@@ -1,0 +1,40 @@
+<!--mine.wxml-->
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <!-- 顶部背景 -->
+    <view class="top-bg"></view>
+    
+    <!-- 用户信息 -->
+    <view class="user-info">
+      <view class="user-avatar">👤</view>
+      <view class="user-details">
+        <text class="user-nickname">用户昵称</text>
+        <text class="user-level">普通会员</text>
+      </view>
+    </view>
+    
+    <!-- 功能列表 -->
+    <view class="function-list">
+      <navigator url="#" class="function-item">
+        <view class="function-icon">📋</view>
+        <text class="function-name">历史记录</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+      <navigator url="#" class="function-item">
+        <view class="function-icon">💎</view>
+        <text class="function-name">会员中心</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+      <navigator url="#" class="function-item">
+        <view class="function-icon">⚙️</view>
+        <text class="function-name">设置</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+      <navigator url="#" class="function-item">
+        <view class="function-icon">ℹ️</view>
+        <text class="function-name">关于我们</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+    </view>
+  </view>
+</scroll-view>

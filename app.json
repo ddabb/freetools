@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/discover/discover",
+    "pages/mine/mine",
+    "pages/mortgage/mortgage",
+    "pages/life-countdown/life-countdown",
+    "pages/qrcode/qrcode",
+    "pages/unit-converter/unit-converter",
+    "pages/health-calculator/health-calculator",
+    "pages/price-comparison/price-comparison",
+    "pages/travel-tool/travel-tool",
+    "pages/password-generator/password-generator",
+    "pages/calendar/calendar",
+    "pages/time-tool/time-tool",
+    "pages/battery-health/battery-health",
+    "pages/text-tool/text-tool"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "实用工具",
+    "navigationBarBackgroundColor": "#3498db"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#3498db",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/discover/discover",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

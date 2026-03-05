@@ -1,0 +1,154 @@
+/**health-calculator.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.input-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  padding: 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+}
+
+.input {
+  width: 100%;
+  font-size: 32rpx;
+  border: none;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.gender-select {
+  display: flex;
+  gap: 20rpx;
+}
+
+.gender-item {
+  flex: 1;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  padding: 24rpx;
+  border-radius: 16rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.gender-item.active {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  box-shadow: 0 10rpx 30rpx rgba(79, 172, 254, 0.4);
+}
+
+.calculate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  box-shadow: 0 10rpx 30rpx rgba(79, 172, 254, 0.4);
+  transition: all 0.3s ease;
+}
+
+.calculate-btn:active {
+  transform: scale(0.98);
+}
+
+.result-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+}
+
+.result-item {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.result-label {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+.result-value {
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.result-value.bmi {
+  color: #4facfe;
+  font-size: 56rpx;
+}
+
+.bmi-status {
+  font-size: 28rpx;
+  color: #38ef7d;
+  margin-top: 10rpx;
+  display: block;
+  font-weight: 600;
+}
+
+.result-value.ideal-weight {
+  color: #4facfe;
+}
+
+.result-value.suggestion {
+  color: #666;
+  font-size: 24rpx;
+  font-weight: normal;
+}
+
+.result-divider {
+  height: 2rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  margin: 20rpx 0;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.result-row .result-item {
+  flex: 1;
+  margin-bottom: 0;
+}

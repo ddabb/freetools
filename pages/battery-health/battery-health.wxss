@@ -1,0 +1,132 @@
+/**battery-health.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.battery-status {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.battery-status::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.battery-icon {
+  font-size: 120rpx;
+  margin-right: 30rpx;
+}
+
+.battery-info {
+  flex: 1;
+}
+
+.battery-level {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #11998e;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.battery-status-text {
+  font-size: 32rpx;
+  color: #38ef7d;
+  font-weight: 600;
+}
+
+.health-bar {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 10rpx;
+  height: 40rpx;
+  overflow: hidden;
+}
+
+.health-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #11998e, #38ef7d);
+  border-radius: 8rpx;
+  transition: width 0.3s ease;
+  box-shadow: 0 4rpx 15rpx rgba(17, 153, 142, 0.4);
+}
+
+.health-text {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.suggestion-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.suggestion-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.suggestion-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}

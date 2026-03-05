@@ -1,0 +1,71 @@
+<!--mortgage.wxml-->
+<view class="container">
+  <!-- 贷款类型 -->
+  <view class="section">
+    <text class="section-title">贷款类型</text>
+    <view class="loan-type">
+      <view class="type-item {{loanType === 'commercial' ? 'active' : ''}}" bindtap="setLoanType" data-type="commercial">商业贷款</view>
+      <view class="type-item {{loanType === 'fund' ? 'active' : ''}}" bindtap="setLoanType" data-type="fund">公积金贷款</view>
+      <view class="type-item {{loanType === 'composite' ? 'active' : ''}}" bindtap="setLoanType" data-type="composite">组合贷款</view>
+    </view>
+  </view>
+  
+  <!-- 贷款金额 -->
+  <view class="section">
+    <text class="section-title">贷款金额（万元）</text>
+    <view class="input-box">
+      <input type="number" value="{{loanAmount}}" bindinput="setLoanAmount" class="input"/>
+    </view>
+  </view>
+  
+  <!-- 贷款期限 -->
+  <view class="section">
+    <text class="section-title">贷款期限（年）</text>
+    <view class="input-box">
+      <input type="number" value="{{loanTerm}}" bindinput="setLoanTerm" class="input"/>
+    </view>
+  </view>
+  
+  <!-- 贷款利率 -->
+  <view class="section">
+    <text class="section-title">贷款利率（%）</text>
+    <view class="input-box">
+      <input type="number" value="{{loanRate}}" step="0.01" bindinput="setLoanRate" class="input"/>
+    </view>
+  </view>
+  
+  <!-- 还款方式 -->
+  <view class="section">
+    <text class="section-title">还款方式</text>
+    <view class="repayment-type">
+      <view class="type-item {{repaymentType === 'equal-principal-interest' ? 'active' : ''}}" bindtap="setRepaymentType" data-type="equal-principal-interest">等额本息</view>
+      <view class="type-item {{repaymentType === 'equal-principal' ? 'active' : ''}}" bindtap="setRepaymentType" data-type="equal-principal">等额本金</view>
+    </view>
+  </view>
+  
+  <!-- 计算按钮 -->
+  <view class="section">
+    <button class="calculate-btn" bindtap="calculate">计算</button>
+  </view>
+  
+  <!-- 结果展示 -->
+  <view class="section" wx:if="{{showResult}}">
+    <view class="result-box">
+      <view class="result-item">
+        <text class="result-label">每月还款</text>
+        <text class="result-value">{{monthlyPayment}}</text>
+      </view>
+      <view class="result-divider"></view>
+      <view class="result-row">
+        <view class="result-item">
+          <text class="result-label">总利息</text>
+          <text class="result-value interest">{{totalInterest}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">还款总额</text>
+          <text class="result-value total">{{totalPayment}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

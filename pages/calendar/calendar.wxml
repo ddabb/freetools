@@ -1,0 +1,60 @@
+<!--calendar.wxml-->
+<view class="container">
+  <!-- 日历展示 -->
+  <view class="section">
+    <view class="calendar-header">
+      <text class="calendar-title">{{currentDate}}</text>
+    </view>
+    <view class="calendar-body">
+      <view class="weekdays">
+        <view class="weekday">日</view>
+        <view class="weekday">一</view>
+        <view class="weekday">二</view>
+        <view class="weekday">三</view>
+        <view class="weekday">四</view>
+        <view class="weekday">五</view>
+        <view class="weekday">六</view>
+      </view>
+      <view class="days">
+        <view class="day" wx:for="{{calendarDays}}" wx:key="index">
+          <text class="day-number {{item.isToday ? 'today' : ''}} {{item.isOtherMonth ? 'other-month' : ''}}">{{item.day}}</text>
+          <text class="lunar-date" wx:if="item.lunarDate">{{item.lunarDate}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 节气和节假日 -->
+  <view class="section">
+    <text class="section-title">节气和节假日</text>
+    <view class="holiday-box">
+      <view class="holiday-item">
+        <text class="holiday-name">今天</text>
+        <text class="holiday-date">{{currentDate}}</text>
+      </view>
+      <view class="holiday-item">
+        <text class="holiday-name">立春</text>
+        <text class="holiday-date">2023-02-04</text>
+      </view>
+      <view class="holiday-item">
+        <text class="holiday-name">春节</text>
+        <text class="holiday-date">2023-01-22</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 黄历信息 -->
+  <view class="section">
+    <text class="section-title">黄历信息</text>
+    <view class="almanac-box">
+      <view class="almanac-item">
+        <text class="almanac-label">宜</text>
+        <text class="almanac-content">嫁娶、出行、祭祀</text>
+      </view>
+      <view class="almanac-item">
+        <text class="almanac-label">忌</text>
+        <text class="almanac-content">动土、破土、安葬</text>
+      </view>
+    </view>
+  </view>
+</view>

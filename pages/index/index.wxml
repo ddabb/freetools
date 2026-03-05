@@ -1,0 +1,60 @@
+<!--index.wxml-->
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <view class="search-input">
+        <text class="search-icon">🔍</text>
+        <input placeholder="搜索工具" class="input"/>
+      </view>
+    </view>
+    
+    <!-- 常用工具 -->
+    <view class="section">
+      <text class="section-title">常用工具</text>
+      <view class="tool-grid">
+        <navigator url="/pages/mortgage/mortgage" class="tool-item">
+          <view class="tool-icon blue">🏠</view>
+          <text class="tool-name">房贷计算</text>
+        </navigator>
+        <navigator url="/pages/life-countdown/life-countdown" class="tool-item">
+          <view class="tool-icon green">⏰</view>
+          <text class="tool-name">人生倒计时</text>
+        </navigator>
+        <navigator url="/pages/qrcode/qrcode" class="tool-item">
+          <view class="tool-icon orange">📱</view>
+          <text class="tool-name">二维码生成</text>
+        </navigator>
+        <navigator url="/pages/unit-converter/unit-converter" class="tool-item">
+          <view class="tool-icon purple">🔄</view>
+          <text class="tool-name">单位换算</text>
+        </navigator>
+      </view>
+    </view>
+    
+    <!-- 工具分类 -->
+    <view class="section">
+      <text class="section-title">工具分类</text>
+      <view class="category-grid">
+        <view class="category-item blue">
+          <text class="category-name">财务工具</text>
+        </view>
+        <view class="category-item green">
+          <text class="category-name">健康工具</text>
+        </view>
+        <view class="category-item orange">
+          <text class="category-name">生活工具</text>
+        </view>
+        <view class="category-item purple">
+          <text class="category-name">学习工具</text>
+        </view>
+        <view class="category-item red">
+          <text class="category-name">安全工具</text>
+        </view>
+        <view class="category-item teal">
+          <text class="category-name">更多工具</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

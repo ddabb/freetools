@@ -1,0 +1,164 @@
+/**calendar.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.calendar-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 24rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  text-align: center;
+  box-shadow: 0 8rpx 25rpx rgba(102, 126, 234, 0.4);
+}
+
+.calendar-title {
+  font-size: 36rpx;
+  font-weight: 800;
+}
+
+.calendar-body {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 0 0 20rpx 20rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.weekdays {
+  display: flex;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.weekday {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  padding: 15rpx;
+  text-align: center;
+  border-bottom: 2rpx solid #f0f0f0;
+  border-right: 2rpx solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.day:nth-child(7n) {
+  border-right: none;
+}
+
+.day:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+}
+
+.day-number {
+  font-size: 32rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 5rpx;
+  font-weight: 600;
+}
+
+.day-number.today {
+  color: #667eea;
+  font-weight: 800;
+  text-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.3);
+}
+
+.day-number.other-month {
+  color: #ccc;
+}
+
+.lunar-date {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.holiday-box, .almanac-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.holiday-box::before, .almanac-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #f093fb, #f5576c);
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.holiday-item:last-child {
+  border-bottom: none;
+}
+
+.holiday-name {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.holiday-date {
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.almanac-item {
+  margin-bottom: 20rpx;
+}
+
+.almanac-item:last-child {
+  margin-bottom: 0;
+}
+
+.almanac-label {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #667eea;
+  margin-right: 10rpx;
+}
+
+.almanac-content {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}

@@ -1,0 +1,156 @@
+/**time-tool.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.tool-tabs {
+  display: flex;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  font-weight: 800;
+}
+
+.time-display {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 60rpx 20rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-bottom: 30rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.time-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+}
+
+.time-text {
+  font-size: 72rpx;
+  font-weight: 800;
+  color: #333;
+  font-family: monospace;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 20rpx;
+}
+
+.control-btn {
+  flex: 1;
+  padding: 24rpx;
+  border: none;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  box-shadow: 0 10rpx 30rpx rgba(17, 153, 142, 0.4);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.4);
+}
+
+.time-inputs {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.time-input-item {
+  flex: 1;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+}
+
+.time-input {
+  width: 100%;
+  font-size: 32rpx;
+  border: none;
+  outline: none;
+  text-align: center;
+  color: #333;
+  font-weight: 600;
+}
+
+.timezone-item {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.timezone-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+}
+
+.timezone-item:last-child {
+  margin-bottom: 0;
+}
+
+.timezone-label {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 800;
+}
+
+.timezone-time {
+  font-size: 28rpx;
+  color: #4facfe;
+  font-family: monospace;
+  font-weight: 600;
+}
