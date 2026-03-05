@@ -13,6 +13,22 @@
       </view>
     </view>
     
+    <!-- 工具使用统计 -->
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-number">12</text>
+        <text class="stats-label">使用工具</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">5</text>
+        <text class="stats-label">收藏工具</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">30</text>
+        <text class="stats-label">总使用次数</text>
+      </view>
+    </view>
+    
     <!-- 功能列表 -->
     <view class="function-list">
       <navigator url="#" class="function-item">
@@ -26,8 +42,18 @@
         <text class="function-arrow">→</text>
       </navigator>
       <navigator url="#" class="function-item">
+        <view class="function-icon">⭐</view>
+        <text class="function-name">我的收藏</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+      <navigator url="#" class="function-item">
         <view class="function-icon">⚙️</view>
         <text class="function-name">设置</text>
+        <text class="function-arrow">→</text>
+      </navigator>
+      <navigator url="#" class="function-item">
+        <view class="function-icon">📤</view>
+        <text class="function-name">意见反馈</text>
         <text class="function-arrow">→</text>
       </navigator>
       <navigator url="#" class="function-item">
@@ -35,6 +61,11 @@
         <text class="function-name">关于我们</text>
         <text class="function-arrow">→</text>
       </navigator>
+    </view>
+    
+    <!-- 版本信息 -->
+    <view class="version-info">
+      <text class="version-text">实用工具集合 v1.0.0</text>
     </view>
   </view>
 </scroll-view>

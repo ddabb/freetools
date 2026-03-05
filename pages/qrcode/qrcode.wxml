@@ -27,8 +27,7 @@
   <view class="section" wx:if="{{showQrcode}}">
     <view class="qrcode-box">
       <view class="qrcode-image">
-        <!-- 这里使用占位符，实际开发中需要使用二维码生成库 -->
-        <text class="qrcode-placeholder">📱</text>
+        <canvas canvas-id="qrcodeCanvas" class="qrcode-canvas"></canvas>
       </view>
       <view class="qrcode-buttons">
         <button class="save-btn" bindtap="saveQrcode">保存</button>

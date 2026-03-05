@@ -4,3 +4,4 @@
 !.codebuddy/rules/
 !.codebuddy/prompts/
 !.codebuddy/config.json
+node_modules/

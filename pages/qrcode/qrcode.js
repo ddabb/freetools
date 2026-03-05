@@ -1,4 +1,6 @@
 // qrcode.js
+const QRCode = require('../../miniprogram_npm/weapp-qrcode-canvas-2d/index.js');
+
 Page({
   data: {
     inputContent: '', // 输入内容
@@ -22,7 +24,7 @@ Page({
   
   // 生成二维码
   generate() {
-    const { inputContent } = this.data;
+    const { inputContent, qrcodeType } = this.data;
     if (!inputContent) {
       wx.showToast({
         title: '请输入内容',
@@ -31,8 +33,22 @@ Page({
       return;
     }
     
-    // 实际开发中，这里需要使用二维码生成库生成二维码
-    // 这里仅做模拟
+    // 准备二维码内容
+    let content = inputContent;
+    if (qrcodeType === 'url' && !content.startsWith('http')) {
+      content = 'http://' + content;
+    }
+    
+    // 生成二维码
+    wx.createSelectorQuery().select('#qrcodeCanvas').context(res => {
+      QRCode({
+        canvas: res.context,
+        text: content,
+        width: 400,
+        height: 400
+      });
+    }).exec();
+    
     this.setData({
       showQrcode: true
     });
@@ -40,17 +56,55 @@ Page({
   
   // 保存二维码
   saveQrcode() {
-    wx.showToast({
-      title: '保存成功',
-      icon: 'success'
+    wx.canvasToTempFilePath({
+      canvasId: 'qrcodeCanvas',
+      success: function(res) {
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: function() {
+            wx.showToast({
+              title: '保存成功',
+              icon: 'success'
+            });
+          },
+          fail: function() {
+            wx.showToast({
+              title: '保存失败',
+              icon: 'none'
+            });
+          }
+        });
+      },
+      fail: function() {
+        wx.showToast({
+          title: '保存失败',
+          icon: 'none'
+        });
+      }
     });
   },
   
   // 分享二维码
   shareQrcode() {
-    wx.showToast({
-      title: '分享成功',
-      icon: 'success'
+    wx.canvasToTempFilePath({
+      canvasId: 'qrcodeCanvas',
+      success: function(res) {
+        wx.showShareImageMenu({
+          path: res.tempFilePath,
+          success: function() {
+            wx.showToast({
+              title: '分享成功',
+              icon: 'success'
+            });
+          }
+        });
+      },
+      fail: function() {
+        wx.showToast({
+          title: '分享失败',
+          icon: 'none'
+        });
+      }
     });
   }
 })
