@@ -3,6 +3,7 @@ Page({
   data: {
     birthDate: '', // 出生日期
     expectedLifeYears: 80, // 预计寿命（岁）
+    currentYear: new Date().getFullYear(), // 当前年份
     showResult: false, // 是否显示结果
     daysLived: 0, // 已活天数
     lifeLeft: 0, // 剩余预期寿命
@@ -39,6 +40,15 @@ Page({
     
     const today = new Date();
     const birth = new Date(birthDate);
+    
+    // 检查出生日期是否是未来日期
+    if (birth > today) {
+      wx.showToast({
+        title: '出生日期不能是未来日期',
+        icon: 'none'
+      });
+      return;
+    }
     
     // 计算已活天数
     const daysLived = Math.floor((today - birth) / (1000 * 60 * 60 * 24));

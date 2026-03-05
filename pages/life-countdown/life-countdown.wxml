@@ -4,7 +4,11 @@
   <view class="section">
     <text class="section-title">出生日期</text>
     <view class="input-box">
-      <input type="date" value="{{birthDate}}" bindinput="setBirthDate" class="input"/>
+      <picker mode="date" value="{{birthDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setBirthDate" class="picker">
+        <view class="picker-view">
+          {{birthDate || '请选择出生日期'}}
+        </view>
+      </picker>
     </view>
   </view>
   
