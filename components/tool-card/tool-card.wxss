@@ -1,0 +1,138 @@
+/* components/tool-card/tool-card.wxss */
+.tool-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  padding: 30rpx 24rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.tool-card-hover {
+  transform: translateY(-8rpx) scale(1.02);
+  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.25);
+}
+
+/* 大尺寸 */
+.tool-card.large {
+  flex-direction: column;
+  text-align: center;
+  padding: 40rpx 20rpx;
+}
+
+.tool-card.large .tool-icon-wrapper {
+  margin-bottom: 20rpx;
+}
+
+.tool-card.large .tool-info {
+  align-items: center;
+}
+
+/* 小尺寸 */
+.tool-card.small {
+  padding: 20rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.tool-card.small .tool-icon {
+  width: 60rpx;
+  height: 60rpx;
+  font-size: 32rpx;
+}
+
+.tool-card.small .tool-name {
+  font-size: 22rpx;
+}
+
+.tool-card.small .tool-desc {
+  display: none;
+}
+
+.tool-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-icon {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.tool-icon.blue {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.tool-icon.green {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.tool-icon.orange {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.tool-icon.purple {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.tool-icon.teal {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.tool-icon.red {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.tool-icon.yellow {
+  background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+}
+
+.tool-icon.gray {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.tool-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 24rpx;
+}
+
+.tool-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tool-desc {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

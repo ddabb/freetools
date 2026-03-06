@@ -1,4 +1,6 @@
 {
   "usingComponents": {
+    "tool-card": "/components/tool-card/tool-card",
+    "category-card": "/components/category-card/category-card"
   }
 }

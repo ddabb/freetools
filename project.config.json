@@ -2,7 +2,24 @@
   "compileType": "miniprogram",
   "libVersion": "3.14.3",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "file",
+        "value": "docs/**/*"
+      },
+      {
+        "type": "file",
+        "value": ".codebuddy/**/*"
+      },
+      {
+        "type": "file",
+        "value": "项目提案.html"
+      },
+      {
+        "type": "file",
+        "value": "*.md"
+      }
+    ],
     "include": []
   },
   "setting": {

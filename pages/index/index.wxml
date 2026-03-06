@@ -5,75 +5,85 @@
     <view class="search-bar">
       <view class="search-input">
         <text class="search-icon">🔍</text>
-        <input placeholder="搜索工具" class="input"/>
+        <input
+          placeholder="搜索工具"
+          class="input"
+          value="{{searchText}}"
+          bindinput="onSearchInput"
+        />
+        <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
       </view>
     </view>
-    
-    <!-- 常用工具 -->
-    <view class="section">
+
+    <!-- 搜索结果 -->
+    <view wx:if="{{showSearchResult}}" class="search-result">
+      <text class="section-title">搜索结果</text>
+      <view wx:if="{{filteredTools.length > 0 || filteredCategories.length > 0}}">
+        <!-- 搜索到的工具 -->
+        <view wx:if="{{filteredTools.length > 0}}" class="search-tools">
+          <view class="tool-grid search-grid">
+            <tool-card
+              wx:for="{{filteredTools}}"
+              wx:key="id"
+              name="{{item.name}}"
+              icon="{{item.icon}}"
+              color="{{item.color}}"
+              url="{{item.url}}"
+              size="large"
+            />
+          </view>
+        </view>
+        <!-- 搜索到的分类 -->
+        <view wx:if="{{filteredCategories.length > 0}}" class="search-categories">
+          <view class="category-list">
+            <category-card
+              wx:for="{{filteredCategories}}"
+              wx:key="name"
+              name="{{item.name}}"
+              icon="{{item.icon}}"
+              color="{{item.color}}"
+              url="{{item.url}}"
+              description="{{item.description}}"
+              size="small"
+            />
+          </view>
+        </view>
+      </view>
+      <view wx:else class="no-result">
+        <text class="no-result-text">未找到相关工具</text>
+      </view>
+    </view>
+
+    <!-- 默认显示的常用工具（无搜索时显示） -->
+    <view wx:else class="section">
       <text class="section-title">常用工具</text>
       <view class="tool-grid">
-        <navigator url="/pages/mortgage/mortgage" class="tool-item">
-          <view class="tool-icon blue">🏠</view>
-          <text class="tool-name">房贷计算</text>
-        </navigator>
-        <navigator url="/pages/life-countdown/life-countdown" class="tool-item">
-          <view class="tool-icon green">⏰</view>
-          <text class="tool-name">人生倒计时</text>
-        </navigator>
-        <navigator url="/pages/qrcode/qrcode" class="tool-item">
-          <view class="tool-icon orange">📱</view>
-          <text class="tool-name">二维码生成</text>
-        </navigator>
-        <navigator url="/pages/unit-converter/unit-converter" class="tool-item">
-          <view class="tool-icon purple">🔄</view>
-          <text class="tool-name">单位换算</text>
-        </navigator>
-        <navigator url="/pages/health-calculator/health-calculator" class="tool-item">
-          <view class="tool-icon teal">💪</view>
-          <text class="tool-name">健康计算</text>
-        </navigator>
-        <navigator url="/pages/calendar/calendar" class="tool-item">
-          <view class="tool-icon red">📅</view>
-          <text class="tool-name">万年历</text>
-        </navigator>
-        <navigator url="/pages/time-tool/time-tool" class="tool-item">
-          <view class="tool-icon yellow">⏱️</view>
-          <text class="tool-name">时间工具</text>
-        </navigator>
-        <navigator url="/pages/password-generator/password-generator" class="tool-item">
-          <view class="tool-icon gray">🔒</view>
-          <text class="tool-name">密码生成</text>
-        </navigator>
-        <navigator url="/pages/idcard/idcard" class="tool-item">
-          <view class="tool-icon blue">🆔</view>
-          <text class="tool-name">身份证验证</text>
-        </navigator>
+        <tool-card
+          wx:for="{{commonTools}}"
+          wx:key="id"
+          name="{{item.name}}"
+          icon="{{item.icon}}"
+          color="{{item.color}}"
+          url="{{item.url}}"
+          size="large"
+        />
       </view>
     </view>
-    
-    <!-- 工具分类 -->
-    <view class="section">
+
+    <!-- 默认显示的工具分类（无搜索时显示） -->
+    <view wx:if="{{!showSearchResult}}" class="section">
       <text class="section-title">工具分类</text>
-      <view class="category-grid">
-        <navigator url="/pages/discover/discover?category=财务工具" class="category-item blue">
-          <text class="category-name">财务工具</text>
-        </navigator>
-        <navigator url="/pages/discover/discover?category=健康工具" class="category-item green">
-          <text class="category-name">健康工具</text>
-        </navigator>
-        <navigator url="/pages/discover/discover?category=生活工具" class="category-item orange">
-          <text class="category-name">生活工具</text>
-        </navigator>
-        <navigator url="/pages/discover/discover?category=学习工具" class="category-item purple">
-          <text class="category-name">学习工具</text>
-        </navigator>
-        <navigator url="/pages/discover/discover?category=安全工具" class="category-item red">
-          <text class="category-name">安全工具</text>
-        </navigator>
-        <navigator url="/pages/discover/discover?category=更多工具" class="category-item teal">
-          <text class="category-name">更多工具</text>
-        </navigator>
+      <view class="category-list">
+        <category-card
+          wx:for="{{categories}}"
+          wx:key="name"
+          name="{{item.name}}"
+          icon="{{item.icon}}"
+          color="{{item.color}}"
+          url="{{item.url}}"
+          description="{{item.description}}"
+          size="medium"
+        />
       </view>
     </view>
   </view>

@@ -1,49 +1,150 @@
 // index.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
+const { commonTools, categories, searchTools } = require('../../config/tools.js');
 
 Page({
   data: {
-    motto: 'Hello World',
     userInfo: {
       avatarUrl: defaultAvatarUrl,
       nickName: '',
     },
     hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    commonTools: commonTools,
+    categories: categories.map(cat => {
+      return {
+        name: cat.name,
+        color: cat.color,
+        icon: cat.icon,
+        description: cat.description,
+        url: `/pages/discover/discover?category=${cat.name}`,
+        keywords: []
+      };
+    }),
+    // 搜索相关
+    searchText: '',
+    filteredTools: [],
+    filteredCategories: [],
+    showSearchResult: false
   },
+
+  onLoad() {
+    // 加载缓存的用户信息
+    this.loadUserInfo();
+  },
+
+  // 加载用户信息
+  loadUserInfo() {
+    try {
+      const userInfo = wx.getStorageSync('userInfo');
+      if (userInfo) {
+        this.setData({
+          userInfo: userInfo,
+          hasUserInfo: true
+        });
+      }
+    } catch (e) {
+      console.error('加载用户信息失败', e);
+    }
+  },
+
+  // 搜索输入处理
+  onSearchInput(e) {
+    const searchText = e.detail.value.trim().toLowerCase();
+    this.setData({
+      searchText,
+      showSearchResult: searchText.length > 0
+    });
+
+    if (searchText === '') {
+      // 搜索为空，显示默认列表
+      this.setData({
+        filteredTools: [],
+        filteredCategories: []
+      });
+    } else {
+      // 使用统一配置的搜索功能
+      const allTools = searchTools(searchText);
+      const filteredTools = allTools.filter(tool =>
+        commonTools.some(ct => ct.id === tool.id)
+      );
+
+      // 过滤分类
+      const filteredCategories = this.data.categories.filter(category => {
+        return category.name.toLowerCase().includes(searchText);
+      });
+
+      this.setData({
+        filteredTools,
+        filteredCategories
+      });
+    }
+  },
+
+  // 清除搜索
+  onClearSearch() {
+    this.setData({
+      searchText: '',
+      filteredTools: [],
+      filteredCategories: [],
+      showSearchResult: false
+    });
+  },
+
+  // 选择头像
+  onChooseAvatar(e) {
+    const avatarUrl = e.detail.avatarUrl;
+    const nickName = this.data.userInfo.nickName;
+    const userInfo = Object.assign({}, this.data.userInfo, {
+      avatarUrl: avatarUrl
+    });
+    this.setData({
+      userInfo: userInfo,
+      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+    });
+    this.saveUserInfo(userInfo);
+  },
+
+  // 输入昵称
+  onInputChange(e) {
+    const nickName = e.detail.value;
+    const avatarUrl = this.data.userInfo.avatarUrl;
+    const userInfo = Object.assign({}, this.data.userInfo, {
+      nickName: nickName
+    });
+    this.setData({
+      userInfo: userInfo,
+      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+    });
+    this.saveUserInfo(userInfo);
+  },
+
+  // 保存用户信息到本地存储
+  saveUserInfo(userInfo) {
+    try {
+      wx.setStorageSync('userInfo', userInfo);
+    } catch (e) {
+      console.error('保存用户信息失败', e);
+    }
+  },
+
+  // 获取用户资料
+  getUserProfile() {
+    wx.getUserProfile({
+      desc: '展示用户信息',
+      success: (res) => {
+        const userInfo = res.userInfo;
+        this.setData({
+          userInfo: userInfo,
+          hasUserInfo: true
+        });
+        this.saveUserInfo(userInfo);
+      }
+    });
+  },
+
   bindViewTap() {
     wx.navigateTo({
       url: '../logs/logs'
-    })
-  },
-  onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
-    const { nickName } = this.data.userInfo
-    this.setData({
-      "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
-  },
-  onInputChange(e) {
-    const nickName = e.detail.value
-    const { avatarUrl } = this.data.userInfo
-    this.setData({
-      "userInfo.nickName": nickName,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
-  },
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    })
-  },
+    });
+  }
 })

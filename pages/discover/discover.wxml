@@ -3,88 +3,20 @@
   <view class="container">
     <!-- 工具列表 -->
     <view class="section">
-      <text class="section-title">全部工具</text>
+      <text class="section-title">{{currentCategory || '全部工具'}}</text>
       <view class="tool-grid">
-        <navigator url="/pages/mortgage/mortgage" class="tool-item">
-          <view class="tool-icon blue">🏠</view>
-          <text class="tool-name">房贷计算器</text>
-        </navigator>
-        <navigator url="/pages/life-countdown/life-countdown" class="tool-item">
-          <view class="tool-icon green">⏰</view>
-          <text class="tool-name">人生倒计时</text>
-        </navigator>
-        <navigator url="/pages/qrcode/qrcode" class="tool-item">
-          <view class="tool-icon orange">📱</view>
-          <text class="tool-name">二维码生成</text>
-        </navigator>
-        <navigator url="/pages/unit-converter/unit-converter" class="tool-item">
-          <view class="tool-icon purple">🔄</view>
-          <text class="tool-name">单位换算</text>
-        </navigator>
-        <navigator url="/pages/health-calculator/health-calculator" class="tool-item">
-          <view class="tool-icon teal">🏥</view>
-          <text class="tool-name">健康计算器</text>
-        </navigator>
-        <navigator url="/pages/price-comparison/price-comparison" class="tool-item">
-          <view class="tool-icon red">💰</view>
-          <text class="tool-name">商品比价</text>
-        </navigator>
-        <navigator url="/pages/travel-tool/travel-tool" class="tool-item">
-          <view class="tool-icon blue">✈️</view>
-          <text class="tool-name">旅行工具</text>
-        </navigator>
-        <navigator url="/pages/password-generator/password-generator" class="tool-item">
-          <view class="tool-icon purple">🔐</view>
-          <text class="tool-name">密码生成</text>
-        </navigator>
-        <navigator url="/pages/calendar/calendar" class="tool-item">
-          <view class="tool-icon orange">📅</view>
-          <text class="tool-name">万年历</text>
-        </navigator>
-        <navigator url="/pages/time-tool/time-tool" class="tool-item">
-          <view class="tool-icon green">⏱️</view>
-          <text class="tool-name">时间工具</text>
-        </navigator>
-        <navigator url="/pages/battery-health/battery-health" class="tool-item">
-          <view class="tool-icon teal">🔋</view>
-          <text class="tool-name">电池健康</text>
-        </navigator>
-        <navigator url="/pages/text-tool/text-tool" class="tool-item">
-          <view class="tool-icon red">📝</view>
-          <text class="tool-name">文本工具</text>
-        </navigator>
-        <navigator url="/pages/jsmind/jsmind" class="tool-item">
-          <view class="tool-icon blue">🧠</view>
-          <text class="tool-name">思维导图</text>
-        </navigator>
-        <navigator url="/pages/oddEven/oddEven" class="tool-item">
-          <view class="tool-icon green">🔢</view>
-          <text class="tool-name">判断奇偶数</text>
-        </navigator>
-        <navigator url="/pages/leapyear/leapyear" class="tool-item">
-          <view class="tool-icon orange">📅</view>
-          <text class="tool-name">判断闰年</text>
-        </navigator>
-        <navigator url="/pages/datediff/datediff" class="tool-item">
-          <view class="tool-icon purple">📆</view>
-          <text class="tool-name">日期差计算</text>
-        </navigator>
-        <navigator url="/pages/idcard/idcard" class="tool-item">
-          <view class="tool-icon teal">🆔</view>
-          <text class="tool-name">身份证验证</text>
-        </navigator>
-        <navigator url="/pages/retirementCalculator/retirementCalculator" class="tool-item">
-          <view class="tool-icon red">🏖️</view>
-          <text class="tool-name">退休计算器</text>
-        </navigator>
-        <navigator url="/pages/mdconvert/mdconvert" class="tool-item">
-          <view class="tool-icon blue">📄</view>
-          <text class="tool-name">MD转换</text>
-        </navigator>
-        <navigator url="/pages/onlychinese/onlychinese" class="tool-item">
-          <view class="tool-icon green">🧹</view>
-          <text class="tool-name">HTML标签净化</text>
-        </navigator>
+        <tool-card
+          wx:for="{{filteredTools}}"
+          wx:key="id"
+          name="{{item.name}}"
+          icon="{{item.icon}}"
+          color="{{item.color}}"
+          url="{{item.url}}"
+          size="large"
+        />
+      </view>
+      <view wx:if="{{filteredTools.length === 0}}" class="empty-state">
+        <text class="empty-text">该分类下暂无工具</text>
       </view>
     </view>
   </view>

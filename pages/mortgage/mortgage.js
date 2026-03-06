@@ -11,53 +11,77 @@ Page({
     totalInterest: '0.00 元', // 总利息
     totalPayment: '0.00 元' // 还款总额
   },
-  
+
   // 设置贷款类型
   setLoanType(e) {
     this.setData({
       loanType: e.currentTarget.dataset.type
     });
   },
-  
+
   // 设置贷款金额
   setLoanAmount(e) {
+    const value = parseFloat(e.detail.value) || 0;
+    if (value < 0 || value > 10000) {
+      wx.showToast({
+        title: '贷款金额应在0-10000万之间',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({
-      loanAmount: parseFloat(e.detail.value) || 0
+      loanAmount: value
     });
   },
-  
+
   // 设置贷款期限
   setLoanTerm(e) {
+    const value = parseInt(e.detail.value) || 0;
+    if (value < 1 || value > 30) {
+      wx.showToast({
+        title: '贷款年限应在1-30年之间',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({
-      loanTerm: parseInt(e.detail.value) || 0
+      loanTerm: value
     });
   },
-  
+
   // 设置贷款利率
   setLoanRate(e) {
+    const value = parseFloat(e.detail.value) || 0;
+    if (value < 0 || value > 20) {
+      wx.showToast({
+        title: '贷款利率应在0-20%之间',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({
-      loanRate: parseFloat(e.detail.value) || 0
+      loanRate: value
     });
   },
-  
+
   // 设置还款方式
   setRepaymentType(e) {
     this.setData({
       repaymentType: e.currentTarget.dataset.type
     });
   },
-  
+
   // 计算房贷
   calculate() {
     const { loanAmount, loanTerm, loanRate, repaymentType } = this.data;
-    
+
     // 转换为月利率和还款月数
     const monthlyRate = loanRate / 100 / 12;
     const totalMonths = loanTerm * 12;
     const principal = loanAmount * 10000; // 转换为元
-    
+
     let monthlyPayment, totalInterest, totalPayment;
-    
+
     if (repaymentType === 'equal-principal-interest') {
       // 等额本息计算
       monthlyPayment = principal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
@@ -71,7 +95,7 @@ Page({
       totalInterest = (principal * monthlyRate * (totalMonths + 1)) / 2;
       totalPayment = principal + totalInterest;
     }
-    
+
     // 更新结果
     this.setData({
       showResult: true,

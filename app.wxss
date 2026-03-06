@@ -1,4 +1,10 @@
 /**app.wxss**/
+page {
+  height: 100%;
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
 .container {
   height: 100%;
   display: flex;
@@ -7,4 +13,112 @@
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
+}
+
+/* 通用工具类 */
+.scrollarea {
+  height: 100%;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+.section {
+  background: #fff;
+  margin: 20rpx 30rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 搜索栏样式 */
+.search-bar {
+  padding: 20rpx 30rpx;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06);
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 30rpx;
+  padding: 16rpx 24rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+}
+
+.search-input .input {
+  flex: 1;
+  height: 48rpx;
+  line-height: 48rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.clear-icon {
+  font-size: 32rpx;
+  color: #999;
+  padding: 0 8rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.empty-text {
+  font-size: 28rpx;
+}
+
+.no-result {
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.no-result-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 提示信息 */
+.tips {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background: #fff9e6;
+  border-radius: 8rpx;
+  border-left: 4rpx solid #f59a23;
+}
+
+.tips-text {
+  font-size: 24rpx;
+  color: #f59a23;
+  line-height: 1.6;
 } 

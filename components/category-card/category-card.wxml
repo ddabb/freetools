@@ -1,0 +1,15 @@
+<!-- components/category-card/category-card.wxml -->
+<navigator
+  url="{{url}}"
+  class="category-card {{size}}"
+  hover-class="category-card-hover"
+>
+  <view class="category-icon-wrapper {{color}}">
+    <text class="category-icon">{{icon}}</text>
+  </view>
+  <view class="category-info">
+    <text class="category-name">{{name}}</text>
+    <text wx:if="{{description}}" class="category-desc">{{description}}</text>
+  </view>
+  <text class="category-arrow">→</text>
+</navigator>

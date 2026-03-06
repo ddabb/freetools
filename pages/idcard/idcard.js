@@ -6,6 +6,8 @@ Page({
     idCard: '',
     result: ''
   },
+
+  // 输入改变
   inputChange: function(e) {
     this.setData({
       idCard: e.detail.value

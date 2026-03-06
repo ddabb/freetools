@@ -2,28 +2,63 @@
   "pages": [
     "pages/index/index",
     "pages/discover/discover",
-    "pages/mine/mine",
-    "pages/mortgage/mortgage",
-    "pages/life-countdown/life-countdown",
-    "pages/qrcode/qrcode",
-    "pages/unit-converter/unit-converter",
-    "pages/health-calculator/health-calculator",
-    "pages/price-comparison/price-comparison",
-    "pages/travel-tool/travel-tool",
-    "pages/password-generator/password-generator",
-    "pages/calendar/calendar",
-    "pages/time-tool/time-tool",
-    "pages/battery-health/battery-health",
-    "pages/text-tool/text-tool",
-    "pages/jsmind/jsmind",
-    "pages/oddEven/oddEven",
-    "pages/leapyear/leapyear",
-    "pages/datediff/datediff",
-    "pages/idcard/idcard",
-    "pages/retirementCalculator/retirementCalculator",
-    "pages/mdconvert/mdconvert",
-    "pages/onlychinese/onlychinese"
+    "pages/mine/mine"
   ],
+  "subPackages": [
+    {
+      "root": "packages/financial",
+      "name": "financial",
+      "pages": [
+        "pages/mortgage/mortgage",
+        "pages/price-comparison/price-comparison",
+        "pages/retirementCalculator/retirementCalculator"
+      ]
+    },
+    {
+      "root": "packages/life",
+      "name": "life",
+      "pages": [
+        "pages/life-countdown/life-countdown",
+        "pages/calendar/calendar",
+        "pages/time-tool/time-tool",
+        "pages/battery-health/battery-health",
+        "pages/datediff/datediff"
+      ]
+    },
+    {
+      "root": "packages/utility",
+      "name": "utility",
+      "pages": [
+        "pages/qrcode/qrcode",
+        "pages/unit-converter/unit-converter",
+        "pages/password-generator/password-generator",
+        "pages/text-tool/text-tool",
+        "pages/oddEven/oddEven",
+        "pages/leapyear/leapyear",
+        "pages/idcard/idcard",
+        "pages/mdconvert/mdconvert",
+        "pages/onlychinese/onlychinese"
+      ]
+    },
+    {
+      "root": "packages/other",
+      "name": "other",
+      "pages": [
+        "pages/health-calculator/health-calculator",
+        "pages/travel-tool/travel-tool"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["financial", "life"]
+    },
+    "pages/discover/discover": {
+      "network": "all",
+      "packages": ["financial", "life", "utility", "other"]
+    }
+  },
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "实用工具",

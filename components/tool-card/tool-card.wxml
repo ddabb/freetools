@@ -1,0 +1,14 @@
+<!-- components/tool-card/tool-card.wxml -->
+<navigator
+  url="{{url}}"
+  class="tool-card {{size}}"
+  hover-class="tool-card-hover"
+>
+  <view class="tool-icon-wrapper">
+    <view class="tool-icon {{color}}">{{icon}}</view>
+  </view>
+  <view class="tool-info">
+    <text class="tool-name">{{name}}</text>
+    <text wx:if="{{description}}" class="tool-desc">{{description}}</text>
+  </view>
+</navigator>

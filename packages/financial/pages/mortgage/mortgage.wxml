@@ -1,0 +1,54 @@
+<view class="mortgage-container">
+  <view class="form-section">
+    <view class="form-item">
+      <text class="label">贷款类型</text>
+      <picker bindchange="onLoanTypeChange" value="{{loanType}}" range="['商业贷款', '公积金贷款', '组合贷款']">
+        <view class="picker">
+          {{['商业贷款', '公积金贷款', '组合贷款'][loanType]}} >
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">贷款金额</text>
+      <input class="input" type="digit" placeholder="请输入贷款金额" value="{{loanAmount}}" bindinput="onLoanAmountInput" />
+      <text class="unit">万元</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">贷款年限</text>
+      <picker bindchange="onYearsChange" value="{{years}}" range="{{[5,10,15,20,25,30]}}">
+        <view class="picker">
+          {{years}}年 >
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">年利率</text>
+      <input class="input" type="digit" placeholder="请输入年利率" value="{{rate}}" bindinput="onRateChange" />
+      <text class="unit">%</text>
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button class="btn-calculate" bindtap="calculate">计算</button>
+    <button class="btn-reset" bindtap="reset">重置</button>
+  </view>
+
+  <view wx:if="{{showResult}}" class="result-section">
+    <view class="result-title">计算结果（等额本息）</view>
+    <view class="result-item">
+      <text class="result-label">月供金额</text>
+      <text class="result-value">{{monthlyPayment}} 元</text>
+    </view>
+    <view class="result-item">
+      <text class="result-label">支付利息</text>
+      <text class="result-value">{{totalInterest}} 万元</text>
+    </view>
+    <view class="result-item">
+      <text class="result-label">还款总额</text>
+      <text class="result-value">{{totalPayment}} 万元</text>
+    </view>
+  </view>
+</view>

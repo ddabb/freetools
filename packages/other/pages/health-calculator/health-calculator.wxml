@@ -1,0 +1,61 @@
+<view class="health-container">
+  <view class="form-section">
+    <view class="form-item">
+      <text class="label">性别</text>
+      <picker bindchange="onGenderChange" value="{{gender}}" range="['男', '女']">
+        <view class="picker">
+          {{gender === 0 ? '男' : '女'}} >
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">身高</text>
+      <input class="input" type="number" placeholder="请输入身高" value="{{height}}" bindinput="onHeightInput" />
+      <text class="unit">cm</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">体重</text>
+      <input class="input" type="digit" placeholder="请输入体重" value="{{weight}}" bindinput="onWeightInput" />
+      <text class="unit">kg</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label">年龄</text>
+      <input class="input" type="number" placeholder="请输入年龄" value="{{age}}" bindinput="onAgeInput" />
+      <text class="unit">岁</text>
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button class="btn-calculate" bindtap="calculate">计算</button>
+    <button class="btn-reset" bindtap="reset">重置</button>
+  </view>
+
+  <view wx:if="{{showResult}}" class="result-section">
+    <view class="result-title">健康分析结果</view>
+
+    <view class="result-item bmi-item">
+      <view class="bmi-value">
+        <text class="value">{{bmi}}</text>
+        <text class="unit">BMI</text>
+      </view>
+      <text class="bmi-status {{bmiStatus === '体重正常' ? 'normal' : 'abnormal'}}">{{bmiStatus}}</text>
+    </view>
+
+    <view class="result-item">
+      <text class="result-label">理想体重</text>
+      <text class="result-value">{{idealWeight}} kg</text>
+    </view>
+
+    <view class="result-item">
+      <text class="result-label">每日所需热量</text>
+      <text class="result-value">{{dailyCalories}} kcal</text>
+    </view>
+
+    <view class="tips">
+      <text class="tips-text">* 仅供参考，如有健康问题请咨询专业医生</text>
+    </view>
+  </view>
+</view>

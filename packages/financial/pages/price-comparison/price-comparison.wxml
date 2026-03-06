@@ -1,0 +1,39 @@
+<view class="price-comparison-container">
+  <view class="items-list">
+    <view class="item-card" wx:for="{{items}}" wx:key="index">
+      <view class="card-header">
+        <text class="item-number">商品{{index + 1}}</text>
+        <text wx:if="{{items.length > 1}}" class="btn-remove" bindtap="removeItem" data-index="{{index}}">删除</text>
+      </view>
+
+      <view class="form-item">
+        <text class="label">商品名称</text>
+        <input class="input" placeholder="输入商品名称" value="{{item.name}}" bindinput="onNameInput" data-index="{{index}}" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">总价</text>
+        <input class="input" type="digit" placeholder="输入总价" value="{{item.price}}" bindinput="onPriceInput" data-index="{{index}}" />
+        <text class="unit">元</text>
+      </view>
+
+      <view class="form-item">
+        <text class="label">数量/重量</text>
+        <input class="input" type="digit" placeholder="输入数量或重量" value="{{item.spec}}" bindinput="onSpecInput" data-index="{{index}}" />
+        <text class="unit">kg/个</text>
+      </view>
+
+      <view wx:if="{{item.unitPrice}}" class="unit-price">
+        <text class="label">单价</text>
+        <text class="value">{{item.unitPrice}}</text>
+        <text class="unit">元/kg或元/个</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button wx:if="{{items.length < 5}}" class="btn-add" bindtap="addItem">添加商品</button>
+    <button class="btn-calculate" bindtap="calculate">计算单价</button>
+    <button class="btn-reset" bindtap="reset">重置</button>
+  </view>
+</view>

@@ -20,16 +20,30 @@ Page({
     beijingTime: '', // 北京时间
     newYorkTime: '', // 纽约时间
     londonTime: '', // 伦敦时间
-    tokyoTime: '' // 东京时间
+    tokyoTime: '', // 东京时间
+    timezoneInterval: null // 时区更新定时器
   },
-  
+
   onLoad() {
     // 初始化时区转换
     this.updateTimezoneTimes();
     // 每秒更新一次时区时间
-    setInterval(() => {
+    this.data.timezoneInterval = setInterval(() => {
       this.updateTimezoneTimes();
     }, 1000);
+  },
+
+  onUnload() {
+    // 清除所有定时器，防止内存泄漏
+    if (this.data.stopwatchInterval) {
+      clearInterval(this.data.stopwatchInterval);
+    }
+    if (this.data.timerInterval) {
+      clearInterval(this.data.timerInterval);
+    }
+    if (this.data.timezoneInterval) {
+      clearInterval(this.data.timezoneInterval);
+    }
   },
   
   // 设置激活标签
@@ -54,19 +68,23 @@ Page({
         stopwatchStartTime: Date.now() - this.data.stopwatchElapsedTime,
         stopwatchRunning: true
       });
+      // 降低刷新频率，从10ms改为100ms，提升性能
       this.data.stopwatchInterval = setInterval(() => {
         const elapsedTime = Date.now() - this.data.stopwatchStartTime;
         this.setData({
           stopwatchElapsedTime: elapsedTime,
           stopwatchTime: this.formatTime(elapsedTime / 1000)
         });
-      }, 10);
+      }, 100);
     }
   },
   
   // 重置秒表
   resetStopwatch() {
-    clearInterval(this.data.stopwatchInterval);
+    if (this.data.stopwatchInterval) {
+      clearInterval(this.data.stopwatchInterval);
+      this.data.stopwatchInterval = null;
+    }
     this.setData({
       stopwatchTime: '00:00:00',
       stopwatchRunning: false,
@@ -156,7 +174,10 @@ Page({
   
   // 重置计时器
   resetTimer() {
-    clearInterval(this.data.timerInterval);
+    if (this.data.timerInterval) {
+      clearInterval(this.data.timerInterval);
+      this.data.timerInterval = null;
+    }
     this.setData({
       timerHours: 0,
       timerMinutes: 0,

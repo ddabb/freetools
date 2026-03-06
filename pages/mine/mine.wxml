@@ -3,66 +3,62 @@
   <view class="container">
     <!-- 顶部背景 -->
     <view class="top-bg"></view>
-    
+
     <!-- 用户信息 -->
     <view class="user-info">
-      <view class="user-avatar">👤</view>
+      <view class="user-avatar">
+        <image wx:if="{{hasUserInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" />
+        <text wx:else class="default-avatar">👤</text>
+      </view>
       <view class="user-details">
-        <text class="user-nickname">用户昵称</text>
+        <text class="user-nickname">{{hasUserInfo ? userInfo.nickName : '点击登录'}}</text>
         <text class="user-level">普通会员</text>
       </view>
     </view>
-    
+
     <!-- 工具使用统计 -->
     <view class="stats-card">
       <view class="stats-item">
-        <text class="stats-number">12</text>
-        <text class="stats-label">使用工具</text>
+        <text class="stats-number">9</text>
+        <text class="stats-label">工具总数</text>
       </view>
       <view class="stats-item">
-        <text class="stats-number">5</text>
+        <text class="stats-number">{{favoriteTools.length}}</text>
         <text class="stats-label">收藏工具</text>
       </view>
       <view class="stats-item">
-        <text class="stats-number">30</text>
-        <text class="stats-label">总使用次数</text>
+        <text class="stats-number">{{useCount}}</text>
+        <text class="stats-label">使用次数</text>
       </view>
     </view>
-    
-    <!-- 功能列表 -->
-    <view class="function-list">
-      <navigator url="#" class="function-item">
-        <view class="function-icon">📋</view>
-        <text class="function-name">历史记录</text>
-        <text class="function-arrow">→</text>
-      </navigator>
-      <navigator url="#" class="function-item">
-        <view class="function-icon">💎</view>
-        <text class="function-name">会员中心</text>
-        <text class="function-arrow">→</text>
-      </navigator>
-      <navigator url="#" class="function-item">
-        <view class="function-icon">⭐</view>
-        <text class="function-name">我的收藏</text>
-        <text class="function-arrow">→</text>
-      </navigator>
-      <navigator url="#" class="function-item">
-        <view class="function-icon">⚙️</view>
-        <text class="function-name">设置</text>
-        <text class="function-arrow">→</text>
-      </navigator>
-      <navigator url="#" class="function-item">
-        <view class="function-icon">📤</view>
-        <text class="function-name">意见反馈</text>
-        <text class="function-arrow">→</text>
-      </navigator>
-      <navigator url="#" class="function-item">
-        <view class="function-icon">ℹ️</view>
-        <text class="function-name">关于我们</text>
-        <text class="function-arrow">→</text>
-      </navigator>
+
+    <!-- 菜单列表 -->
+    <view class="menu-list">
+      <view
+        class="menu-item"
+        wx:for="{{menuList}}"
+        wx:key="title"
+        bindtap="onMenuTap"
+        data-index="{{index}}"
+      >
+        <view class="menu-icon">{{item.icon}}</view>
+        <view class="menu-title">{{item.title}}</view>
+        <view class="menu-arrow">›</view>
+      </view>
     </view>
-    
+
+    <!-- 功能按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn" bindtap="onShareTap">
+        <text class="btn-icon">📤</text>
+        <text class="btn-text">分享给朋友</text>
+      </button>
+      <button class="action-btn" bindtap="onFeedbackTap">
+        <text class="btn-icon">💬</text>
+        <text class="btn-text">意见反馈</text>
+      </button>
+    </view>
+
     <!-- 版本信息 -->
     <view class="version-info">
       <text class="version-text">实用工具集合 v1.0.0</text>
