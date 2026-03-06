@@ -3,6 +3,7 @@ Page({
   data: {
     currentAge: '',
     retireAge: 60,
+    retireAgeIndex: 1, // 退休年龄在数组中的索引
     currentSalary: '',
     salaryIncrease: 0.05,
     monthlySaving: '',
@@ -25,8 +26,11 @@ Page({
   },
 
   onRetireAgeChange(e) {
+    const index = parseInt(e.detail.value)
+    const ageArray = [55, 60, 65, 70]
     this.setData({
-      retireAge: parseInt(e.detail.value)
+      retireAgeIndex: index,
+      retireAge: ageArray[index]
     })
   },
 

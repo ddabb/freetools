@@ -2,9 +2,9 @@
   <view class="form-section">
     <view class="form-item">
       <text class="label">贷款类型</text>
-      <picker bindchange="onLoanTypeChange" value="{{loanType}}" range="['商业贷款', '公积金贷款', '组合贷款']">
+      <picker bindchange="onLoanTypeChange" value="{{loanType}}" range="{{['商业贷款', '公积金贷款', '组合贷款']}}">
         <view class="picker">
-          {{['商业贷款', '公积金贷款', '组合贷款'][loanType]}} >
+          {{['商业贷款', '公积金贷款', '组合贷款'][loanType]}} <text class="arrow">></text>
         </view>
       </picker>
     </view>
@@ -17,9 +17,9 @@
 
     <view class="form-item">
       <text class="label">贷款年限</text>
-      <picker bindchange="onYearsChange" value="{{years}}" range="{{[5,10,15,20,25,30]}}">
+      <picker bindchange="onYearsChange" value="{{yearsIndex}}" range="{{[5,10,15,20,25,30]}}">
         <view class="picker">
-          {{years}}年 >
+          {{years}}年 <text class="arrow">></text>
         </view>
       </picker>
     </view>

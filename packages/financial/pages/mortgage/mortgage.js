@@ -4,6 +4,7 @@ Page({
     loanType: 0, // 0:商业贷款 1:公积金贷款 2:组合贷款
     loanAmount: '',
     years: 30,
+    yearsIndex: 5, // 贷款年限在数组中的索引
     rate: 4.2,
     monthlyPayment: '',
     totalInterest: '',
@@ -30,8 +31,11 @@ Page({
   },
 
   onYearsChange(e) {
+    const index = parseInt(e.detail.value)
+    const yearsArray = [5, 10, 15, 20, 25, 30]
     this.setData({
-      years: parseInt(e.detail.value)
+      yearsIndex: index,
+      years: yearsArray[index]
     })
   },
 

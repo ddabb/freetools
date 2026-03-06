@@ -1,33 +1,31 @@
 <!--mine.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <!-- 顶部背景 -->
-    <view class="top-bg"></view>
+    <!-- 顶部背景已移除，由 page 背景统一 -->
 
-    <!-- 用户信息 -->
+    <!-- 通用欢迎区（无登录元素） -->
     <view class="user-info">
       <view class="user-avatar">
-        <image wx:if="{{hasUserInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="avatar-img" />
-        <text wx:else class="default-avatar">👤</text>
+        <text class="default-avatar">🛠️</text>
       </view>
       <view class="user-details">
-        <text class="user-nickname">{{hasUserInfo ? userInfo.nickName : '点击登录'}}</text>
-        <text class="user-level">普通会员</text>
+        <text class="user-nickname">欢迎使用实用工具</text>
+        <text class="user-level">无需登录 · 即用即走</text>
       </view>
     </view>
 
-    <!-- 工具使用统计 -->
+    <!-- 工具统计（本地固定数据） -->
     <view class="stats-card">
       <view class="stats-item">
-        <text class="stats-number">9</text>
+        <text class="stats-number">20+</text>
         <text class="stats-label">工具总数</text>
       </view>
       <view class="stats-item">
-        <text class="stats-number">{{favoriteTools.length}}</text>
+        <text class="stats-number">∞</text>
         <text class="stats-label">收藏工具</text>
       </view>
       <view class="stats-item">
-        <text class="stats-number">{{useCount}}</text>
+        <text class="stats-number">∞</text>
         <text class="stats-label">使用次数</text>
       </view>
     </view>

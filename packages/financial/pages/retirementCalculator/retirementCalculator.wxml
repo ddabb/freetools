@@ -8,9 +8,9 @@
 
     <view class="form-item">
       <text class="label">退休年龄</text>
-      <picker bindchange="onRetireAgeChange" value="{{retireAge}}" range="{{[55,60,65,70]}}">
+      <picker bindchange="onRetireAgeChange" value="{{retireAgeIndex}}" range="{{[55,60,65,70]}}">
         <view class="picker">
-          {{retireAge}}岁 >
+          {{retireAge}}岁 <text class="arrow">></text>
         </view>
       </picker>
     </view>

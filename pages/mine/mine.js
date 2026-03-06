@@ -1,10 +1,7 @@
 // mine.js
 Page({
   data: {
-    userInfo: null,
-    hasUserInfo: false,
-    useCount: 0,
-    favoriteTools: [],
+    // 无登录态，固定展示
     menuList: [
       {
         icon: '⭐',
@@ -30,39 +27,11 @@ Page({
   },
 
   onLoad() {
-    this.loadUserInfo()
-    this.loadStats()
+    // 无需加载用户信息或统计，直接使用 wxml 固定数据
   },
 
   onShow() {
-    this.loadStats()
-  },
-
-  loadUserInfo() {
-    try {
-      const userInfo = wx.getStorageSync('userInfo')
-      if (userInfo) {
-        this.setData({
-          userInfo: userInfo,
-          hasUserInfo: true
-        })
-      }
-    } catch (e) {
-      console.error('加载用户信息失败', e)
-    }
-  },
-
-  loadStats() {
-    try {
-      const useCount = wx.getStorageSync('useCount') || 0
-      const favoriteTools = wx.getStorageSync('favoriteTools') || []
-      this.setData({
-        useCount,
-        favoriteTools
-      })
-    } catch (e) {
-      console.error('加载统计数据失败', e)
-    }
+    // 无需刷新用户数据
   },
 
   onMenuTap(e) {
@@ -92,7 +61,7 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '我的 - 个人中心',
+      title: '实用工具箱',
       path: '/pages/mine/mine',
       imageUrl: ''
     }

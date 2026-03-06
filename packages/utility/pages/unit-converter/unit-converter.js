@@ -14,36 +14,106 @@ Page({
     fromUnitIndex: 0,
     toUnitIndex: 1,
     inputValue: '',
-    resultValue: ''
+    resultValue: '',
+    inputFocus: false
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
       title: '单位换算'
     })
+    // 初始化当前单位列表
+    this.updateCurrentUnits()
+  },
+
+  // 更新当前单位列表
+  updateCurrentUnits() {
+    const currentUnits = this.data.categoryUnits[this.data.categories[this.data.categoryIndex]]
+    this.setData({ currentUnits })
   },
 
   onCategoryChange(e) {
-    const categoryIndex = parseInt(e.detail.value)
+    let categoryIndex
+    if (e.currentTarget && e.currentTarget.dataset.index !== undefined) {
+      categoryIndex = parseInt(e.currentTarget.dataset.index)
+    } else {
+      categoryIndex = parseInt(e.detail.value)
+    }
+    
+    const units = this.data.categoryUnits[this.data.categories[categoryIndex]]
     this.setData({
       categoryIndex,
       fromUnitIndex: 0,
-      toUnitIndex: 1,
+      toUnitIndex: units.length > 1 ? 1 : 0,
       inputValue: '',
-      resultValue: ''
+      resultValue: '',
+      inputFocus: true
+    })
+    this.calculate()
+  },
+
+  // 选择单位（点击芯片）
+  selectUnit(e) {
+    const { index, type } = e.currentTarget.dataset
+    const idx = parseInt(index)
+    
+    if (type === 'from') {
+      if (idx !== this.data.toUnitIndex) {
+        this.setData({ fromUnitIndex: idx })
+      }
+    } else {
+      if (idx !== this.data.fromUnitIndex) {
+        this.setData({ toUnitIndex: idx })
+      }
+    }
+    this.calculate()
+  },
+
+  // 快捷输入
+  quickInput(e) {
+    const value = e.currentTarget.dataset.value
+    this.setData({ 
+      inputValue: value,
+      inputFocus: false
+    })
+    this.calculate()
+  },
+
+  // 复制结果
+  copyResult() {
+    if (!this.data.resultValue) {
+      wx.showToast({
+        title: '暂无结果可复制',
+        icon: 'none'
+      })
+      return
+    }
+    
+    wx.setClipboardData({
+      data: `${this.data.resultValue} ${this.data.categoryUnits[this.data.categories[this.data.categoryIndex]][this.data.toUnitIndex]}`,
+      success: () => {
+        wx.showToast({
+          title: '已复制到剪贴板',
+          icon: 'success'
+        })
+      }
     })
   },
 
   onFromUnitChange(e) {
     const fromUnitIndex = parseInt(e.detail.value)
-    this.setData({ fromUnitIndex })
-    this.calculate()
+    if (fromUnitIndex !== this.data.toUnitIndex) {
+      this.setData({ fromUnitIndex })
+      this.calculate()
+    }
   },
 
   onToUnitChange(e) {
     const toUnitIndex = parseInt(e.detail.value)
-    this.setData({ toUnitIndex })
-    this.calculate()
+    if (toUnitIndex !== this.data.fromUnitIndex) {
+      this.setData({ toUnitIndex })
+      this.calculate()
+    }
   },
 
   onInputChange(e) {

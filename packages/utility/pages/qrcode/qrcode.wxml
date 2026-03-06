@@ -1,30 +1,249 @@
-<view class="qrcode-container">
-  <view class="input-section">
-    <view class="form-item">
-      <input
-        class="input"
-        placeholder="输入文本以生成二维码"
-        value="{{text}}"
-        bindinput="onTextInput"
-        maxlength="500"
-      />
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">📱</text>
+      </view>
+      <text class="main-title">二维码生成器</text>
+      <text class="subtitle">轻松创建个性化二维码</text>
     </view>
   </view>
 
-  <view class="action-buttons">
-    <button class="btn-generate" bindtap="generate">生成</button>
-    <button class="btn-save" bindtap="saveImage">保存</button>
-    <button class="btn-clear" bindtap="clear">清空</button>
-  </view>
+  <view class="content-wrapper">
+    <!-- 输入配置卡片 -->
+    <view class="config-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">⚙️</view>
+        <text class="card-title">内容设置</text>
+      </view>
+      
+      <view class="card-body">
+        <!-- 输入类型选择 -->
+        <view class="type-section">
+          <text class="section-label">内容类型</text>
+          <view class="type-tabs">
+            <view 
+              class="type-tab {{contentType === 'text' ? 'active' : ''}}" 
+              bindtap="switchContentType" 
+              data-type="text"
+            >
+              文本
+            </view>
+            <view 
+              class="type-tab {{contentType === 'url' ? 'active' : ''}}" 
+              bindtap="switchContentType" 
+              data-type="url"
+            >
+              网址
+            </view>
+            <view 
+              class="type-tab {{contentType === 'contact' ? 'active' : ''}}" 
+              bindtap="switchContentType" 
+              data-type="contact"
+            >
+              联系方式
+            </view>
+          </view>
+        </view>
 
-  <view wx:if="{{showQrcode && qrcodeText}}" class="qrcode-section">
-    <view class="qrcode-wrapper">
-      <canvas type="2d" id="qrcodeCanvas" class="qrcode-canvas" />
-      <text class="qrcode-text">{{qrcodeText}}</text>
+        <!-- 内容输入区 -->
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">{{getInputLabel()}}</text>
+            <view class="input-container">
+              <textarea
+                class="modern-textarea"
+                placeholder="{{getInputPlaceholder()}}"
+                value="{{text}}"
+                bindinput="onTextInput"
+                maxlength="500"
+                auto-height
+                show-confirm-bar="false"
+              />
+              <view class="char-counter">
+                <text class="counter-text {{text.length > 400 ? 'warning' : ''}}">{{text.length}}/500</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 样式配置 -->
+        <view class="style-section">
+          <text class="section-label">样式设置</text>
+          
+          <!-- 尺寸选择 -->
+          <view class="option-row">
+            <text class="option-label">尺寸</text>
+            <view class="size-chips">
+              <view 
+                class="size-chip {{qrSize === 200 ? 'selected' : ''}}" 
+                bindtap="changeQrSize" 
+                data-size="200"
+              >
+                小
+              </view>
+              <view 
+                class="size-chip {{qrSize === 280 ? 'selected' : ''}}" 
+                bindtap="changeQrSize" 
+                data-size="280"
+              >
+                中
+              </view>
+              <view 
+                class="size-chip {{qrSize === 360 ? 'selected' : ''}}" 
+                bindtap="changeQrSize" 
+                data-size="360"
+              >
+                大
+              </view>
+            </view>
+          </view>
+
+          <!-- 容错级别 -->
+          <view class="option-row">
+            <text class="option-label">容错级别</text>
+            <picker 
+              range="{{errorLevels}}" 
+              value="{{errorLevelIndex}}" 
+              bindchange="onErrorLevelChange"
+              class="level-picker"
+            >
+              <view class="picker-display">
+                {{errorLevels[errorLevelIndex]}}
+                <text class="arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <!-- 快捷模板 -->
+        <view class="template-section" wx:if="{{contentType === 'url'}}">
+          <text class="section-label">快捷模板</text>
+          <view class="template-chips">
+            <view 
+              class="template-chip" 
+              bindtap="applyTemplate" 
+              data-template="https://"
+            >
+              网址链接
+            </view>
+            <view 
+              class="template-chip" 
+              bindtap="applyTemplate" 
+              data-template="mailto:"
+            >
+              邮件地址
+            </view>
+            <view 
+              class="template-chip" 
+              bindtap="applyTemplate" 
+              data-template="tel:"
+            >
+              电话号码
+            </view>
+          </view>
+        </view>
+      </view>
     </view>
-  </view>
 
-  <view class="tips">
-    <text class="tips-text">* 支持文本、网址等内容生成二维码</text>
+    <!-- 操作按钮组 -->
+    <view class="action-section fade-in-up" style="animation-delay: 0.1s">
+      <button 
+        class="primary-btn {{canGenerate ? 'ready' : ''}}" 
+        bindtap="generate"
+        disabled="{{!text.trim()}}"
+        hover-class="btn-primary-hover"
+      >
+        <text class="btn-icon">✨</text>
+        <text class="btn-text">生成二维码</text>
+      </button>
+      
+      <view class="secondary-actions">
+        <button 
+          class="secondary-btn" 
+          bindtap="pasteFromClipboard"
+          hover-class="btn-secondary-hover"
+        >
+          <text class="btn-icon">📋</text>
+          粘贴
+        </button>
+        <button 
+          class="secondary-btn" 
+          bindtap="clear"
+          wx:if="{{text}}"
+          hover-class="btn-secondary-hover"
+        >
+          <text class="btn-icon">🗑️</text>
+          清空
+        </button>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-card card-shadow" wx:if="{{generating}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在生成中...</text>
+      </view>
+    </view>
+
+    <!-- 二维码展示卡片 -->
+    <view wx:if="{{showQrcode}}" class="result-card card-shadow fade-in-up" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="card-icon">🎯</view>
+        <text class="card-title">生成结果</text>
+        <view class="share-badge">可分享</view>
+      </view>
+      
+      <view class="qrcode-display">
+        <view class="qrcode-wrapper" style="width: {{qrSize}}px; height: {{qrSize}}px;">
+          <canvas 
+            type="2d" 
+            id="qrcodeCanvas" 
+            class="qrcode-canvas"
+            style="width: {{qrSize}}px; height: {{qrSize}}px;"
+          />
+        </view>
+        
+        <!-- 内容预览 -->
+        <view class="content-preview">
+          <text class="preview-label">内容预览</text>
+          <text class="preview-text">{{getDisplayText()}}</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="result-actions">
+        <button class="action-btn save-btn" bindtap="saveImage" hover-class="btn-action-hover">
+          <text class="btn-icon">💾</text>
+          <text>保存到相册</text>
+        </button>
+        <button class="action-btn share-btn" bindtap="shareQRCode" hover-class="btn-action-hover">
+          <text class="btn-icon">📤</text>
+          <text>分享二维码</text>
+        </button>
+        <button class="action-btn copy-btn" bindtap="copyContent" hover-class="btn-action-hover">
+          <text class="btn-icon">📋</text>
+          <text>复制内容</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 使用提示 -->
+    <view class="tips-card card-shadow fade-in-up" style="animation-delay: 0.3s">
+      <view class="tips-header">
+        <view class="tips-icon">💡</view>
+        <text class="tips-title">使用技巧</text>
+      </view>
+      <view class="tips-content">
+        <text class="tips-text">
+          • 支持文本、网址、联系方式等多种内容
+          • 可选择不同尺寸和容错级别
+          • 生成的二维码可用于打印、分享
+          • 建议重要内容使用较高容错级别
+        </text>
+      </view>
+    </view>
   </view>
 </view>

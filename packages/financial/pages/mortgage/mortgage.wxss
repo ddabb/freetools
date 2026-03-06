@@ -52,6 +52,16 @@
   line-height: 60rpx;
   font-size: 28rpx;
   color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10rpx;
+}
+
+.form-item .arrow {
+  color: #c7c7cc;
+  font-size: 24rpx;
+  transform: rotate(90deg);
 }
 
 .form-item .unit {
