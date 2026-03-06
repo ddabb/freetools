@@ -1,0 +1,22 @@
+<!--retirementCalculator.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">退休计算器</text>
+  </view>
+  <view class="content">
+    <view class="input-section">
+      <text class="label">当前年龄：</text>
+      <input type="number" placeholder="请输入当前年龄" bindinput="ageChange" class="input"/>
+    </view>
+    <view class="input-section">
+      <text class="label">退休年龄：</text>
+      <input type="number" placeholder="请输入退休年龄" bindinput="retirementAgeChange" class="input"/>
+    </view>
+    <view class="button-section">
+      <button bindtap="calculateRetirement" class="button">计算</button>
+    </view>
+    <view wx:if="{{result !== ''}}" class="result-section">
+      <text class="result-text">{{result}}</text>
+    </view>
+  </view>
+</view>

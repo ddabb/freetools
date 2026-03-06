@@ -14,7 +14,15 @@
     "pages/calendar/calendar",
     "pages/time-tool/time-tool",
     "pages/battery-health/battery-health",
-    "pages/text-tool/text-tool"
+    "pages/text-tool/text-tool",
+    "pages/jsmind/jsmind",
+    "pages/oddEven/oddEven",
+    "pages/leapyear/leapyear",
+    "pages/datediff/datediff",
+    "pages/idcard/idcard",
+    "pages/retirementCalculator/retirementCalculator",
+    "pages/mdconvert/mdconvert",
+    "pages/onlychinese/onlychinese"
   ],
   "window": {
     "navigationBarTextStyle": "white",

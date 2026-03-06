@@ -53,6 +53,38 @@
           <view class="tool-icon red">📝</view>
           <text class="tool-name">文本工具</text>
         </navigator>
+        <navigator url="/pages/jsmind/jsmind" class="tool-item">
+          <view class="tool-icon blue">🧠</view>
+          <text class="tool-name">思维导图</text>
+        </navigator>
+        <navigator url="/pages/oddEven/oddEven" class="tool-item">
+          <view class="tool-icon green">🔢</view>
+          <text class="tool-name">判断奇偶数</text>
+        </navigator>
+        <navigator url="/pages/leapyear/leapyear" class="tool-item">
+          <view class="tool-icon orange">📅</view>
+          <text class="tool-name">判断闰年</text>
+        </navigator>
+        <navigator url="/pages/datediff/datediff" class="tool-item">
+          <view class="tool-icon purple">📆</view>
+          <text class="tool-name">日期差计算</text>
+        </navigator>
+        <navigator url="/pages/idcard/idcard" class="tool-item">
+          <view class="tool-icon teal">🆔</view>
+          <text class="tool-name">身份证验证</text>
+        </navigator>
+        <navigator url="/pages/retirementCalculator/retirementCalculator" class="tool-item">
+          <view class="tool-icon red">🏖️</view>
+          <text class="tool-name">退休计算器</text>
+        </navigator>
+        <navigator url="/pages/mdconvert/mdconvert" class="tool-item">
+          <view class="tool-icon blue">📄</view>
+          <text class="tool-name">MD转换</text>
+        </navigator>
+        <navigator url="/pages/onlychinese/onlychinese" class="tool-item">
+          <view class="tool-icon green">🧹</view>
+          <text class="tool-name">HTML标签净化</text>
+        </navigator>
       </view>
     </view>
   </view>

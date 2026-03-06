@@ -1,0 +1,35 @@
+<!--idcard.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">身份证验证</text>
+  </view>
+  <view class="content">
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">输入身份证号码</text>
+      </view>
+      <view class="card-body">
+        <view class="input-group">
+          <text class="label">身份证号码：</text>
+          <input type="text" placeholder="请输入18位身份证号码" bindinput="inputChange" class="input" maxlength="18"/>
+        </view>
+        <view class="button-section">
+          <button bindtap="parseIdCard" class="button">立即验证</button>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:if="{{result !== ''}}" class="card result-card">
+      <view class="card-header">
+        <text class="card-title">验证结果</text>
+      </view>
+      <view class="card-body">
+        <text class="result-text">{{result}}</text>
+      </view>
+    </view>
+    
+    <view class="tips">
+      <text class="tips-text">提示：本工具仅用于验证身份证号码格式是否正确，不涉及个人信息查询</text>
+    </view>
+  </view>
+</view>

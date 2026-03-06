@@ -118,6 +118,22 @@ page {
   background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
 }
 
+.tool-icon.teal {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.tool-icon.red {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.tool-icon.yellow {
+  background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+}
+
+.tool-icon.gray {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 .tool-name {
   font-size: 24rpx;
   color: #333;
