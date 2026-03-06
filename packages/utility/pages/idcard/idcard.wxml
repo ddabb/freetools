@@ -1,52 +1,68 @@
 <!--packages/utility/pages/idcard/idcard.wxml-->
 <view class="container">
-  <view class="section">
-    <text class="section-title">输入身份证号码</text>
-    <view class="input-box">
-      <input
-        type="idcard"
-        value="{{idcard}}"
-        bindinput="onIdcardInput"
-        class="input"
-        placeholder="请输入18位身份证号码"
-        maxlength="18"
-      />
-    </view>
+  <view class="header">
+    <text class="title">身份证验证</text>
   </view>
-
-  <view class="section">
-    <button class="validate-btn" bindtap="validate">验证</button>
-  </view>
-
-  <view class="section result" wx:if="{{showResult}}">
-    <view class="result-box {{result.valid ? 'success' : 'error'}}">
-      <view class="result-header">
-        <text class="result-icon">{{result.valid ? '✓' : '✗'}}</text>
-        <text class="result-message">{{result.valid ? '验证通过' : '验证失败'}}</text>
+  
+  <view class="content">
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">输入身份证号码</text>
       </view>
-
-      <view class="result-details" wx:if="{{result.valid}}">
-        <view class="detail-item">
-          <text class="detail-label">性别</text>
-          <text class="detail-value">{{result.gender}}</text>
+      <view class="card-body">
+        <view class="input-group">
+          <text class="label">身份证号码：</text>
+          <input
+            type="idcard"
+            value="{{idcard}}"
+            bindinput="onIdcardInput"
+            class="input"
+            placeholder="请输入18位身份证号码"
+            maxlength="18"
+          />
         </view>
-        <view class="detail-item">
-          <text class="detail-label">年龄</text>
-          <text class="detail-value">{{result.age}}岁</text>
+        <view class="button-section">
+          <button class="button" bindtap="validate">立即验证</button>
         </view>
-        <view class="detail-item">
-          <text class="detail-label">出生日期</text>
-          <text class="detail-value">{{result.birthday}}</text>
-        </view>
-      </view>
-
-      <view class="error-message" wx:if="{{!result.valid}}">
-        <text>{{result.message}}</text>
       </view>
     </view>
-  </view>
-
-  <view class="section" wx:if="{{showResult}}">
-    <button class="reset-btn" bindtap="reset">重置</button>
+    
+    <view wx:if="{{showResult}}" class="card result-card">
+      <view class="card-header">
+        <text class="card-title">{{result.valid ? '验证通过' : '验证失败'}}</text>
+      </view>
+      <view class="card-body">
+        <view class="result-details" wx:if="{{result.valid}}">
+          <view class="detail-item">
+            <text class="detail-label">性别</text>
+            <text class="detail-value">{{result.gender}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">年龄</text>
+            <text class="detail-value">{{result.age}}岁</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">出生日期</text>
+            <text class="detail-value">{{result.birthday}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">签发地点</text>
+            <text class="detail-value">{{result.sign}}</text>
+          </view>
+        </view>
+        
+        <view class="error-message" wx:if="{{!result.valid}}">
+          <text>{{result.message}}</text>
+        </view>
+        
+        <view class="button-section">
+          <button class="button reset-button" bindtap="reset">重置</button>
+        </view>
+      </view>
+    </view>
+    
+    <view class="tips">
+      <text class="tips-text">提示：本工具仅用于验证身份证号码格式是否正确，不涉及个人信息查询</text>
+    </view>
   </view>
 </view>

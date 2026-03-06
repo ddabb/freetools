@@ -1,9 +1,9 @@
 <view class="qrcode-container">
   <view class="input-section">
     <view class="form-item">
-      <textarea
-        class="textarea"
-        placeholder="请输入要生成二维码的内容（文本或链接）"
+      <input
+        class="input"
+        placeholder="输入文本以生成二维码"
         value="{{text}}"
         bindinput="onTextInput"
         maxlength="500"
@@ -11,17 +11,17 @@
     </view>
   </view>
 
-  <view class="button-group">
-    <button class="btn-generate" bindtap="generate">生成二维码</button>
+  <view class="action-buttons">
+    <button class="btn-generate" bindtap="generate">生成</button>
+    <button class="btn-save" bindtap="saveImage">保存</button>
     <button class="btn-clear" bindtap="clear">清空</button>
   </view>
 
-  <view wx:if="{{qrcodeText}}" class="qrcode-section">
+  <view wx:if="{{showQrcode && qrcodeText}}" class="qrcode-section">
     <view class="qrcode-wrapper">
-      <canvas type="2d" id="qrcode" class="qrcode-canvas" />
+      <canvas type="2d" id="qrcodeCanvas" class="qrcode-canvas" />
       <text class="qrcode-text">{{qrcodeText}}</text>
     </view>
-    <button class="btn-save" bindtap="saveImage">保存图片</button>
   </view>
 
   <view class="tips">

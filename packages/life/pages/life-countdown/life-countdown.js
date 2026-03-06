@@ -3,6 +3,7 @@ Page({
   data: {
     birthDate: '', // 出生日期
     expectedLifeYears: 80, // 预计寿命（岁）
+    weddingDate: '', // 结婚日期
     currentYear: new Date().getFullYear(), // 当前年份
     showResult: false, // 是否显示结果
     daysLived: 0, // 已活天数
@@ -35,9 +36,16 @@ Page({
     });
   },
 
+  // 设置结婚日期
+  setWeddingDate(e) {
+    this.setData({
+      weddingDate: e.detail.value
+    });
+  },
+
   // 计算人生倒计时
   calculate() {
-    const { birthDate, expectedLifeYears } = this.data;
+    const { birthDate, expectedLifeYears, weddingDate } = this.data;
     if (!birthDate) {
       wx.showToast({
         title: '请输入出生日期',
@@ -94,12 +102,18 @@ Page({
       }
       const birthdayDays = Math.floor((nextBirthday - today) / (1000 * 60 * 60 * 24));
 
-      // 计算距离下次结婚纪念日的天数（假设结婚日期为每年的10月1日）
-      const nextWedding = new Date(today.getFullYear(), 9, 1); // 10月1日
-      if (nextWedding < today) {
-        nextWedding.setFullYear(nextWedding.getFullYear() + 1);
+      // 计算距离下次结婚纪念日的天数
+      let weddingDays = 0;
+      if (weddingDate) {
+        const wedding = new Date(weddingDate);
+        if (!isNaN(wedding.getTime()) && wedding <= today) {
+          const nextWedding = new Date(today.getFullYear(), wedding.getMonth(), wedding.getDate());
+          if (nextWedding < today) {
+            nextWedding.setFullYear(nextWedding.getFullYear() + 1);
+          }
+          weddingDays = Math.floor((nextWedding - today) / (1000 * 60 * 60 * 24));
+        }
       }
-      const weddingDays = Math.floor((nextWedding - today) / (1000 * 60 * 60 * 24));
 
       // 计算距离新年的天数
       const nextNewYear = new Date(today.getFullYear() + 1, 0, 1); // 1月1日
@@ -115,6 +129,9 @@ Page({
         weddingDays,
         newYearDays
       });
+
+      // 保存数据到本地存储
+      this.saveData();
     } catch (error) {
       console.error('计算失败', error);
       wx.showToast({
@@ -129,6 +146,7 @@ Page({
     this.setData({
       birthDate: '',
       expectedLifeYears: 80,
+      weddingDate: '',
       showResult: false,
       daysLived: 0,
       lifeLeft: 0,
@@ -137,6 +155,34 @@ Page({
       weddingDays: 0,
       newYearDays: 0
     });
+    // 清除本地存储
+    wx.removeStorageSync('lifeCountdownData');
+  },
+
+  // 保存数据到本地存储
+  saveData() {
+    const { birthDate, expectedLifeYears, weddingDate } = this.data;
+    wx.setStorageSync('lifeCountdownData', {
+      birthDate,
+      expectedLifeYears,
+      weddingDate
+    });
+  },
+
+  // 从本地存储加载数据
+  loadData() {
+    const data = wx.getStorageSync('lifeCountdownData');
+    if (data) {
+      this.setData({
+        birthDate: data.birthDate || '',
+        expectedLifeYears: data.expectedLifeYears || 80,
+        weddingDate: data.weddingDate || ''
+      });
+      // 如果有数据，自动计算
+      if (data.birthDate) {
+        this.calculate();
+      }
+    }
   },
 
   // 分享给好友
@@ -154,5 +200,10 @@ Page({
       title: '人生倒计时 - 感知时间，珍惜当下',
       imageUrl: ''
     }
+  },
+
+  // 页面加载时执行
+  onLoad() {
+    this.loadData();
   }
 })

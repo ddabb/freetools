@@ -20,6 +20,18 @@
     </view>
   </view>
 
+  <!-- 结婚日期输入 -->
+  <view class="section">
+    <text class="section-title">结婚日期</text>
+    <view class="input-box">
+      <picker mode="date" value="{{weddingDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setWeddingDate" class="picker">
+        <view class="picker-view">
+          {{weddingDate || '请选择结婚日期（可选）'}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
   <!-- 计算按钮 -->
   <view class="section">
     <button class="calculate-btn" bindtap="calculate">计算</button>
