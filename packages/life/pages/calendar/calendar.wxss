@@ -1,1 +1,169 @@
-/* packages/life/pages/calendar/calendar.wxss */
+/**packages/life/pages/calendar/calendar.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 日期选择器 */
+.date-picker {
+  width: 100%;
+}
+
+.date-display {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+}
+
+.date-text {
+  font-size: 48rpx;
+  font-weight: 800;
+  color: #f5576c;
+}
+
+.date-arrow {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 信息卡片 */
+.info-section {
+  display: flex;
+  gap: 20rpx;
+}
+
+.info-card {
+  flex: 1;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #f093fb, #f5576c);
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.info-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+}
+
+/* 节假日列表 */
+.holidays-section {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+}
+
+.holidays-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12rpx;
+}
+
+.holiday-day {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #f5576c;
+  width: 80rpx;
+}
+
+.holiday-name {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+}
+
+.holiday-type {
+  font-size: 24rpx;
+  color: white;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+
+.holiday-type.solar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.holiday-type.fixed {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+/* 功能按钮 */
+.buttons-section {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  border: none;
+  color: white;
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  box-shadow: 0 8rpx 20rpx rgba(250, 112, 154, 0.4);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 8rpx 20rpx rgba(17, 153, 142, 0.4);
+}
+
+.action-btn:active {
+  transform: scale(0.98);
+}

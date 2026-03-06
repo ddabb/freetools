@@ -1,66 +1,56 @@
-// packages/utility/pages/leapyear/leapyear.js
+//leapyear.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    year: '',
+    result: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  inputChange: function(e) {
+    this.setData({
+      year: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  checkLeapYear: function() {
+    var year = this.data.year;
+    if (!year) {
+      wx.showToast({
+        title: '请输入年份',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    var y = parseInt(year);
+    if (isNaN(y)) {
+      wx.showToast({
+        title: '请输入有效的年份',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    if ((y % 4 === 0 && y % 100 !== 0) || y % 400 === 0) {
+      this.setData({
+        result: y + ' 年是闰年'
+      });
+    } else {
+      this.setData({
+        result: y + ' 年不是闰年'
+      });
+    }
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  onLoad: function (options) {
+    // 页面加载
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  onReady: function () {
+    // 页面初次渲染完成
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onShow: function () {
+    // 页面显示
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  onHide: function () {
+    // 页面隐藏
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onUnload: function () {
+    // 页面卸载
   }
 })

@@ -7,7 +7,7 @@ const tools = [
     name: '房贷计算器',
     icon: '🏠',
     color: 'blue',
-    url: '/pages/mortgage/mortgage',
+    url: '/packages/financial/pages/mortgage/mortgage',
     categories: ['财务工具'],
     keywords: ['房贷', '贷款', '计算', '房屋'],
     description: '计算房贷月供、利息和还款总额'
@@ -17,7 +17,7 @@ const tools = [
     name: '人生倒计时',
     icon: '⏰',
     color: 'green',
-    url: '/pages/life-countdown/life-countdown',
+    url: '/packages/life/pages/life-countdown/life-countdown',
     categories: ['生活工具'],
     keywords: ['倒计时', '人生', '日期', '剩余'],
     description: '计算人生已过天数和剩余寿命'
@@ -27,7 +27,7 @@ const tools = [
     name: '二维码生成',
     icon: '📱',
     color: 'orange',
-    url: '/pages/qrcode/qrcode',
+    url: '/packages/utility/pages/qrcode/qrcode',
     categories: ['安全工具'],
     keywords: ['二维码', '生成', '码', '扫码'],
     description: '生成文本和链接的二维码'
@@ -37,7 +37,7 @@ const tools = [
     name: '单位换算',
     icon: '🔄',
     color: 'purple',
-    url: '/pages/unit-converter/unit-converter',
+    url: '/packages/utility/pages/unit-converter/unit-converter',
     categories: ['学习工具', '生活工具'],
     keywords: ['单位', '换算', '转换', '长度'],
     description: '各种单位的快速换算'
@@ -47,7 +47,7 @@ const tools = [
     name: '健康计算',
     icon: '💪',
     color: 'teal',
-    url: '/pages/health-calculator/health-calculator',
+    url: '/packages/other/pages/health-calculator/health-calculator',
     categories: ['健康工具'],
     keywords: ['健康', 'BMI', '体重', '身高'],
     description: '计算BMI和健康指标'
@@ -57,7 +57,7 @@ const tools = [
     name: '万年历',
     icon: '📅',
     color: 'red',
-    url: '/pages/calendar/calendar',
+    url: '/packages/life/pages/calendar/calendar',
     categories: ['生活工具', '学习工具'],
     keywords: ['日历', '万年历', '日期', '农历'],
     description: '查看日历和农历日期'
@@ -67,7 +67,7 @@ const tools = [
     name: '时间工具',
     icon: '⏱️',
     color: 'yellow',
-    url: '/pages/time-tool/time-tool',
+    url: '/packages/life/pages/time-tool/time-tool',
     categories: ['生活工具'],
     keywords: ['时间', '秒表', '计时器', '时区'],
     description: '秒表、计时器和时区转换'
@@ -77,7 +77,7 @@ const tools = [
     name: '密码生成',
     icon: '🔒',
     color: 'gray',
-    url: '/pages/password-generator/password-generator',
+    url: '/packages/utility/pages/password-generator/password-generator',
     categories: ['安全工具'],
     keywords: ['密码', '生成', '安全', '随机'],
     description: '生成安全的随机密码'
@@ -87,160 +87,110 @@ const tools = [
     name: '身份证验证',
     icon: '🆔',
     color: 'blue',
-    url: '/pages/idcard/idcard',
+    url: '/packages/utility/pages/idcard/idcard',
     categories: ['安全工具'],
     keywords: ['身份证', '验证', '身份', '校验'],
     description: '验证身份证号码的有效性'
   },
   {
-    id: 'exchange-rate',
-    name: '汇率计算',
-    icon: '💱',
-    color: 'blue',
-    url: '/pages/exchange-rate/exchange-rate',
-    categories: ['财务工具'],
-    keywords: ['汇率', '货币', '换算', '外币'],
-    description: '各种货币之间的汇率换算'
-  },
-  {
-    id: 'color-picker',
-    name: '取色器',
-    icon: '🎨',
-    color: 'orange',
-    url: '/pages/color-picker/color-picker',
-    categories: ['学习工具'],
-    keywords: ['颜色', '取色', 'HEX', 'RGB'],
-    description: '拾取和转换颜色值'
-  },
-  {
-    id: 'text-counter',
-    name: '字数统计',
-    icon: '📝',
+    id: 'price-comparison',
+    name: '价格对比',
+    icon: '🛒',
     color: 'purple',
-    url: '/pages/text-counter/text-counter',
-    categories: ['学习工具', '生活工具'],
-    keywords: ['字数', '统计', '文本', '字符'],
-    description: '统计文本的字数和字符数'
+    url: '/packages/financial/pages/price-comparison/price-comparison',
+    categories: ['财务工具'],
+    keywords: ['价格', '对比', '商品', '划算'],
+    description: '对比多个商品的单价和性价比'
   },
   {
-    id: 'tax-calculator',
-    name: '个税计算',
+    id: 'retirementCalculator',
+    name: '退休金计算器',
     icon: '💰',
     color: 'green',
-    url: '/pages/tax-calculator/tax-calculator',
+    url: '/packages/financial/pages/retirementCalculator/retirementCalculator',
     categories: ['财务工具'],
-    keywords: ['个税', '税收', '计算', '工资'],
-    description: '计算个人所得税'
+    keywords: ['退休', '养老金', '储蓄', '计算'],
+    description: '计算退休所需的储蓄金额'
   },
   {
-    id: 'weather',
-    name: '天气查询',
-    icon: '🌤️',
-    color: 'teal',
-    url: '/pages/weather/weather',
-    categories: ['生活工具'],
-    keywords: ['天气', '气温', '预报', '雨'],
-    description: '查询实时天气和预报'
-  },
-  {
-    id: 'note',
-    name: '便签',
-    icon: '📋',
-    color: 'yellow',
-    url: '/pages/note/note',
-    categories: ['生活工具', '学习工具'],
-    keywords: ['便签', '笔记', '备忘', '记录'],
-    description: '记录和管理便签信息'
-  },
-  {
-    id: 'calculator',
-    name: '计算器',
-    icon: '🧮',
-    color: 'gray',
-    url: '/pages/calculator/calculator',
-    categories: ['学习工具'],
-    keywords: ['计算', '数学', '运算', '加减'],
-    description: '基本的数学计算器'
-  },
-  {
-    id: 'stopwatch',
-    name: '秒表',
-    icon: '⏱️',
-    color: 'red',
-    url: '/pages/stopwatch/stopwatch',
-    categories: ['生活工具'],
-    keywords: ['秒表', '计时', '时间', '测量'],
-    description: '精确的秒表计时工具'
-  },
-  {
-    id: 'distance',
-    name: '距离测量',
-    icon: '📏',
-    color: 'blue',
-    url: '/pages/distance/distance',
-    categories: ['生活工具'],
-    keywords: ['距离', '测量', '地图', '长度'],
-    description: '测量两点之间的距离'
-  },
-  {
-    id: 'area-converter',
-    name: '面积换算',
-    icon: '🔲',
+    id: 'text-tool',
+    name: '文本工具',
+    icon: '📝',
     color: 'purple',
-    url: '/pages/area-converter/area-converter',
+    url: '/packages/utility/pages/text-tool/text-tool',
     categories: ['学习工具', '生活工具'],
-    keywords: ['面积', '换算', '平方米', '亩'],
-    description: '各种面积单位的换算'
+    keywords: ['文本', '工具', '处理', '转换'],
+    description: '文本处理和转换工具'
   },
   {
-    id: 'volume-converter',
-    name: '体积换算',
-    icon: '📦',
+    id: 'mdconvert',
+    name: 'Markdown转换',
+    icon: '📄',
     color: 'orange',
-    url: '/pages/volume-converter/volume-converter',
+    url: '/packages/utility/pages/mdconvert/mdconvert',
     categories: ['学习工具'],
-    keywords: ['体积', '容量', '换算', '升'],
-    description: '各种体积和容量单位的换算'
+    keywords: ['Markdown', '转换', '文档', '格式'],
+    description: 'Markdown文档转换工具'
   },
   {
-    id: 'weight-converter',
-    name: '重量换算',
-    icon: '⚖️',
+    id: 'oddEven',
+    name: '奇偶判断',
+    icon: '🔢',
+    color: 'blue',
+    url: '/packages/utility/pages/oddEven/oddEven',
+    categories: ['学习工具'],
+    keywords: ['奇数', '偶数', '判断', '数字'],
+    description: '判断数字的奇偶性'
+  },
+  {
+    id: 'leapyear',
+    name: '闰年判断',
+    icon: '📅',
     color: 'green',
-    url: '/pages/weight-converter/weight-converter',
+    url: '/packages/utility/pages/leapyear/leapyear',
     categories: ['学习工具'],
-    keywords: ['重量', '质量', '换算', '公斤'],
-    description: '各种重量单位的换算'
+    keywords: ['闰年', '判断', '年份', '日历'],
+    description: '判断是否为闰年'
   },
   {
-    id: 'speed-converter',
-    name: '速度换算',
-    icon: '🏃',
+    id: 'onlychinese',
+    name: '中文检测',
+    icon: '🇨🇳',
     color: 'red',
-    url: '/pages/speed-converter/speed-converter',
+    url: '/packages/utility/pages/onlychinese/onlychinese',
     categories: ['学习工具'],
-    keywords: ['速度', '换算', '公里', '英里'],
-    description: '各种速度单位的换算'
+    keywords: ['中文', '检测', '汉字', '识别'],
+    description: '检测文本中是否包含中文'
   },
   {
-    id: 'temperature-converter',
-    name: '温度换算',
-    icon: '🌡️',
+    id: 'battery-health',
+    name: '电池健康',
+    icon: '🔋',
+    color: 'green',
+    url: '/packages/life/pages/battery-health/battery-health',
+    categories: ['生活工具'],
+    keywords: ['电池', '健康', '电量', '检测'],
+    description: '查看设备电池健康状态'
+  },
+  {
+    id: 'datediff',
+    name: '日期差计算',
+    icon: '📆',
     color: 'teal',
-    url: '/pages/temperature-converter/temperature-converter',
-    categories: ['学习工具', '生活工具'],
-    keywords: ['温度', '换算', '摄氏', '华氏'],
-    description: '各种温度单位的换算'
+    url: '/packages/life/pages/datediff/datediff',
+    categories: ['生活工具'],
+    keywords: ['日期', '差', '计算', '天数'],
+    description: '计算两个日期之间的天数差'
   },
   {
-    id: 'data-converter',
-    name: '数据换算',
-    icon: '💾',
-    color: 'gray',
-    url: '/pages/data-converter/data-converter',
-    categories: ['学习工具'],
-    keywords: ['数据', '存储', '换算', 'MB'],
-    description: '各种数据存储单位的换算'
+    id: 'travel-tool',
+    name: '旅行工具',
+    icon: '✈️',
+    color: 'blue',
+    url: '/packages/other/pages/travel-tool/travel-tool',
+    categories: ['生活工具'],
+    keywords: ['旅行', '工具', '行程', '规划'],
+    description: '旅行规划和辅助工具'
   }
 ];
 

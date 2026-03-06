@@ -1,2 +1,52 @@
 <!--packages/utility/pages/idcard/idcard.wxml-->
-<text>packages/utility/pages/idcard/idcard.wxml</text>
+<view class="container">
+  <view class="section">
+    <text class="section-title">输入身份证号码</text>
+    <view class="input-box">
+      <input
+        type="idcard"
+        value="{{idcard}}"
+        bindinput="onIdcardInput"
+        class="input"
+        placeholder="请输入18位身份证号码"
+        maxlength="18"
+      />
+    </view>
+  </view>
+
+  <view class="section">
+    <button class="validate-btn" bindtap="validate">验证</button>
+  </view>
+
+  <view class="section result" wx:if="{{showResult}}">
+    <view class="result-box {{result.valid ? 'success' : 'error'}}">
+      <view class="result-header">
+        <text class="result-icon">{{result.valid ? '✓' : '✗'}}</text>
+        <text class="result-message">{{result.valid ? '验证通过' : '验证失败'}}</text>
+      </view>
+
+      <view class="result-details" wx:if="{{result.valid}}">
+        <view class="detail-item">
+          <text class="detail-label">性别</text>
+          <text class="detail-value">{{result.gender}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">年龄</text>
+          <text class="detail-value">{{result.age}}岁</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">出生日期</text>
+          <text class="detail-value">{{result.birthday}}</text>
+        </view>
+      </view>
+
+      <view class="error-message" wx:if="{{!result.valid}}">
+        <text>{{result.message}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{showResult}}">
+    <button class="reset-btn" bindtap="reset">重置</button>
+  </view>
+</view>

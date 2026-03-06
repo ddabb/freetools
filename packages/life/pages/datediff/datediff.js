@@ -1,66 +1,63 @@
-// packages/life/pages/datediff/datediff.js
+//datediff.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    startDate: '',
+    endDate: '',
+    result: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  startDateChange: function(e) {
+    this.setData({
+      startDate: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  endDateChange: function(e) {
+    this.setData({
+      endDate: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  calculateDateDiff: function() {
+    var startDate = this.data.startDate;
+    var endDate = this.data.endDate;
+    
+    if (!startDate || !endDate) {
+      wx.showToast({
+        title: '请选择开始日期和结束日期',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    var start = new Date(startDate);
+    var end = new Date(endDate);
+    
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      wx.showToast({
+        title: '请选择有效的日期',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    var diffTime = Math.abs(end - start);
+    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    this.setData({
+      result: '两个日期之间相差 ' + diffDays + ' 天'
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  onLoad: function (options) {
+    // 页面加载
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onReady: function () {
+    // 页面初次渲染完成
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  onShow: function () {
+    // 页面显示
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  onHide: function () {
+    // 页面隐藏
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onUnload: function () {
+    // 页面卸载
   }
 })

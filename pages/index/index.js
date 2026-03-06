@@ -146,5 +146,22 @@ Page({
     wx.navigateTo({
       url: '../logs/logs'
     });
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '实用工具箱 - 生活中必备的实用工具',
+      path: '/pages/index/index',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '实用工具箱 - 生活中必备的实用工具',
+      imageUrl: ''
+    }
   }
 })

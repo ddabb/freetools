@@ -1,2 +1,53 @@
 <!--packages/life/pages/calendar/calendar.wxml-->
-<text>packages/life/pages/calendar/calendar.wxml</text>
+<view class="container">
+  <!-- 日期选择器 -->
+  <view class="section">
+    <picker
+      mode="date"
+      value="{{currentDate}}"
+      start="1900-01-01"
+      end="2100-12-31"
+      bindchange="onDateChange"
+      class="date-picker"
+    >
+      <view class="date-display">
+        <text class="date-text">{{year}}年{{month}}月{{day}}日</text>
+        <text class="date-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 星期和农历 -->
+  <view class="section info-section">
+    <view class="info-card">
+      <text class="info-label">星期</text>
+      <text class="info-value">{{weekDay}}</text>
+    </view>
+    <view class="info-card" wx:if="{{showLunar}}">
+      <text class="info-label">农历</text>
+      <text class="info-value">{{lunar}}</text>
+    </view>
+  </view>
+
+  <!-- 本月节假日 -->
+  <view class="section holidays-section" wx:if="{{holidays.length > 0}}">
+    <text class="section-title">本月节假日</text>
+    <view class="holidays-list">
+      <view class="holiday-item" wx:for="{{holidays}}" wx:key="day">
+        <view class="holiday-day">{{day}}日</view>
+        <view class="holiday-name">{{name}}</view>
+        <view class="holiday-type {{item.type === 'solar' ? 'solar' : 'fixed'}}">
+          {{item.type === 'solar' ? '节气' : '节日'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能按钮 -->
+  <view class="section buttons-section">
+    <button class="action-btn" bindtap="toggleLunar">
+      {{showLunar ? '隐藏农历' : '显示农历'}}
+    </button>
+    <button class="action-btn primary" bindtap="today">回到今天</button>
+  </view>
+</view>

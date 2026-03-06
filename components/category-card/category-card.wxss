@@ -9,6 +9,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .category-card::after {
@@ -18,6 +19,7 @@
   left: 0;
   right: 0;
   height: 6rpx;
+  pointer-events: none;
 }
 
 .category-card.blue::after {
@@ -55,6 +57,29 @@
 .category-card-hover {
   transform: translateY(-5rpx);
   box-shadow: 0 15rpx 35rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 分类卡片点击动画 */
+.category-card:active {
+  transform: translateX(10rpx);
+  transition: transform 0.1s ease;
+}
+
+/* 分类卡片箭头动画 */
+.category-card:active .category-arrow {
+  transform: translateX(10rpx);
+  color: #3498db;
+}
+
+.category-arrow {
+  transition: transform 0.1s ease, color 0.1s ease;
+}
+
+/* 分类卡片边框动画 */
+.category-card:active::after {
+  height: 10rpx;
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  transition: height 0.1s ease, background 0.1s ease;
 }
 
 /* 小尺寸 */

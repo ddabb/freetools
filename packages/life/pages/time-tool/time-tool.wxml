@@ -1,2 +1,110 @@
 <!--packages/life/pages/time-tool/time-tool.wxml-->
-<text>packages/life/pages/time-tool/time-tool.wxml</text>
+<view class="container">
+  <!-- 标签页切换 -->
+  <view class="tabs">
+    <view
+      class="tab {{activeTab === index ? 'active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="index"
+      bindtap="onTabChange"
+      data-index="{{index}}"
+    >
+      {{item}}
+    </view>
+  </view>
+
+  <!-- 秒表 -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <view class="stopwatch-display">{{stopwatch.display}}</view>
+    <view class="button-group">
+      <button
+        class="btn {{stopwatch.isRunning ? 'stop' : 'start'}}"
+        bindtap="toggleStopwatch"
+      >
+        {{stopwatch.isRunning ? '暂停' : '开始'}}
+      </button>
+      <button class="btn lap" bindtap="lapStopwatch">计次</button>
+      <button class="btn reset" bindtap="resetStopwatch">重置</button>
+    </view>
+
+    <view class="laps" wx:if="{{stopwatch.laps.length > 0}}">
+      <text class="laps-title">计次记录</text>
+      <view class="lap-item" wx:for="{{stopwatch.laps}}" wx:key="number">
+        <text class="lap-number">Lap {{item.number}}</text>
+        <text class="lap-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 计时器 -->
+  <view class="tab-content" wx:if="{{activeTab === 1}}">
+    <view class="timer-display">{{timer.display}}</view>
+
+    <view class="time-inputs" wx:if="{{!timer.isRunning}}">
+      <view class="time-input-group">
+        <text class="time-label">小时</text>
+        <input
+          type="number"
+          value="{{timer.hours}}"
+          bindinput="onTimerTimeChange"
+          data-type="hours"
+          class="time-input"
+        />
+      </view>
+      <text class="time-separator">:</text>
+      <view class="time-input-group">
+        <text class="time-label">分钟</text>
+        <input
+          type="number"
+          value="{{timer.minutes}}"
+          bindinput="onTimerTimeChange"
+          data-type="minutes"
+          class="time-input"
+        />
+      </view>
+      <text class="time-separator">:</text>
+      <view class="time-input-group">
+        <text class="time-label">秒</text>
+        <input
+          type="number"
+          value="{{timer.seconds}}"
+          bindinput="onTimerTimeChange"
+          data-type="seconds"
+          class="time-input"
+        />
+      </view>
+    </view>
+
+    <view class="button-group">
+      <button
+        class="btn {{timer.isRunning ? (timer.isPaused ? 'start' : 'stop') : 'start'}}"
+        bindtap="toggleTimer"
+      >
+        {{timer.isRunning ? (timer.isPaused ? '继续' : '暂停') : '开始'}}
+      </button>
+      <button class="btn reset" bindtap="resetTimer">重置</button>
+    </view>
+  </view>
+
+  <!-- 世界时钟 -->
+  <view class="tab-content" wx:if="{{activeTab === 2}}">
+    <view class="world-clock">
+      <view class="clock-item">
+        <text class="clock-label">北京时间</text>
+        <text class="clock-time">{{worldClock.beijing}}</text>
+      </view>
+      <view class="clock-item">
+        <text class="clock-label">东京时间</text>
+        <text class="clock-time">{{worldClock.tokyo}}</text>
+      </view>
+      <view class="clock-item">
+        <text class="clock-label">伦敦时间</text>
+        <text class="clock-time">{{worldClock.london}}</text>
+      </view>
+      <view class="clock-item">
+        <text class="clock-label">纽约时间</text>
+        <text class="clock-time">{{worldClock.newYork}}</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -108,5 +108,22 @@ Page({
         })
       }
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '密码生成器 - 一键生成安全密码',
+      path: '/packages/utility/pages/password-generator/password-generator',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '密码生成器 - 一键生成安全密码',
+      imageUrl: ''
+    }
   }
 })

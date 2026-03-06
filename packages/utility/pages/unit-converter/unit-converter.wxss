@@ -1,1 +1,147 @@
-/* packages/utility/pages/unit-converter/unit-converter.wxss */
+/**packages/utility/pages/unit-converter/unit-converter.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 输入框 */
+.input-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  padding: 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+}
+
+.input {
+  width: 100%;
+  font-size: 32rpx;
+  border: none;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 选择器 */
+.picker {
+  width: 100%;
+}
+
+.picker-view {
+  width: 100%;
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  padding: 0;
+  margin: 0;
+}
+
+/* 转换器 */
+.converter-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-group {
+  flex: 1;
+  text-align: center;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+/* 交换按钮 */
+.swap-btn {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+.swap-icon {
+  font-size: 48rpx;
+  color: white;
+  font-weight: bold;
+}
+
+/* 结果 */
+.result-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.result-value {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #667eea;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.result-unit {
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 重置按钮 */
+.reset-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.4);
+}
+
+.reset-btn:active {
+  transform: scale(0.98);
+}

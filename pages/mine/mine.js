@@ -87,5 +87,22 @@ Page({
       title: '反馈功能开发中',
       icon: 'none'
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '我的 - 个人中心',
+      path: '/pages/mine/mine',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '实用工具箱',
+      imageUrl: ''
+    }
   }
 })

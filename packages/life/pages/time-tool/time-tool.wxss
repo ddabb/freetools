@@ -1,1 +1,207 @@
-/* packages/life/pages/time-tool/time-tool.wxss */
+/**packages/life/pages/time-tool/time-tool.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.container {
+  padding: 20rpx;
+}
+
+/* 标签页 */
+.tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12rpx;
+  padding: 8rpx;
+  margin-bottom: 30rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: white;
+  font-weight: 500;
+  border-radius: 8rpx;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background: white;
+  color: #f5576c;
+  font-weight: 700;
+}
+
+/* 标签页内容 */
+.tab-content {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 秒表显示 */
+.stopwatch-display {
+  font-size: 80rpx;
+  font-weight: 800;
+  color: #f5576c;
+  text-align: center;
+  margin-bottom: 40rpx;
+  font-family: 'Courier New', monospace;
+}
+
+/* 计时器显示 */
+.timer-display {
+  font-size: 100rpx;
+  font-weight: 800;
+  color: #f5576c;
+  text-align: center;
+  margin-bottom: 40rpx;
+  font-family: 'Courier New', monospace;
+}
+
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.btn {
+  flex: 1;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  border: none;
+  color: white;
+}
+
+.btn.start {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 8rpx 20rpx rgba(17, 153, 142, 0.4);
+}
+
+.btn.stop {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8rpx 20rpx rgba(245, 87, 108, 0.4);
+}
+
+.btn.lap {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.4);
+}
+
+.btn.reset {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  box-shadow: 0 8rpx 20rpx rgba(250, 112, 154, 0.4);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* 计次记录 */
+.laps {
+  margin-top: 30rpx;
+}
+
+.laps-title {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.lap-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8rpx;
+  margin-bottom: 10rpx;
+}
+
+.lap-number {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.lap-time {
+  font-size: 32rpx;
+  color: #f5576c;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+/* 时间输入 */
+.time-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15rpx;
+  margin-bottom: 40rpx;
+}
+
+.time-input-group {
+  text-align: center;
+}
+
+.time-label {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.time-input {
+  width: 120rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2rpx solid #f5576c;
+  border-radius: 12rpx;
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #f5576c;
+}
+
+.time-separator {
+  font-size: 50rpx;
+  font-weight: 700;
+  color: #f5576c;
+}
+
+/* 世界时钟 */
+.world-clock {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.clock-item {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clock-label {
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 600;
+}
+
+.clock-time {
+  font-size: 48rpx;
+  color: #f5576c;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}

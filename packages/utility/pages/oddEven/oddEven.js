@@ -1,66 +1,143 @@
-// packages/utility/pages/oddEven/oddEven.js
+// oddEven.js - 判断奇偶数功能
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    inputValue: '',
+    result: ''
   },
 
   /**
-   * 生命周期函数--监听页面加载
+   * 输入框内容变化事件
    */
-  onLoad(options) {
-
+  onInputChange: function(e) {
+    this.setData({
+      inputValue: e.detail.value,
+      result: '' // 清空之前的结果
+    });
   },
 
   /**
-   * 生命周期函数--监听页面初次渲染完成
+   * 判断奇偶数主函数
    */
-  onReady() {
+  checkOddEven: function() {
+    const inputValue = this.data.inputValue.trim();
+    
+    // 空值校验
+    if (!inputValue) {
+      wx.showToast({
+        title: '请输入一个整数',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
 
+    // 数值转换和校验
+    const num = parseInt(inputValue);
+    if (isNaN(num)) {
+      wx.showToast({
+        title: '请输入有效的整数',
+        icon: 'none',
+        duration: 2000
+      });
+      return;
+    }
+
+    // 判断奇偶数
+    let result = '';
+    let emoji = '';
+    
+    if (num % 2 === 0) {
+      result = `${num} 是偶数`;
+      emoji = '✨';
+    } else {
+      result = `${num} 是奇数`;
+      emoji = '🎯';
+    }
+
+    // 显示结果
+    this.setData({
+      result: `${emoji} ${result}`
+    });
+
+    // 添加成功反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
   },
 
   /**
-   * 生命周期函数--监听页面显示
+   * 清空输入和结果
    */
-  onShow() {
-
+  clearAll: function() {
+    this.setData({
+      inputValue: '',
+      result: ''
+    });
   },
 
   /**
-   * 生命周期函数--监听页面隐藏
+   * 页面加载完成
    */
-  onHide() {
-
+  onLoad: function(options) {
+    console.log('奇偶数判断页面加载完成');
+    // 如果有传入的数值参数，自动填充
+    if (options.number) {
+      this.setData({
+        inputValue: options.number
+      });
+    }
   },
 
   /**
-   * 生命周期函数--监听页面卸载
+   * 页面初次渲染完成
    */
-  onUnload() {
-
+  onReady: function() {
+    console.log('奇偶数判断页面渲染完成');
   },
 
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
+   * 页面显示
    */
-  onPullDownRefresh() {
+  onShow: function() {
+    console.log('奇偶数判断页面显示');
+  },
 
+  /**
+   * 页面隐藏
+   */
+  onHide: function() {
+    console.log('奇偶数判断页面隐藏');
+  },
+
+  /**
+   * 页面卸载
+   */
+  onUnload: function() {
+    console.log('奇偶数判断页面卸载');
+  },
+
+  /**
+   * 监听用户下拉动作
+   */
+  onPullDownRefresh: function() {
+    this.clearAll();
+    wx.stopPullDownRefresh();
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom() {
-
+  onReachBottom: function() {
+    // 可以在这里添加加载更多逻辑
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
+  onShareAppMessage: function() {
+    return {
+      title: '奇偶数判断工具',
+      path: '/packages/utility/pages/oddEven/oddEven'
+    };
   }
-})
+});

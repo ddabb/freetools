@@ -80,5 +80,22 @@ Page({
       totalPayment: '',
       showResult: false
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '房贷计算器 - 帮你算算每月还多少',
+      path: '/packages/financial/pages/mortgage/mortgage',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '房贷计算器 - 帮你算算每月还多少',
+      imageUrl: ''
+    }
   }
 })

@@ -75,5 +75,22 @@ Page({
         { name: '', price: '', spec: '', unitPrice: '' }
       ]
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '价格对比工具 - 哪个更划算一目了然',
+      path: '/packages/financial/pages/price-comparison/price-comparison',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '价格对比工具 - 哪个更划算一目了然',
+      imageUrl: ''
+    }
   }
 })

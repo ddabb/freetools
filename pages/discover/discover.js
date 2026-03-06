@@ -35,5 +35,23 @@ Page({
     this.setData({
       filteredTools: filtered
     });
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const { currentCategory } = this.data;
+    return {
+      title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
+      path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '实用工具箱 - 探索更多实用工具',
+      imageUrl: ''
+    }
   }
 })

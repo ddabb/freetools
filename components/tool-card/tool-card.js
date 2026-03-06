@@ -44,5 +44,44 @@ Component({
   /**
    * 组件的方法列表
    */
-  methods: {}
+  methods: {
+    onCardTap() {
+      // 工具卡片点击震动反馈（短震动）
+      wx.vibrateShort({
+        type: 'light'
+      });
+      
+      if (this.properties.url) {
+        // 判断是否是 tabBar 页面
+        const tabbarPages = ['/pages/index/index', '/pages/discover/discover', '/pages/mine/mine'];
+        const urlPath = this.properties.url.split('?')[0]; // 获取路径部分，去掉参数
+
+        if (tabbarPages.includes(urlPath)) {
+          // tabBar 页面使用 switchTab
+          wx.switchTab({
+            url: this.properties.url,
+            fail: (err) => {
+              console.error('页面跳转失败:', err);
+              wx.showToast({
+                title: '页面跳转失败',
+                icon: 'none'
+              });
+            }
+          });
+        } else {
+          // 普通页面使用 navigateTo
+          wx.navigateTo({
+            url: this.properties.url,
+            fail: (err) => {
+              console.error('页面跳转失败:', err);
+              wx.showToast({
+                title: '页面跳转失败',
+                icon: 'none'
+              });
+            }
+          });
+        }
+      }
+    }
+  }
 })

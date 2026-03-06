@@ -1,66 +1,57 @@
-// packages/utility/pages/mdconvert/mdconvert.js
+//mdconvert.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    mdText: '',
+    htmlResult: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  mdInputChange: function(e) {
+    this.setData({
+      mdText: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  convertToHtml: function() {
+    var mdText = this.data.mdText;
+    if (!mdText) {
+      wx.showToast({
+        title: '请输入Markdown文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 基本的Markdown转换
+    var html = mdText
+      // 标题
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      // 粗体
+      .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+      // 斜体
+      .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+      // 无序列表
+      .replace(/^\- (.*$)/gim, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+      // 换行
+      .replace(/\n/gim, '<br>');
+    
+    this.setData({
+      htmlResult: html
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  onLoad: function (options) {
+    // 页面加载
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  onReady: function () {
+    // 页面初次渲染完成
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onShow: function () {
+    // 页面显示
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  onHide: function () {
+    // 页面隐藏
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onUnload: function () {
+    // 页面卸载
   }
 })

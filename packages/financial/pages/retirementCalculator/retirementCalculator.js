@@ -102,5 +102,22 @@ Page({
       retireSavings: '',
       showResult: false
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '退休金计算器 - 算算你的退休储蓄',
+      path: '/packages/financial/pages/retirementCalculator/retirementCalculator',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '退休金计算器 - 算算你的退休储蓄',
+      imageUrl: ''
+    }
   }
 })

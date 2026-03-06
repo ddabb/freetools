@@ -50,5 +50,22 @@ Page({
       text: '',
       qrcodeText: ''
     })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '二维码生成器 - 轻松生成二维码',
+      path: '/packages/utility/pages/qrcode/qrcode',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '二维码生成器 - 轻松生成二维码',
+      imageUrl: ''
+    }
   }
 })

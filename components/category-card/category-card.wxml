@@ -1,8 +1,8 @@
 <!-- components/category-card/category-card.wxml -->
-<navigator
-  url="{{url}}"
+<view
   class="category-card {{size}}"
   hover-class="category-card-hover"
+  bindtap="onCardTap"
 >
   <view class="category-icon-wrapper {{color}}">
     <text class="category-icon">{{icon}}</text>
@@ -12,4 +12,4 @@
     <text wx:if="{{description}}" class="category-desc">{{description}}</text>
   </view>
   <text class="category-arrow">→</text>
-</navigator>
+</view>

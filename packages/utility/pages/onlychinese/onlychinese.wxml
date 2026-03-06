@@ -1,2 +1,19 @@
-<!--packages/utility/pages/onlychinese/onlychinese.wxml-->
-<text>packages/utility/pages/onlychinese/onlychinese.wxml</text>
+<!--onlychinese.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">HTML标签净化</text>
+  </view>
+  <view class="content">
+    <view class="input-section">
+      <text class="label">请输入包含HTML标签的文本：</text>
+      <textarea placeholder="请输入包含HTML标签的文本" bindinput="htmlInputChange" class="textarea"/>
+    </view>
+    <view class="button-section">
+      <button bindtap="purifyHtml" class="button">净化HTML标签</button>
+    </view>
+    <view wx:if="{{purifiedResult !== ''}}" class="result-section">
+      <text class="result-label">净化结果：</text>
+      <text class="result-text">{{purifiedResult}}</text>
+    </view>
+  </view>
+</view>

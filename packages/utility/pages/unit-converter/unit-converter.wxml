@@ -1,2 +1,78 @@
 <!--packages/utility/pages/unit-converter/unit-converter.wxml-->
-<text>packages/utility/pages/unit-converter/unit-converter.wxml</text>
+<view class="container">
+  <view class="section">
+    <text class="section-title">选择分类</text>
+    <picker
+      mode="selector"
+      range="{{categories}}"
+      bindchange="onCategoryChange"
+      class="picker"
+    >
+      <view class="picker-view">
+        {{categories[categoryIndex]}}
+      </view>
+    </picker>
+  </view>
+
+  <view class="section">
+    <text class="section-title">转换设置</text>
+    <view class="converter-box">
+      <view class="input-group">
+        <text class="label">从</text>
+        <picker
+          mode="selector"
+          range="{{categoryUnits[categories[categoryIndex]]}}"
+          bindchange="onFromUnitChange"
+          class="picker"
+        >
+          <view class="picker-view">
+            {{categoryUnits[categories[categoryIndex]][fromUnitIndex]}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="swap-btn" bindtap="swapUnits">
+        <text class="swap-icon">⇄</text>
+      </view>
+
+      <view class="input-group">
+        <text class="label">到</text>
+        <picker
+          mode="selector"
+          range="{{categoryUnits[categories[categoryIndex]]}}"
+          bindchange="onToUnitChange"
+          class="picker"
+        >
+          <view class="picker-view">
+            {{categoryUnits[categories[categoryIndex]][toUnitIndex]}}
+          </view>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <text class="section-title">输入数值</text>
+    <view class="input-box">
+      <input
+        type="digit"
+        value="{{inputValue}}"
+        bindinput="onInputChange"
+        class="input"
+        placeholder="请输入要转换的数值"
+      />
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{resultValue}}">
+    <text class="section-title">转换结果</text>
+    <view class="result-box">
+      <text class="result-value">{{resultValue}}</text>
+      <text class="result-unit">{{categoryUnits[categories[categoryIndex]][toUnitIndex]}}</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <button class="reset-btn" bindtap="reset">重置</button>
+  </view>
+</view>

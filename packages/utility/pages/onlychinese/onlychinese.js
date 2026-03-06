@@ -1,66 +1,44 @@
-// packages/utility/pages/onlychinese/onlychinese.js
+//onlychinese.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    htmlText: '',
+    purifiedResult: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  htmlInputChange: function(e) {
+    this.setData({
+      htmlText: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  purifyHtml: function() {
+    var htmlText = this.data.htmlText;
+    if (!htmlText) {
+      wx.showToast({
+        title: '请输入包含HTML标签的文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 移除HTML标签，只保留纯文本
+    var purifiedText = htmlText.replace(/<[^>]*>/g, '');
+    
+    this.setData({
+      purifiedResult: purifiedText
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  onLoad: function (options) {
+    // 页面加载
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  onReady: function () {
+    // 页面初次渲染完成
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onShow: function () {
+    // 页面显示
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  onHide: function () {
+    // 页面隐藏
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onUnload: function () {
+    // 页面卸载
   }
 })

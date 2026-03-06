@@ -1,2 +1,19 @@
 <!--packages/utility/pages/oddEven/oddEven.wxml-->
-<text>packages/utility/pages/oddEven/oddEven.wxml</text>
+<view class="container">
+  <view class="header">
+    <text class="title">判断奇偶数</text>
+  </view>
+  <view class="content">
+    <view class="input-section">
+      <text class="label">请输入一个整数：</text>
+      <input type="number" placeholder="请输入整数" bindinput="onInputChange" class="input" value="{{inputValue}}"/>
+    </view>
+    <view class="button-section">
+      <button bindtap="checkOddEven" class="button">判断</button>
+      <button wx:if="{{inputValue || result}}" bindtap="clearAll" class="button-secondary" style="margin-top: 20rpx; background: #f8f9fa; color: #666;">清空</button>
+    </view>
+    <view wx:if="{{result !== ''}}" class="result-section">
+      <text class="result-text">{{result}}</text>
+    </view>
+  </view>
+</view>

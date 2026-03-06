@@ -1,66 +1,110 @@
-// packages/utility/pages/text-tool/text-tool.js
+// text-tool.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    inputText: '', // 输入文本
+    outputText: '', // 输出文本
+    wordCount: null // 字数统计
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  
+  // 设置输入文本
+  setInputText(e) {
+    this.setData({
+      inputText: e.detail.value
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  
+  // 文本反转
+  reverseText() {
+    const { inputText } = this.data;
+    if (!inputText) {
+      wx.showToast({
+        title: '请输入文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const reversedText = inputText.split('').reverse().join('');
+    this.setData({
+      outputText: reversedText,
+      wordCount: null
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  
+  // 转为大写
+  toUpperCase() {
+    const { inputText } = this.data;
+    if (!inputText) {
+      wx.showToast({
+        title: '请输入文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const upperText = inputText.toUpperCase();
+    this.setData({
+      outputText: upperText,
+      wordCount: null
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  
+  // 转为小写
+  toLowerCase() {
+    const { inputText } = this.data;
+    if (!inputText) {
+      wx.showToast({
+        title: '请输入文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const lowerText = inputText.toLowerCase();
+    this.setData({
+      outputText: lowerText,
+      wordCount: null
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  
+  // 字数统计
+  countWords() {
+    const { inputText } = this.data;
+    if (!inputText) {
+      wx.showToast({
+        title: '请输入文本',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const characters = inputText.length;
+    const words = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
+    const lines = inputText.split('\n').length;
+    
+    this.setData({
+      wordCount: {
+        characters,
+        words,
+        lines
+      },
+      outputText: ''
+    });
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  
+  // 复制文本
+  copyText() {
+    const { outputText } = this.data;
+    if (!outputText) return;
+    
+    wx.setClipboardData({
+      data: outputText,
+      success() {
+        wx.showToast({
+          title: '复制成功',
+          icon: 'success'
+        });
+      }
+    });
   }
 })
