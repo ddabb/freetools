@@ -22,10 +22,10 @@ page {
 }
 
 .content {
-  margin-top: 30rpx;
+  margin-top: 15rpx;
   display: flex;
   flex-direction: column;
-  gap: 24rpx;
+  gap: 20rpx;
 }
 
 .card {
@@ -55,10 +55,11 @@ page {
 }
 
 .label {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #666;
-  margin-bottom: 12rpx;
+  margin-bottom: 16rpx;
   display: block;
+  font-weight: 600;
 }
 
 .input {

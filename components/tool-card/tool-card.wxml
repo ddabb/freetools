@@ -4,11 +4,18 @@
   hover-class="tool-card-hover"
   bindtap="onCardTap"
 >
-  <view class="tool-icon-wrapper">
-    <view class="tool-icon {{color}}">{{icon}}</view>
+  <!-- 图标容器 - 独立对齐 -->
+  <view class="tool-icon-container {{size}}">
+    <view class="tool-icon-wrapper">
+      <view class="tool-icon {{color}}">{{icon}}</view>
+    </view>
   </view>
-  <view class="tool-info">
-    <text class="tool-name">{{name}}</text>
-    <text wx:if="{{description}}" class="tool-desc">{{description}}</text>
+  
+  <!-- 文字容器 - 独立对齐，位于图标下方，文字横向排列 -->
+  <view class="tool-text-container {{size}}">
+    <view class="tool-text-row">
+      <text class="tool-name">{{name}}</text>
+      <text wx:if="{{description}}" class="tool-desc"> {{description}}</text>
+    </view>
   </view>
 </view>

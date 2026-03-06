@@ -18,7 +18,7 @@
 }
 
 .content {
-  margin-top: 50rpx;
+  margin-top: 20rpx;
 }
 
 .input-section {
@@ -38,11 +38,13 @@
 
 .input {
   border: 2rpx solid #ddd;
-  border-radius: 10rpx;
-  padding: 20rpx;
-  font-size: 32rpx;
+  border-radius: 12rpx;
+  padding: 28rpx 24rpx;
+  font-size: 34rpx;
   width: 100%;
   box-sizing: border-box;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
 }
 
 .button-section {
