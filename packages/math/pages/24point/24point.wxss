@@ -6,8 +6,9 @@ page {
 }
 
 .container {
-  padding: 40rpx 30rpx;
+  padding: 20rpx 15rpx;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 /* 头部说明区域 */
@@ -15,64 +16,65 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  padding: 25rpx 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 .game-title {
   display: block;
-  font-size: 48rpx;
+  font-size: 40rpx;
   font-weight: 800;
   color: #ff6b35;
-  margin-bottom: 20rpx;
+  margin-bottom: 15rpx;
 }
 
 .game-desc {
   display: block;
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #666;
-  line-height: 1.5;
-  margin-bottom: 15rpx;
+  line-height: 1.4;
+  margin-bottom: 10rpx;
 }
 
 .game-rules {
   display: block;
-  font-size: 26rpx;
+  font-size: 22rpx;
   color: #ff6b35;
   font-weight: 600;
   background: rgba(255, 107, 53, 0.1);
-  padding: 15rpx 20rpx;
-  border-radius: 12rpx;
+  padding: 12rpx 15rpx;
+  border-radius: 10rpx;
   border-left: 4rpx solid #ff6b35;
+  margin: 0 10rpx;
 }
 
 /* 控制区域 */
 .control-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  border-radius: 30rpx;
+  padding: 30rpx 25rpx;
+  margin-bottom: 25rpx;
+  box-shadow: 0 12rpx 35rpx rgba(0, 0, 0, 0.1);
 }
 
 .numbers-display {
   display: flex;
   justify-content: center;
-  gap: 30rpx;
-  margin-bottom: 40rpx;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
 }
 
 .number-card {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 15rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -93,7 +95,7 @@ page {
 }
 
 .number-text {
-  font-size: 36rpx;
+  font-size: 30rpx;
   font-weight: 800;
   color: white;
 }
@@ -101,20 +103,24 @@ page {
 .control-buttons {
   display: flex;
   justify-content: space-between;
-  gap: 20rpx;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+  flex-wrap: nowrap;
 }
 
 .control-btn {
   flex: 1;
   background: white;
   border: 2rpx solid #ff9a56;
-  border-radius: 15rpx;
-  padding: 24rpx 16rpx;
+  border-radius: 12rpx;
+  padding: 12rpx 10rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10rpx;
+  gap: 5rpx;
   transition: all 0.3s ease;
+  min-height: 80rpx;
+  max-width: 120rpx;
 }
 
 .control-btn:active {
@@ -140,12 +146,12 @@ page {
 }
 
 .btn-icon {
-  font-size: 32rpx;
+  font-size: 36rpx;
   color: #ff9a56;
 }
 
 .btn-text {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #333;
   font-weight: 600;
 }
@@ -155,9 +161,9 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  padding: 25rpx 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
 }
 
 .expression-input-container {
@@ -165,8 +171,8 @@ page {
   align-items: center;
   background: #f8f9fa;
   border-radius: 15rpx;
-  padding: 0 24rpx;
-  margin-bottom: 30rpx;
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
 }
@@ -174,63 +180,40 @@ page {
 .expression-input-container:focus-within {
   border-color: #ff9a56;
   background: white;
-  box-shadow: 0 0 0 6rpx rgba(255, 154, 86, 0.1);
+  box-shadow: 0 0 0 8rpx rgba(255, 154, 86, 0.1);
 }
 
 .expression-input {
   flex: 1;
-  font-size: 32rpx;
+  font-size: 28rpx;
   border: none;
   outline: none;
   color: #333;
   font-weight: 500;
   background: transparent;
-  padding: 28rpx 0;
+  padding: 24rpx 0;
   font-family: 'Monaco', 'Menlo', monospace;
+  min-height: 60rpx;
 }
 
 .clear-btn {
-  width: 40rpx;
-  height: 40rpx;
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
   background: #ff4757;
   color: white;
   border: none;
-  font-size: 24rpx;
+  font-size: 28rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 10rpx;
-}
-
-.quick-operators {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15rpx;
-  justify-content: center;
-  margin-bottom: 30rpx;
-}
-
-.operator-btn {
-  width: 80rpx;
-  height: 60rpx;
-  background: white;
-  border: 2rpx solid #ff9a56;
-  border-radius: 12rpx;
-  color: #ff9a56;
-  font-size: 28rpx;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.operator-btn:active {
-  background: #ff9a56;
-  color: white;
-  transform: scale(0.9);
+  margin-left: 15rpx;
+  min-width: 50rpx;
 }
 
 .action-buttons {
   text-align: center;
+  margin-top: 20rpx;
 }
 
 .check-btn {
@@ -264,9 +247,9 @@ page {
 .result-box {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
+  border-radius: 30rpx;
   padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12rpx 35rpx rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,11 +267,11 @@ page {
 }
 
 .result-icon {
-  font-size: 64rpx;
+  font-size: 72rpx;
 }
 
 .result-message {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: 700;
   color: #333;
   text-align: center;
@@ -299,18 +282,18 @@ page {
 }
 
 .expression-display {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #666;
   font-family: 'Monaco', 'Menlo', monospace;
   background: rgba(255, 255, 255, 0.5);
-  padding: 15rpx 25rpx;
-  border-radius: 10rpx;
+  padding: 20rpx 30rpx;
+  border-radius: 15rpx;
 }
 
 /* 提示和答案区域 */
 .hint-section,
 .solution-section {
-  margin-bottom: 40rpx;
+  margin-bottom: 25rpx;
   animation: slideInUp 0.5s ease-out;
 }
 
@@ -318,32 +301,32 @@ page {
 .solution-box {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
+  border-radius: 30rpx;
   padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12rpx 35rpx rgba(0, 0, 0, 0.1);
 }
 
 .hint-header,
 .solution-header {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: 700;
   color: #333;
-  margin-bottom: 25rpx;
+  margin-bottom: 30rpx;
   text-align: center;
 }
 
 .hint-content {
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
 
 .hint-text {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #555;
   line-height: 1.6;
   background: rgba(255, 193, 7, 0.1);
-  padding: 25rpx;
-  border-radius: 15rpx;
-  border-left: 4rpx solid #ffc107;
+  padding: 30rpx;
+  border-radius: 18rpx;
+  border-left: 5rpx solid #ffc107;
 }
 
 .close-hint-btn,
@@ -351,37 +334,37 @@ page {
   background: #6c757d;
   color: white;
   border: none;
-  border-radius: 15rpx;
-  padding: 20rpx 40rpx;
-  font-size: 28rpx;
+  border-radius: 18rpx;
+  padding: 25rpx 50rpx;
+  font-size: 32rpx;
   margin: 0 auto;
   display: block;
 }
 
 .solution-list {
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
 
 .solution-item {
   background: rgba(69, 183, 209, 0.1);
-  border-radius: 12rpx;
-  padding: 25rpx;
-  margin-bottom: 15rpx;
-  border-left: 4rpx solid #45b7d1;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border-left: 5rpx solid #45b7d1;
 }
 
 .solution-expression {
   display: block;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #45b7d1;
   font-weight: 700;
   font-family: 'Monaco', 'Menlo', monospace;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
 }
 
 .solution-desc {
   display: block;
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #666;
   line-height: 1.4;
 }
@@ -391,33 +374,36 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  margin-bottom: 40rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  padding: 25rpx 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
 }
 
 .stats-grid {
   display: flex;
   justify-content: space-around;
+  gap: 10rpx;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10rpx;
+  gap: 8rpx;
+  flex: 1;
 }
 
 .stat-number {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: 800;
   color: #ff6b35;
 }
 
 .stat-label {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #666;
   font-weight: 500;
+  text-align: center;
 }
 
 /* 历史记录区域 */
@@ -425,23 +411,24 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  padding: 25rpx 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
   animation: fadeInUp 0.6s ease-out;
+  margin-bottom: 20rpx;
 }
 
 .history-header {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: #333;
-  margin-bottom: 25rpx;
+  margin-bottom: 20rpx;
   text-align: center;
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 15rpx;
+  gap: 12rpx;
 }
 
 .history-item {
@@ -450,21 +437,21 @@ page {
   align-items: center;
   background: #f8f9fa;
   border-radius: 12rpx;
-  padding: 20rpx 25rpx;
+  padding: 15rpx 20rpx;
 }
 
 .history-numbers {
   display: flex;
-  gap: 10rpx;
+  gap: 8rpx;
 }
 
 .history-number {
-  width: 40rpx;
-  height: 40rpx;
+  width: 36rpx;
+  height: 36rpx;
   border-radius: 8rpx;
   background: #ff9a56;
   color: white;
-  font-size: 20rpx;
+  font-size: 18rpx;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -472,9 +459,9 @@ page {
 }
 
 .history-result {
-  font-size: 24rpx;
+  font-size: 22rpx;
   font-weight: 700;
-  padding: 8rpx 16rpx;
+  padding: 6rpx 12rpx;
   border-radius: 8rpx;
 }
 

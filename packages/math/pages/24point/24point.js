@@ -71,7 +71,7 @@ Page({
     
     // 防止连续添加运算符
     const lastChar = expression.slice(-1);
-    const operators = ['+', '-', '×', '÷', '(', ')'];
+    const operators = ['+', '-', '×', '÷', '(', ')', '!', '√'];
     
     if (operators.includes(lastChar) && operators.includes(operator)) {
       return;
@@ -137,6 +137,12 @@ Page({
     });
   },
 
+  // 阶乘函数
+  factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    return n * this.factorial(n - 1);
+  },
+
   // 检验答案
   checkAnswer() {
     const { expression, numbers, solutions } = this.data;
@@ -162,6 +168,16 @@ Page({
 
       // 替换显示符号为计算符号
       let calcExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+      
+      // 处理阶乘
+      calcExpression = calcExpression.replace(/(\d+)!/g, (match, num) => {
+        return this.factorial(parseInt(num));
+      });
+      
+      // 处理平方根
+      calcExpression = calcExpression.replace(/√(\d+)/g, (match, num) => {
+        return Math.sqrt(parseInt(num));
+      });
       
       // 计算结果
       const result = eval(calcExpression);

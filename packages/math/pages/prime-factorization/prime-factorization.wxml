@@ -44,7 +44,9 @@
       
       <view class="calculation-steps" wx:if="{{steps.length > 0}}">
         <text class="steps-title">分解过程</text>
-        <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+        <scroll-view class="steps-scroll" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
+          <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+        </scroll-view>
       </view>
 
       <view class="result-divider" wx:if="{{isPrime}}"></view>

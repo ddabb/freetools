@@ -229,6 +229,31 @@ page {
   font-weight: bold;
 }
 
+/* 滚动区域样式 */
+.steps-scroll {
+  max-height: 400rpx;
+  padding-right: 10rpx;
+  margin-top: 10rpx;
+}
+
+.steps-scroll::-webkit-scrollbar {
+  width: 6rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
+}
+
 /* 示例区域 */
 .examples-section {
   background: rgba(255, 255, 255, 0.95);

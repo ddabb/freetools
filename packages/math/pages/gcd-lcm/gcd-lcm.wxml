@@ -26,7 +26,7 @@
     <!-- 计算按钮 -->
     <view class="form-item btn-item">
       <button class="calculate-btn full-width-btn" bindtap="calculate" disabled="{{!canCalculate}}">
-        <text class="btn-text">计算最大公约数和最小公倍数</text>
+        <text class="btn-text">开始计算</text>
       </button>
     </view>
   </view>
@@ -49,7 +49,9 @@
       <view class="result-divider"></view>
       <view class="calculation-steps">
         <text class="steps-title">计算过程</text>
-        <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+        <scroll-view class="steps-scroll" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
+          <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+        </scroll-view>
       </view>
     </view>
   </view>

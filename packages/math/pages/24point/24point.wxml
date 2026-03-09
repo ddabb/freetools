@@ -8,13 +8,6 @@
 
   <!-- 游戏控制区域 -->
   <view class="control-section">
-    <view class="numbers-display">
-      <view class="number-card {{index === 0 ? 'first' : ''}} {{index === 1 ? 'second' : ''}} {{index === 2 ? 'third' : ''}} {{index === 3 ? 'fourth' : ''}}" 
-            wx:for="{{numbers}}" wx:key="index" wx:for-index="index">
-        <text class="number-text">{{item}}</text>
-      </view>
-    </view>
-    
     <view class="control-buttons">
       <button class="control-btn new-game-btn" bindtap="generateNewGame">
         <text class="btn-icon">🎲</text>
@@ -29,24 +22,22 @@
         <text class="btn-text">答案</text>
       </button>
     </view>
+    
+    <view class="numbers-display">
+      <view class="number-card {{index === 0 ? 'first' : ''}} {{index === 1 ? 'second' : ''}} {{index === 2 ? 'third' : ''}} {{index === 3 ? 'fourth' : ''}}" 
+            wx:for="{{numbers}}" wx:key="index" wx:for-index="index">
+        <text class="number-text">{{item}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 用户输入区域 -->
   <view class="input-section">
     <view class="expression-input-container">
-      <input type="text" value="{{expression}}" bindinput="setExpression" class="expression-input" placeholder="输入算式，如：(1+2+3)×4" />
+      <input type="text" value="{{expression}}" bindinput="setExpression" class="expression-input" placeholder="输入算式，如：(1+2+3)×4 或 (1+2+3)*4" />
       <button class="clear-btn" bindtap="clearExpression" wx:if="{{expression}}">×</button>
     </view>
     
-    <view class="quick-operators">
-      <button class="operator-btn" bindtap="appendOperator" data-op="+">+</button>
-      <button class="operator-btn" bindtap="appendOperator" data-op="-">-</button>
-      <button class="operator-btn" bindtap="appendOperator" data-op="×">×</button>
-      <button class="operator-btn" bindtap="appendOperator" data-op="÷">÷</button>
-      <button class="operator-btn" bindtap="appendOperator" data-op="(">(</button>
-      <button class="operator-btn" bindtap="appendOperator" data-op=")">)</button>
-    </view>
-
     <view class="action-buttons">
       <button class="check-btn" bindtap="checkAnswer" disabled="{{!expression}}">
         <text class="btn-text">检验答案</text>

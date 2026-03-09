@@ -266,6 +266,31 @@ page {
   font-weight: bold;
 }
 
+/* 滚动区域样式 */
+.steps-scroll {
+  max-height: 400rpx;
+  padding-right: 10rpx;
+  margin-top: 10rpx;
+}
+
+.steps-scroll::-webkit-scrollbar {
+  width: 6rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-thumb {
+  background: #11998e;
+  border-radius: 3rpx;
+}
+
+.steps-scroll::-webkit-scrollbar-thumb:hover {
+  background: #38ef7d;
+}
+
 /* 质数提示 */
 .prime-notice {
   text-align: center;

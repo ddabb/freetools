@@ -7,6 +7,7 @@ Page({
     lcm: 0, // 最小公倍数
     showResult: false, // 是否显示结果
     steps: [], // 计算步骤
+    canCalculate: false, // 是否可以计算
     examples: [
       { num1: 48, num2: 18 },
       { num1: 100, num2: 75 },
@@ -20,7 +21,8 @@ Page({
     const value = parseInt(e.detail.value) || '';
     this.setData({
       num1: value,
-      showResult: false
+      showResult: false,
+      canCalculate: value && this.data.num2 && value > 0 && this.data.num2 > 0
     });
   },
 
@@ -29,7 +31,8 @@ Page({
     const value = parseInt(e.detail.value) || '';
     this.setData({
       num2: value,
-      showResult: false
+      showResult: false,
+      canCalculate: this.data.num1 && value && this.data.num1 > 0 && value > 0
     });
   },
 
@@ -168,9 +171,5 @@ Page({
     });
   },
 
-  // 计算属性：是否可以计算
-  get canCalculate() {
-    const { num1, num2 } = this.data;
-    return num1 && num2 && num1 > 0 && num2 > 0;
-  }
+
 })

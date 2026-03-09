@@ -6,6 +6,7 @@ Page({
     steps: [], // 计算步骤
     showResult: false, // 是否显示结果
     isPrime: false, // 是否为质数
+    canCalculate: false, // 是否可以计算
     examples: [
       { number: 60 },
       { number: 100 },
@@ -19,12 +20,14 @@ Page({
   // 设置数字
   setNumber(e) {
     const value = parseInt(e.detail.value) || '';
+    const canCalculate = value && value >= 2 && value <= 999999999;
     this.setData({
       number: value,
       showResult: false,
       factors: [],
       steps: [],
-      isPrime: false
+      isPrime: false,
+      canCalculate: canCalculate
     });
   },
 
@@ -207,9 +210,5 @@ Page({
     });
   },
 
-  // 计算属性：是否可以计算
-  get canCalculate() {
-    const { number } = this.data;
-    return number && number >= 2 && number <= 999999999;
-  }
+
 })

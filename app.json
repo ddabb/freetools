@@ -2,7 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/discover/discover",
-    "pages/mine/mine"
+    "pages/about/about"
   ],
   "subPackages": [
     {
@@ -47,16 +47,72 @@
         "pages/travel-tool/travel-tool",
         "pages/health-calculator/health-calculator"
       ]
+    },
+    {
+      "root": "packages/math",
+      "name": "math",
+      "pages": [
+        "pages/gcd-lcm/gcd-lcm",
+        "pages/prime-factorization/prime-factorization",
+        "pages/24point/24point"
+      ]
+    },
+    {
+      "root": "packages/converter",
+      "name": "converter",
+      "pages": [
+        "pages/base-converter/base-converter",
+        "pages/json-xml-converter/json-xml-converter",
+        "pages/yaml-json-converter/yaml-json-converter",
+        "pages/regex-tester/regex-tester"
+      ]
+    },
+    {
+      "root": "packages/text",
+      "name": "text",
+      "pages": [
+        "pages/word-counter/word-counter",
+        "pages/markdown-preview/markdown-preview",
+        "pages/text-diff/text-diff"
+      ]
+    },
+    {
+      "root": "packages/data",
+      "name": "data",
+      "pages": [
+        "pages/data-analyzer/data-analyzer"
+      ]
+    },
+    {
+      "root": "packages/chart",
+      "name": "chart",
+      "pages": [
+        "pages/chart-generator/chart-generator"
+      ]
+    },
+    {
+      "root": "packages/developer",
+      "name": "developer",
+      "pages": [
+        "pages/timestamp-converter/timestamp-converter"
+      ]
+    },
+    {
+      "root": "packages/design",
+      "name": "design",
+      "pages": [
+        "pages/color-converter/color-converter"
+      ]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life"]
+      "packages": ["financial", "life", "math"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other"]
+      "packages": ["financial", "life", "utility", "other", "math"]
     }
   },
   "window": {
@@ -79,8 +135,8 @@
         "text": "发现"
       },
       {
-        "pagePath": "pages/mine/mine",
-        "text": "我的"
+        "pagePath": "pages/about/about",
+        "text": "关于"
       }
     ]
   },

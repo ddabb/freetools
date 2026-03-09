@@ -3,7 +3,8 @@ Page({
   data: {
     startDate: '',
     endDate: '',
-    result: ''
+    result: '',
+    currentYear: new Date().getFullYear()
   },
   startDateChange: function(e) {
     this.setData({

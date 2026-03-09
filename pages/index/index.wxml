@@ -3,7 +3,7 @@
   <!-- 顶部搜索栏 -->
   <view class="search-bar top-search">
     <view class="search-input">
-      <text class="search-icon">�</text>
+      <text class="search-icon">🔍</text>
       <input
         placeholder="搜索工具"
         class="input"
@@ -39,11 +39,6 @@
 
     <!-- 右侧工具详情列表 -->
     <view class="tools-panel">
-      <view class="panel-header">
-        <text class="panel-title">{{getCurrentCategoryName()}}</text>
-        <text class="panel-desc">{{getCurrentCategoryDesc()}}</text>
-      </view>
-
       <!-- 搜索结果 -->
       <scroll-view class="tools-list" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
         <view wx:if="{{showSearchResult}}">
