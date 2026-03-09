@@ -69,7 +69,7 @@
     <view class="highlight-result" wx:if="{{testText}}">
       <view class="result-title">文本高亮</view>
       <view class="highlight-text">
-        <text class="text-part" wx:for="{{highlightedParts}}" wx:key="index" class="{{"highlight-" + item.type}}">
+        <text wx:for="{{highlightedParts}}" wx:key="index" class="text-part highlight-{{item.type}}">
           {{item.text}}
         </text>
       </view>

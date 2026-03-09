@@ -24,11 +24,11 @@ Page({
       { name: '邮箱地址', pattern: '^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$', flags: ['i'] },
       { name: '手机号码', pattern: '^1[3-9]\\d{9}$', flags: [] },
       { name: '身份证号', pattern: '^\\d{17}[\\dXx]$|^\\d{15}$', flags: [] },
-      { name: 'URL链接', pattern: '^https?:\\/\\/[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!$&\\'()*+,;=.]+$', flags: ['i'] },
+      { name: 'URL链接', pattern: '^https?:\\/\\/[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\.~:/?#[\\]@!$&\\u0027()*+,;=.]+$', flags: ['i'] },
       { name: '纯数字', pattern: '^\\d+$', flags: [] },
       { name: '字母数字', pattern: '^[a-zA-Z0-9]+$', flags: [] },
       { name: '中文', pattern: '[\\u4e00-\\u9fa5]+', flags: ['g'] },
-      { name: 'HTML标签', pattern: '<([a-z]+)([^<]+)*(?:>(.*)<\\/\\\\1>|\\s+\\\\/>)', flags: ['gi'] }
+      { name: 'HTML标签', pattern: '<([a-z]+)([^<]+)*(?:>(.*)<\\/\\1>|\\s+\\/>)', flags: ['gi'] }
     ]
   },
 
