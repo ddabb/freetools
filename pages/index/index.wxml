@@ -110,7 +110,7 @@
         </view>
 
         <!-- 默认显示的工具列表（无搜索时显示） -->
-        <view wx:elif="{{!showSearchResult}}">
+        <view wx:else>
           <text class="section-title">{{activeCategory === '常用工具' ? '常用工具' : activeCategory}}</text>
           <view class="normal-tools">
             <view wx:if="{{activeCategory === '常用工具'}}">
@@ -144,7 +144,7 @@
               </view>
             </view>
             <view wx:else>
-              <view wx:for="{{getToolsByCategory(activeCategory)}}" wx:key="id" class="tool-card-direct"
+              <view wx:for="{{currentCategoryTools}}" wx:key="id" class="tool-card-direct {{_resetAnimation ? 'animation-reset' : ''}}"
                 bindtap="navigateToTool" data-url="{{item.url}}"
                 hover-class="tool-card-hover"
               >

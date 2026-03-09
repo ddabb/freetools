@@ -334,8 +334,8 @@ const discoveryTools = [
 // 合并所有工具
 const allTools = [...tools, ...discoveryTools.filter(tool => !tools.find(t => t.id === tool.id))];
 
-  // 工具分类（与首页分类保持一致）
-  const categories = [
+// 工具分类（与首页分类保持一致）
+const categories = [
     { name: '财务工具', color: 'blue', icon: '💰', description: '房贷、汇率、个税等财务计算' },
     { name: '健康工具', color: 'green', icon: '💪', description: 'BMI、健康指标计算' },
     { name: '生活工具', color: 'orange', icon: '🏠', description: '日历、天气、计时等生活工具' },

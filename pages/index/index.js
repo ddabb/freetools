@@ -13,16 +13,21 @@ Page({
     hasUserInfo: false,
     // 分类数据（从config/tools.js导入）
     categories: categories,
-    activeCategory: '常用工具',
+    activeCategory: categories.length > 0 ? categories[0].name : '常用工具',
     // 原始数据
     commonTools: commonTools,
     allTools: [],
+    // 当前分类的工具列表（预计算，避免wxml中函数调用问题）
+    currentCategoryTools: [],
     // 搜索相关
     searchText: '',
     filteredTools: [],
     filteredCategories: [],
     showSearchResult: false,
-    recentTools: []
+    recentTools: [],
+    // 动画控制
+    _animationResetKey: 0,
+    _resetAnimation: false
   },
 
   onLoad() {
@@ -33,17 +38,29 @@ Page({
     // 加载最近使用工具
     this.loadRecentTools();
     
+    // 初始化当前分类工具列表
+    const initialTools = this.getToolsByCategory(this.data.activeCategory);
+    this.setData({
+      currentCategoryTools: initialTools
+    });
+    
     // 调试：检查数据是否正确加载
     setTimeout(() => {
-      console.log('=== 调试信息 ===');
-      console.log('allTools数量:', this.data.allTools.length);
-      console.log('commonTools数量:', this.data.commonTools.length);
-      console.log('activeCategory:', this.data.activeCategory);
+      console.log('=== 初始化调试信息 ===');
+      console.log('allTools数量: %d', this.data.allTools.length);
+      console.log('commonTools数量: %d', this.data.commonTools.length);
+      console.log('初始activeCategory: "%s"', this.data.activeCategory);
+      console.log('初始currentCategoryTools数量: %d', this.data.currentCategoryTools.length);
       
-      // 测试财务工具
+      // 测试财务工具 - 显示具体名称
       const financeTools = this.getToolsByCategory('财务工具');
-      console.log('财务工具数量:', financeTools.length);
-      console.log('财务工具列表:', financeTools.map(t => ({name: t.name, categories: t.categories})));
+      console.log('财务工具数量: %d', financeTools.length);
+      if (financeTools.length > 0) {
+        const financeNames = financeTools.map(t => t.name).join(', ');
+        console.log('财务工具列表: [%s]', financeNames);
+      } else {
+        console.log('财务工具列表: 无工具');
+      }
     }, 1000);
   },
 
@@ -92,20 +109,58 @@ Page({
   // 切换分类
   switchCategory(e) {
     const category = e.currentTarget.dataset.category
-    console.log('切换到分类:', category);
-    console.log('当前activeCategory:', this.data.activeCategory);
+    console.log('[分类切换] 目标分类: "%s", 当前分类: "%s"', category, this.data.activeCategory);
     
-    // 直接设置状态，不需要回调
+    if (category === this.data.activeCategory) {
+      console.log('[分类切换] 已是当前分类，跳过切换');
+      return;
+    }
+    
+    // 检查分类是否存在
+    const categoryExists = this.data.categories.some(cat => cat.name === category);
+    if (!categoryExists) {
+      console.warn('[分类切换] 分类不存在: "%s"', category);
+      return;
+    }
+    
+    // 预计算工具数据，避免在wxml中函数调用导致的渲染问题
+    const tools = this.getToolsByCategory(category);
+    console.log('[分类切换] 预加载工具数据，分类: "%s", 工具数量: %d', category, tools.length);
+    
+    // 调试：检查当前数据状态
+    console.log('[分类切换][调试] 当前showSearchResult: %s, searchText: "%s"', this.data.showSearchResult, this.data.searchText);
+    console.log('[分类切换][调试] 当前filteredTools长度: %d, filteredCategories长度: %d', this.data.filteredTools.length, this.data.filteredCategories.length);
+    
+    // 设置状态 - 关键：先设置activeCategory和currentCategoryTools，再清空其他状态
     this.setData({ 
       activeCategory: category,
-      searchText: '',
-      showSearchResult: false,
-      filteredTools: [],
-      filteredCategories: []
+      currentCategoryTools: tools
+    }, () => {
+      // 第二步骤：清空搜索状态，确保显示工具列表而非搜索结果
+      this.setData({
+        searchText: '',
+        showSearchResult: false,
+        filteredTools: [],
+        filteredCategories: []
+      }, () => {
+        // 第三步骤：重置动画
+        this.resetToolCardAnimations();
+        
+        // 切换完成后的回调
+        console.log('[分类切换] 切换成功，分类: "%s", 工具数量: %d', category, tools.length);
+        console.log('[分类切换] 工具列表: [%s]', tools.map(t => t.name).join(', '));
+        
+        // 调试：检查设置后的数据状态
+        console.log('[分类切换][调试] 设置后showSearchResult: %s, searchText: "%s"', this.data.showSearchResult, this.data.searchText);
+        console.log('[分类切换][调试] 设置后filteredTools长度: %d, filteredCategories长度: %d', this.data.filteredTools.length, this.data.filteredCategories.length);
+        console.log('[分类切换][调试] currentCategoryTools长度: %d', this.data.currentCategoryTools.length);
+        
+        // 额外调试：手动检查WXML条件
+        const shouldShowDefault = !this.data.showSearchResult;
+        const shouldShowCommonTools = this.data.activeCategory === '常用工具';
+        console.log('[分类切换][调试] WXML条件检查: shouldShowDefault=%s, shouldShowCommonTools=%s', shouldShowDefault, shouldShowCommonTools);
+      });
     });
-    
-    // 强制刷新视图
-    this.setData({});
   },
 
   // 获取当前分类名称
@@ -124,7 +179,7 @@ Page({
   getCategoryToolCount(categoryName) {
     if (categoryName === '常用工具') return this.data.commonTools.length;
     
-    // 直接从this.data.allTools中过滤，保持逻辑一致性
+    // 使用页面数据中的allTools，确保能正确响应数据变化
     return this.data.allTools.filter(tool => 
       tool.categories && tool.categories.includes(categoryName)
     ).length;
@@ -132,19 +187,21 @@ Page({
 
   // 获取分类下的工具
   getToolsByCategory(categoryName) {
-    console.log('获取分类工具:', categoryName);
+    console.log('[工具查询] 查询分类: "%s"', categoryName);
     if (categoryName === '常用工具') {
-      console.log('返回常用工具:', this.data.commonTools.length, '个');
+      console.log('[工具查询] 返回常用工具: %d 个', this.data.commonTools.length);
       return this.data.commonTools;
     }
     
-    // 直接从this.data.allTools中过滤，因为已经在mergeAllTools中合并了所有工具
+    // 使用页面数据中的allTools，确保能正确响应数据变化
     const filteredTools = this.data.allTools.filter(tool => 
       tool.categories && tool.categories.includes(categoryName)
     ).sort((a, b) => (b.frequency || 0) - (a.frequency || 0));
     
-    console.log('过滤结果:', filteredTools.length, '个工具，分类:', categoryName);
-    console.log('工具列表:', filteredTools.map(t => t.name));
+    // 优化日志输出，显示工具名称而不是对象
+    const toolNames = filteredTools.map(t => t.name).join(', ');
+    console.log('[工具查询] 分类 "%s" 共找到 %d 个工具: [%s]', categoryName, filteredTools.length, toolNames || '无工具');
+    
     return filteredTools;
   },
 
@@ -166,7 +223,24 @@ Page({
     return tool && tool.frequency !== undefined ? tool.frequency : 50;
   },
 
-
+  // 重置工具卡片动画状态
+  resetToolCardAnimations() {
+    console.log('[动画重置] 开始重置工具卡片动画');
+    
+    // 微信小程序不支持在wx:key中使用表达式，改用直接操作样式的方法
+    // 通过设置一个标志位，在WXML中使用条件class来控制动画重置
+    this.setData({
+      _resetAnimation: true
+    }, () => {
+      // 使用setTimeout来确保DOM更新后再移除标志位
+      setTimeout(() => {
+        this.setData({
+          _resetAnimation: false
+        });
+        console.log('[动画重置] 动画重置完成');
+      }, 50);
+    });
+  },
 
   // 搜索输入处理
   onSearchInput(e) {
@@ -183,9 +257,9 @@ Page({
       });
     } else {
       // 使用统一配置的搜索功能
-      const allTools = searchTools(searchText);
-      const filteredTools = allTools.filter(tool =>
-        this.data.allTools.some(at => at.id === tool.id)
+      const searchResults = searchTools(searchText);
+      const filteredTools = searchResults.filter(tool =>
+        allTools.some(at => at.id === tool.id)
       );
 
       // 过滤分类

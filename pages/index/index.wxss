@@ -217,6 +217,13 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* 动画重置类 - 强制重排以重新触发动画 */
+.animation-reset {
+  animation: none !important;
+  opacity: 0 !important;
+  transform: translateY(30rpx) !important;
+}
+
 .tool-main {
   display: flex;
   align-items: flex-start;
