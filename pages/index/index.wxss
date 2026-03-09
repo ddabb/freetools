@@ -8,41 +8,20 @@
   overflow: hidden;
 }
 
-/* Banner样式 */
-.banner {
+/* 顶部搜索栏样式 */
+.top-search {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 30rpx 40rpx;
+  padding: 20rpx 40rpx;
+  margin-bottom: 0;
 }
 
-.banner-content {
-  display: flex;
-  align-items: center;
-  gap: 24rpx;
-}
-
-.banner-icon {
-  font-size: 80rpx;
-  filter: drop-shadow(0 4rpx 8rpx rgba(0, 0, 0, 0.2));
-}
-
-.banner-text {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.banner-title {
-  font-size: 48rpx;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
-}
-
-.banner-subtitle {
-  font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.8);
+.top-search .search-input {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30rpx;
+  padding: 24rpx 30rpx;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 点菜式主体布局 */
@@ -157,6 +136,9 @@
 .tools-list {
   flex: 1;
   padding: 24rpx;
+  overflow-y: auto;  /* 添加垂直滚动条 */
+  overflow-x: hidden; /* 隐藏水平滚动条 */
+  -webkit-overflow-scrolling: touch; /* 支持弹性滚动 */
 }
 
 /* 搜索栏样式 */

@@ -39,25 +39,12 @@
             </view>
           </view>
           
-          <!-- 快捷输入按钮 -->
-          <view class="quick-input-section">
-            <text class="section-label">快捷输入</text>
-            <view class="quick-buttons">
-              <button 
-                class="quick-btn {{idcard === '110101199001011234' ? 'active' : ''}}" 
-                bindtap="quickInputSample"
-                hover-class="btn-hover"
-              >
-                示例①
-              </button>
-              <button 
-                class="quick-btn {{idcard === '440301199502029876' ? 'active' : ''}}" 
-                bindtap="quickInputSample2"
-                hover-class="btn-hover"
-              >
-                示例②
-              </button>
-            </view>
+          <!-- 隐私声明 -->
+          <view class="privacy-section">
+            <text class="privacy-title">🔒 隐私声明</text>
+            <text class="privacy-text">本工具仅在本地验证身份证格式，</text>
+            <text class="privacy-text">不采集、不存储任何用户数据，</text>
+            <text class="privacy-text">无后台存储功能，请放心使用。</text>
           </view>
         </view>
 
@@ -68,7 +55,6 @@
             bindtap="validate"
             disabled="{{!idcard || idcard.length < 18}}"
             hover-class="btn-primary-hover"
-            animation="{{validateAnim}}"
           >
             <text class="btn-icon">🔍</text>
             <text class="btn-text">立即验证</text>

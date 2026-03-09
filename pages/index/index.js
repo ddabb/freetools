@@ -17,6 +17,8 @@ Page({
     // 原始数据
     commonTools: commonTools,
     allTools: [],
+    // 分类工具数量（预计算）
+    categoryToolCounts: {},
     // 当前分类的工具列表（预计算，避免wxml中函数调用问题）
     currentCategoryTools: [],
     // 搜索相关
@@ -52,6 +54,12 @@ Page({
       console.log('初始activeCategory: "%s"', this.data.activeCategory);
       console.log('初始currentCategoryTools数量: %d', this.data.currentCategoryTools.length);
       
+      // 检查分类数量显示
+      this.data.categories.forEach(cat => {
+        const count = this.getCategoryToolCount(cat.name);
+        console.log('分类 "%s" 工具数量: %d', cat.name, count);
+      });
+      
       // 测试财务工具 - 显示具体名称
       const financeTools = this.getToolsByCategory('财务工具');
       console.log('财务工具数量: %d', financeTools.length);
@@ -69,6 +77,31 @@ Page({
     // 直接使用从config/tools.js导入的allTools
     this.setData({ allTools });
     console.log('合并工具完成，总计:', allTools.length, '个工具');
+    // 预计算分类工具数量
+    this.calculateCategoryToolCounts();
+  },
+
+  // 预计算分类工具数量
+  calculateCategoryToolCounts() {
+    const counts = {};
+    
+    // 计算常用工具数量
+    counts['常用工具'] = this.data.commonTools.length;
+    console.log('[工具数量] 常用工具数量: %d', counts['常用工具']);
+    
+    // 计算其他分类工具数量
+    this.data.categories.forEach(category => {
+      if (category.name !== '常用工具') {
+        const count = this.data.allTools.filter(tool => 
+          tool.categories && tool.categories.includes(category.name)
+        ).length;
+        counts[category.name] = count;
+        console.log('[工具数量] 分类 "%s" 数量: %d', category.name, count);
+      }
+    });
+    
+    this.setData({ categoryToolCounts: counts });
+    console.log('[工具数量] 所有分类工具数量计算完成:', counts);
   },
 
   // 加载用户信息
@@ -177,12 +210,27 @@ Page({
 
   // 获取分类下工具数量
   getCategoryToolCount(categoryName) {
-    if (categoryName === '常用工具') return this.data.commonTools.length;
+    console.log('[工具数量] 查询分类: "%s"', categoryName);
+    
+    if (categoryName === '常用工具') {
+      const count = this.data.commonTools.length;
+      console.log('[工具数量] 常用工具数量: %d', count);
+      return count;
+    }
+    
+    // 检查allTools是否已加载
+    if (!this.data.allTools || this.data.allTools.length === 0) {
+      console.log('[工具数量] allTools未加载或为空');
+      return 0;
+    }
     
     // 使用页面数据中的allTools，确保能正确响应数据变化
-    return this.data.allTools.filter(tool => 
+    const count = this.data.allTools.filter(tool => 
       tool.categories && tool.categories.includes(categoryName)
     ).length;
+    
+    console.log('[工具数量] 分类 "%s" 数量: %d', categoryName, count);
+    return count;
   },
 
   // 获取分类下的工具

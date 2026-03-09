@@ -2,28 +2,7 @@
 Page({
   data: {
     // 无登录态，固定展示
-    menuList: [
-      {
-        icon: '⭐',
-        title: '我的收藏',
-        url: ''
-      },
-      {
-        icon: '📊',
-        title: '使用统计',
-        url: ''
-      },
-      {
-        icon: '⚙️',
-        title: '设置',
-        url: ''
-      },
-      {
-        icon: '❓',
-        title: '关于我们',
-        url: ''
-      }
-    ]
+    menuList: []
   },
 
   onLoad() {
@@ -44,17 +23,16 @@ Page({
     })
   },
 
-  onShareTap() {
-    wx.showToast({
-      title: '分享功能开发中',
-      icon: 'none'
-    })
-  },
-
-  onFeedbackTap() {
-    wx.showToast({
-      title: '反馈功能开发中',
-      icon: 'none'
+  // 打开GitHub链接
+  openGitHub() {
+    wx.setClipboardData({
+      data: 'https://github.com/ddabb/freetools.git',
+      success: () => {
+        wx.showToast({
+          title: 'GitHub地址已复制到剪贴板',
+          icon: 'success'
+        })
+      }
     })
   },
 

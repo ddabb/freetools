@@ -1,13 +1,16 @@
 <!--index.wxml-->
 <view class="home-container">
-  <!-- 顶部Banner -->
-  <view class="banner">
-    <view class="banner-content">
-      <view class="banner-icon">🛠️</view>
-      <view class="banner-text">
-        <text class="banner-title">免费工具箱</text>
-        <text class="banner-subtitle">精选实用工具，提升工作效率</text>
-      </view>
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar top-search">
+    <view class="search-input">
+      <text class="search-icon">�</text>
+      <input
+        placeholder="搜索工具"
+        class="input"
+        value="{{searchText}}"
+        bindinput="onSearchInput"
+      />
+      <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
     </view>
   </view>
 
@@ -27,7 +30,7 @@
           <view class="category-icon">{{item.icon}}</view>
           <view class="category-info">
             <text class="category-name">{{item.name}}</text>
-            <text class="category-count">{{getCategoryToolCount(item.name)}}个工具</text>
+            <text class="category-count">{{categoryToolCounts[item.name] || 0}}个工具</text>
           </view>
           <view class="category-arrow" wx:if="{{activeCategory === item.name}}">✓</view>
         </view>
@@ -39,20 +42,6 @@
       <view class="panel-header">
         <text class="panel-title">{{getCurrentCategoryName()}}</text>
         <text class="panel-desc">{{getCurrentCategoryDesc()}}</text>
-      </view>
-      
-      <!-- 搜索栏 -->
-      <view class="search-bar">
-        <view class="search-input">
-          <text class="search-icon">🔍</text>
-          <input
-            placeholder="搜索工具"
-            class="input"
-            value="{{searchText}}"
-            bindinput="onSearchInput"
-          />
-          <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
-        </view>
       </view>
 
       <!-- 搜索结果 -->

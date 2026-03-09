@@ -7,8 +7,7 @@ Page({
     result: null,
     showResult: false,
     loading: false,
-    inputFocus: false,
-    validateAnim: ''
+    inputFocus: false
   },
 
   onLoad() {
@@ -29,33 +28,7 @@ Page({
     }
   },
 
-  // 快捷输入示例1
-  quickInputSample() {
-    this.setData({
-      idcard: '110101199001011234',
-      inputFocus: false
-    }, () => {
-      this.triggerValidateAnimation()
-    })
-  },
 
-  // 快捷输入示例2
-  quickInputSample2() {
-    this.setData({
-      idcard: '440301199502029876',
-      inputFocus: false
-    }, () => {
-      this.triggerValidateAnimation()
-    })
-  },
-
-  // 触发验证动画
-  triggerValidateAnimation() {
-    this.setData({ validateAnim: 'validatePulse' })
-    setTimeout(() => {
-      this.setData({ validateAnim: '' })
-    }, 600)
-  },
 
   // 清空输入
   clearInput() {

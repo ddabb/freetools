@@ -9,57 +9,50 @@
         <text class="default-avatar">🛠️</text>
       </view>
       <view class="user-details">
-        <text class="user-nickname">欢迎使用实用工具</text>
+        <text class="user-nickname">欢迎使用免费工具箱</text>
         <text class="user-level">无需登录 · 即用即走</text>
       </view>
     </view>
 
-    <!-- 工具统计（本地固定数据） -->
-    <view class="stats-card">
-      <view class="stats-item">
-        <text class="stats-number">20+</text>
-        <text class="stats-label">工具总数</text>
+    <!-- 项目信息卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">🌐 关于项目</text>
       </view>
-      <view class="stats-item">
-        <text class="stats-number">∞</text>
-        <text class="stats-label">收藏工具</text>
-      </view>
-      <view class="stats-item">
-        <text class="stats-number">∞</text>
-        <text class="stats-label">使用次数</text>
-      </view>
-    </view>
-
-    <!-- 菜单列表 -->
-    <view class="menu-list">
-      <view
-        class="menu-item"
-        wx:for="{{menuList}}"
-        wx:key="title"
-        bindtap="onMenuTap"
-        data-index="{{index}}"
-      >
-        <view class="menu-icon">{{item.icon}}</view>
-        <view class="menu-title">{{item.title}}</view>
-        <view class="menu-arrow">›</view>
+      <view class="project-content">
+        <text class="project-description">这是一个 Vibe Coding 项目，专注于提供实用的工具集合。</text>
+        <text class="project-description">我们致力于打造一个轻量级、无广告、功能丰富的工具箱，</text>
+        <text class="project-description">涵盖生活、学习、工作等多个领域的实用工具。</text>
+        <text class="project-description">欢迎提交 PR 和提出 Issue，一起完善这个项目！</text>
+        <view class="github-link" bindtap="openGitHub">
+          <text class="github-icon">🐙</text>
+          <text class="github-url">https://github.com/ddabb/freetools.git</text>
+          <text class="github-arrow">→</text>
+        </view>
       </view>
     </view>
 
-    <!-- 功能按钮 -->
-    <view class="action-buttons">
-      <button class="action-btn" bindtap="onShareTap">
-        <text class="btn-icon">📤</text>
-        <text class="btn-text">分享给朋友</text>
-      </button>
-      <button class="action-btn" bindtap="onFeedbackTap">
-        <text class="btn-icon">💬</text>
-        <text class="btn-text">意见反馈</text>
-      </button>
+
+
+    <!-- 隐私声明卡片 -->
+    <view class="privacy-card">
+      <view class="privacy-header">
+        <text class="privacy-title">🔒 隐私声明</text>
+      </view>
+      <view class="privacy-content">
+        <text class="privacy-text">本项目不涉及数据收集、采集等功能，</text>
+        <text class="privacy-text">无后台数据库，所有数据仅保存在本地，</text>
+        <text class="privacy-text">请放心使用。</text>
+      </view>
     </view>
+
+
+
+
 
     <!-- 版本信息 -->
     <view class="version-info">
-      <text class="version-text">实用工具集合 v1.0.0</text>
+      <text class="version-text">免费工具箱 v1.0.0</text>
     </view>
   </view>
 </scroll-view>
