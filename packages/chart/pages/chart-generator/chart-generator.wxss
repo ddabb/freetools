@@ -1,0 +1,143 @@
+/**packages/chart/pages/chart-generator/chart-generator.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.placeholder-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  text-align: center;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 40rpx;
+}
+
+.placeholder-text {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.placeholder-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.chart-preview {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.preview-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.sample-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+}
+
+.sample-item {
+  text-align: center;
+}
+
+.chart-type {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  font-weight: 600;
+}
+
+.chart-demo {
+  height: 120rpx;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding: 20rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-chart {
+  gap: 15rpx;
+  display: flex;
+  align-items: end;
+}
+
+.bar {
+  width: 30rpx;
+  background: linear-gradient(to top, #74b9ff, #0984e3);
+  border-radius: 4rpx 4rpx 0 0;
+  transition: all 0.3s ease;
+}
+
+.bar:active {
+  transform: scale(1.1);
+}
+
+.pie-chart {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: conic-gradient(
+    #ff7675 0deg 120deg,
+    #74b9ff 120deg 240deg,
+    #55efc4 240deg 360deg
+  );
+}
+
+.pie-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40rpx;
+  height: 40rpx;
+  background: white;
+  border-radius: 50%;
+}
+
+.line-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line-canvas {
+  width: 200rpx;
+  height: 120rpx;
+}

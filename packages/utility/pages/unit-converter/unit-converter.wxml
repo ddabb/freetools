@@ -1,122 +1,96 @@
 <!--packages/utility/pages/unit-converter/unit-converter.wxml-->
 <view class="container">
-  <!-- 分类选择标签页 -->
-  <view class="category-tabs">
-    <scroll-view scroll-x="true" class="tabs-scroll">
-      <view 
-        class="tab-item {{categoryIndex === index ? 'active' : ''}}"
-        wx:for="{{categories}}" 
-        wx:key="index"
-        bindtap="onCategoryChange"
-        data-index="{{index}}"
-      >
-        {{item}}
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 分类选择 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">转换分类</text>
+        <text class="required-mark">*</text>
       </view>
-    </scroll-view>
-  </view>
-
-  <!-- 常用单位快速选择 -->
-  <view class="quick-units">
-    <text class="section-title">常用单位</text>
-    <scroll-view scroll-x="true" class="units-scroll">
-      <view class="unit-chips">
-        <view 
-          class="chip {{fromUnitIndex === index ? 'selected' : ''}} {{toUnitIndex === index ? 'target-selected' : ''}}"
-          wx:for="{{currentUnits}}" 
-          wx:key="index"
-          bindtap="selectUnit"
-          data-index="{{index}}"
-          data-type="from"
-          wx:if="{{fromUnitIndex !== index}}"
-        >
-          {{item}}
+      <picker bindchange="onCategoryChange" value="{{categoryIndex}}" range="{{categories}}" class="form-picker">
+        <view class="picker-display {{categoryIndex === -1 ? 'placeholder' : ''}}">
+          {{categories[categoryIndex] || '请选择转换分类'}}
         </view>
-        <view 
-          class="chip target-chip {{toUnitIndex === index ? 'selected' : ''}}"
-          wx:for="{{currentUnits}}" 
-          wx:key="index"
-          bindtap="selectUnit"
-          data-index="{{index}}"
-          data-type="to"
-          wx:if="{{toUnitIndex !== index}}"
-        >
-          {{item}}
-        </view>
-      </view>
-    </scroll-view>
-  </view>
+      </picker>
+    </view>
 
-  <!-- 转换区域 -->
-  <view class="converter-section">
     <!-- 源单位 -->
-    <view class="converter-card from-card">
-      <view class="card-header">
-        <text class="card-label">从</text>
-        <view class="selected-unit">
-          <text class="unit-name">{{currentUnits[fromUnitIndex]}}</text>
-          <picker 
-            range="{{currentUnits}}" 
-            value="{{fromUnitIndex}}"
-            bindchange="onFromUnitChange"
-            class="hidden-picker"
-          />
-        </view>
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">从</text>
+        <text class="required-mark">*</text>
       </view>
-      <view class="input-area">
-        <input
-          type="digit"
-          value="{{inputValue}}"
-          bindinput="onInputChange"
-          class="main-input"
-          placeholder="0"
-          focus="{{inputFocus}}"
-        />
+      <view class="input-with-unit">
+        <input type="digit" value="{{inputValue}}" bindinput="onInputChange" class="input-field" placeholder="请输入数值" focus="{{inputFocus}}"/>
+        <picker 
+          range="{{currentUnits}}" 
+          value="{{fromUnitIndex}}"
+          bindchange="onFromUnitChange"
+          class="unit-picker"
+        >
+          <view class="unit-picker-display">
+            {{currentUnits[fromUnitIndex]}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 目标单位 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">到</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="input-with-unit">
+        <text class="result-display">{{resultValue || '0'}}</text>
+        <picker 
+          range="{{currentUnits}}" 
+          value="{{toUnitIndex}}"
+          bindchange="onToUnitChange"
+          class="unit-picker"
+        >
+          <view class="unit-picker-display">
+            {{currentUnits[toUnitIndex]}}
+          </view>
+        </picker>
       </view>
     </view>
 
     <!-- 交换按钮 -->
-    <view class="swap-section">
-      <button class="swap-btn-modern" bindtap="swapUnits">
-        <text class="swap-icon">⇅</text>
+    <view class="form-item">
+      <button class="swap-btn full-width-btn" bindtap="swapUnits">
+        <text class="btn-text">交换单位 ⇅</text>
       </button>
     </view>
 
-    <!-- 目标单位 -->
-    <view class="converter-card to-card">
-      <view class="card-header">
-        <text class="card-label">到</text>
-        <view class="selected-unit">
-          <text class="unit-name">{{currentUnits[toUnitIndex]}}</text>
-          <picker 
-            range="{{currentUnits}}" 
-            value="{{toUnitIndex}}"
-            bindchange="onToUnitChange"
-            class="hidden-picker"
-          />
+    <!-- 计算按钮 -->
+    <view class="form-item btn-item">
+      <button class="calculate-btn full-width-btn" bindtap="calculate">
+        <text class="btn-text">开始转换</text>
+      </button>
+    </view>
+
+    <!-- 结果展示 -->
+    <view class="result-section" wx:if="{{showResult}}">
+      <view class="result-box">
+        <view class="result-item">
+          <text class="result-label">转换结果</text>
+          <text class="result-value bmi">{{resultValue}}</text>
+          <text class="bmi-status">{{resultFormula}}</text>
+        </view>
+        <view class="result-divider"></view>
+        <view class="result-row">
+          <view class="result-item">
+            <text class="result-label">从</text>
+            <text class="result-value ideal-weight">{{inputValue}} {{currentUnits[fromUnitIndex]}}</text>
+          </view>
+          <view class="result-item">
+            <text class="result-label">到</text>
+            <text class="result-value ideal-weight">{{resultValue}} {{currentUnits[toUnitIndex]}}</text>
+          </view>
         </view>
       </view>
-      <view class="result-area">
-        <text class="result-value">{{resultValue || '0'}}</text>
-        <text class="result-unit-label">自动计算</text>
-      </view>
     </view>
-  </view>
-
-  <!-- 快捷输入按钮 -->
-  <view class="quick-input">
-    <text class="section-title">快捷输入</text>
-    <view class="quick-numbers">
-      <button class="num-btn" bindtap="quickInput" data-value="0.1">0.1</button>
-      <button class="num-btn" bindtap="quickInput" data-value="1">1</button>
-      <button class="num-btn" bindtap="quickInput" data-value="10">10</button>
-      <button class="num-btn" bindtap="quickInput" data-value="100">100</button>
-      <button class="num-btn" bindtap="quickInput" data-value="1000">1000</button>
-    </view>
-  </view>
-
-  <!-- 操作按钮 -->
-  <view class="action-section">
-    <button class="btn-secondary" bindtap="reset">重置</button>
-    <button class="btn-primary" bindtap="copyResult">复制结果</button>
   </view>
 </view>

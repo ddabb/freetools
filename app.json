@@ -44,8 +44,8 @@
       "root": "packages/other",
       "name": "other",
       "pages": [
-        "pages/health-calculator/health-calculator",
-        "pages/travel-tool/travel-tool"
+        "pages/travel-tool/travel-tool",
+        "pages/health-calculator/health-calculator"
       ]
     }
   ],

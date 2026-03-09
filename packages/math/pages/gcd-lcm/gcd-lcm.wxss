@@ -1,0 +1,301 @@
+/**packages/math/pages/gcd-lcm/gcd-lcm.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* 表单区域样式 */
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.label-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-right: 10rpx;
+}
+
+.required-mark {
+  color: #ff4757;
+  font-size: 28rpx;
+}
+
+/* 输入框样式 */
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 15rpx;
+  padding: 0 24rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.input-with-unit:focus-within {
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.1);
+}
+
+.input-field {
+  flex: 1;
+  font-size: 34rpx;
+  border: none;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+  background: transparent;
+  padding: 28rpx 0;
+}
+
+.input-field::placeholder {
+  color: #999;
+}
+
+.unit-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-left: 10rpx;
+  font-weight: 500;
+}
+
+/* 按钮样式 */
+.btn-item {
+  margin-top: 60rpx;
+  margin-bottom: 0;
+}
+
+.calculate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  box-shadow: 0 15rpx 40rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.calculate-btn:not(.disabled):active {
+  transform: translateY(-2rpx) scale(1.02);
+  box-shadow: 0 20rpx 50rpx rgba(102, 126, 234, 0.5);
+}
+
+.calculate-btn.disabled {
+  background: #ccc;
+  box-shadow: none;
+}
+
+.full-width-btn {
+  width: 100%;
+}
+
+.btn-text {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* 结果展示样式 */
+.result-section {
+  margin-bottom: 40rpx;
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.result-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.result-item {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.result-item.highlight {
+  background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.result-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+
+.result-value {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  margin-bottom: 10rpx;
+}
+
+.gcd-value {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 56rpx;
+}
+
+.lcm-value {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 56rpx;
+}
+
+.result-formula {
+  display: block;
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 5rpx;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.result-divider {
+  width: 100%;
+  height: 2rpx;
+  background: linear-gradient(to right, transparent, #ddd, transparent);
+  margin: 30rpx 0;
+}
+
+/* 计算步骤 */
+.calculation-steps {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #f0f0f0;
+}
+
+.steps-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.step-text {
+  display: block;
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10rpx;
+  padding-left: 20rpx;
+  position: relative;
+}
+
+.step-text:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 示例区域 */
+.examples-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.examples-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.example-item {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 15rpx;
+  padding: 24rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2rpx solid transparent;
+}
+
+.example-item:active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  transform: scale(0.95);
+}
+
+.example-item:active .example-text {
+  color: white;
+}
+
+.example-text {
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* 动画效果 */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

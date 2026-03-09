@@ -1,6 +1,43 @@
 // 工具配置文件
 // 统一管理所有工具的信息，便于维护和扩展
 
+// 工具频率数据
+const toolFrequency = {
+  'mortgage': 95,           // 房贷计算器
+  'life-countdown': 92,     // 人生倒计时
+  'battery-health': 88,     // 电池健康
+  'qrcode': 85,             // 二维码生成
+  'unit-converter': 82,     // 单位换算
+  'time-tool': 78,          // 时间工具
+  'health-calculator': 75,  // 健康计算
+  'calendar': 72,           // 万年历
+  'password-generator': 68, // 密码生成
+  'idcard': 65,             // 身份证验证
+  'price-comparison': 62,   // 价格对比
+  'retirementCalculator': 58, // 退休金计算器
+  'text-tool': 55,          // 文本工具
+  'mdconvert': 52,          // Markdown转换
+  'oddEven': 48,            // 奇偶判断
+  'leapyear': 45,           // 闰年判断
+  'onlychinese': 42,        // 中文检测
+  'travel-tool': 38,        // 旅行工具
+  'datediff': 35,           // 日期差计算
+  'gcd-lcm': 60,            // 最大公约数·最小公倍数
+  'prime-factorization': 58, // 质因数分解
+  '24point': 56,            // 24点速算
+  'base-converter': 54,      // 整数基转换器
+  'json-xml-converter': 52,  // JSON·XML转换器
+  'yaml-json-converter': 50, // YAML·JSON转换器
+  'regex-tester': 48,        // 正则表达式测试
+  'word-counter': 46,        // 字数统计器
+  'markdown-preview': 44,    // Markdown预览器
+  'text-diff': 42,           // 文本对比工具
+  'data-analyzer': 40,       // 数据统计器
+  'chart-generator': 38,     // 图表生成器
+  'timestamp-converter': 36,  // 时间戳转换器
+  'color-converter': 34      // 颜色转换器
+};
+
 const tools = [
   {
     id: 'mortgage',
@@ -10,7 +47,8 @@ const tools = [
     url: '/packages/financial/pages/mortgage/mortgage',
     categories: ['财务工具'],
     keywords: ['房贷', '贷款', '计算', '房屋'],
-    description: '计算房贷月供、利息和还款总额'
+    description: '计算房贷月供、利息和还款总额',
+    frequency: toolFrequency['mortgage']
   },
   {
     id: 'life-countdown',
@@ -20,7 +58,8 @@ const tools = [
     url: '/packages/life/pages/life-countdown/life-countdown',
     categories: ['生活工具'],
     keywords: ['倒计时', '人生', '日期', '剩余'],
-    description: '计算人生已过天数和剩余寿命'
+    description: '计算人生已过天数和剩余寿命',
+    frequency: toolFrequency['life-countdown']
   },
   {
     id: 'qrcode',
@@ -30,7 +69,8 @@ const tools = [
     url: '/packages/utility/pages/qrcode/qrcode',
     categories: ['安全工具'],
     keywords: ['二维码', '生成', '码', '扫码'],
-    description: '生成文本和链接的二维码'
+    description: '生成文本和链接的二维码',
+    frequency: toolFrequency['qrcode']
   },
   {
     id: 'unit-converter',
@@ -40,7 +80,8 @@ const tools = [
     url: '/packages/utility/pages/unit-converter/unit-converter',
     categories: ['学习工具', '生活工具'],
     keywords: ['单位', '换算', '转换', '长度'],
-    description: '各种单位的快速换算'
+    description: '各种单位的快速换算',
+    frequency: toolFrequency['unit-converter']
   },
   {
     id: 'health-calculator',
@@ -50,7 +91,8 @@ const tools = [
     url: '/packages/other/pages/health-calculator/health-calculator',
     categories: ['健康工具'],
     keywords: ['健康', 'BMI', '体重', '身高'],
-    description: '计算BMI和健康指标'
+    description: '计算BMI和健康指标',
+    frequency: toolFrequency['health-calculator']
   },
   {
     id: 'calendar',
@@ -163,6 +205,16 @@ const tools = [
     description: '检测文本中是否包含中文'
   },
   {
+    id: 'travel-tool',
+    name: '旅行工具',
+    icon: '✈️',
+    color: 'blue',
+    url: '/packages/other/pages/travel-tool/travel-tool',
+    categories: ['更多工具', '生活工具'],
+    keywords: ['旅行', '工具', '行程', '规划'],
+    description: '旅行规划和辅助工具'
+  },
+  {
     id: 'battery-health',
     name: '电池健康',
     icon: '🔋',
@@ -182,6 +234,38 @@ const tools = [
     keywords: ['日期', '差', '计算', '天数'],
     description: '计算两个日期之间的天数差'
   },
+  // 数学工具分类开始
+  {
+    id: 'gcd-lcm',
+    name: '最大公约数·最小公倍数',
+    icon: '🔢',
+    color: 'indigo',
+    url: '/packages/math/pages/gcd-lcm/gcd-lcm',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['最大公约数', '最小公倍数', 'GCD', 'LCM', '欧几里得'],
+    description: '计算两个数的最大公约数和最小公倍数'
+  },
+  {
+    id: 'prime-factorization',
+    name: '质因数分解',
+    icon: '🧮',
+    color: 'pink',
+    url: '/packages/math/pages/prime-factorization/prime-factorization',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['质因数', '分解', '素数', '数论', '因子'],
+    description: '将合数分解成质数相乘的形式'
+  },
+  {
+    id: '24point',
+    name: '24点速算',
+    icon: '🎮',
+    color: 'amber',
+    url: '/packages/math/pages/24point/24point',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['24点', '速算', '数学游戏', '四则运算', '挑战'],
+    description: '使用4个数字通过运算得到24的游戏'
+  },
+  // 数学工具分类结束
   {
     id: 'travel-tool',
     name: '旅行工具',
@@ -191,28 +275,88 @@ const tools = [
     categories: ['生活工具'],
     keywords: ['旅行', '工具', '行程', '规划'],
     description: '旅行规划和辅助工具'
+  },
+  // 转换工具分类开始
+  {
+    id: 'base-converter',
+    name: '整数基转换器',
+    icon: '🔢',
+    color: 'cyan',
+    url: '/packages/converter/pages/base-converter/base-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['进制', '转换', '二进制', '十六进制', 'Base64'],
+    description: '在不同基数间转换数字，支持二进制、十六进制、Base64等'
+  },
+  {
+    id: 'json-xml-converter',
+    name: 'JSON·XML转换器',
+    icon: '🔄',
+    color: 'lime',
+    url: '/packages/converter/pages/json-xml-converter/json-xml-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['JSON', 'XML', '转换', '数据格式'],
+    description: '在JSON和XML格式之间进行相互转换'
+  },
+  {
+    id: 'yaml-json-converter',
+    name: 'YAML·JSON转换器',
+    icon: '📋',
+    color: 'violet',
+    url: '/packages/converter/pages/yaml-json-converter/yaml-json-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['YAML', 'JSON', '转换', '配置文件'],
+    description: '在YAML和JSON格式之间进行相互转换'
+  },
+  {
+    id: 'regex-tester',
+    name: '正则表达式测试',
+    icon: '🎯',
+    color: 'rose',
+    url: '/packages/converter/pages/regex-tester/regex-tester',
+    categories: ['学习工具', '开发工具'],
+    keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
+    description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
   }
+  // 转换工具分类结束
 ];
 
-// 工具分类
-const categories = [
-  { name: '财务工具', color: 'blue', icon: '💰', description: '房贷、汇率、个税等财务计算' },
-  { name: '健康工具', color: 'green', icon: '💪', description: 'BMI、健康指标计算' },
-  { name: '生活工具', color: 'orange', icon: '🏠', description: '日历、天气、计时等生活工具' },
-  { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具' },
-  { name: '安全工具', color: 'red', icon: '🔒', description: '密码生成、身份证验证等安全工具' },
-  { name: '更多工具', color: 'teal', icon: '📱', description: '更多实用工具' }
+// 发现页特有的工具数据
+const discoveryTools = [
+  { id: 'word-counter', name: '字数统计器', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], frequency: toolFrequency['word-counter'] },
+  { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], frequency: toolFrequency['markdown-preview'] },
+  { id: 'text-diff', name: '文本对比工具', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], frequency: toolFrequency['text-diff'] },
+  { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], frequency: toolFrequency['data-analyzer'] },
+  { id: 'chart-generator', name: '图表生成器', icon: '📊', description: '多种图表一键生成', url: '/packages/chart/pages/chart-generator/chart-generator', categories: ['学习工具', '开发工具'], frequency: toolFrequency['chart-generator'] },
+  { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], frequency: toolFrequency['timestamp-converter'] },
+  { id: 'color-converter', name: '颜色转换器', icon: '🎨', description: 'RGB/Hex/HSL色彩转换', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '转换工具'], frequency: toolFrequency['color-converter'] }
 ];
+
+// 合并所有工具
+const allTools = [...tools, ...discoveryTools.filter(tool => !tools.find(t => t.id === tool.id))];
+
+  // 工具分类（与首页分类保持一致）
+  const categories = [
+    { name: '财务工具', color: 'blue', icon: '💰', description: '房贷、汇率、个税等财务计算' },
+    { name: '健康工具', color: 'green', icon: '💪', description: 'BMI、健康指标计算' },
+    { name: '生活工具', color: 'orange', icon: '🏠', description: '日历、天气、计时等生活工具' },
+    { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具' },
+    { name: '数学工具', color: 'indigo', icon: '🔢', description: '最大公约数、质因数分解、24点等数学工具' },
+    { name: '转换工具', color: 'cyan', icon: '🔄', description: '进制转换、格式转换等数据处理工具' },
+    { name: '开发工具', color: 'slate', icon: '⚙️', description: '正则测试、代码工具等开发者工具' },
+    { name: '安全工具', color: 'red', icon: '🔒', description: '密码生成、身份证验证等安全工具' },
+    { name: '更多工具', color: 'teal', icon: '📱', description: '旅行等其他实用工具' }
+  ];
 
 // 常用工具（首页显示）
 const commonTools = [
   tools[0],  // 房贷计算器
   tools[1],  // 人生倒计时
+  tools[17], // 电池健康
   tools[2],  // 二维码生成
   tools[3],  // 单位换算
+  tools[6],  // 时间工具
   tools[4],  // 健康计算
   tools[5],  // 万年历
-  tools[6],  // 时间工具
   tools[7],  // 密码生成
   tools[8]   // 身份证验证
 ];
@@ -242,6 +386,9 @@ module.exports = {
   tools,
   categories,
   commonTools,
+  discoveryTools,
+  allTools,
+  toolFrequency,
   getToolsByCategory,
   searchTools,
   getToolById

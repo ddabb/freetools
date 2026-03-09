@@ -1,0 +1,162 @@
+<view class="container">
+  <!-- 颜色选择器区域 -->
+  <view class="color-picker-section">
+    <view class="section-title">🎨 颜色选择器</view>
+    <view class="picker-container">
+      <view class="color-preview" style="background-color: {{currentColor}};">
+        <text class="preview-text">{{currentColor}}</text>
+      </view>
+      
+      <view class="picker-inputs">
+        <input type="text" value="{{hexInput}}" bindinput="onHexInput" class="color-input hex-input" placeholder="#FF5733" />
+        <view class="rgb-inputs">
+          <input type="number" value="{{rgbInputs.r}}" bindinput="onRgbInput" data-channel="r" class="color-input rgb-input" placeholder="R" min="0" max="255" />
+          <input type="number" value="{{rgbInputs.g}}" bindinput="onRgbInput" data-channel="g" class="color-input rgb-input" placeholder="G" min="0" max="255" />
+          <input type="number" value="{{rgbInputs.b}}" bindinput="onRgbInput" data-channel="b" class="color-input rgb-input" placeholder="B" min="0" max="255" />
+        </view>
+      </view>
+      
+      <button class="random-color-btn" bindtap="generateRandomColor">
+        <text class="btn-text">🎲 随机颜色</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 转换结果区域 -->
+  <view class="conversion-results">
+    <view class="section-title">🔄 格式转换</view>
+    
+    <!-- HEX格式 -->
+    <view class="format-group">
+      <view class="format-label">HEX</view>
+      <view class="format-values">
+        <view class="format-item">
+          <text class="format-name">标准格式:</text>
+          <text class="format-value highlight" selectable="true">{{conversions.hex}}</text>
+        </view>
+        <view class="format-item">
+          <text class="format-name">紧凑格式:</text>
+          <text class="format-value" selectable="true">{{conversions.hexCompact}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- RGB格式 -->
+    <view class="format-group">
+      <view class="format-label">RGB</view>
+      <view class="format-values">
+        <view class="format-item">
+          <text class="format-name">函数格式:</text>
+          <text class="format-value" selectable="true">{{conversions.rgb}}</text>
+        </view>
+        <view class="format-item">
+          <text class="format-name">数组格式:</text>
+          <text class="format-value" selectable="true">{{conversions.rgbArray}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- HSL格式 -->
+    <view class="format-group">
+      <view class="format-label">HSL</view>
+      <view class="format-values">
+        <view class="format-item">
+          <text class="format-name">函数格式:</text>
+          <text class="format-value" selectable="true">{{conversions.hsl}}</text>
+        </view>
+        <view class="format-item">
+          <text class="format-name">数值详情:</text>
+          <text class="format-value detail">H:{{conversions.hslValues.h}}° S:{{conversions.hslValues.s}}% L:{{conversions.hslValues.l}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- CMYK格式 -->
+    <view class="format-group">
+      <view class="format-label">CMYK</view>
+      <view class="format-values">
+        <view class="format-item">
+          <text class="format-name">函数格式:</text>
+          <text class="format-value" selectable="true">{{conversions.cmyk}}</text>
+        </view>
+        <view class="format-item">
+          <text class="format-name">数值详情:</text>
+          <text class="format-value detail">C:{{conversions.cmykValues.c}}% M:{{conversions.cmykValues.m}}% Y:{{conversions.cmykValues.y}}% K:{{conversions.cmykValues.k}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 颜色信息区域 -->
+  <view class="color-info-section">
+    <view class="section-title">ℹ️ 颜色信息</view>
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="info-label">色彩名称:</text>
+        <text class="info-value highlight">{{colorInfo.name}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">亮度:</text>
+        <text class="info-value">{{colorInfo.brightness}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">对比度:</text>
+        <text class="info-value">{{colorInfo.contrast}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">适合文字:</text>
+        <view class="contrast-preview" style="background-color: {{currentColor}}; color: {{colorInfo.suggestedTextColor}};">
+          示例文字
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 配色方案 -->
+  <view class="color-schemes">
+    <view class="section-title">🌈 配色方案</view>
+    <view class="schemes-grid">
+      <view class="scheme-item" wx:for="{{colorSchemes}}" wx:key="name">
+        <view class="scheme-header">
+          <text class="scheme-name">{{item.name}}</text>
+        </view>
+        <view class="scheme-colors">
+          <view class="scheme-color" wx:for="{{item.colors}}" wx:for-item="color" wx:for-index="colorIndex" wx:key="colorIndex" 
+                style="background-color: {{color}};" bindtap="selectSchemeColor" data-color="{{color}}">
+            <text class="scheme-color-code">{{color}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="section-title">⚡ 快捷操作</view>
+    <view class="action-buttons">
+      <button class="action-btn" bindtap="copyAllFormats">
+        <text class="btn-icon">📋</text>
+        <text class="btn-text">复制全部</text>
+      </button>
+      <button class="action-btn" bindtap="saveToFavorites">
+        <text class="btn-icon">❤️</text>
+        <text class="btn-text">收藏</text>
+      </button>
+      <button class="action-btn" bindtap="shareColor">
+        <text class="btn-icon">📤</text>
+        <text class="btn-text">分享</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 使用说明</view>
+    <view class="help-content">
+      <text class="help-text">• HEX: Web开发最常用的颜色格式</text>
+      <text class="help-text">• RGB: 屏幕显示的三原色光模式</text>
+      <text class="help-text">• HSL: 更直观的色彩表示方法</text>
+      <text class="help-text">• CMYK: 印刷行业的四色模式</text>
+    </view>
+  </view>
+</view>

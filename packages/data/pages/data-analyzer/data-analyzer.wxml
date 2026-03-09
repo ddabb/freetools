@@ -1,0 +1,7 @@
+<view class="container">
+  <view class="section-title">📊 数据统计器</view>
+  <view class="placeholder-content">
+    <text class="placeholder-text">数据统计器开发中...</text>
+    <text class="placeholder-desc">支持平均值、中位数、方差、标准差等统计分析</text>
+  </view>
+</view>

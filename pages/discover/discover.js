@@ -1,5 +1,5 @@
 // discover.js
-import { tools, categories } from '../../config/tools.js';
+const { tools, categories } = require('../../config/tools.js');
 
 Page({
   data: {
@@ -29,8 +29,19 @@ Page({
 
   // 根据分类过滤工具
   filterTools(category) {
+    const target = category.trim();
     const filtered = this.data.tools.filter(tool => {
-      return tool.categories.includes(category);
+      // 精确匹配（忽略前后空格）
+      if (tool.categories.some(cat => cat.trim() === target)) {
+        return true;
+      }
+      // 更多工具：不属于任何主分类
+      if (target === '更多工具') {
+        return !['财务工具', '健康工具', '生活工具', '学习工具', '安全工具'].some(mainCat => 
+          tool.categories.some(cat => cat.trim() === mainCat)
+        );
+      }
+      return false;
     });
     this.setData({
       filteredTools: filtered

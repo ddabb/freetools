@@ -1,0 +1,131 @@
+<view class="container">
+  <!-- 顶部标签页 -->
+  <view class="tab-container">
+    <view class="tab-item {{activeTab === 'json2xml' ? 'active' : ''}}" bindtap="switchTab" data-tab="json2xml">
+      <text class="tab-text">JSON → XML</text>
+    </view>
+    <view class="tab-item {{activeTab === 'xml2json' ? 'active' : ''}}" bindtap="switchTab" data-tab="xml2json">
+      <text class="tab-text">XML → JSON</text>
+    </view>
+  </view>
+
+  <!-- JSON转XML区域 -->
+  <view class="converter-section" wx:if="{{activeTab === 'json2xml'}}">
+    <view class="form-container">
+      <!-- JSON输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">JSON输入</text>
+          <text class="required-mark">*</text>
+        </view>
+        <textarea value="{{jsonInput}}" bindinput="setJsonInput" class="textarea-field" placeholder='请输入JSON数据，如：{"name": "张三", "age": 25}' maxlength="5000" />
+        <view class="textarea-counter">{{jsonInput.length}}/5000</view>
+      </view>
+
+      <!-- 转换选项 -->
+      <view class="options-section">
+        <view class="option-item">
+          <checkbox checked="{{addRootElement}}" bindtap="toggleAddRoot" />
+          <text class="option-label">添加根元素</text>
+        </view>
+        <view class="option-item">
+          <text class="option-label">根元素名：</text>
+          <input type="text" value="{{rootElementName}}" bindinput="setRootElementName" class="option-input" placeholder="data" />
+        </view>
+      </view>
+
+      <!-- 转换按钮 -->
+      <view class="form-item btn-item">
+        <button class="convert-btn full-width-btn" bindtap="convertJsonToXml">
+          <text class="btn-text">转换为XML</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- JSON转XML结果 -->
+    <view class="result-section" wx:if="{{showJsonXmlResult}}">
+      <view class="result-box">
+        <view class="result-header">
+          <text class="result-title">XML结果</text>
+          <button class="copy-btn" bindtap="copyResult" data-type="xml">复制</button>
+        </view>
+        <scroll-view class="result-content" scroll-y="true">
+          <text class="xml-output">{{xmlOutput}}</text>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- XML转JSON区域 -->
+  <view class="converter-section" wx:if="{{activeTab === 'xml2json'}}">
+    <view class="form-container">
+      <!-- XML输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">XML输入</text>
+          <text class="required-mark">*</text>
+        </view>
+        <textarea value="{{xmlInput}}" bindinput="setXmlInput" class="textarea-field" placeholder='请输入XML数据，如：<person><name>张三</name><age>25</age></person>' maxlength="5000" />
+        <view class="textarea-counter">{{xmlInput.length}}/5000</view>
+      </view>
+
+      <!-- 转换选项 -->
+      <view class="options-section">
+        <view class="option-item">
+          <checkbox checked="{{formatOutput}}" bindtap="toggleFormat" />
+          <text class="option-label">格式化输出</text>
+        </view>
+        <view class="option-item">
+          <checkbox checked="{{preserveAttributes}}" bindtap="togglePreserveAttrs" />
+          <text class="option-label">保留属性</text>
+        </view>
+      </view>
+
+      <!-- 转换按钮 -->
+      <view class="form-item btn-item">
+        <button class="convert-btn full-width-btn" bindtap="convertXmlToJson">
+          <text class="btn-text">转换为JSON</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- XML转JSON结果 -->
+    <view class="result-section" wx:if="{{showXmlJsonResult}}">
+      <view class="result-box">
+        <view class="result-header">
+          <text class="result-title">JSON结果</text>
+          <button class="copy-btn" bindtap="copyResult" data-type="json">复制</button>
+        </view>
+        <scroll-view class="result-content" scroll-y="true">
+          <text class="json-output">{{jsonOutput}}</text>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-section" wx:if="{{errorMessage}}">
+    <view class="error-box">
+      <text class="error-icon">❌</text>
+      <text class="error-text">{{errorMessage}}</text>
+      <button class="close-error-btn" bindtap="clearError">×</button>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 使用帮助</view>
+    <view class="help-content" wx:if="{{activeTab === 'json2xml'}}">
+      <text class="help-text">• JSON键名将转换为XML元素名</text>
+      <text class="help-text">• JSON字符串值将成为XML文本内容</text>
+      <text class="help-text">• 支持嵌套对象和数组结构</text>
+      <text class="help-text">• 布尔值和null值会被适当处理</text>
+    </view>
+    <view class="help-content" wx:else>
+      <text class="help-text">• XML元素名将转换为JSON键名</text>
+      <text class="help-text">• XML文本内容将成为JSON字符串值</text>
+      <text class="help-text">• 支持嵌套元素和属性</text>
+      <text class="help-text">• 会自动处理重复的元素名</text>
+    </view>
+  </view>
+</view>

@@ -1,18 +1,39 @@
 <!--leapyear.wxml-->
 <view class="container">
-  <view class="header">
-    <text class="title">判断是否闰年</text>
-  </view>
-  <view class="content">
-    <view class="input-section">
-      <text class="label">请输入年份：</text>
-      <input type="number" placeholder="请输入年份" bindinput="inputChange" class="input"/>
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 标题 -->
+    <view class="header">
+      <text class="title">判断是否闰年</text>
     </view>
-    <view class="button-section">
-      <button bindtap="checkLeapYear" class="button">判断</button>
+
+    <!-- 年份输入 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">请输入年份</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="input-with-unit">
+        <input type="number" value="{{year}}" bindinput="inputChange" class="input-field" placeholder="例如：2024"/>
+        <text class="unit-text">年</text>
+      </view>
     </view>
-    <view wx:if="{{result !== ''}}" class="result-section">
-      <text class="result-text">{{result}}</text>
+
+    <!-- 判断按钮 -->
+    <view class="form-item btn-item">
+      <button class="calculate-btn full-width-btn" bindtap="checkLeapYear">
+        <text class="btn-text">判断</text>
+      </button>
+    </view>
+
+    <!-- 结果显示 -->
+    <view class="form-item" wx:if="{{result !== ''}}">
+      <view class="form-label">
+        <text class="label-text">判断结果</text>
+      </view>
+      <view class="result-box">
+        <text class="output-text">{{result}}</text>
+      </view>
     </view>
   </view>
 </view>

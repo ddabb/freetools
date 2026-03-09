@@ -1,0 +1,125 @@
+<view class="container">
+  <!-- 头部说明 -->
+  <view class="header-section">
+    <view class="game-title">🎮 24点速算挑战</view>
+    <view class="game-desc">使用给定的4个数字，通过加减乘除运算得到24</view>
+    <view class="game-rules">规则：每个数字必须使用且只能使用一次</view>
+  </view>
+
+  <!-- 游戏控制区域 -->
+  <view class="control-section">
+    <view class="numbers-display">
+      <view class="number-card {{index === 0 ? 'first' : ''}} {{index === 1 ? 'second' : ''}} {{index === 2 ? 'third' : ''}} {{index === 3 ? 'fourth' : ''}}" 
+            wx:for="{{numbers}}" wx:key="index" wx:for-index="index">
+        <text class="number-text">{{item}}</text>
+      </view>
+    </view>
+    
+    <view class="control-buttons">
+      <button class="control-btn new-game-btn" bindtap="generateNewGame">
+        <text class="btn-icon">🎲</text>
+        <text class="btn-text">新游戏</text>
+      </button>
+      <button class="control-btn hint-btn" bindtap="showHint" disabled="{{showingHint}}">
+        <text class="btn-icon">💡</text>
+        <text class="btn-text">提示</text>
+      </button>
+      <button class="control-btn solution-btn" bindtap="showSolution" disabled="{{solutionFound}}">
+        <text class="btn-icon">🔍</text>
+        <text class="btn-text">答案</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 用户输入区域 -->
+  <view class="input-section">
+    <view class="expression-input-container">
+      <input type="text" value="{{expression}}" bindinput="setExpression" class="expression-input" placeholder="输入算式，如：(1+2+3)×4" />
+      <button class="clear-btn" bindtap="clearExpression" wx:if="{{expression}}">×</button>
+    </view>
+    
+    <view class="quick-operators">
+      <button class="operator-btn" bindtap="appendOperator" data-op="+">+</button>
+      <button class="operator-btn" bindtap="appendOperator" data-op="-">-</button>
+      <button class="operator-btn" bindtap="appendOperator" data-op="×">×</button>
+      <button class="operator-btn" bindtap="appendOperator" data-op="÷">÷</button>
+      <button class="operator-btn" bindtap="appendOperator" data-op="(">(</button>
+      <button class="operator-btn" bindtap="appendOperator" data-op=")">)</button>
+    </view>
+
+    <view class="action-buttons">
+      <button class="check-btn" bindtap="checkAnswer" disabled="{{!expression}}">
+        <text class="btn-text">检验答案</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 结果显示区域 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-box {{isCorrect ? 'correct' : 'incorrect'}}">
+      <view class="result-icon">{{isCorrect ? '🎉' : '😅'}}</view>
+      <view class="result-message">{{resultMessage}}</view>
+      <view class="result-expression" wx:if="{{isCorrect}}">
+        <text class="expression-display">{{expression}} = 24</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示区域 -->
+  <view class="hint-section" wx:if="{{showingHint}}">
+    <view class="hint-box">
+      <view class="hint-header">💡 解题提示</view>
+      <view class="hint-content">
+        <text class="hint-text">{{currentHint}}</text>
+      </view>
+      <button class="close-hint-btn" bindtap="closeHint">关闭提示</button>
+    </view>
+  </view>
+
+  <!-- 答案区域 -->
+  <view class="solution-section" wx:if="{{showingSolution}}">
+    <view class="solution-box">
+      <view class="solution-header">🔍 参考答案</view>
+      <view class="solution-list">
+        <view class="solution-item" wx:for="{{solutions}}" wx:key="index">
+          <text class="solution-expression">{{item.expression}} = 24</text>
+          <text class="solution-desc">{{item.description}}</text>
+        </view>
+      </view>
+      <button class="close-solution-btn" bindtap="closeSolution">关闭答案</button>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-section">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{gamesPlayed}}</text>
+        <text class="stat-label">已玩局数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{correctAnswers}}</text>
+        <text class="stat-label">答对题数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{accuracy}}%</text>
+        <text class="stat-label">正确率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{gameHistory.length > 0}}">
+    <view class="history-header">📝 最近游戏</view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{gameHistory}}" wx:key="index">
+        <view class="history-numbers">
+          <text class="history-number" wx:for="{{item.numbers}}" wx:key="numIndex" wx:for-item="num">{{num}}</text>
+        </view>
+        <view class="history-result {{item.solved ? 'solved' : 'unsolved'}}">
+          {{item.solved ? '✓ 已解' : '✗ 未解'}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

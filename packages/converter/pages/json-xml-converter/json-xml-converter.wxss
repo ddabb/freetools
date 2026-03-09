@@ -1,0 +1,350 @@
+/**packages/converter/pages/json-xml-converter/json-xml-converter.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* 标签页样式 */
+.tab-container {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 8rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 20rpx;
+  border-radius: 15rpx;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.tab-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.tab-item.active .tab-text {
+  color: white;
+}
+
+/* 转换器区域 */
+.converter-section {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.label-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-right: 10rpx;
+}
+
+.required-mark {
+  color: #ff4757;
+  font-size: 28rpx;
+}
+
+/* 文本域样式 */
+.textarea-field {
+  width: 100%;
+  min-height: 200rpx;
+  background: #f8f9fa;
+  border: 2rpx solid transparent;
+  border-radius: 15rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.textarea-field:focus {
+  border-color: #11998e;
+  background: white;
+  box-shadow: 0 0 0 6rpx rgba(17, 153, 142, 0.1);
+}
+
+.textarea-counter {
+  text-align: right;
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 10rpx;
+}
+
+/* 选项区域 */
+.options-section {
+  background: rgba(17, 153, 142, 0.05);
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.option-item:last-child {
+  margin-bottom: 0;
+}
+
+.option-label {
+  font-size: 28rpx;
+  color: #555;
+  margin-left: 15rpx;
+}
+
+.option-input {
+  flex: 1;
+  margin-left: 15rpx;
+  background: white;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 15rpx 20rpx;
+  font-size: 26rpx;
+}
+
+/* 按钮样式 */
+.btn-item {
+  margin-top: 40rpx;
+  margin-bottom: 0;
+}
+
+.convert-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  box-shadow: 0 15rpx 40rpx rgba(17, 153, 142, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.convert-btn:not(.disabled):active {
+  transform: translateY(-2rpx) scale(1.02);
+  box-shadow: 0 20rpx 50rpx rgba(17, 153, 142, 0.5);
+}
+
+.convert-btn.disabled {
+  background: #ccc;
+  box-shadow: none;
+}
+
+.full-width-btn {
+  width: 100%;
+}
+
+.btn-text {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* 结果区域 */
+.result-section {
+  margin-bottom: 40rpx;
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.result-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  overflow: hidden;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  background: rgba(17, 153, 142, 0.1);
+  border-bottom: 2rpx solid rgba(17, 153, 142, 0.2);
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.copy-btn {
+  background: #11998e;
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 15rpx 25rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.result-content {
+  max-height: 400rpx;
+  padding: 30rpx;
+}
+
+.xml-output,
+.json-output {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+  font-family: 'Monaco', 'Menlo', monospace;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.xml-output {
+  color: #cc6600;
+}
+
+.json-output {
+  color: #0066cc;
+}
+
+/* 错误提示区域 */
+.error-section {
+  margin-bottom: 40rpx;
+}
+
+.error-box {
+  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+  border: 2rpx solid #ff4757;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  position: relative;
+}
+
+.error-icon {
+  font-size: 40rpx;
+}
+
+.error-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #721c24;
+  font-weight: 600;
+}
+
+.close-error-btn {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #ff4757;
+  color: white;
+  border: none;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 帮助区域 */
+.help-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.help-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25rpx;
+  text-align: center;
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.help-text {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.5;
+  padding-left: 20rpx;
+  position: relative;
+}
+
+.help-text:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #11998e;
+  font-weight: bold;
+}
+
+/* 动画效果 */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

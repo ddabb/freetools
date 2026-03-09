@@ -11,10 +11,13 @@ Page({
       '体积': ['立方米', '升', '毫升', '加仑'],
       '时间': ['秒', '分钟', '小时', '天', '周', '年']
     },
+    currentUnits: ['米', '千米', '厘米', '毫米', '英里', '英尺', '英寸'],
     fromUnitIndex: 0,
     toUnitIndex: 1,
     inputValue: '',
     resultValue: '',
+    showResult: false,
+    resultFormula: '',
     inputFocus: false
   },
 
@@ -33,13 +36,7 @@ Page({
   },
 
   onCategoryChange(e) {
-    let categoryIndex
-    if (e.currentTarget && e.currentTarget.dataset.index !== undefined) {
-      categoryIndex = parseInt(e.currentTarget.dataset.index)
-    } else {
-      categoryIndex = parseInt(e.detail.value)
-    }
-    
+    const categoryIndex = parseInt(e.detail.value)
     const units = this.data.categoryUnits[this.data.categories[categoryIndex]]
     this.setData({
       categoryIndex,
@@ -47,57 +44,11 @@ Page({
       toUnitIndex: units.length > 1 ? 1 : 0,
       inputValue: '',
       resultValue: '',
+      showResult: false,
       inputFocus: true
     })
-    this.calculate()
-  },
-
-  // 选择单位（点击芯片）
-  selectUnit(e) {
-    const { index, type } = e.currentTarget.dataset
-    const idx = parseInt(index)
-    
-    if (type === 'from') {
-      if (idx !== this.data.toUnitIndex) {
-        this.setData({ fromUnitIndex: idx })
-      }
-    } else {
-      if (idx !== this.data.fromUnitIndex) {
-        this.setData({ toUnitIndex: idx })
-      }
-    }
-    this.calculate()
-  },
-
-  // 快捷输入
-  quickInput(e) {
-    const value = e.currentTarget.dataset.value
-    this.setData({ 
-      inputValue: value,
-      inputFocus: false
-    })
-    this.calculate()
-  },
-
-  // 复制结果
-  copyResult() {
-    if (!this.data.resultValue) {
-      wx.showToast({
-        title: '暂无结果可复制',
-        icon: 'none'
-      })
-      return
-    }
-    
-    wx.setClipboardData({
-      data: `${this.data.resultValue} ${this.data.categoryUnits[this.data.categories[this.data.categoryIndex]][this.data.toUnitIndex]}`,
-      success: () => {
-        wx.showToast({
-          title: '已复制到剪贴板',
-          icon: 'success'
-        })
-      }
-    })
+    // 更新当前单位列表
+    this.updateCurrentUnits()
   },
 
   onFromUnitChange(e) {
@@ -125,7 +76,10 @@ Page({
   calculate() {
     const { categoryIndex, fromUnitIndex, toUnitIndex, inputValue } = this.data
     if (!inputValue) {
-      this.setData({ resultValue: '' })
+      this.setData({ 
+        resultValue: '',
+        showResult: false
+      })
       return
     }
 
@@ -135,7 +89,10 @@ Page({
 
     const value = parseFloat(inputValue)
     if (isNaN(value)) {
-      this.setData({ resultValue: '' })
+      this.setData({ 
+        resultValue: '',
+        showResult: false
+      })
       return
     }
 
@@ -153,7 +110,14 @@ Page({
       formattedResult = parseFloat(result.toFixed(6))
     }
 
-    this.setData({ resultValue: formattedResult.toString() })
+    // 生成转换公式说明
+    const formula = `${value} ${fromUnit} → ${formattedResult} ${toUnit}`
+
+    this.setData({ 
+      resultValue: formattedResult.toString(),
+      resultFormula: formula,
+      showResult: true
+    })
   },
 
   toBaseUnit(value, unit, category) {
@@ -246,8 +210,12 @@ Page({
       fromUnitIndex: toUnitIndex,
       toUnitIndex: fromUnitIndex,
       inputValue: resultValue,
-      resultValue: inputValue
+      resultValue: inputValue,
+      showResult: resultValue ? true : false
     })
+    if (resultValue) {
+      this.calculate()
+    }
   },
 
   reset() {
@@ -255,7 +223,8 @@ Page({
       fromUnitIndex: 0,
       toUnitIndex: 1,
       inputValue: '',
-      resultValue: ''
+      resultValue: '',
+      showResult: false
     })
   },
 

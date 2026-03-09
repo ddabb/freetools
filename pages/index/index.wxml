@@ -1,90 +1,201 @@
 <!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <!-- 搜索栏 -->
-    <view class="search-bar">
-      <view class="search-input">
-        <text class="search-icon">🔍</text>
-        <input
-          placeholder="搜索工具"
-          class="input"
-          value="{{searchText}}"
-          bindinput="onSearchInput"
-        />
-        <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
-      </view>
-    </view>
-
-    <!-- 搜索结果 -->
-    <view wx:if="{{showSearchResult}}" class="search-result">
-      <text class="section-title">搜索结果</text>
-      <view wx:if="{{filteredTools.length > 0 || filteredCategories.length > 0}}">
-        <!-- 搜索到的工具 -->
-        <view wx:if="{{filteredTools.length > 0}}" class="search-tools">
-          <view class="tool-grid search-grid">
-            <tool-card
-              wx:for="{{filteredTools}}"
-              wx:key="id"
-              name="{{item.name}}"
-              icon="{{item.icon}}"
-              color="{{item.color}}"
-              url="{{item.url}}"
-              size="large"
-            />
-          </view>
-        </view>
-        <!-- 搜索到的分类 -->
-        <view wx:if="{{filteredCategories.length > 0}}" class="search-categories">
-          <view class="category-list">
-            <category-card
-              wx:for="{{filteredCategories}}"
-              wx:key="name"
-              name="{{item.name}}"
-              icon="{{item.icon}}"
-              color="{{item.color}}"
-              url="{{item.url}}"
-              description="{{item.description}}"
-              size="small"
-            />
-          </view>
-        </view>
-      </view>
-      <view wx:else class="no-result">
-        <text class="no-result-text">未找到相关工具</text>
-      </view>
-    </view>
-
-    <!-- 默认显示的常用工具（无搜索时显示） -->
-    <view wx:else class="section">
-      <text class="section-title">常用工具</text>
-      <view class="tool-grid">
-        <tool-card
-          wx:for="{{commonTools}}"
-          wx:key="id"
-          name="{{item.name}}"
-          icon="{{item.icon}}"
-          color="{{item.color}}"
-          url="{{item.url}}"
-          size="large"
-        />
-      </view>
-    </view>
-
-    <!-- 默认显示的工具分类（无搜索时显示） -->
-    <view wx:if="{{!showSearchResult}}" class="section">
-      <text class="section-title">工具分类</text>
-      <view class="category-list">
-        <category-card
-          wx:for="{{categories}}"
-          wx:key="name"
-          name="{{item.name}}"
-          icon="{{item.icon}}"
-          color="{{item.color}}"
-          url="{{item.url}}"
-          description="{{item.description}}"
-          size="medium"
-        />
+<view class="home-container">
+  <!-- 顶部Banner -->
+  <view class="banner">
+    <view class="banner-content">
+      <view class="banner-icon">🛠️</view>
+      <view class="banner-text">
+        <text class="banner-title">免费工具箱</text>
+        <text class="banner-subtitle">精选实用工具，提升工作效率</text>
       </view>
     </view>
   </view>
-</scroll-view>
+
+  <!-- 点菜式主体布局 -->
+  <view class="menu-layout">
+    <!-- 左侧分类菜单 -->
+    <view class="category-menu">
+      <view class="menu-title">工具分类</view>
+      <scroll-view class="category-list" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
+        <view 
+          wx:for="{{categories}}" 
+          wx:key="name" 
+          class="category-item {{activeCategory === item.name ? 'category-active' : ''}}"
+          bindtap="switchCategory" 
+          data-category="{{item.name}}"
+        >
+          <view class="category-icon">{{item.icon}}</view>
+          <view class="category-info">
+            <text class="category-name">{{item.name}}</text>
+            <text class="category-count">{{getCategoryToolCount(item.name)}}个工具</text>
+          </view>
+          <view class="category-arrow" wx:if="{{activeCategory === item.name}}">✓</view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 右侧工具详情列表 -->
+    <view class="tools-panel">
+      <view class="panel-header">
+        <text class="panel-title">{{getCurrentCategoryName()}}</text>
+        <text class="panel-desc">{{getCurrentCategoryDesc()}}</text>
+      </view>
+      
+      <!-- 搜索栏 -->
+      <view class="search-bar">
+        <view class="search-input">
+          <text class="search-icon">🔍</text>
+          <input
+            placeholder="搜索工具"
+            class="input"
+            value="{{searchText}}"
+            bindinput="onSearchInput"
+          />
+          <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
+        </view>
+      </view>
+
+      <!-- 搜索结果 -->
+      <scroll-view class="tools-list" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
+        <view wx:if="{{showSearchResult}}">
+          <text class="section-title">搜索结果</text>
+          <view wx:if="{{filteredTools.length > 0 || filteredCategories.length > 0}}">
+            <!-- 搜索到的工具 -->
+            <view wx:if="{{filteredTools.length > 0}}" class="search-tools">
+              <view wx:for="{{filteredTools}}" wx:key="id" class="tool-card-direct"
+                bindtap="navigateToTool" data-url="{{item.url}}"
+                hover-class="tool-card-hover"
+              >
+                <view class="tool-main">
+                  <view class="tool-icon-wrapper {{getToolCategory(item.id)}}">
+                    <text class="tool-icon">{{item.icon}}</text>
+                  </view>
+                  <view class="tool-info">
+                    <view class="tool-name-row">
+                      <text class="tool-name">{{item.name}}</text>
+                      <view class="tool-frequency">
+                        <text class="frequency-label">热度</text>
+                        <view class="frequency-bar">
+                          <view class="frequency-fill" style="width: {{getToolFrequency(item.id) / 100 * 60}}rpx"></view>
+                        </view>
+                      </view>
+                    </view>
+                    <text class="tool-desc">{{item.description || '实用工具'}}</text>
+                  </view>
+                </view>
+                <view class="tool-action">
+                  <button class="start-btn" hover-class="btn-hover">
+                    <text class="btn-text">开始使用</text>
+                    <text class="btn-icon">→</text>
+                  </button>
+                </view>
+              </view>
+            </view>
+            <!-- 搜索到的分类 -->
+            <view wx:if="{{filteredCategories.length > 0}}" class="search-categories">
+              <view wx:for="{{filteredCategories}}" wx:key="name" class="category-card-direct"
+                bindtap="switchCategory" data-category="{{item.name}}"
+              >
+                <view class="category-icon">{{item.icon}}</view>
+                <view class="category-info">
+                  <text class="category-name">{{item.name}}</text>
+                  <text class="category-desc">{{item.description}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view wx:else class="no-result">
+            <text class="no-result-text">未找到相关工具</text>
+          </view>
+        </view>
+
+        <!-- 默认显示的工具列表（无搜索时显示） -->
+        <view wx:elif="{{!showSearchResult}}">
+          <text class="section-title">{{activeCategory === '常用工具' ? '常用工具' : activeCategory}}</text>
+          <view class="normal-tools">
+            <view wx:if="{{activeCategory === '常用工具'}}">
+              <view wx:for="{{commonTools}}" wx:key="id" class="tool-card-direct"
+                bindtap="navigateToTool" data-url="{{item.url}}"
+                hover-class="tool-card-hover"
+              >
+                <view class="tool-main">
+                  <view class="tool-icon-wrapper {{getToolCategory(item.id)}}">
+                    <text class="tool-icon">{{item.icon}}</text>
+                  </view>
+                  <view class="tool-info">
+                    <view class="tool-name-row">
+                      <text class="tool-name">{{item.name}}</text>
+                      <view class="tool-frequency">
+                        <text class="frequency-label">热度</text>
+                        <view class="frequency-bar">
+                          <view class="frequency-fill" style="width: {{getToolFrequency(item.id) / 100 * 60}}rpx"></view>
+                        </view>
+                      </view>
+                    </view>
+                    <text class="tool-desc">{{item.description || '实用工具'}}</text>
+                  </view>
+                </view>
+                <view class="tool-action">
+                  <button class="start-btn" hover-class="btn-hover">
+                    <text class="btn-text">开始使用</text>
+                    <text class="btn-icon">→</text>
+                  </button>
+                </view>
+              </view>
+            </view>
+            <view wx:else>
+              <view wx:for="{{getToolsByCategory(activeCategory)}}" wx:key="id" class="tool-card-direct"
+                bindtap="navigateToTool" data-url="{{item.url}}"
+                hover-class="tool-card-hover"
+              >
+                <view class="tool-main">
+                  <view class="tool-icon-wrapper {{getToolCategory(item.id)}}">
+                    <text class="tool-icon">{{item.icon}}</text>
+                  </view>
+                  <view class="tool-info">
+                    <view class="tool-name-row">
+                      <text class="tool-name">{{item.name}}</text>
+                      <view class="tool-frequency">
+                        <text class="frequency-label">热度</text>
+                        <view class="frequency-bar">
+                          <view class="frequency-fill" style="width: {{getToolFrequency(item.id) / 100 * 60}}rpx"></view>
+                        </view>
+                      </view>
+                    </view>
+                    <text class="tool-desc">{{item.description || '实用工具'}}</text>
+                  </view>
+                </view>
+                <view class="tool-action">
+                  <button class="start-btn" hover-class="btn-hover">
+                    <text class="btn-text">开始使用</text>
+                    <text class="btn-icon">→</text>
+                  </button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 最近使用工具栏 -->
+  <view class="recent-section" wx:if="{{recentTools.length > 0}}">
+    <view class="section-header">
+      <view class="section-title">最近使用</view>
+      <text class="clear-history" bindtap="clearRecentTools">清空</text>
+    </view>
+    <scroll-view class="recent-list" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view 
+        wx:for="{{recentTools}}" 
+        wx:key="id" 
+        class="recent-item"
+        bindtap="navigateToTool" 
+        data-url="{{item.url}}"
+      >
+        <view class="recent-icon">{{item.icon}}</view>
+        <text class="recent-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

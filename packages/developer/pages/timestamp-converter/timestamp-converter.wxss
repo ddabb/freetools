@@ -1,0 +1,308 @@
+/**packages/developer/pages/timestamp-converter/timestamp-converter.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* 当前时间区域 */
+.current-time-section {
+  margin-bottom: 40rpx;
+}
+
+.current-time-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  text-align: center;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.current-time-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+
+.current-time-value {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #0984e3;
+  margin-bottom: 15rpx;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.current-timestamp {
+  display: block;
+  font-size: 26rpx;
+  color: #888;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* 转换器区域 */
+.converter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+}
+
+.converter-block {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.block-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+/* 输入组 */
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input-field {
+  width: 100%;
+  background: #f8f9fa;
+  border: 2rpx solid transparent;
+  border-radius: 15rpx;
+  padding: 28rpx 24rpx;
+  font-size: 30rpx;
+  color: #333;
+  font-family: 'Monaco', 'Menlo', monospace;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin-bottom: 20rpx;
+}
+
+.input-field:focus {
+  border-color: #74b9ff;
+  background: white;
+  box-shadow: 0 0 0 6rpx rgba(116, 185, 255, 0.1);
+}
+
+/* 快速按钮 */
+.quick-buttons {
+  display: flex;
+  gap: 15rpx;
+}
+
+.quick-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #74b9ff, #0984e3);
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.quick-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 5rpx 15rpx rgba(116, 185, 255, 0.3);
+}
+
+/* 时区选择器 */
+.timezone-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background: rgba(116, 185, 255, 0.1);
+  border-radius: 12rpx;
+}
+
+.selector-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 20rpx;
+  font-weight: 500;
+}
+
+.timezone-picker {
+  flex: 1;
+}
+
+.picker-display {
+  background: white;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 26rpx;
+  color: #333;
+  text-align: center;
+}
+
+/* 日期时间选择器 */
+.date-picker, .time-picker {
+  flex: 1;
+  margin: 0 10rpx;
+}
+
+/* 结果显示 */
+.result-display {
+  border-top: 2rpx solid #f0f0f0;
+  padding-top: 30rpx;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background: rgba(116, 185, 255, 0.05);
+  border-radius: 12rpx;
+}
+
+.result-item:last-child {
+  margin-bottom: 0;
+}
+
+.result-label {
+  font-size: 26rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.result-value {
+  font-size: 26rpx;
+  color: #333;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-weight: 500;
+}
+
+.result-value.highlight {
+  color: #0984e3;
+  font-weight: 700;
+}
+
+.result-value.code {
+  background: rgba(116, 185, 255, 0.1);
+  padding: 8rpx 12rpx;
+  border-radius: 6rpx;
+  border-left: 3rpx solid #74b9ff;
+}
+
+/* 快速区域 */
+.quick-section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.quick-item {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2rpx solid transparent;
+}
+
+.quick-item:active {
+  background: linear-gradient(135deg, #74b9ff, #0984e3);
+  transform: scale(0.95);
+}
+
+.quick-item:active .quick-name,
+.quick-item:active .quick-value {
+  color: white;
+}
+
+.quick-name {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #74b9ff;
+  margin-bottom: 10rpx;
+}
+
+.quick-value {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* 帮助区域 */
+.help-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.help-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25rpx;
+  text-align: center;
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.help-text {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.5;
+  padding-left: 20rpx;
+  position: relative;
+}
+
+.help-text:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #74b9ff;
+  font-weight: bold;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

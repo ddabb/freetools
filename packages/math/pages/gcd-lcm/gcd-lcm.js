@@ -1,0 +1,176 @@
+// packages/math/pages/gcd-lcm/gcd-lcm.js
+Page({
+  data: {
+    num1: '', // 第一个数字
+    num2: '', // 第二个数字
+    gcd: 0, // 最大公约数
+    lcm: 0, // 最小公倍数
+    showResult: false, // 是否显示结果
+    steps: [], // 计算步骤
+    examples: [
+      { num1: 48, num2: 18 },
+      { num1: 100, num2: 75 },
+      { num1: 36, num2: 24 },
+      { num1: 144, num2: 96 }
+    ]
+  },
+
+  // 设置第一个数字
+  setNum1(e) {
+    const value = parseInt(e.detail.value) || '';
+    this.setData({
+      num1: value,
+      showResult: false
+    });
+  },
+
+  // 设置第二个数字
+  setNum2(e) {
+    const value = parseInt(e.detail.value) || '';
+    this.setData({
+      num2: value,
+      showResult: false
+    });
+  },
+
+  // 计算最大公约数和最小公倍数
+  calculate() {
+    const { num1, num2 } = this.data;
+    
+    if (!num1 || !num2) {
+      wx.showToast({
+        title: '请输入两个数字',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (num1 < 1 || num2 < 1) {
+      wx.showToast({
+        title: '请输入大于0的正整数',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (num1 > 999999 || num2 > 999999) {
+      wx.showToast({
+        title: '数字太大，请输入小于100万的数',
+        icon: 'none'
+      });
+      return;
+    }
+
+    try {
+      // 计算最大公约数（欧几里得算法）
+      const gcd = this.calculateGCD(num1, num2);
+      
+      // 计算最小公倍数
+      const lcm = (num1 * num2) / gcd;
+
+      // 生成计算步骤
+      const steps = this.generateSteps(num1, num2, gcd);
+
+      this.setData({
+        gcd,
+        lcm,
+        showResult: true,
+        steps
+      });
+
+      wx.vibrateShort();
+
+    } catch (error) {
+      console.error('计算失败', error);
+      wx.showToast({
+        title: '计算失败，请重试',
+        icon: 'none'
+      });
+    }
+  },
+
+  // 欧几里得算法计算最大公约数
+  calculateGCD(a, b) {
+    let x = Math.abs(a);
+    let y = Math.abs(b);
+    
+    const steps = [];
+    
+    while (y !== 0) {
+      const temp = y;
+      y = x % y;
+      x = temp;
+    }
+    
+    return x;
+  },
+
+  // 生成计算步骤说明
+  generateSteps(num1, num2, gcd) {
+    const steps = [];
+    steps.push(`步骤1：使用欧几里得算法求 ${num1} 和 ${num2} 的最大公约数`);
+    
+    let a = Math.max(num1, num2);
+    let b = Math.min(num1, num2);
+    let stepNum = 2;
+    
+    while (b !== 0) {
+      const remainder = a % b;
+      steps.push(`步骤${stepNum}：${a} ÷ ${b} = ${Math.floor(a/b)} 余 ${remainder}`);
+      a = b;
+      b = remainder;
+      stepNum++;
+    }
+    
+    steps.push(`步骤${stepNum}：余数为0，所以最大公约数是 ${a}`);
+    steps.push(`步骤${stepNum + 1}：最小公倍数 = (${num1} × ${num2}) ÷ ${a} = ${(num1 * num2) / a}`);
+    
+    return steps;
+  },
+
+  // 使用示例
+  useExample(e) {
+    const { num1, num2 } = e.currentTarget.dataset;
+    this.setData({
+      num1,
+      num2,
+      showResult: false
+    });
+    
+    // 自动计算
+    setTimeout(() => {
+      this.calculate();
+    }, 100);
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '最大公约数计算器 - 轻松搞定数学难题',
+      path: '/packages/math/pages/gcd-lcm/gcd-lcm',
+      imageUrl: ''
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '数学工具箱 - 最大公约数和最小公倍数一键计算',
+      imageUrl: ''
+    }
+  },
+
+  // 页面加载时执行
+  onLoad() {
+    // 设置导航栏标题
+    wx.setNavigationBarTitle({
+      title: '最大公约数·最小公倍数'
+    });
+  },
+
+  // 计算属性：是否可以计算
+  get canCalculate() {
+    const { num1, num2 } = this.data;
+    return num1 && num2 && num1 > 0 && num2 > 0;
+  }
+})

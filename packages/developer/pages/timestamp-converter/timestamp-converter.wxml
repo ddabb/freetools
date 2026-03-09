@@ -1,0 +1,98 @@
+<view class="container">
+  <!-- 当前时间显示 -->
+  <view class="current-time-section">
+    <view class="current-time-card">
+      <text class="current-time-label">当前时间</text>
+      <text class="current-time-value">{{currentTime}}</text>
+      <text class="current-timestamp">时间戳: {{currentTimestamp}}</text>
+    </view>
+  </view>
+
+  <!-- 转换区域 -->
+  <view class="converter-section">
+    <!-- 时间戳转日期 -->
+    <view class="converter-block">
+      <view class="block-title">🔢 时间戳 → 日期</view>
+      <view class="input-group">
+        <input type="number" value="{{timestampInput}}" bindinput="setTimestampInput" class="input-field" placeholder="输入时间戳（秒或毫秒）" />
+        <view class="quick-buttons">
+          <button class="quick-btn" bindtap="useCurrentTimestamp">当前</button>
+          <button class="quick-btn" bindtap="useYesterdayTimestamp">昨天</button>
+          <button class="quick-btn" bindtap="useTomorrowTimestamp">明天</button>
+        </view>
+      </view>
+      
+      <view class="timezone-selector">
+        <text class="selector-label">时区:</text>
+        <picker bindchange="setTimezone" value="{{timezoneIndex}}" range="{{timezones}}" class="timezone-picker">
+          <view class="picker-display">{{timezones[timezoneIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="result-display" wx:if="{{timestampResult}}">
+        <view class="result-item">
+          <text class="result-label">本地时间:</text>
+          <text class="result-value highlight">{{timestampResult.localTime}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">UTC时间:</text>
+          <text class="result-value">{{timestampResult.utcTime}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">ISO格式:</text>
+          <text class="result-value code">{{timestampResult.isoFormat}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日期转时间戳 -->
+    <view class="converter-block">
+      <view class="block-title">📅 日期 → 时间戳</view>
+      <view class="input-group">
+        <picker mode="date" value="{{dateInput}}" bindchange="setDateInput" class="date-picker">
+          <view class="picker-display">{{dateInput || '选择日期'}}</view>
+        </picker>
+        <picker mode="time" value="{{timeInput}}" bindchange="setTimeInput" class="time-picker">
+          <view class="picker-display">{{timeInput || '选择时间'}}</view>
+        </picker>
+      </view>
+
+      <view class="result-display" wx:if="{{dateResult}}">
+        <view class="result-item">
+          <text class="result-label">时间戳(秒):</text>
+          <text class="result-value highlight">{{dateResult.timestampSec}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">时间戳(毫秒):</text>
+          <text class="result-value">{{dateResult.timestampMs}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">有效期至:</text>
+          <text class="result-value">{{dateResult.expireTime}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 常用时间戳 -->
+  <view class="quick-section">
+    <view class="section-title">⚡ 常用时间戳</view>
+    <view class="quick-grid">
+      <view class="quick-item" wx:for="{{commonTimestamps}}" wx:key="name" bindtap="useCommonTimestamp" data-timestamp="{{item.value}}" data-name="{{item.name}}">
+        <text class="quick-name">{{item.name}}</text>
+        <text class="quick-value">{{item.displayValue}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 使用说明</view>
+    <view class="help-content">
+      <text class="help-text">• 10位数字为秒级时间戳，13位为毫秒级</text>
+      <text class="help-text">• 支持Unix时间戳与本地时间互转</text>
+      <text class="help-text">• 时间戳从1970年1月1日00:00:00 UTC开始计算</text>
+      <text class="help-text">• 注意时区差异对转换结果的影响</text>
+    </view>
+  </view>
+</view>

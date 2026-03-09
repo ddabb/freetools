@@ -1,0 +1,48 @@
+<view class="container">
+  <view class="section-title">📈 图表生成器</view>
+  <view class="placeholder-content">
+    <text class="placeholder-text">图表生成器开发中...</text>
+    <text class="placeholder-desc">支持柱状图、饼图、折线图等多种图表类型
+
+即将推出功能：
+• 拖拽式图表配置
+• 实时数据绑定
+• 多种图表样式
+• 一键导出图片
+• 响应式设计适配</text>
+  </view>
+  
+  <!-- 基础图表预览 -->
+  <view class="chart-preview">
+    <view class="preview-title">示例预览</view>
+    <view class="sample-charts">
+      <view class="sample-item">
+        <text class="chart-type">柱状图</text>
+        <view class="chart-demo bar-chart">
+          <view class="bar" style="height: 60%;"></view>
+          <view class="bar" style="height: 80%;"></view>
+          <view class="bar" style="height: 45%;"></view>
+          <view class="bar" style="height: 90%;"></view>
+          <view class="bar" style="height: 70%;"></view>
+        </view>
+      </view>
+      
+      <view class="sample-item">
+        <text class="chart-type">饼图</text>
+        <view class="chart-demo pie-chart">
+          <view class="pie-slice slice1"></view>
+          <view class="pie-slice slice2"></view>
+          <view class="pie-slice slice3"></view>
+          <view class="pie-center"></view>
+        </view>
+      </view>
+      
+      <view class="sample-item">
+        <text class="chart-type">折线图</text>
+        <view class="chart-demo line-chart">
+          <canvas canvas-id="sampleLine" class="line-canvas"></canvas>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

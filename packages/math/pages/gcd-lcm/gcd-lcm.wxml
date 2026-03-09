@@ -1,0 +1,66 @@
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 第一个数字输入 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">第一个数字</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="input-with-unit">
+        <input type="number" value="{{num1}}" bindinput="setNum1" class="input-field" placeholder="请输入正整数" min="1" max="999999"/>
+      </view>
+    </view>
+
+    <!-- 第二个数字输入 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">第二个数字</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="input-with-unit">
+        <input type="number" value="{{num2}}" bindinput="setNum2" class="input-field" placeholder="请输入正整数" min="1" max="999999"/>
+      </view>
+    </view>
+
+    <!-- 计算按钮 -->
+    <view class="form-item btn-item">
+      <button class="calculate-btn full-width-btn" bindtap="calculate" disabled="{{!canCalculate}}">
+        <text class="btn-text">计算最大公约数和最小公倍数</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-box">
+      <view class="result-item highlight">
+        <text class="result-label">最大公约数 (GCD)</text>
+        <text class="result-value gcd-value">{{gcd}}</text>
+        <text class="result-formula">{{num1}} = {{gcd}} × {{num1/gcd}}</text>
+        <text class="result-formula">{{num2}} = {{gcd}} × {{num2/gcd}}</text>
+      </view>
+      <view class="result-divider"></view>
+      <view class="result-item highlight">
+        <text class="result-label">最小公倍数 (LCM)</text>
+        <text class="result-value lcm-value">{{lcm}}</text>
+        <text class="result-formula">{{lcm}} = {{num1}} × {{num2}} ÷ {{gcd}}</text>
+      </view>
+      <view class="result-divider"></view>
+      <view class="calculation-steps">
+        <text class="steps-title">计算过程</text>
+        <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷示例 -->
+  <view class="examples-section">
+    <view class="examples-title">快速示例</view>
+    <view class="examples-grid">
+      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-num1="{{item.num1}}" data-num2="{{item.num2}}">
+        <text class="example-text">{{item.num1}} 和 {{item.num2}}</text>
+      </view>
+    </view>
+  </view>
+</view>

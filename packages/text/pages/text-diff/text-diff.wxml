@@ -1,0 +1,187 @@
+<view class="container">
+  <!-- 操作区域 -->
+  <view class="operation-section">
+    <view class="section-title">⚙️ 对比设置</view>
+    <view class="operation-controls">
+      <view class="control-group">
+        <text class="control-label">对比模式:</text>
+        <picker bindchange="setDiffMode" value="{{diffModeIndex}}" range="{{diffModes}}" class="mode-picker">
+          <view class="picker-display">{{diffModes[diffModeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="control-group">
+        <text class="control-label">忽略空格:</text>
+        <switch checked="{{ignoreWhitespace}}" bindchange="toggleIgnoreWhitespace" class="whitespace-switch" />
+      </view>
+      <view class="action-buttons">
+        <button class="action-btn primary" bindtap="compareTexts">
+          <text class="btn-icon">🔍</text>
+          <text class="btn-text">开始对比</text>
+        </button>
+        <button class="action-btn" bindtap="swapTexts">
+          <text class="btn-icon">⇄</text>
+          <text class="btn-text">交换文本</text>
+        </button>
+        <button class="action-btn" bindtap="clearAll">
+          <text class="btn-icon">🗑️</text>
+          <text class="btn-text">清空</text>
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文本输入区域 -->
+  <view class="text-input-section">
+    <view class="text-panels">
+      <!-- 原始文本 -->
+      <view class="text-panel">
+        <view class="panel-header">
+          <text class="panel-title">📄 原始文本 (A)</text>
+          <view class="panel-controls">
+            <button class="mini-btn" bindtap="pasteTextA">粘贴</button>
+            <button class="mini-btn" bindtap="copyTextA">复制</button>
+            <text class="char-count">A: {{textA.length}}</text>
+          </view>
+        </view>
+        <textarea 
+          value="{{textA}}" 
+          bindinput="setTextA" 
+          class="diff-textarea text-a" 
+          placeholder="请输入原始文本..." 
+          maxlength="10000"
+          show-confirm-bar="false"
+        />
+      </view>
+
+      <!-- 对比文本 -->
+      <view class="text-panel">
+        <view class="panel-header">
+          <text class="panel-title">📝 对比文本 (B)</text>
+          <view class="panel-controls">
+            <button class="mini-btn" bindtap="pasteTextB">粘贴</button>
+            <button class="mini-btn" bindtap="copyTextB">复制</button>
+            <text class="char-count">B: {{textB.length}}</text>
+          </view>
+        </view>
+        <textarea 
+          value="{{textB}}" 
+          bindinput="setTextB" 
+          class="diff-textarea text-b" 
+          placeholder="请输入要对比的文本..." 
+          maxlength="10000"
+          show-confirm-bar="false"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计信息区域 -->
+  <view class="stats-section" wx:if="{{comparisonResult}}">
+    <view class="section-title">📊 对比统计</view>
+    <view class="stats-grid">
+      <view class="stat-card added">
+        <text class="stat-number">{{comparisonResult.additions}}</text>
+        <text class="stat-label">新增</text>
+      </view>
+      <view class="stat-card removed">
+        <text class="stat-number">{{comparisonResult.deletions}}</text>
+        <text class="stat-label">删除</text>
+      </view>
+      <view class="stat-card modified">
+        <text class="stat-number">{{comparisonResult.modifications}}</text>
+        <text class="stat-label">修改</text>
+      </view>
+      <view class="stat-card unchanged">
+        <text class="stat-number">{{comparisonResult.unchanged}}</text>
+        <text class="stat-label">未变</text>
+      </view>
+      <view class="stat-card similarity">
+        <text class="stat-number">{{comparisonResult.similarity}}%</text>
+        <text class="stat-label">相似度</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 对比结果区域 -->
+  <view class="result-section" wx:if="{{comparisonResult}}">
+    <view class="section-title">🔍 对比结果</view>
+    
+    <!-- 并排对比视图 -->
+    <view class="side-by-side-view" wx:if="{{diffModeIndex === 0}}">
+      <view class="comparison-row header-row">
+        <view class="line-numbers-label">行号</view>
+        <view class="text-labels">
+          <text class="label-a">原始文本 (A)</text>
+          <text class="label-b">对比文本 (B)</text>
+        </view>
+      </view>
+      
+      <scroll-view scroll-y="true" class="comparison-scroll">
+        <view class="comparison-lines">
+          <view class="comparison-line" wx:for="{{comparisonResult.lines}}" wx:key="index">
+            <view class="line-number">{{item.lineNumber}}</view>
+            <view class="line-content line-a {{item.type}}">
+              <text selectable="true">{{item.contentA || ' '}}</text>
+            </view>
+            <view class="line-content line-b {{item.type}}">
+              <text selectable="true">{{item.contentB || ' '}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 合并对比视图 -->
+    <view class="unified-view" wx:else>
+      <view class="comparison-row header-row">
+        <view class="line-numbers-label">行号</view>
+        <text class="text-label">合并视图</text>
+      </view>
+      
+      <scroll-view scroll-y="true" class="comparison-scroll">
+        <view class="comparison-lines unified-lines">
+          <view class="comparison-line unified-line" wx:for="{{comparisonResult.lines}}" wx:key="index">
+            <view class="line-number">{{item.lineNumber}}</view>
+            <view class="line-content {{item.type}}">
+              <text selectable="true">{{item.contentA || item.contentB || ' '}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="quick-actions" wx:if="{{comparisonResult}}">
+    <view class="section-title">⚡ 快捷操作</view>
+    <view class="quick-buttons">
+      <button class="quick-btn" bindtap="loadSampleDiff">
+        <text class="btn-icon">📋</text>
+        <text class="btn-text">示例对比</text>
+      </button>
+      <button class="quick-btn" bindtap="exportDiff">
+        <text class="btn-icon">💾</text>
+        <text class="btn-text">导出结果</text>
+      </button>
+      <button class="quick-btn" bindtap="shareDiff">
+        <text class="btn-icon">📤</text>
+        <text class="btn-text">分享对比</text>
+      </button>
+      <button class="quick-btn" bindtap="highlightMode">
+        <text class="btn-icon">🎨</text>
+        <text class="btn-text">切换高亮</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 使用说明</view>
+    <view class="help-content">
+      <text class="help-text">• 支持文本、代码、配置文件等多种格式对比</text>
+      <text class="help-text">• 绿色表示新增内容，红色表示删除内容</text>
+      <text class="help-text">• 可选择是否忽略空格差异进行对比</text>
+      <text class="help-text">• 支持并排视图和合并视图两种显示模式</text>
+    </view>
+  </view>
+</view>

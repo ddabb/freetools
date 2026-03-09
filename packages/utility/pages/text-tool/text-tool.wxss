@@ -1,43 +1,104 @@
 /**text-tool.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .container {
-  padding: 20rpx;
+  padding: 16rpx;
+  min-height: 100vh;
 }
 
-.section {
-  margin-bottom: 30rpx;
+/* 标题区域 */
+.header {
+  text-align: center;
+  margin-bottom: 32rpx;
 }
 
-.section-title {
-  font-size: 32rpx;
+.title {
+  font-size: 48rpx;
   font-weight: 700;
   color: white;
-  margin-bottom: 15rpx;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
-.input-box {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+/* 表单容器 */
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20rpx;
-  padding: 24rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
 }
 
-.textarea {
-  width: 100%;
-  height: 300rpx;
-  font-size: 32rpx;
-  border: none;
-  outline: none;
-  resize: none;
+/* 表单项 */
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 表单标签 */
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.label-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.required-mark {
+  color: #ff4757;
+  font-size: 28rpx;
+  margin-left: 8rpx;
+}
+
+/* 带单位的输入框 */
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.input-with-unit:active {
+  border-color: #667eea;
+  background: #fff;
+}
+
+.input-field {
+  flex: 1;
+  padding: 24rpx 28rpx;
+  font-size: 30rpx;
   color: #333;
   font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
 }
 
+.textarea-field {
+  width: 100%;
+  height: 300rpx;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.input-field::placeholder {
+  color: #adb5bd;
+}
+
+/* 按钮网格 */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -48,82 +109,84 @@ page {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 16rpx;
+  border-radius: 12rpx;
   padding: 24rpx;
   font-size: 28rpx;
-  font-weight: 800;
-  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.4);
+  font-weight: 700;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.4);
   transition: all 0.3s ease;
 }
 
 .action-btn:active {
-  transform: scale(0.98);
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
 }
 
-.output-box {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-  border-radius: 20rpx;
+/* 全宽按钮 */
+.full-width-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-width-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+/* 结果显示框 */
+.result-box {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
   padding: 24rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  position: relative;
-  overflow: hidden;
-}
-
-.output-box::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6rpx;
-  background: linear-gradient(90deg, #a18cd1, #fbc2eb);
 }
 
 .output-text {
   flex: 1;
-  font-size: 32rpx;
+  font-size: 30rpx;
   color: #333;
   word-break: break-all;
   margin-right: 20rpx;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .copy-btn {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 12rpx;
   padding: 16rpx 24rpx;
   font-size: 24rpx;
-  font-weight: 800;
-  box-shadow: 0 6rpx 20rpx rgba(245, 87, 108, 0.3);
+  font-weight: 700;
+  box-shadow: 0 6rpx 16rpx rgba(102, 126, 234, 0.3);
   transition: all 0.3s ease;
 }
 
 .copy-btn:active {
-  transform: scale(0.95);
+  transform: translateY(1rpx);
+  box-shadow: 0 3rpx 8rpx rgba(102, 126, 234, 0.3);
 }
 
+/* 统计框 */
 .count-box {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-  border-radius: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
   padding: 24rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.count-box::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6rpx;
-  background: linear-gradient(90deg, #a18cd1, #fbc2eb);
 }
 
 .count-item {
@@ -131,7 +194,7 @@ page {
   justify-content: space-between;
   align-items: center;
   padding: 20rpx 0;
-  border-bottom: 2rpx solid #f0f0f0;
+  border-bottom: 2rpx solid #e9ecef;
 }
 
 .count-item:last-child {
@@ -139,13 +202,13 @@ page {
 }
 
 .count-label {
-  font-size: 32rpx;
+  font-size: 30rpx;
   color: #666;
   font-weight: 600;
 }
 
 .count-value {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 800;
-  color: #a18cd1;
+  color: #667eea;
 }

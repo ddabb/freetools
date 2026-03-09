@@ -1,12 +1,18 @@
 <!--packages/life/pages/life-countdown/life-countdown.wxml-->
 <view class="container">
+  <!-- 头部介绍 -->
+  <view class="header">
+    <text class="header-title">人生格子</text>
+    <text class="header-subtitle">900个格子，见证生命流逝</text>
+  </view>
+
   <!-- 出生日期输入 -->
   <view class="section">
-    <text class="section-title">出生日期</text>
+    <text class="section-title">您的出生日期</text>
     <view class="input-box">
       <picker mode="date" value="{{birthDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setBirthDate" class="picker">
-        <view class="picker-view">
-          {{birthDate || '请选择出生日期'}}
+        <view class="picker-view {{birthDate ? 'has-value' : ''}}">
+          {{birthDate || '点击选择出生日期'}}
         </view>
       </picker>
     </view>
@@ -14,65 +20,100 @@
 
   <!-- 预计寿命设置 -->
   <view class="section">
-    <text class="section-title">预计寿命（岁）</text>
+    <text class="section-title">预期寿命（岁）</text>
     <view class="input-box">
-      <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input"/>
-    </view>
-  </view>
-
-  <!-- 结婚日期输入 -->
-  <view class="section">
-    <text class="section-title">结婚日期</text>
-    <view class="input-box">
-      <picker mode="date" value="{{weddingDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setWeddingDate" class="picker">
-        <view class="picker-view">
-          {{weddingDate || '请选择结婚日期（可选）'}}
-        </view>
-      </picker>
+      <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input" placeholder="默认75岁"/>
     </view>
   </view>
 
   <!-- 计算按钮 -->
   <view class="section">
-    <button class="calculate-btn" bindtap="calculate">计算</button>
+    <button class="calculate-btn {{!birthDate ? 'disabled' : ''}}" bindtap="calculate" disabled="{{!birthDate}}">
+      开启人生格子之旅
+    </button>
   </view>
 
   <!-- 结果展示 -->
-  <view class="section" wx:if="{{showResult}}">
-    <view class="result-box">
-      <view class="result-item">
-        <text class="result-label">已活天数</text>
-        <text class="result-value days-lived">{{daysLived}}</text>
+  <view class="section result-section" wx:if="{{showResult}}">
+    <!-- 统计信息 -->
+    <view class="stats-container">
+      <view class="stat-item">
+        <text class="stat-number">{{daysLived}}</text>
+        <text class="stat-label">已活天数</text>
       </view>
-      <view class="result-row">
-        <view class="result-item">
-          <text class="result-label">剩余预期寿命</text>
-          <text class="result-value life-left">{{lifeLeft}} 天</text>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{lifeLeft}}</text>
+        <text class="stat-label">剩余天数</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number highlight">{{progress}}%</text>
+        <text class="stat-label">人生进度</text>
+      </view>
+    </view>
+
+    <!-- 900个格子可视化 -->
+    <view class="grid-section">
+      <view class="grid-title">
+        <text>人生画卷（共{{totalGrids}}格，{{gridRows}}×{{gridCols}}）</text>
+        <text class="grid-percentage">已填充 {{gridPercentage}}%（{{livedGrids}}/{{totalGrids}}）</text>
+      </view>
+      <view class="grid-container">
+        <scroll-view class="grid-scroll" scroll-x="false" scroll-y="true" enhanced="true" bounces="true">
+          <view class="grid-wrapper">
+            <view class="grid-row" wx:for="{{gridRows}}" wx:key="row-{{index}}" wx:for-index="rowIndex">
+              <view class="grid-cell {{colIndex < getRowLivedGrids(rowIndex) ? 'lived' : ''}} {{colIndex == getRowLivedGrids(rowIndex) && progress < 100 ? 'current' : ''}}" 
+                    wx:for="{{gridCols}}" 
+                    wx:key="cell-{{rowIndex}}-{{colIndex}}" 
+                    wx:for-index="colIndex"
+                    data-index="{{rowIndex * gridCols + colIndex}}">
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view class="grid-legend">
+        <view class="legend-item">
+          <view class="legend-color lived"></view>
+          <text>已度过的时光</text>
         </view>
-        <view class="result-item">
-          <text class="result-label">人生进度</text>
-          <text class="result-value progress">{{progress}}%</text>
+        <view class="legend-item">
+          <view class="legend-color current"></view>
+          <text>正在经历</text>
+        </view>
+        <view class="legend-item">
+          <view class="legend-color future"></view>
+          <text>未来可期</text>
         </view>
       </view>
+      <view class="grid-info">
+        <text>💡 每格 ≈ {{getDaysPerGridText()}}，拖动可查看全部格子</text>
+      </view>
+    </view>
+
+    <!-- 人生思考引导 -->
+    <view class="reflection-section">
+      <view class="reflection-header">
+        <text class="reflection-title">🤔 人生思考</text>
+        <button class="refresh-btn" bindtap="refreshQuestion">换一题</button>
+      </view>
+      <view class="question-card">
+        <text class="question-text">{{randomQuestion}}</text>
+      </view>
+      <view class="reflection-hint">
+        <text>静下心来，认真思考这个问题。生命有限，别让时光在无意识中溜走。</text>
+      </view>
+    </view>
+
+    <!-- 重置按钮 -->
+    <view class="reset-section">
+      <button class="reset-btn" bindtap="reset">重新计算</button>
     </view>
   </view>
 
-  <!-- 重要纪念日 -->
-  <view class="section" wx:if="{{showResult}}">
-    <text class="section-title">重要纪念日</text>
-    <view class="anniversary-box">
-      <view class="anniversary-item">
-        <text class="anniversary-name">生日</text>
-        <text class="anniversary-days">还有 {{birthdayDays}} 天</text>
-      </view>
-      <view class="anniversary-item">
-        <text class="anniversary-name">结婚纪念日</text>
-        <text class="anniversary-days">还有 {{weddingDays}} 天</text>
-      </view>
-      <view class="anniversary-item">
-        <text class="anniversary-name">新年</text>
-        <text class="anniversary-days">还有 {{newYearDays}} 天</text>
-      </view>
-    </view>
+  <!-- 底部提示 -->
+  <view class="footer-tip" wx:if="{{!showResult}}">
+    <text>💡 每个格子约等于2.67小时，900格代表约75年的人生</text>
   </view>
 </view>

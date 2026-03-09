@@ -1,0 +1,104 @@
+<view class="container">
+  <!-- 正则输入区域 -->
+  <view class="regex-section">
+    <view class="section-title">正则表达式</view>
+    <view class="regex-input-container">
+      <input type="text" value="{{regexPattern}}" bindinput="setRegexPattern" class="regex-input" placeholder="请输入正则表达式，如：^[a-zA-Z0-9]+$" />
+      <view class="flags-container">
+        <checkbox-group bindchange="setFlags">
+          <label class="flag-item" wx:for="{{availableFlags}}" wx:key="flag">
+            <checkbox value="{{item.flag}}" checked="{{item.enabled}}" />
+            <text class="flag-text">{{item.label}}</text>
+          </label>
+        </checkbox-group>
+      </view>
+    </view>
+    
+    <!-- 常用正则示例 -->
+    <view class="quick-regex-section">
+      <view class="quick-regex-title">常用正则：</view>
+      <view class="quick-regex-list">
+        <view class="quick-regex-item" wx:for="{{commonRegex}}" wx:key="name" bindtap="useCommonRegex" data-regex="{{item.pattern}}" data-flags="{{item.flags}}">
+          <text class="regex-name">{{item.name}}</text>
+          <text class="regex-preview">{{item.pattern}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 测试文本区域 -->
+  <view class="test-section">
+    <view class="section-title">测试文本</view>
+    <textarea value="{{testText}}" bindinput="setTestText" class="test-textarea" placeholder="请输入要测试的文本..." maxlength="10000" />
+    <view class="test-controls">
+      <button class="test-btn" bindtap="testRegex">
+        <text class="btn-text">测试匹配</text>
+      </button>
+      <view class="test-stats">
+        <text class="stat-item">匹配数: {{matchCount}}</text>
+        <text class="stat-item">文本长度: {{testText.length}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 测试结果区域 -->
+  <view class="results-section" wx:if="{{showResults}}">
+    <!-- 匹配结果 -->
+    <view class="matches-result" wx:if="{{matches.length > 0}}">
+      <view class="result-title">匹配结果 ({{matches.length}}个)</view>
+      <scroll-view class="matches-list" scroll-y="true">
+        <view class="match-item" wx:for="{{matches}}" wx:key="index">
+          <view class="match-header">
+            <text class="match-index">#{{index + 1}}</text>
+            <text class="match-position">位置: {{item.index}} - {{item.index + item[0].length}}</text>
+          </view>
+          <view class="match-content">
+            <text class="match-text">"{{item[0]}}"</text>
+          </view>
+          <view class="match-groups" wx:if="{{item.length > 1}}">
+            <text class="groups-title">捕获组:</text>
+            <view class="group-item" wx:for="{{item.slice(1)}}" wx:for-item="group" wx:key="groupIndex">
+              <text class="group-text">$1: "{{group}}"</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 高亮显示 -->
+    <view class="highlight-result" wx:if="{{testText}}">
+      <view class="result-title">文本高亮</view>
+      <view class="highlight-text">
+        <text class="text-part" wx:for="{{highlightedParts}}" wx:key="index" class="{{"highlight-" + item.type}}">
+          {{item.text}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 无匹配结果 -->
+    <view class="no-matches" wx:if="{{showResults && matches.length === 0 && testText}}">
+      <view class="no-match-icon">🔍</view>
+      <text class="no-match-text">未找到匹配项</text>
+    </view>
+  </view>
+
+  <!-- 错误信息 -->
+  <view class="error-section" wx:if="{{errorMessage}}">
+    <view class="error-box">
+      <text class="error-icon">❌</text>
+      <text class="error-text">{{errorMessage}}</text>
+      <button class="close-error-btn" bindtap="clearError">×</button>
+    </view>
+  </view>
+
+  <!-- 正则说明 -->
+  <view class="help-section">
+    <view class="help-title">💡 正则表达式说明</view>
+    <view class="help-content">
+      <text class="help-text">• ^ 开头，$ 结尾，. 任意字符，* 零次或多次</text>
+      <text class="help-text">• + 一次或多次，? 零次或一次，\d 数字，\w 字母数字</text>
+      <text class="help-text">• [abc] 字符集，(abc) 分组，| 或操作符</text>
+      <text class="help-text">• i 忽略大小写，g 全局匹配，m 多行模式</text>
+    </view>
+  </view>
+</view>

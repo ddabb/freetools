@@ -1,0 +1,123 @@
+<view class="container">
+  <!-- 工具栏区域 -->
+  <view class="toolbar-section">
+    <view class="section-title">🛠️ 编辑工具</view>
+    <view class="toolbar-controls">
+      <view class="control-group">
+        <text class="control-label">主题:</text>
+        <picker bindchange="setTheme" value="{{themeIndex}}" range="{{themes}}" class="theme-picker">
+          <view class="picker-display">{{themes[themeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="action-buttons">
+        <button class="action-btn" bindtap="insertTemplate">
+          <text class="btn-icon">📋</text>
+          <text class="btn-text">模板</text>
+        </button>
+        <button class="action-btn" bindtap="toggleFullscreen">
+          <text class="btn-icon">📺</text>
+          <text class="btn-text">全屏</text>
+        </button>
+        <button class="action-btn primary" bindtap="exportHtml">
+          <text class="btn-icon">💾</text>
+          <text class="btn-text">导出</text>
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑器区域 -->
+  <view class="editor-section">
+    <view class="editor-header">
+      <text class="panel-title">✏️ Markdown编辑器</text>
+      <view class="editor-controls">
+        <button class="mini-btn" bindtap="boldText">B</button>
+        <button class="mini-btn" bindtap="italicText">I</button>
+        <button class="mini-btn" bindtap="linkText">🔗</button>
+        <button class="mini-btn" bindtap="codeText">{ }</button>
+        <text class="char-count">字数: {{markdownText.length}}</text>
+      </view>
+    </view>
+    <textarea 
+      value="{{markdownText}}" 
+      bindinput="setMarkdownText" 
+      class="markdown-editor" 
+      placeholder="在此输入Markdown文本...\n\n支持语法:\n# 标题1\n## 标题2\n**粗体** \n*斜体*\n- 列表项\n[链接](url)\n`代码`\n> 引用" 
+      maxlength="50000"
+      show-confirm-bar="false"
+    />
+  </view>
+
+  <!-- 预览区域 -->
+  <view class="preview-section">
+    <view class="preview-header">
+      <text class="panel-title">👀 实时预览</text>
+      <view class="preview-controls">
+        <button class="mini-btn" bindtap="copyHtml">复制HTML</button>
+        <button class="mini-btn" bindtap="refreshPreview">刷新</button>
+      </view>
+    </view>
+    <scroll-view scroll-y="true" class="preview-scroll">
+      <view class="markdown-preview {{theme}}-theme" wx:if="{{renderedHtml}}">
+        <rich-text nodes="{{renderedHtml}}"></rich-text>
+      </view>
+      <view class="empty-preview" wx:else>
+        <text class="empty-text">在左侧编辑器中输入Markdown文本，这里将显示预览效果</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="quick-actions">
+    <view class="section-title">⚡ 快捷操作</view>
+    <view class="quick-buttons">
+      <button class="quick-btn" bindtap="loadSample">
+        <text class="btn-icon">📖</text>
+        <text class="btn-text">示例文档</text>
+      </button>
+      <button class="quick-btn" bindtap="sharePreview">
+        <text class="btn-icon">📤</text>
+        <text class="btn-text">分享预览</text>
+      </button>
+      <button class="quick-btn" bindtap="printPreview">
+        <text class="btn-icon">🖨️</text>
+        <text class="btn-text">打印</text>
+      </button>
+      <button class="quick-btn" bindtap="settings">
+        <text class="btn-icon">⚙️</text>
+        <text class="btn-text">设置</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 Markdown语法速查</view>
+    <view class="syntax-grid">
+      <view class="syntax-item">
+        <text class="syntax-markdown"># 标题1</text>
+        <text class="syntax-result">大标题</text>
+      </view>
+      <view class="syntax-item">
+        <text class="syntax-markdown">**粗体**</text>
+        <text class="syntax-result">粗体文本</text>
+      </view>
+      <view class="syntax-item">
+        <text class="syntax-markdown">*斜体*</text>
+        <text class="syntax-result">斜体文本</text>
+      </view>
+      <view class="syntax-item">
+        <text class="syntax-markdown">- 列表</text>
+        <text class="syntax-result">无序列表</text>
+      </view>
+      <view class="syntax-item">
+        <text class="syntax-markdown">[链接](url)</text>
+        <text class="syntax-result">超链接</text>
+      </view>
+      <view class="syntax-item">
+        <text class="syntax-markdown">`代码`</text>
+        <text class="syntax-result">行内代码</text>
+      </view>
+    </view>
+  </view>
+</view>

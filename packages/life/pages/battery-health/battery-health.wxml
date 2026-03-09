@@ -1,44 +1,39 @@
 <!--battery-health.wxml-->
 <view class="container">
-  <!-- 电池状态 -->
-  <view class="section">
-    <view class="battery-status">
-      <view class="battery-icon">🔋</view>
-      <view class="battery-info">
-        <text class="battery-level">{{batteryLevel}}%</text>
-        <text class="battery-status-text">{{batteryStatus}}</text>
-      </view>
-    </view>
+  <!-- 标题区 -->
+  <view class="header">
+    <text class="title">设备电量信息</text>
+    <text class="subtitle">实时获取系统电池状态</text>
   </view>
-  
-  <!-- 电池健康度 -->
-  <view class="section">
-    <text class="section-title">电池健康度</text>
-    <view class="health-bar">
-      <view class="health-fill" style="width: {{batteryHealth}}%"></view>
+
+  <!-- 表单区 -->
+  <view class="form-container">
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">操作</text>
+      </view>
+      <button class="full-width-btn btn-primary" bindtap="getBatteryInfo">刷新电量信息</button>
     </view>
-    <text class="health-text">{{batteryHealth}}%</text>
-  </view>
-  
-  <!-- 电池使用建议 -->
-  <view class="section">
-    <text class="section-title">电池使用建议</text>
-    <view class="suggestion-box">
-      <view class="suggestion-item">
-        <text class="suggestion-icon">✅</text>
-        <text class="suggestion-text">避免过度充电</text>
+
+    <!-- 结果区 -->
+    <view class="form-item" wx:if="{{showResult}}">
+      <view class="form-label">
+        <text class="label-text">电量信息</text>
       </view>
-      <view class="suggestion-item">
-        <text class="suggestion-icon">✅</text>
-        <text class="suggestion-text">避免电池温度过高</text>
+      <view class="result-box">
+        <text class="output-text">{{result}}</text>
       </view>
-      <view class="suggestion-item">
-        <text class="suggestion-icon">✅</text>
-        <text class="suggestion-text">定期深度放电和充电</text>
+      <view class="form-item" wx:if="{{level !== null}}">
+        <view class="form-label"><text class="label-text">电量百分比</text></view>
+        <view class="result-box"><text class="output-text">{{level}}%</text></view>
       </view>
-      <view class="suggestion-item">
-        <text class="suggestion-icon">✅</text>
-        <text class="suggestion-text">使用原装充电器</text>
+      <view class="form-item" wx:if="{{isCharging !== null}}">
+        <view class="form-label"><text class="label-text">充电状态</text></view>
+        <view class="result-box"><text class="output-text">{{isCharging ? '充电中' : '未在充电'}}</text></view>
+      </view>
+      <view class="form-item" wx:if="{{isLowPowerModeEnabled !== null}}">
+        <view class="form-label"><text class="label-text">省电模式</text></view>
+        <view class="result-box"><text class="output-text">{{isLowPowerModeEnabled ? '已开启' : '未开启'}}</text></view>
       </view>
     </view>
   </view>

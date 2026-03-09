@@ -1,0 +1,136 @@
+<view class="container">
+  <!-- 顶部标签页 -->
+  <view class="tab-container">
+    <view class="tab-item {{activeTab === 'yaml2json' ? 'active' : ''}}" bindtap="switchTab" data-tab="yaml2json">
+      <text class="tab-text">YAML → JSON</text>
+    </view>
+    <view class="tab-item {{activeTab === 'json2yaml' ? 'active' : ''}}" bindtap="switchTab" data-tab="json2yaml">
+      <text class="tab-text">JSON → YAML</text>
+    </view>
+  </view>
+
+  <!-- YAML转JSON区域 -->
+  <view class="converter-section" wx:if="{{activeTab === 'yaml2json'}}">
+    <view class="form-container">
+      <!-- YAML输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">YAML输入</text>
+          <text class="required-mark">*</text>
+        </view>
+        <textarea value="{{yamlInput}}" bindinput="setYamlInput" class="textarea-field" placeholder="请输入YAML数据，如：\nname: 张三\nage: 25\nhobbies:\n  - 读书\n  - 运动" maxlength="5000" />
+        <view class="textarea-counter">{{yamlInput.length}}/5000</view>
+      </view>
+
+      <!-- 转换选项 -->
+      <view class="options-section">
+        <view class="option-item">
+          <checkbox checked="{{formatOutput}}" bindtap="toggleFormat" />
+          <text class="option-label">格式化JSON输出</text>
+        </view>
+        <view class="option-item">
+          <checkbox checked="{{removeEmptyLines}}" bindtap="toggleRemoveEmpty" />
+          <text class="option-label">移除空行</text>
+        </view>
+      </view>
+
+      <!-- 转换按钮 -->
+      <view class="form-item btn-item">
+        <button class="convert-btn full-width-btn" bindtap="convertYamlToJson">
+          <text class="btn-text">转换为JSON</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- YAML转JSON结果 -->
+    <view class="result-section" wx:if="{{showYamlJsonResult}}">
+      <view class="result-box">
+        <view class="result-header">
+          <text class="result-title">JSON结果</text>
+          <button class="copy-btn" bindtap="copyResult" data-type="json">复制</button>
+        </view>
+        <scroll-view class="result-content" scroll-y="true">
+          <text class="json-output">{{jsonOutput}}</text>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- JSON转YAML区域 -->
+  <view class="converter-section" wx:if="{{activeTab === 'json2yaml'}}">
+    <view class="form-container">
+      <!-- JSON输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">JSON输入</text>
+          <text class="required-mark">*</text>
+        </view>
+        <textarea value="{{jsonInput}}" bindinput="setJsonInput" class="textarea-field" placeholder='请输入JSON数据，如：{"name": "张三", "age": 25, "hobbies": ["读书", "运动"]}' maxlength="5000" />
+        <view class="textarea-counter">{{jsonInput.length}}/5000</view>
+      </view>
+
+      <!-- 转换选项 -->
+      <view class="options-section">
+        <view class="option-item">
+          <checkbox checked="{{addComments}}" bindtap="toggleAddComments" />
+          <text class="option-label">添加类型注释</text>
+        </view>
+        <view class="option-item">
+          <checkbox checked="{{preserveOrder}}" bindtap="togglePreserveOrder" />
+          <text class="option-label">保持字段顺序</text>
+        </view>
+      </view>
+
+      <!-- 转换按钮 -->
+      <view class="form-item btn-item">
+        <button class="convert-btn full-width-btn" bindtap="convertJsonToYaml">
+          <text class="btn-text">转换为YAML</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- JSON转YAML结果 -->
+    <view class="result-section" wx:if="{{showJsonYamlResult}}">
+      <view class="result-box">
+        <view class="result-header">
+          <text class="result-title">YAML结果</text>
+          <button class="copy-btn" bindtap="copyResult" data-type="yaml">复制</button>
+        </view>
+        <scroll-view class="result-content" scroll-y="true">
+          <text class="yaml-output">{{yamlOutput}}</text>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-section" wx:if="{{errorMessage}}">
+    <view class="error-box">
+      <text class="error-icon">❌</text>
+      <text class="error-text">{{errorMessage}}</text>
+      <button class="close-error-btn" bindtap="clearError">×</button>
+    </view>
+  </view>
+
+  <!-- 使用帮助 -->
+  <view class="help-section">
+    <view class="help-title">💡 YAML vs JSON</view>
+    <view class="help-content">
+      <text class="help-text">• YAML更易读，支持注释和复杂数据结构</text>
+      <text class="help-text">• JSON更严格，广泛用于Web API和数据交换</text>
+      <text class="help-text">• YAML使用缩进表示层级关系</text>
+      <text class="help-text">• JSON使用大括号和方括号表示结构</text>
+      <text class="help-text">• 两者都支持字符串、数字、布尔值、数组和对象</text>
+    </view>
+  </view>
+
+  <!-- 快捷示例 -->
+  <view class="examples-section">
+    <view class="examples-title">快速示例</view>
+    <view class="examples-grid">
+      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-example="{{item}}">
+        <text class="example-text">{{item.title}}</text>
+      </view>
+    </view>
+  </view>
+</view>

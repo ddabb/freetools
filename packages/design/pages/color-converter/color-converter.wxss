@@ -1,0 +1,407 @@
+/**packages/design/pages/color-converter/color-converter.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* 颜色选择器区域 */
+.color-picker-section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.picker-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+}
+
+.color-preview {
+  width: 100%;
+  height: 200rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15rpx 25rpx;
+  border-radius: 10rpx;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.picker-inputs {
+  margin-bottom: 30rpx;
+}
+
+.color-input {
+  width: 100%;
+  background: #f8f9fa;
+  border: 2rpx solid transparent;
+  border-radius: 15rpx;
+  padding: 28rpx 24rpx;
+  font-size: 30rpx;
+  color: #333;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin-bottom: 20rpx;
+  text-align: center;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.color-input:focus {
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.1);
+}
+
+.hex-input {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+.rgb-inputs {
+  display: flex;
+  gap: 15rpx;
+}
+
+.rgb-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.rgb-input::-webkit-inner-spin-button,
+.rgb-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.random-color-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 15rpx;
+  padding: 28rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.random-color-btn:active {
+  transform: translateY(-2rpx) scale(1.02);
+  box-shadow: 0 15rpx 40rpx rgba(102, 126, 234, 0.5);
+}
+
+.btn-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+
+/* 转换结果区域 */
+.conversion-results {
+  margin-bottom: 40rpx;
+}
+
+.format-group {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 25rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+}
+
+.format-group:last-child {
+  margin-bottom: 0;
+}
+
+.format-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 20rpx;
+  text-align: center;
+  padding: 10rpx;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 8rpx;
+}
+
+.format-values {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.format-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 20rpx;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 10rpx;
+}
+
+.format-name {
+  font-size: 26rpx;
+  color: #555;
+  font-weight: 500;
+}
+
+.format-value {
+  font-size: 26rpx;
+  color: #333;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-weight: 600;
+}
+
+.format-value.highlight {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 8rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.format-value.detail {
+  font-size: 22rpx;
+  color: #777;
+}
+
+/* 颜色信息区域 */
+.color-info-section {
+  margin-bottom: 40rpx;
+}
+
+.info-grid {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+}
+
+.info-item {
+  text-align: center;
+  padding: 20rpx;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 12rpx;
+}
+
+.info-label {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+.info-value {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.info-value.highlight {
+  color: #667eea;
+}
+
+.contrast-preview {
+  padding: 15rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  margin-top: 10rpx;
+}
+
+/* 配色方案区域 */
+.color-schemes {
+  margin-bottom: 40rpx;
+}
+
+.schemes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx;
+}
+
+.scheme-item {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+}
+
+.scheme-header {
+  margin-bottom: 20rpx;
+}
+
+.scheme-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.scheme-colors {
+  display: flex;
+  gap: 15rpx;
+  flex-wrap: wrap;
+}
+
+.scheme-color {
+  flex: 1;
+  min-width: 120rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.scheme-color:active {
+  transform: scale(0.95);
+}
+
+.scheme-color-code {
+  font-size: 18rpx;
+  color: white;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
+  font-family: 'Monaco', 'Menlo', monospace;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+}
+
+/* 快捷操作区域 */
+.quick-actions {
+  margin-bottom: 40rpx;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border: none;
+  border-radius: 20rpx;
+  padding: 30rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.action-btn:active .btn-icon,
+.action-btn:active .btn-text {
+  color: white;
+}
+
+.btn-icon {
+  font-size: 36rpx;
+}
+
+.btn-text {
+  font-size: 24rpx;
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* 帮助区域 */
+.help-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 25rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.help-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25rpx;
+  text-align: center;
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.help-text {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.5;
+  padding-left: 20rpx;
+  position: relative;
+}
+
+.help-text:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

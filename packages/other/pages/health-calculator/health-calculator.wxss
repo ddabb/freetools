@@ -1,166 +1,212 @@
-/* packages/other/pages/health-calculator/health-calculator.wxss */
-.health-container {
-  padding: 30rpx;
+/**health-calculator.wxss**/
+page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.form-section {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
-}
-
-.form-item {
-  display: flex;
-  align-items: center;
-  padding: 24rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-
-.form-item:last-child {
-  border-bottom: none;
-}
-
-.form-item .label {
-  width: 160rpx;
-  font-size: 28rpx;
-  color: #333;
-}
-
-.form-item .input {
-  flex: 1;
-  height: 60rpx;
-  font-size: 28rpx;
-  padding: 0 20rpx;
-}
-
-.form-item .picker {
-  flex: 1;
-  height: 60rpx;
-  line-height: 60rpx;
-  font-size: 28rpx;
-  color: #333;
-}
-
-.form-item .unit {
-  width: 80rpx;
-  text-align: right;
-  font-size: 28rpx;
-  color: #999;
-}
-
-.button-group {
-  display: flex;
-  gap: 20rpx;
-  margin-bottom: 30rpx;
-}
-
-.btn-calculate,
-.btn-reset {
-  flex: 1;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: 44rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-}
-
-.btn-calculate {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-  color: #fff;
-}
-
-.btn-reset {
-  background: #f5f5f5;
-  color: #666;
+.container {
+  padding: 16rpx;
+  min-height: 100vh;
 }
 
 .result-section {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+  margin-bottom: 32rpx;
 }
 
-.result-title {
-  font-size: 32rpx;
-  font-weight: bold;
+/* 表单容器 */
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 表单标签 */
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.label-text {
+  font-size: 30rpx;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 30rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 2rpx solid #3498db;
+}
+
+.required-mark {
+  color: #ff4757;
+  font-size: 28rpx;
+  margin-left: 8rpx;
+}
+
+/* 性别选择 - 选择框样式 */
+.form-picker {
+  margin-top: 0;
+}
+
+.picker-display {
+  background: #f8f9fa;
+  padding: 24rpx 28rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.picker-display.placeholder {
+  color: #adb5bd;
+}
+
+.picker-display:active {
+  border-color: #667eea;
+  background: #fff;
+}
+
+/* 带单位的输入框 */
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.input-with-unit:active {
+  border-color: #667eea;
+  background: #fff;
+}
+
+.input-field {
+  flex: 1;
+  padding: 24rpx 28rpx;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: #adb5bd;
+}
+
+.unit-text {
+  padding-right: 28rpx;
+  font-size: 26rpx;
+  color: #6c757d;
+  font-weight: 500;
+  background: #e9ecef;
+  padding: 24rpx 28rpx;
+  border-left: 2rpx solid #dee2e6;
+}
+
+/* 按钮表单项 */
+.btn-item {
+  margin-bottom: 0;
+}
+
+.full-width-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-width-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+.btn-text {
+  margin-left: 8rpx;
+}
+
+.result-box {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.08);
 }
 
 .result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 0;
+  text-align: center;
+  margin-bottom: 20rpx;
 }
 
-.result-item .result-label {
+.result-label {
   font-size: 28rpx;
   color: #666;
-}
-
-.result-item .result-value {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #3498db;
-}
-
-.bmi-item {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40rpx;
-  border-radius: 16rpx;
-  margin-bottom: 20rpx;
-  text-align: center;
-}
-
-.bmi-value {
   display: block;
-  margin-bottom: 15rpx;
+  margin-bottom: 10rpx;
+  font-weight: 500;
 }
 
-.bmi-value .value {
-  font-size: 72rpx;
-  font-weight: bold;
-  color: #fff;
+.result-value {
+  font-size: 40rpx;
+  font-weight: 800;
 }
 
-.bmi-value .unit {
-  font-size: 36rpx;
-  color: #f0f0f0;
-  margin-left: 10rpx;
+.result-value.bmi {
+  color: #667eea;
+  font-size: 56rpx;
 }
 
 .bmi-status {
-  display: inline-block;
-  padding: 10rpx 30rpx;
-  border-radius: 30rpx;
   font-size: 28rpx;
-  font-weight: bold;
-  background: rgba(255,255,255,0.2);
-  color: #fff;
+  color: #38ef7d;
+  margin-top: 10rpx;
+  display: block;
+  font-weight: 600;
 }
 
-.bmi-status.normal {
-  background: #27ae60;
+.result-value.ideal-weight {
+  color: #667eea;
 }
 
-.bmi-status.abnormal {
-  background: #e74c3c;
-}
-
-.tips {
-  margin-top: 30rpx;
-  padding: 20rpx;
-  background: #fff9e6;
-  border-radius: 8rpx;
-}
-
-.tips-text {
+.result-value.suggestion {
+  color: #666;
   font-size: 24rpx;
-  color: #f59a23;
+  font-weight: normal;
+}
+
+.result-divider {
+  height: 2rpx;
+  background: rgba(102, 126, 234, 0.5);
+  margin: 20rpx 0;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.result-row .result-item {
+  flex: 1;
+  margin-bottom: 0;
 }
