@@ -9,6 +9,7 @@ Page({
     base64Decoded: '', // base64解码结果
     sourceBases: ['十进制', '二进制', '八进制', '十六进制', 'Base64'],
     targetBases: ['二进制', '八进制', '十进制', '十六进制', 'Base64'],
+    canConvert: false, // 是否可以转换
     baseInfo: [
       { base: 'decimal', name: '十进制', symbol: 'DEC', description: '使用0-9共10个数字' },
       { base: 'binary', name: '二进制', symbol: 'BIN', description: '使用0和1，计算机基础' },
@@ -26,27 +27,76 @@ Page({
 
   // 设置输入值
   setInputValue(e) {
+    const inputValue = e.detail.value;
+    const canConvert = inputValue && this.data.sourceBaseIndex >= 0 && this.data.targetBaseIndex >= 0;
     this.setData({
-      inputValue: e.detail.value,
-      showResult: false,
+      inputValue: inputValue,
+      canConvert: canConvert,
       base64Decoded: ''
     });
+    // 自动转换
+    if (canConvert) {
+      this.convert();
+    } else {
+      this.setData({ showResult: false });
+    }
   },
 
   // 设置源进制
   setSourceBase(e) {
+    const sourceBaseIndex = e.detail.value;
+    const canConvert = this.data.inputValue && sourceBaseIndex >= 0 && this.data.targetBaseIndex >= 0;
     this.setData({
-      sourceBaseIndex: e.detail.value,
-      showResult: false
+      sourceBaseIndex: sourceBaseIndex,
+      canConvert: canConvert
     });
+    // 自动转换
+    if (canConvert) {
+      this.convert();
+    } else {
+      this.setData({ showResult: false });
+    }
   },
 
   // 设置目标进制
   setTargetBase(e) {
+    const targetBaseIndex = e.detail.value;
+    const canConvert = this.data.inputValue && this.data.sourceBaseIndex >= 0 && targetBaseIndex >= 0;
     this.setData({
-      targetBaseIndex: e.detail.value,
-      showResult: false
+      targetBaseIndex: targetBaseIndex,
+      canConvert: canConvert
     });
+    // 自动转换
+    if (canConvert) {
+      this.convert();
+    } else {
+      this.setData({ showResult: false });
+    }
+  },
+
+  // 交换进制
+  swapBases() {
+    const { sourceBaseIndex, targetBaseIndex, sourceBases, targetBases } = this.data;
+    
+    // 交换源进制和目标进制
+    const newSourceIndex = targetBaseIndex;
+    const newTargetIndex = sourceBaseIndex;
+    
+    // 交换源进制和目标进制数组
+    const newSourceBases = [...targetBases];
+    const newTargetBases = [...sourceBases];
+    
+    this.setData({
+      sourceBaseIndex: newSourceIndex,
+      targetBaseIndex: newTargetIndex,
+      sourceBases: newSourceBases,
+      targetBases: newTargetBases
+    });
+    
+    // 自动转换
+    if (this.data.canConvert) {
+      this.convert();
+    }
   },
 
   // 获取进制类型
@@ -189,19 +239,22 @@ Page({
     const { value, source, target } = e.currentTarget.dataset;
     const sourceIndex = this.data.sourceBases.indexOf(source);
     const targetIndex = this.data.targetBases.indexOf(target);
+    const canConvert = value && sourceIndex >= 0 && targetIndex >= 0;
     
     this.setData({
       inputValue: value,
       sourceBaseIndex: sourceIndex,
       targetBaseIndex: targetIndex,
-      showResult: false,
+      canConvert: canConvert,
       base64Decoded: ''
     });
     
     // 自动转换
-    setTimeout(() => {
+    if (canConvert) {
       this.convert();
-    }, 100);
+    } else {
+      this.setData({ showResult: false });
+    }
   },
 
   // 分享给好友
@@ -216,11 +269,10 @@ Page({
   // 页面加载时执行
   onLoad() {
     wx.setNavigationBarTitle({ title: '整数基转换器' });
+    // 初始化canConvert属性
+    const canConvert = this.data.inputValue && this.data.sourceBaseIndex >= 0 && this.data.targetBaseIndex >= 0;
+    this.setData({ canConvert: canConvert });
   },
 
-  // 计算属性：是否可以转换
-  get canConvert() {
-    const { inputValue, sourceBaseIndex, targetBaseIndex } = this.data;
-    return inputValue && sourceBaseIndex >= 0 && targetBaseIndex >= 0;
-  }
+
 })

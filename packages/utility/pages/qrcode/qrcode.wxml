@@ -150,9 +150,9 @@
     <!-- 操作按钮组 -->
     <view class="action-section fade-in-up" style="animation-delay: 0.1s">
       <button 
-        class="primary-btn {{canGenerate ? 'ready' : ''}}" 
+        class="primary-btn {{text.trim().length > 0 ? 'ready' : ''}}"
         bindtap="generate"
-        disabled="{{!text.trim()}}"
+        disabled="{{!canGenerate}}"
         hover-class="btn-primary-hover"
       >
         <text class="btn-icon">✨</text>

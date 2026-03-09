@@ -38,17 +38,17 @@
     <!-- 统计信息 -->
     <view class="stats-container">
       <view class="stat-item">
-        <text class="stat-number">{{daysLived}}</text>
+        <text class="stat-number">{{daysLived || 0}}</text>
         <text class="stat-label">已活天数</text>
       </view>
       <view class="stat-divider"></view>
       <view class="stat-item">
-        <text class="stat-number">{{lifeLeft}}</text>
+        <text class="stat-number">{{lifeLeft || 0}}</text>
         <text class="stat-label">剩余天数</text>
       </view>
       <view class="stat-divider"></view>
       <view class="stat-item">
-        <text class="stat-number highlight">{{progress}}%</text>
+        <text class="stat-number highlight">{{progress || 0}}%</text>
         <text class="stat-label">人生进度</text>
       </view>
     </view>
@@ -57,17 +57,18 @@
     <view class="grid-section">
       <view class="grid-title">
         <text>人生画卷（共{{totalGrids}}格，{{gridRows}}×{{gridCols}}）</text>
-        <text class="grid-percentage">已填充 {{gridPercentage}}%（{{livedGrids}}/{{totalGrids}}）</text>
+        <text class="grid-percentage">已填充 {{gridPercentage || 0}}%（{{livedGrids || 0}}/{{totalGrids}}）</text>
       </view>
       <view class="grid-container">
-        <scroll-view class="grid-scroll" scroll-x="false" scroll-y="true" enhanced="true" bounces="true">
+        <scroll-view class="grid-scroll" scroll-x="false" scroll-y="true" enhanced="true" bounces="true" scroll-top="0">
           <view class="grid-wrapper">
-            <view class="grid-row" wx:for="{{gridRows}}" wx:key="row-{{index}}" wx:for-index="rowIndex">
-              <view class="grid-cell {{colIndex < getRowLivedGrids(rowIndex) ? 'lived' : ''}} {{colIndex == getRowLivedGrids(rowIndex) && progress < 100 ? 'current' : ''}}" 
-                    wx:for="{{gridCols}}" 
+            <view class="grid-row" wx:for="{{rowsArray}}" wx:key="row-{{index}}" wx:for-index="rowIndex">
+              <view class="grid-cell {{rowIndex * gridCols + colIndex < livedGrids - 1 ? 'lived' : ''}} {{rowIndex * gridCols + colIndex == livedGrids - 1 && livedGrids > 0 && progress < 100 ? 'current' : ''}}" 
+                    wx:for="{{colsArray}}" 
                     wx:key="cell-{{rowIndex}}-{{colIndex}}" 
-                    wx:for-index="colIndex"
-                    data-index="{{rowIndex * gridCols + colIndex}}">
+                    wx:for-item="colIndex"
+                    data-index="{{rowIndex * gridCols + colIndex}}"
+                    bindtap="onGridTap">
               </view>
             </view>
           </view>
@@ -88,7 +89,7 @@
         </view>
       </view>
       <view class="grid-info">
-        <text>💡 每格 ≈ {{getDaysPerGridText()}}，拖动可查看全部格子</text>
+        <text>💡 每格 ≈ {{daysPerGridText}}，拖动可查看全部格子</text>
       </view>
     </view>
 
@@ -96,10 +97,20 @@
     <view class="reflection-section">
       <view class="reflection-header">
         <text class="reflection-title">🤔 人生思考</text>
-        <button class="refresh-btn" bindtap="refreshQuestion">换一题</button>
+        <view class="banner-indicator">
+          <view wx:for="{{questions}}" wx:key="index" class="indicator-dot {{currentIndex === index ? 'active' : ''}}"></view>
+        </view>
       </view>
-      <view class="question-card">
-        <text class="question-text">{{randomQuestion}}</text>
+      <view class="question-card" style="animation: fadeInScale 0.8s ease-out;">
+        <text class="question-text">{{questions[currentIndex].text}}</text>
+      </view>
+      <view class="banner-controls">
+        <view class="banner-arrow left" bindtap="prevQuestion">
+          <text>‹</text>
+        </view>
+        <view class="banner-arrow right" bindtap="nextQuestion">
+          <text>›</text>
+        </view>
       </view>
       <view class="reflection-hint">
         <text>静下心来，认真思考这个问题。生命有限，别让时光在无意识中溜走。</text>

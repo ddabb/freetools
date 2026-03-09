@@ -25,6 +25,13 @@
       </picker>
     </view>
 
+    <!-- 交换按钮 -->
+    <view class="form-item">
+      <button class="swap-btn full-width-btn" bindtap="swapBases">
+        <text class="btn-text">交换进制 ⇅</text>
+      </button>
+    </view>
+
     <!-- 目标进制选择 -->
     <view class="form-item">
       <view class="form-label">
@@ -36,13 +43,6 @@
           {{targetBases[targetBaseIndex] || '选择目标进制'}}
         </view>
       </picker>
-    </view>
-
-    <!-- 计算按钮 -->
-    <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="convert" disabled="{{!canConvert}}">
-        <text class="btn-text">立即转换</text>
-      </button>
     </view>
   </view>
 

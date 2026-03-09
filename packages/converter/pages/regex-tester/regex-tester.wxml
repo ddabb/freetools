@@ -13,15 +13,15 @@
         </checkbox-group>
       </view>
     </view>
-    
-    <!-- 常用正则示例 -->
-    <view class="quick-regex-section">
-      <view class="quick-regex-title">常用正则：</view>
-      <view class="quick-regex-list">
-        <view class="quick-regex-item" wx:for="{{commonRegex}}" wx:key="name" bindtap="useCommonRegex" data-regex="{{item.pattern}}" data-flags="{{item.flags}}">
-          <text class="regex-name">{{item.name}}</text>
-          <text class="regex-preview">{{item.pattern}}</text>
-        </view>
+  </view>
+
+  <!-- 常用正则示例 -->
+  <view class="quick-regex-section">
+    <view class="quick-regex-title">常用正则：</view>
+    <view class="quick-regex-list">
+      <view class="quick-regex-item" wx:for="{{commonRegex}}" wx:key="name" bindtap="useCommonRegex" data-regex="{{item.pattern}}" data-flags="{{item.flags}}">
+        <text class="regex-name">{{item.name}}</text>
+        <text class="regex-preview">{{item.pattern}}</text>
       </view>
     </view>
   </view>

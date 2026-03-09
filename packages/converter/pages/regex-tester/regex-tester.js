@@ -66,14 +66,16 @@ Page({
   // 使用常用正则
   useCommonRegex(e) {
     const { regex, flags } = e.currentTarget.dataset;
+    // 确保flags是数组类型
+    const flagsArray = Array.isArray(flags) ? flags : flags.split('');
     const flagObjects = this.data.availableFlags.map(item => ({
       ...item,
-      enabled: flags.includes(item.flag)
+      enabled: flagsArray.includes(item.flag)
     }));
 
     this.setData({
       regexPattern: regex,
-      flags: flags.split(''),
+      flags: flagsArray,
       availableFlags: flagObjects,
       showResults: false
     });

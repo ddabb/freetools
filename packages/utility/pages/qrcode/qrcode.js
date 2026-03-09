@@ -12,7 +12,8 @@ Page({
     contentType: 'text',
     qrSize: 280,
     errorLevels: ['L (低)', 'M (中)', 'Q (较高)', 'H (高)'],
-    errorLevelIndex: 1
+    errorLevelIndex: 1,
+    canGenerate: false
   },
 
   onLoad() {
@@ -21,13 +22,30 @@ Page({
     })
     // 设置默认示例文本
     this.setDefaultContent()
+    
+    // 添加页面滚动监听器，确保二维码跟随页面滚动
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 0
+    })
+  },
+  
+  onPageScroll() {
+    // 页面滚动时，重新设置canvas的样式，确保它跟随页面滚动
+    if (this.data.showQrcode) {
+      this.setData({
+        qrSize: this.data.qrSize
+      })
+    }
   },
 
   // 设置默认内容
   setDefaultContent() {
     const defaultText = '欢迎使用二维码生成器！'
+    const canGenerate = defaultText.trim().length > 0
     this.setData({
-      text: defaultText
+      text: defaultText,
+      canGenerate: canGenerate
     })
   },
 
@@ -52,9 +70,11 @@ Page({
         break
     }
     
+    const canGenerate = defaultText.trim().length > 0
     this.setData({
       contentType: type,
-      text: defaultText
+      text: defaultText,
+      canGenerate: canGenerate
     })
   },
 
@@ -111,14 +131,27 @@ Page({
   // 应用模板
   applyTemplate(e) {
     const template = e.currentTarget.dataset.template
+    const canGenerate = template.trim().length > 0
     this.setData({
-      text: template
+      text: template,
+      canGenerate: canGenerate
     })
   },
 
   onTextInput(e) {
+    const value = e.detail.value
+    const canGenerate = value.trim().length > 0
     this.setData({
-      text: e.detail.value
+      text: value,
+      canGenerate: canGenerate
+    })
+    // 添加日志记录
+    console.log('文本输入变化:', {
+      value: value,
+      trimmedLength: value.trim().length,
+      canGenerate: canGenerate,
+      buttonClass: canGenerate ? 'ready' : '',
+      disabled: !canGenerate
     })
   },
 
@@ -127,8 +160,10 @@ Page({
     wx.getClipboardData({
       success: (res) => {
         if (res.data) {
+          const canGenerate = res.data.trim().length > 0
           this.setData({
-            text: res.data
+            text: res.data,
+            canGenerate: canGenerate
           })
           wx.showToast({
             title: '已粘贴',
@@ -150,9 +185,7 @@ Page({
     })
   },
 
-  get canGenerate() {
-    return this.data.text.trim().length > 0
-  },
+
 
   generate() {
     const text = this.data.text.trim()
@@ -166,7 +199,8 @@ Page({
 
     this.setData({ 
       generating: true,
-      showQrcode: true 
+      showQrcode: true,
+      qrcodeText: text
     })
 
     // 延迟生成二维码，确保DOM渲染完成
@@ -209,6 +243,9 @@ Page({
         // 错误级别映射
         const errorLevelMap = ['L', 'M', 'Q', 'H']
         const errorLevel = errorLevelMap[this.data.errorLevelIndex] || 'M'
+        // 错误级别数字值映射
+        const correctLevelMap = { 'L': 1, 'M': 2, 'Q': 3, 'H': 4 }
+        const correctLevel = correctLevelMap[errorLevel] || 2
 
         // 使用微信小程序兼容的二维码生成库
         QRCode({
@@ -219,9 +256,15 @@ Page({
           padding: 20,
           background: '#ffffff',
           foreground: '#000000',
-          correctLevel: QRCode.CorrectLevel[errorLevel]
+          correctLevel: correctLevel
         }).then(() => {
           console.log('二维码生成成功')
+          // 延迟执行，确保canvas元素重新渲染和定位
+          setTimeout(() => {
+            this.setData({
+              qrSize: this.data.qrSize
+            })
+          }, 100)
         }).catch(err => {
           console.error('生成二维码失败:', err)
           wx.showToast({
@@ -234,7 +277,7 @@ Page({
 
   // 获取显示文本（截断长文本）
   getDisplayText() {
-    const text = this.data.qrcodeText
+    const text = this.data.text
     if (text.length <= 50) return text
     return text.substring(0, 47) + '...'
   },
@@ -334,7 +377,8 @@ Page({
     this.setData({
       text: '',
       qrcodeText: '',
-      showQrcode: false
+      showQrcode: false,
+      canGenerate: false
     })
     this.setDefaultContent()
   },

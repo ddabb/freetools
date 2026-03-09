@@ -1,47 +1,99 @@
 <view class="container">
   <view class="section-title">📈 图表生成器</view>
-  <view class="placeholder-content">
-    <text class="placeholder-text">图表生成器开发中...</text>
-    <text class="placeholder-desc">支持柱状图、饼图、折线图等多种图表类型
-
-即将推出功能：
-• 拖拽式图表配置
-• 实时数据绑定
-• 多种图表样式
-• 一键导出图片
-• 响应式设计适配</text>
+  
+  <!-- 图表类型选择 -->
+  <view class="chart-type-section">
+    <view class="section-header">
+      <text class="section-label">图表类型</text>
+    </view>
+    <picker bindchange="setChartType" value="{{chartTypeIndex}}" range="{{chartTypes}}" class="chart-type-picker">
+      <view class="picker-display">
+        {{chartTypes[chartTypeIndex]}}
+        <text class="picker-arrow">▼</text>
+      </view>
+    </picker>
   </view>
   
-  <!-- 基础图表预览 -->
-  <view class="chart-preview">
-    <view class="preview-title">示例预览</view>
-    <view class="sample-charts">
-      <view class="sample-item">
-        <text class="chart-type">柱状图</text>
-        <view class="chart-demo bar-chart">
-          <view class="bar" style="height: 60%;"></view>
-          <view class="bar" style="height: 80%;"></view>
-          <view class="bar" style="height: 45%;"></view>
-          <view class="bar" style="height: 90%;"></view>
-          <view class="bar" style="height: 70%;"></view>
-        </view>
+  <!-- 数据输入 -->
+  <view class="data-input-section">
+    <view class="section-header">
+      <text class="section-label">数据输入</text>
+    </view>
+    <textarea value="{{chartData}}" bindinput="setChartData" class="data-textarea" placeholder="请输入图表数据，格式：\n\n柱状图/折线图：\n[10, 20, 30, 40, 50]\n\n饼图：\n[{name: 'A', value: 30}, {name: 'B', value: 20}, {name: 'C', value: 50}]\n\n雷达图：\n[{name: '指标1', value: 80}, {name: '指标2', value: 60}, {name: '指标3', value: 90}]" maxlength="1000" />
+  </view>
+  
+  <!-- 图表配置 -->
+  <view class="chart-config-section">
+    <view class="section-header">
+      <text class="section-label">图表配置</text>
+    </view>
+    <view class="config-items">
+      <view class="config-item">
+        <text class="config-label">图表标题</text>
+        <input type="text" value="{{chartTitle}}" bindinput="setChartTitle" class="config-input" placeholder="请输入图表标题" />
       </view>
-      
-      <view class="sample-item">
-        <text class="chart-type">饼图</text>
-        <view class="chart-demo pie-chart">
-          <view class="pie-slice slice1"></view>
-          <view class="pie-slice slice2"></view>
-          <view class="pie-slice slice3"></view>
-          <view class="pie-center"></view>
-        </view>
+      <view class="config-item">
+        <text class="config-label">X轴标题</text>
+        <input type="text" value="{{xAxisTitle}}" bindinput="setXAxisTitle" class="config-input" placeholder="请输入X轴标题" />
       </view>
-      
-      <view class="sample-item">
-        <text class="chart-type">折线图</text>
-        <view class="chart-demo line-chart">
-          <canvas canvas-id="sampleLine" class="line-canvas"></canvas>
-        </view>
+      <view class="config-item">
+        <text class="config-label">Y轴标题</text>
+        <input type="text" value="{{yAxisTitle}}" bindinput="setYAxisTitle" class="config-input" placeholder="请输入Y轴标题" />
+      </view>
+    </view>
+  </view>
+  
+  <!-- 图表预览 -->
+  <view class="chart-preview-section">
+    <view class="section-header">
+      <text class="section-label">图表预览</text>
+      <button class="refresh-btn" bindtap="refreshChart">刷新预览</button>
+    </view>
+    <view class="chart-container">
+      <canvas canvas-id="chartCanvas" class="chart-canvas"></canvas>
+      <view class="chart-placeholder" wx:if="{{!showChart}}">
+        <text class="placeholder-text">请输入数据并点击刷新预览</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="action-btn primary-btn" bindtap="createChart">
+      <text class="btn-icon">🎯</text>
+      <text class="btn-text">生成图表</text>
+    </button>
+    <button class="action-btn secondary-btn" bindtap="exportImage">
+      <text class="btn-icon">💾</text>
+      <text class="btn-text">导出图片</text>
+    </button>
+    <button class="action-btn secondary-btn" bindtap="loadTemplate">
+      <text class="btn-icon">📋</text>
+      <text class="btn-text">加载模板</text>
+    </button>
+  </view>
+  
+  <!-- 示例模板 -->
+  <view class="templates-section">
+    <view class="section-header">
+      <text class="section-label">常用模板</text>
+    </view>
+    <view class="templates-grid">
+      <view class="template-item" bindtap="useTemplate" data-template="bar">
+        <text class="template-icon">📊</text>
+        <text class="template-name">销售数据</text>
+      </view>
+      <view class="template-item" bindtap="useTemplate" data-template="pie">
+        <text class="template-icon">🥧</text>
+        <text class="template-name">市场份额</text>
+      </view>
+      <view class="template-item" bindtap="useTemplate" data-template="line">
+        <text class="template-icon">📈</text>
+        <text class="template-name">趋势分析</text>
+      </view>
+      <view class="template-item" bindtap="useTemplate" data-template="radar">
+        <text class="template-icon">🎯</text>
+        <text class="template-name">能力评估</text>
       </view>
     </view>
   </view>

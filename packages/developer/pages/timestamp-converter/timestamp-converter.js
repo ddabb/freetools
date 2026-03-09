@@ -3,6 +3,7 @@ Page({
   data: {
     currentTime: '', // 当前时间字符串
     currentTimestamp: '', // 当前时间戳
+    currentTimestampSec: '', // 当前秒级时间戳
     
     // 时间戳转日期
     timestampInput: '', // 时间戳输入
@@ -14,6 +15,10 @@ Page({
     dateInput: '', // 日期输入
     timeInput: '', // 时间输入
     dateResult: null, // 日期转换结果
+    
+    // 时间差计算
+    timeDiffInput: '', // 时间差输入
+    timeDiffResult: null, // 时间差结果
     
     // 常用时间戳
     commonTimestamps: [
@@ -320,6 +325,108 @@ Page({
     const seconds = String(date.getUTCSeconds()).padStart(2, '0');
     
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} UTC`;
+  },
+
+  // 复制当前时间戳
+  copyCurrentTimestamp() {
+    wx.setClipboardData({
+      data: this.data.currentTimestamp,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
+  },
+
+  // 复制当前秒级时间戳
+  copyCurrentTimestampSec() {
+    wx.setClipboardData({
+      data: this.data.currentTimestampSec,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
+  },
+
+  // 复制时间戳转换结果
+  copyTimestampResult(e) {
+    const type = e.currentTarget.dataset.type;
+    const value = this.data.timestampResult[type];
+    wx.setClipboardData({
+      data: value,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
+  },
+
+  // 复制日期转换结果
+  copyDateResult(e) {
+    const type = e.currentTarget.dataset.type;
+    const value = this.data.dateResult[type];
+    wx.setClipboardData({
+      data: value,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
+  },
+
+  // 复制常用时间戳
+  copyCommonTimestamp(e) {
+    const timestamp = e.currentTarget.dataset.timestamp;
+    wx.setClipboardData({
+      data: timestamp,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
+  },
+
+  // 设置时间差输入
+  setTimeDiffInput(e) {
+    this.setData({ timeDiffInput: e.detail.value });
+  },
+
+  // 计算时间差
+  calculateTimeDiff() {
+    const { timeDiffInput } = this.data;
+    
+    if (!timeDiffInput.trim()) {
+      wx.showToast({ title: '请输入时间戳', icon: 'none' });
+      return;
+    }
+
+    try {
+      let timestamp = parseInt(timeDiffInput.trim());
+      
+      // 判断是秒还是毫秒
+      if (timestamp < 9999999999) {
+        timestamp *= 1000; // 转为毫秒
+      }
+
+      const targetDate = new Date(timestamp);
+      const now = new Date();
+      const diff = Math.abs(now.getTime() - targetDate.getTime());
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      let result = '';
+      if (days > 0) result += `${days}天 `;
+      if (hours > 0) result += `${hours}小时 `;
+      if (minutes > 0) result += `${minutes}分钟 `;
+      if (seconds > 0) result += `${seconds}秒`;
+      
+      if (!result) result = '时间相同';
+      
+      this.setData({ timeDiffResult: result });
+      
+    } catch (error) {
+      console.error('时间差计算失败', error);
+      wx.showToast({ title: '计算失败', icon: 'none' });
+    }
   },
 
   // 分享给好友

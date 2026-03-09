@@ -18,126 +18,253 @@ page {
   text-align: center;
 }
 
-.placeholder-content {
+/* 通用section样式 */
+.chart-type-section,
+.data-input-section,
+.chart-config-section,
+.chart-preview-section,
+.templates-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  text-align: center;
+  padding: 30rpx;
   box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
-  margin-bottom: 40rpx;
+  margin-bottom: 30rpx;
 }
 
-.placeholder-text {
-  display: block;
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 600;
-  margin-bottom: 20rpx;
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
 }
 
-.placeholder-desc {
-  display: block;
-  font-size: 24rpx;
-  color: #666;
-  line-height: 1.6;
-  text-align: left;
-}
-
-.chart-preview {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
-}
-
-.preview-title {
-  font-size: 28rpx;
+.section-label {
+  font-size: 26rpx;
   font-weight: 700;
   color: #333;
-  margin-bottom: 30rpx;
-  text-align: center;
 }
 
-.sample-charts {
+/* 图表类型选择 */
+.chart-type-picker {
+  width: 100%;
+}
+
+.picker-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.picker-arrow {
+  font-size: 18rpx;
+  color: #666;
+}
+
+/* 数据输入 */
+.import-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 16rpx;
+  font-size: 20rpx;
+}
+
+.data-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: #333;
+  resize: vertical;
+}
+
+/* 图表配置 */
+.config-items {
   display: flex;
   flex-direction: column;
-  gap: 40rpx;
+  gap: 20rpx;
 }
 
-.sample-item {
-  text-align: center;
+.config-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
 }
 
-.chart-type {
-  display: block;
-  font-size: 24rpx;
+.config-label {
+  font-size: 22rpx;
   color: #666;
-  margin-bottom: 20rpx;
-  font-weight: 600;
+  font-weight: 500;
 }
 
-.chart-demo {
-  height: 120rpx;
+.config-input {
+  padding: 16rpx 20rpx;
   background: #f8f9fa;
-  border-radius: 10rpx;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding: 20rpx;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: #333;
+}
+
+/* 图表预览 */
+.refresh-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 16rpx;
+  font-size: 20rpx;
+}
+
+.chart-container {
   position: relative;
-  overflow: hidden;
-}
-
-.bar-chart {
-  gap: 15rpx;
-  display: flex;
-  align-items: end;
-}
-
-.bar {
-  width: 30rpx;
-  background: linear-gradient(to top, #74b9ff, #0984e3);
-  border-radius: 4rpx 4rpx 0 0;
-  transition: all 0.3s ease;
-}
-
-.bar:active {
-  transform: scale(1.1);
-}
-
-.pie-chart {
-  position: relative;
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  margin: 0 auto;
-  background: conic-gradient(
-    #ff7675 0deg 120deg,
-    #74b9ff 120deg 240deg,
-    #55efc4 240deg 360deg
-  );
-}
-
-.pie-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40rpx;
-  height: 40rpx;
-  background: white;
-  border-radius: 50%;
-}
-
-.line-chart {
+  width: 100%;
+  height: 400rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-.line-canvas {
-  width: 200rpx;
-  height: 120rpx;
+.chart-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 15rpx;
+  margin-bottom: 30rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0069d9 100%);
+  color: white;
+  border: none;
+}
+
+.secondary-btn {
+  background: #f8f9fa;
+  color: #333;
+  border: 2rpx solid #e9ecef;
+}
+
+.action-btn:active {
+  transform: scale(0.96);
+}
+
+.btn-icon {
+  font-size: 32rpx;
+}
+
+.btn-text {
+  font-size: 20rpx;
+}
+
+/* 模板区域 */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.template-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.template-item:active {
+  transform: scale(0.96);
+  background: #e9ecef;
+}
+
+.template-icon {
+  font-size: 48rpx;
+  margin-bottom: 10rpx;
+}
+
+.template-name {
+  font-size: 22rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .container {
+    padding: 30rpx 20rpx;
+  }
+  
+  .section-title {
+    font-size: 28rpx;
+  }
+  
+  .chart-type-section,
+  .data-input-section,
+  .chart-config-section,
+  .chart-preview-section,
+  .templates-section {
+    padding: 20rpx;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    flex-direction: row;
+    gap: 10rpx;
+  }
+  
+  .templates-grid {
+    grid-template-columns: 1fr;
+  }
 }

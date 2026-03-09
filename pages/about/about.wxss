@@ -182,24 +182,28 @@ page {
 
 .project-header {
   margin-bottom: 16rpx;
+  text-align: left;
 }
 
 .project-title {
   font-size: 32rpx;
   font-weight: bold;
   color: #333333;
+  text-align: left;
 }
 
 .project-content {
   display: flex;
   flex-direction: column;
   gap: 12rpx;
+  text-align: left;
 }
 
 .project-description {
   font-size: 26rpx;
   color: #333333;
   line-height: 1.5;
+  text-align: left;
 }
 
 .github-link {
@@ -236,38 +240,7 @@ page {
   font-weight: bold;
 }
 
-/* 隐私声明卡片 */
-.privacy-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 24rpx;
-  margin: 0 0 24rpx;
-  padding: 24rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
-}
-
-.privacy-header {
-  margin-bottom: 16rpx;
-}
-
-.privacy-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333333;
-}
-
-.privacy-content {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-  text-align: left;
-}
-
-.privacy-text {
-  font-size: 26rpx;
-  color: #333333;
-  line-height: 1.5;
-}
+/* 隐私声明卡片 - 已统一使用 project-card 样式 */
 
 /* 版本信息 */
 .version-info {
@@ -278,6 +251,6 @@ page {
 
 .version-text {
   font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
+  color: #333333;
   font-weight: 500;
 }

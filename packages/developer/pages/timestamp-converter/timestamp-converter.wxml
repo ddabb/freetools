@@ -4,7 +4,14 @@
     <view class="current-time-card">
       <text class="current-time-label">当前时间</text>
       <text class="current-time-value">{{currentTime}}</text>
-      <text class="current-timestamp">时间戳: {{currentTimestamp}}</text>
+      <view class="current-timestamp-row">
+        <text class="current-timestamp">时间戳: {{currentTimestamp}}</text>
+        <button class="copy-btn small" bindtap="copyCurrentTimestamp">复制</button>
+      </view>
+      <view class="current-timestamp-row">
+        <text class="current-timestamp-sec">秒级: {{currentTimestampSec}}</text>
+        <button class="copy-btn small" bindtap="copyCurrentTimestampSec">复制</button>
+      </view>
     </view>
   </view>
 
@@ -32,15 +39,24 @@
       <view class="result-display" wx:if="{{timestampResult}}">
         <view class="result-item">
           <text class="result-label">本地时间:</text>
-          <text class="result-value highlight">{{timestampResult.localTime}}</text>
+          <view class="result-value-container">
+            <text class="result-value highlight">{{timestampResult.localTime}}</text>
+            <button class="copy-btn" bindtap="copyTimestampResult" data-type="localTime">复制</button>
+          </view>
         </view>
         <view class="result-item">
           <text class="result-label">UTC时间:</text>
-          <text class="result-value">{{timestampResult.utcTime}}</text>
+          <view class="result-value-container">
+            <text class="result-value">{{timestampResult.utcTime}}</text>
+            <button class="copy-btn" bindtap="copyTimestampResult" data-type="utcTime">复制</button>
+          </view>
         </view>
         <view class="result-item">
           <text class="result-label">ISO格式:</text>
-          <text class="result-value code">{{timestampResult.isoFormat}}</text>
+          <view class="result-value-container">
+            <text class="result-value code">{{timestampResult.isoFormat}}</text>
+            <button class="copy-btn" bindtap="copyTimestampResult" data-type="isoFormat">复制</button>
+          </view>
         </view>
       </view>
     </view>
@@ -48,7 +64,7 @@
     <!-- 日期转时间戳 -->
     <view class="converter-block">
       <view class="block-title">📅 日期 → 时间戳</view>
-      <view class="input-group">
+      <view class="input-group date-time-inputs">
         <picker mode="date" value="{{dateInput}}" bindchange="setDateInput" class="date-picker">
           <view class="picker-display">{{dateInput || '选择日期'}}</view>
         </picker>
@@ -60,15 +76,24 @@
       <view class="result-display" wx:if="{{dateResult}}">
         <view class="result-item">
           <text class="result-label">时间戳(秒):</text>
-          <text class="result-value highlight">{{dateResult.timestampSec}}</text>
+          <view class="result-value-container">
+            <text class="result-value highlight">{{dateResult.timestampSec}}</text>
+            <button class="copy-btn" bindtap="copyDateResult" data-type="timestampSec">复制</button>
+          </view>
         </view>
         <view class="result-item">
           <text class="result-label">时间戳(毫秒):</text>
-          <text class="result-value">{{dateResult.timestampMs}}</text>
+          <view class="result-value-container">
+            <text class="result-value">{{dateResult.timestampMs}}</text>
+            <button class="copy-btn" bindtap="copyDateResult" data-type="timestampMs">复制</button>
+          </view>
         </view>
         <view class="result-item">
           <text class="result-label">有效期至:</text>
-          <text class="result-value">{{dateResult.expireTime}}</text>
+          <view class="result-value-container">
+            <text class="result-value">{{dateResult.expireTime}}</text>
+            <button class="copy-btn" bindtap="copyDateResult" data-type="expireTime">复制</button>
+          </view>
         </view>
       </view>
     </view>
@@ -81,6 +106,24 @@
       <view class="quick-item" wx:for="{{commonTimestamps}}" wx:key="name" bindtap="useCommonTimestamp" data-timestamp="{{item.value}}" data-name="{{item.name}}">
         <text class="quick-name">{{item.name}}</text>
         <text class="quick-value">{{item.displayValue}}</text>
+        <button class="copy-btn small" bindtap="copyCommonTimestamp" data-timestamp="{{item.value}}">复制</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 时间差计算 -->
+  <view class="time-diff-section">
+    <view class="section-title">⏰ 时间差计算</view>
+    <view class="time-diff-card">
+      <view class="input-group">
+        <input type="number" value="{{timeDiffInput}}" bindinput="setTimeDiffInput" class="input-field" placeholder="输入时间戳（秒）" />
+        <button class="quick-btn full-width" bindtap="calculateTimeDiff">计算时间差</button>
+      </view>
+      <view class="result-display" wx:if="{{timeDiffResult}}">
+        <view class="result-item">
+          <text class="result-label">时间差:</text>
+          <text class="result-value highlight">{{timeDiffResult}}</text>
+        </view>
       </view>
     </view>
   </view>
@@ -93,6 +136,7 @@
       <text class="help-text">• 支持Unix时间戳与本地时间互转</text>
       <text class="help-text">• 时间戳从1970年1月1日00:00:00 UTC开始计算</text>
       <text class="help-text">• 注意时区差异对转换结果的影响</text>
+      <text class="help-text">• 点击结果右侧的复制按钮可快速复制</text>
     </view>
   </view>
 </view>

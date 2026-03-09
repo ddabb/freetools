@@ -136,6 +136,24 @@ page {
   width: 100%;
 }
 
+.swap-btn {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  color: #667eea;
+  border: 2rpx solid #667eea;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.swap-btn:active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-2rpx) scale(1.02);
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.3);
+}
+
 .btn-text {
   color: inherit;
   font-size: inherit;

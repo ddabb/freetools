@@ -91,6 +91,25 @@ Page({
     }});
   },
 
+  exportResultWithInput() {
+    if (!this.data.analysisResult) {
+      wx.showToast({ title: '请先进行分析', icon: 'none' });
+      return;
+    }
+
+    const result = this.data.analysisResult;
+    const inputData = this.data.inputData;
+    
+    // 格式化输入数据，保留原始输入格式
+    const formattedInput = inputData ? inputData.replace(/\n/g, '\\n').trim() : '无数据';
+    
+    const exportText = `数据分析报告：\n\n输入数据：\n${formattedInput}\n\n分析结果：\n样本数量: ${result.count}\n总和: ${result.sum}\n平均值: ${result.mean}\n中位数: ${result.median}\n方差: ${result.variance}\n标准差: ${result.stdDev}\n最小值: ${result.min}\n最大值: ${result.max}\n极差: ${result.range}`;
+    
+    wx.setClipboardData({ data: exportText, success: () => {
+      wx.showToast({ title: '完整报告已复制', icon: 'success' });
+    }});
+  },
+
   onShareAppMessage() {
     return {
       title: '数据统计器 - 专业的数据分析工具',

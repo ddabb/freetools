@@ -18,26 +18,198 @@ page {
   text-align: center;
 }
 
-.placeholder-content {
+/* 通用section样式 */
+.input-section,
+.type-section,
+.result-section,
+.help-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 60rpx 40rpx;
-  text-align: center;
+  padding: 30rpx;
   box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 30rpx;
 }
 
-.placeholder-text {
-  display: block;
-  font-size: 28rpx;
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+
+.section-label {
+  font-size: 26rpx;
+  font-weight: 700;
   color: #333;
-  font-weight: 600;
-  margin-bottom: 20rpx;
 }
 
-.placeholder-desc {
+/* 数据输入区域 */
+.load-sample-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 16rpx;
+  font-size: 20rpx;
+}
+
+.data-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  color: #333;
+  resize: vertical;
+}
+
+.input-hint {
+  font-size: 18rpx;
+  color: #666;
+  margin-top: 10rpx;
+  text-align: right;
+}
+
+/* 数据类型选择 */
+.type-picker {
+  width: 100%;
+}
+
+.picker-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.picker-arrow {
+  font-size: 18rpx;
+  color: #666;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 15rpx;
+  margin-bottom: 30rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.secondary-btn {
+  background: #f8f9fa;
+  color: #333;
+  border: 2rpx solid #e9ecef;
+}
+
+.action-btn:active {
+  transform: scale(0.96);
+}
+
+.btn-icon {
+  font-size: 32rpx;
+}
+
+.btn-text {
+  font-size: 20rpx;
+}
+
+/* 分析结果 */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.result-item {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  text-align: center;
+  border: 2rpx solid #e9ecef;
+}
+
+.result-label {
+  display: block;
+  font-size: 18rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.result-value {
   display: block;
   font-size: 24rpx;
+  font-weight: 600;
+  color: #667eea;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* 使用帮助 */
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.help-text {
+  font-size: 22rpx;
   color: #666;
   line-height: 1.5;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .container {
+    padding: 30rpx 20rpx;
+  }
+  
+  .section-title {
+    font-size: 28rpx;
+  }
+  
+  .input-section,
+  .type-section,
+  .result-section,
+  .help-section {
+    padding: 20rpx;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    flex-direction: row;
+    gap: 10rpx;
+  }
+  
+  .result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
