@@ -363,13 +363,13 @@ const commonTools = [
 
 // 根据分类获取工具
 function getToolsByCategory(categoryName) {
-  return tools.filter(tool => tool.categories.includes(categoryName));
+  return allTools.filter(tool => tool.categories.includes(categoryName));
 }
 
 // 根据关键词搜索工具
 function searchTools(keyword) {
   const lowerKeyword = keyword.toLowerCase();
-  return tools.filter(tool => {
+  return allTools.filter(tool => {
     return tool.name.toLowerCase().includes(lowerKeyword) ||
            tool.keywords.some(k => k.toLowerCase().includes(lowerKeyword)) ||
            tool.description.toLowerCase().includes(lowerKeyword);
@@ -378,12 +378,12 @@ function searchTools(keyword) {
 
 // 根据ID获取工具
 function getToolById(id) {
-  return tools.find(tool => tool.id === id);
+  return allTools.find(tool => tool.id === id);
 }
 
 // 导出模块
 module.exports = {
-  tools,
+  tools: allTools,
   categories,
   commonTools,
   discoveryTools,
