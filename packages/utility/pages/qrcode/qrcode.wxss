@@ -221,65 +221,88 @@ page {
 }
 
 /* 样式配置 */
-.style-section {
-  margin-bottom: 30rpx;
-}
+    .style-section {
+      margin-bottom: 30rpx;
+    }
 
-.option-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
+    .option-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20rpx;
+    }
 
-.option-label {
-  font-size: 24rpx;
-  color: #555;
-  font-weight: 500;
-}
+    .option-label {
+      font-size: 24rpx;
+      color: #555;
+      font-weight: 500;
+    }
 
-/* 尺寸选择 */
-.size-chips {
-  display: flex;
-  gap: 10rpx;
-}
+    /* 中心图片按钮 */
+    .image-upload-btn {
+      background: #f9f9f9;
+      border: 2rpx solid #e0e0e0;
+      border-radius: 20rpx;
+      padding: 8rpx 20rpx;
+      font-size: 20rpx;
+      color: #666;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8rpx;
+    }
 
-.size-chip {
-  padding: 10rpx 20rpx;
-  border: 2rpx solid #e0e0e0;
-  border-radius: 20rpx;
-  font-size: 20rpx;
-  color: #666;
-  transition: all 0.3s ease;
-}
+    .image-upload-btn.has-image {
+      border-color: #4CAF50;
+      color: #4CAF50;
+    }
 
-.size-chip.selected {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
-  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
-}
+    .upload-icon {
+      font-size: 20rpx;
+    }
 
-/* 容错级别 */
-.level-picker {
-  width: 160rpx;
-}
+    /* 尺寸选择 */
+    .size-chips {
+      display: flex;
+      gap: 10rpx;
+    }
 
-.picker-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10rpx 16rpx;
-  border: 2rpx solid #e0e0e0;
-  border-radius: 12rpx;
-  font-size: 22rpx;
-  color: #666;
-}
+    .size-chip {
+      padding: 10rpx 20rpx;
+      border: 2rpx solid #e0e0e0;
+      border-radius: 20rpx;
+      font-size: 20rpx;
+      color: #666;
+      transition: all 0.3s ease;
+    }
 
-.arrow {
-  font-size: 16rpx;
-  color: #999;
-}
+    .size-chip.selected {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #667eea;
+      box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
+    }
+
+    /* 容错级别 */
+    .level-picker {
+      width: 160rpx;
+    }
+
+    .picker-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10rpx 16rpx;
+      border: 2rpx solid #e0e0e0;
+      border-radius: 12rpx;
+      font-size: 22rpx;
+      color: #666;
+    }
+
+    .arrow {
+      font-size: 16rpx;
+      color: #999;
+    }
 
 /* 快捷模板 */
 .template-section {
@@ -493,21 +516,21 @@ page {
 /* 结果操作按钮 */
 .result-actions {
   display: flex;
-  gap: 12rpx;
+  justify-content: center;
 }
 
 .action-btn {
-  flex: 1;
   background: #f9f9f9;
   border: 2rpx solid #e0e0e0;
   border-radius: 12rpx;
-  padding: 16rpx;
+  padding: 16rpx 32rpx;
   font-size: 20rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8rpx;
   transition: all 0.3s ease;
+  min-width: 200rpx;
 }
 
 .action-btn .btn-icon {

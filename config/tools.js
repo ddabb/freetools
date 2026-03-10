@@ -4,7 +4,7 @@
 // 工具频率数据
 const toolFrequency = {
   'mortgage': 95,           // 房贷计算器
-  'life-countdown': 92,     // 人生倒计时
+  'life-countdown': 92,     // 人生A4纸
   'battery-health': 88,     // 电池健康
   'qrcode': 85,             // 二维码生成
   'unit-converter': 82,     // 单位换算
@@ -52,7 +52,7 @@ const tools = [
   },
   {
     id: 'life-countdown',
-    name: '人生倒计时',
+    name: '人生A4纸',
     icon: '⏰',
     color: 'green',
     url: '/packages/life/pages/life-countdown/life-countdown',
@@ -357,7 +357,7 @@ const categories = [
 // 常用工具（首页显示）
 const commonTools = [
   tools[0],  // 房贷计算器
-  tools[1],  // 人生倒计时
+  tools[1],  // 人生A4纸
   tools[17], // 电池健康
   tools[2],  // 二维码生成
   tools[3],  // 单位换算

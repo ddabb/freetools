@@ -216,8 +216,10 @@ const PageDefinition = {
 
   // 设置出生日期
   setBirthDate(e) {
+    const selectedDate = e.detail.value;
+    console.log('设置出生日期:', selectedDate);
     this.setData({
-      birthDate: e.detail.value
+      birthDate: selectedDate
     });
   },
 
@@ -243,9 +245,11 @@ const PageDefinition = {
     });
   },
 
-  // 计算人生倒计时
+  // 计算人生A4纸
   calculate() {
     const { birthDate, expectedLifeYears = 75 } = this.data;
+    console.log('计算开始，当前数据:', { birthDate, expectedLifeYears });
+    
     if (!birthDate) {
       platform.showToast({
         title: '请输入出生日期'
@@ -324,22 +328,25 @@ const PageDefinition = {
       }
 
 // 计算每格代表的天数文本
-    let daysPerGridText = '2.67天'; // 默认值
-    
-    if (finalExpectedLife && this.data.totalGrids && finalExpectedLife > 0 && this.data.totalGrids > 0) {
-      const expectedLifeTotal = finalExpectedLife * 365.25;
-      const daysPerGrid = (expectedLifeTotal / this.data.totalGrids);
-      daysPerGridText = `${daysPerGrid.toFixed(3)}天`;
-    }
-    
-    console.log('每格代表天数文本:', daysPerGridText);
+      let daysPerGridText = '2.67天'; // 默认值
+      
+      if (finalExpectedLife && this.data.totalGrids && finalExpectedLife > 0 && this.data.totalGrids > 0) {
+        const expectedLifeTotal = finalExpectedLife * 365.25;
+        const daysPerGrid = (expectedLifeTotal / this.data.totalGrids);
+        daysPerGridText = `${daysPerGrid.toFixed(3)}天`;
+      }
+      
+      console.log('每格代表天数文本:', daysPerGridText);
 
-// 设置初始问题索引
-    const randomIndex = Math.floor(Math.random() * this.data.questions.length);
-    this.setData({
-      currentIndex: randomIndex
-    });
-    console.log('随机问题索引:', randomIndex);
+      // 设置初始问题索引
+      const randomIndex = Math.floor(Math.random() * this.data.questions.length);
+      this.setData({
+        currentIndex: randomIndex
+      });
+      console.log('随机问题索引:', randomIndex);
+
+      // 确保数组已初始化
+      this.initArrays();
 
       // 更新结果
       this.setData({
@@ -495,6 +502,7 @@ const PageDefinition = {
     const { gridRows, gridCols } = this.data;
     const rowsArray = Array.from({ length: gridRows }, (_, index) => index);
     const colsArray = Array.from({ length: gridCols }, (_, index) => index);
+    console.log('初始化数组:', { gridRows, gridCols, rowsArray: rowsArray.length, colsArray: colsArray.length });
     this.setData({
       rowsArray,
       colsArray
@@ -545,6 +553,12 @@ const PageDefinition = {
     this.stopAutoPlay();
   },
 
+  // 页面数据更新时执行
+  onReady() {
+    console.log('页面准备就绪，确保数据正确绑定');
+    this.initArrays();
+  },
+
   // 页面加载时执行
   onInit() {
     this.initArrays();
@@ -590,14 +604,37 @@ const PageDefinition = {
       // 鸿蒙平台
       canvas = res;
       ctx = canvas.getContext('2d');
+      console.log('鸿蒙平台Canvas:', { width: canvas.width, height: canvas.height });
     } else {
       // 微信小程序平台
       canvas = res[0].node;
       ctx = canvas.getContext('2d');
+      console.log('微信小程序Canvas:', { width: canvas.width, height: canvas.height });
     }
 
     console.log('Canvas元素:', canvas);
     let that = this;
+    
+    // 确保Canvas尺寸正确
+    if (isHarmonyOS) {
+      const dpr = 2; // 鸿蒙平台使用固定DPI
+      const width = this.data.canvaswidth;
+      const height = this.data.canvasheight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      console.log('鸿蒙Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height });
+    } else {
+      // 微信小程序平台 - 使用系统信息获取DPI
+      const systemInfo = wx.getSystemInfoSync();
+      const dpr = systemInfo.pixelRatio || 2;
+      const width = this.data.canvaswidth;
+      const height = this.data.canvasheight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      console.log('微信Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height, systemInfo });
+    }
 
     // 获取系统信息
     platform.getSystemInfo((systemInfo) => {
@@ -735,11 +772,24 @@ const PageDefinition = {
       // 绘制格子网格 - 所见即所得
       const totalGrids = this.data.totalGrids;
       const livedGrids = Math.min(this.data.livedGrids, totalGrids);
+      const expectedLifeYears = this.data.expectedLifeYears || 75;
       console.log('格子绘制开始:', {total: totalGrids, lived: livedGrids});
       
-      for (let i = 0; i < gridRows; i++) {
-        for (let j = 0; j < gridCols; j++) {
-          const index = i * gridCols + j;
+      // 添加调试信息
+      console.log('网格配置:', {
+        gridRows: this.data.gridRows, 
+        gridCols: this.data.gridCols,
+        gridCellSize, 
+        gridGap,
+        gridStartX, 
+        gridStartY,
+        livedGrids,
+        expectedLivedGrids: Math.ceil((this.data.daysLived / (expectedLifeYears * 365.25)) * totalGrids)
+      });
+      
+      for (let i = 0; i < this.data.gridRows; i++) {
+        for (let j = 0; j < this.data.gridCols; j++) {
+          const index = i * this.data.gridCols + j;
           const x = gridStartX + j * (gridCellSize + gridGap);
           const y = gridStartY + i * (gridCellSize + gridGap);
 
@@ -756,9 +806,26 @@ const PageDefinition = {
           }
 
           ctx.fillRect(x, y, gridCellSize, gridCellSize);
+          
+          // 调试：绘制网格线
+          if (i < 2 && j < 2) {
+            ctx.strokeStyle = '#cccccc';
+            ctx.strokeRect(x, y, gridCellSize, gridCellSize);
+          }
         }
       }
-      console.log('格子网格绘制完成');
+      
+      // 绘制网格边界
+      ctx.strokeStyle = '#666666';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(gridStartX, gridStartY, 
+                    this.data.gridCols * (gridCellSize + gridGap) - gridGap, 
+                    this.data.gridRows * (gridCellSize + gridGap) - gridGap);
+      
+      console.log('格子网格绘制完成，边界尺寸:', {
+        width: this.data.gridCols * (gridCellSize + gridGap) - gridGap,
+        height: this.data.gridRows * (gridCellSize + gridGap) - gridGap
+      });
 
       // 格子信息文本
       ctx.font = 'bold 16px 微软雅黑';

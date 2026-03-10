@@ -59,6 +59,38 @@ page {
   transition: all 0.3s ease;
 }
 
+/* 组合输入区域样式 */
+.combined-section {
+  margin-bottom: 30rpx;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.input-row {
+  display: flex;
+  gap: 15rpx;
+}
+
+.input-box.date-input,
+.input-box.age-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  padding: 15rpx;
+  border-radius: 15rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  border: 1rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.section-title-small {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 10rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+}
+
 .input-box:focus-within {
   border-color: #667eea;
   transform: translateY(-2rpx);
@@ -227,24 +259,24 @@ page {
 .grid-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 4rpx;
-  padding: 10rpx;
+  gap: 1rpx;
+  padding: 5rpx;
 }
 
 .grid-row {
   display: flex;
-  gap: 2rpx;
+  gap: 1rpx;
   justify-content: center;
   align-items: center;
   flex-wrap: nowrap;
   width: 100%;
-  min-height: 16rpx;
+  min-height: 14rpx;
 }
 
 .grid-cell {
-  width: 14rpx;
-  height: 14rpx;
-  border-radius: 1rpx;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 0.5rpx;
   display: block;
   background-color: #e9ecef;
 }

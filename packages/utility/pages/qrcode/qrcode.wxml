@@ -68,54 +68,94 @@
           </view>
         </view>
 
-        <!-- 样式配置 -->
-        <view class="style-section">
-          <text class="section-label">样式设置</text>
-          
-          <!-- 尺寸选择 -->
-          <view class="option-row">
-            <text class="option-label">尺寸</text>
-            <view class="size-chips">
-              <view 
-                class="size-chip {{qrSize === 200 ? 'selected' : ''}}" 
-                bindtap="changeQrSize" 
-                data-size="200"
-              >
-                小
-              </view>
-              <view 
-                class="size-chip {{qrSize === 280 ? 'selected' : ''}}" 
-                bindtap="changeQrSize" 
-                data-size="280"
-              >
-                中
-              </view>
-              <view 
-                class="size-chip {{qrSize === 360 ? 'selected' : ''}}" 
-                bindtap="changeQrSize" 
-                data-size="360"
-              >
-                大
-              </view>
-            </view>
+<!-- 样式配置 -->
+    <view class="style-section">
+      <text class="section-label">样式设置</text>
+      
+      <!-- 尺寸选择 -->
+      <view class="option-row">
+        <text class="option-label">尺寸</text>
+        <view class="size-chips">
+          <view 
+            class="size-chip {{qrSize === 200 ? 'selected' : ''}}" 
+            bindtap="changeQrSize" 
+            data-size="200"
+          >
+            小
           </view>
-
-          <!-- 容错级别 -->
-          <view class="option-row">
-            <text class="option-label">容错级别</text>
-            <picker 
-              range="{{errorLevels}}" 
-              value="{{errorLevelIndex}}" 
-              bindchange="onErrorLevelChange"
-              class="level-picker"
-            >
-              <view class="picker-display">
-                {{errorLevels[errorLevelIndex]}}
-                <text class="arrow">▼</text>
-              </view>
-            </picker>
+          <view 
+            class="size-chip {{qrSize === 280 ? 'selected' : ''}}" 
+            bindtap="changeQrSize" 
+            data-size="280"
+          >
+            中
+          </view>
+          <view 
+            class="size-chip {{qrSize === 360 ? 'selected' : ''}}" 
+            bindtap="changeQrSize" 
+            data-size="360"
+          >
+            大
           </view>
         </view>
+      </view>
+
+      <!-- 中心图片 -->
+      <view class="option-row">
+        <text class="option-label">中心图片</text>
+        <button 
+          class="image-upload-btn {{centerImage ? 'has-image' : ''}}" 
+          bindtap="uploadCenterImage"
+        >
+          <text class="upload-icon">📷</text>
+          {{centerImage ? '更换' : '添加'}}
+        </button>
+      </view>
+
+      <!-- 图片大小 -->
+      <view class="option-row" wx:if="{{centerImage}}">
+        <text class="option-label">图片大小</text>
+        <view class="size-chips">
+          <view 
+            class="size-chip {{imageSize === 40 ? 'selected' : ''}}" 
+            bindtap="changeImageSize" 
+            data-size="40"
+          >
+            小
+          </view>
+          <view 
+            class="size-chip {{imageSize === 60 ? 'selected' : ''}}" 
+            bindtap="changeImageSize" 
+            data-size="60"
+          >
+            中
+          </view>
+          <view 
+            class="size-chip {{imageSize === 80 ? 'selected' : ''}}" 
+            bindtap="changeImageSize" 
+            data-size="80"
+          >
+            大
+          </view>
+        </view>
+      </view>
+
+      <!-- 容错级别 -->
+      <view class="option-row">
+        <text class="option-label">容错级别</text>
+        <picker 
+          range="{{errorLevels}}" 
+          value="{{errorLevelIndex}}" 
+          bindchange="onErrorLevelChange"
+          class="level-picker"
+        >
+          <view class="picker-display">
+            {{errorLevels[errorLevelIndex]}}
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
 
         <!-- 快捷模板 -->
         <view class="template-section" wx:if="{{contentType === 'url'}}">
@@ -177,6 +217,15 @@
           <text class="btn-icon">🗑️</text>
           清空
         </button>
+        <button 
+          class="secondary-btn" 
+          bindtap="removeImage"
+          wx:if="{{hasImage}}"
+          hover-class="btn-secondary-hover"
+        >
+          <text class="btn-icon">📷</text>
+          移除图片
+        </button>
       </view>
     </view>
 
@@ -218,14 +267,6 @@
         <button class="action-btn save-btn" bindtap="saveImage" hover-class="btn-action-hover">
           <text class="btn-icon">💾</text>
           <text>保存到相册</text>
-        </button>
-        <button class="action-btn share-btn" bindtap="shareQRCode" hover-class="btn-action-hover">
-          <text class="btn-icon">📤</text>
-          <text>分享二维码</text>
-        </button>
-        <button class="action-btn copy-btn" bindtap="copyContent" hover-class="btn-action-hover">
-          <text class="btn-icon">📋</text>
-          <text>复制内容</text>
         </button>
       </view>
     </view>

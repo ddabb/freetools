@@ -6,30 +6,29 @@
     <text class="header-subtitle">900个格子，见证生命的成长~</text>
   </view>
 
-  <!-- 出生日期输入 -->
-  <view class="section">
-    <text class="section-title">您的出生日期</text>
-    <view class="input-box">
-      <picker mode="date" value="{{birthDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setBirthDate" class="picker">
-        <view class="picker-view {{birthDate ? 'has-value' : ''}}">
-          {{birthDate || '点击选择出生日期'}}
-        </view>
-      </picker>
-    </view>
-  </view>
-
-  <!-- 预计寿命设置 -->
-  <view class="section">
-    <text class="section-title">预期寿命（岁）</text>
-    <view class="input-box">
-      <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input" placeholder="默认75岁"/>
+  <!-- 基本信息 -->
+  <view class="combined-section">
+    <view class="input-row">
+      <view class="input-box date-input">
+        <text class="section-title-small">出生日期</text>
+        <picker mode="date" value="{{birthDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="setBirthDate" class="picker">
+          <view class="picker-view {{birthDate ? 'has-value' : ''}}">
+            {{birthDate || '点击选择'}}
+          </view>
+        </picker>
+      </view>
+      
+      <view class="input-box age-input">
+        <text class="section-title-small">预期寿命（岁）</text>
+        <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input" placeholder="75"/>
+      </view>
     </view>
   </view>
 
   <!-- 计算按钮 -->
   <view class="section">
     <button class="calculate-btn {{!birthDate ? 'disabled' : ''}}" bindtap="calculate" disabled="{{!birthDate}}">
-      开启人生A4纸之旅
+      绘制A4纸
     </button>
   </view>
 
