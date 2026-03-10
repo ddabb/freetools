@@ -2,8 +2,8 @@
 <view class="container">
   <!-- 头部介绍 -->
   <view class="header">
-    <text class="header-title">人生格子</text>
-    <text class="header-subtitle">900个格子，见证生命流逝</text>
+    <text class="header-title">人生A4纸</text>
+    <text class="header-subtitle">900个格子，见证生命的成长~</text>
   </view>
 
   <!-- 出生日期输入 -->
@@ -29,7 +29,7 @@
   <!-- 计算按钮 -->
   <view class="section">
     <button class="calculate-btn {{!birthDate ? 'disabled' : ''}}" bindtap="calculate" disabled="{{!birthDate}}">
-      开启人生格子之旅
+      开启人生A4纸之旅
     </button>
   </view>
 
@@ -56,7 +56,7 @@
     <!-- 900个格子可视化 -->
     <view class="grid-section">
       <view class="grid-title">
-        <text>人生画卷（共{{totalGrids}}格，{{gridRows}}×{{gridCols}}）</text>
+        <text>人生A4纸（共{{totalGrids}}格，{{gridRows}}×{{gridCols}}）</text>
         <text class="grid-percentage">已填充 {{gridPercentage || 0}}%（{{livedGrids || 0}}/{{totalGrids}}）</text>
       </view>
       <view class="grid-container">
@@ -96,21 +96,19 @@
     <!-- 人生思考引导 -->
     <view class="reflection-section">
       <view class="reflection-header">
+        <view class="banner-arrow left" bindtap="prevQuestion">
+          <text>‹</text>
+        </view>
         <text class="reflection-title">🤔 人生思考</text>
         <view class="banner-indicator">
           <view wx:for="{{questions}}" wx:key="index" class="indicator-dot {{currentIndex === index ? 'active' : ''}}"></view>
         </view>
-      </view>
-      <view class="question-card" style="animation: fadeInScale 0.8s ease-out;">
-        <text class="question-text">{{questions[currentIndex].text}}</text>
-      </view>
-      <view class="banner-controls">
-        <view class="banner-arrow left" bindtap="prevQuestion">
-          <text>‹</text>
-        </view>
         <view class="banner-arrow right" bindtap="nextQuestion">
           <text>›</text>
         </view>
+      </view>
+      <view class="question-card" style="animation: fadeInScale 0.8s ease-out;">
+        <text class="question-text">{{questions[currentIndex].text}}</text>
       </view>
       <view class="reflection-hint">
         <text>静下心来，认真思考这个问题。生命有限，别让时光在无意识中溜走。</text>
@@ -127,4 +125,14 @@
   <view class="footer-tip" wx:if="{{!showResult}}">
     <text>💡 每个格子约等于2.67小时，900格代表约75年的人生</text>
   </view>
+
+  <!-- 分享按钮 -->
+  <view class="share-section" wx:if="{{showResult}}">
+    <button class="share-btn" bindtap="MakePosters">
+      分享人生A4纸
+    </button>
+  </view>
+
+  <!-- 隐藏的Canvas用于生成分享图片 -->
+  <canvas id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
 </view>

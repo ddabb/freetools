@@ -332,20 +332,23 @@ page {
 
 .reflection-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 30rpx;
+  gap: 20rpx;
 }
 
 .reflection-title {
   font-size: 36rpx;
   font-weight: 700;
   color: #333;
+  flex: 1;
+  text-align: center;
 }
 
 .banner-indicator {
   display: flex;
   gap: 8rpx;
+  align-items: center;
 }
 
 .indicator-dot {
@@ -378,16 +381,7 @@ page {
   color: #333;
   font-weight: 500;
   flex: 1;
-}
-
-.banner-controls {
-  position: absolute;
-  bottom: 30rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20rpx;
-  z-index: 10;
+  text-align: center;
 }
 
 .banner-arrow {
@@ -404,14 +398,6 @@ page {
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
-}
-
-.banner-arrow.left {
-  transform: translateX(-80rpx);
-}
-
-.banner-arrow.right {
-  transform: translateX(80rpx);
 }
 
 .banner-arrow:active {
@@ -444,6 +430,7 @@ page {
 /* 重置按钮区域 */
 .reset-section {
   text-align: center;
+  margin-bottom: 30rpx;
 }
 
 .reset-btn {
@@ -459,6 +446,31 @@ page {
 .reset-btn:active {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 分享按钮区域 */
+.share-section {
+  text-align: center;
+  margin-bottom: 40rpx;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.share-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 32rpx;
+  font-size: 36rpx;
+  font-weight: 800;
+  box-shadow: 0 15rpx 40rpx rgba(102, 126, 234, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.share-btn:active {
+  transform: translateY(-2rpx) scale(1.02);
+  box-shadow: 0 20rpx 50rpx rgba(102, 126, 234, 0.5);
 }
 
 /* 底部提示 */

@@ -322,17 +322,24 @@ const tools = [
 
 // 发现页特有的工具数据
 const discoveryTools = [
-  { id: 'word-counter', name: '字数统计器', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], frequency: toolFrequency['word-counter'] },
-  { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], frequency: toolFrequency['markdown-preview'] },
-  { id: 'text-diff', name: '文本对比工具', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], frequency: toolFrequency['text-diff'] },
-  { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], frequency: toolFrequency['data-analyzer'] },
-  { id: 'chart-generator', name: '图表生成器', icon: '📊', description: '多种图表一键生成', url: '/packages/chart/pages/chart-generator/chart-generator', categories: ['学习工具', '开发工具'], frequency: toolFrequency['chart-generator'] },
-  { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], frequency: toolFrequency['timestamp-converter'] },
-  { id: 'color-converter', name: '颜色转换器', icon: '🎨', description: 'RGB/Hex/HSL色彩转换', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '转换工具'], frequency: toolFrequency['color-converter'] }
+  { id: 'word-counter', name: '字数统计器', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], keywords: ['字数', '统计', '文本', '字符'], frequency: toolFrequency['word-counter'] },
+  { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], keywords: ['Markdown', '预览', '文档', '格式'], frequency: toolFrequency['markdown-preview'] },
+  { id: 'text-diff', name: '文本对比工具', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'], frequency: toolFrequency['text-diff'] },
+  { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'], frequency: toolFrequency['data-analyzer'] },
+  { id: 'chart-generator', name: '图表生成器', icon: '📊', description: '多种图表一键生成', url: '/packages/chart/pages/chart-generator/chart-generator', categories: ['学习工具', '开发工具'], keywords: ['图表', '生成', '可视化', '图形'], frequency: toolFrequency['chart-generator'] },
+  { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'], frequency: toolFrequency['timestamp-converter'] },
+  { id: 'color-converter', name: '颜色转换器', icon: '🎨', description: 'RGB/Hex/HSL色彩转换', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '转换工具'], keywords: ['颜色', '转换', 'RGB', 'Hex', 'HSL'], frequency: toolFrequency['color-converter'] }
 ];
 
 // 合并所有工具
 const allTools = [...tools, ...discoveryTools.filter(tool => !tools.find(t => t.id === tool.id))];
+
+// 确保所有工具都有 keywords 数组
+allTools.forEach(tool => {
+  if (!tool.keywords || !Array.isArray(tool.keywords)) {
+    tool.keywords = [];
+  }
+});
 
 // 工具分类（与首页分类保持一致）
 const categories = [
@@ -363,22 +370,61 @@ const commonTools = [
 
 // 根据分类获取工具
 function getToolsByCategory(categoryName) {
-  return allTools.filter(tool => tool.categories.includes(categoryName));
+  if (!allTools || !Array.isArray(allTools)) {
+    console.error('工具列表未正确初始化');
+    return [];
+  }
+  
+  return allTools.filter(tool => {
+    if (!tool || !tool.categories) return false;
+    return tool.categories.includes(categoryName);
+  });
 }
 
 // 根据关键词搜索工具
 function searchTools(keyword) {
   const lowerKeyword = keyword.toLowerCase();
+  if (!allTools || !Array.isArray(allTools)) {
+    console.error('工具列表未正确初始化');
+    return [];
+  }
+  
   return allTools.filter(tool => {
-    return tool.name.toLowerCase().includes(lowerKeyword) ||
-           tool.keywords.some(k => k.toLowerCase().includes(lowerKeyword)) ||
-           tool.description.toLowerCase().includes(lowerKeyword);
+    if (!tool) return false;
+    
+    const nameMatch = tool.name && tool.name.toLowerCase().includes(lowerKeyword);
+    const descriptionMatch = tool.description && tool.description.toLowerCase().includes(lowerKeyword);
+    const keywordsMatch = tool.keywords && Array.isArray(tool.keywords) && tool.keywords.some(k => 
+      k && k.toLowerCase().includes(lowerKeyword)
+    );
+    
+    return nameMatch || keywordsMatch || descriptionMatch;
   });
 }
 
 // 根据ID获取工具
 function getToolById(id) {
-  return allTools.find(tool => tool.id === id);
+  if (!allTools || !Array.isArray(allTools)) {
+    console.error('工具列表未正确初始化');
+    return null;
+  }
+  
+  return allTools.find(tool => {
+    if (!tool) return false;
+    return tool.id === id;
+  });
+}
+
+// 确保在导出前 allTools 已经定义
+if (!allTools || !Array.isArray(allTools)) {
+  throw new Error('工具列表未正确初始化');
+}
+
+// 确保在导出前 allTools 已经定义
+if (!allTools || !Array.isArray(allTools)) {
+  console.error('工具列表未正确初始化');
+  // 创建一个空数组作为默认值
+  const allTools = [];
 }
 
 // 导出模块

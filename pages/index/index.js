@@ -75,10 +75,14 @@ Page({
   // 合并所有工具数据
   mergeAllTools() {
     // 直接使用从config/tools.js导入的allTools
-    this.setData({ allTools });
-    console.log('合并工具完成，总计:', allTools.length, '个工具');
-    // 预计算分类工具数量
-    this.calculateCategoryToolCounts();
+    if (allTools && Array.isArray(allTools)) {
+      this.setData({ allTools: allTools });
+      console.log('合并工具完成，总计:', this.data.allTools.length, '个工具');
+      // 预计算分类工具数量
+      this.calculateCategoryToolCounts();
+    } else {
+      console.error('工具列表未正确初始化');
+    }
   },
 
   // 预计算分类工具数量
@@ -307,7 +311,7 @@ Page({
       // 使用统一配置的搜索功能
       const searchResults = searchTools(searchText);
       const filteredTools = searchResults.filter(tool =>
-        allTools.some(at => at.id === tool.id)
+        this.data.allTools.some(at => at.id === tool.id)  // 使用 this.data.allTools 而不是 allTools
       );
 
       // 过滤分类
