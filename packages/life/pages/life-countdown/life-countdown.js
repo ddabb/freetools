@@ -1,9 +1,30 @@
 // packages/life/pages/life-countdown/life-countdown.js
 // 平台兼容API封装
+const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+
+// 根据平台导入相应的模块
+let prompt, image, permission, app, storage, device, share;
+if (isHarmonyOS) {
+  prompt = require('@system.prompt');
+  image = require('@system.image');
+  storage = require('@system.storage');
+  device = require('@system.device');
+  share = require('@system.share');
+  try {
+    permission = require('@system.permission');
+  } catch (e) {
+    console.log('鸿蒙权限模块不可用:', e.message);
+  }
+  try {
+    app = require('@system.app');
+  } catch (e) {
+    console.log('鸿蒙应用模块不可用:', e.message);
+  }
+}
+
 const platform = {
   // 弹窗提示
   showToast: function(options) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       prompt.showToast({
         message: options.title || options.message,
@@ -20,7 +41,6 @@ const platform = {
   
   // 存储相关
   setStorage: function(key, value) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.set({
         key: key,
@@ -38,7 +58,6 @@ const platform = {
   },
   
   getStorage: function(key, callback) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.get({
         key: key,
@@ -61,7 +80,6 @@ const platform = {
   },
   
   removeStorage: function(key) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.delete({ 
         key: key,
@@ -79,7 +97,6 @@ const platform = {
   
   // 系统信息
   getSystemInfo: function(callback) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       device.getInfo({
         success: (data) => {
@@ -102,7 +119,6 @@ const platform = {
   
   // 分享
   share: function(options) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       share.share({
         title: options.title,
@@ -123,13 +139,91 @@ const platform = {
   
   // 保存图片到相册
   saveImageToAlbum: function(imageData, success, fail) {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
-      image.saveToPhotosAlbum({
-        uri: imageData,
-        success: success,
-        fail: fail
-      });
+      console.log('鸿蒙平台保存图片，imageData类型:', typeof imageData, '长度:', imageData ? imageData.length : 0);
+      // 检查imageData是否是base64数据
+      if (imageData && imageData.startsWith('data:image/')) {
+        console.log('图片数据是base64格式，MIME类型:', imageData.substring(5, imageData.indexOf(';')));
+      }
+      
+      // 鸿蒙平台保存图片的内部函数
+      const saveImageInternal = () => {
+        try {
+          image.saveToPhotosAlbum({
+            uri: imageData,
+            success: function(data) {
+              console.log('鸿蒙平台保存成功:', data);
+              success && success(data);
+            },
+            fail: function(data, code) {
+              console.error('鸿蒙平台保存失败:', { code, data, imageDataType: typeof imageData });
+              // 如果权限被拒绝，尝试引导用户开启权限
+              if (code === 201 || (data && data.code === 201)) {
+                if (prompt && prompt.showDialog) {
+                  prompt.showDialog({
+                    title: '需要相册权限',
+                    message: '保存图片需要相册写入权限，请在设置中开启',
+                    buttons: [
+                      {
+                        text: '去设置',
+                        color: '#007dff'
+                      },
+                      {
+                        text: '取消',
+                        color: '#999999'
+                      }
+                    ],
+                    success: function(result) {
+                      if (result.index === 0 && app && app.getInfo) {
+                        // 打开应用设置
+                        app.getInfo({
+                          success: function(appInfo) {
+                            if (appInfo && appInfo.packageName) {
+                              // 鸿蒙打开应用设置的方式可能不同
+                              console.log('应打开应用设置页面，包名:', appInfo.packageName);
+                              prompt.showToast({
+                                message: '请到系统设置中开启相册权限'
+                              });
+                            }
+                          }
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  prompt.showToast({
+                    message: '需要相册权限，请到设置中开启'
+                  });
+                }
+              }
+              fail && fail(data, code);
+            }
+          });
+        } catch (error) {
+          console.error('调用鸿蒙保存API异常:', error);
+          fail && fail({ errMsg: error.message }, -1);
+        }
+      };
+      
+      // 检查权限（如果权限模块可用）
+      if (permission && permission.request) {
+        const permissionName = 'ohos.permission.WRITE_MEDIA';
+        permission.request({
+          permission: permissionName,
+          success: function() {
+            console.log('权限申请成功');
+            saveImageInternal();
+          },
+          fail: function(data, code) {
+            console.log('权限申请失败或用户拒绝:', { code, data });
+            // 用户拒绝权限，仍然尝试保存（可能会失败）
+            saveImageInternal();
+          }
+        });
+      } else {
+        // 没有权限模块，直接尝试保存
+        saveImageInternal();
+      }
     } else {
       wx.saveImageToPhotosAlbum({
         filePath: imageData,
@@ -896,19 +990,31 @@ const PageDefinition = {
         console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
         
         if (isHarmonyOS) {
-          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
-          const imageData = canvas.toDataURL();
+          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
+          console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+          const imageData = canvas.toDataURL('image/png');
+          console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
           
-          // 保存图片到相册
+          if (!imageData || !imageData.startsWith('data:image/png')) {
+            console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
+            platform.showToast({
+              title: '生成图片数据失败'
+            });
+            return;
+          }
+          
+          // 保存图片到相册 - 使用增强的权限校验
           platform.saveImageToAlbum(imageData, 
             function() {
               console.log("保存相册成功");
               platform.showToast({
-                title: '保存相册成功'
+                title: '保存成功'
               });
             },
             function(data, code) {
-              console.log("保存到相册失败", code, data);
+              console.log("保存到相册失败", { code, data, dataType: typeof data });
+              // 增强的权限处理已经在saveImageToAlbum函数中实现
+              // 这里只显示通用错误提示
               platform.showToast({
                 title: '保存失败，请重试'
               });
@@ -1015,12 +1121,43 @@ const PageDefinition = {
   MakePosters: async function () {
     try {
       let that = this;
-      platform.showToast({
-        title: '生成中，请稍候'
-      });
-      setTimeout(function () {
-        that.savecodetofile()
-      }, 1000);
+      
+      // 鸿蒙平台权限预检查
+      if (isHarmonyOS && permission && permission.request) {
+        const permissionName = 'ohos.permission.WRITE_MEDIA';
+        console.log('鸿蒙平台检查相册写入权限');
+        
+        permission.request({
+          permission: permissionName,
+          success: function() {
+            console.log('权限申请成功，开始生成图片');
+            platform.showToast({
+              title: '生成中，请稍候'
+            });
+            setTimeout(function () {
+              that.savecodetofile()
+            }, 1000);
+          },
+          fail: function(data, code) {
+            console.log('权限申请失败或用户拒绝:', { code, data });
+            // 用户拒绝权限，仍然尝试生成（保存时可能会失败）
+            platform.showToast({
+              title: '生成中，请稍候'
+            });
+            setTimeout(function () {
+              that.savecodetofile()
+            }, 1000);
+          }
+        });
+      } else {
+        // 非鸿蒙平台或权限模块不可用，直接生成
+        platform.showToast({
+          title: '生成中，请稍候'
+        });
+        setTimeout(function () {
+          that.savecodetofile()
+        }, 1000);
+      }
     } catch (ex) {
       console.log("绘图出现了错误" + ex)
       platform.showToast({
@@ -1031,7 +1168,6 @@ const PageDefinition = {
 
   // 分享到朋友圈
   onShareTimeline() {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     let share;
     if (isHarmonyOS) {
       try {

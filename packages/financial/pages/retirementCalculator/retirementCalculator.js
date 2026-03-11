@@ -5,11 +5,13 @@ Page({
     retireAge: 60,
     retireAgeIndex: 1, // 退休年龄在数组中的索引
     currentSalary: '',
-    salaryIncrease: 0.05,
+    salaryIncrease: 5,
+    savingTypeIndex: 0, // 0: 固定金额, 1: 薪资比例
     monthlySaving: '',
-    expectedReturn: 0.06,
+    expectedReturn: 6,
     totalSavings: '',
     retireSavings: '',
+    expectedMonthlySaving: '',
     showResult: false
   },
 
@@ -20,9 +22,13 @@ Page({
   },
 
   onCurrentAgeInput(e) {
-    this.setData({
-      currentAge: e.detail.value
-    })
+    const value = e.detail.value
+    // 只允许输入数字
+    if (/^\d*$/.test(value)) {
+      this.setData({
+        currentAge: value
+      })
+    }
   },
 
   onRetireAgeChange(e) {
@@ -35,26 +41,43 @@ Page({
   },
 
   onCurrentSalaryInput(e) {
+    const value = e.detail.value
+    // 只允许输入数字和小数点
+    if (/^\d*\.?\d*$/.test(value)) {
+      this.setData({
+        currentSalary: value
+      })
+    }
+  },
+
+  onSavingTypeChange(e) {
+    const index = parseInt(e.detail.value)
     this.setData({
-      currentSalary: e.detail.value
+      savingTypeIndex: index
     })
   },
 
   onSalaryIncreaseChange(e) {
+    const value = parseFloat(e.detail.value);
     this.setData({
-      salaryIncrease: parseFloat(e.detail.value)
+      salaryIncrease: isNaN(value) ? 0 : value
     })
   },
 
   onMonthlySavingInput(e) {
-    this.setData({
-      monthlySaving: e.detail.value
-    })
+    const value = e.detail.value
+    // 只允许输入数字和小数点
+    if (/^\d*\.?\d*$/.test(value)) {
+      this.setData({
+        monthlySaving: value
+      })
+    }
   },
 
   onExpectedReturnChange(e) {
+    const value = parseFloat(e.detail.value);
     this.setData({
-      expectedReturn: parseFloat(e.detail.value)
+      expectedReturn: isNaN(value) ? 0 : value
     })
   },
 
@@ -77,19 +100,45 @@ Page({
       return
     }
 
-    const yearsToRetire = retireAge - parseInt(currentAge)
+    const currentAgeNum = parseInt(currentAge)
+    if (currentAgeNum >= retireAge) {
+      wx.showToast({
+        title: '当前年龄必须小于退休年龄',
+        icon: 'none'
+      })
+      return
+    }
+
+    const yearsToRetire = retireAge - currentAgeNum
     const months = yearsToRetire * 12
 
+    // 计算每月储蓄金额
+    let monthlySavingAmount
+    if (this.data.savingTypeIndex === 1 && currentSalary) {
+      // 如果选择了薪资比例且输入了当前薪资
+      monthlySavingAmount = parseFloat(currentSalary) * (parseFloat(monthlySaving) / 100)
+    } else {
+      // 否则视为固定金额
+      monthlySavingAmount = parseFloat(monthlySaving)
+    }
+
     // 计算退休时预计的月储蓄
-    const expectedMonthlySaving = parseFloat(monthlySaving) * Math.pow(1 + salaryIncrease, yearsToRetire)
+    const expectedMonthlySaving = monthlySavingAmount * Math.pow(1 + salaryIncrease / 100, yearsToRetire)
 
     // 计算退休储蓄总额（考虑复利）
-    const monthlyRate = expectedReturn / 12
-    const totalSavings = (expectedMonthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate
+    const monthlyRate = expectedReturn / 100 / 12
+    let totalSavings
+    if (Math.abs(monthlyRate) < 1e-10) {
+      // 利率为零时，简单累加
+      totalSavings = expectedMonthlySaving * months
+    } else {
+      totalSavings = (expectedMonthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate
+    }
 
     this.setData({
       totalSavings: totalSavings.toFixed(2),
       retireSavings: (totalSavings / 10000).toFixed(2),
+      expectedMonthlySaving: expectedMonthlySaving.toFixed(2),
       showResult: true
     })
   },
@@ -99,11 +148,13 @@ Page({
       currentAge: '',
       retireAge: 60,
       currentSalary: '',
-      salaryIncrease: 0.05,
+      salaryIncrease: 5,
+      savingTypeIndex: 0,
       monthlySaving: '',
-      expectedReturn: 0.06,
+      expectedReturn: 6,
       totalSavings: '',
       retireSavings: '',
+      expectedMonthlySaving: '',
       showResult: false
     })
   },

@@ -6,10 +6,20 @@ const QRCode = require('weapp-qrcode-canvas-2d')
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
 // 根据平台导入相应的模块
-let prompt, image;
+let prompt, image, permission, app;
 if (isHarmonyOS) {
   prompt = require('@system.prompt');
   image = require('@system.image');
+  try {
+    permission = require('@system.permission');
+  } catch (e) {
+    console.log('鸿蒙权限模块不可用:', e.message);
+  }
+  try {
+    app = require('@system.app');
+  } catch (e) {
+    console.log('鸿蒙应用模块不可用:', e.message);
+  }
 }
 
 // 平台兼容API封装
@@ -33,11 +43,90 @@ const platform = {
   // 保存图片到相册
   saveImageToAlbum: function(imageData, success, fail) {
     if (isHarmonyOS) {
-      image.saveToPhotosAlbum({
-        uri: imageData,
-        success: success,
-        fail: fail
-      });
+      console.log('鸿蒙平台保存图片，imageData类型:', typeof imageData, '长度:', imageData ? imageData.length : 0);
+      // 检查imageData是否是base64数据
+      if (imageData && imageData.startsWith('data:image/')) {
+        console.log('图片数据是base64格式，MIME类型:', imageData.substring(5, imageData.indexOf(';')));
+      }
+      
+      // 鸿蒙平台保存图片的内部函数
+      const saveImageInternal = () => {
+        try {
+          image.saveToPhotosAlbum({
+            uri: imageData,
+            success: function(data) {
+              console.log('鸿蒙平台保存成功:', data);
+              success && success(data);
+            },
+            fail: function(data, code) {
+              console.error('鸿蒙平台保存失败:', { code, data, imageDataType: typeof imageData });
+              // 如果权限被拒绝，尝试引导用户开启权限
+              if (code === 201 || (data && data.code === 201)) {
+                if (prompt && prompt.showDialog) {
+                  prompt.showDialog({
+                    title: '需要相册权限',
+                    message: '保存图片需要相册写入权限，请在设置中开启',
+                    buttons: [
+                      {
+                        text: '去设置',
+                        color: '#007dff'
+                      },
+                      {
+                        text: '取消',
+                        color: '#999999'
+                      }
+                    ],
+                    success: function(result) {
+                      if (result.index === 0 && app && app.getInfo) {
+                        // 打开应用设置
+                        app.getInfo({
+                          success: function(appInfo) {
+                            if (appInfo && appInfo.packageName) {
+                              // 鸿蒙打开应用设置的方式可能不同
+                              console.log('应打开应用设置页面，包名:', appInfo.packageName);
+                              prompt.showToast({
+                                message: '请到系统设置中开启相册权限'
+                              });
+                            }
+                          }
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  prompt.showToast({
+                    message: '需要相册权限，请到设置中开启'
+                  });
+                }
+              }
+              fail && fail(data, code);
+            }
+          });
+        } catch (error) {
+          console.error('调用鸿蒙保存API异常:', error);
+          fail && fail({ errMsg: error.message }, -1);
+        }
+      };
+      
+      // 检查权限（如果权限模块可用）
+      if (permission && permission.request) {
+        const permissionName = 'ohos.permission.WRITE_MEDIA';
+        permission.request({
+          permission: permissionName,
+          success: function() {
+            console.log('权限申请成功');
+            saveImageInternal();
+          },
+          fail: function(data, code) {
+            console.log('权限申请失败或用户拒绝:', { code, data });
+            // 用户拒绝权限，仍然尝试保存（可能会失败）
+            saveImageInternal();
+          }
+        });
+      } else {
+        // 没有权限模块，直接尝试保存
+        saveImageInternal();
+      }
     } else {
       wx.saveImageToPhotosAlbum({
         filePath: imageData,
@@ -883,8 +972,19 @@ const PageDefinition = {
   // 鸿蒙平台保存图片
   saveImageHarmony(canvas) {
     try {
-      // 在鸿蒙平台，使用canvas.toDataURL()获取图片数据
-      const imageData = canvas.toDataURL();
+      console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+      
+      // 在鸿蒙平台，使用canvas.toDataURL()获取图片数据，指定PNG格式
+      const imageData = canvas.toDataURL('image/png');
+      console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+      
+      if (!imageData || !imageData.startsWith('data:image/png')) {
+        console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
+        platform.showToast({
+          title: '生成图片数据失败'
+        });
+        return;
+      }
       
       // 保存图片到相册
       platform.saveImageToAlbum(imageData, 
@@ -895,16 +995,26 @@ const PageDefinition = {
           });
         },
         function(data, code) {
-          console.log("保存到相册失败", code, data);
-          platform.showToast({
-            title: '保存失败，请重试'
-          });
+          console.log("保存到相册失败", { code, data, dataType: typeof data });
+          if (code === 201 || (data && data.code === 201)) {
+            // 权限被拒绝
+            if (isHarmonyOS) {
+              // 鸿蒙平台权限提示
+              platform.showToast({
+                title: '需要相册权限，请到设置中开启'
+              });
+            }
+          } else {
+            platform.showToast({
+              title: '保存失败，请重试'
+            });
+          }
         }
       );
     } catch (error) {
       console.error('保存图片失败:', error);
       platform.showToast({
-        title: '保存失败，请重试'
+        title: '保存失败: ' + (error.message || '未知错误')
       });
     }
   },

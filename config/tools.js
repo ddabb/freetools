@@ -57,7 +57,7 @@ const tools = [
     color: 'green',
     url: '/packages/life/pages/life-countdown/life-countdown',
     categories: ['生活工具'],
-    keywords: ['倒计时', '人生', '日期', '剩余'],
+    keywords: [ '人生', '日期', '剩余'],
     description: '计算人生已过天数和剩余寿命',
     frequency: toolFrequency['life-countdown']
   },

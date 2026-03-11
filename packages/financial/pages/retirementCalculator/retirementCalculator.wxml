@@ -28,9 +28,18 @@
     </view>
 
     <view class="form-item">
+      <text class="label">每月储蓄类型</text>
+      <picker bindchange="onSavingTypeChange" value="{{savingTypeIndex}}" range="{{['固定金额', '薪资比例']}}">
+        <view class="picker">
+          {{savingTypeIndex === 0 ? '固定金额' : '薪资比例'}} <text class="arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
       <text class="label">每月储蓄</text>
-      <input class="input" type="digit" placeholder="请输入每月储蓄" value="{{monthlySaving}}" bindinput="onMonthlySavingInput" />
-      <text class="unit">元</text>
+      <input class="input" type="digit" placeholder="{{savingTypeIndex === 0 ? '请输入每月储蓄金额' : '请输入每月储蓄比例'}}" value="{{monthlySaving}}" bindinput="onMonthlySavingInput" />
+      <text class="unit">{{savingTypeIndex === 0 ? '元' : '%'}}</text>
     </view>
 
     <view class="form-item">
@@ -47,12 +56,17 @@
 
   <view wx:if="{{showResult}}" class="result-section">
     <view class="result-title">退休储蓄预测</view>
+
+    <view class="result-item">
+      <text class="result-label">退休时预计月储蓄</text>
+      <text class="result-value">{{expectedMonthlySaving}} 元</text>
+    </view>
     <view class="result-item">
       <text class="result-label">预计退休时储蓄总额</text>
       <text class="result-value">{{retireSavings}} 万元</text>
     </view>
     <view class="result-item">
-      <text class="result-label">预计退休时月储蓄</text>
+      <text class="result-label">预计退休时储蓄总额（元）</text>
       <text class="result-value">{{totalSavings}} 元</text>
     </view>
     <view class="tips">
