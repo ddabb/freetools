@@ -32,6 +32,66 @@ Page({
     _resetAnimation: false
   },
 
+  // 检测运行环境并初始化平台分享功能
+  onReady() {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+    
+    console.log('检测运行环境:', isHarmonyOS ? '鸿蒙系统' : '微信小程序');
+    
+    // 根据平台初始化分享模块
+    let share;
+    if (isHarmonyOS) {
+      try {
+        share = require('@system.share');
+        console.log('鸿蒙系统分享模块加载成功');
+      } catch (err) {
+        console.error('鸿蒙系统分享模块加载失败:', err);
+      }
+    }
+    
+    // 平台兼容分享方法
+    this.sharePlatform = {
+      // 显示分享菜单
+      showShareMenu: function(options) {
+        console.log('显示分享菜单调用:', isHarmonyOS ? '鸿蒙' : '微信');
+        
+        if (isHarmonyOS && share) {
+          // 鸿蒙系统分享处理 - 使用更标准的参数格式
+          console.log('调用鸿蒙分享API');
+          share.show({
+            type: 'share',
+            success: () => {
+              console.log('鸿蒙系统分享菜单显示成功');
+            },
+            fail: (err) => {
+              console.error('鸿蒙系统分享菜单显示失败', err);
+              // 如果失败，尝试使用微信小程序的分享方式
+              console.log('尝试使用微信小程序分享');
+              wx.showShareMenu({
+                withShareTicket: options.withShareTicket,
+                menus: options.menus
+              });
+            }
+          });
+        } else {
+          // 微信小程序分享
+          console.log('调用微信分享API');
+          wx.showShareMenu({
+            withShareTicket: options.withShareTicket,
+            menus: options.menus
+          });
+        }
+      }
+    };
+    
+    // 显示分享按钮
+    this.sharePlatform.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+  },
+
+  // 页面加载时执行
   onLoad() {
     // 合并所有工具数据
     this.mergeAllTools();
@@ -45,31 +105,6 @@ Page({
     this.setData({
       currentCategoryTools: initialTools
     });
-    
-    // 调试：检查数据是否正确加载
-    setTimeout(() => {
-      console.log('=== 初始化调试信息 ===');
-      console.log('allTools数量: %d', this.data.allTools.length);
-      console.log('commonTools数量: %d', this.data.commonTools.length);
-      console.log('初始activeCategory: "%s"', this.data.activeCategory);
-      console.log('初始currentCategoryTools数量: %d', this.data.currentCategoryTools.length);
-      
-      // 检查分类数量显示
-      this.data.categories.forEach(cat => {
-        const count = this.getCategoryToolCount(cat.name);
-        console.log('分类 "%s" 工具数量: %d', cat.name, count);
-      });
-      
-      // 测试财务工具 - 显示具体名称
-      const financeTools = this.getToolsByCategory('财务工具');
-      console.log('财务工具数量: %d', financeTools.length);
-      if (financeTools.length > 0) {
-        const financeNames = financeTools.map(t => t.name).join(', ');
-        console.log('财务工具列表: [%s]', financeNames);
-      } else {
-        console.log('财务工具列表: 无工具');
-      }
-    }, 1000);
   },
 
   // 合并所有工具数据
@@ -456,7 +491,32 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage() {
+  onShareAppMessage(res) {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      return {
+        title: '免费工具箱 - 精选实用工具集合',
+        path: '/pages/index/index',
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享逻辑
+    if (res.from === 'button') {
+      // 从按钮触发的分享
+      const { toolId } = res.target.dataset;
+      const tool = this.data.allTools.find(t => t.id === toolId);
+      
+      if (tool) {
+        return {
+          title: `${tool.name} - ${tool.description || '实用工具'}`,
+          path: tool.url,
+          imageUrl: ''
+        };
+      }
+    }
+    
+    // 默认分享
     return {
       title: '免费工具箱 - 精选实用工具集合',
       path: '/pages/index/index',
@@ -466,8 +526,19 @@ Page({
 
   // 分享到朋友圈
   onShareTimeline() {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      return {
+        title: '免费工具箱 - 让知识触手可及',
+        path: '/pages/index/index',
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享
     return {
-      title: '免费工具箱 - 精选实用工具集合',
+      title: '免费工具箱 - 让知识触手可及',
+      path: '/pages/index/index',
       imageUrl: ''
     }
   }

@@ -1,12 +1,60 @@
 // mine.js
+
+// 检测运行环境
+const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+
+// 根据平台导入相应的模块
+let share;
+if (isHarmonyOS) {
+  share = require('@system.share');
+}
+
+// 平台兼容分享方法
+const sharePlatform = {
+  // 显示分享菜单
+  showShareMenu: function(options) {
+    if (isHarmonyOS && share) {
+      // 鸿蒙系统分享处理
+      share.show({
+        type: 'share',
+        success: () => {
+          console.log('鸿蒙系统分享菜单显示成功');
+        },
+        fail: (err) => {
+          console.error('鸿蒙系统分享菜单显示失败', err);
+        }
+      });
+    } else {
+      // 微信小程序分享
+      wx.showShareMenu({
+        withShareTicket: options.withShareTicket,
+        menus: options.menus
+      });
+    }
+  }
+};
+
 Page({
   data: {
     // 无登录态，固定展示
-    menuList: []
+    menuList: [],
+    // ICP备案信息
+    icpInfo: {
+      number: '粤ICP备2026023418号'
+    }
   },
 
   onLoad() {
     // 无需加载用户信息或统计，直接使用 wxml 固定数据
+    
+    // 初始化平台分享功能
+    this.sharePlatform = sharePlatform;
+    
+    // 显示分享按钮
+    this.sharePlatform.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
   },
 
   onShow() {
@@ -37,18 +85,49 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage() {
+  onShareAppMessage(res) {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      return {
+        title: '实用工具箱 - 关于我们',
+        path: '/pages/about/about',
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享逻辑
+    if (res && res.from === 'button') {
+      // 如果是按钮触发的分享
+      return {
+        title: '实用工具箱 - 关于我们',
+        path: '/pages/about/about',
+        imageUrl: ''
+      };
+    }
+    
+    // 默认分享
     return {
-      title: '实用工具箱',
-      path: '/pages/mine/mine',
+      title: '实用工具箱 - 关于我们',
+      path: '/pages/about/about',
       imageUrl: ''
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      return {
+        title: '实用工具箱 - 关于我们',
+        path: '/pages/about/about',
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享
     return {
-      title: '实用工具箱',
+      title: '实用工具箱 - 关于我们',
+      path: '/pages/about/about',
       imageUrl: ''
     }
   }

@@ -2,26 +2,18 @@
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
     <!-- 顶部背景已移除，由 page 背景统一 -->
-    <!-- 通用欢迎区（无登录元素） -->
-    <view class="user-info">
-      <view class="user-avatar">
-        <text class="default-avatar">🛠️</text>
-      </view>
-      <view class="user-details">
-        <text class="user-nickname">欢迎使用免费工具箱</text>
-        <text class="user-level">无需登录 · 即用即走</text>
-      </view>
-    </view>
+    <!-- 通用欢迎区 -->
+
     <!-- 项目信息卡片 -->
     <view class="project-card">
       <view class="project-header">
-        <text class="project-title">🌐 关于项目</text>
+        <text class="project-title">🌐 关于小程序</text>
       </view>
       <view class="project-content">
-        <text class="project-description">这是一个 Vibe Coding 项目，专注于提供实用的工具集合。</text>
-        <text class="project-description">我们致力于打造一个轻量级、无广告、功能丰富的工具箱，</text>
+        <text class="project-description">这是一个全程 Vibe Coding 的小程序，专注于提供实用的工具集合。</text>
+        <text class="project-description">我们致力于打造一个轻量级、功能丰富的工具箱，</text>
         <text class="project-description">涵盖生活、学习、工作等多个领域的实用工具。</text>
-        <text class="project-description">欢迎提交 PR 和提出 Issue，一起完善这个项目！</text>
+        <text class="project-description">欢迎提交 PR 和提出 Issue，一起完善这个小程序！</text>
         <view class="github-link" bindtap="openGitHub">
           <text class="github-icon">🐙</text>
           <text class="github-url">https://github.com/ddabb/freetools.git</text>
@@ -29,6 +21,8 @@
         </view>
       </view>
     </view>
+    
+
     <!-- 隐私声明卡片 -->
     <view class="project-card">
       <view class="project-header">
@@ -40,9 +34,18 @@
         <text class="project-description">请放心使用。</text>
       </view>
     </view>
-    <!-- 版本信息 -->
-    <view class="version-info">
-      <text class="version-text">免费工具箱 v1.0.0</text>
+
+    <!-- ICP备案信息卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">📜 ICP备案信息</text>
+      </view>
+      <view class="project-content">
+        <view class="icp-info">
+          <text class="icp-label">备案/许可证编号：</text>
+          <text class="icp-value">粤ICP备2026023418号</text>
+        </view>
+      </view>
     </view>
   </view>
 </scroll-view>

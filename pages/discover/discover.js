@@ -1,6 +1,40 @@
 // discover.js
 const { tools, categories } = require('../../config/tools.js');
 
+// 检测运行环境
+const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+
+// 根据平台导入相应的模块
+let share;
+if (isHarmonyOS) {
+  share = require('@system.share');
+}
+
+// 平台兼容分享方法
+const sharePlatform = {
+  // 显示分享菜单
+  showShareMenu: function(options) {
+    if (isHarmonyOS && share) {
+      // 鸿蒙系统分享处理
+      share.show({
+        type: 'share',
+        success: () => {
+          console.log('鸿蒙系统分享菜单显示成功');
+        },
+        fail: (err) => {
+          console.error('鸿蒙系统分享菜单显示失败', err);
+        }
+      });
+    } else {
+      // 微信小程序分享
+      wx.showShareMenu({
+        withShareTicket: options.withShareTicket,
+        menus: options.menus
+      });
+    }
+  }
+};
+
 Page({
   data: {
     currentCategory: '',
@@ -11,6 +45,16 @@ Page({
 
   onLoad(options) {
     // 页面加载时执行
+    
+    // 初始化平台分享功能
+    this.sharePlatform = sharePlatform;
+    
+    // 显示分享按钮
+    this.sharePlatform.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+    
     if (options.category) {
       this.setData({
         currentCategory: options.category
@@ -49,7 +93,29 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage() {
+  onShareAppMessage(res) {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      const { currentCategory } = this.data;
+      return {
+        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
+        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享逻辑
+    if (res && res.from === 'button') {
+      // 如果是按钮触发的分享，可以添加更多自定义逻辑
+      const { currentCategory } = this.data;
+      return {
+        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
+        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
+        imageUrl: ''
+      };
+    }
+    
+    // 默认分享
     const { currentCategory } = this.data;
     return {
       title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
@@ -60,8 +126,21 @@ Page({
 
   // 分享到朋友圈
   onShareTimeline() {
+    // 鸿蒙系统分享处理
+    if (this.sharePlatform) {
+      const { currentCategory } = this.data;
+      return {
+        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
+        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享
+    const { currentCategory } = this.data;
     return {
-      title: '实用工具箱 - 探索更多实用工具',
+      title: currentCategory ? `${currentCategory}工具 - 发现更多实用工具` : '发现页 - 探索更多实用工具',
+      path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
       imageUrl: ''
     }
   }

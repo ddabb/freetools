@@ -1,21 +1,9 @@
 // packages/life/pages/life-countdown/life-countdown.js
-// 检测运行环境
-const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
-
-// 根据平台导入相应的模块
-let prompt, storage, device, image, share;
-if (isHarmonyOS) {
-  prompt = require('@system.prompt');
-  storage = require('@system.storage');
-  device = require('@system.device');
-  image = require('@system.image');
-  share = require('@system.share');
-}
-
 // 平台兼容API封装
 const platform = {
   // 弹窗提示
   showToast: function(options) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       prompt.showToast({
         message: options.title || options.message,
@@ -32,6 +20,7 @@ const platform = {
   
   // 存储相关
   setStorage: function(key, value) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.set({
         key: key,
@@ -49,6 +38,7 @@ const platform = {
   },
   
   getStorage: function(key, callback) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.get({
         key: key,
@@ -71,6 +61,7 @@ const platform = {
   },
   
   removeStorage: function(key) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       storage.delete({ 
         key: key,
@@ -88,6 +79,7 @@ const platform = {
   
   // 系统信息
   getSystemInfo: function(callback) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       device.getInfo({
         success: (data) => {
@@ -110,6 +102,7 @@ const platform = {
   
   // 分享
   share: function(options) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       share.share({
         title: options.title,
@@ -130,6 +123,7 @@ const platform = {
   
   // 保存图片到相册
   saveImageToAlbum: function(imageData, success, fail) {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
     if (isHarmonyOS) {
       image.saveToPhotosAlbum({
         uri: imageData,
@@ -482,11 +476,31 @@ const PageDefinition = {
 
   // 分享给好友
   onShareAppMessage() {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+    let share;
+    if (isHarmonyOS) {
+      try {
+        share = require('@system.share');
+      } catch (err) {
+        console.error('鸿蒙系统分享模块加载失败:', err);
+      }
+    }
+    
+    // 鸿蒙系统分享处理
+    if (isHarmonyOS && share) {
+      return {
+        title: '人生格子 - 每一格都是生命的珍贵时光',
+        path: '/packages/life/pages/life-countdown/life-countdown',
+        imageUrl: ''
+      };
+    }
+    
+    // 微信小程序分享
     return {
       title: '人生格子 - 每一格都是生命的珍贵时光',
       path: '/packages/life/pages/life-countdown/life-countdown',
       imageUrl: ''
-    };
+    }
   },
 
   // 分享到朋友圈
@@ -1033,6 +1047,54 @@ const PageDefinition = {
       platform.showToast({
         title: '请重试'
       });
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+    let share;
+    if (isHarmonyOS) {
+      try {
+        share = require('@system.share');
+      } catch (err) {
+        console.error('鸿蒙系统分享模块加载失败:', err);
+      }
+    }
+    
+    // 分享倒计时结果到朋友圈
+    const { countdownText, countdownTitle } = this.data;
+    if (countdownText) {
+      // 鸿蒙系统分享处理
+      if (isHarmonyOS && share) {
+        return {
+          title: `${countdownTitle} - ${countdownText}`,
+          path: '/packages/life/pages/life-countdown/life-countdown',
+          imageUrl: ''
+        };
+      }
+      
+      // 微信小程序分享
+      return {
+        title: `${countdownTitle} - ${countdownText}`,
+        path: '/packages/life/pages/life-countdown/life-countdown',
+        imageUrl: ''
+      };
+    }
+    
+    // 默认分享
+    if (isHarmonyOS && share) {
+      return {
+        title: '倒计时工具 - 计算你的重要日子',
+        path: '/packages/life/pages/life-countdown/life-countdown',
+        imageUrl: ''
+      };
+    }
+    
+    return {
+      title: '倒计时工具 - 计算你的重要日子',
+      path: '/packages/life/pages/life-countdown/life-countdown',
+      imageUrl: ''
     }
   }
 };
