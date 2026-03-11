@@ -195,8 +195,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '正则表达式测试器 - 在线正则调试神器',
-      path: '/packages/converter/pages/regex-tester/regex-tester',
-      imageUrl: ''
+      path: '/packages/converter/pages/regex-tester/regex-tester'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '正则表达式测试器 - 在线正则调试神器',
+      query: 'regex-tester'
     }
   },
 

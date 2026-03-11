@@ -81,8 +81,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '价格对比工具 - 哪个更划算一目了然',
-      path: '/packages/financial/pages/price-comparison/price-comparison',
-      imageUrl: ''
+      path: '/packages/financial/pages/price-comparison/price-comparison'
     }
   },
 
@@ -90,7 +89,7 @@ Page({
   onShareTimeline() {
     return {
       title: '价格对比工具 - 哪个更划算一目了然',
-      imageUrl: ''
+      query: 'price-comparison'
     }
   }
 })

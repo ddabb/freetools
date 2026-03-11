@@ -394,8 +394,15 @@ console.log('The sum is:', result);`;
   onShareAppMessage() {
     return {
       title: '文本对比工具 - 专业的差异分析神器',
-      path: '/packages/text/pages/text-diff/text-diff',
-      imageUrl: ''
+      path: '/packages/text/pages/text-diff/text-diff'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '文本对比工具 - 专业的差异分析神器',
+      query: 'text-diff'
     }
   }
 })

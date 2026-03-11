@@ -232,8 +232,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '单位换算 - 轻松进行各种单位转换',
-      path: '/packages/utility/pages/unit-converter/unit-converter',
-      imageUrl: ''
+      path: '/packages/utility/pages/unit-converter/unit-converter'
     }
   },
 
@@ -241,7 +240,7 @@ Page({
   onShareTimeline() {
     return {
       title: '单位换算 - 轻松进行各种单位转换',
-      imageUrl: ''
+      query: 'unit-converter'
     }
   }
 })

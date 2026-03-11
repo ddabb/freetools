@@ -239,8 +239,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '房贷计算器 - 帮你算算每月还多少',
-      path: '/packages/financial/pages/mortgage/mortgage',
-      imageUrl: ''
+      path: '/packages/financial/pages/mortgage/mortgage'
     }
   },
 
@@ -248,7 +247,7 @@ Page({
   onShareTimeline() {
     return {
       title: '房贷计算器 - 帮你算算每月还多少',
-      imageUrl: ''
+      query: 'mortgage'
     }
   },
 

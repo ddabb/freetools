@@ -276,8 +276,15 @@ CMYK: ${conversions.cmyk}`;
   onShareAppMessage() {
     return {
       title: '颜色转换器 - 设计师必备工具',
-      path: '/packages/design/pages/color-converter/color-converter',
-      imageUrl: ''
+      path: '/packages/design/pages/color-converter/color-converter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '颜色转换器 - 设计师必备工具',
+      query: 'color-converter'
     }
   }
 })

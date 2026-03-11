@@ -288,8 +288,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '万年历 - 查看日历和农历',
-      path: '/packages/life/pages/calendar/calendar',
-      imageUrl: ''
+      path: '/packages/life/pages/calendar/calendar'
     }
   },
 
@@ -297,7 +296,7 @@ Page({
   onShareTimeline() {
     return {
       title: '万年历 - 查看日历和农历',
-      imageUrl: ''
+      query: 'calendar'
     }
   },
 

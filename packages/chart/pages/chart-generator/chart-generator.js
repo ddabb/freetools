@@ -414,5 +414,13 @@ Page({
       title: '图表生成器 - 专业的数据可视化工具',
       path: '/packages/chart/pages/chart-generator/chart-generator'
     }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '图表生成器 - 专业的数据可视化工具',
+      query: 'chart-generator'
+    }
   }
 })

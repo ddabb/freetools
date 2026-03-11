@@ -115,5 +115,13 @@ Page({
       title: '数据统计器 - 专业的数据分析工具',
       path: '/packages/data/pages/data-analyzer/data-analyzer'
     }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '数据统计器 - 专业的数据分析工具',
+      query: 'data-analyzer'
+    }
   }
 })

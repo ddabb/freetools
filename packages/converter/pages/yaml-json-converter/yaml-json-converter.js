@@ -313,8 +313,15 @@ Page({
   onShareAppMessage() {
     return {
       title: 'YAML·JSON转换器 - 配置文件格式互转',
-      path: '/packages/converter/pages/yaml-json-converter/yaml-json-converter',
-      imageUrl: ''
+      path: '/packages/converter/pages/yaml-json-converter/yaml-json-converter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: 'YAML·JSON转换器 - 配置文件格式互转',
+      query: 'yaml-json-converter'
     }
   },
 

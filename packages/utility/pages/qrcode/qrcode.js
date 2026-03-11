@@ -997,8 +997,7 @@ const PageDefinition = {
   onShareAppMessage() {
     return {
       title: '二维码生成器 - 轻松创建个性化二维码',
-      path: '/packages/utility/pages/qrcode/qrcode',
-      imageUrl: ''
+      path: '/packages/utility/pages/qrcode/qrcode'
     }
   },
 
@@ -1006,7 +1005,7 @@ const PageDefinition = {
   onShareTimeline() {
     return {
       title: '二维码生成器 - 功能强大的二维码制作工具',
-      imageUrl: ''
+      query: 'qrcode'
     }
   }
 };

@@ -63,7 +63,7 @@ page {
 .main-title {
   font-size: 36rpx;
   font-weight: 700;
-  color: white;
+  color: #333;
   margin-bottom: 10rpx;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }

@@ -85,50 +85,18 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage(res) {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      return {
-        title: '实用工具箱 - 关于我们',
-        path: '/pages/about/about',
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享逻辑
-    if (res && res.from === 'button') {
-      // 如果是按钮触发的分享
-      return {
-        title: '实用工具箱 - 关于我们',
-        path: '/pages/about/about',
-        imageUrl: ''
-      };
-    }
-    
-    // 默认分享
+  onShareAppMessage() {
     return {
       title: '实用工具箱 - 关于我们',
-      path: '/pages/about/about',
-      imageUrl: ''
+      path: '/pages/about/about'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      return {
-        title: '实用工具箱 - 关于我们',
-        path: '/pages/about/about',
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享
     return {
       title: '实用工具箱 - 关于我们',
-      path: '/pages/about/about',
-      imageUrl: ''
+      query: 'about'
     }
   }
 })

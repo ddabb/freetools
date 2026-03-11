@@ -476,30 +476,9 @@ const PageDefinition = {
 
   // 分享给好友
   onShareAppMessage() {
-    const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
-    let share;
-    if (isHarmonyOS) {
-      try {
-        share = require('@system.share');
-      } catch (err) {
-        console.error('鸿蒙系统分享模块加载失败:', err);
-      }
-    }
-    
-    // 鸿蒙系统分享处理
-    if (isHarmonyOS && share) {
-      return {
-        title: '人生格子 - 每一格都是生命的珍贵时光',
-        path: '/packages/life/pages/life-countdown/life-countdown',
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享
     return {
       title: '人生格子 - 每一格都是生命的珍贵时光',
-      path: '/packages/life/pages/life-countdown/life-countdown',
-      imageUrl: ''
+      path: '/packages/life/pages/life-countdown/life-countdown'
     }
   },
 
@@ -507,8 +486,8 @@ const PageDefinition = {
   onShareTimeline() {
     return {
       title: '人生格子 - 感知时间流逝，思考生命意义',
-      imageUrl: ''
-    };
+      query: 'life-countdown'
+    }
   },
 
   // 初始化数组

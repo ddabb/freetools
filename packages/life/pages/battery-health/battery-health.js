@@ -468,5 +468,21 @@ Page({
         title: '请重试'
       });
     }
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '电池健康检测 - 实时监控您的设备电池状态',
+      path: '/packages/life/pages/battery-health/battery-health'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '电池健康检测 - 实时监控您的设备电池状态',
+      query: 'battery-health'
+    }
   }
 })

@@ -316,16 +316,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '密码生成器 - 创建企业级安全密码',
-      path: '/packages/utility/pages/password-generator/password-generator',
-      imageUrl: ''
+      path: '/packages/utility/pages/password-generator/password-generator'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '密码生成器 - 专业密码安全工具',
-      imageUrl: ''
+      title: '密码生成器 - 创建企业级安全密码',
+      query: 'password-generator'
     }
   }
 })

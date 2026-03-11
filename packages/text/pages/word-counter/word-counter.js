@@ -255,8 +255,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '字数统计器 - 专业的文本分析工具',
-      path: '/packages/text/pages/word-counter/word-counter',
-      imageUrl: ''
+      path: '/packages/text/pages/word-counter/word-counter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '字数统计器 - 专业的文本分析工具',
+      query: 'word-counter'
     }
   }
 })

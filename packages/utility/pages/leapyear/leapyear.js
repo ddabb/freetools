@@ -52,5 +52,21 @@ Page({
   },
   onUnload: function () {
     // 页面卸载
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '闰年计算器 - 判断年份是否为闰年',
+      path: '/packages/utility/pages/leapyear/leapyear'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '闰年计算器 - 判断年份是否为闰年',
+      query: 'leapyear'
+    }
   }
 })

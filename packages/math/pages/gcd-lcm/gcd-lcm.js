@@ -150,16 +150,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '最大公约数计算器 - 轻松搞定数学难题',
-      path: '/packages/math/pages/gcd-lcm/gcd-lcm',
-      imageUrl: ''
+      path: '/packages/math/pages/gcd-lcm/gcd-lcm'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '数学工具箱 - 最大公约数和最小公倍数一键计算',
-      imageUrl: ''
+      title: '最大公约数计算器 - 轻松搞定数学难题',
+      query: 'gcd-lcm'
     }
   },
 

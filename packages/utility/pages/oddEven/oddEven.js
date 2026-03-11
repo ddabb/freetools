@@ -131,13 +131,21 @@ Page({
     // 可以在这里添加加载更多逻辑
   },
 
-  /**
-   * 用户点击右上角分享
-   */
+/**
+ * 用户点击右上角分享
+ */
   onShareAppMessage: function() {
     return {
       title: '奇偶数判断工具',
       path: '/packages/utility/pages/oddEven/oddEven'
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline: function() {
+    return {
+      title: '奇偶数判断工具 - 快速判断奇偶数',
+      query: 'oddEven'
     };
   }
 });

@@ -53,5 +53,21 @@ Page({
   },
   onUnload: function () {
     // 页面卸载
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: 'Markdown转换器 - 在线转换Markdown到HTML',
+      path: '/packages/utility/pages/mdconvert/mdconvert'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: 'Markdown转换器 - 在线转换Markdown到HTML',
+      query: 'mdconvert'
+    }
   }
 })

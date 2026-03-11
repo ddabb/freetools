@@ -18,8 +18,8 @@ page {
 .title {
   font-size: 48rpx;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  color: #333;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 /* 表单容器 */

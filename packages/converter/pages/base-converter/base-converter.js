@@ -261,8 +261,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '整数基转换器 - 多进制转换神器',
-      path: '/packages/converter/pages/base-converter/base-converter',
-      imageUrl: ''
+      path: '/packages/converter/pages/base-converter/base-converter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '整数基转换器 - 多进制转换神器',
+      query: 'base-converter'
     }
   },
 

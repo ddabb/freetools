@@ -60,5 +60,21 @@ Page({
   },
   onUnload: function () {
     // 页面卸载
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '日期计算器 - 轻松计算日期差',
+      path: '/packages/life/pages/datediff/datediff'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '日期计算器 - 轻松计算日期差',
+      query: 'datediff'
+    }
   }
 })

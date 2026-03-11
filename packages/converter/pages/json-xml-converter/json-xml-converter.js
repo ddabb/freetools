@@ -269,8 +269,15 @@ Page({
   onShareAppMessage() {
     return {
       title: 'JSON·XML转换器 - 数据格式互转神器',
-      path: '/packages/converter/pages/json-xml-converter/json-xml-converter',
-      imageUrl: ''
+      path: '/packages/converter/pages/json-xml-converter/json-xml-converter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: 'JSON·XML转换器 - 数据格式互转神器',
+      query: 'json-xml-converter'
     }
   },
 

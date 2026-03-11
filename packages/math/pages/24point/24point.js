@@ -286,16 +286,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '24点速算挑战 - 锻炼数学思维',
-      path: '/packages/math/pages/24point/24point',
-      imageUrl: ''
+      path: '/packages/math/pages/24point/24point'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '数学工具箱 - 24点速算，挑战你的计算能力',
-      imageUrl: ''
+      title: '24点速算挑战 - 锻炼数学思维',
+      query: '24point'
     }
   },
 

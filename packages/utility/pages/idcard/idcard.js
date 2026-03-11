@@ -171,8 +171,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '身份证验证 - 快速验证身份证号码格式',
-      path: '/packages/utility/pages/idcard/idcard',
-      imageUrl: ''
+      path: '/packages/utility/pages/idcard/idcard'
     }
   },
 
@@ -180,7 +179,7 @@ Page({
   onShareTimeline() {
     return {
       title: '身份证验证工具 - 准确验证身份证信息',
-      imageUrl: ''
+      query: 'idcard'
     }
   }
 })

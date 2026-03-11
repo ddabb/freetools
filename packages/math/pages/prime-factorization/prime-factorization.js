@@ -189,16 +189,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '质因数分解器 - 轻松学习数论',
-      path: '/packages/math/pages/prime-factorization/prime-factorization',
-      imageUrl: ''
+      path: '/packages/math/pages/prime-factorization/prime-factorization'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '数学工具箱 - 质因数分解一目了然',
-      imageUrl: ''
+      title: '质因数分解器 - 轻松学习数论',
+      query: 'prime-factorization'
     }
   },
 

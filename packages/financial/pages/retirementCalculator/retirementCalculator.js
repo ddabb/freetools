@@ -112,8 +112,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '退休金计算器 - 算算你的退休储蓄',
-      path: '/packages/financial/pages/retirementCalculator/retirementCalculator',
-      imageUrl: ''
+      path: '/packages/financial/pages/retirementCalculator/retirementCalculator'
     }
   },
 
@@ -121,7 +120,7 @@ Page({
   onShareTimeline() {
     return {
       title: '退休金计算器 - 算算你的退休储蓄',
-      imageUrl: ''
+      query: 'retirementCalculator'
     }
   }
 })

@@ -93,55 +93,18 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage(res) {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      const { currentCategory } = this.data;
-      return {
-        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
-        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享逻辑
-    if (res && res.from === 'button') {
-      // 如果是按钮触发的分享，可以添加更多自定义逻辑
-      const { currentCategory } = this.data;
-      return {
-        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
-        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
-        imageUrl: ''
-      };
-    }
-    
-    // 默认分享
-    const { currentCategory } = this.data;
+  onShareAppMessage() {
     return {
-      title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
-      path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
-      imageUrl: ''
+      title: '发现页 - 探索更多实用工具',
+      path: '/pages/discover/discover'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      const { currentCategory } = this.data;
-      return {
-        title: currentCategory ? `${currentCategory}工具 - 发现更多实用功能` : '发现页 - 探索更多实用工具',
-        path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享
-    const { currentCategory } = this.data;
     return {
-      title: currentCategory ? `${currentCategory}工具 - 发现更多实用工具` : '发现页 - 探索更多实用工具',
-      path: '/pages/discover/discover' + (currentCategory ? `?category=${currentCategory}` : ''),
-      imageUrl: ''
+      title: '发现页 - 探索更多实用工具',
+      query: 'discover'
     }
   }
 })

@@ -247,8 +247,7 @@ Page({
     const tabNames = ['秒表', '计时器', '世界时钟']
     return {
       title: '时间工具 - ' + tabNames[this.data.activeTab],
-      path: '/packages/life/pages/time-tool/time-tool',
-      imageUrl: ''
+      path: '/packages/life/pages/time-tool/time-tool'
     }
   },
 
@@ -256,7 +255,7 @@ Page({
   onShareTimeline() {
     return {
       title: '时间工具 - 秒表、计时器、世界时钟',
-      imageUrl: ''
+      query: 'time-tool'
     }
   },
 

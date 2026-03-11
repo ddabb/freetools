@@ -40,5 +40,21 @@ Page({
   },
   onUnload: function () {
     // 页面卸载
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '纯中文提取 - 提取文本中的中文内容',
+      path: '/packages/utility/pages/onlychinese/onlychinese'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '纯中文提取 - 提取文本中的中文内容',
+      query: 'onlychinese'
+    }
   }
 })

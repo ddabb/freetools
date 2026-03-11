@@ -166,5 +166,13 @@ Page({
       title: 'Markdown预览器',
       path: '/packages/text/pages/markdown-preview/markdown-preview'
     }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: 'Markdown预览器 - 在线编辑和预览',
+      query: 'markdown-preview'
+    }
   }
 })

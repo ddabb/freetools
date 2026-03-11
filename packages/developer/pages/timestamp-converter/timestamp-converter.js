@@ -433,8 +433,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '时间戳转换 - 开发必备工具',
-      path: '/packages/developer/pages/timestamp-converter/timestamp-converter',
-      imageUrl: ''
+      path: '/packages/developer/pages/timestamp-converter/timestamp-converter'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '时间戳转换 - 开发必备工具',
+      query: 'timestamp-converter'
     }
   }
 })

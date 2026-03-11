@@ -588,5 +588,21 @@ Page({
         title: '请重试'
       });
     }
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '健康计算器 - 了解您的身体状况',
+      path: '/packages/other/pages/health-calculator/health-calculator'
+    }
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '健康计算器 - 了解您的身体状况',
+      query: 'health-calculator'
+    }
   }
 })

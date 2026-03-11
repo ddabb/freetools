@@ -491,55 +491,18 @@ Page({
   },
 
   // 分享给好友
-  onShareAppMessage(res) {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      return {
-        title: '免费工具箱 - 精选实用工具集合',
-        path: '/pages/index/index',
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享逻辑
-    if (res.from === 'button') {
-      // 从按钮触发的分享
-      const { toolId } = res.target.dataset;
-      const tool = this.data.allTools.find(t => t.id === toolId);
-      
-      if (tool) {
-        return {
-          title: `${tool.name} - ${tool.description || '实用工具'}`,
-          path: tool.url,
-          imageUrl: ''
-        };
-      }
-    }
-    
-    // 默认分享
+  onShareAppMessage() {
     return {
       title: '免费工具箱 - 精选实用工具集合',
-      path: '/pages/index/index',
-      imageUrl: ''
+      path: '/pages/index/index'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
-    // 鸿蒙系统分享处理
-    if (this.sharePlatform) {
-      return {
-        title: '免费工具箱 - 让知识触手可及',
-        path: '/pages/index/index',
-        imageUrl: ''
-      };
-    }
-    
-    // 微信小程序分享
     return {
-      title: '免费工具箱 - 让知识触手可及',
-      path: '/pages/index/index',
-      imageUrl: ''
+      title: '免费工具箱 - 精选实用工具集合',
+      query: 'index'
     }
   }
 })
