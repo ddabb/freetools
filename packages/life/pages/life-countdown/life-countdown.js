@@ -3,23 +3,13 @@
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
 // 根据平台导入相应的模块
-let prompt, image, permission, app, storage, device, share;
+let prompt, image, storage, device, share;
 if (isHarmonyOS) {
   prompt = require('@system.prompt');
   image = require('@system.image');
   storage = require('@system.storage');
   device = require('@system.device');
   share = require('@system.share');
-  try {
-    permission = require('@system.permission');
-  } catch (e) {
-    console.log('鸿蒙权限模块不可用:', e.message);
-  }
-  try {
-    app = require('@system.app');
-  } catch (e) {
-    console.log('鸿蒙应用模块不可用:', e.message);
-  }
 }
 
 const platform = {
@@ -140,91 +130,20 @@ const platform = {
   // 保存图片到相册
   saveImageToAlbum: function(imageData, success, fail) {
     if (isHarmonyOS) {
-      console.log('鸿蒙平台保存图片，imageData类型:', typeof imageData, '长度:', imageData ? imageData.length : 0);
-      // 检查imageData是否是base64数据
-      if (imageData && imageData.startsWith('data:image/')) {
-        console.log('图片数据是base64格式，MIME类型:', imageData.substring(5, imageData.indexOf(';')));
-      }
-      
-      // 鸿蒙平台保存图片的内部函数
-      const saveImageInternal = () => {
-        try {
-          image.saveToPhotosAlbum({
-            uri: imageData,
-            success: function(data) {
-              console.log('鸿蒙平台保存成功:', data);
-              success && success(data);
-            },
-            fail: function(data, code) {
-              console.error('鸿蒙平台保存失败:', { code, data, imageDataType: typeof imageData });
-              // 如果权限被拒绝，尝试引导用户开启权限
-              if (code === 201 || (data && data.code === 201)) {
-                if (prompt && prompt.showDialog) {
-                  prompt.showDialog({
-                    title: '需要相册权限',
-                    message: '保存图片需要相册写入权限，请在设置中开启',
-                    buttons: [
-                      {
-                        text: '去设置',
-                        color: '#007dff'
-                      },
-                      {
-                        text: '取消',
-                        color: '#999999'
-                      }
-                    ],
-                    success: function(result) {
-                      if (result.index === 0 && app && app.getInfo) {
-                        // 打开应用设置
-                        app.getInfo({
-                          success: function(appInfo) {
-                            if (appInfo && appInfo.packageName) {
-                              // 鸿蒙打开应用设置的方式可能不同
-                              console.log('应打开应用设置页面，包名:', appInfo.packageName);
-                              prompt.showToast({
-                                message: '请到系统设置中开启相册权限'
-                              });
-                            }
-                          }
-                        });
-                      }
-                    }
-                  });
-                } else {
-                  prompt.showToast({
-                    message: '需要相册权限，请到设置中开启'
-                  });
-                }
-              }
-              fail && fail(data, code);
-            }
-          });
-        } catch (error) {
-          console.error('调用鸿蒙保存API异常:', error);
-          fail && fail({ errMsg: error.message }, -1);
+      // 鸿蒙平台保存图片
+      image.saveToPhotosAlbum({
+        uri: imageData,
+        success: function(data) {
+          success && success(data);
+        },
+        fail: function(data, code) {
+          // 简单的错误处理
+          console.error('保存图片失败:', code, data);
+          fail && fail(data, code);
         }
-      };
-      
-      // 检查权限（如果权限模块可用）
-      if (permission && permission.request) {
-        const permissionName = 'ohos.permission.WRITE_MEDIA';
-        permission.request({
-          permission: permissionName,
-          success: function() {
-            console.log('权限申请成功');
-            saveImageInternal();
-          },
-          fail: function(data, code) {
-            console.log('权限申请失败或用户拒绝:', { code, data });
-            // 用户拒绝权限，仍然尝试保存（可能会失败）
-            saveImageInternal();
-          }
-        });
-      } else {
-        // 没有权限模块，直接尝试保存
-        saveImageInternal();
-      }
+      });
     } else {
+      // 微信小程序平台
       wx.saveImageToPhotosAlbum({
         filePath: imageData,
         success: success,
@@ -1045,36 +964,15 @@ const PageDefinition = {
                     wx.showModal({
                       title: '提示',
                       content: '需要您授权保存相册',
-                      showCancel: false,
+                      showCancel: true,
                       success: modalSuccess => {
-                        wx.openSetting({
-                          success(settingdata) {
-                            console.log("settingdata", settingdata);
-                            if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限成功,再次点击图片即可保存',
-                                showCancel: false,
-                              });
-                            } else {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限失败，将无法保存到相册哦~',
-                                showCancel: false,
-                              });
-                            }
-                          },
-                          fail(failData) {
-                            console.log("failData", failData);
-                          },
-                          complete(finishData) {
-                            console.log("finishData", finishData);
-                          }
-                        });
+                        if (modalSuccess.confirm) {
+                          wx.openSetting();
+                        }
                       }
                     });
                   } else {
-                    console.log("保存到相册失败" + res);
+                    console.log("保存到相册失败", err);
                   }
                 }
               );
@@ -1121,43 +1019,12 @@ const PageDefinition = {
   MakePosters: async function () {
     try {
       let that = this;
-      
-      // 鸿蒙平台权限预检查
-      if (isHarmonyOS && permission && permission.request) {
-        const permissionName = 'ohos.permission.WRITE_MEDIA';
-        console.log('鸿蒙平台检查相册写入权限');
-        
-        permission.request({
-          permission: permissionName,
-          success: function() {
-            console.log('权限申请成功，开始生成图片');
-            platform.showToast({
-              title: '生成中，请稍候'
-            });
-            setTimeout(function () {
-              that.savecodetofile()
-            }, 1000);
-          },
-          fail: function(data, code) {
-            console.log('权限申请失败或用户拒绝:', { code, data });
-            // 用户拒绝权限，仍然尝试生成（保存时可能会失败）
-            platform.showToast({
-              title: '生成中，请稍候'
-            });
-            setTimeout(function () {
-              that.savecodetofile()
-            }, 1000);
-          }
-        });
-      } else {
-        // 非鸿蒙平台或权限模块不可用，直接生成
-        platform.showToast({
-          title: '生成中，请稍候'
-        });
-        setTimeout(function () {
-          that.savecodetofile()
-        }, 1000);
-      }
+      platform.showToast({
+        title: '生成中，请稍候'
+      });
+      setTimeout(function () {
+        that.savecodetofile()
+      }, 1000);
     } catch (ex) {
       console.log("绘图出现了错误" + ex)
       platform.showToast({
