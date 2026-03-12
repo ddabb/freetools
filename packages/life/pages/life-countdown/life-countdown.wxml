@@ -133,5 +133,5 @@
   </view>
 
   <!-- 隐藏的Canvas用于生成分享图片 -->
-  <canvas id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <canvas id="cvs1" canvas-id="cvs1" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
 </view>

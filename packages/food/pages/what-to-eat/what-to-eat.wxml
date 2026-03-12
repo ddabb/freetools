@@ -158,7 +158,6 @@
   <!-- 海报生成Canvas（隐藏） -->
   <canvas 
     id="foodPosterCanvas" 
-    type="2d"
     style="position: absolute; left: -9999rpx; width: {{canvaswidth}}px; height: {{canvasheight}}px;"
     canvas-id="foodPosterCanvas"
   ></canvas>

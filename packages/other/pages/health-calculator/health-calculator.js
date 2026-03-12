@@ -103,8 +103,22 @@ const platform = {
         }
       });
     } else {
-      const info = wx.getSystemInfoSync();
-      callback(info);
+      wx.getDeviceInfo({
+        success: (data) => {
+          callback({
+            pixelRatio: data.pixelRatio || 1,
+            screenWidth: data.screenWidth || 375,
+            screenHeight: data.screenHeight || 667,
+            platform: data.platform || '',
+            version: data.version || '',
+            SDKVersion: data.SDKVersion || ''
+          });
+        },
+        fail: (err) => {
+          console.log('获取设备信息失败', err);
+          callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
+        }
+      });
     }
   },
   
@@ -317,128 +331,217 @@ Page({
         });
       }
     } else {
-      // 在微信小程序平台
-      wx.createSelectorQuery()
-        .select('#cvs1')
-        .fields({
-          node: true,
-          size: true,
-        })
-        .exec(this.MergeImage.bind(this));
+      // 在微信小程序平台，使用wx.createCanvasContext
+      console.log('使用wx.createCanvasContext获取画布');
+      const ctx = wx.createCanvasContext('cvs1', this);
+      if (ctx) {
+        this.MergeImage(ctx);
+      } else {
+        console.error('创建Canvas上下文失败');
+        platform.showToast({
+          title: '获取画布失败，请重试'
+        });
+      }
     }
   },
 
   // 绘制分享图片
-  MergeImage(res) {
-    let canvas, ctx;
+  MergeImage(ctx) {
+    let canvas;
     
     if (isHarmonyOS) {
       // 鸿蒙平台
-      canvas = res;
-      ctx = canvas.getContext('2d');
-    } else {
-      // 微信小程序平台
-      canvas = res[0].node;
+      canvas = ctx;
       ctx = canvas.getContext('2d');
     }
 
-    console.log('Canvas元素:', canvas);
+    console.log('Canvas上下文:', ctx);
     let that = this;
 
-    // 获取系统信息
-    platform.getSystemInfo((systemInfo) => {
-      const dpr = systemInfo.pixelRatio || 1;
-      const width = this.data.canvaswidth;
-      const canvasHeight = this.data.canvasheight;
-      
-      canvas.width = width * dpr;
-      canvas.height = canvasHeight * dpr;
-      ctx.scale(dpr, dpr); // 适配分辨率
+    // 直接使用默认值，不依赖系统信息
+    console.log('使用默认系统信息');
+    const width = this.data.canvaswidth;
+    const canvasHeight = this.data.canvasheight;
+    
+    console.log('Canvas尺寸:', { width, canvasHeight });
 
-      const padding = 30; // 页面内边距
-      const qrSize = 100; // 二维码大小
-      
-      // 布局位置计算
-      const qrX = width - qrSize - 20; // 二维码X坐标（右侧）
-      const qrY = padding + 10; // 二维码Y坐标（顶部，靠近内边距）
-      const titleY = padding + 30; // 标题位置
-      const subtitleY = titleY + 30; // 副标题位置
-      const infoY = subtitleY + 40; // 信息区域起始位置
+    // 清空画布
+    if (isHarmonyOS) {
+      ctx.clearRect(0, 0, width, canvasHeight);
+    }
 
-      // 背景色
+    const padding = 30; // 页面内边距
+    const qrSize = 100; // 二维码大小
+    
+    // 布局位置计算
+    const qrX = width - qrSize - 20; // 二维码X坐标（右侧）
+    const qrY = padding + 10; // 二维码Y坐标（顶部，靠近内边距）
+    const titleY = padding + 30; // 标题位置
+    const subtitleY = titleY + 30; // 副标题位置
+    const infoY = subtitleY + 40; // 信息区域起始位置
+
+    // 背景色
+    if (isHarmonyOS) {
       ctx.fillStyle = '#f8f9fa';
       ctx.fillRect(0, 0, width, canvasHeight);
+    } else {
+      ctx.setFillStyle('#f8f9fa');
+      ctx.fillRect(0, 0, width, canvasHeight);
+    }
 
-      // 标题
+    // 标题
+    if (isHarmonyOS) {
       ctx.font = 'bold 26px 微软雅黑';
       ctx.fillStyle = '#2c3e50';
       ctx.fillText('健康计算器', padding, titleY);
+    } else {
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#2c3e50');
+      ctx.fillText('健康计算器', padding, titleY);
+    }
 
-      // 副标题
+    // 副标题
+    if (isHarmonyOS) {
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#7f8c8d';
       ctx.fillText('了解您的健康状况，科学管理体重', padding, subtitleY);
+    } else {
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#7f8c8d');
+      ctx.fillText('了解您的健康状况，科学管理体重', padding, subtitleY);
+    }
 
-      // 个人信息
-      const { height, weight, age, genderIndex, bmi, bmiStatus, idealWeight, suggestion } = this.data;
-      const genderText = genderIndex === 0 ? '男' : (genderIndex === 1 ? '女' : '未选择');
-      
+    // 个人信息
+    const { height, weight, age, genderIndex, bmi, bmiStatus, idealWeight, suggestion } = this.data;
+    const genderText = genderIndex === 0 ? '男' : (genderIndex === 1 ? '女' : '未选择');
+    
+    // 身高
+    if (isHarmonyOS) {
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#2c3e50';
       ctx.fillText('身高：', padding, infoY);
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#3498db';
       ctx.fillText(height + ' cm', padding + 100, infoY);
+    } else {
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
+      ctx.fillText('身高：', padding, infoY);
+      ctx.setFillStyle('#3498db');
+      ctx.fillText(height + ' cm', padding + 100, infoY);
+    }
 
+    // 体重
+    if (isHarmonyOS) {
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#2c3e50';
       ctx.fillText('体重：', padding, infoY + 30);
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#3498db';
       ctx.fillText(weight + ' kg', padding + 100, infoY + 30);
+    } else {
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
+      ctx.fillText('体重：', padding, infoY + 30);
+      ctx.setFillStyle('#3498db');
+      ctx.fillText(weight + ' kg', padding + 100, infoY + 30);
+    }
 
+    // 年龄
+    if (isHarmonyOS) {
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#2c3e50';
       ctx.fillText('年龄：', padding, infoY + 60);
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#3498db';
       ctx.fillText(age + ' 岁', padding + 100, infoY + 60);
+    } else {
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
+      ctx.fillText('年龄：', padding, infoY + 60);
+      ctx.setFillStyle('#3498db');
+      ctx.fillText(age + ' 岁', padding + 100, infoY + 60);
+    }
 
+    // 性别
+    if (isHarmonyOS) {
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#2c3e50';
       ctx.fillText('性别：', padding, infoY + 90);
       ctx.font = '16px 微软雅黑';
       ctx.fillStyle = '#3498db';
       ctx.fillText(genderText, padding + 100, infoY + 90);
+    } else {
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
+      ctx.fillText('性别：', padding, infoY + 90);
+      ctx.setFillStyle('#3498db');
+      ctx.fillText(genderText, padding + 100, infoY + 90);
+    }
 
-      // 健康结果
-      if (this.data.showResult) {
+    // 健康结果
+    if (this.data.showResult) {
+      // 健康结果标题
+      if (isHarmonyOS) {
         ctx.font = 'bold 18px 微软雅黑';
         ctx.fillStyle = '#2c3e50';
         ctx.fillText('健康结果：', padding, infoY + 130);
+      } else {
+        ctx.setFontSize(18);
+        ctx.setFillStyle('#2c3e50');
+        ctx.fillText('健康结果：', padding, infoY + 130);
+      }
 
+      // BMI指数
+      if (isHarmonyOS) {
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#2c3e50';
         ctx.fillText('BMI指数：', padding, infoY + 160);
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#e74c3c';
         ctx.fillText(bmi, padding + 100, infoY + 160);
+      } else {
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
+        ctx.fillText('BMI指数：', padding, infoY + 160);
+        ctx.setFillStyle('#e74c3c');
+        ctx.fillText(bmi, padding + 100, infoY + 160);
+      }
 
+      // 体重状态
+      if (isHarmonyOS) {
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#2c3e50';
         ctx.fillText('体重状态：', padding, infoY + 190);
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#e74c3c';
         ctx.fillText(bmiStatus, padding + 100, infoY + 190);
+      } else {
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
+        ctx.fillText('体重状态：', padding, infoY + 190);
+        ctx.setFillStyle('#e74c3c');
+        ctx.fillText(bmiStatus, padding + 100, infoY + 190);
+      }
 
+      // 理想体重
+      if (isHarmonyOS) {
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#2c3e50';
         ctx.fillText('理想体重：', padding, infoY + 220);
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#e74c3c';
         ctx.fillText(idealWeight + ' kg', padding + 100, infoY + 220);
+      } else {
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
+        ctx.fillText('理想体重：', padding, infoY + 220);
+        ctx.setFillStyle('#e74c3c');
+        ctx.fillText(idealWeight + ' kg', padding + 100, infoY + 220);
+      }
 
-        // 健康建议
+      // 健康建议
+      if (isHarmonyOS) {
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#2c3e50';
         ctx.fillText('健康建议：', padding, infoY + 260);
@@ -467,109 +570,144 @@ Page({
         }
         ctx.fillText(line, padding, currentY);
       } else {
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
+        ctx.fillText('健康建议：', padding, infoY + 260);
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#7f8c8d');
+        
+        // 绘制建议文本，简单处理（微信Canvas Context不支持measureText）
+        let suggestionText = suggestion;
+        let lineHeight = 20;
+        let currentY = infoY + 280;
+        
+        // 简单的换行处理
+        const maxLineLength = 20;
+        let lines = [];
+        let currentLine = '';
+        
+        for (let i = 0; i < suggestionText.length; i++) {
+          currentLine += suggestionText[i];
+          if (currentLine.length >= maxLineLength || suggestionText[i] === ' ') {
+            lines.push(currentLine);
+            currentLine = '';
+          }
+        }
+        if (currentLine) {
+          lines.push(currentLine);
+        }
+        
+        lines.forEach((line, index) => {
+          ctx.fillText(line, padding, currentY + index * lineHeight);
+        });
+      }
+    } else {
+      if (isHarmonyOS) {
         ctx.font = '16px 微软雅黑';
         ctx.fillStyle = '#7f8c8d';
         ctx.fillText('请填写完整信息并计算', padding, infoY + 130);
+      } else {
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#7f8c8d');
+        ctx.fillText('请填写完整信息并计算', padding, infoY + 130);
       }
+    }
 
-      // 底部提示
+    // 底部提示
+    if (isHarmonyOS) {
       ctx.font = '14px 微软雅黑';
       ctx.fillStyle = '#7f8c8d';
       ctx.fillText('扫码使用健康计算器', padding, canvasHeight - 40);
+    } else {
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#7f8c8d');
+      ctx.fillText('扫码使用健康计算器', padding, canvasHeight - 40);
+    }
 
-      // 加载并绘制二维码
-      const img = isHarmonyOS ? new Image() : canvas.createImage();
-      img.onload = () => {
-        ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-        console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+    // 绘制完成
+    if (!isHarmonyOS) {
+      ctx.draw(false, () => {
+        console.log('Canvas绘制完成');
         
-        if (isHarmonyOS) {
-          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
-          const imageData = canvas.toDataURL();
-          
-          // 保存图片到相册
-          platform.saveImageToAlbum(imageData, 
-            function() {
-              console.log("保存相册成功");
-              platform.showToast({
-                title: '保存相册成功'
-              });
-            },
-            function(data, code) {
-              console.log("保存到相册失败", code, data);
-              platform.showToast({
-                title: '保存失败，请重试'
-              });
-            }
-          );
-        } else {
-          // 在微信小程序平台
-          wx.canvasToTempFilePath({
-            x: 0,
-            y: 0,
-            quality: 1,
-            canvas: canvas,
-            destWidth: width * (systemInfo.pixelRatio / 2),
-            destHeight: canvasHeight * (systemInfo.pixelRatio / 2),
-            success: (res) => {
-              const drawurl = res.tempFilePath;
-              platform.saveImageToAlbum(drawurl, 
-                function(res) {
-                  console.log("保存相册成功" + res);
-                  platform.showToast({
-                    title: '保存相册成功'
-                  });
-                },
-                function(err) {
-                  if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
-                    wx.showModal({
-                      title: '提示',
-                      content: '需要您授权保存相册',
-                      showCancel: false,
-                      success: modalSuccess => {
-                        wx.openSetting({
-                          success(settingdata) {
-                            console.log("settingdata", settingdata);
-                            if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限成功,再次点击图片即可保存',
-                                showCancel: false,
-                              });
-                            } else {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限失败，将无法保存到相册哦~',
-                                showCancel: false,
-                              });
-                            }
-                          },
-                          fail(failData) {
-                            console.log("failData", failData);
-                          },
-                          complete(finishData) {
-                            console.log("finishData", finishData);
+        // 生成临时文件路径并保存到相册
+        wx.canvasToTempFilePath({
+          canvasId: 'cvs1',
+          success: (res) => {
+            const drawurl = res.tempFilePath;
+            platform.saveImageToAlbum(drawurl, 
+              function(res) {
+                console.log("保存相册成功" + res);
+                platform.showToast({
+                  title: '保存相册成功'
+                });
+              },
+              function(err) {
+                if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
+                    err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
+                    err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
+                  wx.showModal({
+                    title: '提示',
+                    content: '需要您授权保存相册',
+                    showCancel: false,
+                    success: modalSuccess => {
+                      wx.openSetting({
+                        success(settingdata) {
+                          console.log("settingdata", settingdata);
+                          if (settingdata.authSetting['scope.writePhotosAlbum']) {
+                            wx.showModal({
+                              title: '提示',
+                              content: '获取权限成功,再次点击图片即可保存',
+                              showCancel: false,
+                            });
+                          } else {
+                            wx.showModal({
+                              title: '提示',
+                              content: '获取权限失败，将无法保存到相册哦~',
+                              showCancel: false,
+                            });
                           }
-                        });
-                      }
-                    });
-                  } else {
-                    console.log("保存到相册失败" + res);
-                  }
+                        },
+                        fail(failData) {
+                          console.log("failData", failData);
+                        },
+                        complete(finishData) {
+                          console.log("finishData", finishData);
+                        }
+                      });
+                    }
+                  });
+                } else {
+                  console.log("保存到相册失败" + res);
                 }
-              );
-            },
-            fail: function (error) {
-              console.log("canvasToTempFilePath" + error);
-            }
-          }, that);
+              }
+            );
+          },
+          fail: function (error) {
+            console.log("canvasToTempFilePath" + error);
+          }
+        }, that);
+      });
+    } else {
+      // 鸿蒙平台处理
+      // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
+      const imageData = canvas.toDataURL();
+      
+      // 保存图片到相册
+      platform.saveImageToAlbum(imageData, 
+        function() {
+          console.log("保存相册成功");
+          platform.showToast({
+            title: '保存相册成功'
+          });
+        },
+        function(data, code) {
+          console.log("保存到相册失败", code, data);
+          platform.showToast({
+            title: '保存失败，请重试'
+          });
         }
-      };
-      img.src = '/images/mini.png';
-      console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
-    });
+      );
+    }
   },
 
   // 生成分享海报

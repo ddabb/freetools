@@ -103,8 +103,22 @@ const platform = {
         }
       });
     } else {
-      const info = wx.getSystemInfoSync();
-      callback(info);
+      wx.getDeviceInfo({
+        success: (data) => {
+          callback({
+            pixelRatio: data.pixelRatio || 1,
+            screenWidth: data.screenWidth || 375,
+            screenHeight: data.screenHeight || 667,
+            platform: data.platform || '',
+            version: data.version || '',
+            SDKVersion: data.SDKVersion || ''
+          });
+        },
+        fail: (err) => {
+          console.log('获取设备信息失败', err);
+          callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
+        }
+      });
     }
   },
   
@@ -338,80 +352,48 @@ Page({
         });
       }
     } else {
-      // 在微信小程序平台
-      wx.createSelectorQuery()
-        .select('#cvs1')
-        .fields({
-          node: true,
-          size: true,
-        })
-        .exec(this.MergeImage.bind(this));
+      // 在微信小程序平台，使用wx.createCanvasContext
+      try {
+        const ctx = wx.createCanvasContext('cvs1', this);
+        if (ctx) {
+          this.MergeImage(ctx);
+        } else {
+          console.error('创建Canvas上下文失败');
+          platform.showToast({
+            title: '创建画布上下文失败，请重试'
+          });
+        }
+      } catch (error) {
+        console.error('调用wx.createCanvasContext失败:', error);
+        platform.showToast({
+          title: '创建画布失败，请重试'
+        });
+      }
     }
   },
 
   // 绘制分享图片
-  MergeImage(res) {
-    let canvas, ctx;
-    
-    if (isHarmonyOS) {
-      // 鸿蒙平台
-      canvas = res;
-      if (!canvas) {
-        console.error('鸿蒙平台获取Canvas失败');
-        platform.showToast({
-          title: '获取画布失败，请重试'
-        });
-        return;
-      }
-      ctx = canvas.getContext('2d');
-      console.log('鸿蒙平台Canvas:', { width: canvas.width, height: canvas.height });
-    } else {
-      // 微信小程序平台
-      if (!res || !res[0] || !res[0].node) {
-        console.error('微信小程序平台获取Canvas失败:', res);
-        platform.showToast({
-          title: '获取画布失败，请重试'
-        });
-        return;
-      }
-      canvas = res[0].node;
-      ctx = canvas.getContext('2d');
-      console.log('微信小程序Canvas:', { width: canvas.width, height: canvas.height });
-    }
-
-    console.log('Canvas元素:', canvas);
+  MergeImage(ctx) {
     let that = this;
 
-    // 确保Canvas尺寸正确
-    if (isHarmonyOS) {
-      const dpr = 2; // 鸿蒙平台使用固定DPI
-      const width = this.data.canvaswidth;
-      const height = this.data.canvasheight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
-      console.log('鸿蒙Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height });
-    } else {
-      // 微信小程序平台 - 使用系统信息获取DPI
-      const systemInfo = wx.getSystemInfoSync();
-      const dpr = systemInfo.pixelRatio || 2;
-      const width = this.data.canvaswidth;
-      const height = this.data.canvasheight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
-      console.log('微信Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height, systemInfo });
-    }
-
-    // 获取系统信息
-    platform.getSystemInfo((systemInfo) => {
-      const dpr = systemInfo.pixelRatio || 1;
-      const width = this.data.canvaswidth;
-      const height = this.data.canvasheight;
-      
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr); // 适配分辨率
+    console.log('开始获取系统信息');
+    
+    // 直接使用默认值，不依赖系统信息
+    console.log('使用默认系统信息');
+    const systemInfo = {
+      pixelRatio: 2,
+      screenWidth: 375,
+      screenHeight: 667,
+      platform: 'wechat',
+      version: '7.0.0',
+      SDKVersion: '2.0.0'
+    };
+    
+    console.log('系统信息:', systemInfo);
+    const width = this.data.canvaswidth;
+    const height = this.data.canvasheight;
+    
+    console.log('画布尺寸:', { width, height });
 
       const padding = 30; // 页面内边距
       const qrSize = 100; // 二维码大小
@@ -424,11 +406,11 @@ Page({
       const infoY = subtitleY + 40; // 信息区域起始位置
 
       // 背景色 - 使用更专业的金融蓝色调
-      ctx.fillStyle = '#f0f8ff';
+      ctx.setFillStyle('#f0f8ff');
       ctx.fillRect(0, 0, width, height);
 
       // 添加装饰性背景元素
-      ctx.fillStyle = 'rgba(52, 152, 219, 0.1)';
+      ctx.setFillStyle('rgba(52, 152, 219, 0.1)');
       ctx.beginPath();
       ctx.arc(width - 50, 50, 30, 0, Math.PI * 2);
       ctx.fill();
@@ -437,13 +419,13 @@ Page({
       ctx.fill();
 
       // 标题
-      ctx.font = 'bold 24px 微软雅黑';
-      ctx.fillStyle = '#1a73e8';
+      ctx.setFontSize(24);
+      ctx.setFillStyle('#1a73e8');
       ctx.fillText('退休储蓄预测', padding, titleY);
 
       // 副标题
-      ctx.font = '14px 微软雅黑';
-      ctx.fillStyle = '#666666';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#666666');
       ctx.fillText('来算算你退休时候能存在多少钱', padding, subtitleY);
 
       // 退休信息
@@ -451,111 +433,116 @@ Page({
       const savingTypeText = savingTypeIndex === 0 ? '固定金额' : '薪资比例';
       
       // 退休信息标题
-      ctx.font = 'bold 14px 微软雅黑';
-      ctx.fillStyle = '#333333';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#333333');
       ctx.fillText('你的储蓄计划', padding, infoY);
       
       // 退休信息内容
-      ctx.font = '14px 微软雅黑';
-      ctx.fillStyle = '#666666';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#666666');
       ctx.fillText('当前年龄：', padding + 10, infoY + 25);
-      ctx.fillStyle = '#1a73e8';
+      ctx.setFillStyle('#1a73e8');
       ctx.fillText(currentAge + ' 岁', padding + 90, infoY + 25);
 
-      ctx.fillStyle = '#666666';
+      ctx.setFillStyle('#666666');
       ctx.fillText('退休年龄：', padding + 10, infoY + 50);
-      ctx.fillStyle = '#1a73e8';
+      ctx.setFillStyle('#1a73e8');
       ctx.fillText(retireAge + ' 岁', padding + 90, infoY + 50);
 
-      ctx.fillStyle = '#666666';
+      ctx.setFillStyle('#666666');
       ctx.fillText('每月储蓄' + (savingTypeIndex === 0 ? '金额' : '比例') + '：', padding + 10, infoY + 75);
-      ctx.fillStyle = '#1a73e8';
+      ctx.setFillStyle('#1a73e8');
       ctx.fillText(monthlySaving + (savingTypeIndex === 0 ? ' 元' : '%'), padding + 120, infoY + 75);
 
-      ctx.fillStyle = '#666666';
+      ctx.setFillStyle('#666666');
       ctx.fillText('预期年化收益率：', padding + 10, infoY + 100);
-      ctx.fillStyle = '#1a73e8';
+      ctx.setFillStyle('#1a73e8');
       ctx.fillText(expectedReturn + '%', padding + 130, infoY + 100);
 
       // 计算结果
       if (this.data.showResult) {
         // 结果标题
-        ctx.font = 'bold 14px 微软雅黑';
-        ctx.fillStyle = '#333333';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#333333');
         ctx.fillText('如果按照这个计划执行', padding, infoY + 135);
 
         // 结果内容
-        ctx.font = '14px 微软雅黑';
-        ctx.fillStyle = '#666666';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#666666');
         ctx.fillText('然后到退休时，你每月能存：', padding + 10, infoY + 160);
-        ctx.font = 'bold 14px 微软雅黑';
-        ctx.fillStyle = '#e53935';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#e53935');
         ctx.fillText('¥' + expectedMonthlySaving, padding + 200, infoY + 160);
 
-        ctx.font = '14px 微软雅黑';
-        ctx.fillStyle = '#666666';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#666666');
         ctx.fillText('最后总共能存下：', padding + 10, infoY + 185);
-        ctx.font = 'bold 14px 微软雅黑';
-        ctx.fillStyle = '#e53935';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#e53935');
         ctx.fillText('¥' + retireSavings + ' 万元', padding + 120, infoY + 185);
 
-        ctx.font = 'bold 14px 微软雅黑';
-        ctx.fillStyle = '#1a73e8';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#1a73e8');
         ctx.fillText('所以，从现在开始努力存钱吧！', padding + 10, infoY + 210);
         
         // 补充仅供参考的提醒
-        ctx.font = '12px 微软雅黑';
-        ctx.fillStyle = '#999999';
+        ctx.setFontSize(12);
+        ctx.setFillStyle('#999999');
         ctx.fillText('* 仅供参考，实际收益受市场影响', padding + 10, infoY + 240);
         ctx.fillText('* 投资有风险，理财需谨慎', padding + 10, infoY + 260);
       } else {
-        ctx.font = '14px 微软雅黑';
-        ctx.fillStyle = '#999999';
+        ctx.setFontSize(14);
+        ctx.setFillStyle('#999999');
         ctx.fillText('快输入你的信息，我来帮你算退休储蓄！', padding + 10, infoY + 135);
       }
 
-      // 加载并绘制二维码
-      const img = isHarmonyOS ? new Image() : canvas.createImage();
-      img.onload = () => {
-        ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-        console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
-        
+      // 绘制二维码
+      ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
+
+      // 绘制完成后执行保存
+      ctx.draw(false, function() {
         if (isHarmonyOS) {
-          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
-          console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
-          const imageData = canvas.toDataURL('image/png');
-          console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
-          
-          if (!imageData || !imageData.startsWith('data:image/png')) {
-            console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
-            platform.showToast({
-              title: '生成图片数据失败'
-            });
-            return;
-          }
-          
-          // 保存图片到相册
-          platform.saveImageToAlbum(imageData, 
-            function() {
-              console.log("保存相册成功");
+          // 在鸿蒙平台，我们需要通过组件引用获取Canvas
+          const canvas = that.$element('cvs1');
+          if (canvas) {
+            // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
+            console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+            const imageData = canvas.toDataURL('image/png');
+            console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+            
+            if (!imageData || !imageData.startsWith('data:image/png')) {
+              console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
               platform.showToast({
-                title: '保存成功'
+                title: '生成图片数据失败'
               });
-            },
-            function(data, code) {
-              console.log("保存到相册失败", { code, data, dataType: typeof data });
-              platform.showToast({
-                title: '保存失败，请重试'
-              });
+              return;
             }
-          );
+            
+            // 保存图片到相册
+            platform.saveImageToAlbum(imageData, 
+              function() {
+                console.log("保存相册成功");
+                platform.showToast({
+                  title: '保存成功'
+                });
+              },
+              function(data, code) {
+                console.log("保存到相册失败", { code, data, dataType: typeof data });
+                platform.showToast({
+                  title: '保存失败，请重试'
+                });
+              }
+            );
+          }
         } else {
           // 在微信小程序平台
           wx.canvasToTempFilePath({
             x: 0,
             y: 0,
+            width: width,
+            height: height,
             quality: 1,
-            canvas: canvas,
+            canvasId: 'cvs1',
             destWidth: width * (systemInfo.pixelRatio / 2),
             destHeight: height * (systemInfo.pixelRatio / 2),
             success: (res) => {
@@ -592,10 +579,7 @@ Page({
             }
           }, that);
         }
-      };
-      img.src = '/images/mini.png';
-      console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
-    });
+      });
   },
 
   // 生成分享海报

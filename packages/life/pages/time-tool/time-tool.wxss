@@ -65,6 +65,7 @@ page {
 /* 按钮组 */
 .button-group {
   display: flex;
+  align-items: center;
   gap: 20rpx;
   margin-bottom: 30rpx;
 }
@@ -77,6 +78,9 @@ page {
   font-weight: 700;
   border: none;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn.start {

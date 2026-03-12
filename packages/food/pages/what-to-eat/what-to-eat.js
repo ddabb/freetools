@@ -306,39 +306,45 @@ Page({
 
   // 保存Canvas为图片
   savecodetofile() {
-    wx.createSelectorQuery()
-      .select('#foodPosterCanvas')
-      .fields({
-        node: true,
-        size: true,
-      })
-      .exec(this.MergeImage.bind(this));
+    try {
+      const ctx = wx.createCanvasContext('foodPosterCanvas', this);
+      if (ctx) {
+        this.MergeImage(ctx);
+      } else {
+        console.error('创建Canvas上下文失败');
+        wx.showToast({
+          title: '创建画布上下文失败，请重试',
+          icon: 'none'
+        });
+      }
+    } catch (error) {
+      console.error('调用wx.createCanvasContext失败:', error);
+      wx.showToast({
+        title: '创建画布失败，请重试',
+        icon: 'none'
+      });
+    }
   },
 
   // 绘制分享图片
-  MergeImage(res) {
-    if (!res || !res[0] || !res[0].node) {
-      console.error('获取Canvas失败:', res);
-      wx.showToast({
-        title: '获取画布失败，请重试',
-        icon: 'none'
-      });
-      return;
-    }
+  MergeImage(ctx) {
+    // 直接使用默认值，不依赖系统信息
+    console.log('使用默认系统信息');
+    const systemInfo = {
+      pixelRatio: 2,
+      screenWidth: 375,
+      screenHeight: 667,
+      platform: 'wechat',
+      version: '7.0.0',
+      SDKVersion: '2.0.0'
+    };
     
-    const canvas = res[0].node;
-    const ctx = canvas.getContext('2d');
-    
-    // 获取系统信息以适配分辨率
-    const systemInfo = wx.getSystemInfoSync();
-    const dpr = systemInfo.pixelRatio || 2;
+    console.log('系统信息:', systemInfo);
     const width = this.data.canvaswidth;
     const height = this.data.canvasheight;
     
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-    
+    console.log('画布尺寸:', { width, height });
+
     const padding = 20;
     const titleY = padding + 20;
     const subtitleY = titleY + 20;
@@ -346,132 +352,141 @@ Page({
     const qrSize = 80;
     const qrX = (width - qrSize) / 2;
     const qrY = height - qrSize - padding;
-    
+
     // 背景色 - 食物主题的温暖色调
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, '#fff5e6');
-    gradient.addColorStop(1, '#ffe6cc');
-    ctx.fillStyle = gradient;
+    // 由于wx.createCanvasContext不支持渐变，使用纯色背景
+    ctx.setFillStyle('#ffe6cc');
     ctx.fillRect(0, 0, width, height);
-    
+
     // 添加装饰性食物元素背景
-    ctx.fillStyle = 'rgba(255, 152, 0, 0.1)';
+    ctx.setFillStyle('rgba(255, 152, 0, 0.1)');
     ctx.beginPath();
     ctx.arc(width - 40, 40, 25, 0, Math.PI * 2);
     ctx.fill();
-    
+
     ctx.beginPath();
     ctx.arc(40, height - 40, 20, 0, Math.PI * 2);
     ctx.fill();
-    
+
     // 标题
-    ctx.font = 'bold 22px 微软雅黑, sans-serif';
-    ctx.fillStyle = '#e67e22';
+    ctx.setFontSize(22);
+    ctx.setFillStyle('#e67e22');
     ctx.fillText('今日饮食推荐', padding, titleY);
-    
+
     // 副标题
-    ctx.font = '14px 微软雅黑, sans-serif';
-    ctx.fillStyle = '#d35400';
+    ctx.setFontSize(14);
+    ctx.setFillStyle('#d35400');
     ctx.fillText('解决你的选择困难症', padding, subtitleY);
-    
+
     // 餐型信息
-    ctx.font = 'bold 16px 微软雅黑, sans-serif';
-    ctx.fillStyle = '#333';
+    ctx.setFontSize(16);
+    ctx.setFillStyle('#333');
     ctx.fillText(`餐型：${this.data.selectedMealType}`, padding, mealInfoY);
-    
+
     // 如果有结果，绘制食物详情
     if (this.data.result) {
       const meal = this.data.result.meal;
       const calories = this.data.result.totalCalories;
       const suggestion = this.data.result.suggestion;
-      
+
       // 绘制食物项目
       let yPos = mealInfoY + 30;
       const drawFoodItem = (label, food) => {
         if (food) {
-          ctx.font = '14px 微软雅黑, sans-serif';
-          ctx.fillStyle = '#666';
+          ctx.setFontSize(14);
+          ctx.setFillStyle('#666');
           ctx.fillText(`${label}：`, padding, yPos);
-          
-          // 绘制emoji（需要先绘制文本背景）
-          ctx.font = '20px sans-serif'; // emoji字体
-          ctx.fillStyle = '#000';
-          const emojiWidth = ctx.measureText(food.emoji).width;
+
+          // 绘制emoji（wx.createCanvasContext自动处理emoji）
+          ctx.setFontSize(20);
+          ctx.setFillStyle('#000');
           ctx.fillText(food.emoji, padding + 60, yPos);
-          
-          ctx.font = 'bold 14px 微软雅黑, sans-serif';
-          ctx.fillStyle = '#e67e22';
-          ctx.fillText(food.name, padding + 60 + emojiWidth + 10, yPos);
-          
+
+          ctx.setFontSize(14);
+          ctx.setFillStyle('#e67e22');
+          ctx.fillText(food.name, padding + 90, yPos);
+
           yPos += 20;
         }
       };
-      
+
       drawFoodItem('主食', meal.staple);
       drawFoodItem('蛋白质', meal.protein);
       drawFoodItem('蔬菜', meal.vegetable);
       drawFoodItem('水果', meal.fruit);
       drawFoodItem('饮品', meal.drink);
-      
+
       // 热量信息
       yPos += 10;
-      ctx.font = 'bold 16px 微软雅黑, sans-serif';
-      ctx.fillStyle = '#e74c3c';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#e74c3c');
       ctx.fillText(`总热量：${calories} 大卡`, padding, yPos);
-      
+
       // 饮食建议
       yPos += 20;
-      ctx.font = '14px 微软雅黑, sans-serif';
-      ctx.fillStyle = '#27ae60';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#27ae60');
       ctx.fillText('饮食建议：', padding, yPos);
-      
+
       // 多行文本处理
-      const maxWidth = width - padding * 2;
       const lineHeight = 20;
-      const words = suggestion.split('');
-      let line = '';
+      const maxCharsPerLine = 15;
+      let startIndex = 0;
       let lineY = yPos + lineHeight;
-      
-      for (let i = 0; i < words.length; i++) {
-        const testLine = line + words[i];
-        const metrics = ctx.measureText(testLine);
-        const testWidth = metrics.width;
-        
-        if (testWidth > maxWidth && i > 0) {
-          ctx.fillText(line, padding, lineY);
-          line = words[i];
-          lineY += lineHeight;
-        } else {
-          line = testLine;
+
+      while (startIndex < suggestion.length) {
+        let endIndex = Math.min(startIndex + maxCharsPerLine, suggestion.length);
+        // 尝试在词语边界处换行
+        if (endIndex < suggestion.length && suggestion[endIndex] !== ' ') {
+          const lastSpaceIndex = suggestion.lastIndexOf(' ', endIndex);
+          if (lastSpaceIndex > startIndex) {
+            endIndex = lastSpaceIndex;
+          }
         }
+        const lineText = suggestion.substring(startIndex, endIndex);
+        ctx.fillText(lineText, padding, lineY);
+        startIndex = endIndex + 1;
+        lineY += lineHeight;
       }
-      ctx.fillText(line, padding, lineY);
     } else {
       // 没有结果时的提示
-      ctx.font = '14px 微软雅黑, sans-serif';
-      ctx.fillStyle = '#999';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#999');
       ctx.fillText('快来生成你的饮食推荐吧！', padding, mealInfoY + 30);
     }
-    
-    // 加载并绘制二维码
-    const img = canvas.createImage();
-    img.onload = () => {
-      ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-      
+
+    // 绘制二维码
+    console.log('开始绘制二维码');
+    ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
+    console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+
+    // 绘制完成后执行保存
+    ctx.draw(false, () => {
+      console.log('开始执行保存操作');
       // 生成临时文件路径并保存到相册
       wx.canvasToTempFilePath({
-        canvas: canvas,
+        x: 0,
+        y: 0,
+        width: width,
+        height: height,
+        quality: 1,
+        canvasId: 'foodPosterCanvas',
+        destWidth: width * (systemInfo.pixelRatio / 2),
+        destHeight: height * (systemInfo.pixelRatio / 2),
         success: (res) => {
+          console.log('canvasToTempFilePath成功:', res);
           const tempFilePath = res.tempFilePath;
           wx.saveImageToPhotosAlbum({
             filePath: tempFilePath,
             success: () => {
+              console.log('保存相册成功');
               wx.showToast({
                 title: '海报已保存到相册',
                 icon: 'success'
               });
             },
             fail: (err) => {
+              console.log('保存到相册失败', err);
               if (err.errMsg.includes('auth denied')) {
                 wx.showModal({
                   title: '提示',
@@ -500,27 +515,7 @@ Page({
           });
         }
       }, this);
-    };
-    img.onerror = () => {
-      console.error('二维码加载失败');
-      // 即使没有二维码也继续保存
-      wx.canvasToTempFilePath({
-        canvas: canvas,
-        success: (res) => {
-          const tempFilePath = res.tempFilePath;
-          wx.saveImageToPhotosAlbum({
-            filePath: tempFilePath,
-            success: () => {
-              wx.showToast({
-                title: '海报已保存到相册',
-                icon: 'success'
-              });
-            }
-          });
-        }
-      }, this);
-    };
-    img.src = '/images/mini.png';
+    });
   },
 
   // 生成分享海报

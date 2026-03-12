@@ -103,8 +103,22 @@ const platform = {
         }
       });
     } else {
-      const info = wx.getSystemInfoSync();
-      callback(info);
+      wx.getDeviceInfo({
+        success: (data) => {
+          callback({
+            pixelRatio: data.pixelRatio || 1,
+            screenWidth: data.screenWidth || 375,
+            screenHeight: data.screenHeight || 667,
+            platform: data.platform || '',
+            version: data.version || '',
+            SDKVersion: data.SDKVersion || ''
+          });
+        },
+        fail: (err) => {
+          console.log('获取设备信息失败', err);
+          callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
+        }
+      });
     }
   },
   
@@ -314,43 +328,46 @@ Page({
         });
       }
     } else {
-      // 在微信小程序平台
-      wx.createSelectorQuery()
-        .select('#cvs1')
-        .fields({
-          node: true,
-          size: true,
-        })
-        .exec(this.MergeImage.bind(this));
+      // 在微信小程序平台，使用wx.createCanvasContext
+      try {
+        const ctx = wx.createCanvasContext('cvs1', this);
+        if (ctx) {
+          this.MergeImage(ctx);
+        } else {
+          console.error('创建Canvas上下文失败');
+          platform.showToast({
+            title: '创建画布上下文失败，请重试'
+          });
+        }
+      } catch (error) {
+        console.error('调用wx.createCanvasContext失败:', error);
+        platform.showToast({
+          title: '创建画布失败，请重试'
+        });
+      }
     }
   },
 
   // 绘制分享图片
-  MergeImage(res) {
-    let canvas, ctx;
-    
-    if (isHarmonyOS) {
-      // 鸿蒙平台
-      canvas = res;
-      ctx = canvas.getContext('2d');
-    } else {
-      // 微信小程序平台
-      canvas = res[0].node;
-      ctx = canvas.getContext('2d');
-    }
-
-    console.log('Canvas元素:', canvas);
+  MergeImage(ctx) {
     let that = this;
 
-    // 获取系统信息
-    platform.getSystemInfo((systemInfo) => {
-      const dpr = systemInfo.pixelRatio || 1;
-      const width = this.data.canvaswidth;
-      const height = this.data.canvasheight;
-      
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr); // 适配分辨率
+    // 直接使用默认值，不依赖系统信息
+    console.log('使用默认系统信息');
+    const systemInfo = {
+      pixelRatio: 2,
+      screenWidth: 375,
+      screenHeight: 667,
+      platform: 'wechat',
+      version: '7.0.0',
+      SDKVersion: '2.0.0'
+    };
+    
+    console.log('系统信息:', systemInfo);
+    const width = this.data.canvaswidth;
+    const height = this.data.canvasheight;
+    
+    console.log('画布尺寸:', { width, height });
 
       const padding = 30; // 页面内边距
       const qrSize = 100; // 二维码大小
@@ -363,128 +380,133 @@ Page({
       const infoY = subtitleY + 40; // 信息区域起始位置
 
       // 背景色
-      ctx.fillStyle = '#f8f9fa';
+      ctx.setFillStyle('#f8f9fa');
       ctx.fillRect(0, 0, width, height);
 
       // 标题
-      ctx.font = 'bold 26px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#2c3e50');
       ctx.fillText('万年历', padding, titleY);
 
       // 副标题
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#7f8c8d';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#7f8c8d');
       ctx.fillText('公历农历双显示，节假日一目了然', padding, subtitleY);
 
       // 日期信息
       const { year, month, day, weekDay, lunar, holidays } = this.data;
       
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
       ctx.fillText('公历日期：', padding, infoY);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#3498db');
       ctx.fillText(`${year}年${month}月${day}日`, padding + 100, infoY);
 
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
       ctx.fillText('星期：', padding, infoY + 30);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#3498db');
       ctx.fillText(weekDay, padding + 100, infoY + 30);
 
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
       ctx.fillText('农历：', padding, infoY + 60);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#3498db');
       ctx.fillText(lunar, padding + 100, infoY + 60);
 
       // 节假日信息
       if (holidays && holidays.length > 0) {
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
         ctx.fillText('今日节日：', padding, infoY + 90);
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#e74c3c';
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#e74c3c');
         const holidayNames = holidays.map(holiday => holiday.name).join('、');
         ctx.fillText(holidayNames, padding + 100, infoY + 90);
       } else {
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#2c3e50');
         ctx.fillText('今日节日：', padding, infoY + 90);
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#7f8c8d';
+        ctx.setFontSize(16);
+        ctx.setFillStyle('#7f8c8d');
         ctx.fillText('无', padding + 100, infoY + 90);
       }
 
       // 日历小知识
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
+      ctx.setFontSize(16);
+      ctx.setFillStyle('#2c3e50');
       ctx.fillText('日历小知识：', padding, infoY + 130);
-      ctx.font = '14px 微软雅黑';
-      ctx.fillStyle = '#7f8c8d';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#7f8c8d');
       
       let calendarTip = '农历是中国传统历法，结合了太阳和月亮的运行周期，包含二十四节气，对农业生产和传统节日有重要意义。';
       
       // 绘制小知识文本，支持换行
-      let lineHeight = 20;
+      const lineHeight = 20;
+      const maxCharsPerLine = 18;
+      let startIndex = 0;
       let currentY = infoY + 150;
-      let words = calendarTip.split(' ');
-      let line = '';
-      
-      for (let i = 0; i < words.length; i++) {
-        let testLine = line + words[i] + ' ';
-        let metrics = ctx.measureText(testLine);
-        let testWidth = metrics.width;
-        
-        if (testWidth > width - padding * 2) {
-          ctx.fillText(line, padding, currentY);
-          line = words[i] + ' ';
-          currentY += lineHeight;
-        } else {
-          line = testLine;
+
+      while (startIndex < calendarTip.length) {
+        let endIndex = Math.min(startIndex + maxCharsPerLine, calendarTip.length);
+        // 尝试在词语边界处换行
+        if (endIndex < calendarTip.length && calendarTip[endIndex] !== ' ') {
+          const lastSpaceIndex = calendarTip.lastIndexOf(' ', endIndex);
+          if (lastSpaceIndex > startIndex) {
+            endIndex = lastSpaceIndex;
+          }
         }
+        const lineText = calendarTip.substring(startIndex, endIndex);
+        ctx.fillText(lineText, padding, currentY);
+        startIndex = endIndex + 1;
+        currentY += lineHeight;
       }
-      ctx.fillText(line, padding, currentY);
 
       // 底部提示
-      ctx.font = '14px 微软雅黑';
-      ctx.fillStyle = '#7f8c8d';
+      ctx.setFontSize(14);
+      ctx.setFillStyle('#7f8c8d');
       ctx.fillText('扫码使用万年历', padding, height - 40);
 
-      // 加载并绘制二维码
-      const img = isHarmonyOS ? new Image() : canvas.createImage();
-      img.onload = () => {
-        ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-        console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
-        
+      // 绘制二维码
+      ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
+
+      // 绘制完成后执行保存
+      ctx.draw(false, function() {
         if (isHarmonyOS) {
-          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
-          const imageData = canvas.toDataURL();
-          
-          // 保存图片到相册
-          platform.saveImageToAlbum(imageData, 
-            function() {
-              console.log("保存相册成功");
-              platform.showToast({
-                title: '保存相册成功'
-              });
-            },
-            function(data, code) {
-              console.log("保存到相册失败", code, data);
-              platform.showToast({
-                title: '保存失败，请重试'
-              });
-            }
-          );
+          // 在鸿蒙平台，我们需要通过组件引用获取Canvas
+          const canvas = that.$element('cvs1');
+          if (canvas) {
+            // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
+            const imageData = canvas.toDataURL();
+            
+            // 保存图片到相册
+            platform.saveImageToAlbum(imageData, 
+              function() {
+                console.log("保存相册成功");
+                platform.showToast({
+                  title: '保存相册成功'
+                });
+              },
+              function(data, code) {
+                console.log("保存到相册失败", code, data);
+                platform.showToast({
+                  title: '保存失败，请重试'
+                });
+              }
+            );
+          }
         } else {
           // 在微信小程序平台
           wx.canvasToTempFilePath({
             x: 0,
             y: 0,
+            width: width,
+            height: height,
             quality: 1,
-            canvas: canvas,
+            canvasId: 'cvs1',
             destWidth: width * (systemInfo.pixelRatio / 2),
             destHeight: height * (systemInfo.pixelRatio / 2),
             success: (res) => {
@@ -542,10 +564,7 @@ Page({
             }
           }, that);
         }
-      };
-      img.src = '/images/mini.png';
-      console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
-    });
+      });
   },
 
   // 生成分享海报
