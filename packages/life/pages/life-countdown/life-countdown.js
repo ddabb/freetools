@@ -464,10 +464,27 @@ const PageDefinition = {
   startAutoPlay() {
     if (this.autoPlayTimer) {
       clearInterval(this.autoPlayTimer);
+      this.autoPlayTimer = null;
     }
-    this.autoPlayTimer = setInterval(() => {
-      this.nextQuestion();
+    // 捕获当前this的引用
+    const self = this;
+    const timerId = setInterval(() => {
+      // 安全检查：确保self存在
+      if (!self) {
+        clearInterval(timerId);
+        return;
+      }
+      try {
+        self.nextQuestion();
+      } catch (error) {
+        console.error('自动轮播出错:', error);
+        clearInterval(timerId);
+        if (self.autoPlayTimer === timerId) {
+          self.autoPlayTimer = null;
+        }
+      }
     }, 5000); // 5秒切换一次
+    this.autoPlayTimer = timerId;
   },
 
   // 停止自动轮播

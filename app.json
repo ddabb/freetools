@@ -103,6 +103,13 @@
       "pages": [
         "pages/color-converter/color-converter"
       ]
+    },
+    {
+      "root": "packages/food",
+      "name": "food",
+      "pages": [
+        "pages/what-to-eat/what-to-eat"
+      ]
     }
   ],
   "preloadRule": {

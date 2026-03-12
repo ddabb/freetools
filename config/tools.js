@@ -316,8 +316,18 @@ const tools = [
     categories: ['学习工具', '开发工具'],
     keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
     description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
-  }
+  },
   // 转换工具分类结束
+  {
+    id: 'what-to-eat',
+    name: '今天吃什么',
+    icon: '🍽️',
+    color: 'orange',
+    url: '/packages/food/pages/what-to-eat/what-to-eat',
+    categories: ['生活工具'],
+    keywords: ['吃什么', '食物', '随机', '饮食', '搭配'],
+    description: '随机生成饮食建议，解决选择困难症'
+  }
 ];
 
 // 发现页特有的工具数据

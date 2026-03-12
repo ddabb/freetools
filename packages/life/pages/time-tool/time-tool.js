@@ -38,9 +38,28 @@ Page({
     })
     this.updateWorldClock()
     // 每秒更新一次世界时钟
-    this.data.clockInterval = setInterval(() => {
-      this.updateWorldClock()
+    const self = this;
+    const clockTimerId = setInterval(() => {
+      // 安全检查：确保self存在
+      if (!self) {
+        clearInterval(clockTimerId);
+        return;
+      }
+      try {
+        self.updateWorldClock();
+      } catch (error) {
+        console.error('更新世界时钟出错:', error);
+        clearInterval(clockTimerId);
+        if (self.data.clockInterval === clockTimerId) {
+          self.setData({ clockInterval: null });
+        }
+      }
     }, 1000)
+    this.setData({ clockInterval: clockTimerId })
+  },
+
+  onHide() {
+    this.clearIntervals()
   },
 
   onUnload() {
@@ -95,12 +114,26 @@ Page({
     } else {
       // 开始
       const startTime = Date.now() - milliseconds
+      const self = this;
       const interval = setInterval(() => {
-        const elapsed = Date.now() - startTime
-        this.setData({
-          'stopwatch.milliseconds': elapsed,
-          'stopwatch.display': this.formatStopwatch(elapsed)
-        })
+        // 安全检查：确保self存在
+        if (!self) {
+          clearInterval(interval);
+          return;
+        }
+        try {
+          const elapsed = Date.now() - startTime
+          self.setData({
+            'stopwatch.milliseconds': elapsed,
+            'stopwatch.display': self.formatStopwatch(elapsed)
+          })
+        } catch (error) {
+          console.error('秒表更新出错:', error);
+          clearInterval(interval);
+          if (self.data.stopwatchInterval === interval) {
+            self.setData({ stopwatchInterval: null });
+          }
+        }
       }, 10)
       this.setData({
         'stopwatch.isRunning': true,
@@ -199,30 +232,44 @@ Page({
   },
 
   startTimerCountdown() {
+    const self = this;
     const interval = setInterval(() => {
-      let { remaining } = this.data.timer
-      remaining -= 100
+      // 安全检查：确保self存在
+      if (!self) {
+        clearInterval(interval);
+        return;
+      }
+      try {
+        let { remaining } = self.data.timer
+        remaining -= 100
 
-      if (remaining <= 0) {
-        clearInterval(interval)
-        this.setData({
-          'timer.remaining': 0,
-          'timer.isRunning': false,
-          'timer.display': '00:00',
-          timerInterval: null
-        })
-        wx.showToast({
-          title: '计时结束',
-          icon: 'success'
-        })
-        wx.vibrateShort({
-          type: 'heavy'
-        })
-      } else {
-        this.setData({
-          'timer.remaining': remaining,
-          'timer.display': this.formatTimer(remaining)
-        })
+        if (remaining <= 0) {
+          clearInterval(interval)
+          self.setData({
+            'timer.remaining': 0,
+            'timer.isRunning': false,
+            'timer.display': '00:00',
+            timerInterval: null
+          })
+          wx.showToast({
+            title: '计时结束',
+            icon: 'success'
+          })
+          wx.vibrateShort({
+            type: 'heavy'
+          })
+        } else {
+          self.setData({
+            'timer.remaining': remaining,
+            'timer.display': self.formatTimer(remaining)
+          })
+        }
+      } catch (error) {
+        console.error('计时器更新出错:', error);
+        clearInterval(interval);
+        if (self.data.timerInterval === interval) {
+          self.setData({ timerInterval: null });
+        }
       }
     }, 100)
 

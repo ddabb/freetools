@@ -40,15 +40,39 @@ Page({
     this.initDefaultValues();
     
     // 每秒更新当前时间
-    this.timeTimer = setInterval(() => {
-      this.updateCurrentTime();
+    const self = this;
+    const timerId = setInterval(() => {
+      // 安全检查：确保self存在
+      if (!self) {
+        clearInterval(timerId);
+        return;
+      }
+      try {
+        self.updateCurrentTime();
+      } catch (error) {
+        console.error('更新时间出错:', error);
+        clearInterval(timerId);
+        if (self.timeTimer === timerId) {
+          self.timeTimer = null;
+        }
+      }
     }, 1000);
+    this.timeTimer = timerId;
+  },
+
+  // 页面隐藏时清理定时器
+  onHide() {
+    if (this.timeTimer) {
+      clearInterval(this.timeTimer);
+      this.timeTimer = null;
+    }
   },
 
   // 页面卸载时清理定时器
   onUnload() {
     if (this.timeTimer) {
       clearInterval(this.timeTimer);
+      this.timeTimer = null;
     }
   },
 

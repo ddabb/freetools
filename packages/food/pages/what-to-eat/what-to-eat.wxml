@@ -1,0 +1,165 @@
+<view class="container">
+  <!-- 查看全部食物按钮 -->
+  <button class="view-all-button" bindtap="showAllFoods">
+    查看全部食物清单 📋
+  </button>
+  
+  <!-- 餐型选择 -->
+  <view class="meal-type-container">
+    <view class="meal-type-title">选择餐型</view>
+    <view class="meal-type-buttons">
+      <block wx:for="{{mealTypes}}" wx:key="*this">
+        <view 
+          class="meal-type-button {{selectedMealType === item ? 'active' : ''}}"
+          bindtap="selectMealType"
+          data-type="{{item}}"
+        >
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </view>
+  
+  <!-- 随机按钮 -->
+  <view class="random-container">
+    <button 
+      class="random-button bounce-on-hover" 
+      bindtap="startRandom"
+      disabled="{{isSpinning}}"
+      hover-class="pulse-on-click"
+    >
+      <view class="button-content {{isSpinning ? 'spinning' : ''}}">
+        <text>{{isSpinning ? '随机中...' : '开始随机 '}}</text>
+        <text wx:if="{{!isSpinning}}" class="slot-emoji">🎰</text>
+        <text wx:else class="slot-emoji spinning-fast">🎰</text>
+      </view>
+    </button>
+  </view>
+  
+  <!-- 结果显示 -->
+  <view class="result-container">
+    <block wx:if="{{showResult && result}}">
+      <view class="result-title">🎉 {{selectedMealType}}推荐</view>
+      
+      <view class="meal-items">
+        <view class="meal-item">
+          <text class="meal-item-label">主食</text>
+          <text class="meal-item-value">{{result.meal.staple ? result.meal.staple.emoji : ''}} {{result.meal.staple ? result.meal.staple.name : ''}}<text class="meal-item-calories" wx:if="{{result.meal.staple}}">({{result.meal.staple.calories}}大卡/100g)</text></text>
+        </view>
+        <view class="meal-item">
+          <text class="meal-item-label">蛋白质</text>
+          <text class="meal-item-value">{{result.meal.protein ? result.meal.protein.emoji : ''}} {{result.meal.protein ? result.meal.protein.name : ''}}<text class="meal-item-calories" wx:if="{{result.meal.protein}}">({{result.meal.protein.calories}}大卡/100g)</text></text>
+        </view>
+        <view class="meal-item">
+          <text class="meal-item-label">蔬菜</text>
+          <text class="meal-item-value">{{result.meal.vegetable ? result.meal.vegetable.emoji : ''}} {{result.meal.vegetable ? result.meal.vegetable.name : ''}}<text class="meal-item-calories" wx:if="{{result.meal.vegetable}}">({{result.meal.vegetable.calories}}大卡/100g)</text></text>
+        </view>
+        <view class="meal-item">
+          <text class="meal-item-label">水果</text>
+          <text class="meal-item-value">{{result.meal.fruit ? result.meal.fruit.emoji : ''}} {{result.meal.fruit ? result.meal.fruit.name : ''}}<text class="meal-item-calories" wx:if="{{result.meal.fruit}}">({{result.meal.fruit.calories}}大卡/100g)</text></text>
+        </view>
+        <view class="meal-item">
+          <text class="meal-item-label">饮品</text>
+          <text class="meal-item-value">{{result.meal.drink ? result.meal.drink.emoji : ''}} {{result.meal.drink ? result.meal.drink.name : ''}}<text class="meal-item-calories" wx:if="{{result.meal.drink}}">({{result.meal.drink.calories}}大卡/100g)</text></text>
+        </view>
+      </view>
+      
+      <!-- 能量统计 -->
+      <view class="calories-container">
+        <text class="calories-label">总热量</text>
+        <text class="calories-value">{{result.totalCalories}} 大卡</text>
+      </view>
+      
+      <!-- 饮食建议 -->
+      <view class="suggestion-container">
+        <text class="suggestion-label">饮食建议</text>
+        <text class="suggestion-text">{{result.suggestion}}</text>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <button class="action-button re-random" bindtap="reRandom">
+          再随机一次 🔄
+        </button>
+        <button class="action-button poster" bindtap="MakePosters">
+          生成海报 🖼️
+        </button>
+      </view>
+    </block>
+    
+    <block wx:elif="{{isSpinning}}">
+      <!-- 随机处理中 -->
+      <view class="random-processing">
+        <view class="processing-title">🍽️ 正在点兵点将...</view>
+        <view class="processing-subtitle">让AI帮你挑选最佳组合</view>
+        
+        <view class="food-selection-animation">
+          <view class="food-item-anim">
+            <text class="food-emoji-anim">🍔</text>
+            <text class="food-name-anim">汉堡</text>
+          </view>
+          <view class="food-item-anim">
+            <text class="food-emoji-anim">🍣</text>
+            <text class="food-name-anim">寿司</text>
+          </view>
+          <view class="food-item-anim">
+            <text class="food-emoji-anim">🥗</text>
+            <text class="food-name-anim">沙拉</text>
+          </view>
+          <view class="food-item-anim">
+            <text class="food-emoji-anim">🍜</text>
+            <text class="food-name-anim">面条</text>
+          </view>
+        </view>
+        
+        <view class="scrolling-text-container">
+          <view class="scrolling-text">
+            <text>正在挑选美味食物... 正在计算热量... 正在搭配营养... 正在优化组合...</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <block wx:else>
+      <!-- 初始提示 -->
+      <view class="initial-tip">
+        <text class="tip-text">点击按钮开始随机生成今日饮食建议</text>
+        <text class="tip-subtext">解决你的选择困难症</text>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 食物清单模态框 -->
+  <view class="modal" wx:if="{{showFoodModal}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">全部食物清单</text>
+        <text class="modal-close" bindtap="closeFoodModal">×</text>
+      </view>
+      <scroll-view class="modal-body" scroll-y>
+        <block wx:for="{{foodCategories}}" wx:key="*this">
+          <view class="category-section">
+            <text class="category-title">{{categoryMap[item].emoji}} {{categoryMap[item].name}}</text>
+            <view class="food-grid">
+              <block wx:for="{{foodData[item]}}" wx:key="index">
+                <view class="food-item">
+                  <text class="food-emoji">{{item.emoji}}</text>
+                  <text class="food-name">{{item.name}}</text>
+                  <text class="food-calories">{{item.calories}}大卡/100g</text>
+                </view>
+              </block>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+  </view>
+  
+  <!-- 海报生成Canvas（隐藏） -->
+  <canvas 
+    id="foodPosterCanvas" 
+    type="2d"
+    style="position: absolute; left: -9999rpx; width: {{canvaswidth}}px; height: {{canvasheight}}px;"
+    canvas-id="foodPosterCanvas"
+  ></canvas>
+</view>
