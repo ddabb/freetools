@@ -9,8 +9,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "idcard-tool": "^1.0.2",
-    "weapp-qrcode-canvas-2d": "^1.1.6"
-  }
+  "dependencies": {}
 }

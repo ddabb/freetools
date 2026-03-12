@@ -1,0 +1,16 @@
+{
+  "name": "freetools-utility",
+  "version": "1.0.0",
+  "description": "Utility tools for freetools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "idcard-tool": "^1.0.2",
+    "weapp-qrcode-canvas-2d": "^1.1.6"
+  }
+}
