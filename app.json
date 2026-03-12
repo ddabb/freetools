@@ -33,7 +33,6 @@
         "pages/unit-converter/unit-converter",
         "pages/password-generator/password-generator",
         "pages/text-tool/text-tool",
-        "pages/oddEven/oddEven",
         "pages/leapyear/leapyear",
         "pages/idcard/idcard",
         "pages/mdconvert/mdconvert",
@@ -54,7 +53,8 @@
       "pages": [
         "pages/gcd-lcm/gcd-lcm",
         "pages/prime-factorization/prime-factorization",
-        "pages/24point/24point"
+        "pages/24point/24point",
+        "pages/oddEven/oddEven"
       ]
     },
     {

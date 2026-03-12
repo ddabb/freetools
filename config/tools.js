@@ -179,8 +179,8 @@ const tools = [
     name: '奇偶判断',
     icon: '🔢',
     color: 'blue',
-    url: '/packages/utility/pages/oddEven/oddEven',
-    categories: ['学习工具'],
+    url: '/packages/math/pages/oddEven/oddEven',
+    categories: ['学习工具', '数学工具'],
     keywords: ['奇数', '偶数', '判断', '数字'],
     description: '判断数字的奇偶性'
   },

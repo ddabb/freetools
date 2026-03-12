@@ -148,3 +148,50 @@ page {
   text-align: center;
   display: block;
 }
+
+/* 概念说明容器 */
+.concept-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 固定在底部 */
+.dock-bottom {
+  position: fixed;
+  bottom: 32rpx;
+  left: 0;
+  right: 0;
+  margin: 0 16rpx;
+  border-top: 2rpx solid #e9ecef;
+}
+
+/* 概念说明标题 */
+.concept-header {
+  margin-bottom: 16rpx;
+  border-bottom: 1rpx solid #e9ecef;
+  padding-bottom: 12rpx;
+}
+
+.concept-title {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #666;
+}
+
+/* 概念说明内容 */
+.concept-content {
+  line-height: 1.5;
+}
+
+.concept-text {
+  font-size: 22rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.concept-text:last-child {
+  margin-bottom: 0;
+}

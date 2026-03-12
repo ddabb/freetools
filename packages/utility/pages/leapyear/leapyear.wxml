@@ -36,4 +36,16 @@
       </view>
     </view>
   </view>
+  
+  <!-- 概念说明 -->
+  <view class="concept-container dock-bottom">
+    <view class="concept-header">
+      <text class="concept-title">概念说明</text>
+    </view>
+    <view class="concept-content">
+      <text class="concept-text">闰年：能被4整除但不能被100整除，或者能被400整除的年份。</text>
+      <text class="concept-text">平年：不能被4整除，或者能被100整除但不能被400整除的年份。</text>
+      <text class="concept-text">闰年有366天，2月有29天；平年有365天，2月有28天。</text>
+    </view>
+  </view>
 </view>

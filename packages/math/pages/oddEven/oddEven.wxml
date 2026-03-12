@@ -36,4 +36,15 @@
       </view>
     </view>
   </view>
+  
+  <!-- 概念说明 -->
+  <view class="concept-container dock-bottom">
+    <view class="concept-header">
+      <text class="concept-title">概念说明</text>
+    </view>
+    <view class="concept-content">
+      <text class="concept-text">奇数：不能被2整除的整数，如1、3、5、7、9等。</text>
+      <text class="concept-text">偶数：能被2整除的整数，如0、2、4、6、8等。</text>
+    </view>
+  </view>
 </view>
