@@ -6,28 +6,93 @@
     <view class="game-rules">规则：每个数字必须使用且只能使用一次</view>
   </view>
 
-  <!-- 游戏控制区域 -->
-  <view class="control-section">
-    <view class="control-buttons">
-      <button class="control-btn new-game-btn" bindtap="generateNewGame">
-        <text class="btn-icon">🎲</text>
-        <text class="btn-text">新游戏</text>
-      </button>
-      <button class="control-btn hint-btn" bindtap="showHint" disabled="{{showingHint}}">
-        <text class="btn-icon">💡</text>
-        <text class="btn-text">提示</text>
-      </button>
-      <button class="control-btn solution-btn" bindtap="showSolution" disabled="{{solutionFound}}">
-        <text class="btn-icon">🔍</text>
-        <text class="btn-text">答案</text>
-      </button>
+  <!-- 模式切换选项卡 -->
+  <view class="mode-section">
+    <view class="mode-tabs">
+      <view class="mode-tab {{gameMode === 'custom' ? 'active' : ''}}" bindtap="switchGameMode" data-mode="custom">
+        <text class="mode-icon">🔢</text>
+        <text class="mode-text">自定义模式</text>
+      </view>
+      <view class="mode-tab {{gameMode === 'preset' ? 'active' : ''}}" bindtap="switchGameMode" data-mode="preset">
+        <text class="mode-icon">🎲</text>
+        <text class="mode-text">预设模式</text>
+      </view>
     </view>
-    
+  </view>
+
+  <!-- 数字显示区域（始终保留空间，仅在预设模式显示内容） -->
+  <view class="control-section {{gameMode !== 'preset' ? 'hidden-control' : ''}}">
     <view class="numbers-display">
       <view class="number-card {{index === 0 ? 'first' : ''}} {{index === 1 ? 'second' : ''}} {{index === 2 ? 'third' : ''}} {{index === 3 ? 'fourth' : ''}}" 
             wx:for="{{numbers}}" wx:key="index" wx:for-index="index">
         <text class="number-text">{{item}}</text>
       </view>
+    </view>
+  </view>
+
+  <!-- 模式特定控制区域 -->
+  <view class="mode-control-section">
+    <!-- 预设模式控制 -->
+    <view wx:if="{{gameMode === 'preset'}}">
+      <button class="new-game-btn mode-specific-btn" bindtap="generateNewGame">
+        <text class="btn-icon">🎲</text>
+        <text class="btn-text">新游戏</text>
+      </button>
+    </view>
+
+    <!-- 自定义模式控制 -->
+    <view wx:elif="{{gameMode === 'custom'}}">
+      <view class="custom-input-section">
+        <view class="custom-inputs">
+          <input type="number" placeholder="数字1" value="{{customNumbers[0]}}" bindinput="onCustomInput1" class="custom-input" />
+          <input type="number" placeholder="数字2" value="{{customNumbers[1]}}" bindinput="onCustomInput2" class="custom-input" />
+          <input type="number" placeholder="数字3" value="{{customNumbers[2]}}" bindinput="onCustomInput3" class="custom-input" />
+          <input type="number" placeholder="数字4" value="{{customNumbers[3]}}" bindinput="onCustomInput4" class="custom-input" />
+          <button class="random-generate-btn" bindtap="generateRandomCustomNumbers">
+            <text class="btn-icon">🎲</text>
+            <text class="btn-text">随机生成</text>
+          </button>
+        </view>
+        
+        <view class="custom-actions">
+          <button class="custom-btn check-solvability-btn" bindtap="checkSolvability" disabled="{{!customNumbersValid}}">
+            <text class="btn-icon">🔍</text>
+            <text class="btn-text">检查是否有解</text>
+          </button>
+          <button class="custom-btn use-custom-btn" bindtap="useCustomNumbers" disabled="{{!customNumbersValid}}">
+            <text class="btn-icon">🎮</text>
+            <text class="btn-text">使用这些数字游戏</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 可解性结果（仅自定义模式显示） -->
+  <view class="solvability-section" wx:if="{{gameMode === 'custom' && showSolvabilityResult}}">
+    <view class="solvability-box {{isSolvable ? 'solvable' : 'unsolvable'}}">
+      <view class="solvability-icon">{{isSolvable ? '✅' : '❌'}}</view>
+      <view class="solvability-message">{{solvabilityMessage}}</view>
+      <view class="solvability-solutions" wx:if="{{isSolvable && customSolutions.length > 0}}">
+        <view class="solution-count">找到 {{customSolutions.length}} 种解法:</view>
+        <view class="solution-item" wx:for="{{customSolutions}}" wx:key="index">
+          <text class="solution-expression">{{item.expression}} = 24</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 全局控制按钮（仅预设模式显示） -->
+  <view class="global-control-section" wx:if="{{gameMode === 'preset'}}">
+    <view class="global-control-buttons">
+      <button class="global-control-btn hint-btn" bindtap="showHint" disabled="{{showingHint}}">
+        <text class="btn-icon">💡</text>
+        <text class="btn-text">提示</text>
+      </button>
+      <button class="global-control-btn solution-btn" bindtap="showSolution" disabled="{{solutionFound}}">
+        <text class="btn-icon">🔍</text>
+        <text class="btn-text">答案</text>
+      </button>
     </view>
   </view>
 
@@ -81,8 +146,8 @@
     </view>
   </view>
 
-  <!-- 统计信息 -->
-  <view class="stats-section">
+  <!-- 统计信息（仅预设模式显示） -->
+  <view class="stats-section" wx:if="{{gameMode === 'preset'}}">
     <view class="stats-grid">
       <view class="stat-item">
         <text class="stat-number">{{gamesPlayed}}</text>
@@ -99,8 +164,8 @@
     </view>
   </view>
 
-  <!-- 历史记录 -->
-  <view class="history-section" wx:if="{{gameHistory.length > 0}}">
+  <!-- 历史记录（仅预设模式显示，且有记录时） -->
+  <view class="history-section" wx:if="{{gameMode === 'preset' && gameHistory.length > 0}}">
     <view class="history-header">📝 最近游戏</view>
     <view class="history-list">
       <view class="history-item" wx:for="{{gameHistory}}" wx:key="index">

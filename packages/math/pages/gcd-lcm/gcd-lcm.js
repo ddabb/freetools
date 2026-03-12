@@ -166,7 +166,7 @@ Page({
   onLoad() {
     // 设置导航栏标题
     wx.setNavigationBarTitle({
-      title: '最大公约数·最小公倍数'
+      title: '公约数·公倍数'
     });
   },
 

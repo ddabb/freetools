@@ -22,7 +22,7 @@ const toolFrequency = {
   'onlychinese': 42,        // 中文检测
   'travel-tool': 38,        // 旅行工具
   'datediff': 35,           // 日期差计算
-  'gcd-lcm': 60,            // 最大公约数·最小公倍数
+  'gcd-lcm': 60,            // 公约数·公倍数
   'prime-factorization': 58, // 质因数分解
   '24point': 56,            // 24点速算
   'base-converter': 54,      // 整数基转换器
@@ -237,7 +237,7 @@ const tools = [
   // 数学工具分类开始
   {
     id: 'gcd-lcm',
-    name: '最大公约数·最小公倍数',
+    name: '公约数·公倍数',
     icon: '🔢',
     color: 'indigo',
     url: '/packages/math/pages/gcd-lcm/gcd-lcm',
@@ -266,16 +266,6 @@ const tools = [
     description: '使用4个数字通过运算得到24的游戏'
   },
   // 数学工具分类结束
-  {
-    id: 'travel-tool',
-    name: '旅行工具',
-    icon: '✈️',
-    color: 'blue',
-    url: '/packages/other/pages/travel-tool/travel-tool',
-    categories: ['生活工具'],
-    keywords: ['旅行', '工具', '行程', '规划'],
-    description: '旅行规划和辅助工具'
-  },
   // 转换工具分类开始
   {
     id: 'base-converter',
@@ -428,13 +418,6 @@ function getToolById(id) {
 // 确保在导出前 allTools 已经定义
 if (!allTools || !Array.isArray(allTools)) {
   throw new Error('工具列表未正确初始化');
-}
-
-// 确保在导出前 allTools 已经定义
-if (!allTools || !Array.isArray(allTools)) {
-  console.error('工具列表未正确初始化');
-  // 创建一个空数组作为默认值
-  const allTools = [];
 }
 
 // 导出模块

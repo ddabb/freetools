@@ -105,6 +105,8 @@ Page({
     this.setData({
       currentCategoryTools: initialTools
     });
+    
+
   },
 
   // 合并所有工具数据

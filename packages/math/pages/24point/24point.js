@@ -15,6 +15,15 @@ Page({
     correctAnswers: 0, // 答对题数
     accuracy: 0, // 正确率
     gameHistory: [], // 游戏历史
+    // 游戏模式：'preset'（预设模式） 或 'custom'（自定义模式）
+    gameMode: 'custom',
+    // 自定义数字相关
+    customNumbers: ['', '', '', ''], // 自定义输入的4个数字
+    customNumbersValid: false, // 自定义数字是否有效（4个数字都已输入）
+    showSolvabilityResult: false, // 是否显示可解性结果
+    isSolvable: false, // 自定义数字是否有解
+    solvabilityMessage: '', // 可解性消息
+    customSolutions: [], // 自定义数字的解法
     hints: [
       "尝试先将两个数字组合成容易计算的数，比如 3×8=24、4×6=24、12×2=24",
       "可以先算出 24 的因数，然后看能否用其他数字得到对应的另一个因数",
@@ -44,6 +53,10 @@ Page({
       ]},
       { numbers: [5, 5, 5, 1], solutions: [
         { expression: "(5-1÷5)×5", description: "分数运算的经典例子" }
+      ]},
+      { numbers: [6, 6, 8, 8], solutions: [
+        { expression: "(6÷(8-6))×8", description: "先做减法，再除法，最后乘法" },
+        { expression: "(8÷(8-6))×6", description: "另一种顺序" }
       ]}
     ]
   },
@@ -83,26 +96,418 @@ Page({
     });
   },
 
-  // 生成新游戏
-  generateNewGame() {
-    // 随机选择一个预设题目
-    const randomIndex = Math.floor(Math.random() * this.data.questionBank.length);
-    const selectedQuestion = this.data.questionBank[randomIndex];
+  // 自定义数字输入处理
+  onCustomInput1(e) {
+    this.handleCustomInput(0, e.detail.value);
+  },
+  onCustomInput2(e) {
+    this.handleCustomInput(1, e.detail.value);
+  },
+  onCustomInput3(e) {
+    this.handleCustomInput(2, e.detail.value);
+  },
+  onCustomInput4(e) {
+    this.handleCustomInput(3, e.detail.value);
+  },
+
+  // 处理自定义数字输入
+  handleCustomInput(index, value) {
+    const customNumbers = [...this.data.customNumbers];
+    customNumbers[index] = value;
     
-    // 打乱数字顺序
-    const shuffledNumbers = [...selectedQuestion.numbers].sort(() => Math.random() - 0.5);
+    // 检查四个数字是否都已输入（非空且为有效数字）
+    const allFilled = customNumbers.every(num => num !== '' && !isNaN(parseInt(num)));
     
     this.setData({
+      customNumbers,
+      customNumbersValid: allFilled,
+      showSolvabilityResult: false // 输入变化时隐藏结果
+    });
+  },
+
+  // 随机生成自定义数字（0-24之间的4个随机整数）
+  generateRandomCustomNumbers() {
+    const randomNumbers = [];
+    for (let i = 0; i < 4; i++) {
+      // 生成0-24之间的随机整数
+      randomNumbers.push(Math.floor(Math.random() * 25).toString());
+    }
+    
+    this.setData({
+      customNumbers: randomNumbers,
+      customNumbersValid: true,
+      showSolvabilityResult: false // 隐藏之前的可解性结果
+    });
+    
+    // 移除振动和弹窗，输入框更新已经提供足够反馈
+  },
+
+  // 检查自定义数字是否有解
+  checkSolvability() {
+    const { customNumbers } = this.data;
+    
+    if (!this.data.customNumbersValid) {
+      wx.showToast({
+        title: '请输入4个有效整数',
+        icon: 'none',
+        duration: 1000
+      });
+      return;
+    }
+    
+    // 转换为数字数组
+    const numbers = customNumbers.map(num => parseInt(num));
+    
+    // 检查是否有解
+    const solutions = this.solve24(numbers);
+    const isSolvable = solutions.length > 0;
+    
+    this.setData({
+      showSolvabilityResult: true,
+      isSolvable,
+      solvabilityMessage: isSolvable ? 
+        `数字 [${numbers.join(', ')}] 可以计算出24！` : 
+        `数字 [${numbers.join(', ')}] 无法计算出24。`,
+      customSolutions: solutions
+    });
+  },
+
+  // 使用自定义数字开始游戏
+  useCustomNumbers() {
+    const { customNumbers } = this.data;
+    
+    if (!this.data.customNumbersValid) {
+      wx.showToast({
+        title: '请输入4个有效整数',
+        icon: 'none',
+        duration: 1000
+      });
+      return;
+    }
+    
+    const numbers = customNumbers.map(num => parseInt(num));
+    
+    // 打乱数字顺序
+    const shuffledNumbers = [...numbers].sort(() => Math.random() - 0.5);
+    
+    // 尝试查找解法
+    const solutions = this.solve24(numbers);
+    
+    this.setData({
+      gameMode: 'custom',
       numbers: shuffledNumbers,
       expression: '',
       showResult: false,
       showingHint: false,
       showingSolution: false,
       solutionFound: false,
-      solutions: selectedQuestion.solutions
+      solutions: solutions,
+      showSolvabilityResult: false // 隐藏可解性结果
     });
     
-    wx.vibrateShort();
+    // 移除振动和成功弹窗，界面切换已经提供足够反馈
+  },
+
+  // 安全表达式求值函数（替代eval，避免微信小程序环境限制）
+  safeEval(expression) {
+    // 移除所有空格
+    let expr = expression.replace(/\s+/g, '');
+    
+    // 运算符优先级映射
+    const precedence = {
+      '+': 1,
+      '-': 1,
+      '*': 2,
+      '/': 2
+    };
+    
+    // 双栈：操作数栈和运算符栈
+    const values = [];
+    const ops = [];
+    
+    // 辅助函数：应用运算符
+    const applyOp = (a, b, op) => {
+      switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': 
+          if (Math.abs(b) < 0.000001) throw new Error('除零错误');
+          return a / b;
+        default: throw new Error(`未知运算符: ${op}`);
+      }
+    };
+    
+    // 辅助函数：处理栈顶运算符
+    const processTopOp = () => {
+      if (ops.length < 1 || values.length < 2) return;
+      const b = values.pop();
+      const a = values.pop();
+      const op = ops.pop();
+      values.push(applyOp(a, b, op));
+    };
+    
+    let i = 0;
+    while (i < expr.length) {
+      // 处理数字
+      if (expr[i] >= '0' && expr[i] <= '9') {
+        let num = '';
+        while (i < expr.length && (expr[i] >= '0' && expr[i] <= '9' || expr[i] === '.')) {
+          num += expr[i];
+          i++;
+        }
+        values.push(parseFloat(num));
+        continue;
+      }
+      
+      // 处理左括号
+      if (expr[i] === '(') {
+        ops.push('(');
+        i++;
+        continue;
+      }
+      
+      // 处理右括号
+      if (expr[i] === ')') {
+        while (ops.length > 0 && ops[ops.length - 1] !== '(') {
+          processTopOp();
+        }
+        if (ops.length === 0) throw new Error('括号不匹配');
+        ops.pop(); // 移除左括号
+        i++;
+        continue;
+      }
+      
+      // 处理运算符
+      if (['+', '-', '*', '/'].includes(expr[i])) {
+        // 处理负号（一元减号）
+        if (expr[i] === '-' && (i === 0 || expr[i-1] === '(' || ['+', '-', '*', '/'].includes(expr[i-1]))) {
+          // 一元负号：推入0和减号，或者直接处理为负数
+          // 简单处理：读取下一个数字作为负数
+          i++;
+          if (expr[i] >= '0' && expr[i] <= '9') {
+            let num = '-';
+            while (i < expr.length && (expr[i] >= '0' && expr[i] <= '9' || expr[i] === '.')) {
+              num += expr[i];
+              i++;
+            }
+            values.push(parseFloat(num));
+          } else {
+            throw new Error('无效的一元负号');
+          }
+          continue;
+        }
+        
+        // 二元运算符
+        while (ops.length > 0 && ops[ops.length - 1] !== '(' && 
+               precedence[ops[ops.length - 1]] >= precedence[expr[i]]) {
+          processTopOp();
+        }
+        ops.push(expr[i]);
+        i++;
+        continue;
+      }
+      
+      // 未知字符
+      throw new Error(`无效字符: ${expr[i]}`);
+    }
+    
+    // 处理剩余运算符
+    while (ops.length > 0) {
+      if (ops[ops.length - 1] === '(') throw new Error('括号不匹配');
+      processTopOp();
+    }
+    
+    if (values.length !== 1) throw new Error('表达式无效');
+    return values[0];
+  },
+
+  // 24点求解算法
+  solve24(numbers) {
+    if (numbers.length !== 4) return [];
+    
+    // 调试模式：检查是否为 [6,6,8,8]
+    const debugMode = JSON.stringify(numbers) === JSON.stringify([6,6,8,8]);
+    if (debugMode) {
+      console.log('调试模式：求解 6,6,8,8');
+    }
+    
+    const solutions = [];
+    const ops = ['+', '-', '*', '/'];
+    
+    // 递归函数：尝试所有可能的运算
+    const solve = (nums, exprs) => {
+      if (nums.length === 1) {
+        if (Math.abs(nums[0] - 24) < 0.000001) {
+          solutions.push(exprs[0]);
+          if (debugMode) {
+            console.log('找到解:', exprs[0]);
+          }
+        }
+        return;
+      }
+      
+      for (let i = 0; i < nums.length; i++) {
+        for (let j = i + 1; j < nums.length; j++) {
+          // 选择两个数字 nums[i] 和 nums[j]
+          const a = nums[i];
+          const b = nums[j];
+          const aExpr = exprs[i];
+          const bExpr = exprs[j];
+          
+          // 剩余数字
+          const remainingNums = [];
+          const remainingExprs = [];
+          for (let k = 0; k < nums.length; k++) {
+            if (k !== i && k !== j) {
+              remainingNums.push(nums[k]);
+              remainingExprs.push(exprs[k]);
+            }
+          }
+          
+          // 尝试所有运算符
+          for (const op of ops) {
+            // 加法、乘法满足交换律，避免重复
+            if ((op === '+' || op === '*') && i > j) continue;
+            
+            let newVal, newExpr;
+            switch (op) {
+              case '+':
+                newVal = a + b;
+                newExpr = `(${aExpr}+${bExpr})`;
+                solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                break;
+              case '-':
+                // 减法不满足交换律，尝试两种顺序
+                // a - b
+                newVal = a - b;
+                newExpr = `(${aExpr}-${bExpr})`;
+                solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                // b - a
+                newVal = b - a;
+                newExpr = `(${bExpr}-${aExpr})`;
+                solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                break;
+              case '*':
+                newVal = a * b;
+                newExpr = `(${aExpr}×${bExpr})`;
+                solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                break;
+              case '/':
+                // 除法不满足交换律，尝试两种顺序（除数不能为0）
+                if (Math.abs(b) > 0.000001) {
+                  newVal = a / b;
+                  newExpr = `(${aExpr}÷${bExpr})`;
+                  solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                }
+                if (Math.abs(a) > 0.000001) {
+                  newVal = b / a;
+                  newExpr = `(${bExpr}÷${aExpr})`;
+                  solve([newVal, ...remainingNums], [newExpr, ...remainingExprs]);
+                }
+                break;
+            }
+          }
+        }
+      }
+    };
+    
+    // 初始表达式就是数字本身
+    const initExprs = numbers.map(num => num.toString());
+    solve(numbers, initExprs);
+    
+    if (debugMode) {
+      console.log('总共找到原始解数量:', solutions.length);
+      console.log('原始解列表:', solutions);
+    }
+    
+    // 去重并格式化解法
+    const uniqueSolutions = [];
+    const seen = new Set();
+    
+    for (const expr of solutions) {
+      // 标准化运算符：确保使用统一的乘除符号
+      let normalized = expr.replace(/\*/g, '×').replace(/\//g, '÷');
+      
+      // 验证表达式是否正确计算为24
+      try {
+        let calcExpression = normalized.replace(/×/g, '*').replace(/÷/g, '/');
+        const result = this.safeEval(calcExpression);
+        if (Math.abs(result - 24) < 0.000001) {
+          if (!seen.has(normalized)) {
+            seen.add(normalized);
+            uniqueSolutions.push({ expression: normalized, description: '' });
+          }
+        } else if (debugMode) {
+          console.log('表达式计算结果不为24:', normalized, '=', result);
+        }
+      } catch (error) {
+        // 忽略无效表达式
+        if (debugMode) {
+          console.log('表达式无效:', normalized, error);
+        }
+      }
+    }
+    
+    if (debugMode) {
+      console.log('去重后解数量:', uniqueSolutions.length);
+      console.log('去重后解列表:', uniqueSolutions);
+    }
+    
+    return uniqueSolutions.slice(0, 10); // 最多返回10种解法
+  },
+
+  // 切换游戏模式
+  switchGameMode(e) {
+    const mode = e.currentTarget.dataset.mode;
+    console.log('switchGameMode called, mode:', mode);
+    if (this.data.gameMode === mode) return;
+    
+    this.setData({
+      gameMode: mode,
+      showSolvabilityResult: false,
+      showingHint: false,
+      showingSolution: false
+    });
+    
+    // 切换到预设模式时，生成新游戏
+    if (mode === 'preset') {
+      console.log('Switching to preset, generating new game');
+      this.generateNewGame();
+    }
+    
+    // 移除振动，选项卡切换已提供视觉反馈
+  },
+
+  // 生成新游戏
+  generateNewGame() {
+    console.log('generateNewGame called');
+    try {
+      // 随机选择一个预设题目
+      const randomIndex = Math.floor(Math.random() * this.data.questionBank.length);
+      const selectedQuestion = this.data.questionBank[randomIndex];
+      
+      // 打乱数字顺序
+      const shuffledNumbers = [...selectedQuestion.numbers].sort(() => Math.random() - 0.5);
+      
+      this.setData({
+        numbers: shuffledNumbers,
+        expression: '',
+        showResult: false,
+        showingHint: false,
+        showingSolution: false,
+        solutionFound: false,
+        solutions: selectedQuestion.solutions
+      });
+      
+      // 移除振动和弹窗，通过界面更新来反馈
+    } catch (error) {
+      console.error('generateNewGame error:', error);
+      wx.showToast({
+        title: '生成新游戏失败',
+        icon: 'none'
+      });
+    }
   },
 
   // 显示提示
@@ -112,7 +517,7 @@ Page({
       showingHint: true,
       currentHint: this.data.hints[randomIndex]
     });
-    wx.vibrateShort();
+    // 移除振动，提示框弹出已提供足够反馈
   },
 
   // 关闭提示
@@ -127,7 +532,7 @@ Page({
     this.setData({
       showingSolution: true
     });
-    wx.vibrateShort();
+    // 移除振动，答案框弹出已提供足够反馈
   },
 
   // 关闭答案
@@ -150,7 +555,8 @@ Page({
     if (!expression) {
       wx.showToast({
         title: '请输入算式',
-        icon: 'none'
+        icon: 'none',
+        duration: 1000
       });
       return;
     }
@@ -180,7 +586,7 @@ Page({
       });
       
       // 计算结果
-      const result = eval(calcExpression);
+      const result = this.safeEval(calcExpression);
       
       // 允许一定的误差范围（处理浮点数精度问题）
       if (Math.abs(result - 24) < 0.000001) {
@@ -305,11 +711,32 @@ Page({
       title: '24点速算'
     });
     
-    // 生成初始游戏
-    this.generateNewGame();
+    // 生成初始游戏（仅在预设模式下）
+    if (this.data.gameMode === 'preset') {
+      this.generateNewGame();
+    }
     
     // 加载统计数据
     this.loadStats();
+    
+    // 测试 [6,6,8,8] 是否有解
+    const testNumbers = [6, 6, 8, 8];
+    const testSolutions = this.solve24(testNumbers);
+    console.log(`测试数字 [${testNumbers}] 的求解结果:`, testSolutions.length > 0 ? '有解' : '无解');
+    if (testSolutions.length > 0) {
+      console.log('解法:', testSolutions.map(s => s.expression));
+    } else {
+      console.log('算法未找到解法，但正确解法应为 (6÷(8-6))×8');
+      // 尝试手动验证
+      const manualExpr = '(6÷(8-6))×8';
+      const calcExpr = manualExpr.replace(/÷/g, '/').replace(/×/g, '*');
+      try {
+        const result = this.safeEval(calcExpr);
+        console.log('手动验证表达式:', manualExpr, '=', result);
+      } catch (e) {
+        console.log('手动验证失败:', e);
+      }
+    }
   },
 
   // 页面显示时执行
