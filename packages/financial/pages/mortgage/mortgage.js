@@ -158,7 +158,7 @@ Page({
     totalPayment: '',
     showResult: false,
     canvaswidth: 376,
-    canvasheight: 500
+    canvasheight: 400
   },
 
   onLoad(options) {
@@ -283,15 +283,52 @@ Page({
     if (isHarmonyOS) {
       // 鸿蒙平台
       canvas = res;
+      if (!canvas) {
+        console.error('鸿蒙平台获取Canvas失败');
+        platform.showToast({
+          title: '获取画布失败，请重试'
+        });
+        return;
+      }
       ctx = canvas.getContext('2d');
+      console.log('鸿蒙平台Canvas:', { width: canvas.width, height: canvas.height });
     } else {
       // 微信小程序平台
+      if (!res || !res[0] || !res[0].node) {
+        console.error('微信小程序平台获取Canvas失败:', res);
+        platform.showToast({
+          title: '获取画布失败，请重试'
+        });
+        return;
+      }
       canvas = res[0].node;
       ctx = canvas.getContext('2d');
+      console.log('微信小程序Canvas:', { width: canvas.width, height: canvas.height });
     }
 
     console.log('Canvas元素:', canvas);
     let that = this;
+
+    // 确保Canvas尺寸正确
+    if (isHarmonyOS) {
+      const dpr = 2; // 鸿蒙平台使用固定DPI
+      const width = this.data.canvaswidth;
+      const height = this.data.canvasheight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      console.log('鸿蒙Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height });
+    } else {
+      // 微信小程序平台 - 使用系统信息获取DPI
+      const systemInfo = wx.getSystemInfoSync();
+      const dpr = systemInfo.pixelRatio || 2;
+      const width = this.data.canvaswidth;
+      const height = this.data.canvasheight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      console.log('微信Canvas尺寸调整:', { width, height, dpr, actualWidth: canvas.width, actualHeight: canvas.height, systemInfo });
+    }
 
     // 获取系统信息
     platform.getSystemInfo((systemInfo) => {
@@ -313,88 +350,95 @@ Page({
       const subtitleY = titleY + 30; // 副标题位置
       const infoY = subtitleY + 40; // 信息区域起始位置
 
-      // 背景色
-      ctx.fillStyle = '#f8f9fa';
+      // 背景色 - 使用更专业的金融蓝色调
+      ctx.fillStyle = '#f0f8ff';
       ctx.fillRect(0, 0, width, height);
 
+      // 添加装饰性背景元素
+      ctx.fillStyle = 'rgba(52, 152, 219, 0.1)';
+      ctx.beginPath();
+      ctx.arc(width - 50, 50, 30, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(50, height - 50, 25, 0, Math.PI * 2);
+      ctx.fill();
+
       // 标题
-      ctx.font = 'bold 26px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
-      ctx.fillText('房贷计算器', padding, titleY);
+      ctx.font = 'bold 24px 微软雅黑';
+      ctx.fillStyle = '#1a73e8';
+      ctx.fillText('房贷计算结果', padding, titleY);
 
       // 副标题
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#7f8c8d';
-      ctx.fillText('专业房贷计算，让您的购房计划更清晰', padding, subtitleY);
+      ctx.font = '14px 微软雅黑';
+      ctx.fillStyle = '#666666';
+      ctx.fillText('嘿，这是你的房贷计划', padding, subtitleY);
 
       // 贷款信息
       const { loanAmount, years, rate, monthlyPayment, totalInterest, totalPayment, loanType } = this.data;
       const loanTypeText = ['商业贷款', '公积金贷款', '组合贷款'][loanType];
       
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
-      ctx.fillText('贷款类型：', padding, infoY);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
-      ctx.fillText(loanTypeText, padding + 100, infoY);
+      // 贷款信息标题
+      ctx.font = 'bold 14px 微软雅黑';
+      ctx.fillStyle = '#333333';
+      ctx.fillText('你选择的贷款信息', padding, infoY);
+      
+      // 贷款信息内容
+      ctx.font = '14px 微软雅黑';
+      ctx.fillStyle = '#666666';
+      ctx.fillText('贷款类型：', padding + 10, infoY + 25);
+      ctx.fillStyle = '#1a73e8';
+      ctx.fillText(loanTypeText, padding + 90, infoY + 25);
 
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
-      ctx.fillText('贷款金额：', padding, infoY + 30);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
-      ctx.fillText(loanAmount + ' 万元', padding + 100, infoY + 30);
+      ctx.fillStyle = '#666666';
+      ctx.fillText('贷款金额：', padding + 10, infoY + 50);
+      ctx.fillStyle = '#1a73e8';
+      ctx.fillText(loanAmount + ' 万元', padding + 90, infoY + 50);
 
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
-      ctx.fillText('贷款年限：', padding, infoY + 60);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
-      ctx.fillText(years + ' 年', padding + 100, infoY + 60);
+      ctx.fillStyle = '#666666';
+      ctx.fillText('贷款年限：', padding + 10, infoY + 75);
+      ctx.fillStyle = '#1a73e8';
+      ctx.fillText(years + ' 年', padding + 90, infoY + 75);
 
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#2c3e50';
-      ctx.fillText('年利率：', padding, infoY + 90);
-      ctx.font = '16px 微软雅黑';
-      ctx.fillStyle = '#3498db';
-      ctx.fillText(rate + '%', padding + 100, infoY + 90);
+      ctx.fillStyle = '#666666';
+      ctx.fillText('年利率：', padding + 10, infoY + 100);
+      ctx.fillStyle = '#1a73e8';
+      ctx.fillText(rate + '%', padding + 90, infoY + 100);
 
       // 计算结果
       if (this.data.showResult) {
-        ctx.font = 'bold 18px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
-        ctx.fillText('计算结果：', padding, infoY + 130);
+        // 结果标题
+        ctx.font = 'bold 14px 微软雅黑';
+        ctx.fillStyle = '#333333';
+        ctx.fillText('算好了！你的还款计划是这样的', padding, infoY + 135);
 
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
-        ctx.fillText('月供：', padding, infoY + 160);
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#e74c3c';
-        ctx.fillText('¥' + monthlyPayment, padding + 100, infoY + 160);
+        // 结果内容
+        ctx.font = '14px 微软雅黑';
+        ctx.fillStyle = '#666666';
+        ctx.fillText('每个月要还：', padding + 10, infoY + 160);
+        ctx.font = 'bold 14px 微软雅黑';
+        ctx.fillStyle = '#e53935';
+        ctx.fillText('¥' + monthlyPayment, padding + 90, infoY + 160);
 
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
-        ctx.fillText('总利息：', padding, infoY + 190);
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#e74c3c';
-        ctx.fillText('¥' + totalInterest + ' 万元', padding + 100, infoY + 190);
+        ctx.font = '14px 微软雅黑';
+        ctx.fillStyle = '#666666';
+        ctx.fillText('总共要付利息：', padding + 10, infoY + 185);
+        ctx.font = 'bold 14px 微软雅黑';
+        ctx.fillStyle = '#e53935';
+        ctx.fillText('¥' + totalInterest + ' 万元', padding + 110, infoY + 185);
 
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#2c3e50';
-        ctx.fillText('还款总额：', padding, infoY + 220);
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#e74c3c';
-        ctx.fillText('¥' + totalPayment + ' 万元', padding + 100, infoY + 220);
+        ctx.font = '14px 微软雅黑';
+        ctx.fillStyle = '#666666';
+        ctx.fillText('最后总共要还：', padding + 10, infoY + 210);
+        ctx.font = 'bold 14px 微软雅黑';
+        ctx.fillStyle = '#e53935';
+        ctx.fillText('¥' + totalPayment + ' 万元', padding + 110, infoY + 210);
       } else {
-        ctx.font = '16px 微软雅黑';
-        ctx.fillStyle = '#7f8c8d';
-        ctx.fillText('请输入贷款信息并计算', padding, infoY + 130);
+        ctx.font = '14px 微软雅黑';
+        ctx.fillStyle = '#999999';
+        ctx.fillText('快输入你的贷款信息，我来帮你算！', padding + 10, infoY + 135);
       }
 
-      // 底部提示
-      ctx.font = '14px 微软雅黑';
-      ctx.fillStyle = '#7f8c8d';
-      ctx.fillText('扫码使用房贷计算器', padding, height - 40);
+
 
       // 加载并绘制二维码
       const img = isHarmonyOS ? new Image() : canvas.createImage();
@@ -403,19 +447,29 @@ Page({
         console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
         
         if (isHarmonyOS) {
-          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
-          const imageData = canvas.toDataURL();
+          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
+          console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+          const imageData = canvas.toDataURL('image/png');
+          console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+          
+          if (!imageData || !imageData.startsWith('data:image/png')) {
+            console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
+            platform.showToast({
+              title: '生成图片数据失败'
+            });
+            return;
+          }
           
           // 保存图片到相册
           platform.saveImageToAlbum(imageData, 
             function() {
               console.log("保存相册成功");
               platform.showToast({
-                title: '保存相册成功'
+                title: '保存成功'
               });
             },
             function(data, code) {
-              console.log("保存到相册失败", code, data);
+              console.log("保存到相册失败", { code, data, dataType: typeof data });
               platform.showToast({
                 title: '保存失败，请重试'
               });
@@ -446,36 +500,15 @@ Page({
                     wx.showModal({
                       title: '提示',
                       content: '需要您授权保存相册',
-                      showCancel: false,
+                      showCancel: true,
                       success: modalSuccess => {
-                        wx.openSetting({
-                          success(settingdata) {
-                            console.log("settingdata", settingdata);
-                            if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限成功,再次点击图片即可保存',
-                                showCancel: false,
-                              });
-                            } else {
-                              wx.showModal({
-                                title: '提示',
-                                content: '获取权限失败，将无法保存到相册哦~',
-                                showCancel: false,
-                              });
-                            }
-                          },
-                          fail(failData) {
-                            console.log("failData", failData);
-                          },
-                          complete(finishData) {
-                            console.log("finishData", finishData);
-                          }
-                        });
+                        if (modalSuccess.confirm) {
+                          wx.openSetting();
+                        }
                       }
                     });
                   } else {
-                    console.log("保存到相册失败" + res);
+                    console.log("保存到相册失败", err);
                   }
                 }
               );

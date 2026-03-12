@@ -73,4 +73,12 @@
       <text class="tips-text">* 仅供参考，实际情况请咨询专业理财师</text>
     </view>
   </view>
+
+  <!-- 分享海报生成 -->
+  <view class="share-section">
+    <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
+  </view>
+
+  <!-- 隐藏的Canvas用于生成分享图片 -->
+  <canvas id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
 </view>
