@@ -1000,8 +1000,8 @@ const PageDefinition = {
           }, that);
         }
       };
-      img.src = '/images/mini.png';
-      console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
+      img.src = '/images/lifecountdown.png';
+      console.log('二维码加载开始:', {source: '/images/lifecountdown.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
     });
   },
 
