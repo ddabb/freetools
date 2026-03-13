@@ -1,0 +1,282 @@
+<view class="container">
+  <!-- 免责声明 -->
+  <view class="disclaimer">
+    <text>{{disclaimer}}</text>
+  </view>
+  
+  <!-- 模式选择 -->
+  <view class="mode-selector">
+    <view 
+      class="mode-item {{mode === 'double' ? 'active' : ''}}"
+      data-mode="double"
+      bindtap="switchMode"
+    >
+      6红1蓝
+    </view>
+    <view 
+      class="mode-item {{mode === 'lottery' ? 'active' : ''}}"
+      data-mode="lottery"
+      bindtap="switchMode"
+    >
+      5红2蓝
+    </view>
+  </view>
+  
+  <!-- 主要功能区 -->
+  <view class="main-content">
+    <!-- 号码生成区 -->
+    <view class="card primary-card">
+      <view class="card-header">
+        <text class="card-title">号码生成</text>
+      </view>
+      <view class="card-content">
+        <view class="generate-settings">
+          <text class="settings-label">生成数量：</text>
+          <view class="option-grid">
+            <view 
+              wx:for="{{generateOptions}}" 
+              wx:key="index"
+              class="option-item {{selectedGenerateCount === item ? 'active' : ''}}"
+              bindtap="setGenerateCountDirectly" 
+              data-count="{{item}}"
+            >
+              {{item}}注
+            </view>
+          </view>
+        </view>
+        <button class="generate-btn" bindtap="generateNumbers">一键生成</button>
+        
+        <!-- 生成的号码 -->
+        <view class="numbers-container" wx:if="{{redBalls.length > 0}}">
+          <view class="balls-section">
+            <text class="section-title">红球：</text>
+            <view class="balls">
+              <view class="ball red" wx:for="{{redBalls}}" wx:key="index">{{item}}</view>
+            </view>
+          </view>
+          <view class="balls-section">
+            <text class="section-title">蓝球：</text>
+            <view class="balls">
+              <view class="ball blue" wx:for="{{blueBalls}}" wx:key="index">{{item}}</view>
+            </view>
+          </view>
+          <button class="add-btn" bindtap="addToNotes">添加到注数</button>
+          <view class="export-section">
+            <button class="export-btn" bindtap="exportResult">导出投注内容</button>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 注数管理区 -->
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">注数管理</text>
+        <button class="clear-btn" bindtap="clearNotes">清空</button>
+      </view>
+      <view class="card-content">
+        <view class="notes-list">
+          <view class="note-item" wx:for="{{generatedNotes}}" wx:key="item.id">
+            <view class="note-checkbox" bindtap="toggleNote" data-id="{{item.id}}">
+              <view class="checkbox {{item.selected ? 'checked' : ''}}"></view>
+            </view>
+            <view class="note-content">
+              <view class="note-balls">
+                <view class="ball red small" wx:for="{{item.redBalls}}" wx:key="index">{{item}}</view>
+                <view class="ball blue small" wx:for="{{item.blueBalls}}" wx:key="index">{{item}}</view>
+              </view>
+            </view>
+          </view>
+          <view class="empty-note" wx:if="{{generatedNotes.length === 0}}">
+            暂无生成的注数
+          </view>
+        </view>
+        <view class="export-section" wx:if="{{generatedNotes.length > 0}}">
+          <button class="export-btn" bindtap="copyNotesToClipboard">复制到剪贴板</button>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 模拟区域 -->
+  <view class="secondary-content">
+    <!-- 定投模拟区 -->
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">定投模拟</text>
+      </view>
+      <view class="card-content">
+        <view class="investment-settings">
+          <text class="settings-label">定投期数：</text>
+          <view class="option-grid">
+            <view 
+              wx:for="{{periodOptions}}" 
+              wx:key="index"
+              class="option-item {{selectedPeriod === item ? 'active' : ''}}"
+              bindtap="setInvestmentPeriodsDirectly" 
+              data-periods="{{item}}"
+            >
+              {{item}}期
+            </view>
+          </view>
+        </view>
+        <button 
+          class="investment-btn" 
+          bindtap="startInvestment"
+          disabled="{{isInvesting}}"
+        >
+          {{isInvesting ? '模拟中...' : '开始定投模拟'}}
+        </button>
+        <text class="investment-tip">注：选择1期即为单期模拟，多期则进行定投模拟，生成指定期数的开奖结果并计算命中情况。</text>
+        
+        <!-- 模拟结果 -->
+        <view class="draw-result" wx:if="{{showDrawResult}}">
+          <view class="balls-section">
+            <text class="section-title">开奖结果：</text>
+            <view class="balls">
+              <view class="ball red" wx:for="{{drawResult.redBalls}}" wx:key="index">{{item}}</view>
+              <view class="ball blue" wx:for="{{drawResult.blueBalls}}" wx:key="index">{{item}}</view>
+            </view>
+          </view>
+          
+          <!-- 中奖金额和投资成本信息 -->
+          <view class="result-summary" wx:if="{{showMatchResult}}">
+            <view class="summary-item">
+              <text class="summary-label">投入成本：</text>
+              <text class="summary-value">¥{{singleResult.totalCost}}</text>
+            </view>
+            <view class="summary-item">
+              <text class="summary-label">总收入：</text>
+              <text class="summary-value">¥{{singleResult.totalRevenue}}</text>
+            </view>
+            <view class="summary-item">
+              <text class="summary-label">净利润：</text>
+              <text class="summary-value" style="color: {{singleResult.netProfit >= 0 ? '#27ae60' : '#e74c3c'}}">¥{{singleResult.netProfit}}
+              </text>
+            </view>
+          </view>
+          
+          <!-- 警示语 -->
+          <view class="warning" wx:if="{{showMatchResult}}">
+            <text class="warning-text">⚠️ 注：本模拟结果仅供参考，奖项金额为默认值，实际情况可能有所不同。本工具不构成任何投资建议，请理性对待。</text>
+          </view>
+          
+          <button class="share-btn" bindtap="shareResult">复制到剪贴板</button>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 匹配结果区 -->
+    <view class="card" wx:if="{{showMatchResult}}">
+      <view class="card-header">
+        <text class="card-title">匹配结果</text>
+      </view>
+      <view class="card-content">
+        <!-- 成本和收益统计 -->
+        <view class="result-summary">
+          <view class="summary-item">
+            <text class="summary-label">投入成本：</text>
+            <text class="summary-value">¥{{singleResult.totalCost.toLocaleString()}}</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">总收入：</text>
+            <text class="summary-value">¥{{singleResult.totalRevenue.toLocaleString()}}</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">净利润：</text>
+            <text class="summary-value" style="color: {{singleResult.netProfit >= 0 ? '#27ae60' : '#e74c3c'}}">¥{{singleResult.netProfit.toLocaleString()}}
+            </text>
+          </view>
+        </view>
+        
+        <!-- 警示语 -->
+        <view class="warning">
+          <text class="warning-text">⚠️ 注：本模拟结果仅供参考，奖项金额为默认值，实际情况可能有所不同。本工具不构成任何投资建议，请理性对待。</text>
+        </view>
+        
+        <!-- 每注匹配结果 -->
+        <view class="match-list">
+          <view class="match-item" wx:for="{{matchResults}}" wx:key="item.id">
+            <view class="match-balls-container">
+              <view class="match-balls">
+                <view class="ball red small" wx:for="{{item.redBalls}}" wx:key="index">{{item}}</view>
+                <view class="ball blue small" wx:for="{{item.blueBalls}}" wx:key="index">{{item}}</view>
+              </view>
+            </view>
+            <view class="match-info">
+              <text>红球：{{item.matchedRed}}个，蓝球：{{item.matchedBlue}}个</text>
+              <text class="match-level">{{item.matchLevel}}</text>
+              <text class="match-revenue" wx:if="{{item.revenue > 0}}">收益：¥{{item.revenue}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 定投结果区 -->
+    <view class="card" wx:if="{{showInvestmentResult}}">
+      <view class="card-header">
+        <text class="card-title">定投模拟结果</text>
+      </view>
+      <view class="card-content">
+        <view class="result-summary">
+          <view class="summary-item">
+            <text class="summary-label">总期数：</text>
+            <text class="summary-value">{{investmentResult.totalPeriods}}期</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">命中期数：</text>
+            <text class="summary-value">{{investmentResult.hitPeriods}}期</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">命中率：</text>
+            <text class="summary-value">{{investmentResult.hitRate}}%</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">投入成本：</text>
+            <text class="summary-value">¥{{investmentResult.totalCost}}</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">总收入：</text>
+            <text class="summary-value">¥{{investmentResult.totalRevenue}}</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-label">净利润：</text>
+            <text class="summary-value" style="color: {{investmentResult.netProfit >= 0 ? '#27ae60' : '#e74c3c'}}">¥{{investmentResult.netProfit}}
+            </text>
+          </view>
+        </view>
+        
+        <!-- 警示语 -->
+        <view class="warning">
+          <text class="warning-text">⚠️ 注：本模拟结果仅供参考，奖项金额为默认值，实际情况可能有所不同。本工具不构成任何投资建议，请理性对待。</text>
+        </view>
+        
+        <!-- 奖项统计 -->
+        <view class="award-statistics">
+          <text class="details-title">奖项统计</text>
+          <view class="award-list">
+            <view class="award-item" wx:for="{{investmentResult.awardStats}}" wx:key="name">
+              <view class="award-header">
+                <text class="award-name">{{item.name}}</text>
+                <text class="award-count">{{item.count}}个</text>
+              </view>
+              <view class="award-revenue">
+                <text class="revenue-label">累计奖金：</text>
+                <text class="revenue-value">¥{{item.revenue}}</text>
+              </view>
+            </view>
+            <view class="no-award" wx:if="{{investmentResult.awardStats.length === 0}}">
+              <text class="no-award-text">本期定投未命中任何奖项</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="export-section">
+          <button class="share-investment-btn" bindtap="shareInvestmentResult">复制到剪贴板</button>
+          <button class="export-btn" bindtap="exportInvestmentResult">导出定投结果</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

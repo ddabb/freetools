@@ -54,7 +54,8 @@
         "pages/gcd-lcm/gcd-lcm",
         "pages/prime-factorization/prime-factorization",
         "pages/24point/24point",
-        "pages/oddEven/oddEven"
+        "pages/oddEven/oddEven",
+        "pages/random-selector/random-selector"
       ]
     },
     {
