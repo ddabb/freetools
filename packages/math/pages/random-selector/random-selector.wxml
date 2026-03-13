@@ -1,28 +1,31 @@
 <view class="container">
-  <!-- 免责声明 -->
-  <view class="disclaimer">
-    <text>{{disclaimer}}</text>
+  <!-- 固定头部区域 -->
+  <view class="fixed-header">
+    <!-- 免责声明 -->
+    <view class="disclaimer">
+      <text>{{disclaimer}}</text>
+    </view>
+    
+    <!-- 模式选择 -->
+    <view class="mode-selector">
+      <view 
+        class="mode-item {{mode === 'double' ? 'active' : ''}}"
+        data-mode="double"
+        bindtap="switchMode"
+      >
+        6红1蓝
+      </view>
+      <view 
+        class="mode-item {{mode === 'lottery' ? 'active' : ''}}"
+        data-mode="lottery"
+        bindtap="switchMode"
+      >
+        5红2蓝
+      </view>
+    </view>
   </view>
   
-  <!-- 模式选择 -->
-  <view class="mode-selector">
-    <view 
-      class="mode-item {{mode === 'double' ? 'active' : ''}}"
-      data-mode="double"
-      bindtap="switchMode"
-    >
-      6红1蓝
-    </view>
-    <view 
-      class="mode-item {{mode === 'lottery' ? 'active' : ''}}"
-      data-mode="lottery"
-      bindtap="switchMode"
-    >
-      5红2蓝
-    </view>
-  </view>
-  
-  <!-- 主要功能区 -->
+  <!-- 主要内容区域（带有顶部边距） -->
   <view class="main-content">
     <!-- 号码生成区 -->
     <view class="card primary-card">
