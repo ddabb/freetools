@@ -1,0 +1,61 @@
+<!--packages/unit/pages/length-converter/length-converter.wxml-->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">长度单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 概念说明 -->
+    <view class="concept-section">
+      <view class="concept-title">长度单位概念</view>
+      <view class="concept-content">
+        <view class="concept-item">
+          <text class="concept-term">米 (m)</text>
+          <text class="concept-desc">国际单位制中的基本长度单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">千米 (km)</text>
+          <text class="concept-desc">1千米 = 1000米，常用于表示较长距离</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">厘米 (cm)</text>
+          <text class="concept-desc">1厘米 = 0.01米，常用于表示较短长度</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">毫米 (mm)</text>
+          <text class="concept-desc">1毫米 = 0.001米，常用于表示微小长度</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">英里 (mile)</text>
+          <text class="concept-desc">英制长度单位，1英里 ≈ 1609.344米</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">英尺 (ft)</text>
+          <text class="concept-desc">英制长度单位，1英尺 ≈ 0.3048米</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">英寸 (in)</text>
+          <text class="concept-desc">英制长度单位，1英寸 ≈ 0.0254米</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

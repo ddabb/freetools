@@ -1,0 +1,57 @@
+<!--packages/unit/pages/weight-converter/weight-converter.wxml-->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">重量单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 概念说明 -->
+    <view class="concept-section">
+      <view class="concept-title">重量单位概念</view>
+      <view class="concept-content">
+        <view class="concept-item">
+          <text class="concept-term">千克 (kg)</text>
+          <text class="concept-desc">国际单位制中的基本质量单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">克 (g)</text>
+          <text class="concept-desc">1克 = 0.001千克，常用于表示较小质量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">毫克 (mg)</text>
+          <text class="concept-desc">1毫克 = 0.000001千克，常用于表示微小质量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">吨 (t)</text>
+          <text class="concept-desc">1吨 = 1000千克，常用于表示较大质量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">磅 (lb)</text>
+          <text class="concept-desc">英制质量单位，1磅 ≈ 0.45359237千克</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">盎司 (oz)</text>
+          <text class="concept-desc">英制质量单位，1盎司 ≈ 0.02834952千克</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,53 @@
+<!--packages/unit/pages/volume-converter/volume-converter.wxml-->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">体积单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 概念说明 -->
+  <view class="concept-section">
+    <view class="concept-title">体积单位概念</view>
+    <view class="concept-content">
+      <view class="concept-item">
+        <view class="concept-item-title">立方米 (m³)</view>
+        <view class="concept-item-desc">国际标准单位，定义为边长为1米的立方体的体积。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">立方厘米 (cm³)</view>
+        <view class="concept-item-desc">常用于表示较小体积，1立方厘米等于0.000001立方米。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">升 (L)</view>
+        <view class="concept-item-desc">常用的容量单位，1升等于0.001立方米。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">毫升 (mL)</view>
+        <view class="concept-item-desc">常用于表示液体体积，1毫升等于0.001升。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">立方英尺 (cu ft)</view>
+        <view class="concept-item-desc">英制体积单位，1立方英尺约等于0.0283立方米。</view>
+      </view>
+    </view>
+  </view>
+</view>

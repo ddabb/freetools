@@ -1,0 +1,168 @@
+/* packages/unit/pages/volume-converter/volume-converter.wxss */
+
+/* 容器样式 */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 20rpx;
+  font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 表单容器 */
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* 表单标题 */
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.label-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.required-mark {
+  color: #ff4d4f;
+  margin-left: 8rpx;
+}
+
+/* 单位列表 */
+.unit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 单位项 */
+.unit-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding: 20rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.unit-item:hover {
+  background: #f0f0f0;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 单位标签 */
+.unit-label {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #555;
+}
+
+/* 输入框 */
+.unit-input {
+  width: 100%;
+  padding: 16rpx 20rpx;
+  font-size: 32rpx;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 8rpx;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.unit-input:focus {
+  border-color: #f5576c;
+  box-shadow: 0 0 0 4rpx rgba(245, 87, 108, 0.1);
+  outline: none;
+}
+
+/* 概念说明部分 */
+.concept-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.concept-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.concept-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.concept-item {
+  padding: 16rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.concept-item:hover {
+  background: #f0f0f0;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.concept-item-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.concept-item-desc {
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .container {
+    padding: 16rpx;
+  }
+  
+  .form-container,
+  .concept-section {
+    padding: 24rpx;
+  }
+  
+  .label-text,
+  .concept-title {
+    font-size: 28rpx;
+  }
+  
+  .unit-input {
+    font-size: 28rpx;
+  }
+  
+  .unit-label {
+    font-size: 26rpx;
+  }
+  
+  .concept-item-title {
+    font-size: 26rpx;
+  }
+  
+  .concept-item-desc {
+    font-size: 22rpx;
+  }
+}

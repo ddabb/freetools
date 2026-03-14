@@ -1,0 +1,53 @@
+<!--packages/unit/pages/area-converter/area-converter.wxml-->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">面积单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 概念说明 -->
+  <view class="concept-section">
+    <view class="concept-title">面积单位概念</view>
+    <view class="concept-content">
+      <view class="concept-item">
+        <view class="concept-item-title">平方米 (㎡)</view>
+        <view class="concept-item-desc">国际标准单位，定义为边长为1米的正方形的面积。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">平方千米 (km²)</view>
+        <view class="concept-item-desc">常用于表示较大面积，如国家、省份的面积。1平方千米等于1000000平方米。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">公顷 (ha)</view>
+        <view class="concept-item-desc">常用于农业和土地测量。1公顷等于10000平方米。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">亩</view>
+        <view class="concept-item-desc">中国传统面积单位，常用于农业。1亩约等于666.67平方米。</view>
+      </view>
+      <view class="concept-item">
+        <view class="concept-item-title">平方英尺 (sq ft)</view>
+        <view class="concept-item-desc">英制面积单位，常用于房地产。1平方英尺约等于0.0929平方米。</view>
+      </view>
+    </view>
+  </view>
+</view>

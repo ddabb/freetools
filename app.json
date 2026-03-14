@@ -30,7 +30,6 @@
       "name": "utility",
       "pages": [
         "pages/qrcode/qrcode",
-        "pages/unit-converter/unit-converter",
         "pages/password-generator/password-generator",
         "pages/text-tool/text-tool",
         "pages/leapyear/leapyear",
@@ -111,16 +110,28 @@
       "pages": [
         "pages/what-to-eat/what-to-eat"
       ]
+    },
+    {
+      "root": "packages/unit",
+      "name": "unit",
+      "pages": [
+        "pages/length-converter/length-converter",
+        "pages/weight-converter/weight-converter",
+        "pages/temperature-converter/temperature-converter",
+        "pages/area-converter/area-converter",
+        "pages/volume-converter/volume-converter",
+        "pages/time-converter/time-converter"
+      ]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life", "math"]
+      "packages": ["financial", "life", "math", "unit"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other", "math"]
+      "packages": ["financial", "life", "utility", "other", "math", "unit"]
     }
   },
   "window": {

@@ -6,8 +6,9 @@ page {
 }
 
 .container {
-  padding: 40rpx 30rpx;
+  padding: 30rpx 20rpx;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 /* 当前时间区域 */
@@ -19,45 +20,61 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
+  padding: 30rpx 20rpx;
   text-align: center;
   box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
 }
 
 .current-time-label {
   display: block;
-  font-size: 28rpx;
+  font-size: 26rpx;
   color: #666;
-  margin-bottom: 15rpx;
+  margin-bottom: 12rpx;
   font-weight: 500;
 }
 
 .current-time-value {
   display: block;
-  font-size: 42rpx;
+  font-size: 36rpx;
   font-weight: 700;
   color: #0984e3;
-  margin-bottom: 15rpx;
+  margin-bottom: 12rpx;
   font-family: 'Monaco', 'Menlo', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .current-timestamp-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10rpx;
+  margin-bottom: 8rpx;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .current-timestamp {
-  font-size: 26rpx;
+  font-size: 22rpx;
   color: #888;
   font-family: 'Monaco', 'Menlo', monospace;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .current-timestamp-sec {
-  font-size: 24rpx;
+  font-size: 20rpx;
   color: #888;
   font-family: 'Monaco', 'Menlo', monospace;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 复制按钮 */
@@ -87,16 +104,29 @@ page {
   display: flex;
   align-items: center;
   gap: 10rpx;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.result-value {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 日期时间输入框 */
 .date-time-inputs {
   display: flex;
-  gap: 20rpx;
+  gap: 10rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .date-picker, .time-picker {
   flex: 1;
+  margin: 0 5rpx;
 }
 
 /* 时间差计算区域 */
@@ -121,28 +151,29 @@ page {
 .converter-section {
   display: flex;
   flex-direction: column;
-  gap: 40rpx;
+  gap: 30rpx;
 }
 
 .converter-block {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
+  padding: 30rpx 20rpx;
   box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
 }
 
 .block-title {
-  font-size: 32rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: #333;
-  margin-bottom: 30rpx;
+  margin-bottom: 24rpx;
   text-align: center;
 }
 
 /* 输入组 */
 .input-group {
-  margin-bottom: 30rpx;
+  margin-bottom: 24rpx;
 }
 
 .input-field {
@@ -150,13 +181,16 @@ page {
   background: #f8f9fa;
   border: 2rpx solid transparent;
   border-radius: 15rpx;
-  padding: 28rpx 24rpx;
-  font-size: 30rpx;
+  padding: 24rpx 20rpx;
+  font-size: 28rpx;
   color: #333;
   font-family: 'Monaco', 'Menlo', monospace;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  margin-bottom: 20rpx;
+  margin-bottom: 16rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .input-field:focus {
@@ -168,19 +202,23 @@ page {
 /* 快速按钮 */
 .quick-buttons {
   display: flex;
-  gap: 15rpx;
+  gap: 10rpx;
+  flex-wrap: wrap;
 }
 
 .quick-btn {
   flex: 1;
+  min-width: calc(33.333% - 7rpx);
   background: linear-gradient(135deg, #74b9ff, #0984e3);
   color: white;
   border: none;
   border-radius: 12rpx;
-  padding: 20rpx;
-  font-size: 24rpx;
+  padding: 18rpx 12rpx;
+  font-size: 22rpx;
   font-weight: 600;
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .quick-btn:active {
@@ -192,17 +230,19 @@ page {
 .timezone-selector {
   display: flex;
   align-items: center;
-  margin-bottom: 30rpx;
-  padding: 20rpx;
+  margin-bottom: 24rpx;
+  padding: 16rpx;
   background: rgba(116, 185, 255, 0.1);
   border-radius: 12rpx;
+  flex-wrap: nowrap;
 }
 
 .selector-label {
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #333;
-  margin-right: 20rpx;
+  margin-right: 16rpx;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .timezone-picker {
@@ -213,10 +253,14 @@ page {
   background: white;
   border: 1rpx solid #ddd;
   border-radius: 8rpx;
-  padding: 20rpx;
-  font-size: 26rpx;
+  padding: 18rpx 12rpx;
+  font-size: 24rpx;
   color: #333;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 /* 日期时间选择器 */
@@ -286,17 +330,18 @@ page {
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20rpx;
+  gap: 16rpx;
 }
 
 .quick-item {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 20rpx;
-  padding: 30rpx 20rpx;
+  padding: 24rpx 16rpx;
   text-align: center;
   transition: all 0.3s ease;
   border: 2rpx solid transparent;
+  box-sizing: border-box;
 }
 
 .quick-item:active {
@@ -311,17 +356,23 @@ page {
 
 .quick-name {
   display: block;
-  font-size: 26rpx;
+  font-size: 24rpx;
   font-weight: 600;
   color: #74b9ff;
-  margin-bottom: 10rpx;
+  margin-bottom: 8rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .quick-value {
   display: block;
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #666;
   font-family: 'Monaco', 'Menlo', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 帮助区域 */
@@ -329,31 +380,33 @@ page {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
   border-radius: 25rpx;
-  padding: 40rpx 30rpx;
+  padding: 30rpx 20rpx;
   box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
   animation: fadeInUp 0.6s ease-out;
+  box-sizing: border-box;
 }
 
 .help-title {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: #333;
-  margin-bottom: 25rpx;
+  margin-bottom: 20rpx;
   text-align: center;
 }
 
 .help-content {
   display: flex;
   flex-direction: column;
-  gap: 15rpx;
+  gap: 12rpx;
 }
 
 .help-text {
-  font-size: 26rpx;
+  font-size: 24rpx;
   color: #555;
   line-height: 1.5;
-  padding-left: 20rpx;
+  padding-left: 16rpx;
   position: relative;
+  word-wrap: break-word;
 }
 
 .help-text:before {

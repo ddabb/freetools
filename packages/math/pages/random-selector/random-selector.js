@@ -248,6 +248,7 @@ Page({
       mode
     });
     
+    // 先显示开奖结果，再显示匹配结果
     this.setData({
       drawResult: {
         redBalls,
@@ -256,18 +257,20 @@ Page({
       showDrawResult: true,
       // 初始化为空结果
       matchResults: [],
-      showMatchResult: true,
+      showMatchResult: false,
       singleResult: {
         totalCost: 0,
         totalRevenue: 0,
         netProfit: 0
       }
+    }, () => {
+      // 延迟计算匹配结果，确保开奖结果先显示
+      setTimeout(() => {
+        this.calculateMatch();
+      }, 100);
     });
     
     console.log('[simulateResult] 初始化 singleResult:', this.data.singleResult);
-    
-    // 计算匹配结果
-    this.calculateMatch();
   },
 
   // 计算匹配结果
@@ -546,191 +549,238 @@ Page({
       return;
     }
     
-    const selectedNotes = generatedNotes;
+    const selectedNotes = generatedNotes.filter(note => note.selected);
     
     this.setData({
       isInvesting: true,
       showInvestmentResult: false
     });
     
-    // 模拟指定期数
-    const totalPeriods = investmentSettings.periods;
-    const hitDetails = [];
-    let hitPeriods = 0;
-    
-    for (let i = 0; i < totalPeriods; i++) {
-      // 生成当期结果
-      const currentDraw = this.generateResultNumbers(mode);
+    // 使用setTimeout避免UI阻塞
+    setTimeout(() => {
+      // 模拟指定期数
+      const totalPeriods = investmentSettings.periods;
+      const hitDetails = [];
+      let hitPeriods = 0;
       
-      // 检查每注是否命中
-      const currentHitStatus = selectedNotes.map(note => {
-        const matchedRed = note.redBalls.filter(ball => currentDraw.redBalls.includes(ball)).length;
-        const matchedBlue = note.blueBalls.filter(ball => currentDraw.blueBalls.includes(ball)).length;
+      for (let i = 0; i < totalPeriods; i++) {
+        // 生成当期结果
+        const currentDraw = this.generateResultNumbers(mode);
         
-        let matchLevel = '';
+        // 检查每注是否命中
+        const currentHitStatus = selectedNotes.map(note => {
+          const matchedRed = note.redBalls.filter(ball => currentDraw.redBalls.includes(ball)).length;
+          const matchedBlue = note.blueBalls.filter(ball => currentDraw.blueBalls.includes(ball)).length;
+          
+          let matchLevel = '';
+          
+          // 根据模式计算匹配等级
+          if (mode === 'double') {
+            // 双色球（6红1蓝）模式匹配规则
+            if (matchedRed === 6 && matchedBlue === 1) {
+              matchLevel = '一等奖';
+            } else if (matchedRed === 6 && matchedBlue === 0) {
+              matchLevel = '二等奖';
+            } else if (matchedRed === 5 && matchedBlue === 1) {
+              matchLevel = '三等奖';
+            } else if (matchedRed === 5 && matchedBlue === 0) {
+              matchLevel = '四等奖';
+            } else if (matchedRed === 4 && matchedBlue === 1) {
+              matchLevel = '四等奖';
+            } else if (matchedRed === 4 && matchedBlue === 0) {
+              matchLevel = '五等奖';
+            } else if (matchedRed === 3 && matchedBlue === 1) {
+              matchLevel = '五等奖';
+            } else if (matchedRed === 2 && matchedBlue === 1) {
+              matchLevel = '六等奖';
+            } else if (matchedRed === 1 && matchedBlue === 1) {
+              matchLevel = '六等奖';
+            } else if (matchedRed === 0 && matchedBlue === 1) {
+              matchLevel = '六等奖';
+            } else {
+              matchLevel = '未中奖';
+            }
+          } else {
+            // 大乐透（5红2蓝）模式匹配规则
+            if (matchedRed === 5 && matchedBlue === 2) {
+              matchLevel = '一等奖';
+            } else if (matchedRed === 5 && matchedBlue === 1) {
+              matchLevel = '二等奖';
+            } else if (matchedRed === 5 && matchedBlue === 0) {
+              matchLevel = '三等奖';
+            } else if (matchedRed === 4 && matchedBlue === 2) {
+              matchLevel = '三等奖';
+            } else if (matchedRed === 4 && matchedBlue === 1) {
+              matchLevel = '四等奖';
+            } else if (matchedRed === 3 && matchedBlue === 2) {
+              matchLevel = '四等奖';
+            } else if (matchedRed === 4 && matchedBlue === 0) {
+              matchLevel = '五等奖';
+            } else if (matchedRed === 3 && matchedBlue === 1) {
+              matchLevel = '五等奖';
+            } else if (matchedRed === 2 && matchedBlue === 2) {
+              matchLevel = '五等奖';
+            } else if (matchedRed === 3 && matchedBlue === 0) {
+              matchLevel = '六等奖';
+            } else if (matchedRed === 1 && matchedBlue === 2) {
+              matchLevel = '六等奖';
+            } else if (matchedRed === 2 && matchedBlue === 1) {
+              matchLevel = '六等奖';
+            } else if (matchedRed === 0 && matchedBlue === 2) {
+              matchLevel = '六等奖';
+            } else {
+              matchLevel = '未中奖';
+            }
+          }
+          
+          return {
+            ...note,
+            matchedRed,
+            matchedBlue,
+            matchLevel
+          };
+        });
         
-        // 根据模式计算匹配等级
-        if (mode === 'double') {
-          // 双色球（6红1蓝）模式匹配规则
-          if (matchedRed === 6 && matchedBlue === 1) {
-            matchLevel = '一等奖';
-          } else if (matchedRed === 6 && matchedBlue === 0) {
-            matchLevel = '二等奖';
-          } else if (matchedRed === 5 && matchedBlue === 1) {
-            matchLevel = '三等奖';
-          } else if (matchedRed === 5 && matchedBlue === 0) {
-            matchLevel = '四等奖';
-          } else if (matchedRed === 4 && matchedBlue === 1) {
-            matchLevel = '四等奖';
-          } else if (matchedRed === 4 && matchedBlue === 0) {
-            matchLevel = '五等奖';
-          } else if (matchedRed === 3 && matchedBlue === 1) {
-            matchLevel = '五等奖';
-          } else if (matchedRed === 2 && matchedBlue === 1) {
-            matchLevel = '六等奖';
-          } else if (matchedRed === 1 && matchedBlue === 1) {
-            matchLevel = '六等奖';
-          } else if (matchedRed === 0 && matchedBlue === 1) {
-            matchLevel = '六等奖';
-          } else {
-            matchLevel = '未中奖';
-          }
-        } else {
-          // 大乐透（5红2蓝）模式匹配规则
-          if (matchedRed === 5 && matchedBlue === 2) {
-            matchLevel = '一等奖';
-          } else if (matchedRed === 5 && matchedBlue === 1) {
-            matchLevel = '二等奖';
-          } else if (matchedRed === 5 && matchedBlue === 0) {
-            matchLevel = '三等奖';
-          } else if (matchedRed === 4 && matchedBlue === 2) {
-            matchLevel = '三等奖';
-          } else if (matchedRed === 4 && matchedBlue === 1) {
-            matchLevel = '四等奖';
-          } else if (matchedRed === 3 && matchedBlue === 2) {
-            matchLevel = '四等奖';
-          } else if (matchedRed === 4 && matchedBlue === 0) {
-            matchLevel = '五等奖';
-          } else if (matchedRed === 3 && matchedBlue === 1) {
-            matchLevel = '五等奖';
-          } else if (matchedRed === 2 && matchedBlue === 2) {
-            matchLevel = '五等奖';
-          } else if (matchedRed === 3 && matchedBlue === 0) {
-            matchLevel = '六等奖';
-          } else if (matchedRed === 1 && matchedBlue === 2) {
-            matchLevel = '六等奖';
-          } else if (matchedRed === 2 && matchedBlue === 1) {
-            matchLevel = '六等奖';
-          } else if (matchedRed === 0 && matchedBlue === 2) {
-            matchLevel = '六等奖';
-          } else {
-            matchLevel = '未中奖';
-          }
+        // 检查当期是否有命中
+        const hasHit = currentHitStatus.some(item => item.matchLevel !== '未中奖');
+        if (hasHit) {
+          hitPeriods++;
         }
         
-        return {
-          ...note,
-          matchedRed,
-          matchedBlue,
-          matchLevel
-        };
-      });
-      
-      // 检查当期是否有命中
-      const hasHit = currentHitStatus.some(item => item.matchLevel !== '未中奖');
-      if (hasHit) {
-        hitPeriods++;
-      }
-      
-      hitDetails.push({
-        period: i + 1,
-        drawResult: currentDraw,
-        hitStatus: currentHitStatus,
-        hasHit: hasHit
-      });
-    }
-    
-    const hitRate = (hitPeriods / totalPeriods * 100).toFixed(2);
-    
-    // 计算投入成本和总收入（模拟）
-    const costPerNote = 2; // 每注成本
-    const totalNotes = selectedNotes.length;
-    const totalCost = totalPeriods * totalNotes * costPerNote;
-    
-    // 模拟收入（根据命中情况）
-    let totalRevenue = 0;
-    
-    // 初始化奖项统计
-    const awardStats = [
-      { name: '一等奖', count: 0, revenue: 0 },
-      { name: '二等奖', count: 0, revenue: 0 },
-      { name: '三等奖', count: 0, revenue: 0 },
-      { name: '四等奖', count: 0, revenue: 0 },
-      { name: '五等奖', count: 0, revenue: 0 },
-      { name: '六等奖', count: 0, revenue: 0 }
-    ];
-    
-    hitDetails.forEach(detail => {
-      if (detail.hasHit) {
-        detail.hitStatus.forEach(status => {
-          if (status.matchLevel !== '未中奖') {
-            // 根据命中等级模拟奖金
-            let revenue = 0;
-            switch (status.matchLevel) {
-              case '一等奖':
-                revenue = 5000000; // 模拟大奖
-                awardStats[0].count++;
-                awardStats[0].revenue += revenue;
-                break;
-              case '二等奖':
-                revenue = 1000000;
-                awardStats[1].count++;
-                awardStats[1].revenue += revenue;
-                break;
-              case '三等奖':
-                revenue = 50000;
-                awardStats[2].count++;
-                awardStats[2].revenue += revenue;
-                break;
-              case '四等奖':
-                revenue = 1000;
-                awardStats[3].count++;
-                awardStats[3].revenue += revenue;
-                break;
-              case '五等奖':
-                revenue = 100;
-                awardStats[4].count++;
-                awardStats[4].revenue += revenue;
-                break;
-              case '六等奖':
-                revenue = 10;
-                awardStats[5].count++;
-                awardStats[5].revenue += revenue;
-                break;
-            }
-            totalRevenue += revenue;
-          }
+        hitDetails.push({
+          period: i + 1,
+          drawResult: currentDraw,
+          hitStatus: currentHitStatus,
+          hasHit: hasHit
         });
       }
-    });
-    
-    // 过滤掉数量为0的奖项
-    const filteredAwardStats = awardStats.filter(award => award.count > 0);
-    
-    this.setData({
-      investmentResult: {
-        totalPeriods,
-        hitPeriods,
-        hitDetails,
-        hitRate,
-        totalCost,
-        totalRevenue,
-        netProfit: totalRevenue - totalCost,
-        awardStats: filteredAwardStats
-      },
-      showInvestmentResult: true,
-      isInvesting: false
-    });
+      
+      const hitRate = (hitPeriods / totalPeriods * 100).toFixed(2);
+      
+      // 计算投入成本和总收入（模拟）
+      const costPerNote = 2; // 每注成本
+      const totalNotes = selectedNotes.length;
+      const totalCost = totalPeriods * totalNotes * costPerNote;
+      
+      // 模拟收入（根据命中情况）
+      let totalRevenue = 0;
+      
+      // 初始化奖项统计
+      const awardStats = [
+        { name: '一等奖', count: 0, revenue: 0 },
+        { name: '二等奖', count: 0, revenue: 0 },
+        { name: '三等奖', count: 0, revenue: 0 },
+        { name: '四等奖', count: 0, revenue: 0 },
+        { name: '五等奖', count: 0, revenue: 0 },
+        { name: '六等奖', count: 0, revenue: 0 }
+      ];
+      
+      hitDetails.forEach(detail => {
+        if (detail.hasHit) {
+          detail.hitStatus.forEach(status => {
+            if (status.matchLevel !== '未中奖') {
+              // 根据命中等级模拟奖金 - 使用与calculateMatch方法一致的奖金标准
+              let revenue = 0;
+              if (mode === 'double') {
+                // 双色球奖金标准
+                switch (status.matchLevel) {
+                  case '一等奖':
+                    revenue = 5000000; // 模拟大奖
+                    break;
+                  case '二等奖':
+                    revenue = 200000; // 二等奖（浮动奖金，模拟20万）
+                    break;
+                  case '三等奖':
+                    revenue = 3000; // 三等奖（3000元）
+                    break;
+                  case '四等奖':
+                    revenue = 200; // 四等奖（200元）
+                    break;
+                  case '五等奖':
+                    revenue = 10; // 五等奖（10元）
+                    break;
+                  case '六等奖':
+                    revenue = 5; // 六等奖（5元）
+                    break;
+                }
+              } else {
+                // 大乐透奖金标准
+                switch (status.matchLevel) {
+                  case '一等奖':
+                    revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
+                    break;
+                  case '二等奖':
+                    revenue = 500000; // 二等奖（浮动奖金，模拟50万）
+                    break;
+                  case '三等奖':
+                    revenue = 200; // 三等奖（200元）
+                    break;
+                  case '四等奖':
+                    revenue = 50; // 四等奖（50元）
+                    break;
+                  case '五等奖':
+                    revenue = 10; // 五等奖（10元）
+                    break;
+                  case '六等奖':
+                    revenue = 5; // 六等奖（5元）
+                    break;
+                }
+              }
+              
+              // 更新奖项统计
+              switch (status.matchLevel) {
+                case '一等奖':
+                  awardStats[0].count++;
+                  awardStats[0].revenue += revenue;
+                  break;
+                case '二等奖':
+                  awardStats[1].count++;
+                  awardStats[1].revenue += revenue;
+                  break;
+                case '三等奖':
+                  awardStats[2].count++;
+                  awardStats[2].revenue += revenue;
+                  break;
+                case '四等奖':
+                  awardStats[3].count++;
+                  awardStats[3].revenue += revenue;
+                  break;
+                case '五等奖':
+                  awardStats[4].count++;
+                  awardStats[4].revenue += revenue;
+                  break;
+                case '六等奖':
+                  awardStats[5].count++;
+                  awardStats[5].revenue += revenue;
+                  break;
+              }
+              totalRevenue += revenue;
+            }
+          });
+        }
+      });
+      
+      // 过滤掉数量为0的奖项
+      const filteredAwardStats = awardStats.filter(award => award.count > 0);
+      
+      // 延迟更新数据，确保UI有足够时间响应
+      setTimeout(() => {
+        this.setData({
+          investmentResult: {
+            totalPeriods,
+            hitPeriods,
+            hitDetails,
+            hitRate,
+            totalCost,
+            totalRevenue,
+            netProfit: totalRevenue - totalCost,
+            awardStats: filteredAwardStats
+          },
+          showInvestmentResult: true,
+          isInvesting: false
+        });
+      }, 100);
+    }, 100);
   },
 
   // 生成结果号码

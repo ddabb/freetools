@@ -21,14 +21,19 @@ page {
 /* 工具列表 */
 .section {
   margin-bottom: 32rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .section-title {
   font-size: 36rpx;
   font-weight: 800;
-  color: white;
+  color: #333333;
   margin-bottom: 20rpx;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
   padding: 0 8rpx;
 }
 

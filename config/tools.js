@@ -7,7 +7,6 @@ const toolFrequency = {
   'life-countdown': 92,     // 人生A4纸
   'battery-health': 88,     // 电池健康
   'qrcode': 85,             // 二维码生成
-  'unit-converter': 82,     // 单位换算
   'time-tool': 78,          // 时间工具
   'health-calculator': 75,  // 健康计算
   'calendar': 72,           // 万年历
@@ -39,6 +38,66 @@ const toolFrequency = {
 };
 
 const tools = [
+  {
+    id: 'length-converter',
+    name: '长度换算',
+    icon: '📏',
+    color: 'blue',
+    url: '/packages/unit/pages/length-converter/length-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['长度', '单位', '换算', '转换'],
+    description: '各种长度单位的快速换算'
+  },
+  {
+    id: 'weight-converter',
+    name: '重量换算',
+    icon: '⚖️',
+    color: 'green',
+    url: '/packages/unit/pages/weight-converter/weight-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['重量', '单位', '换算', '转换'],
+    description: '各种重量单位的快速换算'
+  },
+  {
+    id: 'temperature-converter',
+    name: '温度换算',
+    icon: '🌡️',
+    color: 'red',
+    url: '/packages/unit/pages/temperature-converter/temperature-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['温度', '单位', '换算', '转换'],
+    description: '各种温度单位的快速换算'
+  },
+  {
+    id: 'area-converter',
+    name: '面积换算',
+    icon: '📐',
+    color: 'purple',
+    url: '/packages/unit/pages/area-converter/area-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['面积', '单位', '换算', '转换'],
+    description: '各种面积单位的快速换算'
+  },
+  {
+    id: 'volume-converter',
+    name: '体积换算',
+    icon: '📦',
+    color: 'orange',
+    url: '/packages/unit/pages/volume-converter/volume-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['体积', '单位', '换算', '转换'],
+    description: '各种体积单位的快速换算'
+  },
+  {
+    id: 'time-converter',
+    name: '时间换算',
+    icon: '⏰',
+    color: 'teal',
+    url: '/packages/unit/pages/time-converter/time-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['时间', '单位', '换算', '转换'],
+    description: '各种时间单位的快速换算'
+  },
   {
     id: 'mortgage',
     name: '房贷计算器',
@@ -72,17 +131,7 @@ const tools = [
     description: '生成文本和链接的二维码',
     frequency: toolFrequency['qrcode']
   },
-  {
-    id: 'unit-converter',
-    name: '单位换算',
-    icon: '🔄',
-    color: 'purple',
-    url: '/packages/utility/pages/unit-converter/unit-converter',
-    categories: ['学习工具', '生活工具'],
-    keywords: ['单位', '换算', '转换', '长度'],
-    description: '各种单位的快速换算',
-    frequency: toolFrequency['unit-converter']
-  },
+
   {
     id: 'health-calculator',
     name: '健康计算',
@@ -367,16 +416,15 @@ const categories = [
 
 // 常用工具（首页显示）
 const commonTools = [
-  tools[0],  // 房贷计算器
-  tools[1],  // 人生A4纸
-  tools[17], // 电池健康
-  tools[2],  // 二维码生成
-  tools[3],  // 单位换算
-  tools[6],  // 时间工具
-  tools[4],  // 健康计算
-  tools[5],  // 万年历
-  tools[7],  // 密码生成
-  tools[8]   // 身份证验证
+  tools[6],  // 房贷计算器
+  tools[7],  // 人生A4纸
+  tools[8],  // 二维码生成
+  tools[9],  // 健康计算
+  tools[10], // 万年历
+  tools[11], // 时间工具
+  tools[12], // 密码生成
+  tools[13], // 身份证验证
+  tools[14]  // 价格对比
 ];
 
 // 根据分类获取工具

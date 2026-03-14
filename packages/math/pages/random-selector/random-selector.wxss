@@ -1,5 +1,5 @@
 .container {
-  padding: 20rpx;
+  padding: 10rpx 20rpx;
   background-color: #f5f5f5;
   min-height: 100vh;
   padding-top: 0;
@@ -11,21 +11,26 @@
   top: 0;
   z-index: 100;
   background-color: #f5f5f5;
-  padding: 20rpx 20rpx 5rpx 20rpx;
+  padding: 5rpx 20rpx 10rpx 20rpx;
   margin: 0 -20rpx;
   box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 5rpx;
 }
 
 /* 主要内容区域 */
 .main-content {
   margin-bottom: 20rpx;
-  padding-top: 10rpx;
+  padding-top: 0;
   position: relative;
   z-index: 10;
+  margin-top: 0;
 }
 
 .secondary-content {
   margin-bottom: 20rpx;
+  position: relative;
+  z-index: 5;
+  transition: all 0.3s ease;
 }
 
 /* 免责声明 */
@@ -83,12 +88,8 @@
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   overflow: hidden;
   transition: all 0.3s ease;
-  margin-top: 0;
-}
-
-/* 号码生成区卡片 - 确保顶部间距稳定 */
-.main-content .card:first-child {
-  margin-top: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .card:hover {
@@ -133,7 +134,7 @@
 /* 投资设置 */
 .investment-settings {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   margin-bottom: 20rpx;
 }
 
@@ -162,20 +163,21 @@
 /* 选项网格 */
 .option-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10rpx;
+  flex-wrap: nowrap;
+  gap: 8rpx;
   flex: 1;
-  margin-top: 10rpx;
+  overflow-x: auto;
+  padding-bottom: 5rpx;
 }
 
 .option-item {
   flex: 1;
-  min-width: 80rpx;
-  padding: 10rpx;
+  min-width: 70rpx;
+  padding: 8rpx;
   text-align: center;
   border: 1rpx solid #e0e0e0;
   border-radius: 8rpx;
-  font-size: 14rpx;
+  font-size: 13rpx;
   color: #666;
   background-color: #f9f9f9;
   transition: all 0.3s ease;
@@ -352,6 +354,18 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10rpx;
+  align-items: center;
+}
+
+/* 确保红球蓝球在同一行 */
+.note-balls {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5rpx;
+  align-items: center;
+  margin-bottom: 5rpx;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .ball {
@@ -390,7 +404,7 @@
 /* 注数管理 */
 .generate-settings {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   margin-bottom: 20rpx;
 }
 
@@ -445,13 +459,25 @@
 
 .note-content {
   flex: 1;
+  overflow: hidden;
 }
 
 .note-balls {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 5rpx;
   margin-bottom: 5rpx;
+  align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.note-balls .ball.red.small {
+  margin-right: 2rpx;
+}
+
+.note-balls .ball.blue.small {
+  margin-left: 8rpx;
 }
 
 .empty-note {
