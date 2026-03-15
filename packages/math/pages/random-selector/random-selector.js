@@ -499,6 +499,7 @@ Page({
   setInvestmentPeriods(e) {
     const index = e.detail.value;
     const periods = this.data.periodOptions[index];
+    console.log('[setInvestmentPeriods] 更新定投期数:', { periods, index });
     this.setData({
       periodIndex: index,
       selectedPeriod: periods,
@@ -521,6 +522,7 @@ Page({
   setInvestmentPeriodsDirectly(e) {
     const periods = e.currentTarget.dataset.periods;
     const index = this.data.periodOptions.indexOf(periods);
+    console.log('[setInvestmentPeriodsDirectly] 更新定投期数:', { periods, index });
     this.setData({
       periodIndex: index,
       selectedPeriod: periods,
@@ -538,7 +540,7 @@ Page({
 
   // 开始定投
   startInvestment() {
-    const { generatedNotes, mode, investmentSettings } = this.data;
+    const { generatedNotes, mode, selectedPeriod } = this.data;
     
     if (generatedNotes.length === 0) {
       wx.showToast({
@@ -559,7 +561,7 @@ Page({
     // 使用setTimeout避免UI阻塞
     setTimeout(() => {
       // 模拟指定期数
-      const totalPeriods = investmentSettings.periods;
+      const totalPeriods = selectedPeriod;
       const hitDetails = [];
       let hitPeriods = 0;
       

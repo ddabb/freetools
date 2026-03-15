@@ -19,5 +19,24 @@
     "ignoreDevUnusedFiles": true
   },
   "libVersion": "3.14.3",
-  "condition": {}
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "质因数分解",
+          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "pages/discover/discover",
+          "pathName": "pages/discover/discover",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  }
 }

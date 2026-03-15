@@ -23,9 +23,11 @@ page {
   margin-bottom: 32rpx;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16rpx;
-  padding: 20rpx;
+  padding: 20rpx 20rpx;
   box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .section-title {
@@ -39,37 +41,21 @@ page {
 
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8rpx;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* 响应式适配 */
+/* 响应式适配 - 保持手机端统一设计 */
 @media screen and (max-width: 750rpx) {
   .container {
-    padding: 12rpx 6rpx;
+    padding: 12rpx 12rpx;
   }
   
   .tool-grid {
     gap: 6rpx;
-  }
-}
-
-@media screen and (max-width: 680rpx) {
-  .tool-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6rpx;
-  }
-}
-
-@media screen and (max-width: 520rpx) {
-  .tool-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4rpx;
-  }
-  
-  .container {
-    padding: 8rpx 4rpx;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

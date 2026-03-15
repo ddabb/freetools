@@ -21,6 +21,7 @@ const toolFrequency = {
   'onlychinese': 42,        // 中文检测
   'travel-tool': 38,        // 旅行工具
   'datediff': 35,           // 日期差计算
+  'relative-calculator': 50, // 亲戚计算器
   'gcd-lcm': 60,            // 公约数·公倍数
   'prime-factorization': 58, // 质因数分解
   '24point': 56,            // 24点速算
@@ -34,7 +35,8 @@ const toolFrequency = {
   'data-analyzer': 40,       // 数据统计器
   'chart-generator': 38,     // 图表生成器
   'timestamp-converter': 36,  // 时间戳转换器
-  'color-converter': 34      // 颜色转换器
+  'color-converter': 34,     // 颜色转换器
+  'avatar-generator': 45     // 汉字头像生成
 };
 
 const tools = [
@@ -377,6 +379,37 @@ const tools = [
     categories: ['生活工具'],
     keywords: ['吃什么', '食物', '随机', '饮食', '搭配'],
     description: '随机生成饮食建议，解决选择困难症'
+  },
+  {
+    id: 'zodiac',
+    name: '生肖查询',
+    icon: '🐴',
+    color: 'yellow',
+    url: '/packages/life/pages/zodiac/zodiac',
+    categories: ['生活工具'],
+    keywords: ['生肖', '查询', '年份', '年龄'],
+    description: '根据出生年份查询生肖和年龄'
+  },
+  {
+    id: 'relative-calculator',
+    name: '亲戚计算器',
+    icon: '👥',
+    color: 'blue',
+    url: '/packages/life/pages/relative-calculator/relative-calculator',
+    categories: ['生活工具'],
+    keywords: ['亲戚', '关系', '计算', '称呼'],
+    description: '计算亲戚之间的关系和称呼',
+    frequency: toolFrequency['relative-calculator']
+  },
+  {
+    id: 'avatar-generator',
+    name: '汉字头像生成',
+    icon: '🎨',
+    color: 'purple',
+    url: '/packages/text/pages/avatar-generator/avatar-generator',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['汉字', '头像', '生成'],
+    description: '输入汉字生成专属头像'
   }
 ];
 

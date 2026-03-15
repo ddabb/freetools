@@ -1,0 +1,82 @@
+<view class="container">
+  <!-- 计算器外壳 -->
+  <view class="calculator-shell">
+    
+    <!-- 输入显示区域 -->
+    <view class="input-display">
+      <view class="input-text {{relationshipChain.length === 0 ? 'empty-display' : 'fade-in'}}">
+        {{relationshipChain.length === 0 ? '请选择亲戚关系' : inputDisplayText}}
+      </view>
+    </view>
+    
+    <!-- 结果显示区域 -->
+    <view class="result-display {{result ? 'show-result' : ''}}">
+      <view class="result-label">称呼：</view>
+      <view class="result-text">{{result || '请选择亲戚关系'}}</view>
+    </view>
+    
+    <!-- 按钮区域 -->
+    <view class="buttons-container">
+      <!-- 第一行：操作按钮 -->
+      <view class="button-row action-row">
+        <view class="action-btn delete-btn" bindtap="deleteRelation">删除</view>
+        <view class="action-btn" bindtap="clearAll">清空</view>
+      </view>
+      
+      <!-- 第二行：子女 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="儿子" bindtap="addRelation">儿子</view>
+        <view class="relation-btn" data-relation="女儿" bindtap="addRelation">女儿</view>
+        <view class="relation-btn" data-relation="老公" bindtap="addRelation">老公</view>
+        <view class="relation-btn" data-relation="老婆" bindtap="addRelation">老婆</view>
+      </view>
+      
+      <!-- 第三行：祖父母 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="爷爷" bindtap="addRelation">爷爷</view>
+        <view class="relation-btn" data-relation="奶奶" bindtap="addRelation">奶奶</view>
+        <view class="relation-btn" data-relation="外公" bindtap="addRelation">外公</view>
+        <view class="relation-btn" data-relation="外婆" bindtap="addRelation">外婆</view>
+      </view>
+      
+      <!-- 第四行：父母 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="爸爸" bindtap="addRelation">爸爸</view>
+        <view class="relation-btn" data-relation="妈妈" bindtap="addRelation">妈妈</view>
+        <view class="relation-btn" data-relation="伯伯" bindtap="addRelation">伯伯</view>
+        <view class="relation-btn" data-relation="婶婶" bindtap="addRelation">婶婶</view>
+      </view>
+      
+      <!-- 第五行：叔叔阿姨 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="叔叔" bindtap="addRelation">叔叔</view>
+        <view class="relation-btn" data-relation="阿姨" bindtap="addRelation">阿姨</view>
+        <view class="relation-btn" data-relation="姑姑" bindtap="addRelation">姑姑</view>
+        <view class="relation-btn" data-relation="姨妈" bindtap="addRelation">姨妈</view>
+      </view>
+      
+      <!-- 第六行：兄弟姐妹 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="哥哥" bindtap="addRelation">哥哥</view>
+        <view class="relation-btn" data-relation="弟弟" bindtap="addRelation">弟弟</view>
+        <view class="relation-btn" data-relation="姐姐" bindtap="addRelation">姐姐</view>
+        <view class="relation-btn" data-relation="妹妹" bindtap="addRelation">妹妹</view>
+      </view>
+      
+      <!-- 第七行：侄甥 -->
+      <view class="button-row">
+        <view class="relation-btn" data-relation="侄子" bindtap="addRelation">侄子</view>
+        <view class="relation-btn" data-relation="侄女" bindtap="addRelation">侄女</view>
+        <view class="relation-btn" data-relation="外甥" bindtap="addRelation">外甥</view>
+        <view class="relation-btn" data-relation="外甥女" bindtap="addRelation">外甥女</view>
+      </view>
+      
+    </view>
+
+    <!-- 提示文字 -->
+    <view class="hint-text">
+      如有疑问，跟AI确认！
+    </view>
+
+  </view>
+</view>

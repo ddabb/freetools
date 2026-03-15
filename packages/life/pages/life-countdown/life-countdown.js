@@ -963,8 +963,8 @@ const PageDefinition = {
             );
           }
         };
-        img.src = '/images/lifecountdown.png';
-        console.log('二维码加载开始:', {source: '/images/lifecountdown.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
+        img.src = '/images/mini.png';
+        console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
       }
     } else {
       // 在微信小程序平台，直接使用路径绘制二维码

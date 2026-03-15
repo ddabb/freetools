@@ -1,0 +1,40 @@
+<!-- 查询区域 -->
+<view class="query-section">
+  <view class="input-group">
+    <input type="number" class="year-input" id="yearInput" value="{{year}}" bindinput="onYearInput" placeholder="请输入年份" />
+    <button class="query-btn" bindtap="onQuery">查询</button>
+  </view>
+  <view class="input-hint">请输入出生年份</view>
+</view>
+
+<!-- 结果区域 -->
+<view class="result-section">
+  <view class="zodiac-circle">
+    <view class="zodiac-icon">
+      <text class="icon">{{zodiacIcon}}</text>
+    </view>
+    <view class="zodiac-name">{{zodiacName}}</view>
+  </view>
+  <view class="birth-year">{{birthYearInfo}}</view>
+</view>
+
+<!-- 生肖列表 -->
+<view class="zodiac-list">
+  <view class="list-title">其他生肖年龄</view>
+  
+  <view wx:for="{{zodiacItems}}" wx:key="index" class="zodiac-item {{item.year == year ? 'active' : ''}}" data-year="{{item.year}}" bindtap="onZodiacItemClick">
+    <view class="zodiac-item-icon">
+      <text class="icon">{{item.icon}}</text>
+    </view>
+    <view class="zodiac-item-details">
+      <view class="zodiac-item-name">{{item.name}}</view>
+      <view class="zodiac-item-year">出生于{{item.year}}</view>
+    </view>
+    <view class="zodiac-item-age">{{item.age}}岁</view>
+  </view>
+</view>
+
+<!-- 页脚 -->
+<view class="footer">
+  © 2026 生肖查询 | 数据仅供参考
+</view>

@@ -22,7 +22,9 @@
         "pages/calendar/calendar",
         "pages/time-tool/time-tool",
         "pages/battery-health/battery-health",
-        "pages/datediff/datediff"
+        "pages/datediff/datediff",
+        "pages/zodiac/zodiac",
+        "pages/relative-calculator/relative-calculator"
       ]
     },
     {
@@ -73,7 +75,8 @@
       "pages": [
         "pages/word-counter/word-counter",
         "pages/markdown-preview/markdown-preview",
-        "pages/text-diff/text-diff"
+        "pages/text-diff/text-diff",
+        "pages/avatar-generator/avatar-generator"
       ]
     },
     {
