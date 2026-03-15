@@ -410,6 +410,17 @@ const tools = [
     categories: ['生活工具', '学习工具'],
     keywords: ['汉字', '头像', '生成'],
     description: '输入汉字生成专属头像'
+  },
+  {
+    id: 'bobing',
+    name: '福建博饼游戏',
+    icon: '🎲',
+    color: 'red',
+    url: '/packages/game/pages/bobing/bobing/bobing',
+    categories: ['生活工具', '游戏工具'],
+    keywords: ['博饼', '骰子', '游戏', '福建', '中秋'],
+    description: '福建传统博饼游戏，使用6个骰子决定奖项',
+    frequency: 50
   }
 ];
 
@@ -444,6 +455,7 @@ const categories = [
     { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具' },
     { name: '开发工具', color: 'slate', icon: '⚙️', description: '正则测试、代码工具等开发者工具' },
     { name: '安全工具', color: 'red', icon: '🔒', description: '密码生成、身份证验证等安全工具' },
+    { name: '游戏工具', color: 'pink', icon: '🎮', description: '博饼等娱乐游戏工具' },
     { name: '更多工具', color: 'teal', icon: '📱', description: '旅行等其他实用工具' }
   ];
 

@@ -6,6 +6,13 @@
   ],
   "subPackages": [
     {
+      "root": "packages/game",
+      "name": "game",
+      "pages": [
+        "pages/bobing/bobing/bobing"
+      ]
+    },
+    {
       "root": "packages/financial",
       "name": "financial",
       "pages": [

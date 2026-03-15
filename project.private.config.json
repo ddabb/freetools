@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "质因数分解",
-          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
+          "name": "packages/game/pages/bobing/bobing/bobing",
+          "pathName": "packages/game/pages/bobing/bobing/bobing",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "质因数分解",
+          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/discover/discover",

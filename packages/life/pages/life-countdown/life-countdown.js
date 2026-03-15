@@ -970,7 +970,7 @@ const PageDefinition = {
       // 在微信小程序平台，直接使用路径绘制二维码
       console.log('开始绘制二维码');
       // 绘制二维码
-      ctx.drawImage('/images/lifecountdown.png', qrX, qrY, qrSize, qrSize);
+      ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
       console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
       
       // 绘制完成后执行保存
