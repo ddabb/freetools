@@ -1,6 +1,6 @@
-/* emoji-to-png.wxss */
+/* emoji-to-png.wxss - 优化版 */
 
-/* 全局样式 - 替换不支持的通配符选择器 */
+/* 全局样式 */
 page {
   margin: 0;
   padding: 0;
@@ -60,51 +60,6 @@ page {
   margin-top: 8rpx;
 }
 
-/* 背景选择样式 */
-.background-section {
-  margin-top: 32rpx;
-}
-
-.background-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-  margin-top: 16rpx;
-}
-
-.background-option {
-  flex: 1 1 calc(33.333% - 14rpx);
-  min-width: 120rpx;
-}
-
-.background-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16rpx;
-  border: 2rpx solid #e0e0e0;
-  border-radius: 8rpx;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.background-label.checked {
-  border-color: #3498db;
-  background-color: rgba(52, 152, 219, 0.05);
-}
-
-.background-preview {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 8rpx;
-  margin-bottom: 8rpx;
-}
-
-.background-label div:last-child {
-  font-size: 24rpx;
-  color: #333333;
-}
-
 /* 预览区域样式 */
 .preview-section {
   background: #ffffff;
@@ -128,11 +83,11 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16rpx;
+  border-radius: 50%;
   font-size: 120rpx;
   transition: all 0.3s;
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 10rpx 25rpx rgba(0, 0, 0, 0.2);
 }
 
 .preview-info {
@@ -176,13 +131,6 @@ page {
   opacity: 0.9;
   transform: translateY(-2rpx);
   box-shadow: 0 4rpx 12rpx rgba(52, 152, 219, 0.3);
-}
-
-.btn-primary:disabled {
-  background: #bdc3c7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 .btn-secondary {

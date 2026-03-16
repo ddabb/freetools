@@ -165,7 +165,7 @@
     <!-- 操作按钮 -->
     <view class="action-section">
       <button 
-        class="primary-btn {{text.trim().length > 0 ? 'ready' : ''}}"
+        class="primary-btn {{canGenerate ? 'ready' : ''}}"
         bindtap="generate"
         disabled="{{!canGenerate}}"
         hover-class="btn-primary-hover"

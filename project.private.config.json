@@ -23,11 +23,25 @@
     "miniprogram": {
       "list": [
         {
-          "name": "质因数分解",
-          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
+          "name": "亲戚计算器",
+          "pathName": "packages/life/pages/relative-calculator/relative-calculator",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "emoji转png",
+          "pathName": "packages/text/pages/emoji-to-png/emoji-to-png",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "质因数分解",
+          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "pages/discover/discover",

@@ -1,28 +1,15 @@
-// Emoji转PNG页面逻辑
+// Emoji转PNG页面逻辑（简化版）
 Page({
   data: {
     inputEmoji: '',
-    selectedBackground: 'white',
     canExport: false,
     isLoading: false,
     previewEmoji: '😀',
-    previewStyle: 'background: #ffffff; border: 1px solid #e0e0e0;'
-  },
-
-  // 背景配置
-  backgrounds: {
-    white: {
-      name: '白色',
-      style: 'background: #ffffff; border: 1px solid #e0e0e0;'
-    },
-    black: {
-      name: '黑色',
-      style: 'background: #000000;'
-    },
-    transparent: {
-      name: '透明',
-      style: 'background: transparent;'
-    }
+    previewStyle: 'background: rgba(255, 255, 255, 0.1); border-radius: 0; box-shadow: 0 0 0 transparent;',
+    
+    // 画布尺寸配置
+    canvasWidth: 200,
+    canvasHeight: 200
   },
 
   // 检查输入是否为有效emoji
@@ -55,21 +42,12 @@ Page({
     const inputValue = this.data.inputEmoji.trim();
     const validation = this.isValidEmoji(inputValue);
     
-    const background = this.backgrounds[this.data.selectedBackground];
-    
-    if (!validation.valid) {
-      this.setData({
-        previewEmoji: '😀',
-        canExport: false,
-        previewStyle: background.style
-      });
-    } else {
-      this.setData({
-        previewEmoji: inputValue,
-        canExport: true,
-        previewStyle: background.style
-      });
-    }
+    // 无论输入是否有效，都可以导出图片
+    // 如果输入无效，显示默认emoji；如果输入有效，显示输入的emoji
+    this.setData({
+      previewEmoji: validation.valid ? inputValue : '😀',
+      canExport: true // 始终允许导出
+    });
   },
 
   // 输入emoji变化
@@ -80,93 +58,144 @@ Page({
     this.updatePreview();
   },
 
-  // 背景选择变化
-  onBackgroundChange(e) {
-    this.setData({
-      selectedBackground: e.detail.value
-    });
-    this.updatePreview();
-  },
-
   // 重置表单
   resetForm() {
     this.setData({
-      inputEmoji: '',
-      selectedBackground: 'white'
+      inputEmoji: ''
     });
     this.updatePreview();
   },
 
-  // 导出PNG图片
-  async exportAsPNG() {
-    const inputValue = this.data.inputEmoji.trim();
-    const validation = this.isValidEmoji(inputValue);
-    
-    if (!validation.valid) {
-      wx.showToast({
-        title: `输入无效: ${validation.message}`,
-        icon: 'none'
-      });
-      return;
-    }
-    
-    this.setData({ isLoading: true });
+  // 生成emoji PNG图片
+  generateEmojiPNG() {
+    const that = this;
     
     try {
-      // 获取canvas上下文
-      const canvas = wx.createCanvasContext('emojiCanvas');
+      const inputEmoji = this.data.inputEmoji.trim() || '😀';
       
-      // 绘制背景
-      const background = this.backgrounds[this.data.selectedBackground];
-      if (background.name !== '透明') {
-        canvas.fillStyle = background.name === '白色' ? '#ffffff' : '#000000';
-        canvas.fillRect(0, 0, 800, 800);
-      }
+      console.log('开始生成emoji PNG:', {
+        inputEmoji: inputEmoji
+      });
       
-      // 绘制emoji
-      canvas.font = '300px Arial, sans-serif';
-      canvas.textAlign = 'center';
-      canvas.textBaseline = 'middle';
-      canvas.fillText(inputValue, 400, 400);
+      // 使用life-countdown的方式直接创建Canvas上下文
+      const ctx = wx.createCanvasContext('emojiCanvas', this);
       
-      // 绘制完成
-      canvas.draw(false, () => {
+      // 固定画布尺寸为256x256像素（适合大多数emoji）
+      const canvasWidth = 256;
+      const canvasHeight = 256;
+      
+      // 首先清空画布（保持透明背景）
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      
+      // 使用一个较大的字体确保emoji填满画布
+      const fontSize = 200;
+      ctx.font = `normal ${fontSize}px Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#000000'; // emoji颜色
+      
+      // 绘制emoji（居中显示）
+      ctx.fillText(inputEmoji, canvasWidth / 2, canvasHeight / 2);
+      
+      // 绘制完成后保存图片
+      console.log('Canvas绘制完成，开始生成PNG图片');
+      
+      // 执行绘制
+      ctx.draw(false, function() {
+        // 使用life-countdown的方式保存图片
         wx.canvasToTempFilePath({
           canvasId: 'emojiCanvas',
-          width: 800,
-          height: 800,
-          destWidth: 800,
-          destHeight: 800,
+          x: 0,
+          y: 0,
+          width: canvasWidth,
+          height: canvasHeight,
+          destWidth: canvasWidth, // 输出256x256像素的图片
+          destHeight: canvasHeight,
+          quality: 0.7, // 降低图片质量以减小文件大小
+          fileType: 'png',
           success: (res) => {
-            wx.saveImageToPhotosAlbum({
-              filePath: res.tempFilePath,
-              success: () => {
-                wx.showToast({
-                  title: '图片已保存到相册',
-                  icon: 'success'
-                });
-              },
-              fail: (err) => {
-                console.error('保存图片失败:', err);
-                wx.showToast({
-                  title: '保存图片失败，请重试',
-                  icon: 'none'
-                });
-              }
-            });
+            console.log('PNG图片生成成功:', res.tempFilePath);
+            that.saveImageToAlbum(res.tempFilePath);
           },
           fail: (err) => {
-            console.error('生成图片失败:', err);
+            console.error('生成PNG图片失败:', err);
             wx.showToast({
               title: '生成图片失败，请重试',
               icon: 'none'
             });
-          },
-          complete: () => {
-            this.setData({ isLoading: false });
+            that.setData({ isLoading: false });
           }
         });
       });
+    } catch (error) {
+      console.error('Canvas绘制过程中出错:', error);
+      wx.showToast({
+        title: '生成图片失败，请重试',
+        icon: 'none'
+      });
+      that.setData({ isLoading: false });
+    }
+  },
+
+  // 保存图片到相册
+  saveImageToAlbum(tempFilePath) {
+    wx.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: () => {
+        console.log('图片保存到相册成功');
+        wx.showToast({
+          title: '图片已保存到相册',
+          icon: 'success'
+        });
+        this.setData({ isLoading: false });
+      },
+      fail: (err) => {
+        console.error('保存图片到相册失败:', err);
+        
+        // 处理权限拒绝的情况
+        if (err.errMsg && (err.errMsg.includes('auth denied') || err.errMsg.includes('auth deny'))) {
+          wx.showModal({
+            title: '提示',
+            content: '需要您授权保存相册权限',
+            showCancel: true,
+            success: (res) => {
+              if (res.confirm) {
+                wx.openSetting({
+                  success: (settingRes) => {
+                    console.log('打开设置页面:', settingRes);
+                  }
+                });
+              }
+              this.setData({ isLoading: false });
+            }
+          });
+        } else {
+          wx.showToast({
+            title: '保存失败，请重试',
+            icon: 'none'
+          });
+          this.setData({ isLoading: false });
+        }
+      }
+    });
+  },
+
+  // 导出PNG图片（主函数）
+  exportAsPNG() {
+    const inputValue = this.data.inputEmoji.trim();
+    
+    this.setData({ isLoading: true });
+    
+    try {
+      console.log('开始导出PNG图片，参数:', {
+        inputEmoji: inputValue || '😀' // 如果没有输入，使用默认emoji
+      });
+      
+      // 延迟执行以确保UI更新
+      setTimeout(() => {
+        this.generateEmojiPNG();
+      }, 100);
+      
     } catch (error) {
       console.error('导出图片时出错:', error);
       wx.showToast({

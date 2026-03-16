@@ -36,7 +36,8 @@ const toolFrequency = {
   'chart-generator': 38,     // 图表生成器
   'timestamp-converter': 36,  // 时间戳转换器
   'color-converter': 34,     // 颜色转换器
-  'avatar-generator': 45     // 汉字头像生成
+  'avatar-generator': 45,     // 汉字头像生成
+  'emoji-to-png': 42         // Emoji转PNG
 };
 
 const tools = [
@@ -410,6 +411,17 @@ const tools = [
     categories: ['生活工具', '学习工具'],
     keywords: ['汉字', '头像', '生成'],
     description: '输入汉字生成专属头像'
+  },
+  {
+    id: 'emoji-to-png',
+    name: 'Emoji转PNG',
+    icon: '🖼️',
+    color: 'pink',
+    url: '/packages/text/pages/emoji-to-png/emoji-to-png',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['emoji', 'PNG', '图片', '转换'],
+    description: '将单个emoji转换为小文件PNG图片',
+    frequency: toolFrequency['emoji-to-png']
   }
 ];
 
