@@ -21,7 +21,20 @@
         </view>
       </view>
     </view>
-    
+
+    <!-- 小程序码卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">📱 小程序码</text>
+      </view>
+      <view class="project-content">
+        <view class="mini-program-qr">
+          <image class="qr-image" src="../../images/mini.png" mode="aspectFit"></image>
+          <text class="mini-program-name">随身工具宝</text>
+          <text class="mini-program-desc">扫描二维码，随时随地使用实用工具</text>
+        </view>
+      </view>
+    </view>
 
     <!-- 隐私声明卡片 -->
     <view class="project-card">
