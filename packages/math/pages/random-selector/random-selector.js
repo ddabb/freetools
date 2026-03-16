@@ -1,20 +1,20 @@
 // packages/math/pages/random-selector/random-selector.js
 Page({
   data: {
-    // 选号模式：'double'（六红一蓝）或 'lottery'（五红两蓝）
+    // 选号模式：'double'（六棕一绿）或 'lottery'（五棕两绿）
     mode: 'double',
-    // 红球号码
-    redBalls: [],
-    // 蓝球号码
-    blueBalls: [],
+    // 棕球号码
+    brownBalls: [],
+    // 绿球号码
+    greenBalls: [],
     // 生成的注数
     generatedNotes: [],
     // 选中的注数
     selectedNotes: [],
     // 模拟结果
     drawResult: {
-      redBalls: [],
-      blueBalls: []
+      brownBalls: [],
+      greenBalls: []
     },
     // 是否显示模拟结果
     showDrawResult: false,
@@ -57,8 +57,15 @@ Page({
     selectedPeriod: 5,
     // 定投区域显示控制
     showInvestmentSection: false,
-    // 免责声明
-    disclaimer: '本工具仅为随机模拟，不涉及真实彩票销售或预测，结果不具备任何参考价值。模拟娱乐，与真实彩票无关。'
+    // 卡片展开状态（默认全部展开）
+    expandedCards: {
+      generate: true,
+      notes: true,
+      batch: true,
+      result: true,
+      match: true,
+      investment: true
+    }
   },
 
   // 切换选号模式
@@ -68,14 +75,32 @@ Page({
     
     this.setData({
       mode,
-      redBalls: [],
-      blueBalls: [],
+      brownBalls: [],
+      greenBalls: [],
       generatedNotes: [],
       selectedNotes: [],
       showDrawResult: false,
       showMatchResult: false,
       showInvestmentResult: false
     });
+  },
+
+  // 卡片展开/收起功能
+  toggleCard(e) {
+    const cardType = e.currentTarget.dataset.card;
+    const currentExpanded = this.data.expandedCards[cardType];
+    
+    // 更新卡片展开状态
+    const newExpandedCards = {
+      ...this.data.expandedCards,
+      [cardType]: !currentExpanded
+    };
+    
+    this.setData({
+      expandedCards: newExpandedCards
+    });
+    
+    console.log('[toggleCard] 卡片状态切换:', { cardType, expanded: !currentExpanded });
   },
 
   // 生成随机号码
@@ -85,40 +110,40 @@ Page({
     
     // 生成指定数量的号码组合
     for (let i = 0; i < selectedGenerateCount; i++) {
-      let redBalls = [];
-      let blueBalls = [];
+      let brownBalls = [];
+      let greenBalls = [];
       
-      // 生成红球
-      const redRange = mode === 'double' ? 33 : 35;
-      const redCount = mode === 'double' ? 6 : 5;
+      // 生成棕球
+      const brownRange = mode === 'double' ? 33 : 35;
+      const brownCount = mode === 'double' ? 6 : 5;
       
-      while (redBalls.length < redCount) {
-        const num = Math.floor(Math.random() * redRange) + 1;
-        if (!redBalls.includes(num)) {
-          redBalls.push(num);
+      while (brownBalls.length < brownCount) {
+        const num = Math.floor(Math.random() * brownRange) + 1;
+        if (!brownBalls.includes(num)) {
+          brownBalls.push(num);
         }
       }
       
-      // 生成蓝球
-      const blueRange = mode === 'double' ? 16 : 12;
-      const blueCount = mode === 'double' ? 1 : 2;
+      // 生成绿球
+      const greenRange = mode === 'double' ? 16 : 12;
+      const greenCount = mode === 'double' ? 1 : 2;
       
-      while (blueBalls.length < blueCount) {
-        const num = Math.floor(Math.random() * blueRange) + 1;
-        if (!blueBalls.includes(num)) {
-          blueBalls.push(num);
+      while (greenBalls.length < greenCount) {
+        const num = Math.floor(Math.random() * greenRange) + 1;
+        if (!greenBalls.includes(num)) {
+          greenBalls.push(num);
         }
       }
       
       // 排序
-      redBalls.sort((a, b) => a - b);
-      blueBalls.sort((a, b) => a - b);
+      brownBalls.sort((a, b) => a - b);
+      greenBalls.sort((a, b) => a - b);
       
       // 添加到生成注数
       generatedNotes.push({
         id: Date.now() + i,
-        redBalls: [...redBalls],
-        blueBalls: [...blueBalls],
+        brownBalls: [...brownBalls],
+        greenBalls: [...greenBalls],
         selected: true
       });
     }
@@ -138,8 +163,8 @@ Page({
     // 如果只生成一注，也更新当前显示的号码
     if (selectedGenerateCount === 1 && generatedNotes.length > 0) {
       this.setData({
-        redBalls: generatedNotes[0].redBalls,
-        blueBalls: generatedNotes[0].blueBalls,
+        brownBalls: generatedNotes[0].brownBalls,
+        greenBalls: generatedNotes[0].greenBalls,
         generatedNotes: updatedGeneratedNotes,
         selectedNotes: updatedSelectedNotes
       });
@@ -154,9 +179,9 @@ Page({
 
   // 添加当前显示的号码到生成注数
   addToNotes() {
-    const { redBalls, blueBalls, generatedNotes } = this.data;
+    const { brownBalls, greenBalls, generatedNotes } = this.data;
     
-    if (redBalls.length === 0) {
+    if (brownBalls.length === 0) {
       wx.showToast({
         title: '请先生成号码',
         icon: 'none',
@@ -167,8 +192,8 @@ Page({
     
     const note = {
       id: Date.now(),
-      redBalls: [...redBalls],
-      blueBalls: [...blueBalls],
+      brownBalls: [...brownBalls],
+      greenBalls: [...greenBalls],
       selected: true
     };
     
@@ -213,46 +238,46 @@ Page({
   // 模拟结果
   simulateResult() {
     const { mode } = this.data;
-    let redBalls = [];
-    let blueBalls = [];
+    let brownBalls = [];
+    let greenBalls = [];
     
-    // 生成红球
-    const redRange = mode === 'double' ? 33 : 35;
-    const redCount = mode === 'double' ? 6 : 5;
+    // 生成棕球
+    const brownRange = mode === 'double' ? 33 : 35;
+    const brownCount = mode === 'double' ? 6 : 5;
     
-    while (redBalls.length < redCount) {
-      const num = Math.floor(Math.random() * redRange) + 1;
-      if (!redBalls.includes(num)) {
-        redBalls.push(num);
+    while (brownBalls.length < brownCount) {
+      const num = Math.floor(Math.random() * brownRange) + 1;
+      if (!brownBalls.includes(num)) {
+        brownBalls.push(num);
       }
     }
     
-    // 生成蓝球
-    const blueRange = mode === 'double' ? 16 : 12;
-    const blueCount = mode === 'double' ? 1 : 2;
+    // 生成绿球
+    const greenRange = mode === 'double' ? 16 : 12;
+    const greenCount = mode === 'double' ? 1 : 2;
     
-    while (blueBalls.length < blueCount) {
-      const num = Math.floor(Math.random() * blueRange) + 1;
-      if (!blueBalls.includes(num)) {
-        blueBalls.push(num);
+    while (greenBalls.length < greenCount) {
+      const num = Math.floor(Math.random() * greenRange) + 1;
+      if (!greenBalls.includes(num)) {
+        greenBalls.push(num);
       }
     }
     
     // 排序
-    redBalls.sort((a, b) => a - b);
-    blueBalls.sort((a, b) => a - b);
+    brownBalls.sort((a, b) => a - b);
+    greenBalls.sort((a, b) => a - b);
     
     console.log('[simulateResult] 模拟开奖结果:', {
-      redBalls,
-      blueBalls,
+      brownBalls,
+      greenBalls,
       mode
     });
     
     // 先显示开奖结果，再显示匹配结果
     this.setData({
       drawResult: {
-        redBalls,
-        blueBalls
+        brownBalls,
+        greenBalls
       },
       showDrawResult: true,
       // 初始化为空结果
@@ -283,43 +308,43 @@ Page({
     let totalRevenue = 0;
     
     const matchResults = selectedNotes.length > 0 ? selectedNotes.map(note => {
-      const matchedRed = note.redBalls.filter(ball => drawResult.redBalls.includes(ball)).length;
-      const matchedBlue = note.blueBalls.filter(ball => drawResult.blueBalls.includes(ball)).length;
+      const matchedBrown = note.brownBalls.filter(ball => drawResult.brownBalls.includes(ball)).length;
+      const matchedGreen = note.greenBalls.filter(ball => drawResult.greenBalls.includes(ball)).length;
       
       let matchLevel = '';
       let revenue = 0;
       
       // 根据模式计算匹配等级和收益
       if (mode === 'double') {
-        // 双色球（6红1蓝）模式匹配规则 - 实际奖金标准
-        if (matchedRed === 6 && matchedBlue === 1) {
+        // 模式1（6棕1绿）模式匹配规则 - 实际奖金标准
+        if (matchedBrown === 6 && matchedGreen === 1) {
           matchLevel = '一等奖';
           revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
-        } else if (matchedRed === 6 && matchedBlue === 0) {
+        } else if (matchedBrown === 6 && matchedGreen === 0) {
           matchLevel = '二等奖';
           revenue = 200000; // 二等奖（浮动奖金，模拟20万）
-        } else if (matchedRed === 5 && matchedBlue === 1) {
+        } else if (matchedBrown === 5 && matchedGreen === 1) {
           matchLevel = '三等奖';
           revenue = 3000; // 三等奖（3000元）
-        } else if (matchedRed === 5 && matchedBlue === 0) {
+        } else if (matchedBrown === 5 && matchedGreen === 0) {
           matchLevel = '四等奖';
           revenue = 200; // 四等奖（200元）
-        } else if (matchedRed === 4 && matchedBlue === 1) {
+        } else if (matchedBrown === 4 && matchedGreen === 1) {
           matchLevel = '四等奖';
           revenue = 200; // 四等奖（200元）
-        } else if (matchedRed === 4 && matchedBlue === 0) {
+        } else if (matchedBrown === 4 && matchedGreen === 0) {
           matchLevel = '五等奖';
           revenue = 10; // 五等奖（10元）
-        } else if (matchedRed === 3 && matchedBlue === 1) {
+        } else if (matchedBrown === 3 && matchedGreen === 1) {
           matchLevel = '五等奖';
           revenue = 10; // 五等奖（10元）
-        } else if (matchedRed === 2 && matchedBlue === 1) {
+        } else if (matchedBrown === 2 && matchedGreen === 1) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
-        } else if (matchedRed === 1 && matchedBlue === 1) {
+        } else if (matchedBrown === 1 && matchedGreen === 1) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
-        } else if (matchedRed === 0 && matchedBlue === 1) {
+        } else if (matchedBrown === 0 && matchedGreen === 1) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
         } else {
@@ -327,44 +352,44 @@ Page({
           revenue = 0;
         }
       } else {
-        // 大乐透（5红2蓝）模式匹配规则 - 实际奖金标准
-        if (matchedRed === 5 && matchedBlue === 2) {
+        // 模式2（5棕2绿）模式匹配规则 - 实际奖金标准
+        if (matchedBrown === 5 && matchedGreen === 2) {
           matchLevel = '一等奖';
           revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
-        } else if (matchedRed === 5 && matchedBlue === 1) {
+        } else if (matchedBrown === 5 && matchedGreen === 1) {
           matchLevel = '二等奖';
           revenue = 500000; // 二等奖（浮动奖金，模拟50万）
-        } else if (matchedRed === 5 && matchedBlue === 0) {
+        } else if (matchedBrown === 5 && matchedGreen === 0) {
           matchLevel = '三等奖';
           revenue = 200; // 三等奖（200元）
-        } else if (matchedRed === 4 && matchedBlue === 2) {
+        } else if (matchedBrown === 4 && matchedGreen === 2) {
           matchLevel = '三等奖';
           revenue = 200; // 三等奖（200元）
-        } else if (matchedRed === 4 && matchedBlue === 1) {
+        } else if (matchedBrown === 4 && matchedGreen === 1) {
           matchLevel = '四等奖';
           revenue = 50; // 四等奖（50元）
-        } else if (matchedRed === 3 && matchedBlue === 2) {
+        } else if (matchedBrown === 3 && matchedGreen === 2) {
           matchLevel = '四等奖';
           revenue = 50; // 四等奖（50元）
-        } else if (matchedRed === 4 && matchedBlue === 0) {
+        } else if (matchedBrown === 4 && matchedGreen === 0) {
           matchLevel = '五等奖';
           revenue = 10; // 五等奖（10元）
-        } else if (matchedRed === 3 && matchedBlue === 1) {
+        } else if (matchedBrown === 3 && matchedGreen === 1) {
           matchLevel = '五等奖';
           revenue = 10; // 五等奖（10元）
-        } else if (matchedRed === 2 && matchedBlue === 2) {
+        } else if (matchedBrown === 2 && matchedGreen === 2) {
           matchLevel = '五等奖';
           revenue = 10; // 五等奖（10元）
-        } else if (matchedRed === 3 && matchedBlue === 0) {
+        } else if (matchedBrown === 3 && matchedGreen === 0) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
-        } else if (matchedRed === 1 && matchedBlue === 2) {
+        } else if (matchedBrown === 1 && matchedGreen === 2) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
-        } else if (matchedRed === 2 && matchedBlue === 1) {
+        } else if (matchedBrown === 2 && matchedGreen === 1) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
-        } else if (matchedRed === 0 && matchedBlue === 2) {
+        } else if (matchedBrown === 0 && matchedGreen === 2) {
           matchLevel = '六等奖';
           revenue = 5; // 六等奖（5元）
         } else {
@@ -377,8 +402,8 @@ Page({
       
       return {
         ...note,
-        matchedRed,
-        matchedBlue,
+        matchedBrown,
+        matchedGreen,
         matchLevel,
         revenue
       };
@@ -427,7 +452,7 @@ Page({
   shareResult() {
     const { mode, drawResult, matchResults } = this.data;
     
-    if (!drawResult.redBalls.length) {
+    if (!drawResult.brownBalls.length) {
       wx.showToast({
         title: '请先模拟开奖',
         icon: 'none',
@@ -436,25 +461,25 @@ Page({
       return;
     }
     
-    const modeName = mode === 'double' ? '六红一蓝' : '五红两蓝';
-    const drawRedBalls = drawResult.redBalls.join(' ');
-    const drawBlueBalls = drawResult.blueBalls.join(' ');
+    const modeName = mode === 'double' ? '六棕一绿' : '五棕两绿';
+    const drawBrownBalls = drawResult.brownBalls.join(' ');
+    const drawGreenBalls = drawResult.greenBalls.join(' ');
     
     let shareText = `【${modeName}模拟结果】\n`;
     shareText += `结果：\n`;
-    shareText += `红球：${drawRedBalls}\n`;
-    shareText += `蓝球：${drawBlueBalls}\n\n`;
+    shareText += `棕球：${drawBrownBalls}\n`;
+    shareText += `绿球：${drawGreenBalls}\n\n`;
     
     if (matchResults && matchResults.length) {
       shareText += `匹配结果：\n`;
       matchResults.forEach((result, index) => {
         shareText += `第${index + 1}注：`;
-        shareText += `红球${result.matchedRed}个，蓝球${result.matchedBlue}个，`;
+        shareText += `棕球${result.matchedBrown}个，绿球${result.matchedGreen}个，`;
         shareText += `${result.matchLevel}\n`;
       });
     }
     
-    shareText += `\n注：本结果仅为模拟，与真实彩票无关`;
+
     
     wx.setClipboardData({
       data: shareText,
@@ -471,7 +496,7 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '随机选号器 - 模拟彩票选号',
+      title: '取数模拟器',
       path: '/packages/math/pages/random-selector/random-selector'
     };
   },
@@ -479,7 +504,7 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '随机选号器 - 模拟彩票选号',
+      title: '取数模拟器',
       query: 'random-selector'
     };
   },
@@ -571,74 +596,74 @@ Page({
         
         // 检查每注是否命中
         const currentHitStatus = selectedNotes.map(note => {
-          const matchedRed = note.redBalls.filter(ball => currentDraw.redBalls.includes(ball)).length;
-          const matchedBlue = note.blueBalls.filter(ball => currentDraw.blueBalls.includes(ball)).length;
-          
-          let matchLevel = '';
-          
-          // 根据模式计算匹配等级
-          if (mode === 'double') {
-            // 双色球（6红1蓝）模式匹配规则
-            if (matchedRed === 6 && matchedBlue === 1) {
-              matchLevel = '一等奖';
-            } else if (matchedRed === 6 && matchedBlue === 0) {
-              matchLevel = '二等奖';
-            } else if (matchedRed === 5 && matchedBlue === 1) {
-              matchLevel = '三等奖';
-            } else if (matchedRed === 5 && matchedBlue === 0) {
-              matchLevel = '四等奖';
-            } else if (matchedRed === 4 && matchedBlue === 1) {
-              matchLevel = '四等奖';
-            } else if (matchedRed === 4 && matchedBlue === 0) {
-              matchLevel = '五等奖';
-            } else if (matchedRed === 3 && matchedBlue === 1) {
-              matchLevel = '五等奖';
-            } else if (matchedRed === 2 && matchedBlue === 1) {
-              matchLevel = '六等奖';
-            } else if (matchedRed === 1 && matchedBlue === 1) {
-              matchLevel = '六等奖';
-            } else if (matchedRed === 0 && matchedBlue === 1) {
-              matchLevel = '六等奖';
-            } else {
-              matchLevel = '未中奖';
-            }
+        const matchedBrown = note.brownBalls.filter(ball => currentDraw.brownBalls.includes(ball)).length;
+        const matchedGreen = note.greenBalls.filter(ball => currentDraw.greenBalls.includes(ball)).length;
+        
+        let matchLevel = '';
+        
+        // 根据模式计算匹配等级
+        if (mode === 'double') {
+          // 模式1（6棕1绿）模式匹配规则
+          if (matchedBrown === 6 && matchedGreen === 1) {
+            matchLevel = '一等奖';
+          } else if (matchedBrown === 6 && matchedGreen === 0) {
+            matchLevel = '二等奖';
+          } else if (matchedBrown === 5 && matchedGreen === 1) {
+            matchLevel = '三等奖';
+          } else if (matchedBrown === 5 && matchedGreen === 0) {
+            matchLevel = '四等奖';
+          } else if (matchedBrown === 4 && matchedGreen === 1) {
+            matchLevel = '四等奖';
+          } else if (matchedBrown === 4 && matchedGreen === 0) {
+            matchLevel = '五等奖';
+          } else if (matchedBrown === 3 && matchedGreen === 1) {
+            matchLevel = '五等奖';
+          } else if (matchedBrown === 2 && matchedGreen === 1) {
+            matchLevel = '六等奖';
+          } else if (matchedBrown === 1 && matchedGreen === 1) {
+            matchLevel = '六等奖';
+          } else if (matchedBrown === 0 && matchedGreen === 1) {
+            matchLevel = '六等奖';
           } else {
-            // 大乐透（5红2蓝）模式匹配规则
-            if (matchedRed === 5 && matchedBlue === 2) {
-              matchLevel = '一等奖';
-            } else if (matchedRed === 5 && matchedBlue === 1) {
-              matchLevel = '二等奖';
-            } else if (matchedRed === 5 && matchedBlue === 0) {
-              matchLevel = '三等奖';
-            } else if (matchedRed === 4 && matchedBlue === 2) {
-              matchLevel = '三等奖';
-            } else if (matchedRed === 4 && matchedBlue === 1) {
-              matchLevel = '四等奖';
-            } else if (matchedRed === 3 && matchedBlue === 2) {
-              matchLevel = '四等奖';
-            } else if (matchedRed === 4 && matchedBlue === 0) {
-              matchLevel = '五等奖';
-            } else if (matchedRed === 3 && matchedBlue === 1) {
-              matchLevel = '五等奖';
-            } else if (matchedRed === 2 && matchedBlue === 2) {
-              matchLevel = '五等奖';
-            } else if (matchedRed === 3 && matchedBlue === 0) {
-              matchLevel = '六等奖';
-            } else if (matchedRed === 1 && matchedBlue === 2) {
-              matchLevel = '六等奖';
-            } else if (matchedRed === 2 && matchedBlue === 1) {
-              matchLevel = '六等奖';
-            } else if (matchedRed === 0 && matchedBlue === 2) {
-              matchLevel = '六等奖';
-            } else {
-              matchLevel = '未中奖';
-            }
+            matchLevel = '未中奖';
           }
+        } else {
+          // 模式2（5棕2绿）模式匹配规则
+          if (matchedBrown === 5 && matchedGreen === 2) {
+            matchLevel = '一等奖';
+          } else if (matchedBrown === 5 && matchedGreen === 1) {
+            matchLevel = '二等奖';
+          } else if (matchedBrown === 5 && matchedGreen === 0) {
+            matchLevel = '三等奖';
+          } else if (matchedBrown === 4 && matchedGreen === 2) {
+            matchLevel = '三等奖';
+          } else if (matchedBrown === 4 && matchedGreen === 1) {
+            matchLevel = '四等奖';
+          } else if (matchedBrown === 3 && matchedGreen === 2) {
+            matchLevel = '四等奖';
+          } else if (matchedBrown === 4 && matchedGreen === 0) {
+            matchLevel = '五等奖';
+          } else if (matchedBrown === 3 && matchedGreen === 1) {
+            matchLevel = '五等奖';
+          } else if (matchedBrown === 2 && matchedGreen === 2) {
+            matchLevel = '五等奖';
+          } else if (matchedBrown === 3 && matchedGreen === 0) {
+            matchLevel = '六等奖';
+          } else if (matchedBrown === 1 && matchedGreen === 2) {
+            matchLevel = '六等奖';
+          } else if (matchedBrown === 2 && matchedGreen === 1) {
+            matchLevel = '六等奖';
+          } else if (matchedBrown === 0 && matchedGreen === 2) {
+            matchLevel = '六等奖';
+          } else {
+            matchLevel = '未中奖';
+          }
+        }
           
           return {
             ...note,
-            matchedRed,
-            matchedBlue,
+            matchedBrown,
+            matchedGreen,
             matchLevel
           };
         });
@@ -684,7 +709,7 @@ Page({
               // 根据命中等级模拟奖金 - 使用与calculateMatch方法一致的奖金标准
               let revenue = 0;
               if (mode === 'double') {
-                // 双色球奖金标准
+                // 模式1奖金标准
                 switch (status.matchLevel) {
                   case '一等奖':
                     revenue = 5000000; // 模拟大奖
@@ -706,7 +731,7 @@ Page({
                     break;
                 }
               } else {
-                // 大乐透奖金标准
+                // 模式2奖金标准
                 switch (status.matchLevel) {
                   case '一等奖':
                     revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
@@ -787,38 +812,38 @@ Page({
 
   // 生成结果号码
   generateResultNumbers(mode) {
-    let redBalls = [];
-    let blueBalls = [];
+    let brownBalls = [];
+    let greenBalls = [];
     
-    // 生成红球
-    const redRange = mode === 'double' ? 33 : 35;
-    const redCount = mode === 'double' ? 6 : 5;
+    // 生成棕球
+    const brownRange = mode === 'double' ? 33 : 35;
+    const brownCount = mode === 'double' ? 6 : 5;
     
-    while (redBalls.length < redCount) {
-      const num = Math.floor(Math.random() * redRange) + 1;
-      if (!redBalls.includes(num)) {
-        redBalls.push(num);
+    while (brownBalls.length < brownCount) {
+      const num = Math.floor(Math.random() * brownRange) + 1;
+      if (!brownBalls.includes(num)) {
+        brownBalls.push(num);
       }
     }
     
-    // 生成蓝球
-    const blueRange = mode === 'double' ? 16 : 12;
-    const blueCount = mode === 'double' ? 1 : 2;
+    // 生成绿球
+    const greenRange = mode === 'double' ? 16 : 12;
+    const greenCount = mode === 'double' ? 1 : 2;
     
-    while (blueBalls.length < blueCount) {
-      const num = Math.floor(Math.random() * blueRange) + 1;
-      if (!blueBalls.includes(num)) {
-        blueBalls.push(num);
+    while (greenBalls.length < greenCount) {
+      const num = Math.floor(Math.random() * greenRange) + 1;
+      if (!greenBalls.includes(num)) {
+        greenBalls.push(num);
       }
     }
     
     // 排序
-    redBalls.sort((a, b) => a - b);
-    blueBalls.sort((a, b) => a - b);
+    brownBalls.sort((a, b) => a - b);
+    greenBalls.sort((a, b) => a - b);
     
     return {
-      redBalls,
-      blueBalls
+      brownBalls,
+      greenBalls
     };
   },
 
@@ -852,8 +877,6 @@ Page({
       shareText += `${i + 1}、红球 ${period.drawResult.redBalls.join(' ')}，蓝球 ${period.drawResult.blueBalls.join(' ')}\n`;
     }
     
-    shareText += `注：本结果仅为模拟，与真实彩票无关`;
-    
     wx.setClipboardData({
       data: shareText,
       success() {
@@ -879,7 +902,7 @@ Page({
       return;
     }
     
-    const modeName = mode === 'double' ? '6红1蓝' : '5红2蓝';
+    const modeName = mode === 'double' ? '6棕1绿' : '5棕2绿';
     
     // 生成导出内容
     let exportText = `【${modeName}模拟投注内容】\n\n`;
@@ -887,12 +910,12 @@ Page({
     
     // 列出所有投注内容
     generatedNotes.forEach((note, index) => {
-      exportText += `${index + 1}、红球 ${note.redBalls.join(' ')}，蓝球 ${note.blueBalls.join(' ')}\n`;
+      exportText += `${index + 1}、棕球 ${note.brownBalls.join(' ')}，绿球 ${note.greenBalls.join(' ')}\n`;
     });
     
 
     
-    exportText += `\n注：本内容仅为模拟，与真实彩票无关，不构成任何投资建议`;
+   
     
     wx.setClipboardData({
       data: exportText,
@@ -944,7 +967,7 @@ Page({
       exportText += `${i + 1}、红球 ${period.drawResult.redBalls.join(' ')}，蓝球 ${period.drawResult.blueBalls.join(' ')}\n`;
     }
     
-    exportText += `注：本结果仅为模拟，与真实彩票无关，不构成任何投资建议`;
+  
     
     wx.setClipboardData({
       data: exportText,
@@ -978,7 +1001,7 @@ Page({
       return;
     }
     
-    const modeName = mode === 'double' ? '6红1蓝' : '5红2蓝';
+    const modeName = mode === 'double' ? '6棕1绿' : '5棕2绿';
     
     // 生成复制内容
     let copyText = `【${modeName}生成注数】\n\n`;
@@ -986,10 +1009,10 @@ Page({
     
     // 列出所有注数
     generatedNotes.forEach((note, index) => {
-      copyText += `${index + 1}、红球 ${note.redBalls.join(' ')}，蓝球 ${note.blueBalls.join(' ')}\n`;
+      copyText += `${index + 1}、棕球 ${note.brownBalls.join(' ')}，绿球 ${note.greenBalls.join(' ')}\n`;
     });
     
-    copyText += `注：本内容仅为模拟，与真实彩票无关`;
+
     
     wx.setClipboardData({
       data: copyText,
@@ -1007,7 +1030,7 @@ Page({
   onLoad() {
     // 设置导航栏标题
     wx.setNavigationBarTitle({
-      title: '随机选号器'
+      title: '取数模拟器'
     });
   },
   

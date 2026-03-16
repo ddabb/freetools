@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "亲戚计算器",
-          "pathName": "packages/life/pages/relative-calculator/relative-calculator",
+          "name": "随机数",
+          "pathName": "packages/math/pages/random-selector/random-selector",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "亲戚计算器",
+          "pathName": "packages/life/pages/relative-calculator/relative-calculator",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "emoji转png",

@@ -319,7 +319,7 @@ const tools = [
   },
   {
     id: 'random-selector',
-    name: '随机选号器',
+    name: '取数模拟器',
     icon: '🎰',
     color: 'purple',
     url: '/packages/math/pages/random-selector/random-selector',
