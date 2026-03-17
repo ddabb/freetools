@@ -1,64 +1,34 @@
 <view class="container">
-  <!-- 隐藏的canvas用于绘制和导出图片 -->
-  <canvas id="emojiCanvas" style="width: 800px; height: 800px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <!-- 隐藏的Canvas用于生成分享图片 -->
+  <canvas id="emojiCanvas" canvas-id="emojiCanvas" style="width: 400px; height: 400px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  
   <section class="input-section">
     <div class="input-group">
       <label for="emoji-input">输入Emoji</label>
-      <input type="text" id="emoji-input" class="emoji-input" placeholder="输入一个emoji" maxlength="2" value="{{inputEmoji}}" bindinput="onEmojiInput" />
+      <input type="text" id="emoji-input" class="emoji-input" placeholder="输入一个emoji，如😀" maxlength="2" value="{{inputEmoji}}" bindinput="onEmojiInput" />
       <p class="hint">注意：只能输入一个emoji</p>
     </div>
-    
-    <div class="background-section">
-      <div class="input-group">
-        <label>选择背景颜色</label>
-        <radio-group bindchange="onBackgroundChange">
-          <div class="background-options">
-            <div class="background-option">
-              <radio value="white" checked="{{selectedBackground === 'white'}}">
-                <label class="background-label {{selectedBackground === 'white' ? 'checked' : ''}}">
-                  <div class="background-preview" style="background: #ffffff; border: 1px solid #ddd;"></div>
-                  <div>白色</div>
-                </label>
-              </radio>
-            </div>
-            <div class="background-option">
-              <radio value="black" checked="{{selectedBackground === 'black'}}">
-                <label class="background-label {{selectedBackground === 'black' ? 'checked' : ''}}">
-                  <div class="background-preview" style="background: #000000;"></div>
-                  <div>黑色</div>
-                </label>
-              </radio>
-            </div>
-            <div class="background-option">
-              <radio value="transparent" checked="{{selectedBackground === 'transparent'}}">
-                <label class="background-label {{selectedBackground === 'transparent' ? 'checked' : ''}}">
-                  <div class="background-preview" style="background: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;"></div>
-                  <div>透明</div>
-                </label>
-              </radio>
-            </div>
-          </div>
-        </radio-group>
-      </div>
-    </div>
   </section>  
+  
   <section class="preview-section">
     <div class="preview-title">预览效果</div>
     <view id="emoji-preview" class="emoji-preview" style="{{previewStyle}}">{{previewEmoji}}</view>
-    <p class="preview-info">预览将实时更新，导出图片为800×800像素高清PNG</p>
+    <p class="preview-info">预览将实时更新，导出图片为200×200像素小文件PNG</p>
     
     <div class="actions">
       <button class="btn btn-secondary" bindtap="resetForm">
         <span class="btn-icon">↺</span> 重置
       </button>
-      <button class="btn btn-primary" bindtap="exportAsPNG" disabled="{{!canExport}}">
+      <button class="btn btn-primary" bindtap="exportAsPNG">
         <span class="btn-icon">⤓</span> 导出PNG
       </button>
     </div>
   </section>  
+  
   <footer>
     <p>© 2026 Emoji转PNG工具 | 支持单个emoji转换为高清PNG图片</p>
   </footer>  
+  
   <view class="loading" wx:if="{{isLoading}}">
     <view class="spinner"></view>
     <p>正在生成高清图片，请稍候...</p>

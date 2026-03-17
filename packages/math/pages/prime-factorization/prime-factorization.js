@@ -207,18 +207,6 @@ Page({
     wx.setNavigationBarTitle({
       title: '质因数分解'
     });
-    
-    // 设置默认值 2310*2310 并自动计算
-    const testNumber = 2310 * 2310; // 5336100
-    this.setData({
-      number: testNumber,
-      canCalculate: true
-    });
-    
-    // 延迟执行计算，确保页面渲染完成
-    setTimeout(() => {
-      this.calculate();
-    }, 500);
   },
 
 

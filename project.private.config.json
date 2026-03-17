@@ -23,11 +23,39 @@
     "miniprogram": {
       "list": [
         {
-          "name": "packages/game/pages/bobing/bobing/bobing",
+          "name": "博饼游戏",
           "pathName": "packages/game/pages/bobing/bobing/bobing",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "文字转图片",
+          "pathName": "packages/text/pages/text-to-png/text-to-png",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "随机数",
+          "pathName": "packages/math/pages/random-selector/random-selector",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "亲戚计算器",
+          "pathName": "packages/life/pages/relative-calculator/relative-calculator",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "emoji转png",
+          "pathName": "packages/text/pages/emoji-to-png/emoji-to-png",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "质因数分解",

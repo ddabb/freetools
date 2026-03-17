@@ -83,7 +83,9 @@
         "pages/word-counter/word-counter",
         "pages/markdown-preview/markdown-preview",
         "pages/text-diff/text-diff",
-        "pages/avatar-generator/avatar-generator"
+        "pages/avatar-generator/avatar-generator",
+        "pages/emoji-to-png/emoji-to-png",
+        "pages/text-to-png/text-to-png"
       ]
     },
     {
