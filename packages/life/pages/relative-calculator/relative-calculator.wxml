@@ -74,8 +74,8 @@
     </view>
 
     <!-- 提示文字 -->
-    <view class="hint-text">
-      如有疑问，跟AI确认！
+    <view class="hint-text" bindtap="goToAbout">
+      如有疑问，请参照关于页的反馈方式 →
     </view>
 
   </view>
