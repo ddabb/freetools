@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "随机数",
-          "pathName": "packages/math/pages/random-selector/random-selector",
+          "name": "文字转图片",
+          "pathName": "packages/text/pages/text-to-png/text-to-png",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "随机数",
+          "pathName": "packages/math/pages/random-selector/random-selector",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "亲戚计算器",

@@ -37,7 +37,8 @@ const toolFrequency = {
   'timestamp-converter': 36,  // 时间戳转换器
   'color-converter': 34,     // 颜色转换器
   'avatar-generator': 45,     // 汉字头像生成
-  'emoji-to-png': 42         // Emoji转PNG
+  'emoji-to-png': 42,        // Emoji转PNG
+  'text-to-png': 40           // 文本转PNG
 };
 
 const tools = [
@@ -422,6 +423,17 @@ const tools = [
     keywords: ['emoji', 'PNG', '图片', '转换'],
     description: '将单个emoji转换为小文件PNG图片',
     frequency: toolFrequency['emoji-to-png']
+  },
+  {
+    id: 'text-to-png',
+    name: '文本转PNG',
+    icon: '📝',
+    color: 'purple',
+    url: '/packages/text/pages/text-to-png/text-to-png',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['文本', 'PNG', '图片', '生成'],
+    description: '将文本转换为PNG图片，支持多行文本和样式设置',
+    frequency: toolFrequency['text-to-png']
   }
 ];
 
