@@ -237,10 +237,7 @@
           </view>
         </view>
         
-        <view class="export-section">
-          <button class="share-investment-btn" bindtap="shareInvestmentResult">复制到剪贴板</button>
-          <button class="export-btn" bindtap="exportInvestmentResult">导出批量结果</button>
-        </view>
+
       </view>
     </view>
   </view>
