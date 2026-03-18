@@ -80,12 +80,12 @@
           
           <button 
             class="primary-btn" 
-            bindtap="getPinyinFirstLetter"
+            bindtap="getPinyinResults"
             disabled="{{!inputText}}"
             hover-class="btn-primary-hover"
           >
             <text class="btn-icon">🔤</text>
-            <text class="btn-text">拼音首字母</text>
+            <text class="btn-text">拼音转换</text>
           </button>
         </view>
 
@@ -118,6 +118,61 @@
           <button class="action-btn copy-btn" bindtap="copyText" hover-class="btn-action-hover">
             <text class="btn-icon">📋</text>
             <text>复制结果</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 拼音转换结果卡片 -->
+    <view wx:if="{{pinyinResults}}" class="result-card card-shadow fade-in-up" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">🔤</view>
+        <text class="result-title">拼音转换结果</text>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">🔠</view>
+            <view class="info-content">
+              <text class="info-label">拼音首字母</text>
+              <text class="info-value highlight">{{pinyinResults.firstLetter}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">完整拼音</text>
+              <text class="info-value highlight">{{pinyinResults.fullPinyin}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🎵</view>
+            <view class="info-content">
+              <text class="info-label">带声调</text>
+              <text class="info-value highlight">{{pinyinResults.withTone}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔡</view>
+            <view class="info-content">
+              <text class="info-label">无声调</text>
+              <text class="info-value highlight">{{pinyinResults.withoutTone}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="result-actions">
+          <button class="action-btn copy-btn" bindtap="copyPinyinResult" data-type="firstLetter" hover-class="btn-action-hover">
+            <text class="btn-icon">📋</text>
+            <text>复制首字母</text>
+          </button>
+          <button class="action-btn copy-btn" bindtap="copyPinyinResult" data-type="withoutTone" hover-class="btn-action-hover">
+            <text class="btn-icon">📋</text>
+            <text>复制拼音</text>
           </button>
         </view>
       </view>

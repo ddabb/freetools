@@ -6,6 +6,7 @@ Page({
     inputText: '', // 输入文本
     outputText: '', // 输出文本
     wordCount: null, // 字数统计
+    pinyinResults: null, // 拼音相关结果
     inputFocus: false
   },
   
@@ -117,8 +118,8 @@ Page({
     });
   },
   
-  // 获取拼音首字母
-  getPinyinFirstLetter() {
+  // 获取拼音结果
+  getPinyinResults() {
     const { inputText } = this.data;
     if (!inputText) {
       wx.showToast({
@@ -129,24 +130,36 @@ Page({
     }
     
     try {
-      // 尝试不同的调用方式
-      let firstLetters = '';
+      let pinyinResults = {
+        firstLetter: '',
+        fullPinyin: '',
+        withTone: '',
+        withoutTone: ''
+      };
       
       // 方式1：尝试直接调用
       if (typeof pinyinPro === 'function') {
-        firstLetters = pinyinPro(inputText, { style: 'first-letter' });
+        pinyinResults.firstLetter = pinyinPro(inputText, { style: 'first-letter' });
+        pinyinResults.fullPinyin = pinyinPro(inputText, { style: 'normal' });
+        pinyinResults.withTone = pinyinPro(inputText, { toneType: 'symbol' });
+        pinyinResults.withoutTone = pinyinPro(inputText, { toneType: 'none' });
       }
       // 方式2：尝试调用 pinyinPro.pinyin 方法
       else if (pinyinPro && typeof pinyinPro.pinyin === 'function') {
-        firstLetters = pinyinPro.pinyin(inputText, { pattern: 'first', toneType: 'none' });
+        pinyinResults.firstLetter = pinyinPro.pinyin(inputText, { pattern: 'first', toneType: 'none' });
+        pinyinResults.fullPinyin = pinyinPro.pinyin(inputText, { pattern: 'pinyin', toneType: 'none' });
+        pinyinResults.withTone = pinyinPro.pinyin(inputText, { pattern: 'pinyin', toneType: 'symbol' });
+        pinyinResults.withoutTone = pinyinPro.pinyin(inputText, { pattern: 'pinyin', toneType: 'none' });
       }
       // 方式3：如果都不行，使用简单的拼音转换
       else {
-        firstLetters = this.simplePinyinFirstLetter(inputText);
+        const simpleResults = this.simplePinyinConversion(inputText);
+        pinyinResults = { ...simpleResults };
       }
       
       this.setData({
-        outputText: firstLetters,
+        pinyinResults: pinyinResults,
+        outputText: '',
         wordCount: null
       });
 
@@ -163,31 +176,46 @@ Page({
     }
   },
   
-  // 简单的拼音首字母转换（备用方案）
-  simplePinyinFirstLetter(text) {
-    // 简单的汉字拼音首字母映射
+  // 简单的拼音转换（备用方案）
+  simplePinyinConversion(text) {
+    // 简单的汉字拼音映射
     const pinyinMap = {
-      '阿': 'A', '八': 'B', '擦': 'C', '大': 'D', '鹅': 'E',
-      '发': 'F', '嘎': 'G', '哈': 'H', '一': 'Y', '鸡': 'J',
-      '卡': 'K', '拉': 'L', '妈': 'M', '拿': 'N', '哦': 'O',
-      '趴': 'P', '七': 'Q', '日': 'R', '撒': 'S', '他': 'T',
-      '乌': 'W', '西': 'X', '呀': 'Y', '咋': 'Z'
+      '阿': 'a', '八': 'ba', '擦': 'ca', '大': 'da', '鹅': 'e',
+      '发': 'fa', '嘎': 'ga', '哈': 'ha', '一': 'yi', '鸡': 'ji',
+      '卡': 'ka', '拉': 'la', '妈': 'ma', '拿': 'na', '哦': 'o',
+      '趴': 'pa', '七': 'qi', '日': 'ri', '撒': 'sa', '他': 'ta',
+      '乌': 'wu', '西': 'xi', '呀': 'ya', '咋': 'za'
     };
     
-    let result = '';
+    let firstLetter = '';
+    let fullPinyin = '';
+    let withTone = '';
+    let withoutTone = '';
+    
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
       // 如果是汉字
       if (/[\u4e00-\u9fa5]/.test(char)) {
-        // 这里只是一个简单的示例，实际需要完整的拼音映射
-        // 暂时返回原字符
-        result += char;
+        const pinyin = pinyinMap[char] || char;
+        firstLetter += pinyin.charAt(0).toUpperCase();
+        fullPinyin += pinyin + ' ';
+        withTone += pinyin + ' ';
+        withoutTone += pinyin + ' ';
       } else {
         // 非汉字字符直接保留
-        result += char;
+        firstLetter += char;
+        fullPinyin += char;
+        withTone += char;
+        withoutTone += char;
       }
     }
-    return result;
+    
+    return {
+      firstLetter: firstLetter,
+      fullPinyin: fullPinyin.trim(),
+      withTone: withTone.trim(),
+      withoutTone: withoutTone.trim()
+    };
   },
   
   // 复制文本
@@ -197,6 +225,24 @@ Page({
     
     wx.setClipboardData({
       data: outputText,
+      success() {
+        wx.showToast({
+          title: '复制成功',
+          icon: 'success'
+        });
+      }
+    });
+  },
+
+  // 复制拼音结果
+  copyPinyinResult(e) {
+    const { type } = e.currentTarget.dataset;
+    const { pinyinResults } = this.data;
+    
+    if (!pinyinResults || !pinyinResults[type]) return;
+    
+    wx.setClipboardData({
+      data: pinyinResults[type],
       success() {
         wx.showToast({
           title: '复制成功',

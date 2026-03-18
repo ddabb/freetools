@@ -250,7 +250,7 @@ const tools = [
   {
     id: 'onlychinese',
     name: '中文检测',
-    icon: '🇨🇳',
+    icon: '✍',
     color: 'red',
     url: '/packages/utility/pages/onlychinese/onlychinese',
     categories: ['学习工具'],
