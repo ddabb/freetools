@@ -2,74 +2,170 @@
 Page({
   data: {
     // 当前颜色
-    currentColor: '#FF5733',
-    hexInput: 'FF5733',
-    rgbInputs: { r: 255, g: 87, b: 51 },
+    currentColor: '#667eea',
+    hexInput: '667eea',
     
-    // 转换结果
-    conversions: {
-      hex: '#FF5733',
-      hexCompact: '#F53',
-      rgb: 'rgb(255, 87, 51)',
-      rgbArray: '[255, 87, 51]',
-      hsl: 'hsl(11, 100%, 60%)',
-      hslValues: { h: 11, s: 100, l: 60 },
-      cmyk: 'cmyk(0%, 66%, 80%, 0%)',
-      cmykValues: { c: 0, m: 66, y: 80, k: 0 }
+    // RGB值
+    rgb: {
+      r: 102,
+      g: 126,
+      b: 234
+    },
+    
+    // 格式转换结果
+    formats: {
+      hex: '#667eea',
+      rgb: 'rgb(102, 126, 234)',
+      rgba: 'rgba(102, 126, 234, 1)',
+      hsl: 'hsl(231, 76%, 66%)',
+      cmyk: 'cmyk(56%, 46%, 0%, 8%)'
     },
     
     // 颜色信息
     colorInfo: {
-      name: '番茄红',
-      brightness: '中等偏亮',
+      name: '紫蓝色',
+      brightness: '偏亮 (154)',
       contrast: '良好',
       suggestedTextColor: '#FFFFFF'
     },
     
     // 配色方案
-    colorSchemes: [
-      {
-        name: '单色调',
-        colors: ['#FF5733', '#FF6B47', '#FF8A65', '#FFAB91', '#FFCCBC']
-      },
-      {
-        name: '互补色',
-        colors: ['#FF5733', '#33A1FF', '#57C7FF', '#8BD5FF', '#BFE7FF']
-      },
-      {
-        name: '三角色',
-        colors: ['#FF5733', '#33FF57', '#3357FF', '#F033FF', '#FF33A1']
-      },
-      {
-        name: '类似色',
-        colors: ['#FF5733', '#FF8C33', '#FFD733', '#8CFF33', '#33FF8C']
-      }
-    ]
+    colorSchemes: [],
+    
+    // 预设颜色
+    presetColors: [
+      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD',
+      '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#6C5CE7',
+      '#00B894', '#00CEC9', '#0984E3', '#6C5CE7', '#B2BEC3', '#2D3436',
+      '#E17055', '#FD79A8', '#FDCB6E', '#6C5CE7', '#A29BFE', '#74B9FF'
+    ],
+    
+    // 最近使用颜色
+    recentColors: [],
+    
+    // 最大最近使用数量
+    maxRecentColors: 12
   },
 
-  // 页面加载时执行
-  onLoad() {
-    wx.setNavigationBarTitle({ title: '颜色转换器' });
-    this.updateAllConversions('#FF5733');
-  },
-
-  // HEX输入处理
-  onHexInput(e) {
-    let hex = e.detail.value.trim();
+  // 页面加载
+  onLoad(options) {
+    wx.setNavigationBarTitle({ title: '🎨 颜色生成器' });
     
-    // 移除#号
-    hex = hex.replace('#', '');
+    // 从本地存储加载最近使用颜色
+    this.loadRecentColors();
     
-    // 验证并更新
-    if (/^[0-9A-Fa-f]{6}$/.test(hex) || /^[0-9A-Fa-f]{3}$/.test(hex)) {
-      this.setData({ hexInput: hex.toUpperCase() });
-      
-      let fullHex = hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex;
-      this.updateAllConversions('#' + fullHex);
+    // 如果有传入颜色参数，使用传入的颜色
+    if (options && options.color) {
+      const color = '#' + options.color.replace('#', '');
+      this.setColor(color);
+    } else {
+      // 初始化配色方案
+      this.generateColorSchemes(this.data.currentColor);
     }
   },
 
-  // RGB输入处理
+  // 页面显示时
+  onShow() {
+    this.loadRecentColors();
+  },
+
+  // 从本地存储加载最近使用颜色
+  loadRecentColors() {
+    try {
+      const recent = wx.getStorageSync('recentColors') || [];
+      this.setData({ recentColors: recent });
+    } catch (e) {
+      console.error('加载最近使用颜色失败:', e);
+    }
+  },
+
+  // 保存到最近使用
+  saveToRecent(color) {
+    let recent = this.data.recentColors.slice();
+    
+    // 移除重复项
+    recent = recent.filter(c => c.toLowerCase() !== color.toLowerCase());
+    
+    // 添加到开头
+    recent.unshift(color);
+    
+    // 限制数量
+    if (recent.length > this.data.maxRecentColors) {
+      recent = recent.slice(0, this.data.maxRecentColors);
+    }
+    
+    this.setData({ recentColors: recent });
+    
+    // 保存到本地存储
+    try {
+      wx.setStorageSync('recentColors', recent);
+    } catch (e) {
+      console.error('保存最近使用颜色失败:', e);
+    }
+  },
+
+  // 清空最近使用
+  clearRecent() {
+    wx.showModal({
+      title: '确认清空',
+      content: '确定要清空最近使用的颜色吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ recentColors: [] });
+          try {
+            wx.removeStorageSync('recentColors');
+          } catch (e) {
+            console.error('清空最近使用颜色失败:', e);
+          }
+          wx.showToast({ title: '已清空', icon: 'success' });
+        }
+      }
+    });
+  },
+
+
+
+  // 滑块拖动过程中实时变化
+  onRgbSliderChanging(e) {
+    const channel = e.currentTarget.dataset.channel;
+    const value = parseInt(e.detail.value);
+    
+    // 确保值在有效范围内
+    if (isNaN(value) || value < 0 || value > 255) {
+      return;
+    }
+    
+    // 直接更新rgb值并计算hex，避免setColor重新解析rgb导致不同步
+    const newRgb = { ...this.data.rgb, [channel]: value };
+    const hex = this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    
+    // 只更新基本颜色信息，不计算其他格式和配色方案
+    this.setData({
+      currentColor: hex,
+      hexInput: hex.substring(1),
+      rgb: newRgb
+    });
+  },
+
+  // RGB滑块变化（拖动结束）
+  onRgbSliderChange(e) {
+    const channel = e.currentTarget.dataset.channel;
+    const value = parseInt(e.detail.value);
+    
+    // 确保值在有效范围内
+    if (isNaN(value) || value < 0 || value > 255) {
+      return;
+    }
+    
+    // 直接更新rgb值并计算hex，避免setColor重新解析rgb导致不同步
+    const newRgb = { ...this.data.rgb, [channel]: value };
+    const hex = this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    
+    // 完整更新所有格式和配色方案
+    this.updateColorFromRgb(newRgb, hex, true);
+  },
+
+  // RGB输入变化
   onRgbInput(e) {
     const channel = e.currentTarget.dataset.channel;
     let value = parseInt(e.detail.value) || 0;
@@ -77,60 +173,287 @@ Page({
     // 限制范围
     value = Math.max(0, Math.min(255, value));
     
-    const rgbInputs = { ...this.data.rgbInputs, [channel]: value };
-    this.setData({ rgbInputs });
+    const rgb = { ...this.data.rgb, [channel]: value };
+    const hex = this.rgbToHex(rgb.r, rgb.g, rgb.b);
     
-    // 转换为HEX
-    const hex = '#' + 
-      rgbInputs.r.toString(16).padStart(2, '0') +
-      rgbInputs.g.toString(16).padStart(2, '0') +
-      rgbInputs.b.toString(16).padStart(2, '0');
-    
-    this.setData({ 
-      hexInput: hex.substring(1).toUpperCase(),
-      currentColor: hex
-    });
-    
-    this.updateAllConversions(hex);
+    this.setColor(hex, false);
   },
 
-  // 更新所有转换
-  updateAllConversions(hex) {
+  // HEX输入变化
+  onHexInput(e) {
+    let hex = e.detail.value.trim().toUpperCase();
+    
+    // 移除#号
+    hex = hex.replace('#', '');
+    
+    // 验证HEX格式
+    if (/^[0-9A-F]{6}$/.test(hex)) {
+      this.setColor('#' + hex);
+    } else if (/^[0-9A-F]{3}$/.test(hex)) {
+      // 简写格式转换
+      const fullHex = hex.split('').map(c => c + c).join('');
+      this.setColor('#' + fullHex);
+    }
+    
+    this.setData({ hexInput: hex });
+  },
+
+  // 设置颜色（核心方法）
+  setColor(hex, saveToRecent = true) {
+    hex = hex.toUpperCase();
     const rgb = this.hexToRgb(hex);
     if (!rgb) return;
     
     const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
     const cmyk = this.rgbToCmyk(rgb.r, rgb.g, rgb.b);
     
-    const conversions = {
-      hex: hex.toUpperCase(),
-      hexCompact: this.getCompactHex(hex),
+    // 更新所有格式
+    const formats = {
+      hex: hex,
       rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
-      rgbArray: `[${rgb.r}, ${rgb.g}, ${rgb.b}]`,
+      rgba: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
       hsl: `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`,
-      hslValues: {
-        h: Math.round(hsl.h),
-        s: Math.round(hsl.s),
-        l: Math.round(hsl.l)
-      },
-      cmyk: `cmyk(${Math.round(cmyk.c)}%, ${Math.round(cmyk.m)}%, ${Math.round(cmyk.y)}%, ${Math.round(cmyk.k)}%)`,
-      cmykValues: {
-        c: Math.round(cmyk.c),
-        m: Math.round(cmyk.m),
-        y: Math.round(cmyk.y),
-        k: Math.round(cmyk.k)
-      }
+      cmyk: `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`
     };
-
+    
+    // 更新颜色信息
     const colorInfo = this.getColorInfo(rgb, hsl);
-    const rgbInputs = { r: rgb.r, g: rgb.g, b: rgb.b };
-
+    
     this.setData({
-      conversions,
-      colorInfo,
-      rgbInputs,
-      currentColor: hex.toUpperCase()
+      currentColor: hex,
+      hexInput: hex.substring(1),
+      rgb: rgb,
+      formats: formats,
+      colorInfo: colorInfo
     });
+    
+    // 生成配色方案
+    this.generateColorSchemes(hex);
+    
+    // 保存到最近使用
+    if (saveToRecent) {
+      this.saveToRecent(hex);
+    }
+  },
+
+  // 选择颜色（从预设、最近使用、配色方案）
+  selectColor(e) {
+    const color = e.currentTarget.dataset.color;
+    this.setColor(color);
+    wx.vibrateShort({ type: 'light' });
+  },
+
+  // 从RGB更新颜色（用于滑块，避免重新解析rgb）
+  updateColorFromRgb(rgb, hex, saveToRecent = true) {
+    const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+    const cmyk = this.rgbToCmyk(rgb.r, rgb.g, rgb.b);
+    
+    // 更新所有格式
+    const formats = {
+      hex: hex,
+      rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+      rgba: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
+      hsl: `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`,
+      cmyk: `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`
+    };
+    
+    // 更新颜色信息
+    const colorInfo = this.getColorInfo(rgb, hsl);
+    
+    this.setData({
+      currentColor: hex,
+      hexInput: hex.substring(1),
+      rgb: rgb,
+      formats: formats,
+      colorInfo: colorInfo
+    });
+    
+    // 生成配色方案
+    this.generateColorSchemes(hex);
+    
+    // 保存到最近使用
+    if (saveToRecent) {
+      this.saveToRecent(hex);
+    }
+  },
+
+  // 生成随机颜色
+  generateRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const hex = this.rgbToHex(r, g, b);
+    
+    this.setColor(hex);
+    wx.vibrateShort({ type: 'medium' });
+  },
+
+  // 打开相机取色
+  openCamera() {
+    wx.showModal({
+      title: '相机取色',
+      content: '相机取色功能需要用户授权访问相机，是否继续？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.chooseMedia({
+            count: 1,
+            mediaType: ['image'],
+            sourceType: ['camera', 'album'],
+            success: (res) => {
+              wx.showToast({
+                title: '图片已选择，取色功能开发中',
+                icon: 'none'
+              });
+            },
+            fail: (err) => {
+              if (err.errMsg && !err.errMsg.includes('cancel')) {
+                wx.showToast({ title: '选择图片失败', icon: 'none' });
+              }
+            }
+          });
+        }
+      }
+    });
+  },
+
+  // 复制颜色代码
+  copyColorCode() {
+    this.copyToClipboard(this.data.currentColor, '颜色代码已复制');
+  },
+
+  // 复制指定格式
+  copyFormat(e) {
+    const format = e.currentTarget.dataset.format;
+    const value = this.data.formats[format];
+    this.copyToClipboard(value, `${format.toUpperCase()}格式已复制`);
+  },
+
+  // 复制到剪贴板
+  copyToClipboard(data, successMsg) {
+    wx.setClipboardData({
+      data: data,
+      success: () => {
+        wx.showToast({ title: successMsg, icon: 'success' });
+      },
+      fail: () => {
+        wx.showToast({ title: '复制失败', icon: 'none' });
+      }
+    });
+  },
+
+  // 生成配色方案
+  generateColorSchemes(hex) {
+    const rgb = this.hexToRgb(hex);
+    const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+    
+    const schemes = [
+      {
+        name: '单色调',
+        colors: this.generateMonochromatic(hsl)
+      },
+      {
+        name: '互补色',
+        colors: this.generateComplementary(hsl)
+      },
+      {
+        name: '三角色',
+        colors: this.generateTriadic(hsl)
+      },
+      {
+        name: '类似色',
+        colors: this.generateAnalogous(hsl)
+      }
+    ];
+    
+    this.setData({ colorSchemes: schemes });
+  },
+
+  // 生成单色调
+  generateMonochromatic(hsl) {
+    const colors = [];
+    for (let i = -2; i <= 2; i++) {
+      let l = hsl.l + i * 15;
+      l = Math.max(10, Math.min(90, l));
+      colors.push(this.hslToHex(hsl.h, hsl.s, l));
+    }
+    return colors;
+  },
+
+  // 生成互补色
+  generateComplementary(hsl) {
+    return [
+      this.hslToHex(hsl.h, hsl.s, hsl.l),
+      this.hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l),
+      this.hslToHex(hsl.h, Math.max(20, hsl.s - 20), Math.min(80, hsl.l + 10)),
+      this.hslToHex((hsl.h + 180) % 360, Math.max(20, hsl.s - 20), Math.min(80, hsl.l + 10))
+    ];
+  },
+
+  // 生成三角色
+  generateTriadic(hsl) {
+    return [
+      this.hslToHex(hsl.h, hsl.s, hsl.l),
+      this.hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l),
+      this.hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l),
+      this.hslToHex(hsl.h, Math.max(20, hsl.s - 30), Math.min(70, hsl.l + 15))
+    ];
+  },
+
+  // 生成类似色
+  generateAnalogous(hsl) {
+    return [
+      this.hslToHex((hsl.h - 30 + 360) % 360, hsl.s, hsl.l),
+      this.hslToHex((hsl.h - 15 + 360) % 360, hsl.s, hsl.l),
+      this.hslToHex(hsl.h, hsl.s, hsl.l),
+      this.hslToHex((hsl.h + 15) % 360, hsl.s, hsl.l),
+      this.hslToHex((hsl.h + 30) % 360, hsl.s, hsl.l)
+    ];
+  },
+
+  // 获取颜色信息
+  getColorInfo(rgb, hsl) {
+    const brightness = Math.round((rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000);
+    const brightnessLevel = brightness > 128 ? '偏亮' : '偏暗';
+    
+    // 颜色名称判断
+    let name = '自定义颜色';
+    if (hsl.s < 10) {
+      name = brightness > 128 ? '浅灰色' : '深灰色';
+    } else if (hsl.l > 95) {
+      name = '接近白色';
+    } else if (hsl.l < 10) {
+      name = '接近黑色';
+    } else {
+      const hue = hsl.h;
+      if (hue >= 0 && hue < 15 || hue >= 345) name = '红色系';
+      else if (hue >= 15 && hue < 45) name = '橙/橙红色系';
+      else if (hue >= 45 && hue < 75) name = '黄/黄绿色系';
+      else if (hue >= 75 && hue < 105) name = '黄绿色系';
+      else if (hue >= 105 && hue < 150) name = '绿色系';
+      else if (hue >= 150 && hue < 195) name = '青/青绿色系';
+      else if (hue >= 195 && hue < 240) name = '蓝色系';
+      else if (hue >= 240 && hue < 285) name = '紫/蓝紫色系';
+      else if (hue >= 285 && hue < 315) name = '紫色系';
+      else if (hue >= 315 && hue < 345) name = '粉/玫红色系';
+    }
+    
+    const suggestedTextColor = brightness > 128 ? '#000000' : '#FFFFFF';
+    
+    return {
+      name,
+      brightness: `${brightnessLevel} (${brightness})`,
+      contrast: brightness > 64 && brightness < 192 ? '良好' : '一般',
+      suggestedTextColor
+    };
+  },
+
+  // RGB转HEX
+  rgbToHex(r, g, b) {
+    const toHex = (n) => {
+      const hex = n.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+    return ('#' + toHex(r) + toHex(g) + toHex(b)).toUpperCase();
   },
 
   // HEX转RGB
@@ -145,146 +468,102 @@ Page({
 
   // RGB转HSL
   rgbToHsl(r, g, b) {
-    r /= 255;
-    g /= 255;
-    b /= 255;
+    let rNorm = r / 255;
+    let gNorm = g / 255;
+    let bNorm = b / 255;
     
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
+    const max = Math.max(rNorm, gNorm, bNorm);
+    const min = Math.min(rNorm, gNorm, bNorm);
     let h, s, l = (max + min) / 2;
 
     if (max === min) {
-      h = s = 0; // 灰色
+      h = s = 0;
     } else {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       
       switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
+        case rNorm: h = ((gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0)) / 6; break;
+        case gNorm: h = ((bNorm - rNorm) / d + 2) / 6; break;
+        case bNorm: h = ((rNorm - gNorm) / d + 4) / 6; break;
       }
-      h /= 6;
     }
 
-    return { h: h * 360, s: s * 100, l: l * 100 };
+    return {
+      h: h * 360,
+      s: s * 100,
+      l: l * 100
+    };
+  },
+
+  // HSL转HEX
+  hslToHex(h, s, l) {
+    h /= 360;
+    s /= 100;
+    l /= 100;
+    
+    let r, g, b;
+    
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    
+    return this.rgbToHex(
+      Math.round(r * 255),
+      Math.round(g * 255),
+      Math.round(b * 255)
+    );
   },
 
   // RGB转CMYK
   rgbToCmyk(r, g, b) {
-    if (r === 0 && g === 0 && b === 0) {
+    let c = 1 - (r / 255);
+    let m = 1 - (g / 255);
+    let y = 1 - (b / 255);
+    let k = Math.min(c, Math.min(m, y));
+    
+    if (k === 1) {
       return { c: 0, m: 0, y: 0, k: 100 };
     }
-
-    const c = 1 - (r / 255);
-    const m = 1 - (g / 255);
-    const y = 1 - (b / 255);
     
-    const k = Math.min(c, Math.min(m, y));
-    const divisor = 1 - k;
+    c = Math.round(((c - k) / (1 - k)) * 100);
+    m = Math.round(((m - k) / (1 - k)) * 100);
+    y = Math.round(((y - k) / (1 - k)) * 100);
+    k = Math.round(k * 100);
     
-    return {
-      c: divisor === 0 ? 0 : Math.round(((c - k) / divisor) * 100),
-      m: divisor === 0 ? 0 : Math.round(((m - k) / divisor) * 100),
-      y: divisor === 0 ? 0 : Math.round(((y - k) / divisor) * 100),
-      k: Math.round(k * 100)
-    };
-  },
-
-  // 获取紧凑HEX格式
-  getCompactHex(hex) {
-    if (hex.length === 4) return hex; // 已经是#xxx格式
-    
-    const cleanHex = hex.substring(1);
-    if (cleanHex[0] === cleanHex[1] && cleanHex[2] === cleanHex[3] && cleanHex[4] === cleanHex[5]) {
-      return '#' + cleanHex[0] + cleanHex[2] + cleanHex[4];
-    }
-    return hex.toUpperCase();
-  },
-
-  // 获取颜色信息
-  getColorInfo(rgb, hsl) {
-    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-    const brightnessLevel = brightness > 128 ? '偏亮' : '偏暗';
-    
-    // 简单的颜色名称判断
-    let name = '自定义颜色';
-    if (hsl.h >= 0 && hsl.h <= 15 || hsl.h >= 345) name = '红色系';
-    else if (hsl.h >= 16 && hsl.h <= 45) name = '橙色系';
-    else if (hsl.h >= 46 && hsl.h <= 75) name = '黄色系';
-    else if (hsl.h >= 76 && hsl.h <= 165) name = '绿色系';
-    else if (hsl.h >= 166 && hsl.h <= 195) name = '青色系';
-    else if (hsl.h >= 196 && hsl.h <= 255) name = '蓝色系';
-    else if (hsl.h >= 256 && hsl.h <= 285) name = '紫色系';
-    else if (hsl.h >= 286 && hsl.h <= 344) name = '粉色系';
-
-    const suggestedTextColor = brightness > 128 ? '#000000' : '#FFFFFF';
-
-    return {
-      name,
-      brightness: `${brightnessLevel} (${Math.round(brightness)})`,
-      contrast: brightness > 64 && brightness < 192 ? '良好' : '一般',
-      suggestedTextColor
-    };
-  },
-
-  // 生成随机颜色
-  generateRandomColor() {
-    const randomHex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
-    this.updateAllConversions(randomHex);
-    wx.vibrateShort();
-  },
-
-  // 选择配色方案中的颜色
-  selectSchemeColor(e) {
-    const color = e.currentTarget.dataset.color;
-    this.updateAllConversions(color);
-  },
-
-  // 复制全部格式
-  copyAllFormats() {
-    const conversions = this.data.conversions;
-    const allFormats = `颜色转换结果：
-HEX: ${conversions.hex}
-RGB: ${conversions.rgb}
-HSL: ${conversions.hsl}
-CMYK: ${conversions.cmyk}`;
-
-    wx.setClipboardData({
-      data: allFormats,
-      success: () => {
-        wx.showToast({ title: '已复制全部格式', icon: 'success' });
-      }
-    });
-  },
-
-  // 保存到收藏
-  saveToFavorites() {
-    wx.showToast({ title: '已加入收藏', icon: 'success' });
-  },
-
-  // 分享颜色
-  shareColor() {
-    const color = this.data.currentColor;
-    wx.shareAppMessage({
-      title: `推荐颜色：${color}`,
-      path: `/packages/design/pages/color-converter/color-converter?color=${color.substring(1)}`
-    });
+    return { c, m, y, k };
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '颜色转换器 - 设计师必备工具',
-      path: '/packages/design/pages/color-converter/color-converter'
-    }
+      title: `🎨 推荐颜色：${this.data.currentColor}`,
+      path: `/packages/design/pages/color-converter/color-converter?color=${this.data.currentColor.substring(1)}`,
+      imageUrl: '' // 可以生成颜色图片作为分享图
+    };
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '颜色转换器 - 设计师必备工具',
-      query: 'color-converter'
-    }
+      title: `🎨 颜色生成器 - ${this.data.currentColor}`,
+      query: `color=${this.data.currentColor.substring(1)}`
+    };
   }
-})
+});

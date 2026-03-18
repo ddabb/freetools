@@ -445,7 +445,7 @@ const discoveryTools = [
   { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'], frequency: toolFrequency['data-analyzer'] },
   { id: 'chart-generator', name: '图表生成器', icon: '📊', description: '多种图表一键生成', url: '/packages/chart/pages/chart-generator/chart-generator', categories: ['学习工具', '开发工具'], keywords: ['图表', '生成', '可视化', '图形'], frequency: toolFrequency['chart-generator'] },
   { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'], frequency: toolFrequency['timestamp-converter'] },
-  { id: 'color-converter', name: '颜色转换器', icon: '🎨', description: 'RGB/Hex/HSL色彩转换', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '转换工具'], keywords: ['颜色', '转换', 'RGB', 'Hex', 'HSL'], frequency: toolFrequency['color-converter'] }
+  { id: 'color-converter', name: '颜色生成器', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
 ];
 
 // 合并所有工具

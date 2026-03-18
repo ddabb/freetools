@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "文字转图片",
-          "pathName": "packages/text/pages/text-to-png/text-to-png",
+          "name": "packages/design/pages/color-converter/color-converter",
+          "pathName": "packages/design/pages/color-converter/color-converter",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "文字转图片",
+          "pathName": "packages/text/pages/text-to-png/text-to-png",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "随机数",
@@ -46,13 +53,6 @@
         {
           "name": "emoji转png",
           "pathName": "packages/text/pages/emoji-to-png/emoji-to-png",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "质因数分解",
-          "pathName": "packages/math/pages/prime-factorization/prime-factorization",
           "query": "",
           "launchMode": "default",
           "scene": null
