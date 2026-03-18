@@ -1,59 +1,64 @@
-<!--packages/life/pages/calendar/calendar.wxml-->
+<!-- packages/life/pages/calendar/calendar.wxml -->
 <view class="container">
   <!-- 日期选择器 -->
   <view class="section">
-    <picker
-      mode="date"
-      value="{{currentDate}}"
-      start="1900-01-01"
-      end="2100-12-31"
-      bindchange="onDateChange"
-      class="date-picker"
-    >
+    <picker mode="date" value="{{currentDate}}" start="1900-01-01" end="2100-12-31" bindchange="onDateChange" class="date-picker">
       <view class="date-display">
         <text class="date-text">{{year}}年{{month}}月{{day}}日</text>
         <text class="date-arrow">▼</text>
       </view>
     </picker>
   </view>
-
-  <!-- 星期和农历 -->
-  <view class="section info-section">
-    <view class="info-card">
-      <text class="info-label">星期</text>
-      <text class="info-value">{{weekDay}}</text>
+  <!-- 月历表格 -->
+  <view class="section calendar-section">
+    <view class="month-nav">
+      <button class="nav-btn" data-direction="-1" bindtap="handleYearSwitch">⏮</button>
+      <button class="nav-btn" data-direction="-1" bindtap="handleMonthSwitch">◀</button>
+      <button class="nav-btn" data-direction="1" bindtap="handleMonthSwitch">▶</button>
+      <button class="nav-btn" data-direction="1" bindtap="handleYearSwitch">⏭</button>
     </view>
-    <view class="info-card" wx:if="{{showLunar}}">
-      <text class="info-label">农历</text>
-      <text class="info-value">{{lunar}}</text>
+    <!-- 星期标题 -->
+    <view class="calendar-header">
+      <view class="week-day" wx:for="{{weekDays}}" wx:key="{{index}}">{{item}}</view>
     </view>
-  </view>
-
-  <!-- 本月节假日 -->
-  <view class="section holidays-section" wx:if="{{holidays.length > 0}}">
-    <text class="section-title">本月节假日</text>
-    <view class="holidays-list">
-      <view class="holiday-item" wx:for="{{holidays}}" wx:key="day">
-        <view class="holiday-day">{{day}}日</view>
-        <view class="holiday-name">{{name}}</view>
-        <view class="holiday-type {{item.type === 'solar' ? 'solar' : 'fixed'}}">
-          {{item.type === 'solar' ? '节气' : '节日'}}
+    <!-- 日历网格 -->
+    <view class="calendar-grid">
+      <view class="calendar-week" wx:for="{{calendarDays}}" wx:key="{{index}}">
+        <view wx:for="{{item}}" wx:for-item="dayItem" wx:key="{{index}}" class="calendar-day {{!dayItem.isCurrentMonth ? 'other-month' : ''}} {{dayItem.isToday ? 'today' : ''}} {{dayItem.isSelected ? 'selected' : ''}} {{dayItem.holiday ? 'holiday' : ''}}" bindtap="onDayClick" data-day="{{dayItem.day}}" data-is-current-month="{{dayItem.isCurrentMonth}}">
+          <text class="day-number">{{dayItem.day}}</text>
+          <text class="lunar-day">{{dayItem.lunarDay}}</text>
+          <text wx:if="{{dayItem.holiday}}" class="holiday-name">{{dayItem.holiday.name}}</text>
         </view>
       </view>
     </view>
   </view>
-
-  <!-- 功能按钮 -->
-  <view class="section buttons-section">
-    <button class="action-btn" bindtap="toggleLunar">
-      {{showLunar ? '隐藏农历' : '显示农历'}}
-    </button>
-    <button class="action-btn primary" bindtap="today">回到今天</button>
-  </view>
-
-  <!-- 分享海报生成 -->
-  <view class="share-section">
-    <canvas canvas-id="cvs1" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: fixed; left: -9999rpx; top: -9999rpx;" />
-    <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
+  <!-- 信息卡片 -->
+  <view class="section info-section">
+    <view class="info-card-row">
+      <view class="info-card">
+        <text class="info-label">星期</text>
+        <text class="info-value">{{weekDay}}</text>
+      </view>
+      <view class="info-card">
+        <text class="info-label">农历</text>
+        <text class="info-value">{{lunar}}</text>
+      </view>
+      <view class="info-card">
+        <text class="info-label">生肖</text>
+        <text class="info-value">{{zodiac}}</text>
+      </view>
+      <view class="info-card">
+        <text class="info-label">干支</text>
+        <text class="info-value">{{lunarYearGanZhi}}</text>
+      </view>
+      <view class="info-card">
+        <text class="info-label">星座</text>
+        <text class="info-value">{{xingZuo}}</text>
+      </view>
+    </view>
+    <view class="buttons-section">
+      <button class="action-btn primary" bindtap="today">回到今天</button>
+      <button class="action-btn btn-share" bindtap="MakePosters">生成分享海报</button>
+    </view>
   </view>
 </view>

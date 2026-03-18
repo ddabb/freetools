@@ -1,4 +1,7 @@
 // packages/life/pages/calendar/calendar.js
+// 导入 lunar-javascript
+const { Solar, Lunar } = require('lunar-javascript');
+
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
@@ -169,10 +172,17 @@ Page({
     day: 0,
     weekDay: '',
     lunar: '',
+    lunarYearGanZhi: '',
+    zodiac: '',
+    xingZuo: '',
     holidays: [],
+    calendarDays: [],
     showLunar: true,
     canvaswidth: 376,
-    canvasheight: 500
+    canvasheight: 500,
+    selectedYear: 0,
+    selectedMonth: 0,
+    selectedDay: 0
   },
 
   onLoad() {
@@ -185,40 +195,50 @@ Page({
 
   initCalendar(year, month, day) {
     const date = new Date(year, month, day)
-    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+
+    // 格式化日期为 YYYY-MM-DD 格式，兼容 picker 组件
+    const formatDate = (date) => {
+      const y = date.getFullYear()
+      const m = String(date.getMonth() + 1).padStart(2, '0')
+      const d = String(date.getDate()).padStart(2, '0')
+      return `${y}-${m}-${d}`
+    }
+
+    const solar = Solar.fromYmd(year, month + 1, day)
+    const lunar = solar.getLunar()
+
+    // 农历显示月、日
+    const lunarMonth = lunar.getMonthInChinese()
+    const lunarDay = lunar.getDayInChinese()
+    const lunarDate = lunarMonth + '月' + lunarDay
 
     this.setData({
       year,
       month: month + 1,
       day,
-      currentDate: date.toLocaleDateString('zh-CN'),
-      selectedDate: date.toLocaleDateString('zh-CN'),
+      currentDate: formatDate(date),
+      selectedDate: formatDate(date),
+      selectedYear: year,
+      selectedMonth: month + 1,
+      selectedDay: day,
       weekDay: weekDays[date.getDay()],
-      lunar: this.getLunarDate(year, month + 1, day)
+      lunar: lunarDate,
+      lunarYearGanZhi: lunar.getYearInGanZhi(),
+      zodiac: lunar.getShengxiao(),
+      xingZuo: solar.getXingZuo()
     })
 
-    this.loadHolidays(year, month + 1)
+    this.loadHolidays(year, month + 1, solar)
+    this.generateCalendar(year, month + 1)
   },
 
-  getLunarDate(year, month, day) {
-    // 简化的农历计算（仅作演示）
-    const lunarMonths = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月']
-    const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十']
-
-    // 简单算法，实际需要复杂的天文计算
-    const lunarMonth = (year * 12 + month) % 12
-    const lunarDay = day % 30
-
-    return `农历${lunarMonths[lunarMonth]}${lunarDays[lunarDay]}`
-  },
-
-  loadHolidays(year, month) {
-    // 简化的节假日数据
-    const holidays = this.getMonthHolidays(year, month)
+  loadHolidays(year, month, solar) {
+    const holidays = this.getMonthHolidays(year, month, solar)
     this.setData({ holidays })
   },
 
-  getMonthHolidays(year, month) {
+  getMonthHolidays(year, month, solar) {
     const holidays = []
 
     // 固定节日
@@ -228,8 +248,10 @@ Page({
       '3-8': '妇女节',
       '3-12': '植树节',
       '4-1': '愚人节',
+      '4-5': '清明节',
       '5-1': '劳动节',
       '5-4': '青年节',
+      '5-12': '护士节',
       '6-1': '儿童节',
       '7-1': '建党节',
       '8-1': '建军节',
@@ -245,45 +267,228 @@ Page({
       }
     }
 
-    // 节气（简化）
-    const solarTerms = [
-      { day: 6, name: '小寒', month: 1 },
-      { day: 20, name: '大寒', month: 1 },
-      { day: 4, name: '立春', month: 2 },
-      { day: 19, name: '雨水', month: 2 },
-      { day: 6, name: '惊蛰', month: 3 },
-      { day: 21, name: '春分', month: 3 },
-      { day: 5, name: '清明', month: 4 },
-      { day: 20, name: '谷雨', month: 4 },
-      { day: 6, name: '立夏', month: 5 },
-      { day: 21, name: '小满', month: 5 },
-      { day: 6, name: '芒种', month: 6 },
-      { day: 21, name: '夏至', month: 6 },
-      { day: 7, name: '小暑', month: 7 },
-      { day: 23, name: '大暑', month: 7 },
-      { day: 8, name: '立秋', month: 8 },
-      { day: 23, name: '处暑', month: 8 },
-      { day: 8, name: '白露', month: 9 },
-      { day: 23, name: '秋分', month: 9 },
-      { day: 8, name: '寒露', month: 10 },
-      { day: 24, name: '霜降', month: 10 },
-      { day: 8, name: '立冬', month: 11 },
-      { day: 22, name: '小雪', month: 11 },
-      { day: 7, name: '大雪', month: 12 },
-      { day: 22, name: '冬至', month: 12 }
-    ]
-
-    for (const term of solarTerms) {
-      if (term.month === month) {
-        holidays.push({ day: term.day, name: term.name, type: 'solar' })
+    // 使用 lunar-javascript 获取准确的节气
+    const startSolar = Solar.fromYmd(year, month, 1)
+    const lunarMonth = startSolar.getLunar()
+    
+    // 节气映射
+    const jieQiMap = {
+      'LI_CHUN': '立春',
+      'YU_SHUI': '雨水',
+      'JING_ZHE': '惊蛰',
+      'CHUN_FEN': '春分',
+      'QING_MING': '清明',
+      'GU_YU': '谷雨',
+      'LI_XIA': '立夏',
+      'XIAO_MAN': '小满',
+      'MANG_ZHONG': '芒种',
+      'XIA_ZHI': '夏至',
+      'XIAO_SHU': '小暑',
+      'DA_SHU': '大暑',
+      'LI_QIU': '立秋',
+      'CHU_SHU': '处暑',
+      'BAI_LU': '白露',
+      'QIU_FEN': '秋分',
+      'HAN_LU': '寒露',
+      'SHUANG_JIANG': '霜降',
+      'LI_DONG': '立冬',
+      'XIAO_XUE': '小雪',
+      'DA_XUE': '大雪',
+      'DONG_ZHI': '冬至',
+      'XIAO_HAN': '小寒',
+      'DA_HAN': '大寒'
+    }
+    
+    // 遍历节气映射，检查当月的节气
+    for (const [key, name] of Object.entries(jieQiMap)) {
+      // 尝试获取节气对应的阳历日期
+      const jieQiSolar = lunarMonth._p && lunarMonth._p.jieQi ? lunarMonth._p.jieQi[key] : null
+      if (jieQiSolar && jieQiSolar.getMonth() === month) {
+        holidays.push({ day: jieQiSolar.getDay(), name, type: 'solar' })
       }
     }
+
+    // 按日期排序
+    holidays.sort((a, b) => a.day - b.day)
 
     return holidays
   },
 
+  generateCalendar(year, month) {
+    const calendarDays = []
+    const holidays = this.data.holidays
+    
+    // 星期标题
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+    
+    // 当月第一天
+    const firstDay = new Date(year, month - 1, 1)
+    // 当月第一天是星期几
+    const firstDayWeek = firstDay.getDay()
+    // 当月有多少天
+    const daysInMonth = new Date(year, month, 0).getDate()
+    
+    // 上个月需要显示的天数
+    const prevMonthDays = firstDayWeek
+    // 上个月的年份和月份
+    const prevMonth = month === 1 ? 12 : month - 1
+    const prevYear = month === 1 ? year - 1 : year
+    // 上个月有多少天
+    const daysInPrevMonth = new Date(prevYear, prevMonth, 0).getDate()
+    
+    // 日历网格（6行7列）
+    let dayCount = 1
+    for (let i = 0; i < 6; i++) {
+      const week = []
+      for (let j = 0; j < 7; j++) {
+        let day = null
+        let isCurrentMonth = false
+        let isToday = false
+        let isSelected = false
+        let lunarDay = ''
+        let holiday = null
+        
+        if (i === 0 && j < prevMonthDays) {
+          // 上个月的日期
+          day = daysInPrevMonth - prevMonthDays + j + 1
+          const prevSolar = Solar.fromYmd(prevYear, prevMonth, day)
+          const prevLunar = prevSolar.getLunar()
+          lunarDay = prevLunar.getDayInChinese()
+        } else if (dayCount <= daysInMonth) {
+          // 当月的日期
+          day = dayCount
+          isCurrentMonth = true
+          
+          // 检查是否是今天
+          const today = new Date()
+          if (year === today.getFullYear() && month === today.getMonth() + 1 && day === today.getDate()) {
+            isToday = true
+          }
+          
+          // 检查是否是选中日期
+          isSelected = this.data.selectedYear === year && this.data.selectedMonth === month && this.data.selectedDay === day
+          
+          // 获取农历
+          const solar = Solar.fromYmd(year, month, day)
+          const lunar = solar.getLunar()
+          lunarDay = lunar.getDayInChinese()
+          
+          // 检查是否是节假日
+          holiday = holidays.find(h => h.day === day)
+          
+          // 检查是否是除夕
+          if (!holiday && Math.abs(lunar.getMonth()) === 12 && lunar.getDay() >= 29) {
+            const nextDay = lunar.next(1)
+            if (lunar.getYear() !== nextDay.getYear()) {
+              holiday = { day, name: '除夕', type: 'lunar' }
+            }
+          }
+          
+          dayCount++
+        } else {
+          // 下个月的日期
+          day = dayCount - daysInMonth
+          const nextMonth = month === 12 ? 1 : month + 1
+          const nextYear = month === 12 ? year + 1 : year
+          const nextSolar = Solar.fromYmd(nextYear, nextMonth, day)
+          const nextLunar = nextSolar.getLunar()
+          lunarDay = nextLunar.getDayInChinese()
+        }
+        
+        week.push({
+          day,
+          isCurrentMonth,
+          isToday,
+          isSelected,
+          lunarDay,
+          holiday
+        })
+      }
+      calendarDays.push(week)
+      
+      if (dayCount > daysInMonth) break
+    }
+    
+    this.setData({ calendarDays, weekDays })
+  },
+
+  // 处理日期点击事件
+  onDayClick(e) {
+    const { day, isCurrentMonth } = e.currentTarget.dataset
+    const { year, month } = this.data
+    
+    let targetYear = year
+    let targetMonth = month
+    
+    if (!isCurrentMonth) {
+      // 处理上个月或下个月的日期
+      if (day > 15) {
+        // 上个月
+        targetMonth = month === 1 ? 12 : month - 1
+        targetYear = month === 1 ? year - 1 : year
+      } else {
+        // 下个月
+        targetMonth = month === 12 ? 1 : month + 1
+        targetYear = month === 12 ? year + 1 : year
+      }
+    }
+    
+    // 跳转到选中日期
+    const date = new Date(targetYear, targetMonth - 1, day)
+    this.initCalendar(targetYear, targetMonth - 1, day)
+  },
+
+
+
+  // 切换月份
+  switchMonth(direction) {
+    const { year, month, day } = this.data
+    let newMonth = month + direction
+    let newYear = year
+    
+    if (newMonth > 12) {
+      newMonth = 1
+      newYear = year + 1
+    } else if (newMonth < 1) {
+      newMonth = 12
+      newYear = year - 1
+    }
+    
+    // 确保日期有效
+    const daysInMonth = new Date(newYear, newMonth, 0).getDate()
+    const newDay = Math.min(day, daysInMonth)
+    
+    this.initCalendar(newYear, newMonth - 1, newDay)
+  },
+
+  // 处理年份切换
+  handleYearSwitch(e) {
+    const direction = parseInt(e.currentTarget.dataset.direction)
+    this.switchYear(direction)
+  },
+
+  // 处理月份切换
+  handleMonthSwitch(e) {
+    const direction = parseInt(e.currentTarget.dataset.direction)
+    this.switchMonth(direction)
+  },
+
+  // 切换年份
+  switchYear(direction) {
+    const { year, month, day } = this.data
+    const newYear = year + direction
+    
+    // 确保日期有效
+    const daysInMonth = new Date(newYear, month, 0).getDate()
+    const newDay = Math.min(day, daysInMonth)
+    
+    this.initCalendar(newYear, month - 1, newDay)
+  },
+
   onDateChange(e) {
-    const date = new Date(e.detail.value)
+    // 处理 picker 组件返回的 YYYY-MM-DD 格式日期
+    const dateStr = e.detail.value
+    const date = new Date(dateStr)
     this.initCalendar(date.getFullYear(), date.getMonth(), date.getDate())
   },
 

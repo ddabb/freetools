@@ -1,23 +1,36 @@
 /**packages/life/pages/calendar/calendar.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .container {
-  padding: 20rpx;
+  padding: 0rpx;
+  margin: 0rpx;
 }
 
 .section {
-  margin-bottom: 30rpx;
+  margin-bottom: 20rpx;
+  margin-left: 0rpx;
+  margin-right: 0rpx;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 20rpx;
 }
 
 .section-title {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: 700;
   color: white;
-  margin-bottom: 15rpx;
+  margin-bottom: 16rpx;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  padding: 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 /* 日期选择器 */
@@ -28,7 +41,7 @@ page {
 .date-display {
   background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
   border-radius: 16rpx;
-  padding: 30rpx;
+  padding: 24rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,31 +49,49 @@ page {
 }
 
 .date-text {
-  font-size: 48rpx;
+  font-size: 42rpx;
   font-weight: 800;
-  color: #f5576c;
+  color: #667eea;
 }
 
 .date-arrow {
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #999;
 }
 
 /* 信息卡片 */
 .info-section {
   display: flex;
+  flex-direction: column;
   gap: 20rpx;
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.info-card-row {
+  display: flex;
+  gap: 10rpx;
+  overflow-x: auto;
+  padding: 0 10rpx 10rpx;
+  margin: 0 -10rpx;
 }
 
 .info-card {
-  flex: 1;
+  flex: 0 0 auto;
+  min-width: 100rpx;
   background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
   border-radius: 16rpx;
-  padding: 30rpx;
+  padding: 20rpx 15rpx;
   text-align: center;
   box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  min-height: 130rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  white-space: nowrap;
 }
 
 .info-card::before {
@@ -70,119 +101,236 @@ page {
   left: 0;
   right: 0;
   height: 4rpx;
-  background: linear-gradient(90deg, #f093fb, #f5576c);
+  background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .info-label {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
   display: block;
-  margin-bottom: 10rpx;
+  margin-bottom: 6rpx;
+  font-weight: 600;
 }
 
 .info-value {
-  font-size: 36rpx;
+  font-size: 26rpx;
   font-weight: 700;
   color: #333;
   display: block;
+  word-break: break-all;
 }
 
-/* 节假日列表 */
-.holidays-section {
+/* 日历部分 */
+.calendar-section {
   background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-  border-radius: 20rpx;
-  padding: 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.2);
+  border-radius: 0rpx;
+  padding: 0rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 30rpx;
+  width: calc(100vw - 20rpx);
+  margin-left: calc(-50vw + 50% + 10rpx);
+  margin-right: calc(-50vw + 50% + 10rpx);
+  position: relative;
+  z-index: 1;
 }
 
-.holidays-list {
+/* 星期标题 */
+.calendar-header {
+  display: flex;
+  margin-bottom: 0rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+  padding: 12rpx 0;
+}
+
+.week-day {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #666;
+}
+
+/* 日历网格 */
+.calendar-grid {
   display: flex;
   flex-direction: column;
-  gap: 15rpx;
+  gap: 0rpx;
+  padding: 0rpx;
+  margin: 0rpx;
 }
 
-.holiday-item {
+.calendar-week {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 12rpx;
+  gap: 0rpx;
+  height: 140rpx;
+  margin: 0rpx;
+  padding: 0rpx;
 }
 
-.holiday-day {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: #f5576c;
-  width: 80rpx;
-}
-
-.holiday-name {
+.calendar-day {
   flex: 1;
-  font-size: 28rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0rpx;
+  padding: 8rpx;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 140rpx;
+  min-width: calc(100% / 7);
+  box-sizing: border-box;
+  border: 1rpx solid transparent;
+}
+
+.calendar-day:active {
+  transform: scale(0.95);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.calendar-day.today:active {
+  background: linear-gradient(135deg, #e083ea 0%, #e5475c 100%);
+}
+
+.calendar-day.holiday:active {
+  background: rgba(52, 152, 219, 0.2);
+}
+
+/* 日期数字 */
+.day-number {
+  font-size: 42rpx;
+  font-weight: 700;
   color: #333;
+  margin-bottom: 10rpx;
+  line-height: 1;
+}
+
+/* 农历日期 */
+.lunar-day {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+  line-height: 1;
+}
+
+/* 节假日名称 */
+.calendar-day .holiday-name {
+  font-size: 16rpx;
+  color: #f5576c;
   font-weight: 600;
   text-align: center;
+  line-height: 1;
+  word-break: break-all;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.holiday-type {
-  font-size: 24rpx;
+/* 其他月份的日期 */
+.calendar-day.other-month {
+  opacity: 0.5;
+}
+
+.calendar-day.other-month .day-number {
+  color: #ccc;
+}
+
+.calendar-day.other-month .lunar-day {
+  color: #ccc;
+}
+
+/* 今天 */
+.calendar-day.today {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 4rpx 12rpx rgba(240, 147, 251, 0.4);
+}
+
+.calendar-day.today .day-number {
   color: white;
-  padding: 6rpx 16rpx;
-  border-radius: 20rpx;
-  font-weight: 500;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
 }
 
-.holiday-type.solar {
+.calendar-day.today .lunar-day {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 选中日期 */
+.calendar-day.selected {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
 }
 
-.holiday-type.fixed {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+.calendar-day.selected .day-number {
+  color: white;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+}
+
+.calendar-day.selected .lunar-day {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 节假日 */
+.calendar-day.holiday {
+  background: rgba(52, 152, 219, 0.1);
+  border: 2rpx solid #3498db;
+}
+
+.calendar-day.holiday .day-number {
+  color: #3498db;
+  font-weight: 700;
+}
+
+.calendar-day.today.holiday {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2rpx solid #667eea;
+}
+
+.calendar-day.today.holiday .day-number {
+  color: white;
+}
+
+.calendar-day.today.holiday .holiday-name {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* 功能按钮 */
 .buttons-section {
   display: flex;
-  gap: 20rpx;
+  gap: 12rpx;
+  position: relative;
+  z-index: 0;
 }
 
 .action-btn {
   flex: 1;
-  padding: 24rpx;
+  padding: 20rpx;
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 24rpx;
   font-weight: 700;
   border: none;
   color: white;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  box-shadow: 0 8rpx 20rpx rgba(250, 112, 154, 0.4);
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  box-shadow: 0 8rpx 20rpx rgba(168, 237, 234, 0.4);
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  box-shadow: 0 8rpx 20rpx rgba(17, 153, 142, 0.4);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8rpx 20rpx rgba(240, 147, 251, 0.4);
 }
 
 .action-btn:active {
   transform: scale(0.98);
 }
 
-.share-section {
-  margin-top: 30rpx;
-  text-align: center;
-}
-
 .btn-share {
-  width: 100%;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: 44rpx;
-  font-size: 32rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
   font-weight: bold;
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: #fff;
-  margin-top: 20rpx;
   border: none;
   box-shadow: 0 8rpx 20rpx rgba(231, 76, 60, 0.4);
   transition: all 0.3s ease;
@@ -195,4 +343,46 @@ page {
 .btn-share:active {
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(231, 76, 60, 0.4);
+}
+
+/* 功能按钮容器 */
+.buttons-container {
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+  padding: 0 20rpx;
+  position: relative;
+  z-index: 0;
+}
+
+/* 年月导航 */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 15px;
+  padding: 20rpx;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.nav-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 1rpx solid #ddd;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+  background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
 }

@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "packages/design/pages/color-converter/color-converter",
-          "pathName": "packages/design/pages/color-converter/color-converter",
+          "name": "日历呈现",
+          "pathName": "packages/life/pages/calendar/calendar",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "packages/design/pages/color-converter/color-converter",
+          "pathName": "packages/design/pages/color-converter/color-converter",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "文字转图片",
