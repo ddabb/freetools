@@ -20,7 +20,13 @@ Page({
           'border': '1px solid #e0e0e0',
           'border-radius': '8px'
         },
-        textColor: '#333333'
+        textColor: '#333333',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       },
       template2: {
         name: '深色背景',
@@ -28,7 +34,13 @@ Page({
           'background': '#333333',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       },
       template3: {
         name: '渐变蓝色',
@@ -36,7 +48,13 @@ Page({
           'background': 'linear-gradient(135deg, #3498db, #2980b9)',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'light',
+          fontSize: 17,
+          lineHeight: 1.6
+        }
       },
       template4: {
         name: '渐变绿色',
@@ -44,7 +62,13 @@ Page({
           'background': 'linear-gradient(135deg, #2ecc71, #27ae60)',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       },
       template5: {
         name: '渐变红色',
@@ -52,7 +76,13 @@ Page({
           'background': 'linear-gradient(135deg, #e74c3c, #c0392b)',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'bold',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       },
       template6: {
         name: '渐变紫色',
@@ -60,7 +90,13 @@ Page({
           'background': 'linear-gradient(135deg, #9b59b6, #8e44ad)',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'serif',
+          fontWeight: 'normal',
+          fontSize: 17,
+          lineHeight: 1.6
+        }
       },
       template7: {
         name: '渐变橙色',
@@ -68,7 +104,13 @@ Page({
           'background': 'linear-gradient(135deg, #f39c12, #e67e22)',
           'border-radius': '8px'
         },
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'medium',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       },
       template8: {
         name: '商务灰色',
@@ -77,7 +119,13 @@ Page({
           'border': '2px solid #95a5a6',
           'border-radius': '8px'
         },
-        textColor: '#333333'
+        textColor: '#333333',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
+          fontSize: 15,
+          lineHeight: 1.4
+        }
       },
       template9: {
         name: '卡片风格',
@@ -87,7 +135,13 @@ Page({
           'border-radius': '8px',
           'box-shadow': '0 2px 8px rgba(0, 0, 0, 0.1)'
         },
-        textColor: '#333333'
+        textColor: '#333333',
+        fontConfig: {
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
+          fontSize: 16,
+          lineHeight: 1.5
+        }
       }
     },
     
@@ -206,6 +260,7 @@ Page({
     
     const template = this.data.templates[this.data.selectedTemplate];
     const textEffect = this.data.textEffects[this.data.selectedTextEffect];
+    const fontConfig = template.fontConfig;
     
     // 构建预览样式
     let previewStyle = '';
@@ -216,7 +271,10 @@ Page({
     });
     
     // 应用文字样式
-    previewStyle += `font-size: 16px; line-height: 1.5; `;
+    previewStyle += `font-family: ${fontConfig.fontFamily}; `;
+    previewStyle += `font-weight: ${fontConfig.fontWeight}; `;
+    previewStyle += `font-size: ${fontConfig.fontSize}px; `;
+    previewStyle += `line-height: ${fontConfig.lineHeight}; `;
     
     // 应用文字颜色
     previewStyle += `color: ${template.textColor}; `;
@@ -229,7 +287,7 @@ Page({
     // 处理Markdown预览
     let previewText = validation.valid ? inputValue : '请输入文本';
     if (validation.valid) {
-      previewText = this.renderMarkdownPreview(inputValue);
+      previewText = this.renderMarkdownPreview(inputValue, fontConfig);
     }
     
     this.setData({
@@ -240,18 +298,28 @@ Page({
   },
 
   // 渲染Markdown预览
-  renderMarkdownPreview(text) {
+  renderMarkdownPreview(text, fontConfig) {
     if (!text) return '';
     
     let html = '';
     const lines = text.split('\n');
     let inCodeBlock = false;
     
+    // 默认字体配置
+    const defaultFontConfig = {
+      fontFamily: 'sans-serif',
+      fontWeight: 'normal',
+      fontSize: 16,
+      lineHeight: 1.5
+    };
+    
+    const config = fontConfig || defaultFontConfig;
+    
     lines.forEach(line => {
       if (line.startsWith('```')) {
         inCodeBlock = !inCodeBlock;
         if (inCodeBlock) {
-          html += '<div style="font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px; margin: 10px 0;">';
+          html += `<div style="font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: ${config.fontSize * 0.9}px; line-height: ${config.lineHeight};">`;
         } else {
           html += '</div>';
         }
@@ -265,19 +333,19 @@ Page({
       
       // 标题
       if (line.startsWith('# ')) {
-        html += '<h1 style="font-size: 24px; font-weight: bold; margin: 10px 0;">' + line.substring(2) + '</h1>';
+        html += `<h1 style="font-family: ${config.fontFamily}; font-weight: bold; font-size: ${config.fontSize * 1.5}px; margin: 10px 0; line-height: ${config.lineHeight};">` + line.substring(2) + '</h1>';
       } else if (line.startsWith('## ')) {
-        html += '<h2 style="font-size: 20px; font-weight: bold; margin: 8px 0;">' + line.substring(3) + '</h2>';
+        html += `<h2 style="font-family: ${config.fontFamily}; font-weight: bold; font-size: ${config.fontSize * 1.3}px; margin: 8px 0; line-height: ${config.lineHeight};">` + line.substring(3) + '</h2>';
       } else if (line.startsWith('### ')) {
-        html += '<h3 style="font-size: 18px; font-weight: bold; margin: 6px 0;">' + line.substring(4) + '</h3>';
+        html += `<h3 style="font-family: ${config.fontFamily}; font-weight: bold; font-size: ${config.fontSize * 1.1}px; margin: 6px 0; line-height: ${config.lineHeight};">` + line.substring(4) + '</h3>';
       }
       // 引用
       else if (line.startsWith('> ')) {
-        html += '<div style="margin: 10px 0; padding: 10px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #3498db;">' + line.substring(2) + '</div>';
+        html += `<div style="margin: 10px 0; padding: 10px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #3498db; font-family: ${config.fontFamily}; font-size: ${config.fontSize}px; line-height: ${config.lineHeight};">` + line.substring(2) + '</div>';
       }
       // 列表
       else if (line.startsWith('- ') || line.startsWith('* ')) {
-        html += '<div style="margin: 5px 0; padding-left: 20px;">• ' + line.substring(2) + '</div>';
+        html += `<div style="margin: 5px 0; padding-left: 20px; font-family: ${config.fontFamily}; font-size: ${config.fontSize}px; line-height: ${config.lineHeight};">• ` + line.substring(2) + '</div>';
       }
       // 普通文本
       else {
@@ -288,7 +356,7 @@ Page({
         if (content.trim() === '') {
           html += '<br>';
         } else {
-          html += '<div>' + content + '</div>';
+          html += `<div style="font-family: ${config.fontFamily}; font-size: ${config.fontSize}px; line-height: ${config.lineHeight};">` + content + '</div>';
         }
       }
     });
@@ -441,8 +509,9 @@ Page({
       const inputText = this.data.inputText.trim();
       const template = this.data.templates[this.data.selectedTemplate];
       const textEffect = this.data.textEffects[this.data.selectedTextEffect];
-      const baseFontSize = 16;
-      const lineHeight = 1.5;
+      const fontConfig = template.fontConfig;
+      const baseFontSize = fontConfig.fontSize;
+      const lineHeight = fontConfig.lineHeight;
       
       console.log('开始生成文本PNG:', {
         inputText: inputText,
@@ -581,7 +650,7 @@ Page({
             }
             
             // 设置文字样式
-            ctx.font = `${fontWeight} ${fontSize}px sans-serif`;
+            ctx.font = `${fontWeight} ${fontSize}px ${fontConfig.fontFamily}`;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
             ctx.fillStyle = textColor;

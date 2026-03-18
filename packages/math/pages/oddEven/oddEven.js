@@ -2,7 +2,10 @@
 Page({
   data: {
     inputValue: '',
-    result: ''
+    result: {},
+    showResult: false,
+    loading: false,
+    inputFocus: false
   },
 
   /**
@@ -11,7 +14,7 @@ Page({
   onInputChange: function(e) {
     this.setData({
       inputValue: e.detail.value,
-      result: '' // 清空之前的结果
+      showResult: false // 清空之前的结果
     });
   },
 
@@ -42,36 +45,77 @@ Page({
       return;
     }
 
-    // 判断奇偶数
-    let result = '';
-    let emoji = '';
+    this.setData({ loading: true });
     
-    if (num % 2 === 0) {
-      result = `${num} 是偶数`;
-      emoji = '✨';
-    } else {
-      result = `${num} 是奇数`;
-      emoji = '🎯';
-    }
+    // 模拟判断过程
+    setTimeout(() => {
+      const isEven = num % 2 === 0;
+      const remainder = num % 2;
+      const previousNumber = num - 1;
+      const nextNumber = num + 1;
+      const resultText = isEven ? num + ' 是偶数' : num + ' 是奇数';
+      const explanation = isEven ? 
+        num + ' 能被2整除，余数为0，因此是偶数。' : 
+        num + ' 不能被2整除，余数为1，因此是奇数。';
+      
+      this.setData({
+        result: {
+          number: num,
+          isEven: isEven,
+          resultText: resultText,
+          remainder: remainder,
+          previousNumber: previousNumber,
+          nextNumber: nextNumber,
+          explanation: explanation
+        },
+        showResult: true,
+        loading: false
+      });
 
-    // 显示结果
-    this.setData({
-      result: `${emoji} ${result}`
-    });
-
-    // 添加成功反馈
-    wx.vibrateShort({
-      type: 'light'
-    });
+      // 添加成功反馈
+      wx.vibrateShort({
+        type: 'light'
+      });
+    }, 300);
   },
 
   /**
    * 清空输入和结果
    */
-  clearAll: function() {
+  clearInput: function() {
     this.setData({
       inputValue: '',
-      result: ''
+      result: {},
+      showResult: false
+    });
+  },
+
+  /**
+   * 重置功能
+   */
+  reset: function() {
+    this.setData({
+      inputValue: '',
+      result: {},
+      showResult: false
+    });
+  },
+
+  /**
+   * 复制结果
+   */
+  copyResult: function() {
+    const result = this.data.result;
+    const copyText = `判断结果：\n输入数字：${result.number}\n判断结果：${result.resultText}\n除以2余数：${result.remainder}\n相邻数字：${result.previousNumber}, ${result.nextNumber}`;
+    
+    wx.setClipboardData({
+      data: copyText,
+      success: function() {
+        wx.showToast({
+          title: '结果已复制',
+          icon: 'success'
+        });
+      }
     });
   },
 
@@ -120,7 +164,7 @@ Page({
    * 监听用户下拉动作
    */
   onPullDownRefresh: function() {
-    this.clearAll();
+    this.reset();
     wx.stopPullDownRefresh();
   },
 
@@ -136,15 +180,15 @@ Page({
  */
   onShareAppMessage: function() {
     return {
-      title: '奇偶数判断工具',
-      path: '/packages/utility/pages/oddEven/oddEven'
+      title: '奇偶判断 - 快速判断数字的奇偶性',
+      path: '/packages/math/pages/oddEven/oddEven'
     };
   },
 
   // 分享到朋友圈
   onShareTimeline: function() {
     return {
-      title: '奇偶数判断工具 - 快速判断奇偶数',
+      title: '奇偶判断 - 快速判断数字的奇偶性',
       query: 'oddEven'
     };
   }

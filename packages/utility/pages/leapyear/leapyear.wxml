@@ -1,51 +1,171 @@
 <!--leapyear.wxml-->
-<view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 标题 -->
-    <view class="header">
-      <text class="title">判断是否闰年</text>
-    </view>
-
-    <!-- 年份输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">请输入年份</text>
-        <text class="required-mark">*</text>
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">📅</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{year}}" bindinput="inputChange" class="input-field" placeholder="例如：2024"/>
-        <text class="unit-text">年</text>
-      </view>
-    </view>
-
-    <!-- 判断按钮 -->
-    <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="checkLeapYear">
-        <text class="btn-text">判断</text>
-      </button>
-    </view>
-
-    <!-- 结果显示 -->
-    <view class="form-item" wx:if="{{result !== ''}}">
-      <view class="form-label">
-        <text class="label-text">判断结果</text>
-      </view>
-      <view class="result-box">
-        <text class="output-text">{{result}}</text>
-      </view>
+      <text class="main-title">闰年判断</text>
+      <text class="subtitle">快速判断年份是否为闰年</text>
     </view>
   </view>
-  
-  <!-- 概念说明 -->
-  <view class="concept-container dock-bottom">
-    <view class="concept-header">
-      <text class="concept-title">概念说明</text>
+
+  <view class="content-wrapper">
+    <!-- 输入卡片 -->
+    <view class="input-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">输入年份</text>
+      </view>
+      
+      <view class="card-body">
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">请输入年份</text>
+            <view class="input-container">
+              <input
+                type="number"
+                value="{{year}}"
+                bindinput="inputChange"
+                class="modern-input"
+                placeholder="例如：2024"
+                focus="{{inputFocus}}"
+              />
+              <view class="input-status {{year ? 'valid' : ''}}">
+                <text class="status-dot"></text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮组 -->
+        <view class="action-section">
+          <button 
+            class="primary-btn {{year ? 'ready' : ''}}" 
+            bindtap="checkLeapYear"
+            disabled="{{!year}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔍</text>
+            <text class="btn-text">开始判断</text>
+            <view class="btn-shine" wx:if="{{year}}"></view>
+          </button>
+          
+          <button 
+            class="secondary-btn" 
+            bindtap="clearInput"
+            wx:if="{{year}}"
+            hover-class="btn-secondary-hover"
+          >
+            <text class="btn-icon">🗑️</text>
+            <text class="btn-text">清空</text>
+          </button>
+        </view>
+      </view>
     </view>
-    <view class="concept-content">
-      <text class="concept-text">闰年：能被4整除但不能被100整除，或者能被400整除的年份。</text>
-      <text class="concept-text">平年：不能被4整除，或者能被100整除但不能被400整除的年份。</text>
-      <text class="concept-text">闰年有366天，2月有29天；平年有365天，2月有28天。</text>
+
+    <!-- 加载状态 -->
+    <view class="loading-card card-shadow" wx:if="{{loading}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在判断中...</text>
+      </view>
+    </view>
+
+    <!-- 结果卡片 -->
+    <view wx:if="{{showResult}}" class="result-card card-shadow fade-in-up {{result.isLeapYear ? 'leap-card' : 'common-card'}}" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">{{result.isLeapYear ? '✨' : '📅'}}</view>
+        <text class="result-title">判断结果</text>
+        <view class="result-badge {{result.isLeapYear ? 'leap-badge' : 'common-badge'}}">{{result.isLeapYear ? '闰年' : '平年'}}</view>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">输入年份</text>
+              <text class="info-value highlight">{{result.year}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔍</view>
+            <view class="info-content">
+              <text class="info-label">判断结果</text>
+              <text class="info-value highlight">{{result.resultText}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📊</view>
+            <view class="info-content">
+              <text class="info-label">天数</text>
+              <text class="info-value">{{result.isLeapYear ? '366天' : '365天'}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📅</view>
+            <view class="info-content">
+              <text class="info-label">2月天数</text>
+              <text class="info-value">{{result.isLeapYear ? '29天' : '28天'}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 闰年判断依据 -->
+        <view class="explanation-section">
+          <text class="section-title">判断依据：</text>
+          <text class="explanation-text">{{result.explanation}}</text>
+        </view>
+
+        <!-- 相邻年份信息 -->
+        <view class="years-section">
+          <text class="section-title">相邻年份：</text>
+          <view class="years-grid">
+            <view class="year-item {{result.prevYearIsLeap ? 'leap-year' : 'common-year'}}">
+              <text class="year-number">{{result.prevYear}}</text>
+              <text class="year-type">{{result.prevYearIsLeap ? '闰年' : '平年'}}</text>
+            </view>
+            <view class="year-item current-year">
+              <text class="year-number">{{result.year}}</text>
+              <text class="year-type">当前</text>
+            </view>
+            <view class="year-item {{result.nextYearIsLeap ? 'leap-year' : 'common-year'}}">
+              <text class="year-number">{{result.nextYear}}</text>
+              <text class="year-type">{{result.nextYearIsLeap ? '闰年' : '平年'}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="result-actions">
+        <button class="action-btn copy-btn" bindtap="copyResult" hover-class="btn-action-hover">
+          <text class="btn-icon">📋</text>
+          <text>复制结果</text>
+        </button>
+        <button class="action-btn retry-btn" bindtap="reset" hover-class="btn-action-hover">
+          <text class="btn-icon">🔄</text>
+          <text>重新判断</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 概念说明 -->
+    <view class="concept-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="concept-header">
+        <view class="concept-icon">ℹ️</view>
+        <text class="concept-title">概念说明</text>
+      </view>
+      <view class="concept-content">
+        <text class="concept-text">闰年：能被4整除但不能被100整除，或者能被400整除的年份。</text>
+        <text class="concept-text">平年：不能被4整除，或者能被100整除但不能被400整除的年份。</text>
+        <text class="concept-text">闰年有366天，2月有29天；平年有365天，2月有28天。</text>
+        <text class="concept-text">每4年一次闰年，但整百年份需要能被400整除才是闰年。</text>
+      </view>
     </view>
   </view>
 </view>

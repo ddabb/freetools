@@ -3,13 +3,16 @@ Page({
   data: {
     inputText: '', // 输入文本
     outputText: '', // 输出文本
-    wordCount: null // 字数统计
+    wordCount: null, // 字数统计
+    inputFocus: false
   },
   
   // 设置输入文本
   setInputText(e) {
     this.setData({
-      inputText: e.detail.value
+      inputText: e.detail.value,
+      outputText: '',
+      wordCount: null
     });
   },
   
@@ -29,6 +32,11 @@ Page({
       outputText: reversedText,
       wordCount: null
     });
+
+    // 添加成功反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
   },
   
   // 转为大写
@@ -47,6 +55,11 @@ Page({
       outputText: upperText,
       wordCount: null
     });
+
+    // 添加成功反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
   },
   
   // 转为小写
@@ -64,6 +77,11 @@ Page({
     this.setData({
       outputText: lowerText,
       wordCount: null
+    });
+
+    // 添加成功反馈
+    wx.vibrateShort({
+      type: 'light'
     });
   },
   
@@ -90,6 +108,11 @@ Page({
       },
       outputText: ''
     });
+
+    // 添加成功反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
   },
   
   // 复制文本
@@ -105,6 +128,15 @@ Page({
           icon: 'success'
         });
       }
+    });
+  },
+
+  // 清空文本
+  clearInput() {
+    this.setData({
+      inputText: '',
+      outputText: '',
+      wordCount: null
     });
   },
 

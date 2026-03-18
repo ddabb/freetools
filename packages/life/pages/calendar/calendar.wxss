@@ -64,8 +64,9 @@ page {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
+  width: calc(100% - 60rpx);
   padding: 0 20rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 40rpx;
 }
 
 .info-card-row {
@@ -127,9 +128,9 @@ page {
   padding: 0rpx;
   box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.15);
   margin-bottom: 30rpx;
-  width: calc(100vw - 20rpx);
-  margin-left: calc(-50vw + 50% + 10rpx);
-  margin-right: calc(-50vw + 50% + 10rpx);
+  width: calc(100% - 20rpx);
+  margin-left: 50rpx;
+  margin-right: 50rpx;
   position: relative;
   z-index: 1;
 }

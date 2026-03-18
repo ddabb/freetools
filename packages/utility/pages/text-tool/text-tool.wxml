@@ -1,62 +1,173 @@
 <!--text-tool.wxml-->
-<view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 标题 -->
-    <view class="header">
-      <text class="title">文本工具</text>
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">📝</text>
+      </view>
+      <text class="main-title">文本工具</text>
+      <text class="subtitle">文本处理和转换工具</text>
     </view>
+  </view>
 
-    <!-- 文本输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">输入文本</text>
-        <text class="required-mark">*</text>
+  <view class="content-wrapper">
+    <!-- 输入卡片 -->
+    <view class="input-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">输入文本</text>
       </view>
-      <view class="input-with-unit">
-        <textarea placeholder="请输入文本" value="{{inputText}}" bindinput="setInputText" class="input-field textarea-field"></textarea>
-      </view>
-    </view>
-
-    <!-- 操作按钮 -->
-    <view class="form-item">
-      <view class="button-grid">
-        <button class="action-btn full-width-btn" bindtap="reverseText">文本反转</button>
-        <button class="action-btn full-width-btn" bindtap="toUpperCase">转为大写</button>
-        <button class="action-btn full-width-btn" bindtap="toLowerCase">转为小写</button>
-        <button class="action-btn full-width-btn" bindtap="countWords">字数统计</button>
-      </view>
-    </view>
-
-    <!-- 结果显示 -->
-    <view class="form-item" wx:if="{{outputText}}">
-      <view class="form-label">
-        <text class="label-text">处理结果</text>
-      </view>
-      <view class="result-box">
-        <text class="output-text">{{outputText}}</text>
-        <button class="copy-btn" bindtap="copyText">复制</button>
-      </view>
-    </view>
-
-    <!-- 字数统计结果 -->
-    <view class="form-item" wx:if="{{wordCount}}">
-      <view class="form-label">
-        <text class="label-text">字数统计</text>
-      </view>
-      <view class="count-box">
-        <view class="count-item">
-          <text class="count-label">字符数：</text>
-          <text class="count-value">{{wordCount.characters}}</text>
+      
+      <view class="card-body">
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">请输入文本</text>
+            <view class="input-container">
+              <textarea
+                value="{{inputText}}"
+                bindinput="setInputText"
+                class="modern-textarea"
+                placeholder="请输入需要处理的文本"
+                maxlength="5000"
+                focus="{{inputFocus}}"
+              />
+            </view>
+          </view>
         </view>
-        <view class="count-item">
-          <text class="count-label">单词数：</text>
-          <text class="count-value">{{wordCount.words}}</text>
+
+        <!-- 操作按钮组 -->
+        <view class="action-section">
+          <button 
+            class="primary-btn" 
+            bindtap="reverseText"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔄</text>
+            <text class="btn-text">文本反转</text>
+          </button>
+          
+          <button 
+            class="primary-btn" 
+            bindtap="toUpperCase"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔠</text>
+            <text class="btn-text">转为大写</text>
+          </button>
+          
+          <button 
+            class="primary-btn" 
+            bindtap="toLowerCase"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔡</text>
+            <text class="btn-text">转为小写</text>
+          </button>
+          
+          <button 
+            class="primary-btn" 
+            bindtap="countWords"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">📊</text>
+            <text class="btn-text">字数统计</text>
+          </button>
         </view>
-        <view class="count-item">
-          <text class="count-label">行数：</text>
-          <text class="count-value">{{wordCount.lines}}</text>
+
+        <!-- 清空按钮 -->
+        <button 
+          class="secondary-btn full-width" 
+          bindtap="clearInput"
+          wx:if="{{inputText}}"
+          hover-class="btn-secondary-hover"
+        >
+          <text class="btn-icon">🗑️</text>
+          <text class="btn-text">清空文本</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 结果卡片 -->
+    <view wx:if="{{outputText}}" class="result-card card-shadow fade-in-up" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">📋</view>
+        <text class="result-title">处理结果</text>
+      </view>
+      
+      <view class="result-body">
+        <view class="result-content">
+          <text class="output-text">{{outputText}}</text>
         </view>
+        
+        <view class="result-actions">
+          <button class="action-btn copy-btn" bindtap="copyText" hover-class="btn-action-hover">
+            <text class="btn-icon">📋</text>
+            <text>复制结果</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 字数统计结果卡片 -->
+    <view wx:if="{{wordCount}}" class="result-card card-shadow fade-in-up" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">📊</view>
+        <text class="result-title">字数统计</text>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">字符数</text>
+              <text class="info-value highlight">{{wordCount.characters}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔤</view>
+            <view class="info-content">
+              <text class="info-label">单词数</text>
+              <text class="info-value highlight">{{wordCount.words}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📏</view>
+            <view class="info-content">
+              <text class="info-label">行数</text>
+              <text class="info-value highlight">{{wordCount.lines}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">⏱️</view>
+            <view class="info-content">
+              <text class="info-label">估计阅读时间</text>
+              <text class="info-value">{{Math.ceil(wordCount.words / 200)}} 分钟</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 使用提示 -->
+    <view class="tips-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="tips-header">
+        <view class="tips-icon">ℹ️</view>
+        <text class="tips-title">温馨提示</text>
+      </view>
+      <view class="tips-content">
+        <text class="tips-text">
+          本工具支持文本反转、大小写转换和字数统计功能。
+          最多支持5000字符的文本处理。
+        </text>
       </view>
     </view>
   </view>

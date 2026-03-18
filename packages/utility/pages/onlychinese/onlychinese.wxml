@@ -1,19 +1,146 @@
 <!--onlychinese.wxml-->
-<view class="container">
-  <view class="header">
-    <text class="title">HTML标签净化</text>
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+  
+      <text class="main-title">中文检测</text>
+      <text class="subtitle">检测文本中的中文内容</text>
+    </view>
   </view>
-  <view class="content">
-    <view class="input-section">
-      <text class="label">请输入包含HTML标签的文本：</text>
-      <textarea placeholder="请输入包含HTML标签的文本" bindinput="htmlInputChange" class="textarea"/>
+
+  <view class="content-wrapper">
+    <!-- 输入卡片 -->
+    <view class="input-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">输入文本</text>
+      </view>
+      
+      <view class="card-body">
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">待检测文本</text>
+            <view class="input-container">
+              <textarea
+                value="{{inputText}}"
+                bindinput="onTextInput"
+                class="modern-textarea"
+                placeholder="请输入需要检测的文本"
+                maxlength="1000"
+                focus="{{inputFocus}}"
+              />
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮组 -->
+        <view class="action-section">
+          <button 
+            class="primary-btn {{inputText.length > 0 ? 'ready' : ''}}" 
+            bindtap="detectChinese"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔍</text>
+            <text class="btn-text">开始检测</text>
+            <view class="btn-shine" wx:if="{{inputText.length > 0}}"></view>
+          </button>
+          
+          <button 
+            class="secondary-btn" 
+            bindtap="clearInput"
+            wx:if="{{inputText}}"
+            hover-class="btn-secondary-hover"
+          >
+            <text class="btn-icon">🗑️</text>
+            <text class="btn-text">清空</text>
+          </button>
+        </view>
+      </view>
     </view>
-    <view class="button-section">
-      <button bindtap="purifyHtml" class="button">净化HTML标签</button>
+
+    <!-- 加载状态 -->
+    <view class="loading-card card-shadow" wx:if="{{loading}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在检测中...</text>
+      </view>
     </view>
-    <view wx:if="{{purifiedResult !== ''}}" class="result-section">
-      <text class="result-label">净化结果：</text>
-      <text class="result-text">{{purifiedResult}}</text>
+
+    <!-- 结果卡片 -->
+    <view wx:if="{{showResult}}" class="result-card card-shadow fade-in-up" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">📊</view>
+        <text class="result-title">检测结果</text>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">总字符数</text>
+              <text class="info-value highlight">{{result.totalChars}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🇨🇳</view>
+            <view class="info-content">
+              <text class="info-label">中文字符</text>
+              <text class="info-value highlight">{{result.chineseChars}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📈</view>
+            <view class="info-content">
+              <text class="info-label">中文占比</text>
+              <text class="info-value highlight">{{result.chinesePercentage}}%</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔍</view>
+            <view class="info-content">
+              <text class="info-label">检测结果</text>
+              <text class="info-value">{{result.hasChinese ? '包含中文' : '不含中文'}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 提取的中文内容 -->
+        <view wx:if="{{result.extractedChinese}}" class="extracted-section">
+          <text class="section-title">提取的中文内容：</text>
+          <text class="extracted-text">{{result.extractedChinese}}</text>
+        </view>
+      </view>
+      
+      <view class="result-actions">
+        <button class="action-btn copy-btn" bindtap="copyResult" hover-class="btn-action-hover">
+          <text class="btn-icon">📋</text>
+          <text>复制结果</text>
+        </button>
+        <button class="action-btn extract-btn" bindtap="copyExtracted" hover-class="btn-action-hover">
+          <text class="btn-icon">📄</text>
+          <text>复制中文</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 使用提示 -->
+    <view class="tips-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="tips-header">
+        <view class="tips-icon">ℹ️</view>
+        <text class="tips-title">温馨提示</text>
+      </view>
+      <view class="tips-content">
+        <text class="tips-text">
+          本工具可检测文本中是否包含中文，并提取中文内容。
+          支持中英文混合文本的检测，最多支持1000字符。
+        </text>
+      </view>
     </view>
   </view>
 </view>

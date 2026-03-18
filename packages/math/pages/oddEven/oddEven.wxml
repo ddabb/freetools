@@ -1,50 +1,152 @@
-<!--packages/utility/pages/oddEven/oddEven.wxml-->
-<view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 标题 -->
-    <view class="header">
-      <text class="title">判断奇偶数</text>
-    </view>
-
-    <!-- 数字输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">请输入一个整数</text>
-        <text class="required-mark">*</text>
+<!--packages/math/pages/oddEven/oddEven.wxml-->
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">🔢</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{inputValue}}" bindinput="onInputChange" class="input-field" placeholder="例如：123"/>
-        <text class="unit-text">数</text>
-      </view>
-    </view>
-
-    <!-- 判断按钮 -->
-    <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="checkOddEven">
-        <text class="btn-text">判断</text>
-      </button>
-    </view>
-
-    <!-- 结果显示 -->
-    <view class="form-item" wx:if="{{result !== ''}}">
-      <view class="form-label">
-        <text class="label-text">判断结果</text>
-      </view>
-      <view class="result-box">
-        <text class="output-text">{{result}}</text>
-      </view>
+      <text class="main-title">奇偶判断</text>
+      <text class="subtitle">快速判断数字的奇偶性</text>
     </view>
   </view>
-  
-  <!-- 概念说明 -->
-  <view class="concept-container dock-bottom">
-    <view class="concept-header">
-      <text class="concept-title">概念说明</text>
+
+  <view class="content-wrapper">
+    <!-- 输入卡片 -->
+    <view class="input-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">输入数字</text>
+      </view>
+      
+      <view class="card-body">
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">请输入一个整数</text>
+            <view class="input-container">
+              <input
+                type="number"
+                value="{{inputValue}}"
+                bindinput="onInputChange"
+                class="modern-input"
+                placeholder="例如：123"
+                maxlength="20"
+                focus="{{inputFocus}}"
+              />
+              <view class="input-status {{inputValue ? 'valid' : ''}}">
+                <text class="status-dot"></text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮组 -->
+        <view class="action-section">
+          <button 
+            class="primary-btn {{inputValue ? 'ready' : ''}}" 
+            bindtap="checkOddEven"
+            disabled="{{!inputValue}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔍</text>
+            <text class="btn-text">开始判断</text>
+            <view class="btn-shine" wx:if="{{inputValue}}"></view>
+          </button>
+          
+          <button 
+            class="secondary-btn" 
+            bindtap="clearInput"
+            wx:if="{{inputValue}}"
+            hover-class="btn-secondary-hover"
+          >
+            <text class="btn-icon">🗑️</text>
+            <text class="btn-text">清空</text>
+          </button>
+        </view>
+      </view>
     </view>
-    <view class="concept-content">
-      <text class="concept-text">奇数：不能被2整除的整数，如1、3、5、7、9等。</text>
-      <text class="concept-text">偶数：能被2整除的整数，如0、2、4、6、8等。</text>
+
+    <!-- 加载状态 -->
+    <view class="loading-card card-shadow" wx:if="{{loading}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在判断中...</text>
+      </view>
+    </view>
+
+    <!-- 结果卡片 -->
+    <view wx:if="{{showResult}}" class="result-card card-shadow fade-in-up {{result.isEven ? 'even-card' : 'odd-card'}}" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">{{result.isEven ? '⚡' : '🌟'}}</view>
+        <text class="result-title">判断结果</text>
+        <view class="result-badge {{result.isEven ? 'even-badge' : 'odd-badge'}}">{{result.isEven ? '偶数' : '奇数'}}</view>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">输入数字</text>
+              <text class="info-value highlight">{{result.number}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔍</view>
+            <view class="info-content">
+              <text class="info-label">判断结果</text>
+              <text class="info-value highlight">{{result.resultText}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">📊</view>
+            <view class="info-content">
+              <text class="info-label">除以2余数</text>
+              <text class="info-value">{{result.remainder}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔢</view>
+            <view class="info-content">
+              <text class="info-label">相邻数字</text>
+              <text class="info-value">{{result.previousNumber}}, {{result.nextNumber}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 奇偶性说明 -->
+        <view class="explanation-section">
+          <text class="section-title">奇偶性说明：</text>
+          <text class="explanation-text">{{result.explanation}}</text>
+        </view>
+      </view>
+      
+      <view class="result-actions">
+        <button class="action-btn copy-btn" bindtap="copyResult" hover-class="btn-action-hover">
+          <text class="btn-icon">📋</text>
+          <text>复制结果</text>
+        </button>
+        <button class="action-btn retry-btn" bindtap="reset" hover-class="btn-action-hover">
+          <text class="btn-icon">🔄</text>
+          <text>重新判断</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 概念说明 -->
+    <view class="concept-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="concept-header">
+        <view class="concept-icon">ℹ️</view>
+        <text class="concept-title">概念说明</text>
+      </view>
+      <view class="concept-content">
+        <text class="concept-text">奇数：不能被2整除的整数，如1、3、5、7、9等。</text>
+        <text class="concept-text">偶数：能被2整除的整数，如0、2、4、6、8等。</text>
+        <text class="concept-text">判断方法：一个数除以2余数为0则为偶数，否则为奇数。</text>
+      </view>
     </view>
   </view>
 </view>
