@@ -212,7 +212,7 @@ const tools = [
     name: '文本工具',
     icon: '📝',
     color: 'purple',
-    url: '/packages/utility/pages/text-tool/text-tool',
+    url: '/packages/text/pages/text-tool/text-tool',
     categories: ['学习工具', '生活工具'],
     keywords: ['文本', '工具', '处理', '转换'],
     description: '文本处理和转换工具'

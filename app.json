@@ -33,7 +33,6 @@
       "pages": [
         "pages/qrcode/qrcode",
         "pages/password-generator/password-generator",
-        "pages/text-tool/text-tool",
         "pages/leapyear/leapyear",
         "pages/idcard/idcard",
         "pages/mdconvert/mdconvert",
@@ -78,7 +77,8 @@
         "pages/text-diff/text-diff",
         "pages/avatar-generator/avatar-generator",
         "pages/emoji-to-png/emoji-to-png",
-        "pages/text-to-png/text-to-png"
+        "pages/text-to-png/text-to-png",
+        "pages/text-tool/text-tool"
       ]
     },
     {

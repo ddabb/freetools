@@ -77,6 +77,16 @@
             <text class="btn-icon">📊</text>
             <text class="btn-text">字数统计</text>
           </button>
+          
+          <button 
+            class="primary-btn" 
+            bindtap="getPinyinFirstLetter"
+            disabled="{{!inputText}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔤</text>
+            <text class="btn-text">拼音首字母</text>
+          </button>
         </view>
 
         <!-- 清空按钮 -->
@@ -165,7 +175,7 @@
       </view>
       <view class="tips-content">
         <text class="tips-text">
-          本工具支持文本反转、大小写转换和字数统计功能。
+          本工具支持文本反转、大小写转换、字数统计和拼音首字母提取功能。
           最多支持5000字符的文本处理。
         </text>
       </view>
