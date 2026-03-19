@@ -142,9 +142,21 @@
   padding: 25rpx;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
   transition: all 0.3s ease;
+}
+
+.copywriting-content-wrapper {
+  flex: 1;
+  margin-right: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.copywriting-item-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
 }
 
 .copywriting-item:active {
@@ -159,6 +171,16 @@
   color: #333;
   margin-right: 20rpx;
   word-break: break-word;
+}
+
+.copywriting-from {
+  flex: 1;
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #999;
+  margin-top: 10rpx;
+  margin-right: 20rpx;
+  text-align: right;
 }
 
 .copy-action {

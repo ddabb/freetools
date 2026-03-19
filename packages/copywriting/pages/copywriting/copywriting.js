@@ -107,7 +107,7 @@ Page({
       categories.forEach(category => {
         const categoryContent = category.content || [];
         const matchedItems = categoryContent.filter(item => 
-          item.toLowerCase().includes(keyword)
+          item.text.toLowerCase().includes(keyword)
         );
         filtered = filtered.concat(matchedItems);
       });
@@ -139,7 +139,7 @@ Page({
     
     if (copywriting) {
       wx.setClipboardData({
-        data: copywriting,
+        data: copywriting.text,
         success: (res) => {
           wx.showToast({
             title: '复制成功',

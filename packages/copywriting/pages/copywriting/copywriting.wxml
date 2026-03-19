@@ -58,10 +58,15 @@
         bindtap="copyCopywriting"
         data-index="{{index}}"
       >
-        <text class="copywriting-content">{{item}}</text>
-        <view class="copy-action">
-          <text class="copy-icon">📋</text>
-          <text class="copy-text">复制</text>
+        <view class="copywriting-content-wrapper">
+          <text class="copywriting-content">{{item.text}}</text>
+        </view>
+        <view class="copywriting-item-bottom">
+          <text class="copywriting-from">—— {{item.from || '佚名'}}</text>
+          <view class="copy-action">
+            <text class="copy-icon">📋</text>
+            <text class="copy-text">复制</text>
+          </view>
         </view>
       </view>
     </view>
