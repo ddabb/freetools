@@ -1,41 +1,9 @@
 // packages/copywriting/pages/copywriting/copywriting.js
-// 导入各个分类的文案数据
-const lifeData = require('./data/life');
-const loveData = require('./data/love');
-const friendshipData = require('./data/friendship');
-const familyData = require('./data/family');
-const travelData = require('./data/travel');
-const foodData = require('./data/food');
-const workData = require('./data/work');
-const lifeStyleData = require('./data/life-style');
-const springFestivalData = require('./data/spring-festival');
-const birthdayData = require('./data/birthday');
-const nationalDayData = require('./data/national-day');
-const teacherDayData = require('./data/teacher-day');
-const newYearData = require('./data/new-year');
-const laborDayData = require('./data/labor-day');
-const childrenDayData = require('./data/children-day');
-const midAutumnData = require('./data/mid-autumn');
+// 导入 wordbank 包的数据
+const wordbank = require('wordbank');
 
-// 合并所有文案数据
-const allCategories = [
-  lifeData,
-  loveData,
-  friendshipData,
-  familyData,
-  travelData,
-  foodData,
-  workData,
-  lifeStyleData,
-  springFestivalData,
-  birthdayData,
-  nationalDayData,
-  teacherDayData,
-  newYearData,
-  laborDayData,
-  childrenDayData,
-  midAutumnData
-];
+// 使用 wordbank 包中的数据
+const allCategories = wordbank.allCategories;
 
 Page({
   data: {
