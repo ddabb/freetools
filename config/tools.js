@@ -38,7 +38,8 @@ const toolFrequency = {
   'color-converter': 34,     // 颜色转换器
   'avatar-generator': 45,     // 汉字头像生成
   'emoji-to-png': 42,        // Emoji转PNG
-  'text-to-png': 40           // 文本转PNG
+  'text-to-png': 40,          // 文本转PNG
+  'copywriting': 80            // 文案工具
 };
 
 const tools = [
@@ -434,6 +435,17 @@ const tools = [
     keywords: ['文本', 'PNG', '图片', '生成'],
     description: '将文本转换为PNG图片，支持多行文本和样式设置',
     frequency: toolFrequency['text-to-png']
+  },
+  {
+    id: 'copywriting',
+    name: '文案工具',
+    icon: '✍️',
+    color: 'pink',
+    url: '/packages/copywriting/pages/copywriting/copywriting',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['文案', '写作', '素材', '模板'],
+    description: '提供各种场景的文案素材，支持分类浏览和复制',
+    frequency: toolFrequency['copywriting']
   }
 ];
 
@@ -468,6 +480,7 @@ const categories = [
     { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具' },
     { name: '开发工具', color: 'slate', icon: '⚙️', description: '正则测试、代码工具等开发者工具' },
     { name: '安全工具', color: 'red', icon: '🔒', description: '密码生成、身份证验证等安全工具' },
+    { name: '文案工具', color: 'pink', icon: '✍️', description: '各种场景的文案素材和模板' },
     { name: '更多工具', color: 'teal', icon: '📱', description: '旅行等其他实用工具' }
   ];
 

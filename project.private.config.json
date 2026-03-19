@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "日历呈现",
-          "pathName": "packages/life/pages/calendar/calendar",
+          "name": "文案搜索",
+          "pathName": "packages/copywriting/pages/copywriting/copywriting",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "日历呈现",
+          "pathName": "packages/life/pages/calendar/calendar",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "packages/design/pages/color-converter/color-converter",

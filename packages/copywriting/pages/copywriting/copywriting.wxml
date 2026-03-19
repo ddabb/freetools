@@ -1,0 +1,71 @@
+<!-- packages/copywriting/pages/copywriting/copywriting.wxml -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="header-title">文案宝库</text>
+    <text class="header-subtitle">海量优质文案，一键复制使用</text>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-section">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        type="text" 
+        placeholder="搜索文案关键词..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="clearSearch">
+        <text>✕</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类选择 -->
+  <view class="category-section">
+    <view class="category-grid">
+      <view 
+        class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="selectCategory"
+        data-category-id="{{item.id}}"
+      >
+        <text class="category-icon">{{item.icon}}</text>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文案列表 -->
+  <view class="copywriting-section">
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{filteredCopywritings.length === 0}}">
+      <text class="empty-icon">{{searchKeyword ? '🔍' : (selectedCategory ? '📝' : '👆')}}</text>
+      <text class="empty-text">
+        {{searchKeyword ? '没有找到相关文案' : (selectedCategory ? '该分类暂无文案' : '请选择分类或输入关键词搜索')}}
+      </text>
+    </view>
+
+    <!-- 文案列表 -->
+    <view class="copywriting-list" wx:else>
+      <view 
+        class="copywriting-item"
+        wx:for="{{filteredCopywritings}}"
+        wx:key="index"
+        bindtap="copyCopywriting"
+        data-index="{{index}}"
+      >
+        <text class="copywriting-content">{{item}}</text>
+        <view class="copy-action">
+          <text class="copy-icon">📋</text>
+          <text class="copy-text">复制</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+</view>

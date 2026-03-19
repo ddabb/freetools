@@ -6,6 +6,13 @@
   ],
   "subPackages": [
     {
+      "root": "packages/copywriting",
+      "name": "copywriting",
+      "pages": [
+        "pages/copywriting/copywriting"
+      ]
+    },
+    {
       "root": "packages/financial",
       "name": "financial",
       "pages": [
@@ -136,7 +143,7 @@
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other", "math", "unit"]
+      "packages": ["financial", "life", "utility", "other", "math", "unit", "copywriting"]
     }
   },
   "window": {
