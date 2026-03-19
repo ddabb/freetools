@@ -2,8 +2,10 @@
 <view class="container">
   <!-- 头部 -->
   <view class="header">
-    <text class="header-title">文案宝库</text>
-    <text class="header-subtitle">海量优质文案，一键复制使用</text>
+    <view class="header-content">
+      <text class="header-title">文案宝库</text>
+      <text class="header-subtitle">海量优质文案，一键复制使用</text>
+    </view>
   </view>
 
   <!-- 搜索框 -->
@@ -25,18 +27,24 @@
 
   <!-- 分类选择 -->
   <view class="category-section">
-    <view class="category-grid">
-      <view 
-        class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
-        wx:for="{{categories}}"
-        wx:key="id"
-        bindtap="selectCategory"
-        data-category-id="{{item.id}}"
-      >
-        <text class="category-icon">{{item.icon}}</text>
-        <text class="category-name">{{item.name}}</text>
+    <scroll-view 
+      class="category-scroll" 
+      scroll-y="true"
+      style="height: 200rpx;"
+    >
+      <view class="category-grid">
+        <view 
+          class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="selectCategory"
+          data-category-id="{{item.id}}"
+        >
+          <text class="category-icon">{{item.icon}}</text>
+          <text class="category-name">{{item.name}}</text>
+        </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 
   <!-- 文案列表 -->
@@ -50,7 +58,14 @@
     </view>
 
     <!-- 文案列表 -->
-    <view class="copywriting-list" wx:else>
+    <scroll-view 
+      class="copywriting-list" 
+      wx:else
+      scroll-y="true"
+      scroll-top="{{scrollTop}}"
+      bindscroll="onScroll"
+      style="height: calc(100vh - 500rpx);"
+    >
       <view 
         class="copywriting-item"
         wx:for="{{filteredCopywritings}}"
@@ -63,13 +78,19 @@
         </view>
         <view class="copywriting-item-bottom">
           <text class="copywriting-from">—— {{item.from || '佚名'}}</text>
-          <view class="copy-action">
-            <text class="copy-icon">📋</text>
-            <text class="copy-text">复制</text>
+          <view class="copy-actions">
+            <view class="copy-action" bindtap="copyCopywriting" data-index="{{index}}">
+              <text class="copy-icon">📋</text>
+              <text class="copy-text">复制</text>
+            </view>
+            <navigator url="/packages/text/pages/text-to-png/text-to-png?text={{item.text}}" class="copy-action">
+              <text class="copy-icon">🖼️</text>
+              <text class="copy-text">生成图片</text>
+            </navigator>
           </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 
 

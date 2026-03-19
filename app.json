@@ -5,13 +5,7 @@
     "pages/about/about"
   ],
   "subPackages": [
-    {
-      "root": "packages/copywriting",
-      "name": "copywriting",
-      "pages": [
-        "pages/copywriting/copywriting"
-      ]
-    },
+
     {
       "root": "packages/financial",
       "name": "financial",
@@ -85,7 +79,8 @@
         "pages/avatar-generator/avatar-generator",
         "pages/emoji-to-png/emoji-to-png",
         "pages/text-to-png/text-to-png",
-        "pages/text-tool/text-tool"
+        "pages/text-tool/text-tool",
+        "pages/copywriting/copywriting"
       ]
     },
     {
@@ -139,11 +134,11 @@
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life", "math", "unit"]
+      "packages": ["financial", "life", "utility", "other", "math", "unit", "text"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other", "math", "unit", "copywriting"]
+      "packages": ["financial", "life", "utility", "other", "math", "unit", "text"]
     }
   },
   "window": {

@@ -600,6 +600,15 @@ Page({
             }
           }
           
+          // 绘制阴影效果
+          if (template.style['box-shadow']) {
+            // 简化处理，添加基本阴影效果
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+          }
+          
           // 处理文字颜色和效果
           let textColor = template.textColor;
           if (that.data.selectedTextEffect === 'gradient') {
@@ -655,6 +664,31 @@ Page({
             ctx.textBaseline = 'top';
             ctx.fillStyle = textColor;
             
+            // 应用文字效果
+            if (textEffect.style['text-shadow'] && textEffect.style['text-shadow'] !== 'none') {
+              // 简化处理文字阴影效果
+              if (textEffect.style['text-shadow'].includes('glow')) {
+                ctx.shadowColor = '#00ff9d';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+              } else if (textEffect.style['text-shadow'].includes('3d')) {
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 4;
+                ctx.shadowOffsetY = 4;
+              } else if (textEffect.style['text-shadow'].includes('stroke')) {
+                // 描边效果需要特殊处理
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 1;
+              } else if (textEffect.style['text-shadow'].includes('shadow')) {
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = 8;
+                ctx.shadowOffsetX = 4;
+                ctx.shadowOffsetY = 4;
+              }
+            }
+            
             // 计算每行的最大字符数
             const avgCharWidth = fontSize * 0.6;
             const maxCharsPerLine = Math.floor((canvasWidth - margin * 2 - indent) / avgCharWidth);
@@ -666,19 +700,31 @@ Page({
             if (item.type === 'code') {
               // 绘制代码块
               ctx.font = `normal ${baseFontSize * 0.9}px monospace`;
+              ctx.fillStyle = '#333333';
+              // 绘制代码块背景
+              ctx.fillStyle = '#f5f5f5';
               const codeLines = item.content.split('\n');
+              const codeBlockHeight = codeLines.length * lineHeightPx + 20;
+              ctx.fillRect(margin + indent - 10, y - 10, canvasWidth - (margin + indent) * 2 + 20, codeBlockHeight);
+              // 恢复文字颜色
+              ctx.fillStyle = textColor;
+              
               codeLines.forEach(codeLine => {
                 if (codeLine.trim() !== '') {
                   ctx.fillText(codeLine, margin + indent, y);
                 }
                 y += lineHeightPx;
               });
+              y += 10;
             } else {
-              // 处理引用内容的左侧竖线
+              // 处理引用内容的左侧竖线和背景
               if (isQuote) {
                 // 绘制引用的左侧竖线
                 ctx.fillStyle = '#3498db';
                 ctx.fillRect(margin + 10, y - 5, 4, lineHeightPx * 1.5);
+                // 绘制引用背景
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(margin + indent - 10, y - 10, canvasWidth - (margin + indent) * 2 + 20, lineHeightPx * 1.5 + 10);
                 ctx.fillStyle = textColor;
               }
               
@@ -753,7 +799,11 @@ Page({
                     // 绘制当前行
                     let x = currentX;
                     lineParts.forEach(linePart => {
-                      ctx.font = `${linePart.bold ? 'bold' : 'normal'} ${linePart.italic ? 'italic' : 'normal'} ${fontSize}px sans-serif`;
+                      ctx.font = `${linePart.bold ? 'bold' : 'normal'} ${linePart.italic ? 'italic' : 'normal'} ${fontSize}px ${fontConfig.fontFamily}`;
+                      // 处理描边效果
+                      if (textEffect.style['text-shadow'] && textEffect.style['text-shadow'].includes('stroke')) {
+                        ctx.strokeText(linePart.text, x, y);
+                      }
                       ctx.fillText(linePart.text, x, y);
                       // 计算文本宽度并更新x坐标
                       const textWidth = ctx.measureText(linePart.text).width;
@@ -766,10 +816,12 @@ Page({
                     lineContent = '';
                     lineParts = [];
                     
-                    // 为引用的多行内容也添加竖线
+                    // 为引用的多行内容也添加竖线和背景
                     if (isQuote) {
                       ctx.fillStyle = '#3498db';
                       ctx.fillRect(margin + 10, y - 5, 4, lineHeightPx * 1.5);
+                      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                      ctx.fillRect(margin + indent - 10, y - 10, canvasWidth - (margin + indent) * 2 + 20, lineHeightPx * 1.5 + 10);
                       ctx.fillStyle = textColor;
                     }
                   }
@@ -780,7 +832,11 @@ Page({
               if (lineParts.length > 0) {
                 let x = currentX;
                 lineParts.forEach(linePart => {
-                  ctx.font = `${linePart.bold ? 'bold' : 'normal'} ${linePart.italic ? 'italic' : 'normal'} ${fontSize}px sans-serif`;
+                  ctx.font = `${linePart.bold ? 'bold' : 'normal'} ${linePart.italic ? 'italic' : 'normal'} ${fontSize}px ${fontConfig.fontFamily}`;
+                  // 处理描边效果
+                  if (textEffect.style['text-shadow'] && textEffect.style['text-shadow'].includes('stroke')) {
+                    ctx.strokeText(linePart.text, x, y);
+                  }
                   ctx.fillText(linePart.text, x, y);
                   // 计算文本宽度并更新x坐标
                   const textWidth = ctx.measureText(linePart.text).width;
@@ -790,6 +846,12 @@ Page({
               y += lineHeightPx;
             }
           });
+          
+          // 重置阴影效果
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
           
           console.log('Canvas绘制完成，开始生成PNG图片');
           
@@ -904,7 +966,13 @@ Page({
   },
 
   // 页面加载
-  onLoad() {
+  onLoad(options) {
+    // 接收从其他页面传递的文本参数
+    if (options && options.text) {
+      this.setData({
+        inputText: options.text
+      });
+    }
     this.updatePreview();
   }
 });

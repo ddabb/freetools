@@ -2,175 +2,95 @@
   <!-- 隐藏的Canvas用于生成PNG图片 -->
   <canvas id="textCanvas" type="2d" style="width: {{canvasWidth}}rpx; height: {{canvasHeight}}rpx; position: absolute; left: -9999px; top: -9999px;"></canvas>
   
-  <section class="input-section">
-    <div class="input-group">
-      <label for="text-input">输入文本</label>
-      <textarea 
-        id="text-input" 
-        class="text-input" 
-        placeholder="输入要生成图片的文本..." 
-        value="{{inputText}}" 
-        bindinput="onTextInput" 
-        auto-height
-      ></textarea>
-      <p class="hint">支持多行文本，图片高度会根据内容自动调整</p>
-    </div>
-    
-    <div class="templates-section">
-      <div class="input-group">
-        <div class="section-header" bindtap="toggleTemplateExpanded">
-          <label>选择文本模板（共9种）</label>
-          <span class="expand-icon">{{templateExpanded ? '▼' : '▶'}}</span>
+  <view class="main-layout">
+    <!-- 左侧：输入区域 -->
+    <view class="left-panel">
+      <section class="input-section">
+        <div class="input-group">
+          <label for="text-input">输入文本</label>
+          <textarea 
+            id="text-input" 
+            class="text-input" 
+            placeholder="输入要生成图片的文本..." 
+            value="{{inputText}}" 
+            bindinput="onTextInput" 
+            auto-height
+          ></textarea>
+          <p class="hint">支持多行文本，图片高度会根据内容自动调整</p>
         </div>
-        <div class="templates-grid {{templateExpanded ? 'expanded' : 'collapsed'}}">
-          <!-- 模板1：简约白色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template1' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template1">
-              <div class="template-preview" style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;"></div>
-              <div class="template-name">简约白色</div>
+        
+        <!-- 模板和效果选项 -->
+        <view class="options-section">
+          <!-- 模板选择 -->
+          <div class="input-group">
+            <div class="section-header compact" bindtap="toggleTemplateExpanded">
+              <label>模板样式</label>
+              <span class="expand-icon">{{templateExpanded ? '▼' : '▶'}}</span>
             </div>
+            <scroll-view class="templates-grid {{templateExpanded ? 'expanded' : 'collapsed'}}" scroll-x="true" enhanced="true" show-scrollbar="false">
+              <view class="templates-row">
+                <view class="template-option" wx:for="{{['template1', 'template2', 'template3', 'template4', 'template5', 'template6', 'template7', 'template8', 'template9']}}" wx:key="*this">
+                  <view class="template-label {{selectedTemplate === item ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="{{item}}">
+                    <view class="template-preview" style="{{item === 'template1' ? 'background: #ffffff; border: 1px solid #e0e0e0' : item === 'template2' ? 'background: #333333' : item === 'template3' ? 'background: linear-gradient(135deg, #3498db, #2980b9)' : item === 'template4' ? 'background: linear-gradient(135deg, #2ecc71, #27ae60)' : item === 'template5' ? 'background: linear-gradient(135deg, #e74c3c, #c0392b)' : item === 'template6' ? 'background: linear-gradient(135deg, #9b59b6, #8e44ad)' : item === 'template7' ? 'background: linear-gradient(135deg, #f39c12, #e67e22)' : item === 'template8' ? 'background: #f5f5f5; border: 2px solid #95a5a6' : 'background: #ffffff; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)'}}"></view>
+                    <view class="template-name">{{item === 'template1' ? '简约白' : item === 'template2' ? '深色' : item === 'template3' ? '蓝渐变' : item === 'template4' ? '绿渐变' : item === 'template5' ? '红渐变' : item === 'template6' ? '紫渐变' : item === 'template7' ? '橙渐变' : item === 'template8' ? '商务灰' : '卡片'}}</view>
+                  </view>
+                </view>
+              </view>
+            </scroll-view>
           </div>
           
-          <!-- 模板2：深色背景 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template2' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template2">
-              <div class="template-preview" style="background: #333333; border-radius: 8px;"></div>
-              <div class="template-name">深色背景</div>
+          <!-- 文字效果 -->
+          <div class="input-group">
+            <div class="section-header compact" bindtap="toggleTextEffectExpanded">
+              <label>文字效果</label>
+              <span class="expand-icon">{{textEffectExpanded ? '▼' : '▶'}}</span>
             </div>
+            <scroll-view class="text-effect-options {{textEffectExpanded ? 'expanded' : 'collapsed'}}" scroll-x="true" enhanced="true" show-scrollbar="false">
+              <view class="effects-row">
+                <view class="text-effect-option" wx:for="{{['normal', 'gradient', 'shadow', 'stroke', 'glow', '3d']}}" wx:key="*this">
+                  <view class="text-effect-label {{selectedTextEffect === item ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="{{item}}">
+                    <view class="text-effect-preview" style="{{item === 'normal' ? 'background: #f5f5f5; color: #000000; text-shadow: none' : item === 'gradient' ? 'background: #f5f5f5; color: #ffffff; text-shadow: none' : item === 'shadow' ? 'background: #f5f5f5; color: #000000; text-shadow: 4px 4px 8px rgba(0,0,0,0.5)' : item === 'stroke' ? 'background: #f5f5f5; color: #ffffff; text-shadow: 1px 1px 0 #2c3e50, -1px -1px 0 #2c3e50, 1px -1px 0 #2c3e50, -1px 1px 0 #2c3e50' : item === 'glow' ? 'background: #2c3e50; color: #ffffff; text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d' : 'background: #f5f5f5; color: #000000; text-shadow: 2px 2px 0 #2c3e50, 4px 4px 0 rgba(0,0,0,0.2)'}}">文</view>
+                    <view>{{item === 'normal' ? '普通' : item === 'gradient' ? '渐变' : item === 'shadow' ? '阴影' : item === 'stroke' ? '描边' : item === 'glow' ? '发光' : '立体'}}</view>
+                  </view>
+                </view>
+              </view>
+            </scroll-view>
           </div>
-          
-          <!-- 模板3：渐变蓝色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template3' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template3">
-              <div class="template-preview" style="background: linear-gradient(135deg, #3498db, #2980b9); border-radius: 8px;"></div>
-              <div class="template-name">渐变蓝色</div>
-            </div>
-          </div>
-          
-          <!-- 模板4：渐变绿色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template4' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template4">
-              <div class="template-preview" style="background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 8px;"></div>
-              <div class="template-name">渐变绿色</div>
-            </div>
-          </div>
-          
-          <!-- 模板5：渐变红色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template5' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template5">
-              <div class="template-preview" style="background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 8px;"></div>
-              <div class="template-name">渐变红色</div>
-            </div>
-          </div>
-          
-          <!-- 模板6：渐变紫色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template6' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template6">
-              <div class="template-preview" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 8px;"></div>
-              <div class="template-name">渐变紫色</div>
-            </div>
-          </div>
-          
-          <!-- 模板7：渐变橙色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template7' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template7">
-              <div class="template-preview" style="background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 8px;"></div>
-              <div class="template-name">渐变橙色</div>
-            </div>
-          </div>
-          
-          <!-- 模板8：商务灰色 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template8' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template8">
-              <div class="template-preview" style="background: #f5f5f5; border: 2px solid #95a5a6; border-radius: 8px;"></div>
-              <div class="template-name">商务灰色</div>
-            </div>
-          </div>
-          
-          <!-- 模板9：卡片风格 -->
-          <div class="template-option">
-            <div class="template-label {{selectedTemplate === 'template9' ? 'checked' : ''}}" bindtap="onTemplateSelect" data-value="template9">
-              <div class="template-preview" style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"></div>
-              <div class="template-name">卡片风格</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="input-group text-effect-section">
-        <div class="section-header" bindtap="toggleTextEffectExpanded">
-          <label>选择文字艺术效果</label>
-          <span class="expand-icon">{{textEffectExpanded ? '▼' : '▶'}}</span>
-        </div>
-        <div class="text-effect-options {{textEffectExpanded ? 'expanded' : 'collapsed'}}">
-          <!-- 文字效果1：普通 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === 'normal' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="normal">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: none; font-weight: bold;">文</div>
-              <div>普通</div>
-            </div>
-          </div>
-          
-          <!-- 文字效果2：渐变文字 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === 'gradient' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="gradient">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #ffffff; text-shadow: none; font-weight: bold;">文</div>
-              <div>渐变</div>
-            </div>
-          </div>
-          
-          <!-- 文字效果3：阴影效果 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === 'shadow' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="shadow">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: 4px 4px 8px rgba(0,0,0,0.5); font-weight: bold;">文</div>
-              <div>阴影</div>
-            </div>
-          </div>
-          
-          <!-- 文字效果4：描边效果 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === 'stroke' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="stroke">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #ffffff; text-shadow: 1px 1px 0 #2c3e50, -1px -1px 0 #2c3e50, 1px -1px 0 #2c3e50, -1px 1px 0 #2c3e50; font-weight: bold;">文</div>
-              <div>描边</div>
-            </div>
-          </div>
-          
-          <!-- 文字效果5：发光效果 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === 'glow' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="glow">
-              <div class="text-effect-preview" style="background: #2c3e50; color: #ffffff; text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d; font-weight: bold;">文</div>
-              <div>发光</div>
-            </div>
-          </div>
-          
-          <!-- 文字效果6：立体效果 -->
-          <div class="text-effect-option">
-            <div class="text-effect-label {{selectedTextEffect === '3d' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="3d">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: 2px 2px 0 #2c3e50, 4px 4px 0 rgba(0,0,0,0.2); font-weight: bold;">文</div>
-              <div>立体</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>  
-  
-  <section class="preview-section">
-    <div class="preview-title">预览效果</div>
-    <view id="text-preview" class="text-preview" style="{{previewStyle}}">
-      <rich-text nodes="{{previewText}}"></rich-text>
+        </view>
+      </section>
     </view>
-    <p class="preview-info">预览将实时更新，导出图片宽度与手机屏幕一致，高度根据内容自动调整</p>
     
-    <div class="actions">
-      <button class="btn btn-secondary" bindtap="resetForm">
-        <span class="btn-icon">↺</span> 重置
-      </button>
-      <button class="btn btn-primary" bindtap="exportAsPNG" disabled="{{!canExport}}">
-        <span class="btn-icon">⤓</span> 导出PNG
-      </button>
-    </div>
-  </section>  
+    <!-- 右侧：预览区域 -->
+    <view class="right-panel">
+      <section class="preview-section">
+        <div class="preview-header">
+          <div class="preview-title">预览效果</div>
+          <div class="preview-info">实时预览，导出图片宽度与手机屏幕一致</div>
+        </div>
+        <view id="text-preview" class="text-preview" style="{{previewStyle}}">
+          <rich-text nodes="{{previewText}}"></rich-text>
+        </view>
+        
+        <!-- 操作按钮 -->
+        <div class="actions">
+          <div class="action-group">
+            <navigator url="/packages/text/pages/copywriting/copywriting" class="btn btn-secondary">
+              <span class="btn-icon">📝</span>
+              <span class="btn-text">文案素材</span>
+            </navigator>
+            <button class="btn btn-secondary" bindtap="resetForm">
+              <span class="btn-icon">↺</span>
+              <span class="btn-text">重置</span>
+            </button>
+            <button class="btn btn-primary" bindtap="exportAsPNG" disabled="{{!canExport}}">
+              <span class="btn-icon">⤓</span>
+              <span class="btn-text">导出PNG</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </view>
+  </view>
 
   <view class="loading" wx:if="{{isLoading}}">
     <view class="spinner"></view>

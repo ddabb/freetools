@@ -10,7 +10,8 @@ Page({
     categories: [],
     selectedCategory: '',
     searchKeyword: '',
-    filteredCopywritings: []
+    filteredCopywritings: [],
+    scrollTop: 0
   },
 
   onLoad() {
@@ -40,16 +41,26 @@ Page({
     console.log('点击分类:', categoryId);
     this.setData({
       selectedCategory: categoryId,
-      searchKeyword: ''
+      searchKeyword: '',
+      scrollTop: 0  // 重置滚动条到顶部
     });
     this.filterCopywritings();
+  },
+
+  // 滚动事件
+  onScroll(e) {
+    // 记录当前滚动位置
+    this.setData({
+      scrollTop: e.detail.scrollTop
+    });
   },
 
   // 搜索输入
   onSearchInput(e) {
     const keyword = e.detail.value;
     this.setData({
-      searchKeyword: keyword
+      searchKeyword: keyword,
+      scrollTop: 0  // 搜索时重置滚动条到顶部
     });
     this.filterCopywritings();
   },
@@ -57,7 +68,8 @@ Page({
   // 清空搜索
   clearSearch() {
     this.setData({
-      searchKeyword: ''
+      searchKeyword: '',
+      scrollTop: 0  // 清空搜索时重置滚动条到顶部
     });
     this.filterCopywritings();
   },
