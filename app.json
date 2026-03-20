@@ -25,27 +25,30 @@
         "pages/battery-health/battery-health",
         "pages/datediff/datediff",
         "pages/zodiac/zodiac",
-        "pages/relative-calculator/relative-calculator"
+        "pages/relative-calculator/relative-calculator",
+        "pages/idcard/idcard",
+        "pages/leapyear/leapyear"
       ]
     },
     {
       "root": "packages/utility",
       "name": "utility",
       "pages": [
-        "pages/qrcode/qrcode",
-        "pages/password-generator/password-generator",
-        "pages/leapyear/leapyear",
-        "pages/idcard/idcard",
-        "pages/mdconvert/mdconvert",
-        "pages/onlychinese/onlychinese"
+        "pages/qrcode/qrcode"
       ]
     },
     {
-      "root": "packages/other",
-      "name": "other",
+      "root": "packages/health",
+      "name": "health",
       "pages": [
-        "pages/travel-tool/travel-tool",
         "pages/health-calculator/health-calculator"
+      ]
+    },
+    {
+      "root": "packages/travel",
+      "name": "travel",
+      "pages": [
+        "pages/travel-tool/travel-tool"
       ]
     },
     {
@@ -80,7 +83,10 @@
         "pages/emoji-to-png/emoji-to-png",
         "pages/text-to-png/text-to-png",
         "pages/text-tool/text-tool",
-        "pages/copywriting/copywriting"
+        "pages/copywriting/copywriting",
+        "pages/mdconvert/mdconvert",
+        "pages/onlychinese/onlychinese",
+        "pages/password-generator/password-generator"
       ]
     },
     {
@@ -134,11 +140,11 @@
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other", "math", "unit", "text"]
+      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "chart", "developer", "design", "food", "unit"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "other", "math", "unit", "text"]
+      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "chart", "developer", "design", "food", "unit"]
     }
   },
   "window": {

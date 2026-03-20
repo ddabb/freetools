@@ -142,7 +142,7 @@ const tools = [
     name: '健康计算',
     icon: '💪',
     color: 'teal',
-    url: '/packages/other/pages/health-calculator/health-calculator',
+    url: '/packages/health/pages/health-calculator/health-calculator',
     categories: ['健康工具'],
     keywords: ['健康', 'BMI', '体重', '身高'],
     description: '计算BMI和健康指标',
@@ -173,7 +173,7 @@ const tools = [
     name: '密码生成',
     icon: '🔒',
     color: 'gray',
-    url: '/packages/utility/pages/password-generator/password-generator',
+    url: '/packages/text/pages/password-generator/password-generator',
     categories: ['安全工具'],
     keywords: ['密码', '生成', '安全', '随机'],
     description: '生成安全的随机密码'
@@ -183,7 +183,7 @@ const tools = [
     name: '身份证验证',
     icon: '🆔',
     color: 'blue',
-    url: '/packages/utility/pages/idcard/idcard',
+    url: '/packages/life/pages/idcard/idcard',
     categories: ['安全工具'],
     keywords: ['身份证', '验证', '身份', '校验'],
     description: '验证身份证号码的有效性'
@@ -223,7 +223,7 @@ const tools = [
     name: 'Markdown转换',
     icon: '📄',
     color: 'orange',
-    url: '/packages/utility/pages/mdconvert/mdconvert',
+    url: '/packages/text/pages/mdconvert/mdconvert',
     categories: ['学习工具'],
     keywords: ['Markdown', '转换', '文档', '格式'],
     description: 'Markdown文档转换工具'
@@ -243,7 +243,7 @@ const tools = [
     name: '闰年判断',
     icon: '📅',
     color: 'green',
-    url: '/packages/utility/pages/leapyear/leapyear',
+    url: '/packages/life/pages/leapyear/leapyear',
     categories: ['学习工具'],
     keywords: ['闰年', '判断', '年份', '日历'],
     description: '判断是否为闰年'
@@ -253,7 +253,7 @@ const tools = [
     name: '中文检测',
     icon: '✍',
     color: 'red',
-    url: '/packages/utility/pages/onlychinese/onlychinese',
+    url: '/packages/text/pages/onlychinese/onlychinese',
     categories: ['学习工具'],
     keywords: ['中文', '检测', '汉字', '识别'],
     description: '检测文本中是否包含中文'
@@ -263,7 +263,7 @@ const tools = [
     name: '旅行工具',
     icon: '✈️',
     color: 'blue',
-    url: '/packages/other/pages/travel-tool/travel-tool',
+    url: '/packages/travel/pages/travel-tool/travel-tool',
     categories: ['更多工具', '生活工具'],
     keywords: ['旅行', '工具', '行程', '规划'],
     description: '旅行规划和辅助工具'
