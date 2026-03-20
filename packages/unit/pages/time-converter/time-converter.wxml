@@ -22,31 +22,31 @@
         </view>
       </view>
     </view>
-  </view>
-  
-  <!-- 概念说明 -->
-  <view class="concept-section">
-    <view class="concept-title">时间单位概念</view>
-    <view class="concept-content">
-      <view class="concept-item">
-        <view class="concept-item-title">秒 (s)</view>
-        <view class="concept-item-desc">国际标准单位，定义为铯-133原子基态的两个超精细能级之间跃迁所对应的辐射的9,192,631,770个周期的持续时间。</view>
-      </view>
-      <view class="concept-item">
-        <view class="concept-item-title">分钟 (min)</view>
-        <view class="concept-item-desc">常用时间单位，1分钟等于60秒。</view>
-      </view>
-      <view class="concept-item">
-        <view class="concept-item-title">小时 (h)</view>
-        <view class="concept-item-desc">常用时间单位，1小时等于60分钟。</view>
-      </view>
-      <view class="concept-item">
-        <view class="concept-item-title">天 (d)</view>
-        <view class="concept-item-desc">常用时间单位，1天等于24小时。</view>
-      </view>
-      <view class="concept-item">
-        <view class="concept-item-title">周 (week)</view>
-        <view class="concept-item-desc">常用时间单位，1周等于7天。</view>
+    
+    <!-- 概念说明 -->
+    <view class="concept-section">
+      <view class="concept-title">时间单位概念</view>
+      <view class="concept-content">
+        <view class="concept-item">
+          <text class="concept-term">秒 (s)</text>
+          <text class="concept-desc">国际标准单位，定义为铯-133原子基态的两个超精细能级之间跃迁所对应的辐射的9,192,631,770个周期的持续时间</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">分钟 (min)</text>
+          <text class="concept-desc">1分钟 = 60秒，常用时间单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">小时 (h)</text>
+          <text class="concept-desc">1小时 = 60分钟，常用时间单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">天 (d)</text>
+          <text class="concept-desc">1天 = 24小时，常用时间单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">周 (week)</text>
+          <text class="concept-desc">1周 = 7天，常用时间单位</text>
+        </view>
       </view>
     </view>
   </view>

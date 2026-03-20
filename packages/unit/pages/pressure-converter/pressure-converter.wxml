@@ -1,0 +1,57 @@
+<!-- packages/unit/pages/pressure-converter/pressure-converter.wxml -->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">压力单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 概念说明 -->
+    <view class="concept-section">
+      <view class="concept-title">压力单位概念</view>
+      <view class="concept-content">
+        <view class="concept-item">
+          <text class="concept-term">帕斯卡 (Pa)</text>
+          <text class="concept-desc">国际单位制中的基本压力单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">千帕 (kPa)</text>
+          <text class="concept-desc">1千帕 = 1000帕斯卡，常用于表示气压</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">兆帕 (MPa)</text>
+          <text class="concept-desc">1兆帕 = 1000000帕斯卡，常用于表示高压</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">巴 (bar)</text>
+          <text class="concept-desc">1巴 = 100000帕斯卡，常用于表示气压</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">标准大气压 (atm)</text>
+          <text class="concept-desc">1标准大气压 ≈ 101325帕斯卡</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">毫米汞柱 (mmHg)</text>
+          <text class="concept-desc">1毫米汞柱 ≈ 133.322帕斯卡，常用于表示血压</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

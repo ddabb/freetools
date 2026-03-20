@@ -1,24 +1,19 @@
-// packages/unit/pages/time-converter/time-converter.js
+// packages/unit/pages/speed-converter/speed-converter.js
 Page({
   data: {
-    units: ['毫秒', '秒', '分钟', '小时', '天', '周', '月', '年', '十年', '世纪'],
+    units: ['米/秒', '千米/小时', '英里/小时', '节', '光速'],
     unitValues: {
-      '毫秒': '',
-      '秒': '',
-      '分钟': '',
-      '小时': '',
-      '天': '',
-      '周': '',
-      '月': '',
-      '年': '',
-      '十年': '',
-      '世纪': ''
+      '米/秒': '',
+      '千米/小时': '',
+      '英里/小时': '',
+      '节': '',
+      '光速': ''
     }
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title: '时间单位换算'
+      title: '速度单位换算'
     })
   },
 
@@ -65,34 +60,32 @@ Page({
   },
 
   toBaseUnit(value, unit) {
-    const timeMap = {
-      '毫秒': 0.001, '秒': 1, '分钟': 60, '小时': 3600, '天': 86400,
-      '周': 604800, '月': 2629743.83, '年': 31536000, '十年': 315360000, '世纪': 3153600000
+    const speedMap = {
+      '米/秒': 1, '千米/小时': 0.277778, '英里/小时': 0.44704, '节': 0.514444, '光速': 299792458
     }
-    return value * timeMap[unit]
+    return value * speedMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
-    const timeMap = {
-      '毫秒': 1000, '秒': 1, '分钟': 1/60, '小时': 1/3600, '天': 1/86400,
-      '周': 1/604800, '月': 1/2629743.83, '年': 1/31536000, '十年': 1/315360000, '世纪': 1/3153600000
+    const speedMap = {
+      '米/秒': 1, '千米/小时': 3.6, '英里/小时': 2.23694, '节': 1.94384, '光速': 1/299792458
     }
-    return baseValue * timeMap[unit]
+    return baseValue * speedMap[unit]
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '时间单位换算',
-      path: '/packages/unit/pages/time-converter/time-converter'
+      title: '速度单位换算',
+      path: '/packages/unit/pages/speed-converter/speed-converter'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '时间单位换算',
-      query: 'time-converter'
+      title: '速度单位换算',
+      query: 'speed-converter'
     }
   }
 })

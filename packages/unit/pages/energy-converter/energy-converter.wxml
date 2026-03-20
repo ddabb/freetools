@@ -1,0 +1,57 @@
+<!-- packages/unit/pages/energy-converter/energy-converter.wxml -->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 单位值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">能量单位</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="digit" 
+            value="{{unitValues[item]}}" 
+            bindinput="onUnitValueChange" 
+            data-unit="{{item}}"
+            class="unit-input" 
+            placeholder="输入值"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 概念说明 -->
+    <view class="concept-section">
+      <view class="concept-title">能量单位概念</view>
+      <view class="concept-content">
+        <view class="concept-item">
+          <text class="concept-term">焦耳 (J)</text>
+          <text class="concept-desc">国际单位制中的基本能量单位</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">千焦 (kJ)</text>
+          <text class="concept-desc">1千焦 = 1000焦耳，常用于表示食物能量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">卡路里 (cal)</text>
+          <text class="concept-desc">1卡路里 = 4.184焦耳，常用于表示食物能量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">千卡 (kcal)</text>
+          <text class="concept-desc">1千卡 = 1000卡路里，常用于表示食物能量</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">瓦特小时 (Wh)</text>
+          <text class="concept-desc">1瓦特小时 = 3600焦耳，常用于表示电能</text>
+        </view>
+        <view class="concept-item">
+          <text class="concept-term">千瓦小时 (kWh)</text>
+          <text class="concept-desc">1千瓦小时 = 1000瓦特小时，常用于表示电能</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

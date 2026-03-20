@@ -1,4 +1,4 @@
-/**packages/unit/pages/temperature-converter/temperature-converter.wxss**/
+/* packages/unit/pages/energy-converter/energy-converter.wxss */
 page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -136,25 +136,6 @@ page {
   overflow-y: auto;
 }
 
-/* 滚动条样式 */
-.concept-content::-webkit-scrollbar {
-  width: 8rpx;
-}
-
-.concept-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4rpx;
-}
-
-.concept-content::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4rpx;
-}
-
-.concept-content::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
 .concept-item {
   display: flex;
   flex-direction: column;
@@ -180,4 +161,23 @@ page {
   font-size: 22rpx;
   color: #6c757d;
   line-height: 1.4;
+}
+
+/* 滚动条样式 */
+.concept-content::-webkit-scrollbar {
+  width: 8rpx;
+}
+
+.concept-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4rpx;
+}
+
+.concept-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4rpx;
+}
+
+.concept-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

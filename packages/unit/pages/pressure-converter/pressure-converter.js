@@ -1,24 +1,21 @@
-// packages/unit/pages/time-converter/time-converter.js
+// packages/unit/pages/pressure-converter/pressure-converter.js
 Page({
   data: {
-    units: ['毫秒', '秒', '分钟', '小时', '天', '周', '月', '年', '十年', '世纪'],
+    units: ['帕斯卡', '千帕', '兆帕', '巴', '标准大气压', '毫米汞柱', '磅/平方英寸'],
     unitValues: {
-      '毫秒': '',
-      '秒': '',
-      '分钟': '',
-      '小时': '',
-      '天': '',
-      '周': '',
-      '月': '',
-      '年': '',
-      '十年': '',
-      '世纪': ''
+      '帕斯卡': '',
+      '千帕': '',
+      '兆帕': '',
+      '巴': '',
+      '标准大气压': '',
+      '毫米汞柱': '',
+      '磅/平方英寸': ''
     }
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title: '时间单位换算'
+      title: '压力单位换算'
     })
   },
 
@@ -65,34 +62,34 @@ Page({
   },
 
   toBaseUnit(value, unit) {
-    const timeMap = {
-      '毫秒': 0.001, '秒': 1, '分钟': 60, '小时': 3600, '天': 86400,
-      '周': 604800, '月': 2629743.83, '年': 31536000, '十年': 315360000, '世纪': 3153600000
+    const pressureMap = {
+      '帕斯卡': 1, '千帕': 1000, '兆帕': 1000000, '巴': 100000,
+      '标准大气压': 101325, '毫米汞柱': 133.322, '磅/平方英寸': 6894.76
     }
-    return value * timeMap[unit]
+    return value * pressureMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
-    const timeMap = {
-      '毫秒': 1000, '秒': 1, '分钟': 1/60, '小时': 1/3600, '天': 1/86400,
-      '周': 1/604800, '月': 1/2629743.83, '年': 1/31536000, '十年': 1/315360000, '世纪': 1/3153600000
+    const pressureMap = {
+      '帕斯卡': 1, '千帕': 0.001, '兆帕': 0.000001, '巴': 0.00001,
+      '标准大气压': 0.00000986923, '毫米汞柱': 0.00750062, '磅/平方英寸': 0.000145038
     }
-    return baseValue * timeMap[unit]
+    return baseValue * pressureMap[unit]
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '时间单位换算',
-      path: '/packages/unit/pages/time-converter/time-converter'
+      title: '压力单位换算',
+      path: '/packages/unit/pages/pressure-converter/pressure-converter'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '时间单位换算',
-      query: 'time-converter'
+      title: '压力单位换算',
+      query: 'pressure-converter'
     }
   }
 })

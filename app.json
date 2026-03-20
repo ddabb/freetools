@@ -133,7 +133,10 @@
         "pages/temperature-converter/temperature-converter",
         "pages/area-converter/area-converter",
         "pages/volume-converter/volume-converter",
-        "pages/time-converter/time-converter"
+        "pages/time-converter/time-converter",
+        "pages/speed-converter/speed-converter",
+        "pages/pressure-converter/pressure-converter",
+        "pages/energy-converter/energy-converter"
       ]
     }
   ],

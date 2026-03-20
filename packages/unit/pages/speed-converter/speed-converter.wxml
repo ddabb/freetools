@@ -1,11 +1,11 @@
-<!--packages/unit/pages/volume-converter/volume-converter.wxml-->
+<!-- packages/unit/pages/speed-converter/speed-converter.wxml -->
 <view class="container">
   <!-- 表单区域 -->
   <view class="form-container">
     <!-- 单位值输入区域 -->
     <view class="form-item">
       <view class="form-label">
-        <text class="label-text">体积单位</text>
+        <text class="label-text">速度单位</text>
         <text class="required-mark">*</text>
       </view>
       <view class="unit-list">
@@ -25,27 +25,27 @@
     
     <!-- 概念说明 -->
     <view class="concept-section">
-      <view class="concept-title">体积单位概念</view>
+      <view class="concept-title">速度单位概念</view>
       <view class="concept-content">
         <view class="concept-item">
-          <text class="concept-term">立方米 (m³)</text>
-          <text class="concept-desc">国际标准单位，定义为边长为1米的立方体的体积</text>
+          <text class="concept-term">米/秒 (m/s)</text>
+          <text class="concept-desc">国际单位制中的基本速度单位</text>
         </view>
         <view class="concept-item">
-          <text class="concept-term">立方厘米 (cm³)</text>
-          <text class="concept-desc">1立方厘米 = 0.000001立方米，常用于表示较小体积</text>
+          <text class="concept-term">千米/小时 (km/h)</text>
+          <text class="concept-desc">1千米/小时 = 0.277778米/秒，常用于表示车辆速度</text>
         </view>
         <view class="concept-item">
-          <text class="concept-term">升 (L)</text>
-          <text class="concept-desc">1升 = 0.001立方米，常用的容量单位</text>
+          <text class="concept-term">英里/小时 (mph)</text>
+          <text class="concept-desc">1英里/小时 ≈ 0.44704米/秒，常用于表示车辆速度</text>
         </view>
         <view class="concept-item">
-          <text class="concept-term">毫升 (mL)</text>
-          <text class="concept-desc">1毫升 = 0.001升，常用于表示液体体积</text>
+          <text class="concept-term">节 (kn)</text>
+          <text class="concept-desc">1节 ≈ 0.514444米/秒，常用于表示船舶和飞机速度</text>
         </view>
         <view class="concept-item">
-          <text class="concept-term">立方英尺 (cu ft)</text>
-          <text class="concept-desc">英制体积单位，1立方英尺 ≈ 0.0283立方米</text>
+          <text class="concept-term">英尺/秒 (ft/s)</text>
+          <text class="concept-desc">1英尺/秒 ≈ 0.3048米/秒，常用于表示物体速度</text>
         </view>
       </view>
     </view>

@@ -84,85 +84,79 @@
   outline: none;
 }
 
-/* 概念说明部分 */
+/* 概念说明区域 */
 .concept-section {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  margin-top: 40rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx solid #e9ecef;
 }
 
 .concept-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 20rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 2rpx solid #f0f0f0;
-}
-
-.concept-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.concept-item {
-  padding: 16rpx;
-  background: #f9f9f9;
-  border-radius: 12rpx;
-  transition: all 0.3s ease;
-}
-
-.concept-item:hover {
-  background: #f0f0f0;
-  transform: translateY(-2rpx);
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
-}
-
-.concept-item-title {
   font-size: 28rpx;
   font-weight: 600;
   color: #333;
-  margin-bottom: 8rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
 }
 
-.concept-item-desc {
+.concept-title::before {
+  content: '📚';
+  margin-right: 12rpx;
   font-size: 24rpx;
-  line-height: 1.5;
-  color: #666;
 }
 
-/* 响应式设计 */
-@media (max-width: 375px) {
-  .container {
-    padding: 16rpx;
-  }
-  
-  .form-container,
-  .concept-section {
-    padding: 24rpx;
-  }
-  
-  .label-text,
-  .concept-title {
-    font-size: 28rpx;
-  }
-  
-  .unit-input {
-    font-size: 28rpx;
-  }
-  
-  .unit-label {
-    font-size: 26rpx;
-  }
-  
-  .concept-item-title {
-    font-size: 26rpx;
-  }
-  
-  .concept-item-desc {
-    font-size: 22rpx;
-  }
+.concept-content {
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  border: 2rpx solid #e9ecef;
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+.concept-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #e9ecef;
+}
+
+.concept-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.concept-term {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 4rpx;
+}
+
+.concept-desc {
+  font-size: 22rpx;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+/* 滚动条样式 */
+.concept-content::-webkit-scrollbar {
+  width: 8rpx;
+}
+
+.concept-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4rpx;
+}
+
+.concept-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4rpx;
+}
+
+.concept-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

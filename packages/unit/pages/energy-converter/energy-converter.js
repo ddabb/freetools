@@ -1,24 +1,21 @@
-// packages/unit/pages/time-converter/time-converter.js
+// packages/unit/pages/energy-converter/energy-converter.js
 Page({
   data: {
-    units: ['毫秒', '秒', '分钟', '小时', '天', '周', '月', '年', '十年', '世纪'],
+    units: ['焦耳', '千焦', '兆焦', '卡路里', '千瓦时', '英热单位', '电子伏特'],
     unitValues: {
-      '毫秒': '',
-      '秒': '',
-      '分钟': '',
-      '小时': '',
-      '天': '',
-      '周': '',
-      '月': '',
-      '年': '',
-      '十年': '',
-      '世纪': ''
+      '焦耳': '',
+      '千焦': '',
+      '兆焦': '',
+      '卡路里': '',
+      '千瓦时': '',
+      '英热单位': '',
+      '电子伏特': ''
     }
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title: '时间单位换算'
+      title: '能量单位换算'
     })
   },
 
@@ -65,34 +62,34 @@ Page({
   },
 
   toBaseUnit(value, unit) {
-    const timeMap = {
-      '毫秒': 0.001, '秒': 1, '分钟': 60, '小时': 3600, '天': 86400,
-      '周': 604800, '月': 2629743.83, '年': 31536000, '十年': 315360000, '世纪': 3153600000
+    const energyMap = {
+      '焦耳': 1, '千焦': 1000, '兆焦': 1000000, '卡路里': 4.184,
+      '千瓦时': 3600000, '英热单位': 1055.06, '电子伏特': 1.60218e-19
     }
-    return value * timeMap[unit]
+    return value * energyMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
-    const timeMap = {
-      '毫秒': 1000, '秒': 1, '分钟': 1/60, '小时': 1/3600, '天': 1/86400,
-      '周': 1/604800, '月': 1/2629743.83, '年': 1/31536000, '十年': 1/315360000, '世纪': 1/3153600000
+    const energyMap = {
+      '焦耳': 1, '千焦': 0.001, '兆焦': 0.000001, '卡路里': 0.239006,
+      '千瓦时': 2.77778e-7, '英热单位': 9.47817e-4, '电子伏特': 6.24151e18
     }
-    return baseValue * timeMap[unit]
+    return baseValue * energyMap[unit]
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '时间单位换算',
-      path: '/packages/unit/pages/time-converter/time-converter'
+      title: '能量单位换算',
+      path: '/packages/unit/pages/energy-converter/energy-converter'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '时间单位换算',
-      query: 'time-converter'
+      title: '能量单位换算',
+      query: 'energy-converter'
     }
   }
 })

@@ -104,6 +104,36 @@ const tools = [
     description: '各种时间单位的快速换算'
   },
   {
+    id: 'speed-converter',
+    name: '速度换算',
+    icon: '🚗',
+    color: 'green',
+    url: '/packages/unit/pages/speed-converter/speed-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['速度', '单位', '换算', '转换'],
+    description: '各种速度单位的快速换算'
+  },
+  {
+    id: 'pressure-converter',
+    name: '压力换算',
+    icon: '🌀',
+    color: 'blue',
+    url: '/packages/unit/pages/pressure-converter/pressure-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['压力', '单位', '换算', '转换'],
+    description: '各种压力单位的快速换算'
+  },
+  {
+    id: 'energy-converter',
+    name: '能量换算',
+    icon: '⚡',
+    color: 'yellow',
+    url: '/packages/unit/pages/energy-converter/energy-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['能量', '单位', '换算', '转换'],
+    description: '各种能量单位的快速换算'
+  },
+  {
     id: 'mortgage',
     name: '房贷计算器',
     icon: '🏠',

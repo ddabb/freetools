@@ -1,11 +1,15 @@
 // packages/unit/pages/temperature-converter/temperature-converter.js
 Page({
   data: {
-    units: ['摄氏度', '华氏度', '开尔文'],
+    units: ['摄氏度', '华氏度', '开尔文', '兰金温标', '列氏温标', '牛顿温标', '罗默温标'],
     unitValues: {
       '摄氏度': '',
       '华氏度': '',
-      '开尔文': ''
+      '开尔文': '',
+      '兰金温标': '',
+      '列氏温标': '',
+      '牛顿温标': '',
+      '罗默温标': ''
     }
   },
 
@@ -62,6 +66,10 @@ Page({
     if (unit === '摄氏度') return value
     if (unit === '华氏度') return (value - 32) * 5 / 9
     if (unit === '开尔文') return value - 273.15
+    if (unit === '兰金温标') return (value - 491.67) * 5 / 9
+    if (unit === '列氏温标') return value * 5 / 4
+    if (unit === '牛顿温标') return value * 100 / 33
+    if (unit === '罗默温标') return (value - 7.5) * 40 / 21
     return value
   },
 
@@ -70,6 +78,10 @@ Page({
     if (unit === '摄氏度') return baseValue
     if (unit === '华氏度') return baseValue * 9 / 5 + 32
     if (unit === '开尔文') return baseValue + 273.15
+    if (unit === '兰金温标') return baseValue * 9 / 5 + 491.67
+    if (unit === '列氏温标') return baseValue * 4 / 5
+    if (unit === '牛顿温标') return baseValue * 33 / 100
+    if (unit === '罗默温标') return baseValue * 21 / 40 + 7.5
     return baseValue
   },
 
