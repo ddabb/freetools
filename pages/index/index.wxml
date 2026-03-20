@@ -43,9 +43,9 @@
       <scroll-view class="tools-list" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
         <view wx:if="{{showSearchResult}}">
           <text class="section-title">搜索结果</text>
-          <view wx:if="{{filteredTools.length > 0 || filteredCategories.length > 0}}">
+          <view wx:if="{{filteredTools.length > 0}}">
             <!-- 搜索到的工具 -->
-            <view wx:if="{{filteredTools.length > 0}}" class="search-tools">
+            <view class="search-tools">
               <view wx:for="{{filteredTools}}" wx:key="id" class="tool-card-direct"
                 bindtap="navigateToTool" data-url="{{item.url}}"
                 hover-class="tool-card-hover"
@@ -72,18 +72,6 @@
                     <text class="btn-text">开始使用</text>
                     <text class="btn-icon">→</text>
                   </button>
-                </view>
-              </view>
-            </view>
-            <!-- 搜索到的分类 -->
-            <view wx:if="{{filteredCategories.length > 0}}" class="search-categories">
-              <view wx:for="{{filteredCategories}}" wx:key="name" class="category-card-direct"
-                bindtap="switchCategory" data-category="{{item.name}}"
-              >
-                <view class="category-icon">{{item.icon}}</view>
-                <view class="category-info">
-                  <text class="category-name">{{item.name}}</text>
-                  <text class="category-desc">{{item.description}}</text>
                 </view>
               </view>
             </view>

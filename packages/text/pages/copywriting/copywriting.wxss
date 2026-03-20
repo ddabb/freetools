@@ -3,55 +3,16 @@
 .container {
   min-height: 100vh;
   background-color: #f8f9fa;
-  padding: 20rpx;
+  padding: 15rpx;
   display: flex;
   flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* 头部样式 */
-.header {
-  text-align: center;
-  margin-bottom: 20rpx;
-  padding: 15rpx 0;
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  border-radius: 15rpx;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-  animation: headerFadeIn 0.5s ease;
-}
-
-@keyframes headerFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.header-content {
-  color: white;
-}
-
-.header-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10rpx;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.header-subtitle {
-  font-size: 24rpx;
-  opacity: 0.9;
-  display: block;
-}
-
 /* 搜索框样式 */
 .search-section {
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
+  margin-top: 10rpx;
 }
 
 .search-box {
@@ -62,6 +23,8 @@
   padding: 0 15rpx;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  width: calc(100vw - 40rpx);
+  margin-left: 0;
 }
 
 .search-box:focus-within {
@@ -70,15 +33,15 @@
 }
 
 .search-icon {
-  font-size: 24rpx;
+  font-size: 36rpx;
   color: #999;
-  margin-right: 10rpx;
+  margin-right: 15rpx;
 }
 
 .search-input {
   flex: 1;
-  height: 60rpx;
-  font-size: 24rpx;
+  height: 80rpx;
+  font-size: 32rpx;
   color: #333;
 }
 
@@ -92,27 +55,29 @@
 }
 
 .clear-btn text {
-  font-size: 24rpx;
+  font-size: 36rpx;
   color: #999;
 }
 
 /* 分类样式 */
 .category-section {
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
+  width: calc(100vw - 40rpx);
+  margin-left: 0;
 }
 
 .category-scroll {
-  height: 200rpx;
+  height: 300rpx;
   overflow-y: auto;
 }
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 12rpx;
-  padding: 4rpx 2rpx;
-  height: 180rpx;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 15rpx;
+  padding: 10rpx 8rpx;
+  height: 280rpx;
 }
 
 .category-item {
@@ -120,12 +85,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12rpx 8rpx;
-  border-radius: 12rpx;
+  padding: 20rpx 15rpx;
+  border-radius: 15rpx;
   background-color: white;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  min-height: 60rpx;
+  min-height: 90rpx;
   cursor: pointer;
 }
 
@@ -141,9 +106,9 @@
 }
 
 .category-icon {
-  font-size: 28rpx;
+  font-size: 40rpx;
   display: block;
-  margin-bottom: 4rpx;
+  margin-bottom: 8rpx;
   transition: transform 0.3s ease;
 }
 
@@ -152,7 +117,7 @@
 }
 
 .category-name {
-  font-size: 16rpx;
+  font-size: 24rpx;
   color: #333;
   font-weight: 500;
 }
@@ -161,7 +126,7 @@
 .copywriting-section {
   height: calc(100vh - 400rpx);
   min-height: 300rpx;
-  overflow: hidden;
+  overflow-y: auto;
   padding-right: 10rpx;
   margin-top: 10rpx;
 }
@@ -191,9 +156,9 @@
 }
 
 .empty-icon {
-  font-size: 80rpx;
+  font-size: 100rpx;
   display: block;
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
   animation: bounce 2s infinite;
 }
 
@@ -210,21 +175,21 @@
 }
 
 .empty-text {
-  font-size: 24rpx;
-  line-height: 1.5;
+  font-size: 32rpx;
+  line-height: 1.8;
 }
 
 .copywriting-list {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
-  min-height: 300rpx;
+  gap: 40rpx;
+  min-height: 200rpx;
 }
 
 .copywriting-item {
   background-color: white;
-  border-radius: 15rpx;
-  padding: 25rpx;
+  border-radius: 20rpx;
+  padding: 30rpx;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
@@ -260,8 +225,8 @@
 }
 
 .copywriting-content {
-  font-size: 26rpx;
-  line-height: 1.6;
+  font-size: 32rpx;
+  line-height: 1.8;
   color: #333;
   word-break: break-word;
   font-weight: 500;
@@ -278,9 +243,9 @@
 
 .copywriting-from {
   flex-shrink: 0;
-  max-width: 120rpx;
-  font-size: 20rpx;
-  line-height: 1.4;
+  max-width: 150rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
   color: #999;
   text-align: right;
   font-style: italic;
@@ -314,8 +279,8 @@
 }
 
 .copy-icon {
-  font-size: 36rpx;
-  margin-bottom: 5rpx;
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
   transition: transform 0.3s ease;
 }
 
@@ -324,7 +289,7 @@
 }
 
 .copy-text {
-  font-size: 20rpx;
+  font-size: 28rpx;
   color: #3498db;
   font-weight: 500;
 }
@@ -343,46 +308,3 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* 响应式设计 */
-@media (max-width: 375px) {
-  .container {
-    padding: 15rpx;
-  }
-  
-  .header {
-    padding: 15rpx 0;
-  }
-  
-  .header-title {
-    font-size: 32rpx;
-  }
-  
-  .header-subtitle {
-    font-size: 22rpx;
-  }
-  
-  .copywriting-item {
-    padding: 20rpx;
-  }
-  
-  .copywriting-content {
-    font-size: 24rpx;
-  }
-  
-  .category-grid {
-    gap: 10rpx;
-  }
-  
-  .category-item {
-    padding: 15rpx 5rpx;
-    min-height: 80rpx;
-  }
-  
-  .category-icon {
-    font-size: 28rpx;
-  }
-  
-  .category-name {
-    font-size: 16rpx;
-  }
-}

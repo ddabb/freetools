@@ -1,13 +1,5 @@
 <!-- packages/copywriting/pages/copywriting/copywriting.wxml -->
 <view class="container">
-  <!-- 头部 -->
-  <view class="header">
-    <view class="header-content">
-      <text class="header-title">文案宝库</text>
-      <text class="header-subtitle">海量优质文案，一键复制使用</text>
-    </view>
-  </view>
-
   <!-- 搜索框 -->
   <view class="search-section">
     <view class="search-box">
@@ -30,7 +22,6 @@
     <scroll-view 
       class="category-scroll" 
       scroll-y="true"
-      style="height: 200rpx;"
     >
       <view class="category-grid">
         <view 
@@ -64,7 +55,6 @@
       scroll-y="true"
       scroll-top="{{scrollTop}}"
       bindscroll="onScroll"
-      style="height: calc(100vh - 500rpx);"
     >
       <view 
         class="copywriting-item"

@@ -1,4 +1,4 @@
-// 文本转PNG页面逻辑
+// 文本转图片页面逻辑
 Page({
   data: {
     inputText: '',

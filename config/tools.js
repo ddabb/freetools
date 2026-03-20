@@ -38,7 +38,7 @@ const toolFrequency = {
   'color-converter': 34,     // 颜色转换器
   'avatar-generator': 45,     // 汉字头像生成
   'emoji-to-png': 42,        // Emoji转PNG
-  'text-to-png': 40,          // 文本转PNG
+  'text-to-png': 40,          // 文本转图片
   'copywriting': 80            // 文案工具
 };
 
@@ -427,7 +427,7 @@ const tools = [
   },
   {
     id: 'text-to-png',
-    name: '文本转PNG',
+    name: '文本转图片',
     icon: '📝',
     color: 'purple',
     url: '/packages/text/pages/text-to-png/text-to-png',
@@ -518,7 +518,11 @@ function searchTools(keyword) {
     return [];
   }
   
-  return allTools.filter(tool => {
+  // 添加调试信息
+  console.log('[搜索] 搜索关键词:', keyword);
+  console.log('[搜索] 总工具数量:', allTools.length);
+  
+  const results = allTools.filter(tool => {
     if (!tool) return false;
     
     const nameMatch = tool.name && tool.name.toLowerCase().includes(lowerKeyword);
@@ -527,8 +531,20 @@ function searchTools(keyword) {
       k && k.toLowerCase().includes(lowerKeyword)
     );
     
-    return nameMatch || keywordsMatch || descriptionMatch;
+    const match = nameMatch || keywordsMatch || descriptionMatch;
+    
+    if (match) {
+      console.log('[搜索匹配] 工具:', tool.name, '关键词:', keyword, 
+        'nameMatch:', nameMatch, 'descMatch:', descriptionMatch, 'keywordsMatch:', keywordsMatch);
+    }
+    
+    return match;
   });
+  
+  console.log('[搜索] 搜索结果数量:', results.length);
+  console.log('[搜索] 匹配工具:', results.map(t => t.name).join(', '));
+  
+  return results;
 }
 
 // 根据ID获取工具

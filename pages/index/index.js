@@ -345,19 +345,24 @@ Page({
         filteredCategories: []
       });
     } else {
+      // 添加调试信息
+      console.log('[搜索输入] 搜索文本:', searchText);
+      console.log('[搜索输入] allTools 数量:', this.data.allTools.length);
+      
       // 使用统一配置的搜索功能
       const searchResults = searchTools(searchText);
-      const filteredTools = searchResults.filter(tool =>
-        this.data.allTools.some(at => at.id === tool.id)  // 使用 this.data.allTools 而不是 allTools
-      );
-
+      
       // 过滤分类
       const filteredCategories = this.data.categories.filter(category => {
         return category.name.toLowerCase().includes(searchText);
       });
 
+      // 调试搜索结果
+      console.log('[搜索输入] 搜索结果数量:', searchResults.length);
+      console.log('[搜索输入] 匹配分类数量:', filteredCategories.length);
+      
       this.setData({
-        filteredTools,
+        filteredTools: searchResults,
         filteredCategories
       });
     }

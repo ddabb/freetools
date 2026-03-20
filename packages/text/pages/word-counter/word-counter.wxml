@@ -97,7 +97,7 @@
         <span class="progress-numbers">{{stats.words}}/{{targetWords}}</span>
       </view>
       <view class="progress-bar">
-        <view class="progress-fill" style="width: {{progressPercentage}}%"></view>
+        <view class="progress-fill" style="width: {{progressPercentage + '%'}}"></view>
       </view>
     </view>
   </view>
