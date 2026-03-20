@@ -32,7 +32,6 @@
             <text class="category-name">{{item.name}}</text>
             <text class="category-count">{{categoryToolCounts[item.name] || 0}}个工具</text>
           </view>
-          <view class="category-arrow" wx:if="{{activeCategory === item.name}}">✓</view>
         </view>
       </scroll-view>
     </view>
