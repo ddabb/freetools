@@ -27,7 +27,8 @@
         "pages/zodiac/zodiac",
         "pages/relative-calculator/relative-calculator",
         "pages/idcard/idcard",
-        "pages/leapyear/leapyear"
+        "pages/leapyear/leapyear",
+        "pages/copywriting/copywriting"
       ]
     },
     {
@@ -83,7 +84,6 @@
         "pages/emoji-to-png/emoji-to-png",
         "pages/text-to-png/text-to-png",
         "pages/text-tool/text-tool",
-        "pages/copywriting/copywriting",
         "pages/mdconvert/mdconvert",
         "pages/onlychinese/onlychinese",
         "pages/password-generator/password-generator"

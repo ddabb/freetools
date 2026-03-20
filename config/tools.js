@@ -441,7 +441,7 @@ const tools = [
     name: '文案工具',
     icon: '✍️',
     color: 'pink',
-    url: '/packages/text/pages/copywriting/copywriting',
+    url: '/packages/life/pages/copywriting/copywriting',
     categories: ['生活工具', '学习工具'],
     keywords: ['文案', '写作', '素材', '模板'],
     description: '提供各种场景的文案素材，支持分类浏览和复制',

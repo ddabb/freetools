@@ -24,7 +24,7 @@
       "list": [
         {
           "name": "文案搜索",
-          "pathName": "packages/text/pages/copywriting/copywriting",
+          "pathName": "packages/life/pages/copywriting/copywriting",
           "query": "",
           "scene": null,
           "launchMode": "default"

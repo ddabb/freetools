@@ -73,6 +73,10 @@
               <text class="copy-icon">📋</text>
               <text class="copy-text">复制</text>
             </view>
+            <view class="copy-action" bindtap="downloadImage" data-index="{{index}}">
+              <text class="copy-icon">📸</text>
+              <text class="copy-text">下载图片</text>
+            </view>
             <navigator url="/packages/text/pages/text-to-png/text-to-png?text={{item.text}}" class="copy-action">
               <text class="copy-icon">🖼️</text>
               <text class="copy-text">生成图片</text>
@@ -83,5 +87,7 @@
     </scroll-view>
   </view>
 
+  <!-- 画布元素，用于生成图片 -->
+  <canvas canvas-id="cvs1" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
 
 </view>
