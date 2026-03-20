@@ -403,7 +403,7 @@ Page({
     const qrX = width - qrSize - 35; // 二维码X坐标（右侧，增加边距）
     const qrY = height - qrSize - 35; // 二维码Y坐标（底部，增加边距）
     const dateY = padding + 35; // 日期位置
-    const contentY = dateY + 120; // 文案内容位置（增加空间以容纳星期信息和更大的字体）
+    const contentY = dateY + 90; // 文案内容位置（调整空间以适应新的日期信息布局）
     let fromY = contentY; // 来源信息位置，将在绘制文案后动态调整
 
     // 背景 - 优化渐变效果和装饰元素
@@ -548,55 +548,57 @@ Page({
     }
     
     // 日期标题
-    ctx.font = 'bold 16px 微软雅黑, Microsoft YaHei, sans-serif'; // 加粗
+    ctx.font = 'bold 15px 微软雅黑, Microsoft YaHei, sans-serif'; // 加粗，减小字体
     ctx.setFillStyle('#5a6c7d'); // 稍深的灰色
     if (holidayInfo) {
-      ctx.fillText(holidayInfo, padding, dateY - 30);
+      // 检查节日信息长度
+      const holidayWidth = ctx.measureText(holidayInfo).width;
+      const maxWidth = width - 2 * padding;
+      if (holidayWidth > maxWidth) {
+        // 如果节日信息太长，减小字体
+        ctx.font = 'bold 14px 微软雅黑, Microsoft YaHei, sans-serif';
+      }
+      ctx.fillText(holidayInfo, padding, dateY - 28);
     } else {
-      ctx.fillText('今日', padding, dateY - 30);
+      ctx.fillText('今日', padding, dateY - 28);
     }
     
     // 日期详情
-    ctx.font = '17px 宋体, STSong, SimSun, serif';
+    ctx.font = '16px 宋体, STSong, SimSun, serif'; // 减小字体
     ctx.setFillStyle('#495057'); // 深灰色日期信息
     
     // 优化日期信息排版，确保不超出屏幕
     const maxDateWidth = width - 2 * padding;
     
-    // 绘制公历日期和星期
-    const dateWithWeek = `${dateStr} 星期${weekDay}`;
-    const dateWithWeekWidth = ctx.measureText(dateWithWeek).width;
-    if (dateWithWeekWidth > maxDateWidth) {
-      // 如果日期和星期太长，分开显示
-      ctx.fillText(dateStr, padding, dateY);
-      ctx.fillText(`星期${weekDay}`, padding, dateY + 25);
-    } else {
-      ctx.fillText(dateWithWeek, padding, dateY);
+    // 绘制公历日期
+    const dateWidth = ctx.measureText(dateStr).width;
+    if (dateWidth > maxDateWidth) {
+      // 如果日期太长，减小字体
+      ctx.font = '15px 宋体, STSong, SimSun, serif';
     }
+    ctx.fillText(dateStr, padding, dateY);
+    
+    // 绘制星期
+    ctx.font = '15px 宋体, STSong, SimSun, serif';
+    ctx.fillText(`星期${weekDay}`, padding, dateY + 22);
     
     // 绘制农历日期
     const lunarText = `农历：${lunarDateStr}`;
     const lunarWidth = ctx.measureText(lunarText).width;
     if (lunarWidth > maxDateWidth) {
       // 如果农历日期太长，调整字体大小
-      ctx.setFontSize(15);
-      ctx.fillText(lunarText, padding, dateY + 50);
-      ctx.setFontSize(15);
-    } else {
-      ctx.fillText(lunarText, padding, dateY + 55);
+      ctx.font = '14px 宋体, STSong, SimSun, serif';
     }
+    ctx.fillText(lunarText, padding, dateY + 44);
     
     // 绘制天干地支
     const ganzhiText = `干支：${ganzhi}`;
     const ganzhiWidth = ctx.measureText(ganzhiText).width;
     if (ganzhiWidth > maxDateWidth) {
       // 如果天干地支太长，调整字体大小
-      ctx.setFontSize(14);
-      ctx.fillText(ganzhiText, padding, dateY + 80);
-      ctx.setFontSize(17);
-    } else {
-      ctx.fillText(ganzhiText, padding, dateY + 85);
+      ctx.font = '13px 宋体, STSong, SimSun, serif';
     }
+    ctx.fillText(ganzhiText, padding, dateY + 66);
     
     console.log('日期信息绘制完成:', {date: dateStr, weekDay: weekDay, lunarDate: lunarDateStr, ganzhi: ganzhi, holiday: holidayInfo});
 
