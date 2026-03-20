@@ -16,6 +16,14 @@
     <view class="zodiac-name">{{zodiacName}}</view>
   </view>
   <view class="birth-year">{{birthYearInfo}}</view>
+  <view class="link-row">
+    <view class="link-btn" bindtap="goToCalendar">
+      <text>万年历</text>
+    </view>
+    <view class="link-btn" bindtap="goToConstellation">
+      <text>星座</text>
+    </view>
+  </view>
 </view>
 
 <!-- 生肖列表 -->

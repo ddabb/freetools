@@ -503,6 +503,30 @@ Page({
     this.initCalendar(now.getFullYear(), now.getMonth(), now.getDate())
   },
 
+  goToZodiac() {
+    if (isHarmonyOS) {
+      router.push({
+        uri: '/packages/life/pages/zodiac/zodiac'
+      })
+    } else {
+      wx.navigateTo({
+        url: '/packages/life/pages/zodiac/zodiac'
+      })
+    }
+  },
+
+  goToConstellation() {
+    if (isHarmonyOS) {
+      router.push({
+        uri: '/packages/life/pages/constellation/constellation'
+      })
+    } else {
+      wx.navigateTo({
+        url: '/packages/life/pages/constellation/constellation'
+      })
+    }
+  },
+
   // 分享给好友
   onShareAppMessage() {
     return {

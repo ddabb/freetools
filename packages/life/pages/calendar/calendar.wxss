@@ -121,6 +121,13 @@ page {
   word-break: break-all;
 }
 
+.info-link {
+  font-size: 20rpx;
+  color: #667eea;
+  margin-top: 6rpx;
+  font-weight: 500;
+}
+
 /* 日历部分 */
 .calendar-section {
   background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);

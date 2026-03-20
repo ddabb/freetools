@@ -105,6 +105,30 @@ page {
   margin-top: 5px;
 }
 
+.link-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+  transition: all 0.3s;
+}
+
+.link-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.link-row .link-btn {
+  margin-top: 0;
+}
+
 /* 生肖列表 */
 .zodiac-list {
   padding: 0 15px 25px;

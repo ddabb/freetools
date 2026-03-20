@@ -43,17 +43,19 @@
         <text class="info-label">农历</text>
         <text class="info-value">{{lunar}}</text>
       </view>
-      <view class="info-card">
+      <view class="info-card" bindtap="goToZodiac">
         <text class="info-label">生肖</text>
         <text class="info-value">{{zodiac}}</text>
+        <text class="info-link">查看详情</text>
       </view>
       <view class="info-card">
         <text class="info-label">干支</text>
         <text class="info-value">{{lunarYearGanZhi}}</text>
       </view>
-      <view class="info-card">
+      <view class="info-card" bindtap="goToConstellation">
         <text class="info-label">星座</text>
         <text class="info-value">{{xingZuo}}</text>
+        <text class="info-link">查看详情</text>
       </view>
     </view>
     <view class="buttons-section">
