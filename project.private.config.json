@@ -26,8 +26,8 @@
           "name": "文案搜索",
           "pathName": "packages/life/pages/copywriting/copywriting",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "日历呈现",

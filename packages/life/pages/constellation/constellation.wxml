@@ -1,0 +1,88 @@
+<!-- 查询区域 -->
+<view class="query-section">
+  <view class="input-group">
+    <picker mode="date" value="{{currentDate}}" start="1900-01-01" end="2100-12-31" bindchange="onDateChange">
+      <view class="date-picker-display">
+        <text class="date-text">{{year}}年{{month}}月{{day}}日</text>
+        <text class="date-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+  <view class="input-hint">请选择您的出生阳历日期</view>
+</view>
+
+<!-- 结果区域 -->
+<view class="result-section">
+  <view class="constellation-circle">
+    <view class="constellation-icon">
+      <text class="icon">{{constellationIcon}}</text>
+    </view>
+    <view class="constellation-name">{{constellationName}}</view>
+    <view class="constellation-date">{{constellationDate}}</view>
+  </view>
+  <view class="link-row">
+    <view class="link-btn" bindtap="goToCalendar">
+      <text>万年历</text>
+    </view>
+    <view class="link-btn" bindtap="goToZodiac">
+      <text>生肖</text>
+    </view>
+  </view>
+</view>
+
+<!-- 星座特性介绍 -->
+<view class="detail-section" wx:if="{{constellationData}}">
+  <view class="detail-title">{{constellationName}} 特性分析</view>
+  
+  <view class="detail-card">
+    <view class="detail-header">
+      <text class="detail-icon">🎯</text>
+      <text class="detail-label">性格特点</text>
+    </view>
+    <view class="detail-content">{{constellationData.personality}}</view>
+  </view>
+
+  <view class="detail-card">
+    <view class="detail-header">
+      <text class="detail-icon">💕</text>
+      <text class="detail-label">爱情运势</text>
+    </view>
+    <view class="detail-content">{{constellationData.love}}</view>
+  </view>
+
+  <view class="detail-card">
+    <view class="detail-header">
+      <text class="detail-icon">💼</text>
+      <text class="detail-label">事业运势</text>
+    </view>
+    <view class="detail-content">{{constellationData.career}}</view>
+  </view>
+
+  <view class="detail-card">
+    <view class="detail-header">
+      <text class="detail-icon">🍀</text>
+      <text class="detail-label">幸运数字</text>
+    </view>
+    <view class="detail-content">幸运数字：{{constellationData.luckyNumber}} | 幸运色：{{constellationData.luckyColor}} | 幸运日：{{constellationData.luckyDay}}</view>
+  </view>
+</view>
+
+<!-- 星座列表 -->
+<view class="constellation-list">
+  <view class="list-title">十二星座</view>
+  
+  <view wx:for="{{constellationItems}}" wx:key="index" class="constellation-item {{item.name == constellationName ? 'active' : ''}}" data-index="{{index}}" bindtap="onConstellationItemClick">
+    <view class="constellation-item-icon">
+      <text class="icon">{{item.icon}}</text>
+    </view>
+    <view class="constellation-item-details">
+      <view class="constellation-item-name">{{item.name}}</view>
+      <view class="constellation-item-date">{{item.date}}</view>
+    </view>
+  </view>
+</view>
+
+<!-- 页脚 -->
+<view class="footer">
+  © 2026 星座查询 | 数据仅供参考
+</view>

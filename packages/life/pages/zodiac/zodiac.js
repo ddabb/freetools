@@ -117,5 +117,17 @@ Page({
   // 处理输入框回车键
   onYearInputConfirm: function(e) {
     this.onQuery();
+  },
+
+  goToCalendar() {
+    wx.navigateTo({
+      url: '/packages/life/pages/calendar/calendar'
+    })
+  },
+
+  goToConstellation() {
+    wx.navigateTo({
+      url: '/packages/life/pages/constellation/constellation'
+    })
   }
 });

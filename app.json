@@ -25,6 +25,7 @@
         "pages/battery-health/battery-health",
         "pages/datediff/datediff",
         "pages/zodiac/zodiac",
+        "pages/constellation/constellation",
         "pages/relative-calculator/relative-calculator",
         "pages/idcard/idcard",
         "pages/leapyear/leapyear",
@@ -96,13 +97,7 @@
         "pages/data-analyzer/data-analyzer"
       ]
     },
-    {
-      "root": "packages/chart",
-      "name": "chart",
-      "pages": [
-        "pages/chart-generator/chart-generator"
-      ]
-    },
+
     {
       "root": "packages/developer",
       "name": "developer",
@@ -143,11 +138,11 @@
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "chart", "developer", "design", "food", "unit"]
+      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "developer", "design", "food", "unit"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "chart", "developer", "design", "food", "unit"]
+      "packages": ["financial", "life", "utility", "health", "travel", "math", "converter", "text", "data", "developer", "design", "food", "unit"]
     }
   },
   "window": {

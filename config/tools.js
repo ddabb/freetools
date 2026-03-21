@@ -33,7 +33,7 @@ const toolFrequency = {
   'markdown-preview': 44,    // Markdown预览器
   'text-diff': 42,           // 文本对比工具
   'data-analyzer': 40,       // 数据统计器
-  'chart-generator': 38,     // 图表生成器
+
   'timestamp-converter': 36,  // 时间戳转换器
   'color-converter': 34,     // 颜色转换器
   'avatar-generator': 45,     // 汉字头像生成
@@ -424,6 +424,16 @@ const tools = [
     description: '根据出生年份查询生肖和年龄'
   },
   {
+    id: 'constellation',
+    name: '星座查询',
+    icon: '🔯',
+    color: 'purple',
+    url: '/packages/life/pages/constellation/constellation',
+    categories: ['生活工具'],
+    keywords: ['星座', '查询', '生日', '性格'],
+    description: '根据出生日期查询星座和性格特点'
+  },
+  {
     id: 'relative-calculator',
     name: '亲戚计算器',
     icon: '👥',
@@ -485,7 +495,7 @@ const discoveryTools = [
   { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], keywords: ['Markdown', '预览', '文档', '格式'], frequency: toolFrequency['markdown-preview'] },
   { id: 'text-diff', name: '文本对比工具', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'], frequency: toolFrequency['text-diff'] },
   { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'], frequency: toolFrequency['data-analyzer'] },
-  { id: 'chart-generator', name: '图表生成器', icon: '📊', description: '多种图表一键生成', url: '/packages/chart/pages/chart-generator/chart-generator', categories: ['学习工具', '开发工具'], keywords: ['图表', '生成', '可视化', '图形'], frequency: toolFrequency['chart-generator'] },
+
   { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'], frequency: toolFrequency['timestamp-converter'] },
   { id: 'color-converter', name: '颜色生成器', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
 ];
@@ -510,7 +520,8 @@ const categories = [
     { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具' },
     { name: '开发工具', color: 'slate', icon: '⚙️', description: '正则测试、代码工具等开发者工具' },
     { name: '安全工具', color: 'red', icon: '🔒', description: '密码生成、身份证验证等安全工具' },
-    { name: '文案工具', color: 'pink', icon: '✍️', description: '各种场景的文案素材和模板' },
+    { name: '文本工具', color: 'yellow', icon: '📝', description: '字数统计、Markdown预览等文本工具' },
+    { name: '设计工具', color: 'pink', icon: '🎨', description: '颜色生成、配色方案等设计工具' },
     { name: '更多工具', color: 'teal', icon: '📱', description: '旅行等其他实用工具' }
   ];
 
