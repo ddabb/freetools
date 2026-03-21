@@ -99,6 +99,9 @@
   font-size: 28rpx;
   color: #5a2d0c;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category-active .category-name {
