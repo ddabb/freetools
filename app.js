@@ -96,22 +96,10 @@ App({
         // Source Sans Pro Regular 400 latin
         source: 'url("https://fonts.gstatic.com/s/sourcesanspro/v22/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNa7lqDY.woff2")',
         desc: { weight: '400', style: 'normal' }
-      },
-
-
-      // 系统字体
-      {
-        family: 'PingFang SC',
-        // 苹方字体，系统字体优先
-        source: 'local("PingFang SC"), system-ui',
-        desc: { weight: 'normal', style: 'normal' }
-      },
-      {
-        family: 'Microsoft YaHei',
-        // 微软雅黑，Windows系统字体
-        source: 'local("Microsoft YaHei"), system-ui',
-        desc: { weight: 'normal', style: 'normal' }
       }
+
+
+
     ];
 
     const promises = fonts.map(font => new Promise((resolve) => {

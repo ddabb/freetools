@@ -21,17 +21,45 @@
     <!-- 项目信息卡片 -->
     <view class="project-card">
       <view class="project-header">
-        <text class="project-title">🌐 关于小程序</text>
+        <text class="project-title">🌟 关于我们</text>
       </view>
       <view class="project-content">
-        <text class="project-description">这是一个全程 Vibe Coding 的小程序，专注于提供实用的工具集合。</text>
-        <text class="project-description">我们致力于打造一个轻量级、功能丰富的工具箱，</text>
-        <text class="project-description">涵盖生活、学习、工作等多个领域的实用工具。</text>
-        <text class="project-description">欢迎提交 PR 和提出 Issue，一起完善这个小程序！</text>
-        <view class="github-link" bindtap="openGitHub">
-          <text class="github-icon">🐙</text>
-          <text class="github-url">https://github.com/ddabb/freetools.git</text>
-          <text class="github-arrow">→</text>
+        <text class="project-description">欢迎使用「随身工具宝」小程序！</text>
+        <text class="project-description">这是一款专为大众用户设计的实用工具集合，</text>
+        <text class="project-description">涵盖生活、学习、工作等各个场景的便捷功能。</text>
+        <text class="project-description">
+          <text class="highlight">🎯 我们的特色：</text>
+        </text>
+        <text class="project-description">• 完全免费使用，无任何隐藏收费</text>
+        <text class="project-description">• 界面简洁易用，操作简单快捷</text>
+        <text class="project-description">• 无需下载安装，即开即用</text>
+        <text class="project-description">• 数据本地存储，保护您的隐私</text>
+        
+        <text class="project-description">
+          <text class="highlight">💡 主要功能：</text>
+        </text>
+        <text class="project-description">• 生活工具：日历查询、星座运势、生肖配对等</text>
+        <text class="project-description">• 学习助手：文案创作、计算工具等</text>
+        <text class="project-description">• 实用功能：更多实用工具持续更新中</text>
+        
+        <view class="share-section">
+          <text class="share-title">📢 分享给好友</text>
+          <text class="share-description">觉得好用吗？分享给身边的朋友吧！</text>
+          <text class="share-description">让更多人一起享受便捷的工具服务！</text>
+          <button class="share-btn" open-type="share" hover-class="share-btn-hover">
+            <text class="share-icon">📤</text>
+            <text class="share-text">分享给好友</text>
+          </button>
+        </view>
+        
+        <view class="favorite-section">
+          <text class="favorite-title">⭐ 收藏小程序</text>
+          <text class="favorite-description">收藏后可在微信首页下拉快速找到</text>
+          <text class="favorite-description">方便下次使用，无需搜索！</text>
+          <button class="favorite-btn" bindtap="addToFavorite" hover-class="favorite-btn-hover">
+            <text class="favorite-icon">⭐</text>
+            <text class="favorite-text">添加到我的小程序</text>
+          </button>
         </view>
       </view>
     </view>

@@ -9,7 +9,12 @@ Page({
     constellationIcon: '🐐',
     constellationDate: '12.22 - 1.19',
     constellationData: null,
-    constellationItems: []
+    constellationItems: [],
+    pickerRange: [
+      ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      ['1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日', '11日', '12日', '13日', '14日', '15日', '16日', '17日', '18日', '19日', '20日', '21日', '22日', '23日', '24日', '25日', '26日', '27日', '28日', '29日', '30日', '31日']
+    ],
+    pickerValue: [0, 0]
   },
 
   // 星座详细数据
@@ -189,6 +194,34 @@ Page({
     return items;
   },
 
+  // 初始化日期选择器范围
+  initPickerRange: function() {
+    // 生成月份数组
+    const months = [];
+    for (let i = 1; i <= 12; i++) {
+      months.push(i + '月');
+    }
+    
+    // 生成日期数组（默认1月）
+    const days = [];
+    const daysInMonth = new Date(2000, 1, 0).getDate(); // 2000年1月的天数
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i + '日');
+    }
+    
+    return [months, days];
+  },
+
+  // 更新日期选择器的日期范围
+  updateDayRange: function(month) {
+    const days = [];
+    const daysInMonth = new Date(2000, month, 0).getDate(); // 获取指定月份的天数
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i + '日');
+    }
+    return days;
+  },
+
   // 更新查询结果
   updateResult: function(month, day) {
     const constellationName = this.getConstellation(month, day);
@@ -206,15 +239,34 @@ Page({
 
   // 处理阳历日期选择器变化
   onDateChange: function(e) {
-    const dateStr = e.detail.value;
-    const date = new Date(dateStr);
+    const value = e.detail.value;
+    const month = value[0] + 1;
+    const day = value[1] + 1;
+    
     this.setData({
-      currentDate: dateStr,
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      day: date.getDate()
+      month: month,
+      day: day,
+      pickerValue: value
     });
-    this.updateResult(date.getMonth() + 1, date.getDate());
+    this.updateResult(month, day);
+  },
+
+  // 处理日期选择器列变化
+  onPickerColumnChange: function(e) {
+    const column = e.detail.column;
+    const value = e.detail.value;
+    
+    if (column === 0) {
+      // 月份变化，更新日期范围
+      const newMonth = value + 1;
+      const newDays = this.updateDayRange(newMonth);
+      
+      this.setData({
+        'pickerRange[1]': newDays,
+        'pickerValue[0]': value,
+        'pickerValue[1]': 0 // 重置日期为1号
+      });
+    }
   },
 
   // 处理月份输入
@@ -282,12 +334,15 @@ Page({
     const day = now.getDate();
     const currentDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     
+    const pickerValue = [month - 1, day - 1];
+    
     this.setData({
       currentDate: currentDate,
       year: year,
       month: month,
       day: day,
-      constellationItems: this.initConstellationList()
+      constellationItems: this.initConstellationList(),
+      pickerValue: pickerValue
     });
     this.updateResult(month, day);
   },

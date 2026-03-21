@@ -1,230 +1,243 @@
 /* 全局样式 */
 page {
-  color: #333;
-  line-height: 1.5;
+  color: #2c3e50;
+  line-height: 1.6;
   min-height: 100vh;
-  background-color: #f8f9fc;
+  background: linear-gradient(180deg, #fff8f8 0%, #fef3c7 100%);
 }
 
 /* 查询区域 */
 .query-section {
-  padding: 25px 20px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-bottom: 1px solid #eee;
+  padding: 20px 15px;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 154, 158, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .input-group {
   display: flex;
-  margin-bottom: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .date-picker-display {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
-  border-radius: 8px;
-  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 12px 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  min-width: 150px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.date-picker-display:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .date-text {
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  color: #f472b6;
+  letter-spacing: 0.5px;
 }
 
 .date-arrow {
-  font-size: 14px;
-  color: #999;
+  font-size: 16px;
+  color: #94a3b8;
+  transition: transform 0.3s ease;
 }
 
 .query-btn {
-  background: linear-gradient(135deg, #ffd700, #ffb800);
-  color: #333;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
   border: none;
-  border-radius: 0 8px 8px 0;
-  padding: 0 25px;
+  border-radius: 0 12px 12px 0;
+  padding: 0 28px;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .query-btn:active {
   transform: scale(0.98);
-  background: linear-gradient(135deg, #ffb800, #ffa500);
+  background: linear-gradient(135deg, #d97706, #b45309);
 }
 
 .input-hint {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  margin-top: 8px;
-  padding-left: 5px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
 }
 
 /* 结果区域 */
 .result-section {
-  padding: 30px 20px;
+  padding: 20px 15px;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  animation: fadeIn 0.5s ease-out;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
+  animation: fadeIn 0.6s ease-out;
+  min-height: calc(100vh - 100px);
 }
 
 .constellation-circle {
-  width: 160px;
-  height: 160px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  width: 170px;
+  height: 170px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
   border-radius: 50%;
-  margin: 0 auto 20px;
+  margin: 0 auto 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(255, 154, 158, 0.3), inset 0 2px 10px rgba(255, 255, 255, 0.5);
+  border: 4px solid #fecdd3;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  padding: 10px;
+}
+
+.constellation-circle:active {
+  transform: scale(0.98);
 }
 
 .constellation-icon {
-  font-size: 60px;
+  font-size: 56px;
   margin-bottom: 5px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  margin-top: -5px;
 }
 
 .constellation-name {
-  font-size: 26px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 24px;
+  font-weight: 800;
+  color: #f472b6;
+  text-shadow: 0 2px 4px rgba(255, 154, 158, 0.3), 0 0 10px rgba(255, 154, 158, 0.2);
+  letter-spacing: 1px;
+  margin-bottom: 2px;
 }
 
 .constellation-date {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 5px;
+  color: #fb7185;
+  margin-top: 2px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .link-row {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 18px;
+  margin-top: 24px;
 }
 
 .link-btn {
-  padding: 8px 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #f472b6;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid #fecdd3;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 154, 158, 0.2);
 }
 
 .link-btn:active {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(0.95);
+  background: rgba(255, 255, 255, 1);
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(255, 154, 158, 0.3);
 }
 
 /* 星座详情 */
 .detail-section {
-  padding: 20px 15px;
+  padding: 25px 18px;
   background-color: white;
 }
 
 .detail-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 20px;
-  padding-left: 10px;
-  border-left: 4px solid #667eea;
+  font-size: 22px;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 22px;
+  padding-left: 12px;
+  border-left: 5px solid #f472b6;
+  background: linear-gradient(90deg, #f472b6, #fb7185);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .detail-card {
-  background: linear-gradient(145deg, #f8f9fc, #fff);
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(145deg, #ffffff, #fef2f2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 16px rgba(255, 154, 158, 0.1);
+  border: 1px solid #fecdd3;
+  transition: all 0.3s ease;
+}
+
+.detail-card:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.15);
 }
 
 .detail-header {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .detail-icon {
-  font-size: 22px;
-  margin-right: 10px;
+  font-size: 24px;
+  margin-right: 12px;
 }
 
 .detail-label {
-  font-size: 17px;
-  font-weight: 600;
-  color: #667eea;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f472b6;
+  letter-spacing: 0.3px;
 }
 
 .detail-content {
-  font-size: 15px;
-  color: #555;
-  line-height: 1.8;
+  font-size: 16px;
+  color: #475569;
+  line-height: 1.9;
+  text-align: justify;
 }
 
-/* 星座列表 */
-.constellation-list {
-  padding: 0 15px 25px;
-  background-color: white;
-}
-
-.list-title {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 15px;
-  padding-left: 5px;
-}
-
-.constellation-item {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  background-color: #f8f9fc;
-  transition: all 0.3s;
-  animation: fadeIn 0.5s ease-out;
-}
-
-.constellation-item.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.constellation-item.active .constellation-item-name,
-.constellation-item.active .constellation-item-date {
-  color: white;
-}
-
+/* 星座图标样式 */
 .constellation-item-icon {
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 15px;
-  font-size: 24px;
+  font-size: 26px;
   color: white;
-}
-
-.constellation-item.active .constellation-item-icon {
-  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 154, 158, 0.3);
+  transition: all 0.3s ease;
 }
 
 .constellation-item-details {
@@ -233,65 +246,201 @@ page {
 
 .constellation-item-name {
   font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 3px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
 }
 
 .constellation-item-date {
   font-size: 14px;
-  color: #777;
+  color: #64748b;
+}
+
+/* 星座滚动列表 */
+.constellation-scroll {
+  margin-top: 24px;
+  padding: 0 12px;
+}
+
+.constellation-scroll .list-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #f472b6;
+  margin-bottom: 14px;
+  text-align: left;
+  padding-left: 8px;
+  letter-spacing: 0.5px;
+}
+
+.constellation-scroll-view {
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.constellation-scroll-view::-webkit-scrollbar {
+  display: none;
+}
+
+.constellation-scroll-content {
+  display: inline-flex;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.constellation-scroll-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  min-width: 105px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.5s ease-out;
+  backdrop-filter: blur(5px);
+  border: 1px solid #fecdd3;
+  box-shadow: 0 2px 8px rgba(255, 154, 158, 0.15);
+}
+
+.constellation-scroll-item.active {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.3);
+  transform: scale(1.05);
+  border: 1px solid #f472b6;
+}
+
+.constellation-scroll-item .constellation-item-icon {
+  margin-right: 0;
+  margin-bottom: 10px;
+}
+
+.constellation-scroll-item .constellation-item-details {
+  text-align: center;
+}
+
+.constellation-scroll-item .constellation-item-name {
+  font-size: 16px;
+  color: #f472b6;
+  margin-bottom: 4px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 154, 158, 0.2);
+}
+
+.constellation-scroll-item .constellation-item-date {
+  font-size: 13px;
+  color: #fb7185;
+}
+
+.constellation-scroll-item.active .constellation-item-name,
+.constellation-scroll-item.active .constellation-item-date {
+  color: #f472b6;
 }
 
 /* 页脚 */
 .footer {
   text-align: center;
-  padding: 20px;
-  color: #888;
+  padding: 25px 20px;
+  color: #fb7185;
   font-size: 14px;
-  background-color: #f8f9fc;
+  background: linear-gradient(180deg, #fff8f8 0%, #fef3c7 100%);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  border-top: 1px solid #fecdd3;
 }
 
 /* 响应式调整 */
 @media (max-width: 480px) {
   .constellation-circle {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
   }
 
   .constellation-icon {
-    font-size: 50px;
+    font-size: 56px;
   }
 
   .constellation-name {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .detail-card {
-    padding: 15px;
+    padding: 17px;
+  }
+
+  .detail-title {
+    font-size: 20px;
+  }
+
+  .date-text {
+    font-size: 20px;
   }
 }
 
 /* 动画效果 */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.constellation-item:nth-child(1) { animation-delay: 0.05s; }
-.constellation-item:nth-child(2) { animation-delay: 0.1s; }
-.constellation-item:nth-child(3) { animation-delay: 0.15s; }
-.constellation-item:nth-child(4) { animation-delay: 0.2s; }
-.constellation-item:nth-child(5) { animation-delay: 0.25s; }
-.constellation-item:nth-child(6) { animation-delay: 0.3s; }
-.constellation-item:nth-child(7) { animation-delay: 0.35s; }
-.constellation-item:nth-child(8) { animation-delay: 0.4s; }
-.constellation-item:nth-child(9) { animation-delay: 0.45s; }
-.constellation-item:nth-child(10) { animation-delay: 0.5s; }
-.constellation-item:nth-child(11) { animation-delay: 0.55s; }
-.constellation-item:nth-child(12) { animation-delay: 0.6s; }
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.constellation-scroll-item:nth-child(1) { animation-delay: 0.05s; }
+.constellation-scroll-item:nth-child(2) { animation-delay: 0.1s; }
+.constellation-scroll-item:nth-child(3) { animation-delay: 0.15s; }
+.constellation-scroll-item:nth-child(4) { animation-delay: 0.2s; }
+.constellation-scroll-item:nth-child(5) { animation-delay: 0.25s; }
+.constellation-scroll-item:nth-child(6) { animation-delay: 0.3s; }
+.constellation-scroll-item:nth-child(7) { animation-delay: 0.35s; }
+.constellation-scroll-item:nth-child(8) { animation-delay: 0.4s; }
+.constellation-scroll-item:nth-child(9) { animation-delay: 0.45s; }
+.constellation-scroll-item:nth-child(10) { animation-delay: 0.5s; }
+.constellation-scroll-item:nth-child(11) { animation-delay: 0.55s; }
+.constellation-scroll-item:nth-child(12) { animation-delay: 0.6s; }
 
 /* 图标样式 */
 .icon {
-  font-size: 30px;
+  font-size: 32px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* 优化滚动指示器 */
+.constellation-scroll-view::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(to left, rgba(99, 102, 241, 0.8), transparent);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* 卡片悬停效果（桌面端） */
+@media (min-width: 768px) {
+  .detail-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  }
+
+  .link-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
 }

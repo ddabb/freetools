@@ -133,6 +133,122 @@ page {
   letter-spacing: 0.5rpx;
 }
 
+/* 分享区域样式 */
+.share-section {
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.share-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.share-description {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.4;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 20rpx 30rpx;
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.share-btn-hover {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 16rpx rgba(76, 175, 80, 0.4);
+}
+
+.share-icon {
+  font-size: 26rpx;
+}
+
+.share-text {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+/* 高亮文本样式 */
+.highlight {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+/* 收藏区域样式 */
+.favorite-section {
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.favorite-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.favorite-description {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.4;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.favorite-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 20rpx 30rpx;
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.favorite-btn-hover {
+  background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 152, 0, 0.4);
+}
+
+.favorite-icon {
+  font-size: 26rpx;
+}
+
+.favorite-text {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
 /* 版本信息 */
 .version-info {
   text-align: center;

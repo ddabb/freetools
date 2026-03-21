@@ -23,6 +23,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "星座查询",
+          "pathName": "packages/life/pages/constellation/constellation",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "生肖查询",
+          "pathName": "packages/life/pages/zodiac/zodiac",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "文案搜索",
           "pathName": "packages/life/pages/copywriting/copywriting",
           "query": "",
@@ -51,22 +65,8 @@
           "scene": null
         },
         {
-          "name": "随机数",
-          "pathName": "packages/math/pages/random-selector/random-selector",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
           "name": "亲戚计算器",
           "pathName": "packages/life/pages/relative-calculator/relative-calculator",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "emoji转png",
-          "pathName": "packages/text/pages/emoji-to-png/emoji-to-png",
           "query": "",
           "launchMode": "default",
           "scene": null

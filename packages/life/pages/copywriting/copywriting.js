@@ -306,7 +306,7 @@ Page({
         data: copywriting.text,
         success: (res) => {
           wx.showToast({
-            title: '复制成功',
+            title: '生成图片成功',
             icon: 'success',
             duration: 1500
           });
@@ -372,6 +372,76 @@ Page({
   },
 
   /**
+   * 获取应用全局数据（字体状态）
+   */
+  getAppGlobalData() {
+    try {
+      const app = getApp();
+      return app.globalData || {};
+    } catch (error) {
+      console.warn('获取应用全局数据失败，使用默认值:', error);
+      return { fontsReady: false, fontsFailed: false };
+    }
+  },
+
+  /**
+   * 获取适合的字体栈
+   * 优先使用 app.js 中定义的字体，支持字体加载状态检测
+   * 针对手机端兼容性优化：使用更稳定的字体栈配置
+   */
+  getFontStack(fontType = 'body') {
+    const globalData = this.getAppGlobalData();
+    
+    // 字体栈配置 - 优化手机端兼容性
+    const fontStacks = {
+      // 标题字体：现代简约风格（手机端优先使用系统字体）
+      title: {
+        primary: 'Montserrat, Inter, Roboto',
+        fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+      },
+      // 正文字体：清晰易读（手机端优化）
+      body: {
+        primary: 'Inter, Roboto, Open Sans',
+        fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+      },
+      // 优雅字体：适合诗歌、文艺内容
+      elegant: {
+        primary: 'Raleway, Lato, Source Sans Pro',
+        fallback: '"STKaiti", "KaiTi", "Microsoft YaHei", serif'
+      },
+      // 传统字体：适合古典、正式内容
+      classic: {
+        primary: '"STSong", "SimSun", serif',
+        fallback: '"Microsoft YaHei", sans-serif'
+      }
+    };
+    
+    const stack = fontStacks[fontType] || fontStacks.body;
+    
+    // 手机端兼容性优化：Canvas 字体设置需要更保守的策略
+    // 直接使用系统字体以确保兼容性，避免网络字体在 Canvas 中的显示问题
+    return stack.fallback;
+  },
+
+  /**
+   * 设置 Canvas 字体（兼容手机端）
+   */
+  setCanvasFont(ctx, fontSize, fontType = 'body', isBold = false, isItalic = false) {
+    const fontStack = this.getFontStack(fontType);
+    let fontStyle = '';
+    
+    if (isBold) fontStyle += 'bold ';
+    if (isItalic) fontStyle += 'italic ';
+    
+    // 手机端 Canvas 字体设置优化
+    ctx.font = `${fontStyle}${fontSize}px ${fontStack}`;
+    
+    // 设置文本对齐方式
+    ctx.setTextAlign('left');
+    ctx.setTextBaseline('top');
+  },
+
+  /**
    * 绘制分享图片
    */
   MergeImage(ctx) {
@@ -402,8 +472,8 @@ Page({
     // 布局位置计算
     const qrX = width - qrSize - 35; // 二维码X坐标（右侧，增加边距）
     const qrY = height - qrSize - 35; // 二维码Y坐标（底部，增加边距）
-    const dateY = padding + 35; // 日期位置
-    const contentY = dateY + 90; // 文案内容位置（调整空间以适应新的日期信息布局）
+    const dateY = qrY; // 日期位置与二维码同一水平线
+    const contentY = padding + 50; // 文案内容位置（顶部居中）
     let fromY = contentY; // 来源信息位置，将在绘制文案后动态调整
 
     // 背景 - 优化渐变效果和装饰元素
@@ -442,201 +512,53 @@ Page({
     
     console.log('背景效果绘制完成:', {bounds: {x: 0, y: 0, width, height}});
 
-    // 日期信息 - 优化字体和布局
-    const now = new Date();
-    const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
-    const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
-    const weekDay = weekDays[now.getDay()];
-    const solar = Solar.fromYmd(now.getFullYear(), now.getMonth() + 1, now.getDate());
-    const lunarDate = solar.getLunar();
-    const lunarDateStr = `${lunarDate.getYear()}年${lunarDate.getMonth()}月${lunarDate.getDay()}日`;
-    const ganzhi = lunarDate.getYearInGanZhi(); // 获取天干地支
-    
-    // 检查是否为节日
-    let holidayInfo = '';
-    
-    // 固定节日
-    const fixedHolidays = {
-      '1-1': '元旦',
-      '2-14': '情人节',
-      '3-8': '妇女节',
-      '3-12': '植树节',
-      '4-1': '愚人节',
-      '4-5': '清明节',
-      '5-1': '劳动节',
-      '5-4': '青年节',
-      '5-12': '护士节',
-      '6-1': '儿童节',
-      '7-1': '建党节',
-      '8-1': '建军节',
-      '9-10': '教师节',
-      '10-1': '国庆节',
-      '12-25': '圣诞节'
-    };
-    
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const dateKey = `${month}-${day}`;
-    
-    // 检查固定节日
-    if (fixedHolidays[dateKey]) {
-      holidayInfo = `今日 ${fixedHolidays[dateKey]}`;
-    } else {
-      // 检查农历节日
-      const lunarMonth = lunarDate.getMonth();
-      const lunarDay = lunarDate.getDay();
-      
-      // 春节
-      if (lunarMonth === 1 && lunarDay === 1) {
-        holidayInfo = '今日 春节';
-      } 
-      // 元宵节
-      else if (lunarMonth === 15 && lunarDay === 1) {
-        holidayInfo = '今日 元宵节';
-      } 
-      // 端午节
-      else if (lunarMonth === 5 && lunarDay === 5) {
-        holidayInfo = '今日 端午节';
-      } 
-      // 中秋节
-      else if (lunarMonth === 8 && lunarDay === 15) {
-        holidayInfo = '今日 中秋节';
-      }
-      // 除夕
-      else if (Math.abs(lunarMonth) === 12 && lunarDay >= 29) {
-        const nextDay = lunarDate.next(1);
-        if (lunarDate.getYear() !== nextDay.getYear()) {
-          holidayInfo = '今日 除夕';
-        }
-      }
-    }
-    
-    // 检查节气
-    const jieQi = lunarDate.getJieQi();
-    if (jieQi && !holidayInfo) {
-      // 节气映射
-      const jieQiMap = {
-        'LI_CHUN': '立春',
-        'YU_SHUI': '雨水',
-        'JING_ZHE': '惊蛰',
-        'CHUN_FEN': '春分',
-        'QING_MING': '清明',
-        'GU_YU': '谷雨',
-        'LI_XIA': '立夏',
-        'XIAO_MAN': '小满',
-        'MANG_ZHONG': '芒种',
-        'XIA_ZHI': '夏至',
-        'XIAO_SHU': '小暑',
-        'DA_SHU': '大暑',
-        'LI_QIU': '立秋',
-        'CHU_SHU': '处暑',
-        'BAI_LU': '白露',
-        'QIU_FEN': '秋分',
-        'HAN_LU': '寒露',
-        'SHUANG_JIANG': '霜降',
-        'LI_DONG': '立冬',
-        'XIAO_XUE': '小雪',
-        'DA_XUE': '大雪',
-        'DONG_ZHI': '冬至',
-        'XIAO_HAN': '小寒',
-        'DA_HAN': '大寒'
-      };
-      
-      if (jieQiMap[jieQi]) {
-        holidayInfo = `今日 ${jieQiMap[jieQi]}`;
-      }
-    }
-    
-    // 日期标题
-    ctx.font = 'bold 15px 微软雅黑, Microsoft YaHei, sans-serif'; // 加粗，减小字体
-    ctx.setFillStyle('#5a6c7d'); // 稍深的灰色
-    if (holidayInfo) {
-      // 检查节日信息长度
-      const holidayWidth = ctx.measureText(holidayInfo).width;
-      const maxWidth = width - 2 * padding;
-      if (holidayWidth > maxWidth) {
-        // 如果节日信息太长，减小字体
-        ctx.font = 'bold 14px 微软雅黑, Microsoft YaHei, sans-serif';
-      }
-      ctx.fillText(holidayInfo, padding, dateY - 28);
-    } else {
-      ctx.fillText('今日', padding, dateY - 28);
-    }
-    
-    // 日期详情
-    ctx.font = '16px 宋体, STSong, SimSun, serif'; // 减小字体
-    ctx.setFillStyle('#495057'); // 深灰色日期信息
-    
-    // 优化日期信息排版，确保不超出屏幕
-    const maxDateWidth = width - 2 * padding;
-    
-    // 绘制公历日期
-    const dateWidth = ctx.measureText(dateStr).width;
-    if (dateWidth > maxDateWidth) {
-      // 如果日期太长，减小字体
-      ctx.font = '15px 宋体, STSong, SimSun, serif';
-    }
-    ctx.fillText(dateStr, padding, dateY);
-    
-    // 绘制星期
-    ctx.font = '15px 宋体, STSong, SimSun, serif';
-    ctx.fillText(`星期${weekDay}`, padding, dateY + 22);
-    
-    // 绘制农历日期
-    const lunarText = `农历：${lunarDateStr}`;
-    const lunarWidth = ctx.measureText(lunarText).width;
-    if (lunarWidth > maxDateWidth) {
-      // 如果农历日期太长，调整字体大小
-      ctx.font = '14px 宋体, STSong, SimSun, serif';
-    }
-    ctx.fillText(lunarText, padding, dateY + 44);
-    
-    // 绘制天干地支
-    const ganzhiText = `干支：${ganzhi}`;
-    const ganzhiWidth = ctx.measureText(ganzhiText).width;
-    if (ganzhiWidth > maxDateWidth) {
-      // 如果天干地支太长，调整字体大小
-      ctx.font = '13px 宋体, STSong, SimSun, serif';
-    }
-    ctx.fillText(ganzhiText, padding, dateY + 66);
-    
-    console.log('日期信息绘制完成:', {date: dateStr, weekDay: weekDay, lunarDate: lunarDateStr, ganzhi: ganzhi, holiday: holidayInfo});
-
     // 文案内容 - 优化排版和字体
     const copywriting = this.data.currentCopywriting;
     if (copywriting && copywriting.text) {
       const text = copywriting.text;
       
-      // 根据不同条件设置不同的模板配置
-      let fontSize, lineHeight, maxCharsPerLine, fontFamily;
+      // 根据不同条件设置不同的模板配置（手机端兼容）
+      let fontSize, lineHeight, maxCharsPerLine, fontType, isBold;
       
-      // 模板1：短文本（适合诗歌、短句）
+      // 模板1：短文本（适合诗歌、短句）- 使用优雅字体
       if (text.length <= 50) {
         fontSize = 25;
         lineHeight = 38;
         maxCharsPerLine = 14;
-        fontFamily = '楷体, STKaiti, KaiTi, serif'; // 适合诗歌、短句的字体
-        // 使用加粗字体
-        ctx.font = `bold ${fontSize}px ${fontFamily}`;
+        fontType = 'elegant';
+        isBold = true; // 短文本使用加粗
       }
-      // 模板2：中等长度文本（适合段落、文章）
+      // 模板2：中等长度文本（适合段落、文章）- 使用传统字体
       else if (text.length <= 150) {
         fontSize = 22;
         lineHeight = 34;
         maxCharsPerLine = 16;
-        fontFamily = '宋体, STSong, SimSun, serif'; // 适合正式文章的字体
-        ctx.font = `${fontSize}px ${fontFamily}`;
+        fontType = 'classic';
+        isBold = false;
       }
-      // 模板3：长文本（适合长文章、故事）
+      // 模板3：长文本（适合长文章、故事）- 使用正文字体
       else {
         fontSize = 20;
         lineHeight = 30;
         maxCharsPerLine = 18;
-        fontFamily = '微软雅黑, Microsoft YaHei, sans-serif'; // 适合长文本阅读的字体
-        ctx.font = `${fontSize}px ${fontFamily}`;
+        fontType = 'body';
+        isBold = false;
       }
-      ctx.setFillStyle('#212529'); // 更深色的文本，提升可读性
-      ctx.setTextAlign('left');
+      
+      // 使用兼容性字体设置方法
+      this.setCanvasFont(ctx, fontSize, fontType, isBold);
+      
+      // 根据字体类型设置合适的颜色（提升视觉效果）
+      const colorPalette = {
+        elegant: '#2c3e50',   // 优雅字体使用深蓝色，文艺感
+        classic: '#34495e',   // 传统字体使用深灰色，正式感
+        body: '#2d3748',      // 正文字体使用中性深灰色，易读性
+        title: '#1a202c'      // 标题字体使用最深的灰色，突出显示
+      };
+      
+      const textColor = colorPalette[fontType] || '#2d3748';
+      ctx.setFillStyle(textColor);
+      ctx.setTextAlign('center'); // 文案居中显示
       
       // 绘制文案内容，支持换行
       let currentY = contentY;
@@ -646,9 +568,20 @@ Page({
       while (startIndex < text.length) {
         let endIndex = Math.min(startIndex + maxCharsPerLine, text.length);
         
-        // 尝试在标点符号处换行，提升排版美观度
+        // 尝试在标点符号处换行，提升排版美观度（手机端兼容）
         if (endIndex < text.length) {
-          const lastPunctuationIndex = text.lastIndexOf(/[，。！？；：]/, endIndex);
+          // 使用字符串方法代替正则表达式，提高兼容性
+          const punctuationChars = ['，', '。', '！', '？', '；', '：', ',', '.', '!', '?', ';', ':'];
+          let lastPunctuationIndex = -1;
+          
+          // 从后向前查找标点符号
+          for (let i = endIndex - 1; i >= startIndex; i--) {
+            if (punctuationChars.includes(text[i])) {
+              lastPunctuationIndex = i;
+              break;
+            }
+          }
+          
           if (lastPunctuationIndex > startIndex) {
             endIndex = lastPunctuationIndex + 1;
           }
@@ -665,14 +598,15 @@ Page({
           lineWidth = ctx.measureText(lineText).width;
         }
         
-        ctx.fillText(lineText, padding, currentY);
+        ctx.fillText(lineText, width / 2, currentY); // 居中显示
         startIndex = endIndex;
         currentY += lineHeight;
         
         // 确保内容不会超出画布高度
-        if (currentY > height - padding - 150) { // 增加空间以容纳来源信息和二维码
+        if (currentY > height - padding - 200) { // 增加空间以容纳日期信息和二维码
           // 超出高度，显示省略号
-          ctx.fillText('...', padding, currentY);
+          ctx.setTextAlign('center');
+          ctx.fillText('...', width / 2, currentY);
           currentY += lineHeight;
           break;
         }
@@ -681,18 +615,46 @@ Page({
       // 动态调整来源信息位置
       fromY = currentY + 20; // 在文案内容下方20px
       
-      console.log('文案内容绘制完成:', {position: {x: padding, y: contentY}, text: text.substring(0, 50) + '...', fontSize: fontSize, endY: currentY});
+      console.log('文案内容绘制完成:', {position: {x: width / 2, y: contentY}, text: text.substring(0, 50) + '...', fontSize: fontSize, endY: currentY});
     }
 
-    // 来源信息 - 优化样式
+    // 来源信息 - 优化样式（手机端兼容）
     if (copywriting && copywriting.from && copywriting.from !== '佚名') {
-      // 使用 ctx.font 设置字体
-      ctx.font = 'italic 16px 楷体, STKaiti, KaiTi, serif'; // 斜体
-      ctx.setFillStyle('#667788'); // 稍深的灰色
-      ctx.setTextAlign('right');
-      ctx.fillText('—— ' + copywriting.from, width - padding, fromY + 5); // 调整位置
-      console.log('来源信息绘制完成:', {position: {x: width - padding, y: fromY + 5}, from: copywriting.from});
+      // 使用优雅字体，斜体效果
+      this.setCanvasFont(ctx, 16, 'elegant', false, true);
+      ctx.setFillStyle('#8a9aaf'); // 更柔和的蓝灰色，与整体配色协调
+      ctx.setTextAlign('center'); // 来源信息居中显示
+      ctx.fillText('—— ' + copywriting.from, width / 2, fromY + 5); // 调整位置，跟随文案内容
+      console.log('来源信息绘制完成:', {position: {x: width / 2, y: fromY + 5}, from: copywriting.from});
     }
+
+    // 日期信息 - 放在二维码中间线的上下，星期和天干地支同一行
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+    const weekDay = weekDays[now.getDay()];
+    const solar = Solar.fromYmd(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    const lunarDate = solar.getLunar();
+    const ganzhi = lunarDate.getYearInGanZhi(); // 获取天干地支
+    
+    // 计算二维码中间线位置
+    const qrCenterY = qrY + qrSize / 2;
+    
+    // 日期信息 - 左下角显示，年月日在二维码中间线上方，星期和天干地支在下方
+    ctx.setTextAlign('left'); // 日期信息左对齐
+    
+    // 日期标题 - 使用清晰字体，放在二维码中间线上方
+    this.setCanvasFont(ctx, 14, 'title', true);
+    ctx.setFillStyle('#4a5568');
+    ctx.fillText(dateStr, padding, qrCenterY - 20);
+    
+    // 星期和天干地支信息 - 同一行显示，放在二维码中间线下方
+    this.setCanvasFont(ctx, 12, 'body');
+    ctx.setFillStyle('#718096');
+    const weekAndGanzhiText = `星期${weekDay} ${ganzhi}`;
+    ctx.fillText(weekAndGanzhiText, padding, qrCenterY + 5);
+    
+    console.log('日期信息绘制完成（左下角）:', {date: dateStr, weekAndGanzhi: weekAndGanzhiText, position: {x: padding, y: qrCenterY}});
 
     // 加载并绘制二维码 - 优化位置和样式
     if (isHarmonyOS) {

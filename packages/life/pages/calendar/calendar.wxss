@@ -1,7 +1,7 @@
 /**packages/life/pages/calendar/calendar.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
 }
 
 .container {
@@ -39,24 +39,36 @@ page {
 }
 
 .date-display {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
   border-radius: 16rpx;
   padding: 24rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8rpx 25rpx rgba(255, 154, 158, 0.2);
+  margin: 20rpx;
 }
 
 .date-text {
   font-size: 42rpx;
   font-weight: 800;
-  color: #667eea;
+  color: #f472b6;
+  text-shadow: 0 2rpx 4rpx rgba(255, 154, 158, 0.3);
 }
 
 .date-arrow {
   font-size: 24rpx;
-  color: #999;
+  color: #f472b6;
+  transition: transform 0.3s ease;
+}
+
+.date-display:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 12rpx 30rpx rgba(255, 154, 158, 0.3);
+}
+
+.date-display:active .date-arrow {
+  transform: rotate(180deg);
 }
 
 /* 信息卡片 */
@@ -80,11 +92,11 @@ page {
 .info-card {
   flex: 0 0 auto;
   min-width: 100rpx;
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
   border-radius: 16rpx;
   padding: 20rpx 15rpx;
   text-align: center;
-  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8rpx 25rpx rgba(255, 154, 158, 0.2);
   position: relative;
   overflow: visible;
   min-height: 130rpx;
@@ -93,6 +105,12 @@ page {
   justify-content: center;
   z-index: 10;
   white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.info-card:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 12rpx 30rpx rgba(255, 154, 158, 0.3);
 }
 
 .info-card::before {
@@ -102,7 +120,7 @@ page {
   left: 0;
   right: 0;
   height: 4rpx;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #f472b6, #fb7185);
 }
 
 .info-label {
@@ -116,28 +134,31 @@ page {
 .info-value {
   font-size: 26rpx;
   font-weight: 700;
-  color: #333;
+  color: #f472b6;
   display: block;
   word-break: break-all;
+  text-shadow: 0 1rpx 2rpx rgba(255, 154, 158, 0.3);
 }
 
 .info-link {
   font-size: 20rpx;
-  color: #667eea;
+  color: #f472b6;
   margin-top: 6rpx;
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(244, 114, 182, 0.5);
 }
 
 /* 日历部分 */
 .calendar-section {
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-  border-radius: 0rpx;
+  background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
+  border-radius: 16rpx;
   padding: 0rpx;
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8rpx 20rpx rgba(255, 154, 158, 0.2);
   margin-bottom: 30rpx;
-  width: calc(100% - 20rpx);
-  margin-left: 50rpx;
-  margin-right: 50rpx;
+  width: calc(100% - 40rpx);
+  margin-left: 20rpx;
+  margin-right: 20rpx;
   position: relative;
   z-index: 1;
 }
@@ -146,8 +167,9 @@ page {
 .calendar-header {
   display: flex;
   margin-bottom: 0rpx;
-  border-bottom: 2rpx solid #f0f0f0;
+  border-bottom: 2rpx solid #fecdd3;
   padding: 12rpx 0;
+  background: linear-gradient(135deg, #fecfef 0%, #ffd9e2 100%);
 }
 
 .week-day {
@@ -155,7 +177,8 @@ page {
   text-align: center;
   font-size: 24rpx;
   font-weight: 600;
-  color: #666;
+  color: #f472b6;
+  text-shadow: 0 1rpx 2rpx rgba(255, 154, 158, 0.3);
 }
 
 /* 日历网格 */
@@ -181,28 +204,29 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 0rpx;
-  padding: 8rpx;
+  border-radius: 12rpx;
+  padding: 12rpx 4rpx;
   position: relative;
   transition: all 0.3s ease;
   cursor: pointer;
   height: 140rpx;
-  min-width: calc(100% / 7);
   box-sizing: border-box;
   border: 1rpx solid transparent;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .calendar-day:active {
   transform: scale(0.95);
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 154, 158, 0.1);
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.2);
 }
 
 .calendar-day.today:active {
-  background: linear-gradient(135deg, #e083ea 0%, #e5475c 100%);
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
 }
 
 .calendar-day.holiday:active {
-  background: rgba(52, 152, 219, 0.2);
+  background: rgba(255, 154, 158, 0.2);
 }
 
 /* 日期数字 */
@@ -212,12 +236,13 @@ page {
   color: #333;
   margin-bottom: 10rpx;
   line-height: 1;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.1);
 }
 
 /* 农历日期 */
 .lunar-day {
   font-size: 24rpx;
-  color: #999;
+  color: #f472b6;
   margin-bottom: 6rpx;
   line-height: 1;
 }
@@ -225,7 +250,7 @@ page {
 /* 节假日名称 */
 .calendar-day .holiday-name {
   font-size: 16rpx;
-  color: #f5576c;
+  color: #f472b6;
   font-weight: 600;
   text-align: center;
   line-height: 1;
@@ -250,8 +275,8 @@ page {
 
 /* 今天 */
 .calendar-day.today {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  box-shadow: 0 4rpx 12rpx rgba(240, 147, 251, 0.4);
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
+  box-shadow: 0 4rpx 12rpx rgba(244, 114, 182, 0.4);
 }
 
 .calendar-day.today .day-number {
@@ -263,35 +288,37 @@ page {
   color: rgba(255, 255, 255, 0.8);
 }
 
+.calendar-day.today .holiday-name {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* 选中日期 */
 .calendar-day.selected {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #fecfef 0%, #ffd9e2 100%);
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.3);
 }
 
 .calendar-day.selected .day-number {
-  color: white;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  color: #f472b6;
+  text-shadow: 0 2rpx 4rpx rgba(255, 154, 158, 0.3);
 }
 
 .calendar-day.selected .lunar-day {
-  color: rgba(255, 255, 255, 0.8);
+  color: #f472b6;
 }
 
 /* 节假日 */
 .calendar-day.holiday {
-  background: rgba(52, 152, 219, 0.1);
-  border: 2rpx solid #3498db;
+  background: rgba(255, 154, 158, 0.1);
 }
 
 .calendar-day.holiday .day-number {
-  color: #3498db;
+  color: #f472b6;
   font-weight: 700;
 }
 
 .calendar-day.today.holiday {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 2rpx solid #667eea;
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
 }
 
 .calendar-day.today.holiday .day-number {
@@ -317,18 +344,21 @@ page {
   font-size: 24rpx;
   font-weight: 700;
   border: none;
-  color: white;
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  box-shadow: 0 8rpx 20rpx rgba(168, 237, 234, 0.4);
+  color: #333;
+  background: linear-gradient(135deg, #fecfef 0%, #ffd9e2 100%);
+  box-shadow: 0 8rpx 20rpx rgba(255, 154, 158, 0.3);
+  transition: all 0.3s ease;
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  box-shadow: 0 8rpx 20rpx rgba(240, 147, 251, 0.4);
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
+  box-shadow: 0 8rpx 20rpx rgba(244, 114, 182, 0.4);
+  color: white;
 }
 
 .action-btn:active {
   transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.4);
 }
 
 .btn-share {
@@ -337,10 +367,10 @@ page {
   border-radius: 40rpx;
   font-size: 28rpx;
   font-weight: bold;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
   color: #fff;
   border: none;
-  box-shadow: 0 8rpx 20rpx rgba(231, 76, 60, 0.4);
+  box-shadow: 0 8rpx 20rpx rgba(244, 114, 182, 0.4);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -350,7 +380,7 @@ page {
 
 .btn-share:active {
   transform: translateY(2rpx);
-  box-shadow: 0 4rpx 12rpx rgba(231, 76, 60, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(244, 114, 182, 0.4);
 }
 
 /* 功能按钮容器 */
@@ -369,28 +399,30 @@ page {
   justify-content: space-around;
   margin-bottom: 15px;
   padding: 20rpx;
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
-  border-bottom: 2rpx solid #f0f0f0;
+  background: linear-gradient(135deg, #fecfef 0%, #ffd9e2 100%);
+  border-bottom: 2rpx solid #fecdd3;
+  border-radius: 16rpx 16rpx 0 0;
 }
 
 .nav-btn {
   width: 60rpx;
   height: 60rpx;
   border-radius: 50%;
-  border: 1rpx solid #ddd;
-  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border: 1rpx solid #fecdd3;
+  background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
   font-size: 24rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   margin: 0;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-  color: #333;
+  box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.2);
+  color: #f472b6;
+  transition: all 0.3s ease;
 }
 
 .nav-btn:active {
   transform: scale(0.95);
-  background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #fecfef 0%, #ffd9e2 100%);
+  box-shadow: 0 2rpx 6rpx rgba(255, 154, 158, 0.3);
 }

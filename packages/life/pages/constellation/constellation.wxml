@@ -1,14 +1,14 @@
 <!-- 查询区域 -->
 <view class="query-section">
   <view class="input-group">
-    <picker mode="date" value="{{currentDate}}" start="1900-01-01" end="2100-12-31" bindchange="onDateChange">
+    <view class="input-hint">选择日期(公历):</view>
+    <picker mode="multiSelector" range="{{pickerRange}}" value="{{pickerValue}}" bindchange="onDateChange" bindcolumnchange="onPickerColumnChange">
       <view class="date-picker-display">
-        <text class="date-text">{{year}}年{{month}}月{{day}}日</text>
+        <text class="date-text">{{month}}月{{day}}日</text>
         <text class="date-arrow">▼</text>
       </view>
     </picker>
   </view>
-  <view class="input-hint">请选择您的出生阳历日期</view>
 </view>
 
 <!-- 结果区域 -->
@@ -27,6 +27,24 @@
     <view class="link-btn" bindtap="goToZodiac">
       <text>生肖</text>
     </view>
+  </view>
+  
+  <!-- 星座列表（支持左右滑动） -->
+  <view class="constellation-scroll">
+    <view class="list-title">十二星座</view>
+    <scroll-view scroll-x="true" class="constellation-scroll-view">
+      <view class="constellation-scroll-content">
+        <view wx:for="{{constellationItems}}" wx:key="index" class="constellation-scroll-item {{item.name == constellationName ? 'active' : ''}}" data-index="{{index}}" bindtap="onConstellationItemClick">
+          <view class="constellation-item-icon">
+            <text class="icon">{{item.icon}}</text>
+          </view>
+          <view class="constellation-item-details">
+            <view class="constellation-item-name">{{item.name}}</view>
+            <view class="constellation-item-date">{{item.date}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 </view>
 
@@ -67,22 +85,5 @@
   </view>
 </view>
 
-<!-- 星座列表 -->
-<view class="constellation-list">
-  <view class="list-title">十二星座</view>
-  
-  <view wx:for="{{constellationItems}}" wx:key="index" class="constellation-item {{item.name == constellationName ? 'active' : ''}}" data-index="{{index}}" bindtap="onConstellationItemClick">
-    <view class="constellation-item-icon">
-      <text class="icon">{{item.icon}}</text>
-    </view>
-    <view class="constellation-item-details">
-      <view class="constellation-item-name">{{item.name}}</view>
-      <view class="constellation-item-date">{{item.date}}</view>
-    </view>
-  </view>
-</view>
 
-<!-- 页脚 -->
-<view class="footer">
-  © 2026 星座查询 | 数据仅供参考
-</view>
+
