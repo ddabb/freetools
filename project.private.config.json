@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "星座查询",
-          "pathName": "packages/life/pages/constellation/constellation",
+          "name": "正则表达式",
+          "pathName": "packages/converter/pages/regex-tester/regex-tester",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "星座查询",
+          "pathName": "packages/life/pages/constellation/constellation",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "生肖查询",

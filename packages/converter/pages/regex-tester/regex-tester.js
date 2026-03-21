@@ -9,6 +9,10 @@ Page({
     matchCount: 0, // 匹配数量
     errorMessage: '', // 错误消息
     highlightedParts: [], // 高亮显示部分
+    showCommonRegexModal: false, // 是否显示常用正则表达式弹窗
+    showOptionsModal: false, // 是否显示匹配选项弹窗
+    showSyntaxModal: false, // 是否显示语法参考弹窗
+    showHelp: false, // 是否显示帮助信息
     
     // 可用标志位
     availableFlags: [
@@ -40,7 +44,7 @@ Page({
     });
   },
 
-  // 设置标志位
+  // 设置标志位（旧方法，保留兼容）
   setFlags(e) {
     const selectedFlags = e.detail.value;
     const flags = this.data.availableFlags.map(item => ({
@@ -51,6 +55,25 @@ Page({
     this.setData({
       flags: selectedFlags,
       availableFlags: flags,
+      showResults: false
+    });
+  },
+
+  // 处理标志位变化
+  onFlagChange(e) {
+    const flag = e.currentTarget.dataset.flag;
+    const checked = e.detail.value.includes(flag);
+    
+    const updatedFlags = this.data.availableFlags.map(item => ({
+      ...item,
+      enabled: item.flag === flag ? checked : item.enabled
+    }));
+    
+    const selectedFlags = updatedFlags.filter(item => item.enabled).map(item => item.flag);
+    
+    this.setData({
+      availableFlags: updatedFlags,
+      flags: selectedFlags,
       showResults: false
     });
   },
@@ -189,6 +212,77 @@ Page({
   // 清除错误
   clearError() {
     this.setData({ errorMessage: '' });
+  },
+
+  // 清空结果
+  clearResults() {
+    this.setData({
+      showResults: false,
+      matches: [],
+      matchCount: 0,
+      highlightedParts: []
+    });
+  },
+
+  // 显示常用正则表达式弹窗
+  showCommonRegexModal() {
+    this.setData({ showCommonRegexModal: true });
+  },
+
+  // 关闭常用正则表达式弹窗
+  closeCommonRegexModal() {
+    this.setData({ showCommonRegexModal: false });
+  },
+
+  // 显示匹配选项弹窗
+  showOptionsModal() {
+    this.setData({ showOptionsModal: true });
+  },
+
+  // 关闭匹配选项弹窗
+  closeOptionsModal() {
+    this.setData({ showOptionsModal: false });
+  },
+
+  // 显示语法参考弹窗
+  showSyntaxModal() {
+    this.setData({ showSyntaxModal: true });
+  },
+
+  // 关闭语法参考弹窗
+  closeSyntaxModal() {
+    this.setData({ showSyntaxModal: false });
+  },
+
+  // 选择常用正则表达式
+  selectCommonRegex(e) {
+    const { regex, flags } = e.currentTarget.dataset;
+    // 确保flags是数组类型
+    const flagsArray = Array.isArray(flags) ? flags : flags.split('');
+    const flagObjects = this.data.availableFlags.map(item => ({
+      ...item,
+      enabled: flagsArray.includes(item.flag)
+    }));
+
+    this.setData({
+      regexPattern: regex,
+      flags: flagsArray,
+      availableFlags: flagObjects,
+      showResults: false,
+      showCommonRegexModal: false
+    });
+  },
+
+  // 切换帮助信息显示
+  toggleHelp() {
+    this.setData({
+      showHelp: !this.data.showHelp
+    });
+  },
+
+  // 阻止事件冒泡
+  preventBubble() {
+    // 空方法，用于阻止事件冒泡
   },
 
   // 分享给好友
