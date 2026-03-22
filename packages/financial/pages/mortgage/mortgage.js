@@ -179,7 +179,7 @@ Page({
 
   onLoad(options) {
     wx.setNavigationBarTitle({
-      title: '房贷计算器'
+      title: '房贷计算'
     })
   },
 
@@ -254,7 +254,7 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '房贷计算器 - 帮你算算每月还多少',
+      title: '房贷计算 - 帮你算算每月还多少',
       path: '/packages/financial/pages/mortgage/mortgage'
     }
   },
@@ -262,7 +262,7 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '房贷计算器 - 帮你算算每月还多少',
+      title: '房贷计算 - 帮你算算每月还多少',
       query: 'mortgage'
     }
   },

@@ -1,4 +1,4 @@
-// Emoji转PNG页面逻辑（简化版）
+// Emoji转图片页面逻辑（简化版）
 Page({
   data: {
     inputEmoji: '',

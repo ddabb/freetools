@@ -1,10 +1,9 @@
 <!-- 查询区域 -->
 <view class="query-section">
   <view class="input-group">
-    <input type="number" class="year-input" id="yearInput" value="{{year}}" bindinput="onYearInput" placeholder="请输入年份" />
-    <button class="query-btn" bindtap="onQuery">查询</button>
+    <view class="input-label">年份：</view>
+    <input type="number" class="year-input" id="yearInput" value="{{year}}" bindinput="onYearInput" bindblur="onQuery" placeholder="请输入年份" />
   </view>
-  <view class="input-hint">请输入出生年份</view>
 </view>
 
 <!-- 结果区域 -->
@@ -23,6 +22,27 @@
     <view class="link-btn" bindtap="goToConstellation">
       <text>星座</text>
     </view>
+  </view>
+  
+  <!-- 生肖列表（支持左右滑动） -->
+  <view class="zodiac-scroll">
+    <view class="list-title">
+      <text>十二生肖</text>
+      <text class="swipe-hint">左右滑动切换</text>
+    </view>
+    <scroll-view scroll-x="true" class="zodiac-scroll-view">
+      <view class="zodiac-scroll-content">
+        <view wx:for="{{zodiacScrollItems}}" wx:key="index" class="zodiac-scroll-item {{item.name == zodiacName ? 'active' : ''}}" data-index="{{index}}" bindtap="onZodiacScrollItemClick">
+          <view class="zodiac-item-icon">
+            <text class="icon">{{item.icon}}</text>
+          </view>
+          <view class="zodiac-item-details">
+            <view class="zodiac-item-name">{{item.name}}</view>
+            <view class="zodiac-item-year">{{item.year}}年</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 </view>
 

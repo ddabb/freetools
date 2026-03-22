@@ -5,15 +5,18 @@
     <view class="section">
       <text class="section-title">{{currentCategory || '全部工具'}}</text>
       <view class="tool-grid">
-        <tool-card
+        <view
           wx:for="{{filteredTools}}"
           wx:key="id"
-          name="{{item.name}}"
-          icon="{{item.icon}}"
-          color="{{item.color}}"
-          url="{{item.url}}"
-          size="large"
-        />
+          class="tool-card-item"
+          bindtap="navigateToTool"
+          data-url="{{item.url}}"
+        >
+          <view class="tool-icon-wrapper" style="background: {{item.color}}">
+            <text class="tool-icon">{{item.icon}}</text>
+          </view>
+          <text class="tool-name">{{item.name}}</text>
+        </view>
       </view>
       <view wx:if="{{filteredTools.length === 0}}" class="empty-state">
         <text class="empty-text">该分类下暂无工具</text>

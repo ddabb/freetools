@@ -23,22 +23,29 @@
     "miniprogram": {
       "list": [
         {
-          "name": "正则表达式",
-          "pathName": "packages/converter/pages/regex-tester/regex-tester",
+          "name": "日期转换器",
+          "pathName": "packages/unit/pages/timezone-converter/timezone-converter",
           "query": "",
           "scene": null,
           "launchMode": "default"
         },
         {
-          "name": "星座查询",
-          "pathName": "packages/life/pages/constellation/constellation",
+          "name": "生肖查询",
+          "pathName": "packages/life/pages/zodiac/zodiac",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "生肖查询",
-          "pathName": "packages/life/pages/zodiac/zodiac",
+          "name": "进制转换",
+          "pathName": "packages/unit/pages/base-converter/base-converter",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "正则表达式",
+          "pathName": "packages/converter/pages/regex-tester/regex-tester",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -19,7 +19,7 @@ Page({
 
   // 页面加载时执行
   onLoad() {
-    wx.setNavigationBarTitle({ title: '文本对比工具' });
+    wx.setNavigationBarTitle({ title: '文本对比' });
   },
 
   // 设置文本A
@@ -370,7 +370,7 @@ console.log('The sum is:', result);`;
     }
 
     const stats = this.data.comparisonResult;
-    const shareText = `📊 文本对比完成\n相似度: ${stats.similarity}%\n新增: ${stats.additions} 行\n删除: ${stats.deletions} 行\n修改: ${stats.modifications} 行\n\n来自「免费工具箱」文本对比工具`;
+    const shareText = `📊 文本对比完成\n相似度: ${stats.similarity}%\n新增: ${stats.additions} 行\n删除: ${stats.deletions} 行\n修改: ${stats.modifications} 行\n\n来自「免费工具箱」文本对比`;
 
     wx.setClipboardData({
       data: shareText,
@@ -393,7 +393,7 @@ console.log('The sum is:', result);`;
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '文本对比工具 - 专业的差异分析神器',
+      title: '文本对比 - 专业的差异分析神器',
       path: '/packages/text/pages/text-diff/text-diff'
     }
   },
@@ -401,7 +401,7 @@ console.log('The sum is:', result);`;
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '文本对比工具 - 专业的差异分析神器',
+      title: '文本对比 - 专业的差异分析神器',
       query: 'text-diff'
     }
   }

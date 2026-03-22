@@ -1,0 +1,62 @@
+<!--packages/unit/pages/timezone-converter/timezone-converter.wxml-->
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 时间输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">基准时间</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="time-inputs">
+        <picker mode="date" value="{{baseDate}}" bindchange="onBaseDateChange" class="date-picker">
+          <view class="picker-display">
+            <text class="picker-text">{{baseDate || '选择日期'}}</text>
+            <text class="picker-icon">📅</text>
+          </view>
+        </picker>
+        <input type="time" value="{{baseTime}}" bindinput="onBaseTimeChange" class="time-input" />
+      </view>
+    </view>
+    
+    <!-- 时区列表 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">时区转换</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="timezone-list">
+        <view wx:for="{{timezones}}" wx:key="{{index}}" class="timezone-item">
+          <view class="timezone-label">{{item}}</view>
+          <input 
+            type="text" 
+            value="{{timezoneValues[index]}}" 
+            bindinput="onTimezoneValueChange" 
+            data-index="{{index}}"
+            class="timezone-input" 
+            placeholder="输入时间"
+          />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 时区信息 -->
+    <view class="info-section">
+      <view class="info-title">时区信息</view>
+      <view class="info-content">
+        <view class="info-item">
+          <text class="info-term">UTC</text>
+          <text class="info-desc">协调世界时，是世界标准时间</text>
+        </view>
+        <view class="info-item">
+          <text class="info-term">GMT</text>
+          <text class="info-desc">格林威治标准时间，与UTC基本一致</text>
+        </view>
+        <view class="info-item">
+          <text class="info-term">夏令时</text>
+          <text class="info-desc">部分国家在夏季使用的时间调整，通常提前1小时</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

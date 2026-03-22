@@ -180,7 +180,7 @@ Page({
 
   onLoad(options) {
     wx.setNavigationBarTitle({
-      title: '退休金计算器'
+      title: '退休金计算'
     })
   },
 
@@ -325,7 +325,7 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '退休金计算器 - 算算你的退休储蓄',
+      title: '退休金计算 - 算算你的退休储蓄',
       path: '/packages/financial/pages/retirementCalculator/retirementCalculator'
     }
   },
@@ -333,7 +333,7 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '退休金计算器 - 算算你的退休储蓄',
+      title: '退休金计算 - 算算你的退休储蓄',
       query: 'retirementCalculator'
     }
   },

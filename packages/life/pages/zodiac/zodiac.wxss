@@ -8,68 +8,48 @@ page {
 
 /* 查询区域 */
 .query-section {
-  padding: 25px 20px 20px;
-  background: linear-gradient(135deg, #ffd93d 0%, #ffed4e 100%);
-  border-bottom: 1px solid #ffed4e;
+  padding: 20px 15px;
+  background: linear-gradient(135deg, #4ecdc4 0%, #45b7d1 100%);
+  border-radius: 20px;
+  margin: 15px 15px 5px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
   backdrop-filter: blur(5px);
-}
-
-/* 生肖列表 */
-.zodiac-list {
-  padding: 0 15px 25px;
-  max-height: 500px;
-  overflow-y: auto;
 }
 
 .input-group {
   display: flex;
-  margin-bottom: 5px;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.input-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  min-width: 50px;
 }
 
 .year-input {
   flex: 1;
-  padding: 16px 15px;
-  border: 2px solid #ff6b6b;
-  border-radius: 8px 0 0 8px;
-  font-size: 18px;
+  padding: 12px 15px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  font-size: 16px;
   outline: none;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.95);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.query-btn {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  padding: 0 25px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-}
-
-.query-btn:hover {
-  background: linear-gradient(135deg, #ee5a6f 0%, #ff6b6b 100%);
-}
-
-.query-btn:active {
-  background: linear-gradient(135deg, #cc5265 0%, #ee5a6f 100%);
-  transform: scale(0.98);
-  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.4);
-}
-
-.input-hint {
-  color: #666;
-  font-size: 14px;
-  margin-top: 8px;
-  padding-left: 5px;
-  font-weight: 500;
+.year-input:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
 }
 
 /* 结果区域 */
@@ -78,8 +58,8 @@ page {
   text-align: center;
   background: linear-gradient(135deg, #4ecdc4 0%, #45b7d1 100%);
   animation: fadeIn 0.5s ease-out;
-  border-radius: 0 0 20px 20px;
-  margin: 0 15px 20px;
+  border-radius: 20px 20px 20px 20px;
+  margin: 5px 15px 20px;
   box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
 }
 
@@ -290,6 +270,15 @@ page {
   }
 }
 
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .zodiac-item:nth-child(1) { animation-delay: 0.1s; }
 .zodiac-item:nth-child(2) { animation-delay: 0.2s; }
 .zodiac-item:nth-child(3) { animation-delay: 0.3s; }
@@ -301,3 +290,122 @@ page {
 .icon {
   font-size: 30px;
 }
+
+/* 生肖滚动列表 */
+.zodiac-scroll {
+  margin-top: 24px;
+  padding: 0 12px;
+}
+
+.zodiac-scroll .list-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ff6b6b;
+  margin-bottom: 14px;
+  text-align: left;
+  padding-left: 8px;
+  letter-spacing: 0.5px;
+}
+
+.swipe-hint {
+  font-size: 12px;
+  color: #ee5a6f;
+  font-weight: 500;
+  opacity: 0.8;
+  animation: fadeInOut 2s infinite;
+}
+
+.zodiac-scroll-view {
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.zodiac-scroll-view::-webkit-scrollbar {
+  display: none;
+}
+
+.zodiac-scroll-content {
+  display: inline-flex;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.zodiac-scroll-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  min-width: 120px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.5s ease-out;
+  backdrop-filter: blur(5px);
+  border: 1px solid #ffd9d9;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.15);
+}
+
+.zodiac-scroll-item.active {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+  transform: scale(1.05);
+  border: 1px solid #ff6b6b;
+}
+
+.zodiac-scroll-item .zodiac-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ecdc4 0%, #45b7d1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  box-shadow: 0 3px 8px rgba(78, 205, 196, 0.3);
+  transition: all 0.3s ease;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.zodiac-scroll-item .zodiac-item-details {
+  text-align: left;
+  flex: 1;
+}
+
+.zodiac-scroll-item .zodiac-item-name {
+  font-size: 14px;
+  color: #ff6b6b;
+  margin-bottom: 2px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 107, 107, 0.2);
+  line-height: 1.2;
+}
+
+.zodiac-scroll-item .zodiac-item-year {
+  font-size: 12px;
+  color: #ee5a6f;
+  line-height: 1.2;
+}
+
+.zodiac-scroll-item.active .zodiac-item-name,
+.zodiac-scroll-item.active .zodiac-item-year {
+  color: #ff6b6b;
+}
+
+/* 滚动项动画延迟 */
+.zodiac-scroll-item:nth-child(1) { animation-delay: 0.05s; }
+.zodiac-scroll-item:nth-child(2) { animation-delay: 0.1s; }
+.zodiac-scroll-item:nth-child(3) { animation-delay: 0.15s; }
+.zodiac-scroll-item:nth-child(4) { animation-delay: 0.2s; }
+.zodiac-scroll-item:nth-child(5) { animation-delay: 0.25s; }
+.zodiac-scroll-item:nth-child(6) { animation-delay: 0.3s; }
+.zodiac-scroll-item:nth-child(7) { animation-delay: 0.35s; }
+.zodiac-scroll-item:nth-child(8) { animation-delay: 0.4s; }
+.zodiac-scroll-item:nth-child(9) { animation-delay: 0.45s; }
+.zodiac-scroll-item:nth-child(10) { animation-delay: 0.5s; }
+.zodiac-scroll-item:nth-child(11) { animation-delay: 0.55s; }
+.zodiac-scroll-item:nth-child(12) { animation-delay: 0.6s; }

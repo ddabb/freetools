@@ -68,10 +68,8 @@
       "root": "packages/converter",
       "name": "converter",
       "pages": [
-        "pages/base-converter/base-converter",
         "pages/json-xml-converter/json-xml-converter",
-        "pages/yaml-json-converter/yaml-json-converter",
-        "pages/regex-tester/regex-tester"
+        "pages/yaml-json-converter/yaml-json-converter"
       ]
     },
     {
@@ -87,7 +85,8 @@
         "pages/text-tool/text-tool",
         "pages/mdconvert/mdconvert",
         "pages/onlychinese/onlychinese",
-        "pages/password-generator/password-generator"
+        "pages/password-generator/password-generator",
+        "pages/regex-tester/regex-tester"
       ]
     },
     {
@@ -131,7 +130,9 @@
         "pages/time-converter/time-converter",
         "pages/speed-converter/speed-converter",
         "pages/pressure-converter/pressure-converter",
-        "pages/energy-converter/energy-converter"
+        "pages/energy-converter/energy-converter",
+        "pages/base-converter/base-converter",
+        "pages/timezone-converter/timezone-converter"
       ]
     }
   ],

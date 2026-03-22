@@ -30,7 +30,7 @@ Page({
 
   // 页面加载时执行
   onLoad() {
-    wx.setNavigationBarTitle({ title: '字数统计器' });
+    wx.setNavigationBarTitle({ title: '字数统计' });
     // 初始化示例文本
     this.loadSampleText();
   },
@@ -217,7 +217,7 @@ Page({
   // 分享统计
   shareStats() {
     const stats = this.data.stats;
-    const shareText = `📊 文本统计结果\n总字符: ${stats.characters}\n词语数: ${stats.words}\n句子数: ${stats.sentences}\n段落数: ${stats.paragraphs}\n阅读时长: ${this.data.readingTime}分钟\n\n来自「免费工具箱」字数统计器`;
+    const shareText = `📊 文本统计结果\n总字符: ${stats.characters}\n词语数: ${stats.words}\n句子数: ${stats.sentences}\n段落数: ${stats.paragraphs}\n阅读时长: ${this.data.readingTime}分钟\n\n来自「免费工具箱」字数统计`;
 
     wx.setClipboardData({
       data: shareText,
@@ -254,7 +254,7 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '字数统计器 - 专业的文本分析工具',
+      title: '字数统计 - 专业的文本分析工具',
       path: '/packages/text/pages/word-counter/word-counter'
     }
   },
@@ -262,7 +262,7 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '字数统计器 - 专业的文本分析工具',
+      title: '字数统计 - 专业的文本分析工具',
       query: 'word-counter'
     }
   }

@@ -31,7 +31,10 @@
   
   <!-- 星座列表（支持左右滑动） -->
   <view class="constellation-scroll">
-    <view class="list-title">十二星座</view>
+    <view class="list-title">
+      <text>十二星座</text>
+      <text class="swipe-hint">左右滑动切换</text>
+    </view>
     <scroll-view scroll-x="true" class="constellation-scroll-view">
       <view class="constellation-scroll-content">
         <view wx:for="{{constellationItems}}" wx:key="index" class="constellation-scroll-item {{item.name == constellationName ? 'active' : ''}}" data-index="{{index}}" bindtap="onConstellationItemClick">

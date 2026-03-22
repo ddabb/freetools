@@ -100,6 +100,20 @@ Page({
     }
   },
 
+  // 导航到工具
+  navigateToTool(e) {
+    const { url } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: url,
+      fail: () => {
+        wx.showToast({
+          title: '页面开发中',
+          icon: 'none'
+        })
+      }
+    })
+  },
+
   // 分享到朋友圈
   onShareTimeline() {
     return {

@@ -2,7 +2,7 @@
   <!-- 简化顶部 -->
   <view class="header-bg">
     <view class="header-content">
-      <text class="main-title">二维码生成器</text>
+      <text class="main-title">生成二维码器</text>
     </view>
   </view>
 

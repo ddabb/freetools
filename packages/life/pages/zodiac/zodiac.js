@@ -5,7 +5,8 @@ Page({
     zodiacName: '午马',
     zodiacIcon: '🐴',
     birthYearInfo: '1966年出生 今年61岁',
-    zodiacItems: []
+    zodiacItems: [],
+    zodiacScrollItems: []
   },
 
   // 生肖数据
@@ -41,6 +42,43 @@ Page({
   getAge: function(year) {
     const currentYear = 2026; // 根据当前日期
     return currentYear - year;
+  },
+
+  // 初始化生肖列表（用于滑动切换）
+  initZodiacScrollList: function() {
+    const items = [];
+    const zodiacs = ["鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"];
+    
+    for (const zodiac of zodiacs) {
+      // 计算该生肖最近的年份
+      const currentYear = 2026;
+      const zodiacIndex = this.getZodiacIndex(zodiac);
+      const currentZodiacIndex = currentYear % 12;
+      let year = currentYear;
+      
+      // 找到最近的该生肖年份
+      if (zodiacIndex !== currentZodiacIndex) {
+        year = currentYear - (currentZodiacIndex - zodiacIndex);
+        if (zodiacIndex > currentZodiacIndex) {
+          year = currentYear - (currentZodiacIndex - zodiacIndex + 12);
+        }
+      }
+      
+      items.push({
+        name: this.zodiacEarthlyBranches[zodiac],
+        icon: this.zodiacData[zodiac].icon,
+        year: year,
+        zodiac: zodiac
+      });
+    }
+    
+    return items;
+  },
+
+  // 获取生肖在十二生肖中的索引
+  getZodiacIndex: function(zodiac) {
+    const zodiacs = ["猴", "鸡", "狗", "猪", "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊"];
+    return zodiacs.indexOf(zodiac);
   },
 
   // 更新查询结果
@@ -109,13 +147,33 @@ Page({
     this.updateResult(year);
   },
 
+  // 处理生肖滑动列表项点击
+  onZodiacScrollItemClick: function(e) {
+    const index = parseInt(e.currentTarget.dataset.index);
+    const items = this.data.zodiacScrollItems;
+    const selectedItem = items[index];
+    
+    // 更新显示该生肖的最近年份
+    this.setData({ 
+      year: selectedItem.year,
+      zodiacName: selectedItem.name,
+      zodiacIcon: selectedItem.icon
+    });
+    
+    // 重新计算该年份的生肖信息
+    this.updateResult(selectedItem.year);
+  },
+
   // 页面加载时初始化
   onLoad: function() {
+    this.setData({
+      zodiacScrollItems: this.initZodiacScrollList()
+    });
     this.updateResult(this.data.year);
   },
 
   // 处理输入框回车键
-  onYearInputConfirm: function(e) {
+  onYearInputConfirm: function() {
     this.onQuery();
   },
 

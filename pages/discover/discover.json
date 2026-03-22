@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "发现",
-  "usingComponents": {
-    "tool-card": "/components/tool-card/tool-card"
-  }
+  "usingComponents": {}
 }

@@ -24,11 +24,7 @@
       </button>
     </div>
   </section>  
-  
-  <footer>
-    <p>© 2026 Emoji转PNG工具 | 支持单个emoji转换为高清PNG图片</p>
-  </footer>  
-  
+
   <view class="loading" wx:if="{{isLoading}}">
     <view class="spinner"></view>
     <p>正在生成高清图片，请稍候...</p>

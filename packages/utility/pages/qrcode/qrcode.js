@@ -77,7 +77,7 @@ const PageDefinition = {
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title: '二维码生成器'
+      title: '生成二维码器'
     })
     // 设置默认示例文本
     this.setDefaultContent()
@@ -100,7 +100,7 @@ const PageDefinition = {
 
   // 设置默认内容
   setDefaultContent() {
-    const defaultText = '欢迎使用二维码生成器！'
+    const defaultText = '欢迎使用生成二维码器！'
     const canGenerate = defaultText.trim().length > 0
     this.setData({
       text: defaultText,
@@ -371,7 +371,7 @@ const PageDefinition = {
           const correctLevelMap = { 'L': 1, 'M': 2, 'Q': 3, 'H': 4 }
           const correctLevel = correctLevelMap[errorLevel] || 2
 
-          // 使用微信小程序兼容的二维码生成库
+          // 使用微信小程序兼容的生成二维码库
           QRCode({
             canvas: canvas,
             text: text,
@@ -382,7 +382,7 @@ const PageDefinition = {
             foreground: '#000000',
             correctLevel: correctLevel
           }).then(() => {
-            console.log('二维码生成成功')
+            console.log('生成二维码成功')
             
             // 如果有中心图片，绘制中心图片
             if (this.data.hasImage && this.data.centerImage) {
@@ -601,7 +601,7 @@ const PageDefinition = {
       const correctLevelMap = { 'L': 1, 'M': 2, 'Q': 3, 'H': 4 };
       const correctLevel = correctLevelMap[errorLevel] || 2;
 
-      // 使用微信小程序兼容的二维码生成库
+      // 使用微信小程序兼容的生成二维码库
       QRCode({
         canvas: canvas,
         text: text,
@@ -612,7 +612,7 @@ const PageDefinition = {
         foreground: '#000000',
         correctLevel: correctLevel
       }).then(() => {
-        console.log('二维码生成成功');
+        console.log('生成二维码成功');
         
         // 如果有中心图片，绘制中心图片
         if (this.data.hasImage && this.data.centerImage) {
@@ -1025,7 +1025,7 @@ const PageDefinition = {
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '二维码生成器 - 轻松创建个性化二维码',
+      title: '生成二维码器 - 轻松创建个性化二维码',
       path: '/packages/utility/pages/qrcode/qrcode'
     }
   },
@@ -1033,7 +1033,7 @@ const PageDefinition = {
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '二维码生成器 - 功能强大的二维码制作工具',
+      title: '生成二维码器 - 功能强大的二维码制作工具',
       query: 'qrcode'
     }
   }

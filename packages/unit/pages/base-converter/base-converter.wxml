@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 表单区域 -->
+  <view class="form-container">
+    <!-- 进制值输入区域 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-text">进制转换</text>
+        <text class="required-mark">*</text>
+      </view>
+      <view class="unit-list">
+        <view wx:for="{{bases}}" wx:key="{{index}}" class="unit-item">
+          <view class="unit-label">{{item}}</view>
+          <input 
+            type="text" 
+            value="{{baseValues[item]}}" 
+            disabled="{{item === 'Base64'}}" 
+            bindinput="{{item === 'Base64' ? '' : 'onBaseValueChange'}}" 
+            data-base="{{item}}" 
+            class="unit-input {{item === 'Base64' ? 'disabled' : ''}}" 
+            placeholder="输入值"
+            selectable="{{item === 'Base64'}}"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 进制说明 -->
+  <view class="info-section">
+    <view class="info-title">💡 进制说明</view>
+    <view class="info-content">
+      <view class="base-info" wx:for="{{baseInfo}}" wx:key="base">
+        <text class="base-name">{{item.name}} ({{item.symbol}}):</text>
+        <text class="base-desc">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷示例 -->
+  <view class="examples-section">
+    <view class="examples-title">快速示例</view>
+    <view class="examples-grid">
+      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-value="{{item.value}}" data-source="{{item.source}}">
+        <text class="example-text">{{item.value}} ({{item.source}})</text>
+      </view>
+    </view>
+  </view>
+</view>

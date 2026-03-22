@@ -49,7 +49,7 @@ Page({
 
   // 页面加载
   onLoad(options) {
-    wx.setNavigationBarTitle({ title: '🎨 颜色生成器' });
+    wx.setNavigationBarTitle({ title: '🎨 颜色生成' });
     
     // 从本地存储加载最近使用颜色
     this.loadRecentColors();
@@ -562,7 +562,7 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: `🎨 颜色生成器 - ${this.data.currentColor}`,
+      title: `🎨 颜色生成 - ${this.data.currentColor}`,
       query: `color=${this.data.currentColor.substring(1)}`
     };
   }

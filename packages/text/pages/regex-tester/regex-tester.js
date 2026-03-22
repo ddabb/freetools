@@ -1,4 +1,4 @@
-// packages/converter/pages/regex-tester/regex-tester.js
+// packages/text/pages/regex-tester/regex-tester.js
 Page({
   data: {
     regexPattern: '', // 正则表达式模式
@@ -288,21 +288,21 @@ Page({
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '正则表达式测试器 - 在线正则调试神器',
-      path: '/packages/converter/pages/regex-tester/regex-tester'
+      title: '正则校验器 - 在线正则调试神器',
+      path: '/packages/text/pages/regex-tester/regex-tester'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '正则表达式测试器 - 在线正则调试神器',
+      title: '正则校验器 - 在线正则调试神器',
       query: 'regex-tester'
     }
   },
 
   // 页面加载时执行
   onLoad() {
-    wx.setNavigationBarTitle({ title: '正则表达式测试器' });
+    wx.setNavigationBarTitle({ title: '正则校验器' });
   }
 })

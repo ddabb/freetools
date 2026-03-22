@@ -163,7 +163,7 @@
     </div>
   </section>  
   <footer>
-    <p>© 2026 汉字头像生成器 | 支持1-4个汉字 | 9种背景模板 | 6种文字效果</p>
+    <p>© 2026 汉字头像器 | 支持1-4个汉字 | 9种背景模板 | 6种文字效果</p>
   </footer>  
   <view class="loading" wx:if="{{isLoading}}">
     <view class="spinner"></view>

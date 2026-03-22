@@ -10,7 +10,8 @@ page {
 .query-section {
   padding: 20px 15px;
   background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  margin: 15px 15px 5px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -88,11 +89,13 @@ page {
 
 /* 结果区域 */
 .result-section {
-  padding: 20px 15px;
+  padding: 25px 20px;
   text-align: center;
   background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
   animation: fadeIn 0.6s ease-out;
-  min-height: calc(100vh - 100px);
+  border-radius: 20px;
+  margin: 5px 15px 20px;
+  box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
 }
 
 .constellation-circle {
@@ -264,6 +267,9 @@ page {
 }
 
 .constellation-scroll .list-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 17px;
   font-weight: 600;
   color: #f472b6;
@@ -271,6 +277,14 @@ page {
   text-align: left;
   padding-left: 8px;
   letter-spacing: 0.5px;
+}
+
+.swipe-hint {
+  font-size: 12px;
+  color: #fb7185;
+  font-weight: 500;
+  opacity: 0.8;
+  animation: fadeInOut 2s infinite;
 }
 
 .constellation-scroll-view {
@@ -396,6 +410,15 @@ page {
   }
   50% {
     transform: scale(1.05);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
   }
 }
 

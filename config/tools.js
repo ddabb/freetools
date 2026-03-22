@@ -3,17 +3,17 @@
 
 // 工具频率数据
 const toolFrequency = {
-  'mortgage': 95,           // 房贷计算器
+  'mortgage': 95,           // 房贷计算
   'life-countdown': 92,     // 人生A4纸
   'battery-health': 88,     // 电池健康
-  'qrcode': 85,             // 二维码生成
+  'qrcode': 85,             // 生成二维码
   'time-tool': 78,          // 时间工具
   'health-calculator': 75,  // 健康计算
   'calendar': 72,           // 万年历
   'password-generator': 68, // 密码生成
   'idcard': 65,             // 身份证验证
   'price-comparison': 62,   // 价格对比
-  'retirementCalculator': 58, // 退休金计算器
+  'retirementCalculator': 58, // 退休金计算
   'text-tool': 55,          // 文本工具
   'mdconvert': 52,          // Markdown转换
   'oddEven': 48,            // 奇偶判断
@@ -25,19 +25,19 @@ const toolFrequency = {
   'gcd-lcm': 60,            // 公约数·公倍数
   'prime-factorization': 58, // 质因数分解
   '24point': 56,            // 24点速算
-  'base-converter': 54,      // 整数基转换器
+  'base-converter': 54,      // 进制转换
   'json-xml-converter': 52,  // JSON·XML转换器
   'yaml-json-converter': 50, // YAML·JSON转换器
-  'regex-tester': 48,        // 正则表达式测试
-  'word-counter': 46,        // 字数统计器
+  'regex-tester': 48,        // 正则校验
+  'word-counter': 46,        // 字数统计
   'markdown-preview': 44,    // Markdown预览器
-  'text-diff': 42,           // 文本对比工具
+  'text-diff': 42,           // 文本对比
   'data-analyzer': 40,       // 数据统计器
 
   'timestamp-converter': 36,  // 时间戳转换器
   'color-converter': 34,     // 颜色转换器
-  'avatar-generator': 45,     // 汉字头像生成
-  'emoji-to-png': 42,        // Emoji转PNG
+  'avatar-generator': 45,     // 汉字头像
+  'emoji-to-png': 42,        // Emoji转图片
   'text-to-png': 40,          // 文本转图片
   'copywriting': 80            // 文案工具
 };
@@ -134,8 +134,18 @@ const tools = [
     description: '各种能量单位的快速换算'
   },
   {
+    id: 'timezone-converter',
+    name: '时区转换',
+    icon: '🌍',
+    color: 'blue',
+    url: '/packages/unit/pages/timezone-converter/timezone-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['时区', '转换', '时间', '全球'],
+    description: '在不同时区之间转换时间'
+  },
+  {
     id: 'mortgage',
-    name: '房贷计算器',
+    name: '房贷计算',
     icon: '🏠',
     color: 'blue',
     url: '/packages/financial/pages/mortgage/mortgage',
@@ -157,7 +167,7 @@ const tools = [
   },
   {
     id: 'qrcode',
-    name: '二维码生成',
+    name: '生成二维码',
     icon: '📱',
     color: 'orange',
     url: '/packages/utility/pages/qrcode/qrcode',
@@ -230,7 +240,7 @@ const tools = [
   },
   {
     id: 'retirementCalculator',
-    name: '退休金计算器',
+    name: '退休金计算',
     icon: '💰',
     color: 'green',
     url: '/packages/financial/pages/retirementCalculator/retirementCalculator',
@@ -364,10 +374,10 @@ const tools = [
   // 转换工具分类开始
   {
     id: 'base-converter',
-    name: '整数基转换器',
+    name: '进制转换',
     icon: '🔢',
     color: 'cyan',
-    url: '/packages/converter/pages/base-converter/base-converter',
+    url: '/packages/unit/pages/base-converter/base-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['进制', '转换', '二进制', '十六进制', 'Base64'],
     description: '在不同基数间转换数字，支持二进制、十六进制、Base64等'
@@ -394,10 +404,10 @@ const tools = [
   },
   {
     id: 'regex-tester',
-    name: '正则表达式测试',
+    name: '正则校验',
     icon: '🎯',
     color: 'rose',
-    url: '/packages/converter/pages/regex-tester/regex-tester',
+    url: '/packages/text/pages/regex-tester/regex-tester',
     categories: ['学习工具', '开发工具'],
     keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
     description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
@@ -446,7 +456,7 @@ const tools = [
   },
   {
     id: 'avatar-generator',
-    name: '汉字头像生成',
+    name: '汉字头像',
     icon: '🎨',
     color: 'purple',
     url: '/packages/text/pages/avatar-generator/avatar-generator',
@@ -456,7 +466,7 @@ const tools = [
   },
   {
     id: 'emoji-to-png',
-    name: 'Emoji转PNG',
+    name: 'Emoji转图片',
     icon: '🖼️',
     color: 'pink',
     url: '/packages/text/pages/emoji-to-png/emoji-to-png',
@@ -491,13 +501,13 @@ const tools = [
 
 // 发现页特有的工具数据
 const discoveryTools = [
-  { id: 'word-counter', name: '字数统计器', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], keywords: ['字数', '统计', '文本', '字符'], frequency: toolFrequency['word-counter'] },
+  { id: 'word-counter', name: '字数统计', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], keywords: ['字数', '统计', '文本', '字符'], frequency: toolFrequency['word-counter'] },
   { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], keywords: ['Markdown', '预览', '文档', '格式'], frequency: toolFrequency['markdown-preview'] },
-  { id: 'text-diff', name: '文本对比工具', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'], frequency: toolFrequency['text-diff'] },
+  { id: 'text-diff', name: '文本对比', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'], frequency: toolFrequency['text-diff'] },
   { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'], frequency: toolFrequency['data-analyzer'] },
 
   { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'], frequency: toolFrequency['timestamp-converter'] },
-  { id: 'color-converter', name: '颜色生成器', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
+  { id: 'color-converter', name: '颜色生成', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
 ];
 
 // 合并所有工具
@@ -527,9 +537,9 @@ const categories = [
 
 // 常用工具（首页显示）
 const commonTools = [
-  tools[6],  // 房贷计算器
+  tools[6],  // 房贷计算
   tools[7],  // 人生A4纸
-  tools[8],  // 二维码生成
+  tools[8],  // 生成二维码
   tools[9],  // 健康计算
   tools[10], // 万年历
   tools[11], // 时间工具
