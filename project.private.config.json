@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "文案生图",
-          "pathName": "packages/life/pages/text-to-image/text-to-image",
+          "name": "一笔画求解",
+          "pathName": "packages/math/pages/one-stroke-solver/one-stroke-solver",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "文案生图",
+          "pathName": "packages/life/pages/text-to-image/text-to-image",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "日期转换器",

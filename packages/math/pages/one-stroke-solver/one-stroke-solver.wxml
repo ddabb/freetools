@@ -1,40 +1,62 @@
 <view class="container">
   <view class="header-section">
     <view class="title">✏️ 一笔画求解</view>
-    <view class="desc">根据欧拉路径定理判断图形是否可以一笔画成</view>
+    <view class="desc">根据欧拉路径定理判断网格是否可以一笔画成</view>
   </view>
 
-  <view class="graph-select-section">
-    <view class="graph-select-title">选择图形：</view>
-    <view class="graph-tabs">
+  <!-- 模式切换 -->
+  <view class="mode-section">
+    <view class="mode-tabs">
       <view 
-        class="graph-tab {{currentGraph === 'house' ? 'active' : ''}}" 
-        bindtap="onSelectGraph" 
-        data-graph="house"
+        class="mode-tab {{mode === 'generate' ? 'active' : ''}}" 
+        bindtap="switchMode"
+        data-mode="generate"
       >
-        🏠 房子
+        🎲 生成题目
       </view>
       <view 
-        class="graph-tab {{currentGraph === 'square' ? 'active' : ''}}" 
-        bindtap="onSelectGraph" 
-        data-graph="square"
+        class="mode-tab {{mode === 'verify' ? 'active' : ''}}" 
+        bindtap="switchMode"
+        data-mode="verify"
       >
-        ⬜ 方形
+        🔍 校验题目
       </view>
-      <view 
-        class="graph-tab {{currentGraph === 'star' ? 'active' : ''}}" 
-        bindtap="onSelectGraph" 
-        data-graph="star"
-      >
-        ⭐ 星形
+    </view>
+  </view>
+
+  <!-- 网格设置 -->
+  <view class="grid-section">
+    <view class="grid-controls">
+      <view class="grid-size-controls">
+        <view class="grid-size-control">
+          <text class="grid-size-label">横向：</text>
+          <picker 
+            mode="selector" 
+            range="[1, 2, 3, 4, 5, 6, 7, 8, 9]" 
+            value="{{gridWidth - 1}}" 
+            bindchange="updateGridWidth"
+            class="grid-size-picker"
+          >
+            <view class="grid-size-value">{{gridWidth}}</view>
+          </picker>
+        </view>
+        <view class="grid-size-control">
+          <text class="grid-size-label">纵向：</text>
+          <picker 
+            mode="selector" 
+            range="[1, 2, 3, 4, 5, 6, 7, 8, 9]" 
+            value="{{gridHeight - 1}}" 
+            bindchange="updateGridHeight"
+            class="grid-size-picker"
+          >
+            <view class="grid-size-value">{{gridHeight}}</view>
+          </picker>
+        </view>
       </view>
-      <view 
-        class="graph-tab {{currentGraph === 'butterfly' ? 'active' : ''}}" 
-        bindtap="onSelectGraph" 
-        data-graph="butterfly"
-      >
-        🦋 蝴蝶
-      </view>
+      <button class="btn generate-btn" bindtap="generateValidPuzzle">
+        <text class="btn-icon">🎲</text>
+        <text class="btn-text">生成有效题目</text>
+      </button>
     </view>
   </view>
 
@@ -47,7 +69,11 @@
   </view>
 
   <view class="button-section">
-    <button class="btn check-btn" bindtap="checkOneStroke">
+    <button 
+      class="btn check-btn" 
+      bindtap="checkGridOneStroke"
+      loading="{{isLoading}}"
+    >
       <text class="btn-icon">🔍</text>
       <text class="btn-text">检查是否可以一笔画</text>
     </button>
@@ -78,6 +104,10 @@
       <view class="legend-item">
         <view class="legend-color path"></view>
         <text class="legend-text">一笔画路径</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color hole"></view>
+        <text class="legend-text">洞（灰色）</text>
       </view>
     </view>
   </view>

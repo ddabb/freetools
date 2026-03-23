@@ -138,8 +138,18 @@ const platform = {
         }
       });
     } else {
-      // 微信小程序分享由系统处理
-      console.log('微信分享');
+      // 微信小程序分享
+      wx.shareAppMessage({
+        title: options.title,
+        imageUrl: options.imageUrl || '',
+        path: options.path || '/packages/life/pages/text-to-image/text-to-image',
+        success: function(res) {
+          console.log('微信分享成功', res);
+        },
+        fail: function(err) {
+          console.log('微信分享失败', err);
+        }
+      });
     }
   },
   
@@ -187,11 +197,6 @@ Page({
   onLoad() {
     wx.setNavigationBarTitle({
       title: '文案生图'
-    })
-    const defaultText = '今天，天气真好，适合去码头整点薯条。'
-    this.setData({
-      text: defaultText,
-      textLength: defaultText.length
     })
   },
 
