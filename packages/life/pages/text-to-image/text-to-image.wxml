@@ -9,8 +9,9 @@
         <text class="count">{{textLength}}/200</text>
       </view>
       <view class="form-group">
-        <text class="label">出处（可不填）</text>
-        <input class="input" placeholder="请输入出处信息" bindinput="onFromInput" value="{{from}}"></input>
+        <text class="label">出处（可不填，15字以内）</text>
+        <input class="input" placeholder="请输入出处信息" bindinput="onFromInput" value="{{from}}" maxlength="15"></input>
+        <text class="count">{{from ? from.length : 0}}/15</text>
       </view>
       <!-- 二维码选择 -->
       <view class="form-group">

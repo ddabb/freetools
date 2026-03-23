@@ -1,7 +1,7 @@
 <view class="container">
   <section class="input-section">
     <div class="input-group">
-      <label for="text-input">输入汉字</label>
+      <label for="text-input">输入字符</label>
       <input type="text" id="text-input" class="text-input" placeholder="输入1-4个字符" maxlength="4" value="{{inputText}}" bindinput="onTextInput" />
       <p class="hint">注意：支持1-4个字符（汉字、字母、数字、emoji等）</p>
     </div>
@@ -96,7 +96,7 @@
           <!-- 文字效果1：普通 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === 'normal' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="normal">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: none; font-weight: bold;">文</div>
+              <div class="text-effect-preview te-normal">文</div>
               <div>普通</div>
             </div>
           </div>
@@ -104,7 +104,7 @@
           <!-- 文字效果2：渐变文字 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === 'gradient' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="gradient">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #ffffff; text-shadow: none; font-weight: bold;">文</div>
+              <div class="text-effect-preview te-gradient">文</div>
               <div>渐变</div>
             </div>
           </div>
@@ -112,7 +112,7 @@
           <!-- 文字效果3：阴影效果 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === 'shadow' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="shadow">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: 4px 4px 8px rgba(0,0,0,0.5); font-weight: bold;">文</div>
+              <div class="text-effect-preview te-shadow">文</div>
               <div>阴影</div>
             </div>
           </div>
@@ -120,7 +120,7 @@
           <!-- 文字效果4：描边效果 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === 'stroke' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="stroke">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #ffffff; text-shadow: 1px 1px 0 #2c3e50, -1px -1px 0 #2c3e50, 1px -1px 0 #2c3e50, -1px 1px 0 #2c3e50; font-weight: bold;">文</div>
+              <div class="text-effect-preview te-stroke">文</div>
               <div>描边</div>
             </div>
           </div>
@@ -128,7 +128,7 @@
           <!-- 文字效果5：发光效果 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === 'glow' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="glow">
-              <div class="text-effect-preview" style="background: #2c3e50; color: #ffffff; text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d; font-weight: bold;">文</div>
+              <div class="text-effect-preview te-glow">文</div>
               <div>发光</div>
             </div>
           </div>
@@ -136,8 +136,113 @@
           <!-- 文字效果6：立体效果 -->
           <div class="text-effect-option">
             <div class="text-effect-label {{selectedTextEffect === '3d' ? 'checked' : ''}}" bindtap="onTextEffectSelect" data-value="3d">
-              <div class="text-effect-preview" style="background: #f5f5f5; color: #000000; text-shadow: 2px 2px 0 #2c3e50, 4px 4px 0 rgba(0,0,0,0.2); font-weight: bold;">文</div>
+              <div class="text-effect-preview te-3d">文</div>
               <div>立体</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 字体样式选择 -->
+      <div class="input-group font-style-section">
+        <div class="section-header" bindtap="toggleFontStyleExpanded">
+          <label>选择字体样式（共12种）</label>
+          <span class="expand-icon">{{fontStyleExpanded ? '▼' : '▶'}}</span>
+        </div>
+        <div class="font-style-options {{fontStyleExpanded ? 'expanded' : 'collapsed'}}">
+          <!-- 字体1：黑体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'sans' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="sans">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: bold;">文</div>
+              <div>黑体</div>
+            </div>
+          </div>
+          
+          <!-- 字体2：宋体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'serif' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="serif">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: serif; font-weight: bold;">文</div>
+              <div>宋体</div>
+            </div>
+          </div>
+          
+          <!-- 字体3：等宽 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'mono' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="mono">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: monospace; font-weight: bold;">文</div>
+              <div>等宽</div>
+            </div>
+          </div>
+          
+          <!-- 字体4：细体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'sansLight' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="sansLight">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: 300;">文</div>
+              <div>细体</div>
+            </div>
+          </div>
+          
+          <!-- 字体5：中体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'sansMedium' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="sansMedium">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: 500;">文</div>
+              <div>中体</div>
+            </div>
+          </div>
+          
+          <!-- 字体6：特粗 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'sansBold' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="sansBold">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: 900;">文</div>
+              <div>特粗</div>
+            </div>
+          </div>
+          
+          <!-- 字体7：斜体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'sansItalic' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="sansItalic">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: bold; font-style: italic;">文</div>
+              <div>斜体</div>
+            </div>
+          </div>
+          
+          <!-- 字体8：细宋 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'serifLight' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="serifLight">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: serif; font-weight: 300;">文</div>
+              <div>细宋</div>
+            </div>
+          </div>
+          
+          <!-- 字体9：手写体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'cursive' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="cursive">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: cursive; font-weight: normal;">文</div>
+              <div>手写体</div>
+            </div>
+          </div>
+          
+          <!-- 字体10：艺术体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'fantasy' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="fantasy">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: fantasy; font-weight: bold;">文</div>
+              <div>艺术体</div>
+            </div>
+          </div>
+          
+          <!-- 字体11：系统粗体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'systemBold' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="systemBold">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-weight: 800;">文</div>
+              <div>系统粗体</div>
+            </div>
+          </div>
+          
+          <!-- 字体12：圆润体 -->
+          <div class="font-style-option">
+            <div class="font-style-label {{selectedFontStyle === 'rounded' ? 'checked' : ''}}" bindtap="onFontStyleSelect" data-value="rounded">
+              <div class="font-style-preview" style="background: linear-gradient(135deg, #3498db, #8e44ad); font-family: sans-serif; font-weight: bold;">文</div>
+              <div>圆润体</div>
             </div>
           </div>
         </div>
@@ -162,9 +267,7 @@
       </button>
     </div>
   </section>  
-  <footer>
-    <p>© 2026 汉字头像器 | 支持1-4个汉字 | 9种背景模板 | 6种文字效果</p>
-  </footer>  
+
   <view class="loading" wx:if="{{isLoading}}">
     <view class="spinner"></view>
     <p>正在生成高清图片，请稍候...</p>

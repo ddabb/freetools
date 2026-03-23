@@ -206,7 +206,11 @@ Page({
 
   // 出处输入
   onFromInput(e) {
-    const value = e.detail.value
+    let value = e.detail.value
+    // 限制最多输入15个字
+    if (value.length > 15) {
+      value = value.substring(0, 15)
+    }
     this.setData({
       from: value
     })
@@ -407,28 +411,41 @@ Page({
   getFontStack(fontType = 'body') {
     const globalData = this.getAppGlobalData();
     
-    // 字体栈配置 - 优化手机端兼容性
+    // 字体栈配置 - 优化手机端兼容性，结合 app.js 中加载的字体
     const fontStacks = {
       title: {
-        primary: 'Montserrat, Inter, Roboto',
+        primary: 'Montserrat, Pacifico, Inter, Roboto',
         fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
       },
       body: {
-        primary: 'Inter, Roboto, Open Sans',
+        primary: 'Inter, Roboto, Open Sans, Noto Sans SC',
         fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
       },
       elegant: {
-        primary: 'Raleway, Lato, Source Sans Pro',
+        primary: 'Raleway, Lato, Source Sans Pro, Dancing Script',
         fallback: '"STKaiti", "KaiTi", "Microsoft YaHei", serif'
       },
       classic: {
-        primary: '"STSong", "SimSun", serif',
+        primary: '"STSong", "SimSun", Noto Sans SC, serif',
         fallback: '"Microsoft YaHei", sans-serif'
+      },
+      artistic: {
+        primary: 'Bangers, Comic Neue, fantasy',
+        fallback: '"Microsoft YaHei", sans-serif'
+      },
+      handwriting: {
+        primary: 'Pacifico, Dancing Script, cursive',
+        fallback: '"STKaiti", "KaiTi", cursive'
+      },
+      mono: {
+        primary: 'Fira Code, JetBrains Mono, Inconsolata, monospace',
+        fallback: 'monospace'
       }
     };
     
     const stack = fontStacks[fontType] || fontStacks.body;
-    return stack.fallback;
+    // 根据字体加载状态选择使用 primary 还是 fallback
+    return globalData.fontsReady ? stack.primary + ', ' + stack.fallback : stack.fallback;
   },
 
   /**
@@ -490,32 +507,60 @@ Page({
     let fromY = contentY; // 来源信息位置，将在绘制文案后动态调整
 
     // 背景 - 优化渐变效果和装饰元素
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, '#fefefe');
-    gradient.addColorStop(0.5, '#f8f9fa');
-    gradient.addColorStop(1, '#f0f2f5');
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, '#f9f7fe');
+    gradient.addColorStop(0.2, '#f0f4ff');
+    gradient.addColorStop(0.5, '#e8f0ff');
+    gradient.addColorStop(0.8, '#f5f0ff');
+    gradient.addColorStop(1, '#fef7f9');
     ctx.setFillStyle(gradient);
     ctx.fillRect(0, 0, width, height);
     
-    // 绘制装饰元素
-    ctx.setFillStyle('rgba(255, 193, 7, 0.1)');
+    // 绘制装饰元素 - 艺术感圆形
+    ctx.setFillStyle('rgba(255, 166, 0, 0.08)');
     ctx.beginPath();
-    ctx.arc(width / 2, -50, 150, 0, 2 * Math.PI);
+    ctx.arc(width * 0.2, height * 0.2, 120, 0, 2 * Math.PI);
     ctx.fill();
     
-    ctx.setFillStyle('rgba(54, 162, 235, 0.1)');
+    ctx.setFillStyle('rgba(138, 43, 226, 0.08)');
     ctx.beginPath();
-    ctx.arc(width / 2, height + 50, 150, 0, 2 * Math.PI);
+    ctx.arc(width * 0.8, height * 0.3, 100, 0, 2 * Math.PI);
     ctx.fill();
     
-    // 绘制线条装饰
-    ctx.setStrokeStyle('rgba(108, 117, 125, 0.1)');
-    ctx.setLineWidth(1);
-    for (let i = 0; i < 3; i++) {
-      const y = padding + (height - 2 * padding) * (i + 1) / 4;
+    ctx.setFillStyle('rgba(0, 191, 255, 0.08)');
+    ctx.beginPath();
+    ctx.arc(width * 0.3, height * 0.8, 140, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    // 绘制线条装饰 - 艺术感曲线
+    ctx.setStrokeStyle('rgba(147, 112, 219, 0.1)');
+    ctx.setLineWidth(1.5);
+    ctx.beginPath();
+    ctx.moveTo(padding, height * 0.3);
+    ctx.bezierCurveTo(width * 0.25, height * 0.2, width * 0.75, height * 0.4, width - padding, height * 0.3);
+    ctx.stroke();
+    
+    ctx.setStrokeStyle('rgba(255, 105, 180, 0.1)');
+    ctx.beginPath();
+    ctx.moveTo(padding, height * 0.7);
+    ctx.bezierCurveTo(width * 0.25, height * 0.6, width * 0.75, height * 0.8, width - padding, height * 0.7);
+    ctx.stroke();
+    
+    // 绘制网格装饰
+    ctx.setStrokeStyle('rgba(200, 200, 200, 0.05)');
+    ctx.setLineWidth(0.5);
+    for (let i = 0; i < 5; i++) {
+      const y = padding + (height - 2 * padding) * i / 4;
       ctx.beginPath();
       ctx.moveTo(padding, y);
       ctx.lineTo(width - padding, y);
+      ctx.stroke();
+    }
+    for (let i = 0; i < 4; i++) {
+      const x = padding + (width - 2 * padding) * i / 3;
+      ctx.beginPath();
+      ctx.moveTo(x, padding);
+      ctx.lineTo(x, height - padding);
       ctx.stroke();
     }
 
@@ -527,42 +572,51 @@ Page({
       // 根据不同条件设置不同的模板配置
       let fontSize, lineHeight, maxCharsPerLine, fontType, isBold;
       
-      if (text.length <= 50) {
-        fontSize = 25;
-        lineHeight = 38;
-        maxCharsPerLine = 14;
-        fontType = 'elegant';
-        isBold = true;
+      // 所有文案都使用手写体
+      fontType = 'handwriting';
+      isBold = true;
+      
+      if (text.length <= 20) {
+        fontSize = 32;
+        lineHeight = 45;
+        maxCharsPerLine = 10;
+      } else if (text.length <= 50) {
+        fontSize = 28;
+        lineHeight = 42;
+        maxCharsPerLine = 12;
       } else if (text.length <= 150) {
+        fontSize = 24;
+        lineHeight = 38;
+        maxCharsPerLine = 16;
+      } else {
         fontSize = 22;
         lineHeight = 34;
-        maxCharsPerLine = 16;
-        fontType = 'classic';
-        isBold = false;
-      } else {
-        fontSize = 20;
-        lineHeight = 30;
         maxCharsPerLine = 18;
-        fontType = 'body';
-        isBold = false;
       }
       
       this.setCanvasFont(ctx, fontSize, fontType, isBold);
       
+      // 文字颜色和效果
       const colorPalette = {
-        elegant: '#2c3e50',
-        classic: '#34495e',
+        artistic: '#2c3e50',
+        handwriting: '#34495e',
+        elegant: '#2d3748',
+        classic: '#1a202c',
         body: '#2d3748',
         title: '#1a202c'
       };
       
       const textColor = colorPalette[fontType] || '#2d3748';
-      ctx.setFillStyle(textColor);
-      ctx.setTextAlign('center');
+      ctx.setTextAlign('left');
+      
+      // 添加文字阴影效果
+      // 所有文案都使用手写体阴影效果
+      ctx.setShadow(2, 2, 8, 'rgba(0, 0, 0, 0.1)');
       
       let currentY = contentY;
       let startIndex = 0;
-      const maxContentWidth = width - 2 * padding;
+      const firstLineIndent = 20; // 首行缩进
+      const maxContentWidth = width - 2 * padding - firstLineIndent;
       
       while (startIndex < text.length) {
         let endIndex = Math.min(startIndex + maxCharsPerLine, text.length);
@@ -593,27 +647,40 @@ Page({
           lineWidth = ctx.measureText(lineText).width;
         }
         
-        ctx.fillText(lineText, width / 2, currentY);
+        // 计算绘制位置
+        const x = startIndex === 0 ? padding + firstLineIndent : padding;
+        
+        // 所有文案都使用手写体的渐变效果
+        const textGradient = ctx.createLinearGradient(x, currentY, x + lineWidth, currentY);
+        textGradient.addColorStop(0, '#8e44ad');
+        textGradient.addColorStop(1, '#3498db');
+        ctx.setFillStyle(textGradient);
+        ctx.fillText(lineText, x, currentY);
+        
         startIndex = endIndex;
         currentY += lineHeight;
         
         if (currentY > height - padding - 200) {
-          ctx.setTextAlign('center');
-          ctx.fillText('...', width / 2, currentY);
+          ctx.setTextAlign('left');
+          ctx.setFillStyle(textColor);
+          ctx.fillText('...', padding, currentY);
           currentY += lineHeight;
           break;
         }
       }
       
-      fromY = currentY + 20;
+      // 重置阴影
+      ctx.setShadow(0, 0, 0, 'transparent');
+      
+      fromY = currentY + 25;
     }
 
     // 来源信息
     if (copywriting && copywriting.from && copywriting.from !== '佚名') {
       this.setCanvasFont(ctx, 16, 'elegant', false, true);
       ctx.setFillStyle('#8a9aaf');
-      ctx.setTextAlign('center');
-      ctx.fillText('—— ' + copywriting.from, width / 2, fromY + 5);
+      ctx.setTextAlign('right');
+      ctx.fillText('—— ' + copywriting.from, width - padding, fromY + 5);
     }
 
     // 日期信息

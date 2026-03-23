@@ -7,6 +7,9 @@ Page({
     previewEmoji: '😀',
     previewStyle: 'background: rgba(255, 255, 255, 0.1); border-radius: 0; box-shadow: 0 0 0 transparent;',
     
+    // 画布样式
+    canvasStyle: 'width: 400px; height: 400px; position: absolute; left: -9999px; top: -9999px;',
+    
     // 画布尺寸配置
     canvasWidth: 200,
     canvasHeight: 200
@@ -77,21 +80,51 @@ Page({
         inputEmoji: inputEmoji
       });
       
+      // 首先设置字体大小以测量emoji尺寸
+      const fontSize = 200;
+      
       // 使用life-countdown的方式直接创建Canvas上下文
       const ctx = wx.createCanvasContext('emojiCanvas', this);
+      ctx.font = `normal ${fontSize}px Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       
-      // 固定画布尺寸为256x256像素（适合大多数emoji）
-      const canvasWidth = 256;
-      const canvasHeight = 256;
+      // 测量emoji的实际宽度
+      const metrics = ctx.measureText(inputEmoji);
+      const emojiWidth = metrics.width;
+      
+      // 对于emoji，我们使用字体大小作为高度，因为emoji通常是正方形的
+      // 这样可以确保emoji不会发生形变
+      const emojiHeight = fontSize;
+      
+      // 为确保emoji完全显示，添加一些额外空间
+      const padding = 10;
+      
+      // 计算画布尺寸，确保足够容纳emoji
+      // 保持emoji的原始长宽比，不发生形变
+      // 确保padding的添加不会改变长宽比
+      const canvasWidth = emojiWidth + padding * 2;
+      const canvasHeight = emojiHeight + padding * 2;
+      
+      console.log('Emoji尺寸测量结果:', {
+        emojiWidth: emojiWidth,
+        emojiHeight: emojiHeight,
+        canvasWidth: canvasWidth,
+        canvasHeight: canvasHeight
+      });
+      
+      // 动态调整canvas元素的大小
+      // 在微信小程序中，我们需要通过修改canvas元素的样式来调整其大小
+      // 由于小程序的限制，我们使用setData来更新canvas的样式
+      this.setData({
+        canvasStyle: `width: ${canvasWidth}px; height: ${canvasHeight}px; position: absolute; left: -9999px; top: -9999px;`
+      });
+      
+      console.log('Canvas元素大小已调整:', canvasWidth, 'x', canvasHeight);
       
       // 首先清空画布（保持透明背景）
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       
-      // 使用一个较大的字体确保emoji填满画布
-      const fontSize = 200;
-      ctx.font = `normal ${fontSize}px Arial, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
       ctx.fillStyle = '#000000'; // emoji颜色
       
       // 绘制emoji（居中显示）
@@ -109,7 +142,7 @@ Page({
           y: 0,
           width: canvasWidth,
           height: canvasHeight,
-          destWidth: canvasWidth, // 输出256x256像素的图片
+          destWidth: canvasWidth, // 输出实际画布大小的图片
           destHeight: canvasHeight,
           quality: 0.7, // 降低图片质量以减小文件大小
           fileType: 'png',

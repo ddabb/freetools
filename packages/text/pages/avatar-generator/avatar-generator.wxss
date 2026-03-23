@@ -188,18 +188,65 @@ label {
 }
 
 .text-effect-preview {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  border: 2px solid #e9ecef;
-  background: #ffffff;
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: #ffffff;
   transition: all 0.3s;
   margin-bottom: 4px;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* 文字效果预览样式（与 Canvas 导出效果一致） */
+.te-normal {
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: #ffffff;
+  text-shadow: none;
+}
+
+.te-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f39c12 100%);
+  color: #ffffff;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+
+.te-shadow {
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: #ffffff;
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.te-stroke {
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: #ffffff;
+  text-shadow:
+    1px 1px 0 #2c3e50,
+    -1px -1px 0 #2c3e50,
+    1px -1px 0 #2c3e50,
+    -1px 1px 0 #2c3e50,
+    0 1px 0 #2c3e50,
+    0 -1px 0 #2c3e50;
+}
+
+.te-glow {
+  background: linear-gradient(135deg, #1a3a4a, #0a2a3a);
+  color: #00ff9d;
+  text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d, 0 0 30px #00ff9d;
+}
+
+.te-3d {
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #2c3e50, 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .preview-section {
@@ -362,7 +409,7 @@ footer {
 }
 
 .section-header:hover {
-  background-color: #f8f9fa;
+  background-color: #f8fafc;
 }
 
 .section-header label {
@@ -393,6 +440,83 @@ footer {
 }
 
 .text-effect-options.expanded {
+  display: grid;
+}
+
+/* 字体样式选择器 */
+.font-style-section {
+  margin-top: 8px;
+}
+
+.font-style-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.font-style-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.font-style-label {
+  width: 100%;
+  padding: 6px 2px;
+  border-radius: 6px;
+  background: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #e9ecef;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #495057;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.font-style-label:hover {
+  border-color: #3498db;
+  background: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.15);
+}
+
+.font-style-label.checked {
+  border-color: #3498db;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.05));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+  color: #2c3e50;
+}
+
+.font-style-preview {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 2px solid #ffffff;
+  transition: all 0.3s;
+  margin-bottom: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.font-style-options.collapsed {
+  display: none;
+}
+
+.font-style-options.expanded {
   display: grid;
 }
 
