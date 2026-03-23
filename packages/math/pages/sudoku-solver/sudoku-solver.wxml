@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="header-section">
+    <view class="title">🧩 数独求解器</view>
+    <view class="desc">输入数独题目，点击求解按钮自动获得答案</view>
+  </view>
+
+  <view class="board-section">
+    <view class="board">
+      <view class="row" wx:for="{{board}}" wx:key="row">
+        <view 
+          class="cell {{(index + 1) % 3 === 0 && index !== 8 ? 'right-border' : ''}} {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
+          wx:for="{{item}}" 
+          wx:for-item="cell" 
+          wx:for-index="itemIndex"
+          wx:key="cell"
+        >
+          <input 
+            type="number" 
+            maxlength="1" 
+            value="{{cell.value}}" 
+            bindinput="onInput"
+            data-row="{{index}}"
+            data-col="{{itemIndex}}"
+            disabled="{{solving}}"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="buttons-section">
+    <button class="btn clear-btn" bindtap="clearBoard" disabled="{{solving}}">
+      <text class="btn-icon">🗑️</text>
+      <text class="btn-text">清空</text>
+    </button>
+    <button class="btn solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
+      <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
+      <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
+    </button>
+  </view>
+
+  <view class="result-section" wx:if="{{solutionMessage}}">
+    <view class="result-box {{hasSolution ? 'success' : 'error'}}">
+      <text class="result-icon">{{hasSolution ? '✅' : '❌'}}</text>
+      <text class="result-text">{{solutionMessage}}</text>
+    </view>
+  </view>
+
+  <view class="tips-section">
+    <view class="tips-title">💡 使用提示</view>
+    <view class="tips-list">
+      <view class="tip-item">• 在格子中输入1-9的数字</view>
+      <view class="tip-item">• 点击"求解"按钮自动计算答案</view>
+      <view class="tip-item">• 深色格子是你输入的数字</view>
+      <view class="tip-item">• 浅色格子是求解出的答案</view>
+    </view>
+  </view>
+</view>

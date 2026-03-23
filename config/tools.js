@@ -509,6 +509,39 @@ const tools = [
     description: '将文字转换为图片，支持添加出处和二维码',
     frequency: toolFrequency['text-to-image'],
     publish: false
+  },
+  {
+    id: 'sudoku-solver',
+    name: '数独求解器',
+    icon: '🧩',
+    color: 'orange',
+    url: '/packages/math/pages/sudoku-solver/sudoku-solver',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数独', '求解', '谜题', '逻辑'],
+    description: '输入数独题目，自动求解答案',
+    publish: false
+  },
+  {
+    id: 'sudoku-generator',
+    name: '数独生成器',
+    icon: '🎲',
+    color: 'teal',
+    url: '/packages/math/pages/sudoku-generator/sudoku-generator',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数独', '生成', '谜题', '游戏'],
+    description: '随机生成不同难度的数独题目',
+    publish: false
+  },
+  {
+    id: 'one-stroke-solver',
+    name: '一笔画求解',
+    icon: '✏️',
+    color: 'pink',
+    url: '/packages/math/pages/one-stroke-solver/one-stroke-solver',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
+    description: '判断图形是否可以一笔画成并给出路径',
+    publish: false
   }
 ];
 

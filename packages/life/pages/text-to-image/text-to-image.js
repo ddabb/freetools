@@ -671,118 +671,60 @@ Page({
       ctx.setFillStyle('#ffffff');
       ctx.fillRect(qrX - 5, qrY - 5, qrSize + 10, qrSize + 10);
       
-      // 使用当前选择的二维码图片
-      const qrImg = wx.createImage();
-      qrImg.onload = () => {
-        ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-        ctx.draw(false, function() {
-          // 绘制完成后执行保存
-          wx.canvasToTempFilePath({
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            quality: 1,
-            canvasId: 'cvs1',
-            destWidth: width * (systemInfo.pixelRatio / 2),
-            destHeight: height * (systemInfo.pixelRatio / 2),
-            success: (res) => {
-              const drawurl = res.tempFilePath;
-              platform.saveImageToAlbum(drawurl, 
-                function(res) {
-                  console.log("保存相册成功" + res);
-                  platform.showToast({
-                    title: '保存相册成功'
-                  });
-                },
-                function(err) {
-                  console.log("保存到相册失败", err);
-                  if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
-                    wx.showModal({
-                      title: '提示',
-                      content: '需要您授权保存相册',
-                      showCancel: true,
-                      success: modalSuccess => {
-                        if (modalSuccess.confirm) {
-                          wx.openSetting();
-                        }
+      // 直接使用路径绘制二维码，支持用户自定义二维码
+      ctx.drawImage(qrCodePath, qrX, qrY, qrSize, qrSize);
+      
+      ctx.draw(false, function() {
+        // 绘制完成后执行保存
+        wx.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          width: width,
+          height: height,
+          quality: 1,
+          canvasId: 'cvs1',
+          destWidth: width * (systemInfo.pixelRatio / 2),
+          destHeight: height * (systemInfo.pixelRatio / 2),
+          success: (res) => {
+            const drawurl = res.tempFilePath;
+            platform.saveImageToAlbum(drawurl, 
+              function(res) {
+                console.log("保存相册成功" + res);
+                platform.showToast({
+                  title: '保存相册成功'
+                });
+              },
+              function(err) {
+                console.log("保存到相册失败", err);
+                if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
+                    err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
+                    err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
+                  wx.showModal({
+                    title: '提示',
+                    content: '需要您授权保存相册',
+                    showCancel: true,
+                    success: modalSuccess => {
+                      if (modalSuccess.confirm) {
+                        wx.openSetting();
                       }
-                    });
-                  } else {
-                    platform.showToast({
-                      title: '保存失败，请重试'
-                    });
-                  }
-                }
-              );
-            },
-            fail: function (error) {
-              console.log("canvasToTempFilePath失败:" + error);
-              platform.showToast({
-                title: '生成图片失败，请重试'
-              });
-            }
-          }, that);
-        });
-      };
-      qrImg.onerror = () => {
-        // 图片加载失败时使用默认图片
-        ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
-        ctx.draw(false, function() {
-          // 绘制完成后执行保存
-          wx.canvasToTempFilePath({
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            quality: 1,
-            canvasId: 'cvs1',
-            destWidth: width * (systemInfo.pixelRatio / 2),
-            destHeight: height * (systemInfo.pixelRatio / 2),
-            success: (res) => {
-              const drawurl = res.tempFilePath;
-              platform.saveImageToAlbum(drawurl, 
-                function(res) {
-                  console.log("保存相册成功" + res);
-                  platform.showToast({
-                    title: '保存相册成功'
+                    }
                   });
-                },
-                function(err) {
-                  console.log("保存到相册失败", err);
-                  if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
-                      err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
-                    wx.showModal({
-                      title: '提示',
-                      content: '需要您授权保存相册',
-                      showCancel: true,
-                      success: modalSuccess => {
-                        if (modalSuccess.confirm) {
-                          wx.openSetting();
-                        }
-                      }
-                    });
-                  } else {
-                    platform.showToast({
-                      title: '保存失败，请重试'
-                    });
-                  }
+                } else {
+                  platform.showToast({
+                    title: '保存失败，请重试'
+                  });
                 }
-              );
-            },
-            fail: function (error) {
-              console.log("canvasToTempFilePath失败:" + error);
-              platform.showToast({
-                title: '生成图片失败，请重试'
-              });
-            }
-          }, that);
-        });
-      };
-      qrImg.src = qrCodePath;
+              }
+            );
+          },
+          fail: function (error) {
+            console.log("canvasToTempFilePath失败:" + error);
+            platform.showToast({
+              title: '生成图片失败，请重试'
+            });
+          }
+        }, that);
+      });
     }
   }
 

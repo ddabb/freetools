@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="header-section">
+    <view class="title">🎲 数独生成器</view>
+    <view class="desc">随机生成不同难度的数独题目</view>
+  </view>
+
+  <view class="difficulty-section">
+    <view class="difficulty-tabs">
+      <view 
+        class="difficulty-tab {{difficulty === 'easy' ? 'active' : ''}}" 
+        bindtap="setDifficulty" 
+        data-difficulty="easy"
+      >
+        简单
+      </view>
+      <view 
+        class="difficulty-tab {{difficulty === 'medium' ? 'active' : ''}}" 
+        bindtap="setDifficulty" 
+        data-difficulty="medium"
+      >
+        中等
+      </view>
+      <view 
+        class="difficulty-tab {{difficulty === 'hard' ? 'active' : ''}}" 
+        bindtap="setDifficulty" 
+        data-difficulty="hard"
+      >
+        困难
+      </view>
+    </view>
+  </view>
+
+  <view class="board-section">
+    <view class="board">
+      <view class="row" wx:for="{{board}}" wx:key="row">
+        <view 
+          class="cell {{(index + 1) % 3 === 0 && index !== 8 ? 'right-border' : ''}} {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
+          wx:for="{{item}}" 
+          wx:for-item="cell" 
+          wx:for-index="itemIndex"
+          wx:key="cell"
+        >
+          <text class="cell-value">
+            {{showingAnswer ? answerBoard[index][itemIndex] : cell.value}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="buttons-section">
+    <button class="btn regenerate-btn" bindtap="generateSudoku">
+      <text class="btn-icon">🎲</text>
+      <text class="btn-text">重新生成</text>
+    </button>
+    <button class="btn answer-btn" bindtap="toggleAnswer">
+      <text class="btn-icon">{{showingAnswer ? '🙈' : '👁️'}}</text>
+      <text class="btn-text">{{showingAnswer ? '隐藏答案' : '显示答案'}}</text>
+    </button>
+  </view>
+
+  <view class="tips-section">
+    <view class="tips-title">💡 使用提示</view>
+    <view class="tips-list">
+      <view class="tip-item">• 选择难度后自动生成数独题目</view>
+      <view class="tip-item">• 点击"重新生成"生成新题目</view>
+      <view class="tip-item">• 点击"显示答案"查看完整解答</view>
+      <view class="tip-item">• 深色格子是题目给出的数字</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,93 @@
+<view class="container">
+  <view class="header-section">
+    <view class="title">✏️ 一笔画求解</view>
+    <view class="desc">根据欧拉路径定理判断图形是否可以一笔画成</view>
+  </view>
+
+  <view class="graph-select-section">
+    <view class="graph-select-title">选择图形：</view>
+    <view class="graph-tabs">
+      <view 
+        class="graph-tab {{currentGraph === 'house' ? 'active' : ''}}" 
+        bindtap="onSelectGraph" 
+        data-graph="house"
+      >
+        🏠 房子
+      </view>
+      <view 
+        class="graph-tab {{currentGraph === 'square' ? 'active' : ''}}" 
+        bindtap="onSelectGraph" 
+        data-graph="square"
+      >
+        ⬜ 方形
+      </view>
+      <view 
+        class="graph-tab {{currentGraph === 'star' ? 'active' : ''}}" 
+        bindtap="onSelectGraph" 
+        data-graph="star"
+      >
+        ⭐ 星形
+      </view>
+      <view 
+        class="graph-tab {{currentGraph === 'butterfly' ? 'active' : ''}}" 
+        bindtap="onSelectGraph" 
+        data-graph="butterfly"
+      >
+        🦋 蝴蝶
+      </view>
+    </view>
+  </view>
+
+  <view class="canvas-section">
+    <canvas 
+      canvas-id="graphCanvas" 
+      class="graph-canvas"
+      style="width: 300px; height: 300px;"
+    />
+  </view>
+
+  <view class="button-section">
+    <button class="btn check-btn" bindtap="checkOneStroke">
+      <text class="btn-icon">🔍</text>
+      <text class="btn-text">检查是否可以一笔画</text>
+    </button>
+  </view>
+
+  <view class="result-section" wx:if="{{resultMessage}}">
+    <view class="result-box {{isSolvable ? 'success' : 'error'}}">
+      <text class="result-icon">{{isSolvable ? '✅' : '❌'}}</text>
+      <text class="result-text">{{resultMessage}}</text>
+    </view>
+  </view>
+
+  <view class="legend-section" wx:if="{{isSolvable}}">
+    <view class="legend-title">图例说明：</view>
+    <view class="legend-list">
+      <view class="legend-item">
+        <view class="legend-color start"></view>
+        <text class="legend-text">起点（绿色）</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color end"></view>
+        <text class="legend-text">终点（红色）</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color both"></view>
+        <text class="legend-text">起终点相同（橙色）</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color path"></view>
+        <text class="legend-text">一笔画路径</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="tips-section">
+    <view class="tips-title">💡 一笔画定理</view>
+    <view class="tips-list">
+      <view class="tip-item">• 如果图中没有奇点（度数为奇数的点），可以从任意点开始一笔画</view>
+      <view class="tip-item">• 如果图中有且仅有2个奇点，则必须从一个奇点开始，另一个奇点结束</view>
+      <view class="tip-item">• 如果奇点超过2个，则无法一笔画成</view>
+    </view>
+  </view>
+</view>

@@ -56,7 +56,10 @@
         "pages/prime-factorization/prime-factorization",
         "pages/24point/24point",
         "pages/oddEven/oddEven",
-        "pages/random-selector/random-selector"
+        "pages/random-selector/random-selector",
+        "pages/sudoku-solver/sudoku-solver",
+        "pages/sudoku-generator/sudoku-generator",
+        "pages/one-stroke-solver/one-stroke-solver"
       ]
     },
     {
