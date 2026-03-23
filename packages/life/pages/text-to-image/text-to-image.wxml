@@ -1,0 +1,97 @@
+<view class="container">
+  <!-- 内容区域 -->
+  <view class="content-area">
+    <!-- 输入区域 -->
+    <view class="input-section">
+      <view class="form-group">
+        <text class="label">文字内容（200字以内）</text>
+        <textarea 
+          class="textarea" 
+          placeholder="请输入要生成图片的文字内容" 
+          bindinput="onTextInput" 
+          maxlength="200"
+          value="{{text}}"
+        ></textarea>
+        <text class="count">{{text.length}}/200</text>
+      </view>
+      
+      <view class="form-group">
+        <text class="label">出处（可不填）</text>
+        <input 
+          class="input" 
+          placeholder="请输入出处信息" 
+          bindinput="onFromInput"
+          value="{{from}}"
+        ></input>
+      </view>
+      
+      <!-- 二维码选择 -->
+      <view class="form-group">
+        <text class="label">选择二维码（可选）</text>
+        <view class="qr-selection">
+          <view class="qr-options">
+            <view 
+              class="qr-option {{selectedQrCode === 'default' ? 'active' : ''}}"
+              bindtap="selectQrCode"
+              data-type="default"
+            >
+              <image class="qr-thumbnail" src="/images/mini.png" mode="aspectFit"></image>
+              <text class="qr-label">默认二维码</text>
+            </view>
+            <view 
+              class="qr-option {{selectedQrCode === 'custom' ? 'active' : ''}}"
+              bindtap="selectQrCode"
+              data-type="custom"
+            >
+              <view class="custom-qr-placeholder">
+                <text class="qr-icon">📷</text>
+                <text class="qr-label">自定义二维码</text>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 自定义二维码上传区域 -->
+          <view class="custom-qr-section" wx:if="{{selectedQrCode === 'custom'}}">
+            <button 
+              class="image-upload-btn {{customQrCodeImage ? 'has-image' : ''}}" 
+              bindtap="uploadQRCodeImage"
+            >
+              <text class="upload-icon">📷</text>
+              {{customQrCodeImage ? '更换' : '上传'}}二维码图片
+            </button>
+            <button 
+              class="btn-secondary" 
+              bindtap="removeQRCodeImage"
+              wx:if="{{customQrCodeImage}}"
+            >
+              移除
+            </button>
+            
+            <!-- 自定义二维码预览 -->
+            <view class="qr-preview" wx:if="{{customQrCodeImage}}">
+              <text class="section-title">二维码预览</text>
+              <image 
+                class="qrcode-preview" 
+                src="{{customQrCodeImage}}"
+                mode="aspectFit"
+              ></image>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 固定底部的生成按钮 -->
+  <view class="fixed-action-section">
+    <button 
+      class="btn-primary fixed-btn" 
+      bindtap="generateImage"
+    >
+      生成图片
+    </button>
+  </view>
+  
+  <!-- 隐藏的画布元素，用于生成图片 -->
+  <canvas canvas-id="cvs1" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
+</view>

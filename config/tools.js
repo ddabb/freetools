@@ -39,7 +39,8 @@ const toolFrequency = {
   'avatar-generator': 45,     // 汉字头像
   'emoji-to-png': 42,        // Emoji转图片
   'text-to-png': 40,          // 文本转图片
-  'copywriting': 80            // 文案工具
+  'copywriting': 80,            // 文案工具
+  'text-to-image': 75           // 文字转文案
 };
 
 const tools = [
@@ -170,7 +171,7 @@ const tools = [
     name: '生成二维码',
     icon: '📱',
     color: 'orange',
-    url: '/packages/utility/pages/qrcode/qrcode',
+    url: '/packages/life/pages/qrcode/qrcode',
     categories: ['安全工具'],
     keywords: ['二维码', '生成', '码', '扫码'],
     description: '生成文本和链接的二维码',
@@ -496,6 +497,18 @@ const tools = [
     keywords: ['文案', '写作', '素材', '模板'],
     description: '提供各种场景的文案素材，支持分类浏览和复制',
     frequency: toolFrequency['copywriting']
+  },
+  {
+    id: 'text-to-image',
+    name: '文字转文案',
+    icon: '🖼️',
+    color: 'purple',
+    url: '/packages/life/pages/text-to-image/text-to-image',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['文字', '图片', '生成', '二维码'],
+    description: '将文字转换为图片，支持添加出处和二维码',
+    frequency: toolFrequency['text-to-image'],
+    publish: false
   }
 ];
 
@@ -510,8 +523,8 @@ const discoveryTools = [
   { id: 'color-converter', name: '颜色生成', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
 ];
 
-// 合并所有工具
-const allTools = [...tools, ...discoveryTools.filter(tool => !tools.find(t => t.id === tool.id))];
+// 合并所有工具并过滤掉 publish: false 的工具
+const allTools = [...tools, ...discoveryTools.filter(tool => !tools.find(t => t.id === tool.id))].filter(tool => tool.publish !== false);
 
 // 确保所有工具都有 keywords 数组
 allTools.forEach(tool => {

@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "日期转换器",
-          "pathName": "packages/unit/pages/timezone-converter/timezone-converter",
+          "name": "文字转文案",
+          "pathName": "packages/life/pages/text-to-image/text-to-image",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "日期转换器",
+          "pathName": "packages/unit/pages/timezone-converter/timezone-converter",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "生肖查询",
@@ -72,7 +79,7 @@
           "scene": null
         },
         {
-          "name": "文字转图片",
+          "name": "文字转文案",
           "pathName": "packages/text/pages/text-to-png/text-to-png",
           "query": "",
           "launchMode": "default",
