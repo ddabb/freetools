@@ -1,173 +1,79 @@
+const sudoku = require('../../utils/sudoku');
+
 Page({
   data: {
     board: [],
     difficulty: 'medium',
     showingAnswer: false,
-    answerBoard: []
+    answerBoard: [],
+    generating: false,
   },
 
   onLoad() {
     this.generateSudoku();
   },
 
-  generateFullBoard() {
-    const board = Array(9).fill(0).map(() => Array(9).fill(0));
-    this.solveSudoku(board);
-    return board;
-  },
-
-  isSafe(board, row, col, num) {
-    for (let x = 0; x < 9; x++) {
-      if (board[row][x] === num) return false;
-    }
-
-    for (let x = 0; x < 9; x++) {
-      if (board[x][col] === num) return false;
-    }
-
-    const startRow = Math.floor(row / 3) * 3;
-    const startCol = Math.floor(col / 3) * 3;
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[startRow + i][startCol + j] === num) return false;
-      }
-    }
-
-    return true;
-  },
-
-  solveSudoku(board) {
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
-        if (board[row][col] === 0) {
-          const nums = this.shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-          for (let num of nums) {
-            if (this.isSafe(board, row, col, num)) {
-              board[row][col] = num;
-              if (this.solveSudoku(board)) {
-                return true;
-              }
-              board[row][col] = 0;
-            }
-          }
-          return false;
-        }
-      }
-    }
-    return true;
-  },
-
-  shuffleArray(array) {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  },
-
-  countSolutions(board) {
-    let count = 0;
-    const solve = (b) => {
-      for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-          if (b[row][col] === 0) {
-            for (let num = 1; num <= 9; num++) {
-              if (this.isSafe(b, row, col, num)) {
-                b[row][col] = num;
-                solve(b);
-                b[row][col] = 0;
-              }
-            }
-            return;
-          }
-        }
-      }
-      count++;
-    };
-    solve(board.map(row => [...row]));
-    return count;
-  },
-
-  removeNumbers(board, difficulty) {
-    const puzzle = board.map(row => [...row]);
-    const attempts = difficulty === 'easy' ? 30 : difficulty === 'medium' ? 40 : 50;
-    
-    const cells = [];
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        cells.push([i, j]);
-      }
-    }
-    
-    const shuffledCells = this.shuffleArray(cells);
-    let removed = 0;
-
-    for (let [row, col] of shuffledCells) {
-      if (removed >= attempts) break;
-      
-      const backup = puzzle[row][col];
-      puzzle[row][col] = 0;
-      
-      const solutions = this.countSolutions(puzzle);
-      if (solutions !== 1) {
-        puzzle[row][col] = backup;
-      } else {
-        removed++;
-      }
-    }
-
-    return puzzle;
-  },
-
+  /**
+   * 生成数独谜题
+   * 流程：生成终盘 → 根据难度挖空 → 渲染展示
+   */
   generateSudoku() {
+    if (this.data.generating) return;
+    this.setData({ generating: true });
+
     wx.showLoading({ title: '生成中...' });
-    
+
+    // 用 setTimeout 将计算放到下一个事件循环，让 loading 先显示出来
     setTimeout(() => {
-      const fullBoard = this.generateFullBoard();
-      const puzzleBoard = this.removeNumbers(fullBoard, this.data.difficulty);
+      try {
+        // 1. 生成完整终盘
+        const fullBoard = sudoku.generateFullBoard();
 
-      const displayBoard = puzzleBoard.map(row =>
-        row.map(val => ({
-          value: val ? val.toString() : '',
-          fixed: val !== 0
-        }))
-      );
+        // 2. 根据难度决定挖空数量
+        const removeCount = { easy: 30, medium: 45, hard: 55 }[this.data.difficulty] || 45;
+        const puzzle = sudoku.createPuzzle(fullBoard, removeCount);
 
-      const answerBoard = fullBoard.map(row =>
-        row.map(val => val.toString())
-      );
+        // 3. 转换为展示格式：{value, fixed}
+        const displayBoard = puzzle.map(row =>
+          row.map(val => ({
+            value: val ? String(val) : '',
+            fixed: val !== 0,
+          }))
+        );
 
-      this.setData({
-        board: displayBoard,
-        answerBoard,
-        showingAnswer: false
-      });
+        this.setData({
+          board: displayBoard,
+          answerBoard: fullBoard.map(row => row.map(String)),
+          showingAnswer: false,
+          generating: false,
+        });
 
-      wx.hideLoading();
-      wx.showToast({
-        title: '生成成功',
-        icon: 'success'
-      });
-    }, 100);
+        wx.hideLoading();
+        wx.showToast({ title: '生成成功', icon: 'success' });
+      } catch (e) {
+        wx.hideLoading();
+        this.setData({ generating: false });
+        wx.showToast({ title: '生成失败', icon: 'none' });
+        console.error('Sudoku generate error:', e);
+      }
+    }, 50);
   },
 
   setDifficulty(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
+    if (difficulty === this.data.difficulty) return;
     this.setData({ difficulty });
     this.generateSudoku();
   },
 
   toggleAnswer() {
-    this.setData({
-      showingAnswer: !this.data.showingAnswer
-    });
+    this.setData({ showingAnswer: !this.data.showingAnswer });
   },
 
   onShareAppMessage() {
     return {
       title: '数独生成器 - 随机生成数独题目',
-      path: '/packages/math/pages/sudoku-generator/sudoku-generator'
-    }
-  }
-})
+      path: '/packages/math/pages/sudoku-generator/sudoku-generator',
+    };
+  },
+});

@@ -1,9 +1,11 @@
+const sudoku = require('../../utils/sudoku');
+
 Page({
   data: {
     board: [],
     solving: false,
     hasSolution: false,
-    solutionMessage: ''
+    solutionMessage: '',
   },
 
   onLoad() {
@@ -11,27 +13,22 @@ Page({
   },
 
   initBoard() {
-    const board = [];
-    for (let i = 0; i < 9; i++) {
-      const row = [];
-      for (let j = 0; j < 9; j++) {
-        row.push({
-          value: '',
-          fixed: false
-        });
-      }
-      board.push(row);
-    }
-    this.setData({ board });
+    const board = Array.from({ length: 9 }, () =>
+      Array.from({ length: 9 }, () => ({ value: '', fixed: false }))
+    );
+    this.setData({ board, hasSolution: false, solutionMessage: '' });
   },
 
   onInput(e) {
-    const row = e.currentTarget.dataset.row;
-    const col = e.currentTarget.dataset.col;
+    const { row, col } = e.currentTarget.dataset;
     let value = e.detail.value;
 
-    if (value && (value < 1 || value > 9 || isNaN(value))) {
+    // 只允许 1-9
+    const num = parseInt(value, 10);
+    if (isNaN(num) || num < 1 || num > 9) {
       value = '';
+    } else {
+      value = String(num);
     }
 
     const board = this.data.board;
@@ -42,132 +39,92 @@ Page({
 
   clearBoard() {
     this.initBoard();
-    this.setData({
-      hasSolution: false,
-      solutionMessage: ''
-    });
-  },
-
-  isSafe(board, row, col, num) {
-    for (let x = 0; x < 9; x++) {
-      if (board[row][x] === num) return false;
-    }
-
-    for (let x = 0; x < 9; x++) {
-      if (board[x][col] === num) return false;
-    }
-
-    const startRow = Math.floor(row / 3) * 3;
-    const startCol = Math.floor(col / 3) * 3;
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[startRow + i][startCol + j] === num) return false;
-      }
-    }
-
-    return true;
-  },
-
-  solveSudokuHelper(board) {
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
-        if (board[row][col] === 0 || board[row][col] === '') {
-          for (let num = 1; num <= 9; num++) {
-            if (this.isSafe(board, row, col, num)) {
-              board[row][col] = num;
-              if (this.solveSudokuHelper(board)) {
-                return true;
-              }
-              board[row][col] = 0;
-            }
-          }
-          return false;
-        }
-      }
-    }
-    return true;
-  },
-
-  validateBoard(board) {
-    const usedRows = new Array(9).fill(0).map(() => new Set());
-    const usedCols = new Array(9).fill(0).map(() => new Set());
-    const usedBoxes = new Array(9).fill(0).map(() => new Set());
-
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        const num = board[i][j];
-        if (num) {
-          const boxIndex = Math.floor(i / 3) * 3 + Math.floor(j / 3);
-          if (usedRows[i].has(num) || usedCols[j].has(num) || usedBoxes[boxIndex].has(num)) {
-            return false;
-          }
-          usedRows[i].add(num);
-          usedCols[j].add(num);
-          usedBoxes[boxIndex].add(num);
-        }
-      }
-    }
-    return true;
   },
 
   solveSudoku() {
-    this.setData({ solving: true });
+    if (this.data.solving) return;
+    this.setData({ solving: true, solutionMessage: '' });
 
-    const board = this.data.board.map(row => 
-      row.map(cell => cell.value ? parseInt(cell.value) : 0)
-    );
+    // 小延迟让按钮状态更新再开始计算
+    setTimeout(() => {
+      // 将界面 board 转为纯数字 board
+      const rawBoard = this.data.board.map(row =>
+        row.map(cell => (cell.value ? parseInt(cell.value, 10) : 0))
+      );
 
-    if (!this.validateBoard(board)) {
-      this.setData({
-        solving: false,
-        hasSolution: false,
-        solutionMessage: '输入的数独题目无效，请检查！'
-      });
-      wx.showToast({
-        title: '题目无效',
-        icon: 'none'
-      });
-      return;
-    }
+      // 快速检查输入合法性（行列宫重复检测）
+      if (!isValidInput(rawBoard)) {
+        this.setData({
+          solving: false,
+          hasSolution: false,
+          solutionMessage: '输入无效：行列宫中有重复数字',
+        });
+        wx.showToast({ title: '输入无效', icon: 'none' });
+        return;
+      }
 
-    const solved = this.solveSudokuHelper(board);
+      // 优先用约束传播求解（快），失败再用普通回溯（兜底）
+      let solved = sudoku.solveWithConstraintPropagation(rawBoard);
+      if (!solved) {
+        // 克隆一份再求解，避免修改原数组
+        solved = rawBoard.map(r => [...r]);
+        if (!sudoku.solve(solved)) {
+          this.setData({
+            solving: false,
+            hasSolution: false,
+            solutionMessage: '该数独无解',
+          });
+          wx.showToast({ title: '无解', icon: 'none' });
+          return;
+        }
+      }
 
-    if (solved) {
-      const newBoard = this.data.board;
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-          if (!newBoard[i][j].fixed) {
-            newBoard[i][j].value = board[i][j].toString();
+      // 只更新非固定格子（用户输入的格子）
+      const board = this.data.board;
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (!board[r][c].fixed) {
+            board[r][c].value = String(solved[r][c]);
           }
         }
       }
+
       this.setData({
-        board: newBoard,
+        board,
         solving: false,
         hasSolution: true,
-        solutionMessage: '数独求解成功！'
+        solutionMessage: '求解成功',
       });
-      wx.showToast({
-        title: '求解成功',
-        icon: 'success'
-      });
-    } else {
-      this.setData({
-        solving: false,
-        hasSolution: false,
-        solutionMessage: '该数独无解！'
-      });
-      wx.showToast({
-        title: '无解',
-        icon: 'none'
-      });
-    }
+      wx.showToast({ title: '求解成功', icon: 'success' });
+    }, 60);
   },
 
   onShareAppMessage() {
     return {
       title: '数独求解器 - 快速解决数独难题',
-      path: '/packages/math/pages/sudoku-solver/sudoku-solver'
+      path: '/packages/math/pages/sudoku-solver/sudoku-solver',
+    };
+  },
+});
+
+/**
+ * 检查用户输入是否合法（允许空格，不允许重复）
+ */
+function isValidInput(board) {
+  const seen = Array.from({ length: 9 }, () => new Set());
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      const v = board[r][c];
+      if (v === 0) continue;
+      const box = ((r / 3) | 0) * 3 + ((c / 3) | 0);
+      if (seen[r].has(v) || seen[c + 9].has(v) || seen[box + 18].has(v)) {
+        return false;
+      }
+      seen[r].add(v);
+      seen[c + 9].add(v);
+      seen[box + 18].add(v);
     }
   }
-})
+  return true;
+}
