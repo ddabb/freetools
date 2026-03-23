@@ -23,7 +23,7 @@
     "miniprogram": {
       "list": [
         {
-          "name": "文字转文案",
+          "name": "文案生图",
           "pathName": "packages/life/pages/text-to-image/text-to-image",
           "query": "",
           "scene": null,
@@ -79,7 +79,7 @@
           "scene": null
         },
         {
-          "name": "文字转文案",
+          "name": "文案生图",
           "pathName": "packages/text/pages/text-to-png/text-to-png",
           "query": "",
           "launchMode": "default",

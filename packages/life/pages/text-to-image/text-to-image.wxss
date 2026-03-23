@@ -1,6 +1,6 @@
 .container {
   padding: 0;
-  background-color: #f5f5f5;
+  background-color: #f0f2f5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -8,20 +8,17 @@
 
 .content-area {
   flex: 1;
-  padding: 20rpx;
-  padding-bottom: 120rpx; /* 为底部固定按钮预留空间 */
+  padding: 24rpx;
 }
 
 .input-section {
   background-color: #fff;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  border-radius: 16rpx;
+  padding: 56rpx;
 }
 
 .form-group {
-  margin-bottom: 24rpx;
+  margin-bottom: 32rpx;
 }
 
 .form-group:last-child {
@@ -30,51 +27,53 @@
 
 .label {
   display: block;
-  font-size: 32rpx;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
 }
 
 .textarea {
   width: 100%;
-  height: 200rpx;
-  border: 2rpx solid #e8e8e8;
-  border-radius: 8rpx;
-  padding: 16rpx;
-  font-size: 28rpx;
-  color: #333;
-  background-color: #fafafa;
+  height: 240rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 30rpx;
+  color: #374151;
+  background-color: #f9fafb;
   resize: none;
+  box-sizing: border-box;
 }
 
 .input {
   width: 100%;
-  height: 80rpx;
-  border: 2rpx solid #e8e8e8;
-  border-radius: 8rpx;
-  padding: 0 16rpx;
-  font-size: 28rpx;
-  color: #333;
-  background-color: #fafafa;
+  height: 88rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  color: #374151;
+  background-color: #f9fafb;
+  box-sizing: border-box;
 }
 
 .count {
   display: block;
   text-align: right;
   font-size: 24rpx;
-  color: #999;
-  margin-top: 8rpx;
+  color: #9ca3af;
+  margin-top: 12rpx;
 }
 
 .qr-selection {
-  margin-top: 12rpx;
+  margin-top: 16rpx;
 }
 
 .qr-options {
   display: flex;
   gap: 16rpx;
-  margin-bottom: 16rpx;
+  align-items: stretch;
 }
 
 .qr-option {
@@ -82,23 +81,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16rpx;
-  border: 2rpx solid #e8e8e8;
-  border-radius: 8rpx;
-  background-color: #fafafa;
-  transition: all 0.3s ease;
+  justify-content: center;
+  padding: 24rpx 16rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  background-color: #f9fafb;
 }
 
 .qr-option.active {
-  border-color: #007aff;
-  background-color: #e8f0fe;
+  border-color: #3b82f6;
+  background-color: #eff6ff;
 }
 
 .qr-thumbnail {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 4rpx;
-  margin-bottom: 8rpx;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 8rpx;
+  margin-bottom: 12rpx;
 }
 
 .custom-qr-placeholder {
@@ -108,18 +107,42 @@
 }
 
 .qr-icon {
-  font-size: 32rpx;
-  margin-bottom: 8rpx;
+  font-size: 40rpx;
+  margin-bottom: 12rpx;
 }
 
 .qr-label {
   font-size: 24rpx;
-  color: #666;
+  color: #6b7280;
   text-align: center;
+  font-weight: 500;
+}
+
+.make-qr-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 16rpx;
+  border: 2rpx solid #3b82f6;
+  border-radius: 12rpx;
+  background-color: #3b82f6;
+  min-width: 140rpx;
+}
+
+.make-qr-icon {
+  font-size: 40rpx;
+  margin-bottom: 12rpx;
+}
+
+.make-qr-text {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 600;
 }
 
 .custom-qr-section {
-  margin-top: 16rpx;
+  margin-top: 24rpx;
 }
 
 .qr-actions {
@@ -133,59 +156,62 @@
   height: 80rpx;
   line-height: 80rpx;
   font-size: 28rpx;
-  color: #333;
-  background-color: #f0f0f0;
-  border-radius: 8rpx;
+  color: #374151;
+  background-color: #f3f4f6;
+  border-radius: 12rpx;
   border: none;
+  font-weight: 500;
 }
 
 .btn-secondary[disabled] {
-  color: #ccc;
-  background-color: #fafafa;
+  color: #9ca3af;
+  background-color: #f9fafb;
 }
 
 .qr-preview {
-  background-color: #fff;
+  background-color: #f9fafb;
   border-radius: 12rpx;
-  padding: 20rpx;
-  margin-top: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  padding: 24rpx;
+  margin-top: 20rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 2rpx dashed #e5e7eb;
 }
 
 .section-title {
-  font-size: 32rpx;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 20rpx;
   align-self: flex-start;
 }
 
 .qrcode-canvas {
-  background-color: #fafafa;
+  background-color: #fff;
   border-radius: 8rpx;
 }
 
 .image-upload-btn {
   width: 100%;
-  height: 80rpx;
-  line-height: 80rpx;
+  height: 88rpx;
+  line-height: 88rpx;
   font-size: 28rpx;
-  color: #333;
-  background-color: #f0f0f0;
-  border-radius: 8rpx;
-  border: 2rpx dashed #ccc;
+  color: #374151;
+  background-color: #f9fafb;
+  border-radius: 12rpx;
+  border: 2rpx dashed #d1d5db;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12rpx;
+  font-weight: 500;
 }
 
 .image-upload-btn.has-image {
-  border-color: #007aff;
-  background-color: #e8f0fe;
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  color: #3b82f6;
 }
 
 .upload-icon {
@@ -193,68 +219,33 @@
 }
 
 .qrcode-preview {
-  width: 200px;
-  height: 200px;
-  background-color: #fafafa;
-  border-radius: 8rpx;
-  border: 1rpx solid #e8e8e8;
-}
-
-.preview-section {
+  width: 240rpx;
+  height: 240rpx;
   background-color: #fff;
   border-radius: 12rpx;
-  padding: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  border: 2rpx solid #e5e7eb;
 }
 
-.image-canvas {
+.action-buttons {
+  margin-top: 32rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx solid #f3f4f6;
+}
+
+.btn-primary {
   width: 100%;
-  height: 600rpx;
-  background-color: #fafafa;
-  border-radius: 8rpx;
-  margin-bottom: 16rpx;
-}
-
-.preview-actions {
-  display: flex;
-  justify-content: center;
-}
-
-/* 固定底部按钮区域 */
-.fixed-action-section {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20rpx;
-  background-color: #fff;
-  border-top: 1rpx solid #e8e8e8;
-  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.fixed-btn {
-  width: 100%;
-  height: 90rpx;
-  line-height: 90rpx;
+  height: 96rpx;
+  line-height: 96rpx;
   font-size: 32rpx;
   color: #fff;
-  background-color: #007aff;
-  border-radius: 12rpx;
+  background-color: #3b82f6;
+  border-radius: 16rpx;
   border: none;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0;
-}
-
-/* 移除固定按钮的禁用状态样式，按钮始终可点击 */
-
-/* 响应式设计 */
-@media (max-width: 375px) {
-  .textarea {
-    height: 180rpx;
-  }
-  
-  .image-canvas {
-    height: 500rpx;
-  }
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }

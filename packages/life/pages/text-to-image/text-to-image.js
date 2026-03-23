@@ -180,12 +180,18 @@ Page({
     customQrCodeImage: '',
     canvaswidth: 375,
     canvasheight: 667,
-    linespace: 30
+    linespace: 30,
+    textLength: 0
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title: '文字转文案'
+      title: '文案生图'
+    })
+    const defaultText = '今天，天气真好，适合去码头整点薯条。'
+    this.setData({
+      text: defaultText,
+      textLength: defaultText.length
     })
   },
 
@@ -193,7 +199,8 @@ Page({
   onTextInput(e) {
     const value = e.detail.value
     this.setData({
-      text: value
+      text: value,
+      textLength: value.length
     })
   },
 
@@ -287,6 +294,13 @@ Page({
     })
   },
 
+  // 跳转到二维码生成页面
+  goToQRCodePage() {
+    wx.navigateTo({
+      url: '/packages/life/pages/qrcode/qrcode'
+    })
+  },
+
   // 生成图片
   generateImage() {
     const text = this.data.text.trim()
@@ -316,7 +330,7 @@ Page({
   savecodetofile() {
     if (isHarmonyOS) {
       // 在鸿蒙平台，我们需要通过组件引用获取Canvas
-      const canvas = this.$element('cvs1');
+      const canvas = this.$element('cvsTextToImage');
       if (canvas) {
         this.MergeImage(canvas);
       } else {
@@ -328,7 +342,7 @@ Page({
     } else {
       // 在微信小程序平台，使用wx.createCanvasContext
       try {
-        const ctx = wx.createCanvasContext('cvs1', this);
+        const ctx = wx.createCanvasContext('cvsTextToImage', this);
         if (ctx) {
           this.MergeImage(ctx);
         } else {
@@ -629,7 +643,7 @@ Page({
     
     // 加载并绘制二维码
     if (isHarmonyOS) {
-      const canvas = this.$element('cvs1');
+      const canvas = this.$element('cvsTextToImage');
       if (canvas) {
         const img = new Image();
         img.onload = () => {
@@ -682,7 +696,7 @@ Page({
           width: width,
           height: height,
           quality: 1,
-          canvasId: 'cvs1',
+          canvasId: 'cvsTextToImage',
           destWidth: width * (systemInfo.pixelRatio / 2),
           destHeight: height * (systemInfo.pixelRatio / 2),
           success: (res) => {

@@ -27,6 +27,31 @@
   margin-left: 0;
 }
 
+/* 文案生图按钮 */
+.image-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70rpx;
+  height: 70rpx;
+  margin-left: 10rpx;
+  border-radius: 15rpx;
+  background-color: #3498db;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.image-btn:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  background-color: #2980b9;
+}
+
+.image-icon {
+  font-size: 36rpx;
+  color: white;
+}
+
 .search-box:focus-within {
   box-shadow: 0 4px 16px rgba(52, 152, 219, 0.3);
   transform: translateY(-2rpx);
@@ -58,6 +83,8 @@
   font-size: 36rpx;
   color: #999;
 }
+
+
 
 /* 分类样式 */
 .category-section {

@@ -40,7 +40,7 @@ const toolFrequency = {
   'emoji-to-png': 42,        // Emoji转图片
   'text-to-png': 40,          // 文本转图片
   'copywriting': 80,            // 文案工具
-  'text-to-image': 75           // 文字转文案
+  'text-to-image': 75           // 文案生图
 };
 
 const tools = [
@@ -500,15 +500,14 @@ const tools = [
   },
   {
     id: 'text-to-image',
-    name: '文字转文案',
+    name: '文案生图',
     icon: '🖼️',
     color: 'purple',
     url: '/packages/life/pages/text-to-image/text-to-image',
     categories: ['生活工具', '学习工具'],
     keywords: ['文字', '图片', '生成', '二维码'],
     description: '将文字转换为图片，支持添加出处和二维码',
-    frequency: toolFrequency['text-to-image'],
-    publish: false
+    frequency: toolFrequency['text-to-image']
   },
   {
     id: 'sudoku-solver',

@@ -30,7 +30,6 @@
           <view class="category-icon">{{item.icon}}</view>
           <view class="category-info">
             <text class="category-name">{{item.name}}</text>
-            <text class="category-count">{{categoryToolCounts[item.name] || 0}}个工具</text>
           </view>
         </view>
       </scroll-view>
