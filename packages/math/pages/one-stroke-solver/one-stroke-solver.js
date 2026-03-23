@@ -254,14 +254,16 @@ Page({
 
   // 更新网格宽度
   updateGridWidth(e) {
-    const width = parseInt(e.detail.value) + 1;
+    const range = [3, 4, 5, 6, 7, 8, 9];
+    const width = range[e.detail.value];
     this.setData({ gridWidth: width });
     this.generateGrid();
   },
 
   // 更新网格高度
   updateGridHeight(e) {
-    const height = parseInt(e.detail.value) + 1;
+    const range = [3, 4, 5, 6, 7, 8, 9];
+    const height = range[e.detail.value];
     this.setData({ gridHeight: height });
     this.generateGrid();
   }

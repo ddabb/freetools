@@ -1,7 +1,8 @@
 <view class="container">
+  <!-- 标题区域 -->
   <view class="header-section">
     <view class="title">✏️ 一笔画求解</view>
-    <view class="desc">根据欧拉路径定理判断网格是否可以一笔画成</view>
+    <view class="desc">判断网格是否可以一笔画成（连通、不重复）</view>
   </view>
 
   <!-- 模式切换 -->
@@ -15,11 +16,11 @@
         🎲 生成题目
       </view>
       <view 
-        class="mode-tab {{mode === 'verify' ? 'active' : ''}}" 
+        class="mode-tab {{mode === 'solve' ? 'active' : ''}}" 
         bindtap="switchMode"
-        data-mode="verify"
+        data-mode="solve"
       >
-        🔍 校验题目
+        ✏️ 求解题目
       </view>
     </view>
   </view>
@@ -32,8 +33,8 @@
           <text class="grid-size-label">横向：</text>
           <picker 
             mode="selector" 
-            range="[1, 2, 3, 4, 5, 6, 7, 8, 9]" 
-            value="{{gridWidth - 1}}" 
+            range="{{['3', '4', '5', '6', '7', '8', '9']}}" 
+            value="{{gridWidth - 3}}" 
             bindchange="updateGridWidth"
             class="grid-size-picker"
           >
@@ -44,8 +45,8 @@
           <text class="grid-size-label">纵向：</text>
           <picker 
             mode="selector" 
-            range="[1, 2, 3, 4, 5, 6, 7, 8, 9]" 
-            value="{{gridHeight - 1}}" 
+            range="{{['3', '4', '5', '6', '7', '8', '9']}}" 
+            value="{{gridHeight - 3}}" 
             bindchange="updateGridHeight"
             class="grid-size-picker"
           >
@@ -55,20 +56,32 @@
       </view>
       <button class="btn generate-btn" bindtap="generateValidPuzzle">
         <text class="btn-icon">🎲</text>
-        <text class="btn-text">生成有效题目</text>
+        <text class="btn-text">随机生成题目</text>
       </button>
     </view>
   </view>
 
-  <view class="canvas-section">
-    <canvas 
-      canvas-id="graphCanvas" 
-      class="graph-canvas"
-      style="width: 300px; height: 300px;"
-    />
+  <!-- 游戏区域 -->
+  <view class="game-section">
+    <view class="canvas-wrapper">
+      <canvas 
+        canvas-id="graphCanvas" 
+        class="graph-canvas"
+        style="width: 300px; height: 300px;"
+        bindtouchstart="onCanvasTouchStart"
+        bindtouchmove="onCanvasTouchMove"
+        bindtouchend="onCanvasTouchEnd"
+      />
+    </view>
+    
+    <!-- 操作提示 -->
+    <view class="operation-tips" wx:if="{{mode === 'solve'}}">
+      <text class="tips-text">💡 提示：在画布上绘制路径，尝试一笔完成</text>
+    </view>
   </view>
 
-  <view class="button-section">
+  <!-- 控制按钮 -->
+  <view class="control-section">
     <button 
       class="btn check-btn" 
       bindtap="checkGridOneStroke"
@@ -77,8 +90,18 @@
       <text class="btn-icon">🔍</text>
       <text class="btn-text">检查是否可以一笔画</text>
     </button>
+    
+    <button 
+      class="btn solve-btn" 
+      bindtap="showSolution"
+      wx:if="{{isSolvable}}"
+    >
+      <text class="btn-icon">✏️</text>
+      <text class="btn-text">显示可行解</text>
+    </button>
   </view>
 
+  <!-- 结果显示 -->
   <view class="result-section" wx:if="{{resultMessage}}">
     <view class="result-box {{isSolvable ? 'success' : 'error'}}">
       <text class="result-icon">{{isSolvable ? '✅' : '❌'}}</text>
@@ -86,38 +109,45 @@
     </view>
   </view>
 
+  <!-- 解路径显示 -->
+  <view class="solution-section" wx:if="{{showSolutionPath}}">
+    <view class="solution-header">
+      <text class="solution-icon">📋</text>
+      <text class="solution-title">可行解路径</text>
+    </view>
+    <view class="solution-content">
+      <text class="path-text">{{solutionPathText}}</text>
+    </view>
+  </view>
+
+  <!-- 图例说明 -->
   <view class="legend-section" wx:if="{{isSolvable}}">
-    <view class="legend-title">图例说明：</view>
-    <view class="legend-list">
+    <view class="legend-header">
+      <text class="legend-title">图例说明</text>
+    </view>
+    <view class="legend-grid">
       <view class="legend-item">
         <view class="legend-color start"></view>
-        <text class="legend-text">起点（绿色）</text>
+        <text class="legend-text">起点</text>
       </view>
       <view class="legend-item">
         <view class="legend-color end"></view>
-        <text class="legend-text">终点（红色）</text>
+        <text class="legend-text">终点</text>
       </view>
       <view class="legend-item">
         <view class="legend-color both"></view>
-        <text class="legend-text">起终点相同（橙色）</text>
+        <text class="legend-text">起终点相同</text>
       </view>
       <view class="legend-item">
         <view class="legend-color path"></view>
-        <text class="legend-text">一笔画路径</text>
+        <text class="legend-text">路径</text>
       </view>
       <view class="legend-item">
         <view class="legend-color hole"></view>
-        <text class="legend-text">洞（灰色）</text>
+        <text class="legend-text">洞</text>
       </view>
     </view>
   </view>
 
-  <view class="tips-section">
-    <view class="tips-title">💡 一笔画定理</view>
-    <view class="tips-list">
-      <view class="tip-item">• 如果图中没有奇点（度数为奇数的点），可以从任意点开始一笔画</view>
-      <view class="tip-item">• 如果图中有且仅有2个奇点，则必须从一个奇点开始，另一个奇点结束</view>
-      <view class="tip-item">• 如果奇点超过2个，则无法一笔画成</view>
-    </view>
-  </view>
+
 </view>
