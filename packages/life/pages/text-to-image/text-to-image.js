@@ -593,58 +593,71 @@ Page({
       ctx.setShadow(2, 2, 8, 'rgba(0, 0, 0, 0.1)');
       
       let currentY = contentY;
-      let startIndex = 0;
-      const firstLineIndent = 20; // 首行缩进
+      const firstLineIndent = 24; // 首行缩进（优化效果）
       const maxContentWidth = width - 2 * padding - firstLineIndent;
       
-      while (startIndex < text.length) {
-        let endIndex = Math.min(startIndex + maxCharsPerLine, text.length);
+      // 处理用户输入的换行符
+      const lines = text.split(/[\r\n]+/);
+      
+      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        let lineText = lines[lineIndex];
+        let startIndex = 0;
         
-        // 尝试在标点符号处换行
-        if (endIndex < text.length) {
-          const punctuationChars = ['，', '。', '！', '？', '；', '：', ',', '.', '!', '?', ';', ':'];
-          let lastPunctuationIndex = -1;
+        while (startIndex < lineText.length) {
+          let endIndex = Math.min(startIndex + maxCharsPerLine, lineText.length);
           
-          for (let i = endIndex - 1; i >= startIndex; i--) {
-            if (punctuationChars.includes(text[i])) {
-              lastPunctuationIndex = i;
-              break;
+          // 尝试在标点符号处换行
+          if (endIndex < lineText.length) {
+            const punctuationChars = ['，', '。', '！', '？', '；', '：', ',', '.', '!', '?', ';', ':'];
+            let lastPunctuationIndex = -1;
+            
+            for (let i = endIndex - 1; i >= startIndex; i--) {
+              if (punctuationChars.includes(lineText[i])) {
+                lastPunctuationIndex = i;
+                break;
+              }
+            }
+            
+            if (lastPunctuationIndex > startIndex) {
+              endIndex = lastPunctuationIndex + 1;
             }
           }
           
-          if (lastPunctuationIndex > startIndex) {
-            endIndex = lastPunctuationIndex + 1;
+          let segmentText = lineText.substring(startIndex, endIndex);
+          let segmentWidth = ctx.measureText(segmentText).width;
+          
+          while (segmentWidth > maxContentWidth && endIndex > startIndex) {
+            endIndex--;
+            segmentText = lineText.substring(startIndex, endIndex);
+            segmentWidth = ctx.measureText(segmentText).width;
+          }
+          
+          // 计算绘制位置 - 只有段落的第一行需要缩进
+          const x = (lineIndex === 0 && startIndex === 0) ? padding + firstLineIndent : padding;
+          
+          // 所有文案都使用手写体的渐变效果
+          const textGradient = ctx.createLinearGradient(x, currentY, x + segmentWidth, currentY);
+          textGradient.addColorStop(0, '#8e44ad');
+          textGradient.addColorStop(1, '#3498db');
+          ctx.setFillStyle(textGradient);
+          ctx.fillText(segmentText, x, currentY);
+          
+          startIndex = endIndex;
+          currentY += lineHeight;
+          
+          if (currentY > height - padding - 200) {
+            ctx.setTextAlign('left');
+            ctx.setFillStyle(textColor);
+            ctx.fillText('...', padding, currentY);
+            currentY += lineHeight;
+            lineIndex = lines.length; // 退出外层循环
+            break;
           }
         }
         
-        let lineText = text.substring(startIndex, endIndex);
-        let lineWidth = ctx.measureText(lineText).width;
-        
-        while (lineWidth > maxContentWidth && endIndex > startIndex) {
-          endIndex--;
-          lineText = text.substring(startIndex, endIndex);
-          lineWidth = ctx.measureText(lineText).width;
-        }
-        
-        // 计算绘制位置
-        const x = startIndex === 0 ? padding + firstLineIndent : padding;
-        
-        // 所有文案都使用手写体的渐变效果
-        const textGradient = ctx.createLinearGradient(x, currentY, x + lineWidth, currentY);
-        textGradient.addColorStop(0, '#8e44ad');
-        textGradient.addColorStop(1, '#3498db');
-        ctx.setFillStyle(textGradient);
-        ctx.fillText(lineText, x, currentY);
-        
-        startIndex = endIndex;
-        currentY += lineHeight;
-        
-        if (currentY > height - padding - 200) {
-          ctx.setTextAlign('left');
-          ctx.setFillStyle(textColor);
-          ctx.fillText('...', padding, currentY);
-          currentY += lineHeight;
-          break;
+        // 如果不是最后一行，添加额外的行间距
+        if (lineIndex < lines.length - 1) {
+          currentY += lineHeight * 0.5;
         }
       }
       
