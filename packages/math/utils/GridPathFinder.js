@@ -127,11 +127,10 @@ GridPathFinder.prototype.isOneStroke = function(printPath) {
     for (var i = 0; i < visited.length; i++) {
         visited[i] = false;
     }
-    var path = []; // 用于记录路径
 
     var startCell = -1;
 
-    // 找到第一个有效的单元格开始 DFS
+    // 找到第一个有效的单元格开始 BFS
     for (var i = 0; i < this.row * this.column; i++) {
         if (!this.notExistPot(i)) {
             startCell = i;
@@ -143,52 +142,41 @@ GridPathFinder.prototype.isOneStroke = function(printPath) {
 
     var self = this;
 
-    // 获取有效邻居的辅助函数
-    var getNeighbors = function(i) {
-        var neighbors = [];
-        if (i % self.column > 0 && !self.notExistPot(i - 1) && !visited[i - 1]) neighbors.push(i - 1);
-        if (i % self.column < self.column - 1 && !self.notExistPot(i + 1) && !visited[i + 1]) neighbors.push(i + 1);
-        if (i >= self.column && !self.notExistPot(i - self.column) && !visited[i - self.column]) neighbors.push(i - self.column);
-        if (i < (self.row - 1) * self.column && !self.notExistPot(i + self.column) && !visited[i + self.column]) neighbors.push(i + self.column);
-        return neighbors;
-    };
+    // BFS 检查连通性
+    var queue = [startCell];
+    visited[startCell] = true;
+    var visitedCount = 1;
 
-    // DFS 检查连通性和构建路径
-    var dfs = function(i) {
-        if (visited[i]) return true; // 如果已经访问过，返回 true
-        visited[i] = true;
-        path.push(i); // 记录当前单元格到路径中
-        var neighbors = getNeighbors(i);
+    while (queue.length > 0) {
+        var current = queue.shift();
+        
+        // 检查四个方向的邻居
+        var neighbors = [];
+        if (current % self.column > 0 && !self.notExistPot(current - 1) && !visited[current - 1]) neighbors.push(current - 1);
+        if (current % self.column < self.column - 1 && !self.notExistPot(current + 1) && !visited[current + 1]) neighbors.push(current + 1);
+        if (current >= self.column && !self.notExistPot(current - self.column) && !visited[current - self.column]) neighbors.push(current - self.column);
+        if (current < (self.row - 1) * self.column && !self.notExistPot(current + self.column) && !visited[current + self.column]) neighbors.push(current + self.column);
+        
         for (var j = 0; j < neighbors.length; j++) {
             var neighbor = neighbors[j];
-            if (!dfs(neighbor)) return false; // 如果邻居不能满足条件，返回 false
-        }
-        return true;
-    };
-
-    var isValid = dfs(startCell);
-
-    // 检查所有有效的单元格是否都被访问了
-    for (var i = 0; i < this.row * this.column; i++) {
-        if (!this.notExistPot(i) && !visited[i]) return false; // 不是所有有效的单元格都被访问了
-    }
-
-    // 检查路径是否连续
-    for (var i = 0; i < path.length - 1; i++) {
-        if (!this.areAdjacent(path[i], path[i + 1])) {
-            if (printPath) {
-                console.log('Path error:', path[i], 'and', path[i + 1], 'are not adjacent');
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                visitedCount++;
+                queue.push(neighbor);
             }
-            return false;
         }
     }
 
-    // 如果 printPath 为 true，则打印路径
-    if (printPath) {
-        console.log('Path:', path.join(' -> '));
+    // 计算有效的单元格总数
+    var validCellCount = 0;
+    for (var i = 0; i < this.row * this.column; i++) {
+        if (!this.notExistPot(i)) validCellCount++;
     }
 
-    return isValid;
+    // 检查是否所有有效的单元格都被访问了
+    if (visitedCount !== validCellCount) return false;
+
+    return true;
 };
 
 GridPathFinder.prototype.areAdjacent = function(cell1, cell2) {
@@ -224,7 +212,7 @@ GridPathFinder.prototype.checkPathCompleteness = function() {
 
 /**
  * 静态方法：生成有效一笔画题目
- * 策略：构造连通的有效格集合 → 用 isOneStroke 验证 → 其余格为洞
+ * 策略：构造连通的有效格集合 → 随机移除内部有效格作为洞（保持连通）→ 用 isOneStroke 验证
  *
  * 关键不变量：有效格集合始终连通。连通性是一笔画可解的必要条件。
  * 对于网格图，连通性也是充分条件（连通网格子图必有哈密顿路径），
@@ -236,145 +224,61 @@ GridPathFinder.generateValidPuzzle = function(row, column, maxHolePercentage) {
     var maxHoles = Math.floor(totalCells * maxHolePercentage);
     if (maxHoles < 0) maxHoles = 0;
 
-    // ---------- 辅助：检查活跃格集合是否连通 ----------
-    var isConnected = function(activeArr) {
-        // 找第一个活跃格
-        var start = -1;
-        for (var i = 0; i < totalCells; i++) { if (activeArr[i]) { start = i; break; } }
-        if (start === -1) return false;
-
-        var visited = new Array(totalCells).fill(false);
-        var queue = [start];
-        visited[start] = true;
-        var visitedCount = 1;
-
-        while (queue.length > 0) {
-            var cur = queue.shift();
-            var r = Math.floor(cur / column), c = cur % column;
-            var nbs = [];
-            if (c > 0   && activeArr[cur - 1] && !visited[cur - 1])   nbs.push(cur - 1);
-            if (c < column - 1 && activeArr[cur + 1] && !visited[cur + 1]) nbs.push(cur + 1);
-            if (r > 0   && activeArr[cur - column] && !visited[cur - column]) nbs.push(cur - column);
-            if (r < row - 1   && activeArr[cur + column] && !visited[cur + column]) nbs.push(cur + column);
-            for (var ni = 0; ni < nbs.length; ni++) {
-                if (!visited[nbs[ni]]) { visited[nbs[ni]] = true; visitedCount++; queue.push(nbs[ni]); }
-            }
-        }
-
-        var activeCount = 0;
-        for (var i = 0; i < totalCells; i++) if (activeArr[i]) activeCount++;
-        return visitedCount === activeCount;
+    // ---------- 辅助：检查单元格是否为内部格（非边界） ----------
+    var isInnerCell = function(cell) {
+        var r = Math.floor(cell / column);
+        var c = cell % column;
+        return r > 0 && r < row - 1 && c > 0 && c < column - 1;
     };
 
-    // ---------- 阶段1：构建连通的有效格集合 ----------
-    // 从一个起点开始，用 DFS 构建生成树，逐步扩展确保始终连通
-    var activeSet = new Array(totalCells).fill(false);
-
-    // 随机选择起点
-    var allCells = [];
-    for (var i = 0; i < totalCells; i++) allCells.push(i);
-    // Fisher-Yates 洗牌
-    for (var i = allCells.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = allCells[i]; allCells[i] = allCells[j]; allCells[j] = tmp;
-    }
-
-    // 从第一个格开始生长
-    activeSet[allCells[0]] = true;
-
-    // 收集当前活跃格的邻居（未活跃的候选格）
-    var getCandidates = function() {
-        var cand = [];
-        var seen = {};
-        for (var i = 0; i < totalCells; i++) {
-            if (!activeSet[i]) continue;
-            var r = Math.floor(i / column), c = i % column;
-            var nbs = [];
-            if (c > 0   && !activeSet[i - 1] && !seen[i - 1]) { nbs.push(i - 1); seen[i - 1] = true; }
-            if (c < column - 1 && !activeSet[i + 1] && !seen[i + 1]) { nbs.push(i + 1); seen[i + 1] = true; }
-            if (r > 0   && !activeSet[i - column] && !seen[i - column]) { nbs.push(i - column); seen[i - column] = true; }
-            if (r < row - 1   && !activeSet[i + column] && !seen[i + column]) { nbs.push(i + column); seen[i + column] = true; }
-            for (var k = 0; k < nbs.length; k++) cand.push(nbs[k]);
-        }
-        return cand;
-    };
-
-    // 计算目标最小活跃格数
-    var minActive = totalCells - maxHoles;
-
-    // 贪心扩展：随机顺序尝试加入候选格，始终保持连通
-    while (true) {
-        var curActiveCount = 0;
-        for (var i = 0; i < totalCells; i++) if (activeSet[i]) curActiveCount++;
-        if (curActiveCount >= minActive) break; // 已达目标
-
-        var candidates = getCandidates();
-        if (candidates.length === 0) break; // 没有更多候选
-
-        // 随机打乱候选顺序
-        for (var i = candidates.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var tmp = candidates[i]; candidates[i] = candidates[j]; candidates[j] = tmp;
-        }
-
-        // 尝试加入每个候选，找第一个保持连通性的
-        var added = false;
-        for (var i = 0; i < candidates.length; i++) {
-            var cell = candidates[i];
-            activeSet[cell] = true; // 假设加入
-            if (isConnected(activeSet)) {
-                added = true;
-                // 不 break，继续尝试加入更多格
-            } else {
-                activeSet[cell] = false; // 拒绝，回退
-            }
-        }
-
-        if (!added) break; // 无法继续扩展（被边界限制）
-    }
-
-    // ---------- 阶段2：收集洞 ----------
+    // ---------- 阶段1：生成洞列表 ----------
     var holes = [];
+    
+    // 首先添加一些内部格作为洞
+    var innerCells = [];
     for (var i = 0; i < totalCells; i++) {
-        if (!activeSet[i]) holes.push(i);
+        if (isInnerCell(i)) {
+            innerCells.push(i);
+        }
     }
-
-    // ---------- 阶段3：用 isOneStroke 最终验证 ----------
-    var verifier = new GridPathFinder(row, column, holes);
-    if (!verifier.isOneStroke()) {
-        // isOneStroke 失败：尝试随机换洞
-        // 将一些洞换为活跃格，同时保持连通
-        var tries = 0;
-        while (!verifier.isOneStroke() && tries < 20) {
-            tries++;
-            // 找一个洞，其有至少一个活跃邻居
-            var holeSwapCandidates = [];
-            for (var hi = 0; hi < holes.length; hi++) {
-                var h = holes[hi];
-                var hr = Math.floor(h / column), hc = h % column;
-                if (hc > 0   && activeSet[h - 1]) holeSwapCandidates.push(h);
-                if (hc < column - 1 && activeSet[h + 1]) holeSwapCandidates.push(h);
-                if (hr > 0   && activeSet[h - column]) holeSwapCandidates.push(h);
-                if (hr < row - 1   && activeSet[h + column]) holeSwapCandidates.push(h);
-            }
-            if (holeSwapCandidates.length === 0) break;
-
-            // 随机选一个洞加入（替换）
-            var toAdd = holeSwapCandidates[Math.floor(Math.random() * holeSwapCandidates.length)];
-            activeSet[toAdd] = true;
-            holes = [];
-            for (var i = 0; i < totalCells; i++) { if (!activeSet[i]) holes.push(i); }
-            verifier = new GridPathFinder(row, column, holes);
+    
+    // 随机打乱内部格顺序
+    for (var i = innerCells.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = innerCells[i]; innerCells[i] = innerCells[j]; innerCells[j] = tmp;
+    }
+    
+    // 尝试不同数量的洞，从少到多
+    var maxAttempts = 10;
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+        // 每次尝试使用不同数量的洞
+        var numHoles = Math.min(maxHoles, innerCells.length, Math.floor(innerCells.length * (0.1 + attempt * 0.1)));
+        numHoles = Math.max(numHoles, 1); // 确保至少有一个洞
+        
+        // 重置洞列表
+        holes = [];
+        for (var i = 0; i < numHoles; i++) {
+            holes.push(innerCells[i]);
+        }
+        
+        // 验证
+        var verifier = new GridPathFinder(row, column, holes);
+        if (verifier.isOneStroke()) {
+            // 验证通过，返回洞列表
+            return holes;
+        }
+    }
+    
+    // 如果所有尝试都失败，返回一个简单的洞列表（只有一个洞）
+    if (innerCells.length > 0) {
+        holes = [innerCells[0]];
+        var verifier = new GridPathFinder(row, column, holes);
+        if (verifier.isOneStroke()) {
+            return holes;
         }
     }
 
-    // 最终再次验证
-    verifier = new GridPathFinder(row, column, holes);
-    if (!verifier.isOneStroke()) {
-        return []; // 兜底失败（理论上不会发生）
-    }
-
-    return holes;
+    return []; // 兜底失败
 };
 
 // 兼容 CommonJS 导出

@@ -5,7 +5,7 @@
     <view class="input-section">
       <view class="form-group">
         <text class="label">文字内容（200字以内）</text>
-        <textarea class="textarea" placeholder="请输入要生成图片的文字内容" bindinput="onTextInput" maxlength="200" value="{{text || '今天，天气真好，适合去码头整点薯条。'}}"></textarea>
+        <textarea class="textarea" placeholder="请输入要生成图片的文字内容" bindinput="onTextInput" maxlength="200" value="{{text}}"></textarea>
         <text class="count">{{textLength}}/200</text>
       </view>
       <view class="form-group">

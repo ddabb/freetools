@@ -369,33 +369,7 @@ Page({
     }
   },
 
-  /**
-   * 获取适合的字体栈
-   */
-  getFontStack(fontType = 'body') {
-    // 字体栈配置 - 优化手机端兼容性
-    const fontStacks = {
-      title: {
-        primary: 'Montserrat, Inter, Roboto',
-        fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
-      },
-      body: {
-        primary: 'Inter, Roboto, Open Sans',
-        fallback: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
-      },
-      elegant: {
-        primary: 'Raleway, Lato, Source Sans Pro',
-        fallback: '"STKaiti", "KaiTi", "Microsoft YaHei", serif'
-      },
-      classic: {
-        primary: '"STSong", "SimSun", serif',
-        fallback: '"Microsoft YaHei", sans-serif'
-      }
-    };
-    
-    const stack = fontStacks[fontType] || fontStacks.body;
-    return stack.fallback;
-  },
+
 
   /**
    * 获取应用全局数据（字体状态）
@@ -812,7 +786,25 @@ Page({
         }, that);
       });
     }
-  }
+  },
 
   // 保存图片函数已集成到生成图片逻辑中，不再需要单独的函数
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '文案生图',
+      imageUrl: '/images/mini.png',
+      path: '/packages/life/pages/text-to-image/text-to-image'
+    }
+  },
+
+  // 分享给朋友
+  onShareAppMessage() {
+    return {
+      title: '文案生图',
+      imageUrl: '/images/mini.png',
+      path: '/packages/life/pages/text-to-image/text-to-image'
+    }
+  }
 })
