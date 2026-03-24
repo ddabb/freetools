@@ -518,7 +518,7 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['数独', '求解', '谜题', '逻辑'],
     description: '输入数独题目，自动求解答案',
-    publish: false
+    publish: true
   },
   {
     id: 'sudoku-generator',
@@ -529,7 +529,7 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['数独', '生成', '谜题', '游戏'],
     description: '随机生成不同难度的数独题目',
-    publish: false
+    publish: true
   },
   {
     id: 'one-stroke-solver',

@@ -34,7 +34,7 @@
     <view class="board">
       <view class="row" wx:for="{{board}}" wx:key="row">
         <view 
-          class="cell {{(index + 1) % 3 === 0 && index !== 8 ? 'right-border' : ''}} {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
+          class="cell {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'right-border' : ''}} {{(index + 1) % 3 === 0 && index !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
           wx:for="{{item}}" 
           wx:for-item="cell" 
           wx:for-index="itemIndex"
