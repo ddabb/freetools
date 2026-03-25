@@ -1,6 +1,7 @@
 // health-calculator.js
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+const utils = require('../../../../utils/index');
 
 // 根据平台导入相应的模块
 let prompt, storage, device, image, share;
@@ -22,11 +23,11 @@ const platform = {
         duration: options.duration || 2000
       });
     } else {
-      wx.showToast({
-        title: options.title || options.message,
-        icon: options.icon || 'none',
-        duration: options.duration || 2000
-      });
+      if (options.icon === 'success') {
+        utils.showSuccess(options.title || options.message);
+      } else {
+        utils.showText(options.title || options.message);
+      }
     }
   },
   
@@ -224,10 +225,7 @@ Page({
   calculate() {
     const { height, weight, genderIndex, age, ageGroup } = this.data;
     if (!height || !weight || genderIndex === -1 || !age) {
-      wx.showToast({
-        title: '请填写完整信息',
-        icon: 'none'
-      });
+      utils.showText('请填写完整信息');
       return;
     }
     

@@ -1,3 +1,10 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "实用工具",
+  "usingComponents": {
+    "search-bar": "/components/search-bar/search-bar",
+    "empty-state": "/components/empty-state/empty-state",
+    "loading": "/components/loading/loading",
+    "tool-card": "/components/tool-card/tool-card",
+    "category-card": "/components/category-card/category-card"
+  }
 }

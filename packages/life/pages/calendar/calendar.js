@@ -1,6 +1,7 @@
 // packages/life/pages/calendar/calendar.js
 // 导入 lunar-javascript
 const { Solar, Lunar } = require('lunar-javascript');
+const utils = require('../../../../utils/index');
 
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
@@ -549,13 +550,11 @@ Page({
       // 在鸿蒙平台，我们需要通过组件引用获取Canvas
       const canvas = this.$element('cvs1');
       if (canvas) {
-        this.MergeImage(canvas);
-      } else {
-        console.error('获取Canvas元素失败');
-        platform.showToast({
-          title: '获取画布失败，请重试'
-        });
-      }
+          this.MergeImage(canvas);
+        } else {
+          console.error('获取Canvas元素失败');
+          utils.showText('获取画布失败，请重试');
+        }
     } else {
       // 在微信小程序平台，使用wx.createCanvasContext
       try {
@@ -564,15 +563,11 @@ Page({
           this.MergeImage(ctx);
         } else {
           console.error('创建Canvas上下文失败');
-          platform.showToast({
-            title: '创建画布上下文失败，请重试'
-          });
+          utils.showText('创建画布上下文失败，请重试');
         }
       } catch (error) {
         console.error('调用wx.createCanvasContext失败:', error);
-        platform.showToast({
-          title: '创建画布失败，请重试'
-        });
+        utils.showText('创建画布失败，请重试');
       }
     }
   },
@@ -715,15 +710,11 @@ Page({
             platform.saveImageToAlbum(imageData, 
               function() {
                 console.log("保存相册成功");
-                platform.showToast({
-                  title: '保存相册成功'
-                });
+                utils.showSuccess('保存相册成功');
               },
               function(data, code) {
                 console.log("保存到相册失败", code, data);
-                platform.showToast({
-                  title: '保存失败，请重试'
-                });
+                utils.showText('保存失败，请重试');
               }
             );
           }
@@ -743,9 +734,7 @@ Page({
               platform.saveImageToAlbum(drawurl, 
                 function(res) {
                   console.log("保存相册成功" + res);
-                  platform.showToast({
-                    title: '保存相册成功'
-                  });
+                  utils.showSuccess('保存相册成功');
                 },
                 function(err) {
                   if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
@@ -800,17 +789,14 @@ Page({
   MakePosters: async function () {
     try {
       let that = this;
-      platform.showToast({
-        title: '生成中，请稍候'
-      });
+      utils.showLoading('生成中，请稍候');
       setTimeout(function () {
-        that.savecodetofile()
+        that.savecodetofile();
+        utils.hideLoading();
       }, 1000);
     } catch (ex) {
       console.log("绘图出现了错误" + ex)
-      platform.showToast({
-        title: '请重试'
-      });
+      utils.showText('请重试');
     }
   }
 })

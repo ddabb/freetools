@@ -1,6 +1,7 @@
 // packages/utility/pages/qrcode/qrcode.js
 // 使用 npm 安装的 weapp-qrcode-canvas-2d 包
 const QRCode = require('weapp-qrcode-canvas-2d')
+const utils = require('../../../../utils/index')
 
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
@@ -22,11 +23,11 @@ const platform = {
         duration: options.duration || 2000
       });
     } else {
-      wx.showToast({
-        title: options.title || options.message,
-        icon: options.icon || 'none',
-        duration: options.duration || 2000
-      });
+      if (options.icon === 'success') {
+        utils.showSuccess(options.title || options.message);
+      } else {
+        utils.showText(options.title || options.message);
+      }
     }
   },
   

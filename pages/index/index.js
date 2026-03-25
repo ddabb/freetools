@@ -20,7 +20,10 @@ Page({
     showSearchResult: false,
     
     // 最近使用
-    recentTools: []
+    recentTools: [],
+    
+    // 加载状态
+    loading: false
   },
 
   onLoad() {
@@ -76,6 +79,22 @@ Page({
   // 清除搜索
   onClearSearch() {
     this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
+  },
+
+  // 搜索确认
+  onSearchConfirm(e) {
+    const searchText = e.detail.value.trim().toLowerCase();
+    if (!searchText) return;
+    
+    this.setData({ loading: true });
+    setTimeout(() => {
+      this.setData({
+        searchText,
+        showSearchResult: true,
+        filteredTools: searchTools(searchText),
+        loading: false
+      });
+    }, 300);
   },
 
   // 导航到工具

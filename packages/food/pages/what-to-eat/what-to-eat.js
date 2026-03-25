@@ -1,4 +1,6 @@
 // 食物数据（包含热量信息，单位：大卡/100g）
+const utils = require('../../../../utils/index');
+
 const foodData = {
   // 水果类
   fruits: [
@@ -234,10 +236,7 @@ Page({
           isSpinning: false,
           showResult: false
         });
-        wx.showToast({
-          title: '生成失败，请重试',
-          icon: 'none'
-        });
+        utils.showText('生成失败，请重试');
         return;
       }
       
@@ -312,17 +311,11 @@ Page({
         this.MergeImage(ctx);
       } else {
         console.error('创建Canvas上下文失败');
-        wx.showToast({
-          title: '创建画布上下文失败，请重试',
-          icon: 'none'
-        });
+        utils.showText('创建画布上下文失败，请重试');
       }
     } catch (error) {
       console.error('调用wx.createCanvasContext失败:', error);
-      wx.showToast({
-        title: '创建画布失败，请重试',
-        icon: 'none'
-      });
+      utils.showText('创建画布失败，请重试');
     }
   },
 
@@ -480,10 +473,7 @@ Page({
             filePath: tempFilePath,
             success: () => {
               console.log('保存相册成功');
-              wx.showToast({
-                title: '海报已保存到相册',
-                icon: 'success'
-              });
+              utils.showSuccess('海报已保存到相册');
             },
             fail: (err) => {
               console.log('保存到相册失败', err);
@@ -499,20 +489,14 @@ Page({
                   }
                 });
               } else {
-                wx.showToast({
-                  title: '保存失败，请重试',
-                  icon: 'none'
-                });
+                utils.showText('保存失败，请重试');
               }
             }
           });
         },
         fail: (error) => {
           console.error('生成图片失败:', error);
-          wx.showToast({
-            title: '生成图片失败',
-            icon: 'none'
-          });
+          utils.showText('生成图片失败');
         }
       }, this);
     });
@@ -521,18 +505,11 @@ Page({
   // 生成分享海报
   MakePosters() {
     if (!this.data.result) {
-      wx.showToast({
-        title: '请先生成饮食推荐',
-        icon: 'none'
-      });
+      utils.showText('请先生成饮食推荐');
       return;
     }
     
-    wx.showToast({
-      title: '生成中，请稍候',
-      icon: 'loading',
-      duration: 2000
-    });
+    utils.showLoading('生成中，请稍候');
     
     setTimeout(() => {
       this.savecodetofile();

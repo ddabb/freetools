@@ -1,0 +1,13 @@
+<view class="empty-state">
+  <view class="empty-icon">
+    <icon wx:if="{{ icon }}" type="{{ icon }}" size="{{ iconSize }}" color="{{ iconColor }}"></icon>
+    <image wx:else-if="{{ image }}" src="{{ image }}" class="empty-image" style="width: {{ iconSize }}rpx; height: {{ iconSize }}rpx;"></image>
+  </view>
+  <view class="empty-text">{{ text }}</view>
+  <view wx:if="{{ subText }}" class="empty-subtext">{{ subText }}</view>
+  <view wx:if="{{ showButton }}" class="empty-button">
+    <button bindtap="onButtonClick" type="primary" size="{{ buttonSize }}">
+      {{ buttonText }}
+    </button>
+  </view>
+</view>

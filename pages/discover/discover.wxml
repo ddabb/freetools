@@ -1,26 +1,47 @@
 <!--discover.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <!-- 工具列表 -->
-    <view class="section">
-      <text class="section-title">{{currentCategory || '全部工具'}}</text>
-      <view class="tool-grid">
-        <view
-          wx:for="{{filteredTools}}"
-          wx:key="id"
-          class="tool-card-item"
-          bindtap="navigateToTool"
-          data-url="{{item.url}}"
-        >
-          <view class="tool-icon-wrapper" style="background: {{item.color}}">
-            <text class="tool-icon">{{item.icon}}</text>
-          </view>
-          <text class="tool-name">{{item.name}}</text>
+<view class="container">
+  <!-- 搜索栏 -->
+  <search-bar 
+    placeholder="搜索工具"
+    value="{{searchText}}"
+    bind:input="onSearchInput"
+    bind:confirm="onSearchConfirm"
+    bind:clear="onClearSearch"
+  />
+  
+  <!-- 加载状态 -->
+  <loading 
+    wx:if="{{ loading }}"
+    text="加载中..."
+  />
+  
+  <scroll-view class="scrollarea" scroll-y type="list" wx:if="{{ !loading }}">
+    <view class="content">
+      <!-- 工具列表 -->
+      <view class="section">
+        <text class="section-title">{{currentCategory || '全部工具'}}</text>
+        
+        <!-- 空状态 -->
+        <empty-state 
+          wx:if="{{ filteredTools.length === 0 }}"
+          icon="search"
+          text="未找到工具"
+          subText="请尝试其他关键词"
+        />
+        
+        <view class="tool-grid" wx:if="{{ filteredTools.length > 0 }}">
+          <tool-card 
+            wx:for="{{filteredTools}}"
+            wx:key="id"
+            id="{{item.id}}"
+            name="{{item.name}}"
+            icon="{{item.icon}}"
+            color="{{item.color}}"
+            description="{{item.description}}"
+            url="{{item.url}}"
+          />
         </view>
       </view>
-      <view wx:if="{{filteredTools.length === 0}}" class="empty-state">
-        <text class="empty-text">该分类下暂无工具</text>
-      </view>
     </view>
-  </view>
-</scroll-view>
+  </scroll-view>
+</view>

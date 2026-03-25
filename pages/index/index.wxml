@@ -1,18 +1,33 @@
 <!--index.wxml-->
 <view class="home-container">
   <!-- 顶部搜索栏 -->
-  <view class="search-bar top-search">
-    <view class="search-input">
-      <text class="search-icon">🔍</text>
-      <input
-        placeholder="搜索工具"
-        class="input"
-        value="{{searchText}}"
-        bindinput="onSearchInput"
-      />
-      <text wx:if="{{searchText}}" class="clear-icon" bindtap="onClearSearch">✕</text>
-    </view>
-  </view>
+  <search-bar 
+    placeholder="搜索工具"
+    value="{{searchText}}"
+    bind:input="onSearchInput"
+    bind:confirm="onSearchConfirm"
+    bind:clear="onClearSearch"
+  />
+  
+  <!-- 加载状态 -->
+  <loading 
+    wx:if="{{ loading }}"
+    text="加载中..."
+  />
+  
+  <!-- 空状态 -->
+  <empty-state 
+    wx:if="{{ !loading && showSearchResult && filteredTools.length === 0 }}"
+    icon="search"
+    text="未找到工具"
+    subText="请尝试其他关键词"
+  />
+  
+  <empty-state 
+    wx:if="{{ !loading && !showSearchResult && currentCategoryTools.length === 0 }}"
+    icon="info"
+    text="该分类下暂无工具"
+  />
 
   <!-- 点菜式主体布局 -->
   <view class="menu-layout">

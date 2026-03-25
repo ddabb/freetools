@@ -227,6 +227,15 @@ App({
 
   onError(msg) {
     console.error('小程序发生错误：', msg);
+    // 这里可以添加错误上报逻辑，如发送到服务器
+    // 例如：wx.request({ url: 'https://example.com/api/error', method: 'POST', data: { error: msg } });
+    
+    // 显示错误提示给用户
+    wx.showToast({
+      title: '程序发生错误，请稍后重试',
+      icon: 'none',
+      duration: 2000
+    });
   },
 
   // 检查更新

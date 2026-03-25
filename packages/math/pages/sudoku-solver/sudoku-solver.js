@@ -1,5 +1,6 @@
 // packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
+const utils = require('../../../../utils/index');
 
 // 预设数独题目
 const presetList = [
@@ -62,13 +63,13 @@ Page({
 
   importPasted() {
     const text = this.data.pastedText.trim();
-    if (!text) { wx.showToast({ title: '请输入数独题目', icon: 'none' }); return; }
+    if (!text) { utils.showText('请输入数独题目'); return; }
     let puzzle = null;
     if (/^[0-9.]{81}$/.test(text)) puzzle = this.parseString81(text);
     else if (/^\d{81}$/.test(text)) puzzle = this.parsePure81(text);
     else puzzle = this.parseMultiLine(text);
-    if (puzzle) { this.loadPuzzle(puzzle); wx.showToast({ title: '导入成功', icon: 'success' }); }
-    else wx.showToast({ title: '格式错误', icon: 'none' });
+    if (puzzle) { this.loadPuzzle(puzzle); utils.showSuccess('导入成功'); }
+    else utils.showText('格式错误');
   },
 
   parseString81(str) {
@@ -122,9 +123,9 @@ Page({
 
   importPreset() {
     const index = this.data.selectedPreset;
-    if (index < 0) { wx.showToast({ title: '请先选择题目', icon: 'none' }); return; }
+    if (index < 0) { utils.showText('请先选择题目'); return; }
     this.loadPuzzle(presetList[index].puzzle);
-    wx.showToast({ title: '已加载', icon: 'success' });
+    utils.showSuccess('已加载');
   },
 
   loadPuzzle(puzzle) {
@@ -222,7 +223,7 @@ Page({
       }
       if (!sudoku.isValidInput(rawBoard)) {
         this.setData({ solving: false, hasSolution: false, solutionMessage: '输入无效' });
-        wx.showToast({ title: '输入无效', icon: 'none' });
+        utils.showText('输入无效');
         return;
       }
       let solved = sudoku.solveWithConstraintPropagation(rawBoard.map(r => [...r]));
@@ -230,7 +231,7 @@ Page({
         solved = rawBoard.map(r => [...r]);
         if (!sudoku.solve(solved)) {
           this.setData({ solving: false, hasSolution: false, solutionMessage: '该数独无解' });
-          wx.showToast({ title: '无解', icon: 'none' });
+          utils.showText('无解');
           return;
         }
       }
@@ -245,7 +246,7 @@ Page({
         }
       }
       this.setData({ board: board, solving: false, hasSolution: true, solutionMessage: '求解成功', hasCandidates: false });
-      wx.showToast({ title: '求解成功', icon: 'success' });
+      utils.showSuccess('求解成功');
     }, 60);
   },
 
@@ -259,8 +260,8 @@ Page({
     const copyText = str.match(/.{1,9}/g).join('\n');
     wx.setClipboardData({
       data: copyText,
-      success: () => wx.showToast({ title: '已复制', icon: 'success' }),
-      fail: () => wx.showToast({ title: '复制失败', icon: 'none' })
+      success: () => utils.showSuccess('已复制'),
+      fail: () => utils.showText('复制失败')
     });
   },
 

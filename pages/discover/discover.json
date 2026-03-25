@@ -1,4 +1,9 @@
 {
   "navigationBarTitleText": "发现",
-  "usingComponents": {}
+  "usingComponents": {
+    "search-bar": "/components/search-bar/search-bar",
+    "empty-state": "/components/empty-state/empty-state",
+    "loading": "/components/loading/loading",
+    "tool-card": "/components/tool-card/tool-card"
+  }
 }

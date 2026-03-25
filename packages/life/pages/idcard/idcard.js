@@ -1,5 +1,6 @@
 // packages/utility/pages/idcard/idcard.js
 const idcard = require('idcard-tool')
+const utils = require('../../../../utils/index')
 
 Page({
   data: {
@@ -44,18 +45,12 @@ Page({
     const idcardNumber = this.data.idcard.trim()
 
     if (!idcardNumber) {
-      wx.showToast({
-        title: '请输入身份证号码',
-        icon: 'none'
-      })
+      utils.showText('请输入身份证号码')
       return
     }
 
     if (idcardNumber.length < 18) {
-      wx.showToast({
-        title: '请输入完整的18位身份证号码',
-        icon: 'none'
-      })
+      utils.showText('请输入完整的18位身份证号码')
       return
     }
 
@@ -82,10 +77,7 @@ Page({
             showResult: true
           })
 
-          wx.showToast({
-            title: '验证通过',
-            icon: 'success'
-          })
+          utils.showSuccess('验证通过')
         } else {
           this.setData({
             result: {
@@ -95,17 +87,11 @@ Page({
             showResult: true
           })
 
-          wx.showToast({
-            title: '验证失败',
-            icon: 'none'
-          })
+          utils.showText('验证失败')
         }
       } catch (error) {
         this.setData({ loading: false })
-        wx.showToast({
-          title: error.message || '验证出错，请重试',
-          icon: 'none'
-        })
+        utils.showText(error.message || '验证出错，请重试')
       }
     }, 800) // 模拟网络延迟
   },
@@ -135,16 +121,10 @@ Page({
     wx.setClipboardData({
       data: copyText,
       success: () => {
-        wx.showToast({
-          title: '已复制到剪贴板',
-          icon: 'success'
-        })
+        utils.showSuccess('已复制到剪贴板')
       },
       fail: () => {
-        wx.showToast({
-          title: '复制失败',
-          icon: 'none'
-        })
+        utils.showText('复制失败')
       }
     })
   },

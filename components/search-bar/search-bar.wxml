@@ -1,0 +1,20 @@
+<view class="search-bar">
+  <view class="search-input">
+    <icon class="search-icon" type="search" size="20"></icon>
+    <input
+      class="input"
+      placeholder="{{ placeholder }}"
+      value="{{ value }}"
+      bindinput="onInput"
+      bindfocus="onFocus"
+      bindblur="onBlur"
+      bindconfirm="onConfirm"
+    ></input>
+    <view wx:if="{{ value }}" class="clear-btn" bindtap="onClear">
+      <icon type="clear" size="20"></icon>
+    </view>
+  </view>
+  <view wx:if="{{ showCancel }}" class="cancel-btn" bindtap="onCancel">
+    {{ cancelText }}
+  </view>
+</view>

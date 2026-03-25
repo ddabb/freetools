@@ -1,4 +1,6 @@
 // packages/utility/pages/password-generator/password-generator.js
+const utils = require('../../../../utils/index');
+
 Page({
   data: {
     length: 12,
@@ -145,10 +147,7 @@ Page({
         strengthPercent: 0,
         strengthClass: ''
       })
-      wx.showToast({
-        title: '至少选择一种字符类型',
-        icon: 'none'
-      })
+      utils.showText('至少选择一种字符类型');
       return
     }
 
@@ -271,16 +270,10 @@ Page({
     wx.setClipboardData({
       data: this.data.password,
       success: () => {
-        wx.showToast({
-          title: '已复制到剪贴板',
-          icon: 'success'
-        })
+        utils.showSuccess('已复制到剪贴板');
       },
       fail: () => {
-        wx.showToast({
-          title: '复制失败',
-          icon: 'none'
-        })
+        utils.showText('复制失败');
       }
     })
   },
@@ -306,10 +299,7 @@ Page({
     
     wx.setStorageSync('savedPasswords', passwords)
     
-    wx.showToast({
-      title: '已保存密码',
-      icon: 'success'
-    })
+    utils.showSuccess('已保存密码');
   },
 
   // 分享给好友

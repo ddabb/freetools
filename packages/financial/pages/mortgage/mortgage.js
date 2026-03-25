@@ -1,6 +1,7 @@
 // packages/financial/pages/mortgage/mortgage.js
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
+const utils = require('../../../../utils/index');
 
 // 根据平台导入相应的模块
 let prompt, storage, device, image, share;
@@ -22,11 +23,11 @@ const platform = {
         duration: options.duration || 2000
       });
     } else {
-      wx.showToast({
-        title: options.title || options.message,
-        icon: options.icon || 'none',
-        duration: options.duration || 2000
-      });
+      if (options.icon === 'success') {
+        utils.showSuccess(options.title || options.message);
+      } else {
+        utils.showText(options.title || options.message);
+      }
     }
   },
   
@@ -214,10 +215,7 @@ Page({
     const { loanAmount, years, rate, loanType } = this.data
 
     if (!loanAmount || loanAmount <= 0) {
-      wx.showToast({
-        title: '请输入贷款金额',
-        icon: 'none'
-      })
+      utils.showText('请输入贷款金额');
       return
     }
 

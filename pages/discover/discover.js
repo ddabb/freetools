@@ -1,56 +1,22 @@
 // discover.js
 const { tools, categories } = require('../../config/tools.js');
-
-// 检测运行环境
-const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
-
-// 根据平台导入相应的模块
-let share;
-if (isHarmonyOS) {
-  share = require('@system.share');
-}
-
-// 平台兼容分享方法
-const sharePlatform = {
-  // 显示分享菜单
-  showShareMenu: function(options) {
-    if (isHarmonyOS && share) {
-      // 鸿蒙系统分享处理
-      share.show({
-        type: 'share',
-        success: () => {
-          console.log('鸿蒙系统分享菜单显示成功');
-        },
-        fail: (err) => {
-          console.error('鸿蒙系统分享菜单显示失败', err);
-        }
-      });
-    } else {
-      // 微信小程序分享
-      wx.showShareMenu({
-        withShareTicket: options.withShareTicket,
-        menus: options.menus
-      });
-    }
-  }
-};
+const utils = require('../../utils/index');
 
 Page({
   data: {
     currentCategory: '',
     tools: tools,
     categories: categories,
-    filteredTools: []
+    filteredTools: [],
+    searchText: '',
+    loading: false
   },
 
   onLoad(options) {
     // 页面加载时执行
     
-    // 初始化平台分享功能
-    this.sharePlatform = sharePlatform;
-    
     // 显示分享按钮
-    this.sharePlatform.showShareMenu({
+    utils.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     });
@@ -106,10 +72,7 @@ Page({
     wx.navigateTo({
       url: url,
       fail: () => {
-        wx.showToast({
-          title: '页面开发中',
-          icon: 'none'
-        })
+        utils.showText('页面开发中')
       }
     })
   },
@@ -120,5 +83,41 @@ Page({
       title: '发现页 - 探索更多实用工具',
       query: 'discover'
     }
+  },
+
+  // 搜索输入
+  onSearchInput(e) {
+    const searchText = e.detail.value.trim().toLowerCase();
+    if (!searchText) {
+      this.setData({ searchText: '', filteredTools: this.data.tools });
+      return;
+    }
+    
+    this.setData({ loading: true });
+    setTimeout(() => {
+      const filtered = this.data.tools.filter(tool => {
+        return (
+          tool.name.toLowerCase().includes(searchText) ||
+          (tool.description && tool.description.toLowerCase().includes(searchText)) ||
+          (tool.keywords && tool.keywords.some(keyword => keyword.toLowerCase().includes(searchText)))
+        );
+      });
+      
+      this.setData({
+        searchText,
+        filteredTools: filtered,
+        loading: false
+      });
+    }, 300);
+  },
+
+  // 搜索确认
+  onSearchConfirm(e) {
+    this.onSearchInput(e);
+  },
+
+  // 清除搜索
+  onClearSearch() {
+    this.setData({ searchText: '', filteredTools: this.data.tools });
   }
 })

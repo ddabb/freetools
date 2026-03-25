@@ -1,4 +1,6 @@
 // packages/converter/pages/json-xml-converter/json-xml-converter.js
+const utils = require('../../../../utils/index');
+
 Page({
   data: {
     activeTab: 'json2xml', // 当前激活的标签页
@@ -257,10 +259,10 @@ Page({
     wx.setClipboardData({
       data: text,
       success: () => {
-        wx.showToast({ title: '已复制到剪贴板', icon: 'success' });
+        utils.showSuccess('已复制到剪贴板');
       },
       fail: () => {
-        wx.showToast({ title: '复制失败', icon: 'none' });
+        utils.showText('复制失败');
       }
     });
   },

@@ -29,6 +29,18 @@ const share = require('./share');
 // 图片生成工具
 const imageGenerator = require('./imageGenerator');
 
+// 网络请求工具
+const http = require('./http');
+
+// 格式化工具
+const format = require('./format');
+
+// Cookie工具
+const cookie = require('./cookie');
+
+// 防抖节流工具
+const { debounce, throttle } = require('./debounce');
+
 // 基础工具
 const util = require('./util');
 
@@ -93,6 +105,35 @@ module.exports = {
   
   // 基础工具
   formatTime: util.formatTime,
+  
+  // 网络请求工具
+  http: http,
+  request: http.request,
+  get: http.get,
+  post: http.post,
+  put: http.put,
+  delete: http.delete,
+  
+  // 格式化工具
+  format: format,
+  formatDate: format.formatDate,
+  formatNumber: format.formatNumber,
+  formatMoney: format.formatMoney,
+  formatPhone: format.formatPhone,
+  formatIdCard: format.formatIdCard,
+  truncate: format.truncate,
+  
+  // Cookie工具
+  cookie: cookie,
+  setCookie: cookie.setCookie,
+  getCookie: cookie.getCookie,
+  deleteCookie: cookie.deleteCookie,
+  parseCookie: cookie.parseCookie,
+  serializeCookie: cookie.serializeCookie,
+  
+  // 防抖节流工具
+  debounce: debounce,
+  throttle: throttle,
   
   // 版本信息
   VERSION: '1.0.0'
