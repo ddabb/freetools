@@ -1,3 +1,4 @@
+// packages/math/pages/sudoku-generator/sudoku-generator.js
 const sudoku = require('../../utils/sudoku');
 
 Page({
@@ -7,45 +8,48 @@ Page({
     showingAnswer: false,
     answerBoard: [],
     generating: false,
+    showCandidates: true,
+    hasCandidates: false,
+    difficulties: [
+      { key: 'easy', name: '入门', hint: '⭐ 简单' },
+      { key: 'medium', name: '初级', hint: '⭐⭐ 中等' },
+      { key: 'hard', name: '高级', hint: '⭐⭐⭐ 困难' }
+    ]
   },
 
   onLoad() {
+    wx.setNavigationBarTitle({ title: '数独生成器' });
     this.generateSudoku();
   },
 
-  /**
-   * 生成数独谜题
-   * 流程：生成终盘 → 根据难度挖空 → 渲染展示
-   */
   generateSudoku() {
     if (this.data.generating) return;
     this.setData({ generating: true });
-
     wx.showLoading({ title: '生成中...' });
-
-    // 用 setTimeout 将计算放到下一个事件循环，让 loading 先显示出来
+    
     setTimeout(() => {
       try {
-        // 1. 生成完整终盘
         const fullBoard = sudoku.generateFullBoard();
-
-        // 2. 根据难度决定挖空数量
         const removeCount = { easy: 30, medium: 45, hard: 55 }[this.data.difficulty] || 45;
         const puzzle = sudoku.createPuzzle(fullBoard, removeCount);
-
-        // 3. 转换为展示格式：{value, fixed}
-        const displayBoard = puzzle.map(row =>
-          row.map(val => ({
-            value: val ? String(val) : '',
-            fixed: val !== 0,
-          }))
-        );
+        
+        // 使用公共方法
+        const displayBoard = sudoku.toDisplayBoard(puzzle, this.data.showCandidates);
+        const answerStr = [];
+        for (let r = 0; r < 9; r++) {
+          const row = [];
+          for (let c = 0; c < 9; c++) {
+            row.push(String(fullBoard[r][c]));
+          }
+          answerStr.push(row);
+        }
 
         this.setData({
           board: displayBoard,
-          answerBoard: fullBoard.map(row => row.map(String)),
+          answerBoard: answerStr,
           showingAnswer: false,
           generating: false,
+          hasCandidates: this.data.showCandidates
         });
 
         wx.hideLoading();
@@ -62,18 +66,103 @@ Page({
   setDifficulty(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
     if (difficulty === this.data.difficulty) return;
-    this.setData({ difficulty });
+    this.setData({ difficulty: difficulty });
     this.generateSudoku();
   },
 
+  toggleCandidates(e) {
+    const showCandidates = e.detail.value;
+    this.setData({ showCandidates: showCandidates });
+    this.refreshBoard();
+  },
+
+  refreshBoard() {
+    const grid = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        const v = this.data.answerBoard[r][c];
+        row.push(v ? parseInt(v, 10) : 0);
+      }
+      grid.push(row);
+    }
+    const displayBoard = sudoku.toDisplayBoard(grid, this.data.showCandidates);
+    this.setData({ board: displayBoard, hasCandidates: this.data.showCandidates });
+  },
+
   toggleAnswer() {
-    this.setData({ showingAnswer: !this.data.showingAnswer });
+    const { showingAnswer, answerBoard, showCandidates } = this.data;
+    
+    if (!showingAnswer) {
+      // 显示答案
+      const grid = [];
+      for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+          row.push(answerBoard[r][c] ? parseInt(answerBoard[r][c], 10) : 0);
+        }
+        grid.push(row);
+      }
+      const answerDisplay = sudoku.toDisplayBoard(grid, false);
+      this.setData({ board: answerDisplay, showingAnswer: true });
+    } else {
+      // 隐藏答案
+      this.refreshBoard();
+      this.setData({ showingAnswer: false });
+    }
+  },
+
+  onCandidateTap(e) {
+    if (this.data.showingAnswer) return;
+    
+    const row = e.currentTarget.dataset.row;
+    const col = e.currentTarget.dataset.col;
+    const num = e.currentTarget.dataset.num;
+    const board = this.data.board;
+    
+    const candidates = board[row][col].candidates;
+    if (candidates && candidates.indexOf(num) !== -1) {
+      board[row][col].value = String(num);
+      board[row][col].fixed = true;
+      board[row][col].candidates = [];
+      board[row][col].showCandidates = false;
+      this.setData({ board: board });
+      this.recalculateCandidates();
+    }
+  },
+
+  recalculateCandidates() {
+    if (!this.data.showCandidates) return;
+    
+    const board = this.data.board;
+    const grid = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : 0);
+      }
+      grid.push(row);
+    }
+    
+    const candidates = sudoku.calculateAllCandidates(grid);
+    let hasCandidates = false;
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (grid[r][c] === 0) {
+          board[r][c].candidates = candidates[r][c];
+          board[r][c].showCandidates = true;
+          if (candidates[r][c].length > 0) hasCandidates = true;
+        }
+      }
+    }
+    this.setData({ board: board, hasCandidates: hasCandidates });
   },
 
   onShareAppMessage() {
-    return {
-      title: '数独生成器 - 随机生成数独题目',
-      path: '/packages/math/pages/sudoku-generator/sudoku-generator',
-    };
+    return { title: '数独生成器 - 随机生成数独题目', path: '/packages/math/pages/sudoku-generator/sudoku-generator' };
   },
+
+  onShareTimeline() {
+    return { title: '数独生成器 - 随机生成数独题目' };
+  }
 });

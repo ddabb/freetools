@@ -1,0 +1,26 @@
+<!-- components/tool-card/tool-card.wxml -->
+<view class="tool-card" hover-class="tool-card-hover" bindtap="onTap">
+  <view class="tool-main">
+    <view class="tool-icon-wrapper {{category}}">
+      <text class="tool-icon">{{icon}}</text>
+    </view>
+    <view class="tool-info">
+      <view class="tool-name-row">
+        <text class="tool-name">{{name}}</text>
+        <view class="tool-frequency">
+          <text class="frequency-label">热度</text>
+          <view class="frequency-bar">
+            <view class="frequency-fill" style="width: {{frequency / 100 * 60}}rpx"></view>
+          </view>
+        </view>
+      </view>
+      <text class="tool-desc">{{description}}</text>
+    </view>
+  </view>
+  <view class="tool-action">
+    <button class="start-btn" hover-class="btn-hover">
+      <text class="btn-text">开始使用</text>
+      <text class="btn-icon">→</text>
+    </button>
+  </view>
+</view>

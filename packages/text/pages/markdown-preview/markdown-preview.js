@@ -1,16 +1,37 @@
 // packages/text/pages/markdown-preview/markdown-preview.js
+const utils = require('../../../../utils/index');
+
 Page({
   data: {
     markdownText: '',
     renderedHtml: '',
     themeIndex: 0,
     themes: ['默认', 'GitHub', '暗黑', '护眼'],
-    isFullscreen: false
+    isFullscreen: false,
+    editorExpanded: true,
+    previewExpanded: true,
+    showHelp: false,
+    isLoading: false
   },
 
   onLoad() {
     wx.setNavigationBarTitle({ title: 'Markdown预览器' });
     this.loadDefaultContent();
+  },
+
+  // 折叠/展开编辑器
+  toggleEditorExpanded() {
+    this.setData({ editorExpanded: !this.data.editorExpanded });
+  },
+
+  // 折叠/展开预览
+  togglePreviewExpanded() {
+    this.setData({ previewExpanded: !this.data.previewExpanded });
+  },
+
+  // 切换帮助显示
+  toggleHelp() {
+    this.setData({ showHelp: !this.data.showHelp });
   },
 
   setMarkdownText(e) {
@@ -117,49 +138,49 @@ Page({
   },
 
   insertTemplate() {
-    wx.showToast({ title: '模板功能开发中', icon: 'none' });
+    utils.showText('模板功能开发中');
   },
 
   toggleFullscreen() {
-    wx.showToast({ title: '全屏功能开发中', icon: 'none' });
+    utils.showText('全屏功能开发中');
   },
 
   exportHtml() {
-    wx.showToast({ title: '导出功能开发中', icon: 'none' });
+    utils.showText('导出功能开发中');
   },
 
   copyHtml() {
     wx.setClipboardData({ data: this.data.markdownText, success: () => {
-      wx.showToast({ title: '已复制', icon: 'success' });
+      utils.showSuccess('已复制');
     }});
   },
 
   refreshPreview() {
     this.renderMarkdown(this.data.markdownText);
-    wx.showToast({ title: '已刷新', icon: 'success' });
+    utils.showSuccess('已刷新');
   },
 
   loadSample() {
     this.loadDefaultContent();
-    wx.showToast({ title: '已加载示例', icon: 'success' });
+    utils.showSuccess('已加载示例');
   },
 
   sharePreview() {
-    wx.showToast({ title: '分享功能开发中', icon: 'none' });
+    utils.showText('分享功能开发中');
   },
 
   printPreview() {
-    wx.showToast({ title: '打印功能开发中', icon: 'none' });
+    utils.showText('打印功能开发中');
   },
 
   settings() {
-    wx.showToast({ title: '设置功能开发中', icon: 'none' });
+    utils.showText('设置功能开发中');
   },
 
-  boldText() { wx.showToast({ title: '编辑器开发中', icon: 'none' }); },
-  italicText() { wx.showToast({ title: '编辑器开发中', icon: 'none' }); },
-  linkText() { wx.showToast({ title: '编辑器开发中', icon: 'none' }); },
-  codeText() { wx.showToast({ title: '编辑器开发中', icon: 'none' }); },
+  boldText() { utils.showText('编辑器开发中'); },
+  italicText() { utils.showText('编辑器开发中'); },
+  linkText() { utils.showText('编辑器开发中'); },
+  codeText() { utils.showText('编辑器开发中'); },
 
   onShareAppMessage() {
     return {

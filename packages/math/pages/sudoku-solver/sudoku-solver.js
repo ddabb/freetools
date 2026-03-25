@@ -1,4 +1,14 @@
+// packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
+
+// 预设数独题目
+const presetList = [
+  { name: '入门', level: '★☆☆☆☆', puzzle: [[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]] },
+  { name: '初级', level: '★★☆☆☆', puzzle: [[0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],[8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],[0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0]] },
+  { name: '中级', level: '★★★☆☆', puzzle: [[0,2,0,6,0,0,8,0,0],[5,8,0,0,0,9,7,0,0],[0,0,0,0,4,0,0,0,0],[3,7,0,0,0,0,5,0,0],[6,0,0,0,0,0,0,0,4],[0,0,8,0,0,0,0,1,3],[0,0,0,0,2,0,0,0,0],[0,0,9,8,0,0,0,3,6],[0,0,0,0,0,0,0,9,0]] },
+  { name: '高级', level: '★★★★☆', puzzle: [[0,0,0,0,0,0,2,0,0],[0,0,0,6,0,0,0,0,3],[0,7,4,8,0,0,0,0,0],[8,0,0,0,0,1,0,0,0],[0,4,6,0,0,0,7,0,0],[0,0,0,3,0,0,0,0,5],[0,0,0,0,0,9,6,0,0],[9,0,0,0,0,3,0,0,0],[0,0,1,0,0,0,0,0,0]] },
+  { name: '骨灰级', level: '★★★★★', puzzle: [[0,0,0,0,0,0,0,1,2],[0,0,0,0,0,0,0,0,3],[0,0,2,3,0,0,4,0,0],[0,0,1,8,0,0,0,9,0],[0,5,0,0,9,0,0,4,0],[0,4,0,0,0,6,7,0,0],[0,0,8,5,0,0,9,0,0],[2,0,0,0,0,0,0,0,0],[9,1,0,0,0,0,5,0,0]] }
+];
 
 Page({
   data: {
@@ -6,35 +16,192 @@ Page({
     solving: false,
     hasSolution: false,
     solutionMessage: '',
+    importMode: 'paste',
+    pastedText: '',
+    presetList: presetList,
+    selectedPreset: -1,
+    showCandidates: true,
+    hasCandidates: false
   },
 
   onLoad() {
     this.initBoard();
+    wx.setNavigationBarTitle({ title: '数独求解器' });
   },
 
   initBoard() {
-    const board = Array.from({ length: 9 }, () =>
-      Array.from({ length: 9 }, () => ({ value: '', fixed: false }))
-    );
-    this.setData({ board, hasSolution: false, solutionMessage: '' });
+    const board = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push({ value: '', fixed: false, candidates: [], showCandidates: false });
+      }
+      board.push(row);
+    }
+    this.setData({ board: board, hasSolution: false, solutionMessage: '', selectedPreset: -1, hasCandidates: false });
+    this.calculateCandidates();
+  },
+
+  switchImportMode(e) {
+    this.setData({ importMode: e.currentTarget.dataset.mode });
+  },
+
+  toggleCandidates(e) {
+    const showCandidates = e.detail.value;
+    this.setData({ showCandidates: showCandidates });
+    if (showCandidates) this.calculateCandidates();
+  },
+
+  onPasteInput(e) {
+    this.setData({ pastedText: e.detail.value });
+  },
+
+  clearPasted() {
+    this.setData({ pastedText: '' });
+  },
+
+  importPasted() {
+    const text = this.data.pastedText.trim();
+    if (!text) { wx.showToast({ title: '请输入数独题目', icon: 'none' }); return; }
+    let puzzle = null;
+    if (/^[0-9.]{81}$/.test(text)) puzzle = this.parseString81(text);
+    else if (/^\d{81}$/.test(text)) puzzle = this.parsePure81(text);
+    else puzzle = this.parseMultiLine(text);
+    if (puzzle) { this.loadPuzzle(puzzle); wx.showToast({ title: '导入成功', icon: 'success' }); }
+    else wx.showToast({ title: '格式错误', icon: 'none' });
+  },
+
+  parseString81(str) {
+    const puzzle = [];
+    for (let i = 0; i < 9; i++) {
+      const row = [];
+      for (let j = 0; j < 9; j++) {
+        const ch = str[i * 9 + j];
+        const num = (ch === '.' || ch === '0') ? 0 : parseInt(ch, 10);
+        row.push(num);
+      }
+      puzzle.push(row);
+    }
+    return puzzle;
+  },
+
+  parsePure81(str) {
+    const puzzle = [];
+    for (let i = 0; i < 9; i++) {
+      const row = [];
+      for (let j = 0; j < 9; j++) {
+        const num = parseInt(str[i * 9 + j], 10);
+        row.push(num);
+      }
+      puzzle.push(row);
+    }
+    return puzzle;
+  },
+
+  parseMultiLine(text) {
+    const lines = text.split(/[\n\r]+/);
+    if (lines.length < 9) return null;
+    const puzzle = [];
+    for (let i = 0; i < 9; i++) {
+      const line = lines[i].replace(/\s+/g, '').replace(/[^0-9.]/g, '');
+      if (line.length < 9) return null;
+      const row = [];
+      for (let j = 0; j < 9; j++) {
+        const ch = line[j];
+        const num = (ch === '.' || ch === '0') ? 0 : parseInt(ch, 10);
+        row.push(num);
+      }
+      puzzle.push(row);
+    }
+    return puzzle;
+  },
+
+  selectPreset(e) {
+    this.setData({ selectedPreset: e.currentTarget.dataset.index });
+  },
+
+  importPreset() {
+    const index = this.data.selectedPreset;
+    if (index < 0) { wx.showToast({ title: '请先选择题目', icon: 'none' }); return; }
+    this.loadPuzzle(presetList[index].puzzle);
+    wx.showToast({ title: '已加载', icon: 'success' });
+  },
+
+  loadPuzzle(puzzle) {
+    const board = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        const num = puzzle[r][c];
+        row.push({ value: num === 0 ? '' : String(num), fixed: num !== 0, candidates: [], showCandidates: false });
+      }
+      board.push(row);
+    }
+    this.setData({ board: board, hasSolution: false, solutionMessage: '', pastedText: '', selectedPreset: -1, hasCandidates: false });
+    this.calculateCandidates();
+  },
+
+  calculateCandidates() {
+    if (!this.data.showCandidates) return;
+    const board = this.data.board;
+    const grid = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : 0);
+      }
+      grid.push(row);
+    }
+    const candidates = sudoku.calculateAllCandidates(grid);
+    let hasCandidates = false;
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (grid[r][c] === 0) {
+          board[r][c].candidates = candidates[r][c];
+          board[r][c].showCandidates = true;
+          if (candidates[r][c].length > 0) hasCandidates = true;
+        } else {
+          board[r][c].candidates = [];
+          board[r][c].showCandidates = false;
+        }
+      }
+    }
+    this.setData({ board: board, hasCandidates: hasCandidates });
+  },
+
+  onCandidateTap(e) {
+    const row = e.currentTarget.dataset.row;
+    const col = e.currentTarget.dataset.col;
+    const num = e.currentTarget.dataset.num;
+    const board = this.data.board;
+    if (board[row][col].candidates.indexOf(num) !== -1) {
+      board[row][col].value = String(num);
+      board[row][col].fixed = true;
+      board[row][col].candidates = [];
+      board[row][col].showCandidates = false;
+      this.setData({ board: board, hasSolution: false, solutionMessage: '' });
+      this.calculateCandidates();
+    }
   },
 
   onInput(e) {
-    const { row, col } = e.currentTarget.dataset;
+    const row = e.currentTarget.dataset.row;
+    const col = e.currentTarget.dataset.col;
     let value = e.detail.value;
-
-    // 只允许 1-9
     const num = parseInt(value, 10);
-    if (isNaN(num) || num < 1 || num > 9) {
-      value = '';
-    } else {
-      value = String(num);
-    }
-
+    if (isNaN(num) || num < 1 || num > 9) value = '';
+    else value = String(num);
     const board = this.data.board;
     board[row][col].value = value;
     board[row][col].fixed = value !== '';
-    this.setData({ board });
+    board[row][col].candidates = [];
+    board[row][col].showCandidates = false;
+    this.setData({ board: board, hasSolution: false, solutionMessage: '' });
+    this.calculateCandidates();
+  },
+
+  onCellBlur() {
+    if (this.data.showCandidates) this.calculateCandidates();
   },
 
   clearBoard() {
@@ -44,87 +211,64 @@ Page({
   solveSudoku() {
     if (this.data.solving) return;
     this.setData({ solving: true, solutionMessage: '' });
-
-    // 小延迟让按钮状态更新再开始计算
     setTimeout(() => {
-      // 将界面 board 转为纯数字 board
-      const rawBoard = this.data.board.map(row =>
-        row.map(cell => (cell.value ? parseInt(cell.value, 10) : 0))
-      );
-
-      // 快速检查输入合法性（行列宫重复检测）
-      if (!isValidInput(rawBoard)) {
-        this.setData({
-          solving: false,
-          hasSolution: false,
-          solutionMessage: '输入无效：行列宫中有重复数字',
-        });
+      const rawBoard = [];
+      for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+          row.push(this.data.board[r][c].value ? parseInt(this.data.board[r][c].value, 10) : 0);
+        }
+        rawBoard.push(row);
+      }
+      if (!sudoku.isValidInput(rawBoard)) {
+        this.setData({ solving: false, hasSolution: false, solutionMessage: '输入无效' });
         wx.showToast({ title: '输入无效', icon: 'none' });
         return;
       }
-
-      // 优先用约束传播求解（快），失败再用普通回溯（兜底）
-      let solved = sudoku.solveWithConstraintPropagation(rawBoard);
+      let solved = sudoku.solveWithConstraintPropagation(rawBoard.map(r => [...r]));
       if (!solved) {
-        // 克隆一份再求解，避免修改原数组
         solved = rawBoard.map(r => [...r]);
         if (!sudoku.solve(solved)) {
-          this.setData({
-            solving: false,
-            hasSolution: false,
-            solutionMessage: '该数独无解',
-          });
+          this.setData({ solving: false, hasSolution: false, solutionMessage: '该数独无解' });
           wx.showToast({ title: '无解', icon: 'none' });
           return;
         }
       }
-
-      // 只更新非固定格子（用户输入的格子）
       const board = this.data.board;
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           if (!board[r][c].fixed) {
             board[r][c].value = String(solved[r][c]);
+            board[r][c].candidates = [];
+            board[r][c].showCandidates = false;
           }
         }
       }
-
-      this.setData({
-        board,
-        solving: false,
-        hasSolution: true,
-        solutionMessage: '求解成功',
-      });
+      this.setData({ board: board, solving: false, hasSolution: true, solutionMessage: '求解成功', hasCandidates: false });
       wx.showToast({ title: '求解成功', icon: 'success' });
     }, 60);
   },
 
-  onShareAppMessage() {
-    return {
-      title: '数独求解器 - 快速解决数独难题',
-      path: '/packages/math/pages/sudoku-solver/sudoku-solver',
-    };
-  },
-});
-
-/**
- * 检查用户输入是否合法（允许空格，不允许重复）
- */
-function isValidInput(board) {
-  const seen = Array.from({ length: 9 }, () => new Set());
-
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      const v = board[r][c];
-      if (v === 0) continue;
-      const box = ((r / 3) | 0) * 3 + ((c / 3) | 0);
-      if (seen[r].has(v) || seen[c + 9].has(v) || seen[box + 18].has(v)) {
-        return false;
+  copyBoard() {
+    let str = '';
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        str += this.data.board[r][c].value || '.';
       }
-      seen[r].add(v);
-      seen[c + 9].add(v);
-      seen[box + 18].add(v);
     }
+    const copyText = str.match(/.{1,9}/g).join('\n');
+    wx.setClipboardData({
+      data: copyText,
+      success: () => wx.showToast({ title: '已复制', icon: 'success' }),
+      fail: () => wx.showToast({ title: '复制失败', icon: 'none' })
+    });
+  },
+
+  onShareAppMessage() {
+    return { title: '数独求解器 - 快速解决数独难题', path: '/packages/math/pages/sudoku-solver/sudoku-solver' };
+  },
+
+  onShareTimeline() {
+    return { title: '数独求解器 - 快速解决数独难题' };
   }
-  return true;
-}
+});

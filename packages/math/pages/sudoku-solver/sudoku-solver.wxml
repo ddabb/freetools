@@ -4,8 +4,66 @@
     <view class="desc">输入数独题目，点击求解按钮自动获得答案</view>
   </view>
 
+  <!-- 快速导入区域 -->
+  <view class="import-section">
+    <view class="section-header">
+      <text class="section-title">📋 快速导入</text>
+      <switch class="candidate-switch" checked="{{showCandidates}}" bindchange="toggleCandidates" size="mini"/>
+      <text class="switch-label">候选</text>
+    </view>
+    <view class="import-tabs">
+      <view class="tab-item {{importMode === 'paste' ? 'active' : ''}}" bindtap="switchImportMode" data-mode="paste">
+        粘贴题目
+      </view>
+      <view class="tab-item {{importMode === 'preset' ? 'active' : ''}}" bindtap="switchImportMode" data-mode="preset">
+        预设题目
+      </view>
+    </view>
+    
+    <!-- 粘贴模式 -->
+    <view class="import-content" wx:if="{{importMode === 'paste'}}">
+      <view class="paste-hint">支持3种格式：81位字符串、纯数字、9行格式</view>
+      <textarea 
+        class="paste-input" 
+        placeholder="请粘贴数独题目..."
+        bindinput="onPasteInput"
+        value="{{pastedText}}"
+        maxlength="100"
+      ></textarea>
+      <view class="paste-actions">
+        <button class="btn-sm" bindtap="importPasted">📥 导入</button>
+        <button class="btn-sm btn-outline" bindtap="clearPasted">清空</button>
+      </view>
+    </view>
+    
+    <!-- 预设模式 -->
+    <view class="import-content" wx:if="{{importMode === 'preset'}}">
+      <view class="preset-grid">
+        <view 
+          class="preset-item {{selectedPreset === index ? 'active' : ''}}" 
+          wx:for="{{presetList}}"
+          wx:key="index"
+          bindtap="selectPreset" 
+          data-index="{{index}}"
+        >
+          <text class="preset-name">{{item.name}}</text>
+          <text class="preset-level">{{item.level}}</text>
+        </view>
+      </view>
+      <view class="preset-actions">
+        <button class="btn-sm" bindtap="importPreset">📥 使用此题</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数独棋盘 -->
   <view class="board-section">
-    <view class="board">
+    <!-- 候选解开关提示 -->
+    <view class="candidate-tip" wx:if="{{showCandidates && hasCandidates}}">
+      <text class="tip-text">💡 点击候选数字可直接填入</text>
+    </view>
+    
+    <view class="board {{showCandidates ? 'show-candidates' : ''}}">
       <view class="row" wx:for="{{board}}" wx:key="row">
         <view 
           class="cell {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'right-border' : ''}} {{(index + 1) % 3 === 0 && index !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
@@ -14,20 +72,55 @@
           wx:for-index="itemIndex"
           wx:key="cell"
         >
-          <input 
-            type="number" 
-            maxlength="1" 
-            value="{{cell.value}}" 
-            bindinput="onInput"
-            data-row="{{index}}"
-            data-col="{{itemIndex}}"
-            disabled="{{solving}}"
-          />
+          <!-- 已有数字 -->
+          <view class="cell-value" wx:if="{{cell.value && !cell.showCandidates}}">
+            <input 
+              type="number" 
+              maxlength="1" 
+              value="{{cell.value}}" 
+              bindinput="onInput"
+              bindblur="onCellBlur"
+              data-row="{{index}}"
+              data-col="{{itemIndex}}"
+              disabled="{{solving}}"
+            />
+          </view>
+          
+          <!-- 候选解显示 -->
+          <view class="candidates-grid" wx:if="{{cell.showCandidates && cell.candidates}}">
+            <view 
+              class="candidate-item {{candidateSelected ? 'selected' : ''}}"
+              wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
+              wx:key="num"
+              bindtap="onCandidateTap"
+              data-row="{{index}}"
+              data-col="{{itemIndex}}"
+              data-num="{{num}}"
+            >
+              <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>
+            </view>
+          </view>
+          
+          <!-- 空格子（输入模式） -->
+          <view class="cell-empty" wx:if="{{!cell.value && !cell.showCandidates}}">
+            <input 
+              type="number" 
+              maxlength="1" 
+              value="" 
+              bindinput="onInput"
+              bindblur="onCellBlur"
+              data-row="{{index}}"
+              data-col="{{itemIndex}}"
+              disabled="{{solving}}"
+              placeholder="-"
+            />
+          </view>
         </view>
       </view>
     </view>
   </view>
 
+  <!-- 操作按钮 -->
   <view class="buttons-section">
     <button class="btn clear-btn" bindtap="clearBoard" disabled="{{solving}}">
       <text class="btn-icon">🗑️</text>
@@ -37,8 +130,13 @@
       <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
       <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
     </button>
+    <button class="btn copy-btn" bindtap="copyBoard" disabled="{{solving}}">
+      <text class="btn-icon">📋</text>
+      <text class="btn-text">复制</text>
+    </button>
   </view>
 
+  <!-- 结果区域 -->
   <view class="result-section" wx:if="{{solutionMessage}}">
     <view class="result-box {{hasSolution ? 'success' : 'error'}}">
       <text class="result-icon">{{hasSolution ? '✅' : '❌'}}</text>
@@ -46,13 +144,14 @@
     </view>
   </view>
 
+  <!-- 使用提示 -->
   <view class="tips-section">
     <view class="tips-title">💡 使用提示</view>
     <view class="tips-list">
-      <view class="tip-item">• 在格子中输入1-9的数字</view>
-      <view class="tip-item">• 点击"求解"按钮自动计算答案</view>
-      <view class="tip-item">• 深色格子是你输入的数字</view>
-      <view class="tip-item">• 浅色格子是求解出的答案</view>
+      <view class="tip-item">• 点击上方开关可显示/隐藏候选解</view>
+      <view class="tip-item">• 显示候选时，点击数字可直接填入</view>
+      <view class="tip-item">• 深色格子是题目给出的数字</view>
+      <view class="tip-item">• 求解后可直接复制题目或答案</view>
     </view>
   </view>
 </view>

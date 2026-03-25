@@ -1,267 +1,294 @@
 /**packages/text/pages/markdown-preview/markdown-preview.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
 }
 
 .container {
-  padding: 40rpx 30rpx;
+  padding: 20rpx;
   min-height: 100vh;
 }
 
-.section-title {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 30rpx;
-  text-align: center;
+.main-layout {
+  display: flex;
+  gap: 20rpx;
+  height: calc(100vh - 200rpx);
 }
 
-.toolbar-section {
-  margin-bottom: 40rpx;
-}
-
-.toolbar-controls {
+/* 左侧/右侧面板通用样式 */
+.left-panel,
+.right-panel {
+  flex: 1;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.control-group {
+.input-section,
+.preview-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+}
+
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30rpx;
-  padding: 20rpx;
-  background: rgba(168, 237, 234, 0.2);
-  border-radius: 12rpx;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #eee;
 }
 
-.control-label {
+.section-header label {
   font-size: 28rpx;
-  color: #333;
   font-weight: 600;
+  color: #333;
+}
+
+.expand-icon {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 工具栏 */
+.toolbar-row {
+  display: flex;
+  gap: 10rpx;
+  padding: 15rpx 0;
+  flex-wrap: wrap;
 }
 
 .theme-picker {
   flex: 1;
-  margin-left: 30rpx;
+  min-width: 150rpx;
 }
 
-.picker-display {
-  background: white;
-  border: 2rpx solid #a8edea;
+.picker-btn {
+  background: #f0f0f0;
   border-radius: 8rpx;
-  padding: 15rpx 20rpx;
-  font-size: 26rpx;
-  color: #333;
-}
-
-.action-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20rpx;
-  margin-top: 30rpx;
-}
-
-.action-btn {
-  background: rgba(255, 255, 255, 0.8);
-  border: 2rpx solid #a8edea;
-  border-radius: 15rpx;
-  padding: 25rpx 20rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10rpx;
-  transition: all 0.3s ease;
-}
-
-.action-btn:active {
-  transform: scale(0.95);
-  background: linear-gradient(135deg, #a8edea, #fed6e3);
-}
-
-.action-btn.primary {
-  background: linear-gradient(135deg, #a8edea, #fed6e3);
-  border-color: #a8edea;
-}
-
-.action-btn.primary .btn-icon,
-.action-btn.primary .btn-text {
-  color: white;
-}
-
-.btn-icon {
-  font-size: 32rpx;
-}
-
-.btn-text {
+  padding: 12rpx 20rpx;
   font-size: 24rpx;
-  color: #a8edea;
-  font-weight: 600;
-}
-
-.editor-section {
-  margin-bottom: 40rpx;
-}
-
-.editor-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25rpx 30rpx;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20rpx 20rpx 0 0;
-  border-bottom: 2rpx solid rgba(168, 237, 234, 0.3);
-}
-
-.panel-title {
-  font-size: 28rpx;
-  font-weight: 700;
   color: #333;
-}
-
-.editor-controls {
-  display: flex;
-  align-items: center;
-  gap: 15rpx;
 }
 
 .mini-btn {
-  background: #a8edea;
-  color: #333;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
   border: none;
-  border-radius: 6rpx;
-  padding: 8rpx 16rpx;
-  font-size: 20rpx;
-  font-weight: bold;
+  border-radius: 8rpx;
+  padding: 12rpx 20rpx;
+  font-size: 22rpx;
+  white-space: nowrap;
+}
+
+.mini-btn:active {
+  opacity: 0.8;
+}
+
+/* 编辑器 */
+.markdown-editor {
+  flex: 1;
+  width: 100%;
+  min-height: 300rpx;
+  background: #fafafa;
+  border: 2rpx solid #eee;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 26rpx;
+  font-family: 'Monaco', 'Menlo', monospace;
+  color: #333;
+  line-height: 1.6;
+  box-sizing: border-box;
+  margin-top: 15rpx;
 }
 
 .char-count {
   font-size: 22rpx;
-  color: #666;
+  color: #999;
+  text-align: right;
+  padding: 10rpx 0;
 }
 
-.markdown-editor {
-  width: 100%;
-  min-height: 400rpx;
-  background: white;
-  border: none;
-  padding: 30rpx;
-  font-size: 26rpx;
-  color: #333;
-  line-height: 1.6;
-  font-family: 'Monaco', 'Menlo', monospace;
-  box-sizing: border-box;
-  border-radius: 0 0 20rpx 20rpx;
-}
-
-.preview-section {
-  margin-bottom: 40rpx;
-}
-
-.preview-header {
+/* 预览区域 */
+.preview-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25rpx 30rpx;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20rpx 20rpx 0 0;
-  border-bottom: 2rpx solid rgba(254, 214, 227, 0.3);
+  gap: 10rpx;
+  padding: 15rpx 0;
 }
 
 .preview-scroll {
-  height: 600rpx;
-  background: white;
-  border-radius: 0 0 20rpx 20rpx;
+  flex: 1;
+  background: #fff;
+  border: 2rpx solid #eee;
+  border-radius: 12rpx;
 }
 
 .markdown-preview {
-  padding: 30rpx;
-  min-height: 600rpx;
+  padding: 20rpx;
 }
 
 .empty-preview {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 600rpx;
+  height: 300rpx;
 }
 
 .empty-text {
   color: #999;
-  font-size: 28rpx;
+  font-size: 26rpx;
   text-align: center;
 }
 
-.quick-actions {
-  margin-bottom: 40rpx;
-}
-
-.quick-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20rpx;
-}
-
-.quick-btn {
+/* 底部操作区 */
+.bottom-actions {
+  margin-top: 20rpx;
   background: rgba(255, 255, 255, 0.95);
-  border: none;
   border-radius: 20rpx;
-  padding: 30rpx 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+}
+
+.action-buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 15rpx;
-  transition: all 0.3s ease;
-  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.1);
 }
 
-.quick-btn:active {
-  transform: scale(0.95);
+.btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 25rpx 20rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  border: none;
 }
 
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-icon {
+  font-size: 28rpx;
+}
+
+.btn-text {
+  font-size: 26rpx;
+}
+
+/* 帮助区域 */
 .help-section {
+  margin-top: 20rpx;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10rpx);
-  border-radius: 25rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 15rpx 40rpx rgba(0, 0, 0, 0.15);
+  border-radius: 20rpx;
+  padding: 25rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
 }
 
 .help-title {
-  font-size: 30rpx;
-  font-weight: 700;
+  font-size: 28rpx;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 25rpx;
-  text-align: center;
+  margin-bottom: 20rpx;
 }
 
 .syntax-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 15rpx;
 }
 
 .syntax-item {
-  display: flex;
-  flex-direction: column;
-  padding: 20rpx;
-  background: rgba(168, 237, 234, 0.1);
+  background: #f8f8f8;
   border-radius: 10rpx;
+  padding: 15rpx;
 }
 
 .syntax-markdown {
   font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 24rpx;
-  color: #d63384;
+  font-size: 22rpx;
+  color: #e83e8c;
   margin-bottom: 8rpx;
 }
 
 .syntax-result {
-  font-size: 24rpx;
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 加载状态 */
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading text {
+  color: white;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Markdown预览主题样式 */
+.markdown-preview.default-theme h1,
+.markdown-preview.default-theme h2,
+.markdown-preview.default-theme h3 {
   color: #333;
+  margin: 15rpx 0;
+}
+
+.markdown-preview.default-theme h1 { font-size: 36rpx; }
+.markdown-preview.default-theme h2 { font-size: 30rpx; }
+.markdown-preview.default-theme h3 { font-size: 26rpx; }
+
+/* GitHub主题 */
+.markdown-preview.github-theme {
+  background: #fff;
+  color: #24292e;
+}
+
+/* 暗黑主题 */
+.markdown-preview.dark-theme {
+  background: #1a1a2e;
+  color: #eee;
+}
+
+/* 护眼主题 */
+.markdown-preview.eye-care-theme {
+  background: #fdf6e3;
+  color: #657b83;
 }

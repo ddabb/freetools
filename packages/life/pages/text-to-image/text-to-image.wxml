@@ -4,13 +4,27 @@
     <!-- 输入区域 -->
     <view class="input-section">
       <view class="form-group">
-        <text class="label">文字内容（200字以内）</text>
-        <textarea class="textarea" placeholder="请输入要生成图片的文字内容" bindinput="onTextInput" maxlength="200" value="{{text}}"></textarea>
-        <text class="count">{{textLength}}/200</text>
+        <text class="label">文字内容（50字以内）</text>
+        <textarea 
+          class="textarea" 
+          placeholder="请输入要生成图片的文字内容（建议20字以内效果更佳）" 
+          bindinput="onTextInput" 
+          bindblur="onInputBlur"
+          maxlength="50" 
+          value="{{text}}"
+        ></textarea>
+        <text class="count">{{textLength}}/50</text>
       </view>
       <view class="form-group">
         <text class="label">出处（可不填，15字以内）</text>
-        <input class="input" placeholder="请输入出处信息" bindinput="onFromInput" value="{{from}}" maxlength="15"></input>
+        <input 
+          class="input" 
+          placeholder="请输入出处信息" 
+          bindinput="onFromInput" 
+          bindblur="onInputBlur"
+          value="{{from}}" 
+          maxlength="15"
+        ></input>
         <text class="count">{{from ? from.length : 0}}/15</text>
       </view>
       <!-- 二维码选择 -->
@@ -50,12 +64,18 @@
           </view>
         </view>
       </view>
+
+
+
+
+
       <!-- 生成图片按钮 -->
       <view class="action-buttons">
-        <button class="btn-primary" bindtap="generateImage">生成图片</button>
+        <button class="btn-primary" bindtap="generateImage">💾 保存到相册</button>
       </view>
     </view>
   </view>
-  <!-- 隐藏的画布元素，用于生成图片 -->
-  <canvas canvas-id="cvsTextToImage" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
+  
+  <!-- 隐藏的画布元素，用于生成高清图片 -->
+  <canvas id="cvsTextToImage" type="2d" style="width: 375px; height: 667px; position: absolute; left: -9999px; top: -9999px;"></canvas>
 </view>

@@ -4,6 +4,10 @@
     "pages/discover/discover",
     "pages/about/about"
   ],
+  "usingComponents": {
+    "tool-card": "/components/tool-card/tool-card",
+    "category-card": "/components/category-card/category-card"
+  },
   "subPackages": [
 
     {
@@ -137,11 +141,11 @@
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["financial", "life", "health", "travel", "math", "converter", "text", "data", "developer", "design", "food", "unit"]
+      "packages": ["life", "text", "math"]
     },
     "pages/discover/discover": {
       "network": "all",
-      "packages": ["financial", "life", "health", "travel", "math", "converter", "text", "data", "developer", "design", "food", "unit"]
+      "packages": ["life", "text", "math"]
     }
   },
   "window": {

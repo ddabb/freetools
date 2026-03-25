@@ -1,4 +1,6 @@
 // Emoji转图片页面逻辑（简化版）
+const utils = require('../../../../utils/index');
+
 Page({
   data: {
     inputEmoji: '',
@@ -152,20 +154,14 @@ Page({
           },
           fail: (err) => {
             console.error('生成PNG图片失败:', err);
-            wx.showToast({
-              title: '生成图片失败，请重试',
-              icon: 'none'
-            });
+            utils.showText('生成图片失败，请重试');
             that.setData({ isLoading: false });
           }
         });
       });
     } catch (error) {
       console.error('Canvas绘制过程中出错:', error);
-      wx.showToast({
-        title: '生成图片失败，请重试',
-        icon: 'none'
-      });
+      utils.showText('生成图片失败，请重试');
       that.setData({ isLoading: false });
     }
   },
@@ -176,10 +172,7 @@ Page({
       filePath: tempFilePath,
       success: () => {
         console.log('图片保存到相册成功');
-        wx.showToast({
-          title: '图片已保存到相册',
-          icon: 'success'
-        });
+        utils.showSuccess('图片已保存到相册');
         this.setData({ isLoading: false });
       },
       fail: (err) => {
@@ -203,10 +196,7 @@ Page({
             }
           });
         } else {
-          wx.showToast({
-            title: '保存失败，请重试',
-            icon: 'none'
-          });
+          utils.showText('保存失败，请重试');
           this.setData({ isLoading: false });
         }
       }
@@ -231,10 +221,7 @@ Page({
       
     } catch (error) {
       console.error('导出图片时出错:', error);
-      wx.showToast({
-        title: '导出图片失败，请重试',
-        icon: 'none'
-      });
+      utils.showText('导出图片失败，请重试');
       this.setData({ isLoading: false });
     }
   },

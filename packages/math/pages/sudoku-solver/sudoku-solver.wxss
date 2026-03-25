@@ -31,6 +31,148 @@ page {
   line-height: 1.4;
 }
 
+/* 快速导入区域 */
+.import-section {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
+  margin-bottom: 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.import-tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 16rpx 20rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #666;
+  text-align: center;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #ff7f4d, #ffa66e);
+  color: #fff;
+  font-weight: 600;
+}
+
+.import-content {
+  padding: 10rpx 0;
+}
+
+/* 粘贴模式 */
+.paste-hint {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.paste-format {
+  font-size: 22rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 8rpx;
+  padding: 10rpx;
+  background: #f9f9f9;
+  border-radius: 8rpx;
+}
+
+.paste-format .highlight {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.paste-input {
+  width: 100%;
+  height: 120rpx;
+  background: #f9f9f9;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  font-size: 26rpx;
+  color: #333;
+  box-sizing: border-box;
+  margin-top: 12rpx;
+}
+
+.paste-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.btn-sm {
+  flex: 1;
+  padding: 16rpx 24rpx;
+  background: linear-gradient(135deg, #ff7f4d, #ffa66e);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.btn-outline {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* 预设模式 */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.preset-item {
+  padding: 16rpx 12rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  text-align: center;
+  border: 2rpx solid transparent;
+}
+
+.preset-item.active {
+  background: rgba(255, 127, 77, 0.1);
+  border-color: #ff7f4d;
+}
+
+.preset-name {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.preset-level {
+  display: block;
+  font-size: 22rpx;
+  color: #ff6b35;
+}
+
+.preset-actions {
+  margin-top: 8rpx;
+}
+
+/* 棋盘区域 */
 .board-section {
   background: rgba(255, 255, 255, 0.98);
   border-radius: 20rpx;
@@ -88,6 +230,7 @@ page {
   font-weight: 800;
 }
 
+/* 按钮区域 */
 .buttons-section {
   display: flex;
   gap: 15rpx;
@@ -126,10 +269,16 @@ page {
   color: white;
 }
 
+.copy-btn {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  color: white;
+}
+
 .btn:disabled {
   opacity: 0.6;
 }
 
+/* 结果区域 */
 .result-section {
   margin-bottom: 15rpx;
 }
@@ -164,6 +313,7 @@ page {
   color: #333;
 }
 
+/* 提示区域 */
 .tips-section {
   background: rgba(255, 255, 255, 0.98);
   border-radius: 20rpx;
@@ -188,4 +338,100 @@ page {
   font-size: 24rpx;
   color: #666;
   line-height: 1.5;
+}
+
+/* 候选解相关样式 */
+.candidate-switch {
+  transform: scale(0.8);
+}
+
+.switch-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 8rpx;
+}
+
+.candidate-tip {
+  text-align: center;
+  padding: 12rpx;
+  background: rgba(78, 205, 196, 0.1);
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #4ecdc4;
+}
+
+/* 候选解网格 */
+.candidates-grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 2rpx;
+  box-sizing: border-box;
+}
+
+.candidate-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16rpx;
+  color: #4ecdc4;
+  font-weight: 500;
+}
+
+.candidate-item .has {
+  color: #4ecdc4;
+}
+
+.candidate-item .empty {
+  color: transparent;
+}
+
+.cell-value {
+  width: 100%;
+  height: 100%;
+}
+
+.cell-value input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #4ecdc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.cell-empty {
+  width: 100%;
+  height: 100%;
+}
+
+.cell-empty input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 24rpx;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* 候选模式下的空格子 */
+.show-candidates .cell-empty {
+  background: rgba(78, 205, 196, 0.05);
+}
+
+.show-candidates .cell-empty input {
+  color: transparent;
 }
