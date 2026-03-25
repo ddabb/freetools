@@ -85,80 +85,80 @@ Page({
       // 首先设置字体大小以测量emoji尺寸
       const fontSize = 200;
       
-      // 使用life-countdown的方式直接创建Canvas上下文
-      const ctx = wx.createCanvasContext('emojiCanvas', this);
-      ctx.font = `normal ${fontSize}px Arial, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      // 测量emoji的实际宽度
-      const metrics = ctx.measureText(inputEmoji);
-      const emojiWidth = metrics.width;
-      
-      // 对于emoji，我们使用字体大小作为高度，因为emoji通常是正方形的
-      // 这样可以确保emoji不会发生形变
-      const emojiHeight = fontSize;
-      
-      // 为确保emoji完全显示，添加一些额外空间
-      const padding = 10;
-      
-      // 计算画布尺寸，确保足够容纳emoji
-      // 保持emoji的原始长宽比，不发生形变
-      // 确保padding的添加不会改变长宽比
-      const canvasWidth = emojiWidth + padding * 2;
-      const canvasHeight = emojiHeight + padding * 2;
-      
-      console.log('Emoji尺寸测量结果:', {
-        emojiWidth: emojiWidth,
-        emojiHeight: emojiHeight,
-        canvasWidth: canvasWidth,
-        canvasHeight: canvasHeight
-      });
-      
-      // 动态调整canvas元素的大小
-      // 在微信小程序中，我们需要通过修改canvas元素的样式来调整其大小
-      // 由于小程序的限制，我们使用setData来更新canvas的样式
-      this.setData({
-        canvasStyle: `width: ${canvasWidth}px; height: ${canvasHeight}px; position: absolute; left: -9999px; top: -9999px;`
-      });
-      
-      console.log('Canvas元素大小已调整:', canvasWidth, 'x', canvasHeight);
-      
-      // 首先清空画布（保持透明背景）
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      
-      ctx.fillStyle = '#000000'; // emoji颜色
-      
-      // 绘制emoji（居中显示）
-      ctx.fillText(inputEmoji, canvasWidth / 2, canvasHeight / 2);
-      
-      // 绘制完成后保存图片
-      console.log('Canvas绘制完成，开始生成PNG图片');
-      
-      // 执行绘制
-      ctx.draw(false, function() {
-        // 使用life-countdown的方式保存图片
-        wx.canvasToTempFilePath({
-          canvasId: 'emojiCanvas',
-          x: 0,
-          y: 0,
-          width: canvasWidth,
-          height: canvasHeight,
-          destWidth: canvasWidth, // 输出实际画布大小的图片
-          destHeight: canvasHeight,
-          quality: 0.7, // 降低图片质量以减小文件大小
-          fileType: 'png',
-          success: (res) => {
-            console.log('PNG图片生成成功:', res.tempFilePath);
-            that.saveImageToAlbum(res.tempFilePath);
-          },
-          fail: (err) => {
-            console.error('生成PNG图片失败:', err);
-            utils.showText('生成图片失败，请重试');
+      // 使用新的2D Canvas API获取上下文，参照life-countdown.js的方式
+      const query = wx.createSelectorQuery().in(this);
+      query.select('#emojiCanvas')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          if (!res[0] || !res[0].node) {
+            console.error('获取Canvas元素失败');
+            utils.showText('获取画布失败，请重试');
             that.setData({ isLoading: false });
+            return;
           }
+
+          const canvas = res[0].node;
+          const ctx = canvas.getContext('2d');
+          
+          // 为确保emoji完全显示，添加一些额外空间
+          const padding = 10;
+          
+          // 计算画布尺寸，使用固定尺寸确保图片大小一致
+          const canvasWidth = 200;
+          const canvasHeight = 200;
+          
+          // 动态调整canvas元素的大小
+          // 在微信小程序中，我们需要通过修改canvas元素的样式来调整其大小
+          // 由于小程序的限制，我们使用setData来更新canvas的样式
+          that.setData({
+            canvasStyle: `width: ${canvasWidth}px; height: ${canvasHeight}px; position: absolute; left: -9999px; top: -9999px;`
+          });
+          
+          // 调整canvas的实际尺寸
+          canvas.width = canvasWidth;
+          canvas.height = canvasHeight;
+          
+          console.log('Canvas元素大小已调整:', canvasWidth, 'x', canvasHeight);
+          
+          // 首先清空画布（保持透明背景）
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          
+          // 设置字体大小，使其填充整个画布
+          const fontSize = canvasHeight - padding * 2;
+          ctx.font = `normal ${fontSize}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          ctx.fillStyle = '#000000'; // emoji颜色
+          
+          // 绘制emoji（居中显示）
+          ctx.fillText(inputEmoji, canvasWidth / 2, canvasHeight / 2);
+          
+          // 绘制完成后保存图片
+          console.log('Canvas绘制完成，开始生成PNG图片');
+          
+          // 使用新的2D Canvas API保存图片
+          wx.canvasToTempFilePath({
+            canvas: canvas,
+            x: 0,
+            y: 0,
+            width: canvasWidth,
+            height: canvasHeight,
+            destWidth: canvasWidth, // 输出实际画布大小的图片
+            destHeight: canvasHeight,
+            quality: 0.7, // 降低图片质量以减小文件大小
+            fileType: 'png',
+            success: (res) => {
+              console.log('PNG图片生成成功:', res.tempFilePath);
+              that.saveImageToAlbum(res.tempFilePath);
+            },
+            fail: (err) => {
+              console.error('生成PNG图片失败:', err);
+              utils.showText('生成图片失败，请重试');
+              that.setData({ isLoading: false });
+            }
+          });
         });
-      });
     } catch (error) {
       console.error('Canvas绘制过程中出错:', error);
       utils.showText('生成图片失败，请重试');

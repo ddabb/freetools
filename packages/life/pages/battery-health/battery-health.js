@@ -210,19 +210,33 @@ Page({
         });
       }
     } else {
-      // 在微信小程序平台，使用wx.createCanvasContext
+      // 在微信小程序平台，使用新的2D Canvas API
       try {
-        const ctx = wx.createCanvasContext('cvs1', this);
-        if (ctx) {
-          this.MergeImage(ctx);
-        } else {
-          console.error('创建Canvas上下文失败');
-          platform.showToast({
-            title: '创建画布上下文失败，请重试'
+        const query = wx.createSelectorQuery().in(this);
+        query.select('#cvs1')
+          .fields({ node: true, size: true })
+          .exec((res) => {
+            if (!res[0] || !res[0].node) {
+              console.error('获取Canvas元素失败');
+              platform.showToast({
+                title: '获取画布失败，请重试'
+              });
+              return;
+            }
+
+            const canvas = res[0].node;
+            const ctx = canvas.getContext('2d');
+            const dpr = wx.getSystemInfoSync().pixelRatio;
+
+            // 设置高清canvas尺寸
+            canvas.width = this.data.canvaswidth * dpr;
+            canvas.height = this.data.canvasheight * dpr;
+            ctx.scale(dpr, dpr);
+
+            this.MergeImage(ctx, canvas);
           });
-        }
       } catch (error) {
-        console.error('调用wx.createCanvasContext失败:', error);
+        console.error('创建Canvas上下文失败:', error);
         platform.showToast({
           title: '创建画布失败，请重试'
         });
@@ -231,7 +245,7 @@ Page({
   },
 
   // 绘制分享图片
-  MergeImage(ctx) {
+  MergeImage(ctx, canvas) {
     let that = this;
 
     // 直接使用默认值，不依赖系统信息
@@ -262,17 +276,17 @@ Page({
       const infoY = subtitleY + 40; // 信息区域起始位置
 
       // 背景色
-      ctx.setFillStyle('#f8f9fa');
+      ctx.fillStyle = '#f8f9fa';
       ctx.fillRect(0, 0, width, height);
 
       // 标题
-      ctx.setFontSize(26);
-      ctx.setFillStyle('#2c3e50');
+      ctx.font = '26px Arial, sans-serif';
+      ctx.fillStyle = '#2c3e50';
       ctx.fillText('电池健康', padding, titleY);
 
       // 副标题
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#7f8c8d');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#7f8c8d';
       ctx.fillText('实时监控您的设备电池状态', padding, subtitleY);
 
       // 电池信息
@@ -286,12 +300,12 @@ Page({
       const batteryPadding = 10;
       
       // 电池外框
-      ctx.setStrokeStyle('#2c3e50');
-      ctx.setLineWidth(2);
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 2;
       ctx.strokeRect(batteryX, batteryY, batteryWidth, batteryHeight);
       
       // 电池正极
-      ctx.setFillStyle('#2c3e50');
+      ctx.fillStyle = '#2c3e50';
       ctx.fillRect(batteryX + batteryWidth, batteryY + batteryHeight / 3, 8, batteryHeight / 3);
       
       // 电池电量
@@ -300,42 +314,42 @@ Page({
       
       // 根据电量设置颜色
       if (batteryLevel > 60) {
-        ctx.setFillStyle('#27ae60'); // 绿色
+        ctx.fillStyle = '#27ae60'; // 绿色
       } else if (batteryLevel > 20) {
-        ctx.setFillStyle('#f39c12'); // 黄色
+        ctx.fillStyle = '#f39c12'; // 黄色
       } else {
-        ctx.setFillStyle('#e74c3c'); // 红色
+        ctx.fillStyle = '#e74c3c'; // 红色
       }
       
       ctx.fillRect(batteryX + batteryPadding, batteryY + batteryPadding, batteryFillWidth, batteryHeight - batteryPadding * 2);
       
       // 电量百分比
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#2c3e50');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#2c3e50';
       ctx.fillText(batteryLevel + '%', batteryX + batteryWidth + 20, batteryY + batteryHeight / 2 + 5);
 
       // 充电状态
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#2c3e50');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#2c3e50';
       ctx.fillText('充电状态：', padding, infoY + 80);
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#3498db');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#3498db';
       ctx.fillText(isCharging ? '充电中' : '未在充电', padding + 100, infoY + 80);
 
       // 省电模式
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#2c3e50');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#2c3e50';
       ctx.fillText('省电模式：', padding, infoY + 110);
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#3498db');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#3498db';
       ctx.fillText(isLowPowerModeEnabled ? '已开启' : '未开启', padding + 100, infoY + 110);
 
       // 电池状态建议
-      ctx.setFontSize(16);
-      ctx.setFillStyle('#2c3e50');
+      ctx.font = '16px Arial, sans-serif';
+      ctx.fillStyle = '#2c3e50';
       ctx.fillText('电池建议：', padding, infoY + 150);
-      ctx.setFontSize(14);
-      ctx.setFillStyle('#7f8c8d');
+      ctx.font = '14px Arial, sans-serif';
+      ctx.fillStyle = '#7f8c8d';
       
       let batteryAdvice = '';
       if (batteryLevel >= 80) {
@@ -370,49 +384,53 @@ Page({
       }
 
       // 底部提示
-      ctx.setFontSize(14);
-      ctx.setFillStyle('#7f8c8d');
+      ctx.font = '14px Arial, sans-serif';
+      ctx.fillStyle = '#7f8c8d';
       ctx.fillText('扫码使用电池健康检测', padding, height - 40);
 
-      // 绘制二维码
-      ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
+      // 绘制完成
+      if (isHarmonyOS) {
+        // 在鸿蒙平台，我们需要通过组件引用获取Canvas
+        const canvas = this.$element('cvs1');
+        if (canvas) {
+          // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
+          const imageData = canvas.toDataURL();
+          
+          // 保存图片到相册
+          platform.saveImageToAlbum(imageData, 
+            function() {
+              console.log("保存相册成功");
+              platform.showToast({
+                title: '保存相册成功'
+              });
+            },
+            function(data, code) {
+              console.log("保存到相册失败", code, data);
+              platform.showToast({
+                title: '保存失败，请重试'
+              });
+            }
+          );
+        }
+      } else {
+        // 微信小程序平台
+        // 绘制二维码
+        const img = canvas.createImage();
+        img.src = '/images/mini.png';
+        img.onload = () => {
+          ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
+          console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
 
-      // 绘制完成后执行保存
-      ctx.draw(false, function() {
-        if (isHarmonyOS) {
-          // 在鸿蒙平台，我们需要通过组件引用获取Canvas
-          const canvas = that.$element('cvs1');
-          if (canvas) {
-            // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据
-            const imageData = canvas.toDataURL();
-            
-            // 保存图片到相册
-            platform.saveImageToAlbum(imageData, 
-              function() {
-                console.log("保存相册成功");
-                platform.showToast({
-                  title: '保存相册成功'
-                });
-              },
-              function(data, code) {
-                console.log("保存到相册失败", code, data);
-                platform.showToast({
-                  title: '保存失败，请重试'
-                });
-              }
-            );
-          }
-        } else {
-          // 在微信小程序平台
+          // 生成临时文件路径并保存到相册
           wx.canvasToTempFilePath({
+            canvas: canvas,
             x: 0,
             y: 0,
             width: width,
             height: height,
             quality: 1,
-            canvasId: 'cvs1',
-            destWidth: width * (systemInfo.pixelRatio / 2),
-            destHeight: height * (systemInfo.pixelRatio / 2),
+            destWidth: width * systemInfo.pixelRatio,
+            destHeight: height * systemInfo.pixelRatio,
             success: (res) => {
               const drawurl = res.tempFilePath;
               platform.saveImageToAlbum(drawurl, 
@@ -466,9 +484,9 @@ Page({
             fail: function (error) {
               console.log("canvasToTempFilePath" + error);
             }
-          }, that);
-        }
-      });
+          });
+        };
+      }
   },
 
   // 生成分享海报

@@ -27,88 +27,114 @@ Page({
   },
 
   drawGraph() {
-    const ctx = wx.createCanvasContext('graphCanvas');
-    const width = 300;
-    const height = 300;
+    const that = this;
+    try {
+      // 使用新的2D Canvas API获取上下文，参照life-countdown.js的方式
+      const query = wx.createSelectorQuery();
+      query.select('#graphCanvas')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          console.log('获取Canvas元素结果:', res);
+          if (!res || res.length === 0 || !res[0] || !res[0].node) {
+            console.error('获取Canvas元素失败:', res);
+            return;
+          }
 
-    ctx.clearRect(0, 0, width, height);
+          const canvas = res[0].node;
+          const ctx = canvas.getContext('2d');
+          const width = 300;
+          const height = 300;
 
-    // 绘制边
-    ctx.setStrokeStyle('#ddd');
-    ctx.setLineWidth(3);
-    this.data.edges.forEach(([a, b]) => {
-      // 检查边的两个节点是否都是洞
-      const isHoleA = this.data.gridHoles.indexOf(a) !== -1;
-      const isHoleB = this.data.gridHoles.indexOf(b) !== -1;
-      if (!isHoleA && !isHoleB) {
-        const nodeA = this.data.nodes.find(n => n.id === a);
-        const nodeB = this.data.nodes.find(n => n.id === b);
-        ctx.beginPath();
-        ctx.moveTo(nodeA.x, nodeA.y);
-        ctx.lineTo(nodeB.x, nodeB.y);
-        ctx.stroke();
-      }
-    });
+          // 调整canvas的实际尺寸
+          canvas.width = width;
+          canvas.height = height;
 
-    // 绘制路径
-    if (this.data.path && this.data.path.length > 1) {
-      ctx.setStrokeStyle('#ff6b35');
-      ctx.setLineWidth(5);
-      ctx.beginPath();
-      const firstNode = this.data.nodes.find(n => n.id === this.data.path[0]);
-      ctx.moveTo(firstNode.x, firstNode.y);
-      for (let i = 1; i < this.data.path.length; i++) {
-        const node = this.data.nodes.find(n => n.id === this.data.path[i]);
-        ctx.lineTo(node.x, node.y);
-      }
-      ctx.stroke();
+          ctx.clearRect(0, 0, width, height);
+
+          // 绘制边
+          ctx.strokeStyle = '#ddd';
+          ctx.lineWidth = 3;
+          that.data.edges.forEach(([a, b]) => {
+            // 检查边的两个节点是否都是洞
+            const isHoleA = that.data.gridHoles.indexOf(a) !== -1;
+            const isHoleB = that.data.gridHoles.indexOf(b) !== -1;
+            if (!isHoleA && !isHoleB) {
+              const nodeA = that.data.nodes.find(n => n.id === a);
+              const nodeB = that.data.nodes.find(n => n.id === b);
+              if (nodeA && nodeB) {
+                ctx.beginPath();
+                ctx.moveTo(nodeA.x, nodeA.y);
+                ctx.lineTo(nodeB.x, nodeB.y);
+                ctx.stroke();
+              }
+            }
+          });
+
+          // 绘制路径
+          if (that.data.path && that.data.path.length > 1) {
+            ctx.strokeStyle = '#ff6b35';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            const firstNode = that.data.nodes.find(n => n.id === that.data.path[0]);
+            if (firstNode) {
+              ctx.moveTo(firstNode.x, firstNode.y);
+              for (let i = 1; i < that.data.path.length; i++) {
+                const node = that.data.nodes.find(n => n.id === that.data.path[i]);
+                if (node) {
+                  ctx.lineTo(node.x, node.y);
+                }
+              }
+              ctx.stroke();
+            }
+          }
+
+          // 绘制节点
+          that.data.nodes.forEach(node => {
+            // 检查是否是洞
+            if (that.data.gridHoles.indexOf(node.id) !== -1) {
+              // 绘制洞
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
+              ctx.fillStyle = '#f0f0f0';
+              ctx.fill();
+              ctx.strokeStyle = '#ddd';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            } else {
+              // 绘制正常节点
+              let fillColor = '#3498db';
+              let radius = 15;
+
+              if (node.id === that.data.startNode && node.id === that.data.endNode) {
+                fillColor = '#f39c12';
+                radius = 18;
+              } else if (node.id === that.data.startNode) {
+                fillColor = '#2ecc71';
+                radius = 18;
+              } else if (node.id === that.data.endNode) {
+                fillColor = '#e74c3c';
+                radius = 18;
+              }
+
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+              ctx.fillStyle = fillColor;
+              ctx.fill();
+              ctx.strokeStyle = '#fff';
+              ctx.lineWidth = 3;
+              ctx.stroke();
+
+              ctx.fillStyle = '#fff';
+              ctx.font = '16px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(node.id + 1, node.x, node.y);
+            }
+          });
+        });
+    } catch (error) {
+      console.error('绘制图形时出错:', error);
     }
-
-    // 绘制节点
-    this.data.nodes.forEach(node => {
-      // 检查是否是洞
-      if (this.data.gridHoles.indexOf(node.id) !== -1) {
-        // 绘制洞
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
-        ctx.setFillStyle('#f0f0f0');
-        ctx.fill();
-        ctx.setStrokeStyle('#ddd');
-        ctx.setLineWidth(2);
-        ctx.stroke();
-      } else {
-        // 绘制正常节点
-        let fillColor = '#3498db';
-        let radius = 15;
-
-        if (node.id === this.data.startNode && node.id === this.data.endNode) {
-          fillColor = '#f39c12';
-          radius = 18;
-        } else if (node.id === this.data.startNode) {
-          fillColor = '#2ecc71';
-          radius = 18;
-        } else if (node.id === this.data.endNode) {
-          fillColor = '#e74c3c';
-          radius = 18;
-        }
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-        ctx.setFillStyle(fillColor);
-        ctx.fill();
-        ctx.setStrokeStyle('#fff');
-        ctx.setLineWidth(3);
-        ctx.stroke();
-
-        ctx.setFillStyle('#fff');
-        ctx.setFontSize(16);
-        ctx.setTextAlign('center');
-        ctx.setTextBaseline('middle');
-        ctx.fillText(node.id + 1, node.x, node.y);
-      }
-    });
-
-    ctx.draw();
   },
 
   onShareAppMessage() {
