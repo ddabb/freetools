@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "实用工具",
+  "navigationBarTitleText": "随身工具宝",
   "usingComponents": {
     "search-bar": "/components/search-bar/search-bar",
     "empty-state": "/components/empty-state/empty-state",

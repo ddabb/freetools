@@ -1,9 +1,12 @@
-// 工具配置文件
-// 统一管理所有工具的信息，便于维护和扩展
+/**
+ * 工具配置文件
+ * 统一管理所有工具的信息，便于维护和扩展
+ */
 
 const categories = require('./categories');
-const { toolFrequency } = require('./constants');
-const toolRoutes = require('./routes');
+const { getToolFrequency, updateToolFrequency, getToolFrequencyRanking } = require('./frequency');
+const { searchTools, getToolById, debounce, clearSearchCache, getSearchHistory, addSearchHistory, deleteSearchHistory, clearSearchHistory, getSearchSuggestions } = require('./search');
+const { getToolsByCategory, getAllCategories, getCategoryInfo, groupToolsByCategory, getCategoryStats } = require('./category');
 
 // 工具列表
 const tools = [
@@ -12,7 +15,7 @@ const tools = [
     name: '长度换算',
     icon: '📏',
     color: 'blue',
-    url: toolRoutes['length-converter'],
+    url: '/packages/unit/pages/length-converter/length-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['长度', '单位', '换算', '转换'],
     description: '各种长度单位的快速换算'
@@ -22,7 +25,7 @@ const tools = [
     name: '重量换算',
     icon: '⚖️',
     color: 'green',
-    url: toolRoutes['weight-converter'],
+    url: '/packages/unit/pages/weight-converter/weight-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['重量', '单位', '换算', '转换'],
     description: '各种重量单位的快速换算'
@@ -32,7 +35,7 @@ const tools = [
     name: '温度换算',
     icon: '🌡️',
     color: 'red',
-    url: toolRoutes['temperature-converter'],
+    url: '/packages/unit/pages/temperature-converter/temperature-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['温度', '单位', '换算', '转换'],
     description: '各种温度单位的快速换算'
@@ -42,7 +45,7 @@ const tools = [
     name: '面积换算',
     icon: '📐',
     color: 'purple',
-    url: toolRoutes['area-converter'],
+    url: '/packages/unit/pages/area-converter/area-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['面积', '单位', '换算', '转换'],
     description: '各种面积单位的快速换算'
@@ -52,7 +55,7 @@ const tools = [
     name: '体积换算',
     icon: '📦',
     color: 'orange',
-    url: toolRoutes['volume-converter'],
+    url: '/packages/unit/pages/volume-converter/volume-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['体积', '单位', '换算', '转换'],
     description: '各种体积单位的快速换算'
@@ -62,7 +65,7 @@ const tools = [
     name: '时间换算',
     icon: '⏰',
     color: 'teal',
-    url: toolRoutes['time-converter'],
+    url: '/packages/unit/pages/time-converter/time-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['时间', '单位', '换算', '转换'],
     description: '各种时间单位的快速换算'
@@ -72,7 +75,7 @@ const tools = [
     name: '速度换算',
     icon: '🚗',
     color: 'green',
-    url: toolRoutes['speed-converter'],
+    url: '/packages/unit/pages/speed-converter/speed-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['速度', '单位', '换算', '转换'],
     description: '各种速度单位的快速换算'
@@ -82,7 +85,7 @@ const tools = [
     name: '压力换算',
     icon: '🌀',
     color: 'blue',
-    url: toolRoutes['pressure-converter'],
+    url: '/packages/unit/pages/pressure-converter/pressure-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['压力', '单位', '换算', '转换'],
     description: '各种压力单位的快速换算'
@@ -92,7 +95,7 @@ const tools = [
     name: '能量换算',
     icon: '⚡',
     color: 'yellow',
-    url: toolRoutes['energy-converter'],
+    url: '/packages/unit/pages/energy-converter/energy-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['能量', '单位', '换算', '转换'],
     description: '各种能量单位的快速换算'
@@ -102,7 +105,7 @@ const tools = [
     name: '时区转换',
     icon: '🌍',
     color: 'blue',
-    url: toolRoutes['timezone-converter'],
+    url: '/packages/unit/pages/timezone-converter/timezone-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['时区', '转换', '时间', '全球'],
     description: '在不同时区之间转换时间'
@@ -112,33 +115,30 @@ const tools = [
     name: '房贷计算',
     icon: '🏠',
     color: 'blue',
-    url: toolRoutes['mortgage'],
+    url: '/packages/financial/pages/mortgage/mortgage',
     categories: ['财务工具'],
     keywords: ['房贷', '贷款', '计算', '房屋'],
-    description: '计算房贷月供、利息和还款总额',
-    frequency: toolFrequency['mortgage']
+    description: '计算房贷月供、利息和还款总额'
   },
   {
     id: 'life-countdown',
     name: '人生A4纸',
     icon: '⏰',
     color: 'green',
-    url: toolRoutes['life-countdown'],
+    url: '/packages/life/pages/life-countdown/life-countdown',
     categories: ['生活工具'],
     keywords: [ '人生', '日期', '剩余'],
-    description: '计算人生已过天数和剩余寿命',
-    frequency: toolFrequency['life-countdown']
+    description: '计算人生已过天数和剩余寿命'
   },
   {
     id: 'qrcode',
     name: '生成二维码',
     icon: '📱',
     color: 'orange',
-    url: toolRoutes['qrcode'],
+    url: '/packages/life/pages/qrcode/qrcode',
     categories: ['安全工具'],
     keywords: ['二维码', '生成', '码', '扫码'],
-    description: '生成文本和链接的二维码',
-    frequency: toolFrequency['qrcode']
+    description: '生成文本和链接的二维码'
   },
 
   {
@@ -146,18 +146,17 @@ const tools = [
     name: '健康计算',
     icon: '💪',
     color: 'teal',
-    url: toolRoutes['health-calculator'],
+    url: '/packages/health/pages/health-calculator/health-calculator',
     categories: ['健康工具'],
     keywords: ['健康', 'BMI', '体重', '身高'],
-    description: '计算BMI和健康指标',
-    frequency: toolFrequency['health-calculator']
+    description: '计算BMI和健康指标'
   },
   {
     id: 'calendar',
     name: '万年历',
     icon: '📅',
     color: 'red',
-    url: toolRoutes['calendar'],
+    url: '/packages/life/pages/calendar/calendar',
     categories: ['生活工具', '学习工具'],
     keywords: ['日历', '万年历', '日期', '农历'],
     description: '查看日历和农历日期'
@@ -167,7 +166,7 @@ const tools = [
     name: '时间工具',
     icon: '⏱️',
     color: 'yellow',
-    url: toolRoutes['time-tool'],
+    url: '/packages/life/pages/time-tool/time-tool',
     categories: ['生活工具'],
     keywords: ['时间', '秒表', '计时器', '时区'],
     description: '秒表、计时器和时区转换'
@@ -177,7 +176,7 @@ const tools = [
     name: '密码生成',
     icon: '🔒',
     color: 'gray',
-    url: toolRoutes['password-generator'],
+    url: '/packages/text/pages/password-generator/password-generator',
     categories: ['安全工具'],
     keywords: ['密码', '生成', '安全', '随机'],
     description: '生成安全的随机密码'
@@ -187,7 +186,7 @@ const tools = [
     name: '身份证验证',
     icon: '🆔',
     color: 'blue',
-    url: toolRoutes['idcard'],
+    url: '/packages/life/pages/idcard/idcard',
     categories: ['安全工具'],
     keywords: ['身份证', '验证', '身份', '校验'],
     description: '验证身份证号码的有效性'
@@ -197,7 +196,7 @@ const tools = [
     name: '价格对比',
     icon: '🛒',
     color: 'purple',
-    url: toolRoutes['price-comparison'],
+    url: '/packages/financial/pages/price-comparison/price-comparison',
     categories: ['财务工具'],
     keywords: ['价格', '对比', '商品', '划算'],
     description: '对比多个商品的单价和性价比'
@@ -207,7 +206,7 @@ const tools = [
     name: '退休金计算',
     icon: '💰',
     color: 'green',
-    url: toolRoutes['retirementCalculator'],
+    url: '/packages/financial/pages/retirementCalculator/retirementCalculator',
     categories: ['财务工具'],
     keywords: ['退休', '养老金', '储蓄', '计算'],
     description: '计算退休所需的储蓄金额'
@@ -217,7 +216,7 @@ const tools = [
     name: '文本工具',
     icon: '📝',
     color: 'purple',
-    url: toolRoutes['text-tool'],
+    url: '/packages/text/pages/text-tool/text-tool',
     categories: ['学习工具', '生活工具'],
     keywords: ['文本', '工具', '处理', '转换'],
     description: '文本处理和转换工具'
@@ -227,7 +226,7 @@ const tools = [
     name: 'Markdown转换',
     icon: '📄',
     color: 'orange',
-    url: toolRoutes['mdconvert'],
+    url: '/packages/text/pages/mdconvert/mdconvert',
     categories: ['学习工具'],
     keywords: ['Markdown', '转换', '文档', '格式'],
     description: 'Markdown文档转换工具'
@@ -237,7 +236,7 @@ const tools = [
     name: '奇偶判断',
     icon: '🔢',
     color: 'blue',
-    url: toolRoutes['oddEven'],
+    url: '/packages/math/pages/oddEven/oddEven',
     categories: ['学习工具', '数学工具'],
     keywords: ['奇数', '偶数', '判断', '数字'],
     description: '判断数字的奇偶性'
@@ -247,7 +246,7 @@ const tools = [
     name: '闰年判断',
     icon: '📅',
     color: 'green',
-    url: toolRoutes['leapyear'],
+    url: '/packages/life/pages/leapyear/leapyear',
     categories: ['学习工具'],
     keywords: ['闰年', '判断', '年份', '日历'],
     description: '判断是否为闰年'
@@ -257,7 +256,7 @@ const tools = [
     name: '中文检测',
     icon: '✍',
     color: 'red',
-    url: toolRoutes['onlychinese'],
+    url: '/packages/text/pages/onlychinese/onlychinese',
     categories: ['学习工具'],
     keywords: ['中文', '检测', '汉字', '识别'],
     description: '检测文本中是否包含中文'
@@ -267,7 +266,7 @@ const tools = [
     name: '旅行工具',
     icon: '✈️',
     color: 'blue',
-    url: toolRoutes['travel-tool'],
+    url: '/packages/travel/pages/travel-tool/travel-tool',
     categories: ['更多工具', '生活工具'],
     keywords: ['旅行', '工具', '行程', '规划'],
     description: '旅行规划和辅助工具'
@@ -277,7 +276,7 @@ const tools = [
     name: '电池健康',
     icon: '🔋',
     color: 'green',
-    url: toolRoutes['battery-health'],
+    url: '/packages/life/pages/battery-health/battery-health',
     categories: ['生活工具'],
     keywords: ['电池', '健康', '电量', '检测'],
     description: '查看设备电池健康状态'
@@ -287,7 +286,7 @@ const tools = [
     name: '日期差计算',
     icon: '📆',
     color: 'teal',
-    url: toolRoutes['datediff'],
+    url: '/packages/life/pages/datediff/datediff',
     categories: ['生活工具'],
     keywords: ['日期', '差', '计算', '天数'],
     description: '计算两个日期之间的天数差'
@@ -298,7 +297,7 @@ const tools = [
     name: '公约数·公倍数',
     icon: '🔢',
     color: 'indigo',
-    url: toolRoutes['gcd-lcm'],
+    url: '/packages/math/pages/gcd-lcm/gcd-lcm',
     categories: ['学习工具', '数学工具'],
     keywords: ['最大公约数', '最小公倍数', 'GCD', 'LCM', '欧几里得'],
     description: '计算两个数的最大公约数和最小公倍数'
@@ -308,7 +307,7 @@ const tools = [
     name: '质因数分解',
     icon: '🧮',
     color: 'pink',
-    url: toolRoutes['prime-factorization'],
+    url: '/packages/math/pages/prime-factorization/prime-factorization',
     categories: ['学习工具', '数学工具'],
     keywords: ['质因数', '分解', '素数', '数论', '因子'],
     description: '将合数分解成质数相乘的形式'
@@ -318,7 +317,7 @@ const tools = [
     name: '24点速算',
     icon: '🎮',
     color: 'amber',
-    url: toolRoutes['24point'],
+    url: '/packages/math/pages/24point/24point',
     categories: ['学习工具', '数学工具'],
     keywords: ['24点', '速算', '数学游戏', '四则运算', '挑战'],
     description: '使用4个数字通过运算得到24的游戏'
@@ -328,7 +327,7 @@ const tools = [
     name: '取数模拟器',
     icon: '🎰',
     color: 'purple',
-    url: toolRoutes['random-selector'],
+    url: '/packages/math/pages/random-selector/random-selector',
     categories: ['生活工具', '数学工具'],
     keywords: ['随机', '选号', '模拟', '六红一蓝', '五红两蓝'],
     description: '随机生成号码组合，支持模拟结果和匹配计算',
@@ -341,7 +340,7 @@ const tools = [
     name: '进制转换',
     icon: '🔢',
     color: 'cyan',
-    url: toolRoutes['base-converter'],
+    url: '/packages/unit/pages/base-converter/base-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['进制', '转换', '二进制', '十六进制', 'Base64'],
     description: '在不同基数间转换数字，支持二进制、十六进制、Base64等'
@@ -351,7 +350,7 @@ const tools = [
     name: 'JSON·XML转换器',
     icon: '🔄',
     color: 'lime',
-    url: toolRoutes['json-xml-converter'],
+    url: '/packages/converter/pages/json-xml-converter/json-xml-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['JSON', 'XML', '转换', '数据格式'],
     description: '在JSON和XML格式之间进行相互转换'
@@ -361,7 +360,7 @@ const tools = [
     name: 'YAML·JSON转换器',
     icon: '📋',
     color: 'violet',
-    url: toolRoutes['yaml-json-converter'],
+    url: '/packages/converter/pages/yaml-json-converter/yaml-json-converter',
     categories: ['学习工具', '转换工具'],
     keywords: ['YAML', 'JSON', '转换', '配置文件'],
     description: '在YAML和JSON格式之间进行相互转换'
@@ -371,7 +370,7 @@ const tools = [
     name: '正则校验',
     icon: '🎯',
     color: 'rose',
-    url: toolRoutes['regex-tester'],
+    url: '/packages/text/pages/regex-tester/regex-tester',
     categories: ['学习工具', '开发工具'],
     keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
     description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
@@ -382,7 +381,7 @@ const tools = [
     name: '今天吃什么',
     icon: '🍽️',
     color: 'orange',
-    url: toolRoutes['what-to-eat'],
+    url: '/packages/food/pages/what-to-eat/what-to-eat',
     categories: ['生活工具'],
     keywords: ['吃什么', '食物', '随机', '饮食', '搭配'],
     description: '随机生成饮食建议，解决选择困难症'
@@ -392,7 +391,7 @@ const tools = [
     name: '生肖查询',
     icon: '🐴',
     color: 'yellow',
-    url: toolRoutes['zodiac'],
+    url: '/packages/life/pages/zodiac/zodiac',
     categories: ['生活工具'],
     keywords: ['生肖', '查询', '年份', '年龄'],
     description: '根据出生年份查询生肖和年龄'
@@ -402,7 +401,7 @@ const tools = [
     name: '星座查询',
     icon: '🔯',
     color: 'purple',
-    url: toolRoutes['constellation'],
+    url: '/packages/life/pages/constellation/constellation',
     categories: ['生活工具'],
     keywords: ['星座', '查询', '生日', '性格'],
     description: '根据出生日期查询星座和性格特点'
@@ -412,18 +411,17 @@ const tools = [
     name: '亲戚计算器',
     icon: '👥',
     color: 'blue',
-    url: toolRoutes['relative-calculator'],
+    url: '/packages/life/pages/relative-calculator/relative-calculator',
     categories: ['生活工具'],
     keywords: ['亲戚', '关系', '计算', '称呼'],
-    description: '计算亲戚之间的关系和称呼',
-    frequency: toolFrequency['relative-calculator']
+    description: '计算亲戚之间的关系和称呼'
   },
   {
     id: 'avatar-generator',
     name: '汉字头像',
     icon: '🎨',
     color: 'purple',
-    url: toolRoutes['avatar-generator'],
+    url: '/packages/text/pages/avatar-generator/avatar-generator',
     categories: ['生活工具', '学习工具'],
     keywords: ['汉字', '头像', '生成'],
     description: '输入汉字生成专属头像'
@@ -433,51 +431,47 @@ const tools = [
     name: 'Emoji转图片',
     icon: '🖼️',
     color: 'pink',
-    url: toolRoutes['emoji-to-png'],
+    url: '/packages/text/pages/emoji-to-png/emoji-to-png',
     categories: ['生活工具', '学习工具'],
     keywords: ['emoji', 'PNG', '图片', '转换'],
-    description: '将单个emoji转换为小文件PNG图片',
-    frequency: toolFrequency['emoji-to-png']
+    description: '将单个emoji转换为小文件PNG图片'
   },
   {
     id: 'text-to-png',
     name: '文本转图片',
     icon: '📝',
     color: 'purple',
-    url: toolRoutes['text-to-png'],
+    url: '/packages/text/pages/text-to-png/text-to-png',
     categories: ['生活工具', '学习工具'],
     keywords: ['文本', 'PNG', '图片', '生成'],
-    description: '将文本转换为PNG图片，支持多行文本和样式设置',
-    frequency: toolFrequency['text-to-png']
+    description: '将文本转换为PNG图片，支持多行文本和样式设置'
   },
   {
     id: 'copywriting',
     name: '文案工具',
     icon: '✍️',
     color: 'pink',
-    url: toolRoutes['copywriting'],
+    url: '/packages/life/pages/copywriting/copywriting',
     categories: ['生活工具', '学习工具'],
     keywords: ['文案', '写作', '素材', '模板'],
-    description: '提供各种场景的文案素材，支持分类浏览和复制',
-    frequency: toolFrequency['copywriting']
+    description: '提供各种场景的文案素材，支持分类浏览和复制'
   },
   {
     id: 'text-to-image',
     name: '文案生图',
     icon: '🖼️',
     color: 'purple',
-    url: toolRoutes['text-to-image'],
+    url: '/packages/life/pages/text-to-image/text-to-image',
     categories: ['生活工具', '学习工具'],
     keywords: ['文字', '图片', '生成', '二维码'],
-    description: '将文字转换为图片，支持添加出处和二维码',
-    frequency: toolFrequency['text-to-image']
+    description: '将文字转换为图片，支持添加出处和二维码'
   },
   {
     id: 'sudoku-solver',
     name: '数独求解器',
     icon: '🧩',
     color: 'orange',
-    url: toolRoutes['sudoku-solver'],
+    url: '/packages/math/pages/sudoku-solver/sudoku-solver',
     categories: ['学习工具', '数学工具'],
     keywords: ['数独', '求解', '谜题', '逻辑'],
     description: '输入数独题目，自动求解答案',
@@ -488,7 +482,7 @@ const tools = [
     name: '数独生成器',
     icon: '🎲',
     color: 'teal',
-    url: toolRoutes['sudoku-generator'],
+    url: '/packages/math/pages/sudoku-generator/sudoku-generator',
     categories: ['学习工具', '数学工具'],
     keywords: ['数独', '生成', '谜题', '游戏'],
     description: '随机生成不同难度的数独题目',
@@ -499,7 +493,7 @@ const tools = [
     name: '一笔画求解',
     icon: '✏️',
     color: 'pink',
-    url: toolRoutes['one-stroke-solver'],
+    url: '/packages/math/pages/one-stroke-solver/one-stroke-solver',
     categories: ['学习工具', '数学工具'],
     keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
     description: '判断图形是否可以一笔画成并给出路径',
@@ -509,13 +503,13 @@ const tools = [
 
 // 发现页特有的工具数据
 const discoveryTools = [
-  { id: 'word-counter', name: '字数统计', icon: '📊', description: '中英文混合精确统计', url: toolRoutes['word-counter'], categories: ['学习工具', '文本工具'], keywords: ['字数', '统计', '文本', '字符'], frequency: toolFrequency['word-counter'] },
-  { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: toolRoutes['markdown-preview'], categories: ['学习工具', '文本工具'], keywords: ['Markdown', '预览', '文档', '格式'], frequency: toolFrequency['markdown-preview'] },
-  { id: 'text-diff', name: '文本对比', icon: '🔍', description: '高亮显示文本差异', url: toolRoutes['text-diff'], categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'], frequency: toolFrequency['text-diff'] },
-  { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: toolRoutes['data-analyzer'], categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'], frequency: toolFrequency['data-analyzer'] },
+  { id: 'word-counter', name: '字数统计', icon: '📊', description: '中英文混合精确统计', url: '/packages/text/pages/word-counter/word-counter', categories: ['学习工具', '文本工具'], keywords: ['字数', '统计', '文本', '字符'] },
+  { id: 'markdown-preview', name: 'Markdown预览器', icon: '📋', description: '实时预览MD文档效果', url: '/packages/text/pages/markdown-preview/markdown-preview', categories: ['学习工具', '文本工具'], keywords: ['Markdown', '预览', '文档', '格式'] },
+  { id: 'text-diff', name: '文本对比', icon: '🔍', description: '高亮显示文本差异', url: '/packages/text/pages/text-diff/text-diff', categories: ['学习工具', '文本工具'], keywords: ['文本', '对比', '差异', '比较'] },
+  { id: 'data-analyzer', name: '数据统计器', icon: '📈', description: '数值统计与分布分析', url: '/packages/data/pages/data-analyzer/data-analyzer', categories: ['学习工具', '数学工具'], keywords: ['数据', '统计', '分析', '分布'] },
 
-  { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: toolRoutes['timestamp-converter'], categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'], frequency: toolFrequency['timestamp-converter'] },
-  { id: 'color-converter', name: '颜色生成', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: toolRoutes['color-converter'], categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'], frequency: toolFrequency['color-converter'] }
+  { id: 'timestamp-converter', name: '时间戳转换器', icon: '⏰', description: 'Unix时间戳互转', url: '/packages/developer/pages/timestamp-converter/timestamp-converter', categories: ['开发工具', '转换工具'], keywords: ['时间戳', '转换', 'Unix', '时间'] },
+  { id: 'color-converter', name: '颜色生成', icon: '🎨', description: 'RGB滑块调色、格式转换、配色方案', url: '/packages/design/pages/color-converter/color-converter', categories: ['开发工具', '设计工具'], keywords: ['颜色', '生成器', '取色器', 'RGB', 'Hex', 'HSL', '配色', '调色板'] }
 ];
 
 // 合并所有工具并过滤掉 publish: false 的工具
@@ -541,69 +535,6 @@ const commonTools = [
   tools[18]  // 价格对比
 ];
 
-// 根据分类获取工具
-function getToolsByCategory(categoryName) {
-  if (!allTools || !Array.isArray(allTools)) {
-    console.error('工具列表未正确初始化');
-    return [];
-  }
-  
-  return allTools.filter(tool => {
-    if (!tool || !tool.categories) return false;
-    return tool.categories.includes(categoryName);
-  });
-}
-
-// 根据关键词搜索工具
-function searchTools(keyword) {
-  const lowerKeyword = keyword.toLowerCase();
-  if (!allTools || !Array.isArray(allTools)) {
-    console.error('工具列表未正确初始化');
-    return [];
-  }
-  
-  // 添加调试信息
-  console.log('[搜索] 搜索关键词:', keyword);
-  console.log('[搜索] 总工具数量:', allTools.length);
-  
-  const results = allTools.filter(tool => {
-    if (!tool) return false;
-    
-    const nameMatch = tool.name && tool.name.toLowerCase().includes(lowerKeyword);
-    const descriptionMatch = tool.description && tool.description.toLowerCase().includes(lowerKeyword);
-    const keywordsMatch = tool.keywords && Array.isArray(tool.keywords) && tool.keywords.some(k => 
-      k && k.toLowerCase().includes(lowerKeyword)
-    );
-    
-    const match = nameMatch || keywordsMatch || descriptionMatch;
-    
-    if (match) {
-      console.log('[搜索匹配] 工具:', tool.name, '关键词:', keyword, 
-        'nameMatch:', nameMatch, 'descMatch:', descriptionMatch, 'keywordsMatch:', keywordsMatch);
-    }
-    
-    return match;
-  });
-  
-  console.log('[搜索] 搜索结果数量:', results.length);
-  console.log('[搜索] 匹配工具:', results.map(t => t.name).join(', '));
-  
-  return results;
-}
-
-// 根据ID获取工具
-function getToolById(id) {
-  if (!allTools || !Array.isArray(allTools)) {
-    console.error('工具列表未正确初始化');
-    return null;
-  }
-  
-  return allTools.find(tool => {
-    if (!tool) return false;
-    return tool.id === id;
-  });
-}
-
 // 确保在导出前 allTools 已经定义
 if (!allTools || !Array.isArray(allTools)) {
   throw new Error('工具列表未正确初始化');
@@ -616,8 +547,21 @@ module.exports = {
   commonTools,
   discoveryTools,
   allTools,
-  toolFrequency,
-  getToolsByCategory,
-  searchTools,
-  getToolById
+  getToolFrequency,
+  updateToolFrequency,
+  getToolFrequencyRanking,
+  getToolsByCategory: (categoryName) => getToolsByCategory(categoryName, allTools),
+  searchTools: (keyword) => searchTools(keyword, allTools),
+  getToolById: (id) => getToolById(id, allTools),
+  getAllCategories: () => getAllCategories(allTools),
+  getCategoryInfo,
+  groupToolsByCategory: () => groupToolsByCategory(allTools),
+  getCategoryStats: () => getCategoryStats(allTools),
+  debounce,
+  clearSearchCache,
+  getSearchHistory,
+  addSearchHistory,
+  deleteSearchHistory,
+  clearSearchHistory,
+  getSearchSuggestions: (keyword) => getSearchSuggestions(keyword, allTools)
 };

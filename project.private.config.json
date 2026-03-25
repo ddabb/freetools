@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "一笔画求解",
-          "pathName": "packages/math/pages/one-stroke-solver/one-stroke-solver",
+          "name": "人生A4纸",
+          "pathName": "packages/life/pages/life-countdown/life-countdown",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "一笔画求解",
+          "pathName": "packages/math/pages/one-stroke-solver/one-stroke-solver",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "文案生图",

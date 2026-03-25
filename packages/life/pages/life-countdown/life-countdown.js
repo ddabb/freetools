@@ -620,19 +620,33 @@ const PageDefinition = {
         });
       }
     } else {
-      // 在微信小程序平台，使用wx.createCanvasContext
+      // 在微信小程序平台，使用新的2D Canvas API
       try {
-        const ctx = wx.createCanvasContext('cvs1', this);
-        if (ctx) {
-          this.MergeImage(ctx);
-        } else {
-          console.error('创建Canvas上下文失败');
-          platform.showToast({
-            title: '创建画布上下文失败，请重试'
+        const query = wx.createSelectorQuery().in(this);
+        query.select('#cvs1')
+          .fields({ node: true, size: true })
+          .exec((res) => {
+            if (!res[0] || !res[0].node) {
+              console.error('获取Canvas元素失败');
+              platform.showToast({
+                title: '获取画布失败，请重试'
+              });
+              return;
+            }
+
+            const canvas = res[0].node;
+            const ctx = canvas.getContext('2d');
+            const dpr = wx.getSystemInfoSync().pixelRatio;
+
+            // 设置高清canvas尺寸
+            canvas.width = this.data.canvaswidth * dpr;
+            canvas.height = this.data.canvasheight * dpr;
+            ctx.scale(dpr, dpr);
+
+            this.MergeImage(ctx);
           });
-        }
       } catch (error) {
-        console.error('调用wx.createCanvasContext失败:', error);
+        console.error('创建Canvas上下文失败:', error);
         platform.showToast({
           title: '创建画布失败，请重试'
         });
@@ -724,37 +738,37 @@ const PageDefinition = {
     console.log('重叠检查:', overlapCheck);
 
     // 背景色 - 使用更舒适的配色方案
-    ctx.setFillStyle('#f8f9fa'); // 使用更现代的浅灰色背景，更舒适
+    ctx.fillStyle = '#f8f9fa'; // 使用更现代的浅灰色背景，更舒适
     ctx.fillRect(0, 0, width, height);
     console.log('背景色填充完成:', {color: '#f8f9fa', bounds: {x: 0, y: 0, width, height}});
 
     // 标题 - 使用更现代的样式
-    ctx.setFontSize(26);
-    ctx.setFillStyle('#2c3e50'); // 深灰色标题，更专业
+    ctx.font = '26px Montserrat, Roboto, sans-serif';
+    ctx.fillStyle = '#2c3e50'; // 深灰色标题，更专业
     ctx.fillText('人生A4纸', padding, titleY);
     console.log('标题绘制完成:', {text: '人生A4纸', position: {x: padding, y: titleY}});
 
     // 副标题 - 使用更现代的样式
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#7f8c8d'); // 中灰色副标题，更柔和
+    ctx.font = '16px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#7f8c8d'; // 中灰色副标题，更柔和
     ctx.fillText('900个格子，见证生命的成长~', padding, subtitleY);
     console.log('副标题绘制完成:', {text: '生命的成长~', position: {x: padding, y: subtitleY}});
 
     // 出生日期信息
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '16px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('出生日期：', padding, birthDateY);
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#3498db'); // 蓝色强调，更醒目
+    ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#3498db'; // 蓝色强调，更醒目
     ctx.fillText(this.data.birthDate || '未知', padding + 100, birthDateY);
     console.log('出生日期信息绘制完成:', {position: {x: padding, y: birthDateY}, date: this.data.birthDate});
 
     // 预期寿命信息
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '16px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('预期寿命：', padding, expectedLifeY);
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#3498db');
+    ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.expectedLifeYears + ' 岁', padding + 100, expectedLifeY);
     console.log('预期寿命信息绘制完成:', {position: {x: padding, y: expectedLifeY}, years: this.data.expectedLifeYears});
 
@@ -762,29 +776,29 @@ const PageDefinition = {
     console.log('统计信息区域起始位置:', statsY);
     
     // 已活天数
-    ctx.setFontSize(18);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '18px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('已活天数：', padding, statsY);
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#3498db');
+    ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.daysLived + ' 天', padding + 100, statsY);
     console.log('已活天数绘制完成:', {position: {x: padding, y: statsY}});
 
     // 剩余天数
-    ctx.setFontSize(18);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '18px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('剩余天数：', padding, statsY + 25);
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#3498db');
+    ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.lifeLeft + ' 天', padding + 100, statsY + 25);
     console.log('剩余天数绘制完成:', {position: {x: padding, y: statsY + 25}});
 
     // 人生进度
-    ctx.setFontSize(18);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '18px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('人生进度：', padding, statsY + 50);
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#3498db');
+    ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.progress + '%', padding + 100, statsY + 50);
     console.log('人生进度绘制完成:', {position: {x: padding, y: statsY + 50}});
 
@@ -815,28 +829,29 @@ const PageDefinition = {
         // 根据格子状态设置颜色
         if (index < livedGrids - 1) {
           // 已度过的时光 - 使用优化后的颜色
-          ctx.setFillStyle('#3498db');
+          ctx.fillStyle = '#3498db';
         } else if (index === livedGrids - 1 && livedGrids > 0) {
           // 正在经历 - 使用优化后的颜色
-          ctx.setFillStyle('#e74c3c');
+          ctx.fillStyle = '#e74c3c';
         } else {
           // 未来可期 - 使用优化后的颜色
-          ctx.setFillStyle('#e0e0e0');
+          ctx.fillStyle = '#e0e0e0';
         }
 
         ctx.fillRect(x, y, gridCellSize, gridCellSize);
         
         // 调试：绘制网格线
         if (i < 2 && j < 2) {
-          ctx.setStrokeStyle('#cccccc');
+          ctx.strokeStyle = '#cccccc';
+          ctx.lineWidth = 1;
           ctx.strokeRect(x, y, gridCellSize, gridCellSize);
         }
       }
     }
     
     // 绘制网格边界
-    ctx.setStrokeStyle('#666666');
-    ctx.setLineWidth(1);
+    ctx.strokeStyle = '#666666';
+    ctx.lineWidth = 1;
     ctx.strokeRect(gridStartX, gridStartY, 
                   this.data.gridCols * (gridCellSize + gridGap) - gridGap, 
                   this.data.gridRows * (gridCellSize + gridGap) - gridGap);
@@ -847,13 +862,13 @@ const PageDefinition = {
     });
 
     // 格子信息文本
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '16px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('人生A4纸：' + livedGrids + '/' + totalGrids + ' 格', padding, gridInfoY);
     
     // 每格代表天数
-    ctx.setFontSize(14);
-    ctx.setFillStyle('#7f8c8d');
+    ctx.font = '14px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#7f8c8d';
     ctx.fillText('每格 ≈ ' + this.data.daysPerGridText, padding, daysInfoY);
     
     console.log('格子信息文本绘制完成:', {
@@ -865,33 +880,35 @@ const PageDefinition = {
     console.log('图例区域位置:', legendY);
     
     // 已度过的时光
-    ctx.setFillStyle('#3498db'); // 更现代的蓝色
+    ctx.fillStyle = '#3498db'; // 更现代的蓝色
     ctx.fillRect(padding, legendY, 15, 15);
-    ctx.setFontSize(14);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '14px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('已度过的时光', padding + 20, legendY + 12);
     
     // 正在经历
-    ctx.setFillStyle('#e74c3c'); // 更现代的红色
+    ctx.fillStyle = '#e74c3c'; // 更现代的红色
     ctx.fillRect(padding + 130, legendY, 15, 15);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '14px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('正在经历', padding + 150, legendY + 12);
     
     // 未来可期
-    ctx.setFillStyle('#e0e0e0');
+    ctx.fillStyle = '#e0e0e0';
     ctx.fillRect(padding + 230, legendY, 15, 15);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '14px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('未来可期', padding + 250, legendY + 12);
     
     console.log('图例绘制完成:', {position: {x: padding, y: legendY}});
 
     // 人生思考问题
     const randomQuestion = this.data.questions[Math.floor(Math.random() * this.data.questions.length)];
-    ctx.setFontSize(16);
-    ctx.setFillStyle('#2c3e50');
+    ctx.font = '16px Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#2c3e50';
     ctx.fillText('🤔 人生思考：', padding, questionY);
-    ctx.setFontSize(14);
-    ctx.setFillStyle('#7f8c8d');
+    ctx.font = '14px Open Sans, Inter, Noto Sans SC, sans-serif';
+    ctx.fillStyle = '#7f8c8d';
     // 绘制问题文本，支持换行
     let questionText = randomQuestion.text;
     let lineHeight = 20;
@@ -967,66 +984,81 @@ const PageDefinition = {
         console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
       }
     } else {
-      // 在微信小程序平台，直接使用路径绘制二维码
+      // 在微信小程序平台，使用新的2D Canvas API绘制二维码
       console.log('开始绘制二维码');
-      // 绘制二维码
-      ctx.drawImage('/images/mini.png', qrX, qrY, qrSize, qrSize);
-      console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
-      
-      // 绘制完成后执行保存
-      ctx.draw(false, function() {
-        console.log('开始执行保存操作');
-        // 在微信小程序平台
-        wx.canvasToTempFilePath({
-          x: 0,
-          y: 0,
-          width: width,
-          height: height,
-          quality: 1,
-          canvasId: 'cvs1',
-          destWidth: width * (systemInfo.pixelRatio / 2),
-          destHeight: height * (systemInfo.pixelRatio / 2),
-          success: (res) => {
-            console.log('canvasToTempFilePath成功:', res);
-            const drawurl = res.tempFilePath;
-            platform.saveImageToAlbum(drawurl, 
-              function(res) {
-                console.log("保存相册成功" + res);
-                platform.showToast({
-                  title: '保存相册成功'
-                });
-              },
-              function(err) {
-                console.log("保存到相册失败", err);
-                if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
-                    err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
-                    err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
-                  wx.showModal({
-                    title: '提示',
-                    content: '需要您授权保存相册',
-                    showCancel: true,
-                    success: modalSuccess => {
-                      if (modalSuccess.confirm) {
-                        wx.openSetting();
-                      }
-                    }
-                  });
-                } else {
-                  platform.showToast({
-                    title: '保存失败，请重试'
-                  });
-                }
-              }
-            );
-          },
-          fail: function (error) {
-            console.log("canvasToTempFilePath失败:" + error);
+      // 获取canvas元素来创建图片对象
+      const query = wx.createSelectorQuery().in(this);
+      query.select('#cvs1')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          if (!res[0] || !res[0].node) {
+            console.error('获取Canvas元素失败');
             platform.showToast({
-              title: '生成图片失败，请重试'
+              title: '获取画布失败，请重试'
             });
+            return;
           }
-        }, that);
-      });
+
+          const canvas = res[0].node;
+          const img = canvas.createImage();
+          img.src = '/images/mini.png';
+          img.onload = () => {
+            ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
+            console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+            
+            // 绘制完成后执行保存
+            console.log('开始执行保存操作');
+            wx.canvasToTempFilePath({
+              canvas: canvas,
+              x: 0,
+              y: 0,
+              width: width,
+              height: height,
+              quality: 1,
+              destWidth: width * systemInfo.pixelRatio,
+              destHeight: height * systemInfo.pixelRatio,
+              success: (res) => {
+                console.log('canvasToTempFilePath成功:', res);
+                const drawurl = res.tempFilePath;
+                platform.saveImageToAlbum(drawurl, 
+                  function(res) {
+                    console.log("保存相册成功" + res);
+                    platform.showToast({
+                      title: '保存相册成功'
+                    });
+                  },
+                  function(err) {
+                    console.log("保存到相册失败", err);
+                    if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
+                        err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
+                        err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
+                      wx.showModal({
+                        title: '提示',
+                        content: '需要您授权保存相册',
+                        showCancel: true,
+                        success: modalSuccess => {
+                          if (modalSuccess.confirm) {
+                            wx.openSetting();
+                          }
+                        }
+                      });
+                    } else {
+                      platform.showToast({
+                        title: '保存失败，请重试'
+                      });
+                    }
+                  }
+                );
+              },
+              fail: function (error) {
+                console.log("canvasToTempFilePath失败:" + error);
+                platform.showToast({
+                  title: '生成图片失败，请重试'
+                });
+              }
+            });
+          };
+        });
     }
   },
 
@@ -1034,6 +1066,8 @@ const PageDefinition = {
    * 绘制文本（支持换行）
    */
   drawText(ctx, str, leftWidth, initHeight, titleHeight, canvasWidth) {
+    // 设置字体
+    ctx.font = '14px Open Sans, Inter, Noto Sans SC, sans-serif';
     var lineWidth = 0;
     var linespace = this.data.linespace; //设置成30
     var lastSubStrIndex = 0; //每次开始截取的字符串的索引
