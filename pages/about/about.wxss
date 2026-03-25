@@ -300,3 +300,30 @@ page {
   line-height: 1.5;
   max-width: 80%;
 }
+
+/* 版本日志按钮 */
+.changelog-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 50rpx;
+  padding: 24rpx 40rpx;
+  margin-top: 20rpx;
+}
+
+.changelog-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.changelog-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 600;
+}
+
+.changelog-btn-hover {
+  opacity: 0.8;
+}

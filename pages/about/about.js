@@ -85,5 +85,15 @@ Page({
         confirmText: '知道了'
       })
     }
+  },
+
+  // 跳转到版本日志测试页
+  goToChangelog() {
+    wx.navigateTo({
+      url: '/pages/changelog-test/changelog-test',
+      fail: () => {
+        utils.showText('页面跳转失败')
+      }
+    })
   }
 })

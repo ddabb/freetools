@@ -76,6 +76,20 @@
       </view>
     </view>
 
+    <!-- 版本日志卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">📜 版本日志</text>
+      </view>
+      <view class="project-content">
+        <text class="project-description">查看小程序更新历史，了解最新功能</text>
+        <button class="changelog-btn" bindtap="goToChangelog" hover-class="changelog-btn-hover">
+          <text class="changelog-icon">📋</text>
+          <text class="changelog-text">查看版本日志</text>
+        </button>
+      </view>
+    </view>
+
     <!-- ICP备案信息卡片 -->
     <view class="project-card">
       <view class="project-header">

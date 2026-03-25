@@ -1,0 +1,74 @@
+{
+  "changelog": [
+    {
+      "version": "1.6.0",
+      "date": "2026-03-26",
+      "type": "feature",
+      "title": "数独工具全面升级",
+      "changes": [
+        "数独生成器和求解器新增候选解功能",
+        "候选解以3×3网格显示",
+        "点击候选数字可直接填入",
+        "提取公共方法到 utils/sudoku.js"
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-03-25",
+      "type": "feature",
+      "title": "文案生图功能增强",
+      "changes": [
+        "新增实时预览功能",
+        "支持预览开关控制",
+        "优化图片生成防抖"
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-03-20",
+      "type": "feature",
+      "title": "工具函数重构",
+      "changes": [
+        "新增 utils/toast.js 平台兼容吐司工具",
+        "新增 utils/modal.js 平台兼容模态框",
+        "新增 utils/storage.js 平台兼容存储工具",
+        "统一工具函数导出到 utils/index.js"
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-03-15",
+      "type": "fix",
+      "title": "优化与修复",
+      "changes": [
+        "修复 Markdown 预览页面显示问题",
+        "优化首页布局",
+        "减少主包未引用警告"
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-03-10",
+      "type": "feature",
+      "title": "首页改版",
+      "changes": [
+        "采用点菜式左右布局",
+        "新增分类侧边栏",
+        "支持搜索功能"
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-03-05",
+      "type": "feature",
+      "title": "初始版本发布",
+      "changes": [
+        "上线多种实用工具",
+        "支持分包加载",
+        "首次发布"
+      ]
+    }
+  ],
+  "latestVersion": "1.6.0",
+  "lastUpdate": "2026-03-26"
+}

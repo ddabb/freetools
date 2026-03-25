@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/discover/discover",
-    "pages/about/about"
+    "pages/about/about",
+    "pages/changelog-test/changelog-test"
   ],
   "usingComponents": {
     "tool-card": "/components/tool-card/tool-card",
@@ -142,10 +142,6 @@
     "pages/index/index": {
       "network": "all",
       "packages": ["life", "text", "math"]
-    },
-    "pages/discover/discover": {
-      "network": "all",
-      "packages": ["life", "text", "math"]
     }
   },
   "window": {
@@ -156,16 +152,12 @@
   "tabBar": {
     "color": "#7f8c8d",
     "selectedColor": "#2980b9",
-    "backgroundColor": "#f8f9fa",
-    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "首页"
-      },
-      {
-        "pagePath": "pages/discover/discover",
-        "text": "发现"
       },
       {
         "pagePath": "pages/about/about",
