@@ -33,7 +33,7 @@
         <view class="qr-selection">
           <view class="qr-options">
             <view class="qr-option {{selectedQrCode === 'default' ? 'active' : ''}}" bindtap="selectQrCode" data-type="default">
-              <image class="qr-thumbnail" src="/images/mini.png" mode="aspectFit"></image>
+              <image class="qr-thumbnail" src="/images/text2image.jpg" mode="aspectFit"></image>
               <text class="qr-label">默认二维码</text>
             </view>
             <view class="qr-option {{selectedQrCode === 'custom' ? 'active' : ''}}" bindtap="selectQrCode" data-type="custom">

@@ -497,7 +497,7 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
     description: '判断图形是否可以一笔画成并给出路径',
-    publish: true
+    publish: false
   }
 ];
 

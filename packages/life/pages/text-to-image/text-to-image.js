@@ -83,7 +83,7 @@ Page({
     // 获取二维码路径
     const qrPath = (selectedQrCode === 'custom' && customQrCodeImage) 
       ? customQrCodeImage 
-      : '/images/mini.png';
+      : '/images/text2image.jpg';
 
     // 加载并绘制二维码
     if (qrPath.startsWith('/') || qrPath.startsWith('http')) {

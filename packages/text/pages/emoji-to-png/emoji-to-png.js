@@ -82,8 +82,16 @@ Page({
         inputEmoji: inputEmoji
       });
       
-      // 首先设置字体大小以测量emoji尺寸
-      const fontSize = 200;
+      // 考虑设备像素比，确保在不同设备上都能正确显示
+      let dpr = 1;
+      try {
+        const systemInfo = wx.getSystemInfoSync();
+        dpr = systemInfo.pixelRatio || 1;
+        console.log('设备像素比:', dpr);
+      } catch (error) {
+        console.warn('获取系统信息失败:', error);
+        dpr = 1;
+      }
       
       // 使用新的2D Canvas API获取上下文，参照life-countdown.js的方式
       const query = wx.createSelectorQuery().in(this);
@@ -100,38 +108,32 @@ Page({
           const canvas = res[0].node;
           const ctx = canvas.getContext('2d');
           
-          // 为确保emoji完全显示，添加一些额外空间
-          const padding = 10;
-          
-          // 计算画布尺寸，使用固定尺寸确保图片大小一致
-          const canvasWidth = 200;
-          const canvasHeight = 200;
+          // 使用固定的画布尺寸，确保emoji有足够的空间显示
+          const canvasWidth = 400;
+          const canvasHeight = 400;
           
           // 动态调整canvas元素的大小
-          // 在微信小程序中，我们需要通过修改canvas元素的样式来调整其大小
-          // 由于小程序的限制，我们使用setData来更新canvas的样式
           that.setData({
             canvasStyle: `width: ${canvasWidth}px; height: ${canvasHeight}px; position: absolute; left: -9999px; top: -9999px;`
           });
           
-          // 调整canvas的实际尺寸
-          canvas.width = canvasWidth;
-          canvas.height = canvasHeight;
+          // 调整canvas的实际尺寸，考虑设备像素比
+          canvas.width = canvasWidth * dpr;
+          canvas.height = canvasHeight * dpr;
           
-          console.log('Canvas元素大小已调整:', canvasWidth, 'x', canvasHeight);
+          // 缩放上下文，确保绘制内容在高DPR设备上正确显示
+          ctx.scale(dpr, dpr);
           
           // 首先清空画布（保持透明背景）
           ctx.clearRect(0, 0, canvasWidth, canvasHeight);
           
-          // 设置字体大小，使其填充整个画布
-          const fontSize = canvasHeight - padding * 2;
-          ctx.font = `normal ${fontSize}px Arial, sans-serif`;
+          // 设置字体大小和样式
+          const fontSize = 300; // 使用较大的字体确保emoji能完全显示
+          ctx.font = `normal ${fontSize}px sans-serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           
-          ctx.fillStyle = '#000000'; // emoji颜色
-          
-          // 绘制emoji（居中显示）
+          // 绘制emoji（居中显示，使用emoji本身的颜色）
           ctx.fillText(inputEmoji, canvasWidth / 2, canvasHeight / 2);
           
           // 绘制完成后保存图片
@@ -144,9 +146,9 @@ Page({
             y: 0,
             width: canvasWidth,
             height: canvasHeight,
-            destWidth: canvasWidth, // 输出实际画布大小的图片
+            destWidth: canvasWidth,
             destHeight: canvasHeight,
-            quality: 0.7, // 降低图片质量以减小文件大小
+            quality: 0.7,
             fileType: 'png',
             success: (res) => {
               console.log('PNG图片生成成功:', res.tempFilePath);
