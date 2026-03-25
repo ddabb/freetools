@@ -85,16 +85,16 @@ Page({
       ? customQrCodeImage 
       : '/images/mini.png';
 
-    // 绘制二维码背景
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(qrX - 5, qrY - 5, qrSize + 10, qrSize + 10);
-    
     // 加载并绘制二维码
     if (qrPath.startsWith('/') || qrPath.startsWith('http')) {
       const img = canvas.createImage();
       img.src = qrPath;
       img.onload = () => {
-        ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
+        imgGen.drawQRCode(ctx, img, {
+          qrX,
+          qrY,
+          qrSize
+        });
         if (callback) callback();
       };
     } else {

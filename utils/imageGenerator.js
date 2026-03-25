@@ -100,17 +100,18 @@ function drawBackground(ctx, width, height, options = {}) {
   ctx.fill();
   
   // 绘制装饰曲线
+  const padding = options.padding || defaultConfig.padding;
   ctx.strokeStyle = 'rgba(147, 112, 219, 0.1)';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(options.padding || 45, height * 0.3);
-  ctx.bezierCurveTo(width * 0.25, height * 0.2, width * 0.75, height * 0.4, width - (options.padding || 45), height * 0.3);
+  ctx.moveTo(padding, height * 0.3);
+  ctx.bezierCurveTo(width * 0.25, height * 0.2, width * 0.75, height * 0.4, width - padding, height * 0.3);
   ctx.stroke();
   
   ctx.strokeStyle = 'rgba(255, 105, 180, 0.1)';
   ctx.beginPath();
-  ctx.moveTo(options.padding || 45, height * 0.7);
-  ctx.bezierCurveTo(width * 0.25, height * 0.6, width * 0.75, height * 0.8, width - (options.padding || 45), height * 0.7);
+  ctx.moveTo(padding, height * 0.7);
+  ctx.bezierCurveTo(width * 0.25, height * 0.6, width * 0.75, height * 0.8, width - padding, height * 0.7);
   ctx.stroke();
 }
 
@@ -190,7 +191,12 @@ function drawText(ctx, text, options = {}) {
         ctx.fillStyle = gradient;
         
         // 根据对齐方式设置绘制位置
-        const drawX = align === 'center' ? x : x;
+        let drawX = x;
+        if (align === 'center') {
+          // 计算文本宽度并居中
+          const textWidth = ctx.measureText(lineText).width;
+          drawX = x + (maxWidth - textWidth) / 2;
+        }
         ctx.fillText(lineText, drawX, currentY);
         currentY += lineHeight;
         lineCount++;

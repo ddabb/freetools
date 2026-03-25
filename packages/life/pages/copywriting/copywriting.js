@@ -1,6 +1,7 @@
 // packages/life/pages/copywriting/copywriting.js
 const utils = require('../../../../utils/index');
 const imgGen = require('../../../../utils/imageGenerator');
+const wordbank = require('wordbank');
 
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
@@ -13,45 +14,8 @@ if (isHarmonyOS) {
   share = require('@system.share');
 }
 
-// 文案分类数据
-const allCategories = [
-  {
-    id: 'love',
-    name: '爱情语录',
-    content: [
-      { text: '愿得一人心，白首不相离', from: '白头吟' },
-      { text: '入目无别人，四下皆是你', from: '佚名' },
-      { text: '愿我如星君如月，夜夜流光相皎洁', from: '范成大' },
-      { text: '两情若是久长时，又岂在朝朝暮暮', from: '秦观' }
-    ]
-  },
-  {
-    id: 'life',
-    name: '生活感悟',
-    content: [
-      { text: '生活不是等待风暴过去，而是学会在雨中跳舞', from: '佚名' },
-      { text: '珍惜当下，感恩拥有', from: '佚名' },
-      { text: '人生没有白走的路，每一步都算数', from: '佚名' }
-    ]
-  },
-  {
-    id: 'motivation',
-    name: '励志名言',
-    content: [
-      { text: '路漫漫其修远兮，吾将上下而求索', from: '屈原' },
-      { text: '天行健，君子以自强不息', from: '周易' },
-      { text: '长风破浪会有时，直挂云帆济沧海', from: '李白' }
-    ]
-  },
-  {
-    id: 'friendship',
-    name: '友谊万岁',
-    content: [
-      { text: '海内存知己，天涯若比邻', from: '王勃' },
-      { text: '桃花潭水深千尺，不及汪伦送我情', from: '李白' }
-    ]
-  }
-];
+// 使用 wordbank 模块的文案分类数据
+const allCategories = wordbank.allCategories;
 
 Page({
   data: {
@@ -142,18 +106,70 @@ Page({
 
   // 保存Canvas为图片
   savecodetofile() {
-    const ctx = wx.createCanvasContext('cvs1', this);
-    if (ctx) {
-      this.MergeImage(ctx);
-    } else {
-      utils.showText('创建画布失败');
-    }
+    wx.showLoading({ title: '生成中...' });
+
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#cvs1')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        if (!res[0] || !res[0].node) {
+          wx.hideLoading();
+          console.error('画布初始化失败', res);
+          utils.showText('画布初始化失败');
+          return;
+        }
+
+        const canvas = res[0].node;
+        const ctx = canvas.getContext('2d');
+        const dpr = wx.getSystemInfoSync().pixelRatio;
+        const { canvaswidth: width, canvasheight: height } = this.data;
+
+        // 设置高清canvas尺寸
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        // 绘制图片
+        this.drawImage(ctx, canvas, width, height, () => {
+          // 导出图片
+          wx.canvasToTempFilePath({
+            canvas: canvas,
+            x: 0, y: 0, width, height,
+            destWidth: width * dpr,
+            destHeight: height * dpr,
+            quality: 1, fileType: 'png',
+            success: (res) => {
+              wx.hideLoading();
+              // 保存到相册
+              wx.saveImageToPhotosAlbum({
+                filePath: res.tempFilePath,
+                success: () => utils.showSuccess('保存相册成功'),
+                fail: (err) => {
+                  if (err.errMsg && err.errMsg.includes('auth denied')) {
+                    wx.showModal({
+                      title: '提示',
+                      content: '需要您授权保存相册',
+                      success: (res) => res.confirm && wx.openSetting()
+                    });
+                  } else {
+                    utils.showText('保存失败');
+                  }
+                }
+              });
+            },
+            fail: () => {
+              wx.hideLoading();
+              utils.showText('生成失败');
+            }
+          });
+        });
+      });
   },
 
-  // 绘制分享图片
-  MergeImage(ctx) {
-    const { canvaswidth: width, canvasheight: height, currentCopywriting } = this.data;
-    const padding = 45;
+  // 绘制图片
+  drawImage(ctx, canvas, width, height, callback) {
+    const { currentCopywriting } = this.data;
+    const padding = 10;
     const qrSize = 85;
     const qrX = width - qrSize - 35;
     const qrY = height - qrSize - 35;
@@ -171,7 +187,7 @@ Page({
     if (currentCopywriting && currentCopywriting.text) {
       const textHeight = qrY - contentY - 30;
       fromY = imgGen.drawText(ctx, currentCopywriting.text, {
-        x: width / 2,
+        x: padding,
         startY: contentY,
         maxWidth: maxContentWidth,
         maxHeight: textHeight,
@@ -182,9 +198,9 @@ Page({
     // 绘制来源
     if (currentCopywriting && currentCopywriting.from && currentCopywriting.from !== '佚名') {
       imgGen.drawFrom(ctx, currentCopywriting.from, {
-        x: width / 2,
+        x: padding,
         y: fromY + 5,
-        maxWidth,
+        maxWidth: maxContentWidth,
         align: 'center'
       });
     }
@@ -198,34 +214,20 @@ Page({
     });
 
     // 绘制二维码
-    imgGen.drawQRCode(ctx, '/images/mini.png', { qrX, qrY, qrSize });
-
-    // 导出并保存
-    ctx.draw(false, () => {
-      wx.canvasToTempFilePath({
-        x: 0, y: 0, width, height,
-        destWidth: width, destHeight: height,
-        canvasId: 'cvs1',
-        quality: 1, fileType: 'png',
-        success: (res) => {
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success: () => utils.showSuccess('保存相册成功'),
-            fail: (err) => {
-              if (err.errMsg && err.errMsg.includes('auth denied')) {
-                wx.showModal({
-                  title: '提示',
-                  content: '需要您授权保存相册',
-                  success: (res) => res.confirm && wx.openSetting()
-                });
-              } else {
-                utils.showText('保存失败');
-              }
-            }
-          });
-        },
-        fail: () => utils.showText('生成失败')
-      });
-    });
+    const qrPath = '/images/mini.png';
+    if (qrPath.startsWith('/') || qrPath.startsWith('http')) {
+      const img = canvas.createImage();
+      img.src = qrPath;
+      img.onload = () => {
+        imgGen.drawQRCode(ctx, img, {
+          qrX,
+          qrY,
+          qrSize
+        });
+        if (callback) callback();
+      };
+    } else {
+      if (callback) callback();
+    }
   }
 });

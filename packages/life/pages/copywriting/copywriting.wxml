@@ -91,6 +91,6 @@
   </view>
 
   <!-- 画布元素，用于生成图片 -->
-  <canvas canvas-id="cvs1" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
+  <canvas id="cvs1" type="2d" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
 
 </view>
