@@ -4,17 +4,46 @@ const RelativeCalculator = require('./relativeCalculator');
 // 创建亲属关系计算器实例
 const calculator = new RelativeCalculator();
 
-
-
 Page({
   data: {
     relationshipChain: [],
     result: '',
-    inputDisplayText: ''
+    inputDisplayText: '',
+    loading: true,
+    error: ''
+  },
+
+  onLoad() {
+    this.loadRelationData();
+  },
+
+  // 加载亲属关系数据
+  async loadRelationData() {
+    try {
+      this.setData({ loading: true, error: '' });
+      await calculator.loadRelationGraph();
+      this.setData({ loading: false });
+    } catch (error) {
+      console.error('加载亲属关系数据失败:', error);
+      this.setData({ 
+        loading: false, 
+        error: '数据加载失败，请检查网络连接' 
+      });
+    }
   },
 
   // 添加亲戚关系（实时计算）
   addRelation: function (e) {
+    if (this.data.loading) {
+      wx.showToast({ title: '数据加载中，请稍候', icon: 'loading' });
+      return;
+    }
+
+    if (this.data.error) {
+      wx.showToast({ title: this.data.error, icon: 'none' });
+      return;
+    }
+
     console.log('addRelation called', e);
     console.log('current dataset:', e.currentTarget.dataset);
 
@@ -40,6 +69,11 @@ Page({
 
   // 删除最后一个关系（实时计算）
   deleteRelation: function () {
+    if (this.data.loading) {
+      wx.showToast({ title: '数据加载中，请稍候', icon: 'loading' });
+      return;
+    }
+
     if (this.data.relationshipChain.length > 0) {
       const newChain = this.data.relationshipChain.slice(0, -1);
       const result = newChain.length > 0 ? calculator.calculate(newChain) : '';
