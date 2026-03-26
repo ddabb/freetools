@@ -158,32 +158,26 @@ function getLineText(ctx, text, maxWidth) {
     return { text: text, nextIndex: text.length };
   }
 
-  // 检查当前位置是否是标点符号，如果是，需要向前查找非标点字符
+  // 智能断行逻辑
   let endPos = i;
   
-  // 先检查当前位置的前一个字符是否是标点
-  if (i > 0 && punctChars.includes(text[i-1])) {
-    // 当前位置的前一个字符是标点，需要找到标点前的位置
-    for (let j = i - 2; j >= 0; j--) {
+  // 情况1：当前位置是标点符号，需要向前查找非标点字符
+  if (punctChars.includes(text[i])) {
+    for (let j = i - 1; j >= 0; j--) {
       if (!punctChars.includes(text[j])) {
         endPos = j + 1;
         break;
       }
     }
-  } else {
-    // 往回找标点符号进行智能断行
-    for (let j = i - 1; j > 0; j--) {
+  }
+  // 情况2：当前位置不是标点，向前查找最近的标点符号
+  else {
+    for (let j = i - 1; j >= 0; j--) {
       if (punctChars.includes(text[j])) {
         endPos = j + 1;
         break;
       }
     }
-  }
-
-  // 确保标点符号不会单独占一行
-  // 检查endPos位置是否是标点符号，如果是，向前移动到非标点位置
-  while (endPos > 0 && punctChars.includes(text[endPos - 1])) {
-    endPos--;
   }
 
   // 确保至少有一个字符
