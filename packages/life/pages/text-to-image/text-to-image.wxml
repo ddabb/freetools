@@ -4,16 +4,16 @@
     <!-- 输入区域 -->
     <view class="input-section">
       <view class="form-group">
-        <text class="label">文字内容（80字以内）</text>
+        <text class="label">文字内容（100字以内）</text>
         <textarea
           class="textarea"
           placeholder="请输入要生成图片的文字内容（建议20字以内效果更佳）"
           bindinput="onTextInput"
           bindblur="onInputBlur"
-          maxlength="80"
+          maxlength="100"
           value="{{text}}"
         ></textarea>
-        <text class="count">{{textLength}}/80</text>
+        <text class="count">{{textLength}}/100</text>
       </view>
       <view class="form-group">
         <text class="label">出处（可不填，15字以内）</text>

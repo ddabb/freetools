@@ -42,9 +42,12 @@ function calculateTextParams(textLength, availableHeight) {
   } else if (textLength <= 50) {
     fontSize = 28;
     lineHeight = 42;
+  } else if (textLength <= 80) {
+    fontSize = 24;
+    lineHeight = 38;
   } else {
-    fontSize = 26;
-    lineHeight = 40;
+    fontSize = 22;
+    lineHeight = 36;
   }
 
   // 根据可用高度计算最大行数
@@ -155,17 +158,36 @@ function getLineText(ctx, text, maxWidth) {
     return { text: text, nextIndex: text.length };
   }
 
-  // 往回找标点符号进行智能断行
+  // 检查当前位置是否是标点符号，如果是，需要向前查找非标点字符
   let endPos = i;
-  for (let j = i - 1; j > 0; j--) {
-    if (punctChars.includes(text[j])) {
-      endPos = j + 1;
-      break;
+  
+  // 先检查当前位置的前一个字符是否是标点
+  if (i > 0 && punctChars.includes(text[i-1])) {
+    // 当前位置的前一个字符是标点，需要找到标点前的位置
+    for (let j = i - 2; j >= 0; j--) {
+      if (!punctChars.includes(text[j])) {
+        endPos = j + 1;
+        break;
+      }
+    }
+  } else {
+    // 往回找标点符号进行智能断行
+    for (let j = i - 1; j > 0; j--) {
+      if (punctChars.includes(text[j])) {
+        endPos = j + 1;
+        break;
+      }
     }
   }
 
-  // 如果找不到标点，或者回退太多（超过3个字），就在当前位置断行
-  if (endPos < i - 3) {
+  // 确保标点符号不会单独占一行
+  // 检查endPos位置是否是标点符号，如果是，向前移动到非标点位置
+  while (endPos > 0 && punctChars.includes(text[endPos - 1])) {
+    endPos--;
+  }
+
+  // 确保至少有一个字符
+  if (endPos === 0) {
     endPos = i;
   }
 
@@ -193,6 +215,13 @@ function drawText(ctx, text, options = {}) {
 
   setCanvasFont(ctx, fontSize, 'handwriting', true);
 
+  // 根据文本长度动态调整maxWidth
+  let adjustedMaxWidth = maxWidth;
+  if (text.length > 80) {
+    // 对于长文本，适当增加maxWidth以减少换行
+    adjustedMaxWidth = maxWidth + 10;
+  }
+
   let currentY = startY;
   let lineCount = 0;
   let hasMoreText = false;
@@ -205,12 +234,12 @@ function drawText(ctx, text, options = {}) {
     let pos = 0;
     while (pos < paragraphText.length && lineCount < maxLines) {
       const remainingText = paragraphText.substring(pos);
-      const result = getLineText(ctx, remainingText, maxWidth);
+      const result = getLineText(ctx, remainingText, adjustedMaxWidth);
       const lineText = result.text.trim();
 
       if (lineText) {
         // 渐变色文字
-        const gradient = ctx.createLinearGradient(x, currentY, x + maxWidth, currentY);
+        const gradient = ctx.createLinearGradient(x, currentY, x + adjustedMaxWidth, currentY);
         gradient.addColorStop(0, '#8e44ad');
         gradient.addColorStop(1, '#3498db');
         ctx.fillStyle = gradient;
@@ -219,7 +248,7 @@ function drawText(ctx, text, options = {}) {
         let drawX = x;
         if (align === 'center') {
           const textWidth = ctx.measureText(lineText).width;
-          drawX = x + (maxWidth - textWidth) / 2;
+          drawX = x + (adjustedMaxWidth - textWidth) / 2;
         }
         ctx.fillText(lineText, drawX, currentY);
         currentY += lineHeight;
