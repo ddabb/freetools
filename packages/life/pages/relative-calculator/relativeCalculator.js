@@ -104,7 +104,8 @@ class RelativeCalculator {
       currentRelation = selectedRelation;
 
       // 异常处理：如果计算出的新关系在图中不存在
-      if (!this.relationGraph[currentRelation]) {
+      // 但只在还有剩余关系需要处理时才添加"的"
+      if (!this.relationGraph[currentRelation] && (i + 1 < chain.length)) {
         return currentRelation + '的' + chain.slice(i + 1).join('的');
       }
     }
@@ -112,51 +113,8 @@ class RelativeCalculator {
     return currentRelation;
   }
 
-  // 根据当前节点和关系获取下一个节点（保留方法但简化逻辑）
-  getNextNode(currentNode, relation) {
-    // 这个方法的逻辑已经被graphTraversal替代，保留作为兼容性处理
-    if (currentNode.type === 'self') {
-      return { type: relation, gender: this.relationGraph[relation]?.gender || 'unknown' };
-    }
 
-    const currentRelation = this.relationGraph[currentNode.type];
-    if (!currentRelation) return null;
 
-    const directRelation = currentRelation[relation];
-    if (directRelation) {
-      let selectedRelation = directRelation;
-      if (Array.isArray(directRelation)) {
-        selectedRelation = directRelation[0];
-      }
-      return { type: selectedRelation, gender: this.relationGraph[selectedRelation]?.gender || 'unknown' };
-    }
-
-    return null;
-  }
-
-  // 处理复杂树形结构的辅助方法
-  processComplexTree(chain) {
-    // 处理像"爸爸的哥哥的奶奶"这样的复杂结构
-    if (chain.length <= 2) {
-      return this.calculateTreeStructure(chain);
-    }
-
-    // 分治法：将复杂关系拆分成多个简单关系
-    const mid = Math.floor(chain.length / 2);
-    const leftPart = chain.slice(0, mid);
-    const rightPart = chain.slice(mid);
-
-    const leftResult = this.processComplexTree(leftPart);
-    const rightResult = this.processComplexTree(rightPart);
-
-    // 组合左右结果
-    if (leftResult && rightResult) {
-      const combined = this.calculateTreeStructure([leftResult, rightResult]);
-      return combined;
-    }
-
-    return chain.join('的');
-  }
 }
 
 // 导出RelativeCalculator类
