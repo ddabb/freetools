@@ -26,8 +26,8 @@
           "name": "人生A4纸",
           "pathName": "packages/life/pages/life-countdown/life-countdown",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "一笔画求解",
@@ -88,13 +88,6 @@
         {
           "name": "packages/design/pages/color-converter/color-converter",
           "pathName": "packages/design/pages/color-converter/color-converter",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "文案生图",
-          "pathName": "packages/text/pages/text-to-png/text-to-png",
           "query": "",
           "launchMode": "default",
           "scene": null
