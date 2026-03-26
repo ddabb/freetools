@@ -1,0 +1,248 @@
+/* pages/changelog/changelog.wxss */
+
+page {
+  background: #f5f6f8;
+  min-height: 100vh;
+}
+
+.container {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 顶部导航 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-btn {
+  font-size: 28rpx;
+  color: #3498db;
+  padding: 10rpx 20rpx;
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.header-placeholder {
+  width: 100rpx;
+}
+
+/* 状态区域 */
+.status-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 0;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #e5e7eb;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.error-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.error-text {
+  font-size: 28rpx;
+  color: #e74c3c;
+}
+
+/* 内容区域 */
+.content-section {
+  padding: 20rpx;
+}
+
+/* 最新版本 */
+.latest-section {
+  margin-bottom: 30rpx;
+}
+
+.latest-card {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 30rpx rgba(52, 152, 219, 0.3);
+}
+
+.latest-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 16rpx;
+}
+
+.version-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.version-tag {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.version-date {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 版本历史 */
+.history-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 时间线 */
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 16rpx;
+  top: 20rpx;
+  bottom: 20rpx;
+  width: 2rpx;
+  background: linear-gradient(to bottom, #e5e7eb, #e5e7eb);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 60rpx;
+  padding-bottom: 40rpx;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 6rpx;
+  top: 10rpx;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  background: #bdc3c7;
+  border: 4rpx solid #fff;
+  box-shadow: 0 0 0 2rpx #bdc3c7;
+}
+
+.timeline-dot.feature {
+  background: #27ae60;
+  box-shadow: 0 0 0 2rpx #27ae60;
+}
+
+.timeline-dot.fix {
+  background: #e74c3c;
+  box-shadow: 0 0 0 2rpx #e74c3c;
+}
+
+.timeline-content {
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+  flex-wrap: wrap;
+}
+
+.timeline-version {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.timeline-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.timeline-type {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 24rpx;
+  background: #95a5a6;
+  color: #fff;
+}
+
+.timeline-type.feature {
+  background: #27ae60;
+}
+
+.timeline-type.fix {
+  background: #e74c3c;
+}
+
+.timeline-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 16rpx;
+}
+
+.timeline-changes {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.change-item {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}

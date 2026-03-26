@@ -81,8 +81,8 @@ Page({
     });
 
     // 获取二维码路径
-    const qrPath = (selectedQrCode === 'custom' && customQrCodeImage) 
-      ? customQrCodeImage 
+    const qrPath = (selectedQrCode === 'custom' && customQrCodeImage)
+      ? customQrCodeImage
       : '/images/text2image.jpg';
 
     // 加载并绘制二维码
@@ -116,13 +116,13 @@ Page({
       success: (res) => {
         const tempFilePath = res.tempFilePaths[0];
         if (!tempFilePath) return;
-        
+
         const fileExt = tempFilePath.split('.').pop().toLowerCase();
         if (!['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) {
           utils.showText('请选择图片文件');
           return;
         }
-        
+
         wx.getFileInfo({
           filePath: tempFilePath,
           success: (fileInfo) => {

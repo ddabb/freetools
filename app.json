@@ -2,7 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/about/about",
-    "pages/changelog-test/changelog-test"
+    "pages/changelog/changelog"
   ],
   "usingComponents": {
     "tool-card": "/components/tool-card/tool-card",

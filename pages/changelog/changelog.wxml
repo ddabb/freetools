@@ -2,35 +2,28 @@
   <!-- 顶部导航 -->
   <view class="header">
     <text class="back-btn" bindtap="onBack">← 返回</text>
-    <text class="header-title">CDN 测试页</text>
-    <text class="refresh-btn" bindtap="onRefresh">刷新</text>
-  </view>
-
-  <!-- CDN 地址显示 -->
-  <view class="cdn-section">
-    <text class="section-label">📡 CDN 地址</text>
-    <text class="cdn-url">{{cdnUrl}}</text>
+    <text class="header-title">版本日志</text>
+    <view class="header-placeholder"></view>
   </view>
 
   <!-- 加载状态 -->
   <view class="status-section" wx:if="{{loading}}">
-    <text class="loading-text">⏳ 加载中...</text>
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
   </view>
 
   <!-- 错误状态 -->
   <view class="status-section error" wx:if="{{error}}">
-    <text class="error-text">❌ {{error}}</text>
-    <text class="error-hint">请检查网络或 CDN 地址</text>
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
   </view>
 
-  <!-- 成功状态 -->
-  <view class="result-section" wx:if="{{!loading && !error && changelog}}">
-    <view class="success-banner">✅ CDN 加载成功！</view>
-    
+  <!-- 内容区域 -->
+  <view class="content-section" wx:if="{{!loading && !error && changelog}}">
     <!-- 最新版本 -->
     <view class="latest-section">
-      <text class="section-label">🎉 最新版本</text>
       <view class="latest-card">
+        <view class="latest-label">当前版本</view>
         <view class="version-row">
           <text class="version-tag">v{{changelog.latestVersion}}</text>
           <text class="version-date">{{changelog.lastUpdate}}</text>
@@ -40,7 +33,9 @@
 
     <!-- 版本历史 -->
     <view class="history-section">
-      <text class="section-label">📜 版本历史</text>
+      <view class="section-header">
+        <text class="section-title">更新历史</text>
+      </view>
       <view class="timeline">
         <view class="timeline-item" wx:for="{{changelog.changelog}}" wx:key="version">
           <view class="timeline-dot {{item.type}}"></view>
@@ -48,7 +43,7 @@
             <view class="timeline-header">
               <text class="timeline-version">v{{item.version}}</text>
               <text class="timeline-date">{{item.date}}</text>
-              <text class="timeline-type {{item.type}}">{{item.type === 'feature' ? '✨ 新功能' : '🐛 修复'}}</text>
+              <text class="timeline-type {{item.type}}">{{item.type === 'feature' ? '✨ 新功能' : item.type === 'fix' ? '🐛 修复' : '📦 其他'}}</text>
             </view>
             <text class="timeline-title">{{item.title}}</text>
             <view class="timeline-changes">
@@ -58,10 +53,5 @@
         </view>
       </view>
     </view>
-  </view>
-
-  <!-- 底部说明 -->
-  <view class="footer">
-    <text class="footer-text">测试 jsDelivr CDN 加载 GitHub 文件</text>
   </view>
 </view>

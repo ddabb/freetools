@@ -28,38 +28,29 @@ const defaultConfig = {
  * 计算文案绘制参数
  * @param {number} textLength - 文字长度
  * @param {number} availableHeight - 可用高度
- * @returns {object} {fontSize, lineHeight, maxCharsPerLine, maxLines}
+ * @returns {object} {fontSize, lineHeight, maxLines}
  */
 function calculateTextParams(textLength, availableHeight) {
-  let fontSize, lineHeight, maxCharsPerLine, maxLines;
-  
+  let fontSize, lineHeight;
+
   if (textLength <= 15) {
     fontSize = 36;
     lineHeight = 50;
-    maxCharsPerLine = 8;
-    maxLines = 4;
   } else if (textLength <= 30) {
     fontSize = 32;
     lineHeight = 46;
-    maxCharsPerLine = 10;
-    maxLines = 5;
   } else if (textLength <= 50) {
     fontSize = 28;
     lineHeight = 42;
-    maxCharsPerLine = 12;
-    maxLines = 6;
   } else {
     fontSize = 26;
     lineHeight = 40;
-    maxCharsPerLine = 14;
-    maxLines = 6;
   }
-  
-  // 根据可用高度调整
-  const heightBasedLines = Math.floor(availableHeight / lineHeight);
-  maxLines = Math.min(maxLines, heightBasedLines);
-  
-  return { fontSize, lineHeight, maxCharsPerLine, maxLines };
+
+  // 根据可用高度计算最大行数
+  const maxLines = Math.floor(availableHeight / lineHeight);
+
+  return { fontSize, lineHeight, maxLines };
 }
 
 /**
@@ -139,6 +130,49 @@ function setCanvasFont(ctx, fontSize, fontType = 'handwriting', isBold = false) 
 }
 
 /**
+ * 根据像素宽度截断文本
+ * @param {object} ctx - Canvas上下文
+ * @param {string} text - 文本
+ * @param {number} maxWidth - 最大宽度
+ * @returns {object} {text, nextIndex}
+ */
+function getLineText(ctx, text, maxWidth) {
+  let width = 0;
+  let i = 0;
+  const punctChars = ['，', '。', '！', '？', ',', '.', '!', '?', '、', '；', ':', '：'];
+
+  // 先尝试测量能放下多少字符
+  for (; i < text.length; i++) {
+    const charWidth = ctx.measureText(text[i]).width;
+    if (width + charWidth > maxWidth) {
+      break;
+    }
+    width += charWidth;
+  }
+
+  // 如果没超，直接返回全部
+  if (i >= text.length) {
+    return { text: text, nextIndex: text.length };
+  }
+
+  // 往回找标点符号进行智能断行
+  let endPos = i;
+  for (let j = i - 1; j > 0; j--) {
+    if (punctChars.includes(text[j])) {
+      endPos = j + 1;
+      break;
+    }
+  }
+
+  // 如果找不到标点，或者回退太多（超过3个字），就在当前位置断行
+  if (endPos < i - 3) {
+    endPos = i;
+  }
+
+  return { text: text.substring(0, endPos), nextIndex: endPos };
+}
+
+/**
  * 绘制文案内容
  * @param {object} ctx - Canvas上下文
  * @param {string} text - 文案内容
@@ -153,47 +187,37 @@ function drawText(ctx, text, options = {}) {
     maxHeight = 400,
     align = 'left'
   } = options;
-  
+
   const params = calculateTextParams(text.length, maxHeight);
-  const { fontSize, lineHeight, maxCharsPerLine, maxLines } = params;
-  
+  const { fontSize, lineHeight, maxLines } = params;
+
   setCanvasFont(ctx, fontSize, 'handwriting', true);
-  
+
   let currentY = startY;
   let lineCount = 0;
+  let hasMoreText = false;
   const paragraphs = text.split(/[\r\n]+/);
-  
+
   for (let p = 0; p < paragraphs.length; p++) {
     let paragraphText = paragraphs[p];
     if (!paragraphText.trim()) continue;
-    
+
     let pos = 0;
     while (pos < paragraphText.length && lineCount < maxLines) {
-      let endPos = Math.min(pos + maxCharsPerLine, paragraphText.length);
-      
-      // 智能断行
-      if (endPos < paragraphText.length) {
-        const punctChars = ['，', '。', '！', '？', ',', '.', '!', '?'];
-        for (let i = endPos - 1; i >= pos; i--) {
-          if (punctChars.includes(paragraphText[i])) {
-            endPos = i + 1;
-            break;
-          }
-        }
-      }
-      
-      const lineText = paragraphText.substring(pos, endPos).trim();
+      const remainingText = paragraphText.substring(pos);
+      const result = getLineText(ctx, remainingText, maxWidth);
+      const lineText = result.text.trim();
+
       if (lineText) {
         // 渐变色文字
         const gradient = ctx.createLinearGradient(x, currentY, x + maxWidth, currentY);
         gradient.addColorStop(0, '#8e44ad');
         gradient.addColorStop(1, '#3498db');
         ctx.fillStyle = gradient;
-        
+
         // 根据对齐方式设置绘制位置
         let drawX = x;
         if (align === 'center') {
-          // 计算文本宽度并居中
           const textWidth = ctx.measureText(lineText).width;
           drawX = x + (maxWidth - textWidth) / 2;
         }
@@ -201,21 +225,32 @@ function drawText(ctx, text, options = {}) {
         currentY += lineHeight;
         lineCount++;
       }
-      pos = endPos;
+
+      pos += result.nextIndex;
+
+      // 检查是否还有更多内容未显示
+      if (pos < paragraphText.length && lineCount >= maxLines) {
+        hasMoreText = true;
+      }
     }
-    
+
+    // 检查段落间是否还有更多内容
+    if (p < paragraphs.length - 1 && lineCount >= maxLines) {
+      hasMoreText = true;
+    }
+
     if (p < paragraphs.length - 1 && lineCount < maxLines) {
       currentY += lineHeight * 0.3;
     }
   }
-  
-  // 截断省略号
-  if (text.length > 50 || lineCount >= maxLines) {
+
+  // 只有在确实还有更多内容未显示时才添加省略号
+  if (hasMoreText) {
     ctx.fillStyle = '#8e44ad';
     ctx.fillText('...', x, currentY);
     currentY += lineHeight;
   }
-  
+
   return currentY;
 }
 

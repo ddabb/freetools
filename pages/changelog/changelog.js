@@ -1,12 +1,11 @@
-// pages/changelog-test/changelog-test.js
-// 测试页：验证 jsDelivr CDN 加载 changelog
+// pages/changelog/changelog.js
+// 版本日志页面
 
 Page({
   data: {
     loading: true,
     error: '',
-    changelog: null,
-    cdnUrl: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/changelog.json'
+    changelog: null
   },
 
   onLoad() {
@@ -16,7 +15,7 @@ Page({
   // 从 jsDelivr CDN 加载 changelog
   loadChangelog() {
     wx.request({
-      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/changelog.json',
+      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/changelog.json',
       method: 'GET',
       timeout: 10000,
       success: (res) => {
@@ -25,7 +24,6 @@ Page({
             loading: false,
             changelog: res.data
           });
-          console.log('✅ CDN 加载成功:', res.data);
         } else {
           this.setData({
             loading: false,
@@ -33,20 +31,13 @@ Page({
           });
         }
       },
-      fail: (err) => {
-        console.error('❌ CDN 加载失败:', err);
+      fail: () => {
         this.setData({
           loading: false,
-          error: '网络请求失败: ' + (err.errMsg || '未知错误')
+          error: '网络请求失败，请检查网络连接'
         });
       }
     });
-  },
-
-  // 刷新数据
-  onRefresh() {
-    this.setData({ loading: true, error: '', changelog: null });
-    this.loadChangelog();
   },
 
   // 返回上一页
@@ -56,8 +47,14 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '版本日志测试',
-      path: '/pages/changelog-test/changelog-test'
+      title: '随身工具宝 - 版本日志',
+      path: '/pages/changelog/changelog'
+    };
+  },
+
+  onShareTimeline() {
+    return {
+      title: '随身工具宝 - 版本日志'
     };
   }
 });
