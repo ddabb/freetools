@@ -1,7 +1,6 @@
 // packages/life/pages/copywriting/copywriting.js
 const utils = require('../../../../utils/index');
 const imgGen = require('../../../../utils/imageGenerator');
-const wordbank = require('wordbank');
 
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
@@ -14,8 +13,8 @@ if (isHarmonyOS) {
   share = require('@system.share');
 }
 
-// 使用 wordbank 模块的文案分类数据
-const allCategories = wordbank.allCategories;
+// 从CDN加载文案数据
+let allCategories = [];
 
 Page({
   data: {
@@ -29,11 +28,92 @@ Page({
   },
 
   onLoad() {
-    this.initData();
+    this.loadCategories();
   },
 
-  initData() {
-    this.setData({ categories: allCategories });
+  // 从CDN加载分类数据（带缓存机制）
+  loadCategories() {
+    // 先尝试从缓存读取数据
+    const cachedData = wx.getStorageSync('wordbank_categories');
+    const cachedTimestamp = wx.getStorageSync('wordbank_timestamp');
+    const now = Date.now();
+    const cacheExpiry = 24 * 60 * 60 * 1000; // 24小时过期
+
+    // 如果缓存存在且未过期，直接使用缓存数据
+    if (cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)) {
+      allCategories = cachedData;
+      this.setData({ categories: cachedData });
+      return;
+    }
+
+    // 缓存不存在或已过期，从CDN加载
+    wx.showLoading({ title: '加载中...' });
+    wx.request({
+      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/wordbank/index.json',
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode === 200 && res.data) {
+          const categoryKeys = Object.keys(res.data);
+          const categories = [];
+          
+          // 加载每个分类的数据
+          let loadedCount = 0;
+          categoryKeys.forEach(key => {
+            wx.request({
+              url: `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/wordbank/${key}.json`,
+              method: 'GET',
+              success: (categoryRes) => {
+                if (categoryRes.statusCode === 200 && categoryRes.data) {
+                  categories.push(categoryRes.data);
+                }
+                loadedCount++;
+                if (loadedCount === categoryKeys.length) {
+                  allCategories = categories;
+                  this.setData({ categories });
+                  
+                  // 保存数据到缓存
+                  wx.setStorageSync('wordbank_categories', categories);
+                  wx.setStorageSync('wordbank_timestamp', Date.now());
+                }
+              },
+              fail: () => {
+                loadedCount++;
+                if (loadedCount === categoryKeys.length) {
+                  allCategories = categories;
+                  this.setData({ categories });
+                  
+                  // 保存数据到缓存（即使部分加载失败）
+                  wx.setStorageSync('wordbank_categories', categories);
+                  wx.setStorageSync('wordbank_timestamp', Date.now());
+                }
+              }
+            });
+          });
+        } else {
+          // 加载失败，尝试使用缓存数据
+          if (cachedData) {
+            allCategories = cachedData;
+            this.setData({ categories: cachedData });
+            utils.showText('网络异常，使用缓存数据');
+          } else {
+            utils.showText('分类数据加载失败');
+          }
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        // 网络请求失败，尝试使用缓存数据
+        if (cachedData) {
+          allCategories = cachedData;
+          this.setData({ categories: cachedData });
+          utils.showText('网络连接失败，使用缓存数据');
+        } else {
+          utils.showText('网络请求失败，请检查网络连接');
+        }
+      }
+    });
   },
 
   // 选择分类
@@ -66,18 +146,25 @@ Page({
     const { selectedCategory, searchKeyword, categories } = this.data;
     let filtered = [];
 
+    if (categories.length === 0) {
+      this.setData({ filteredCopywritings: filtered });
+      return;
+    }
+
     if (searchKeyword.trim()) {
       const keyword = searchKeyword.toLowerCase();
       categories.forEach(cat => {
-        cat.content.forEach(item => {
-          if (item.text.toLowerCase().includes(keyword)) {
-            filtered.push(item);
-          }
-        });
+        if (cat && cat.content) {
+          cat.content.forEach(item => {
+            if (item && item.text && item.text.toLowerCase().includes(keyword)) {
+              filtered.push(item);
+            }
+          });
+        }
       });
     } else if (selectedCategory) {
-      const cat = categories.find(c => c.id === selectedCategory);
-      if (cat) filtered = cat.content;
+      const cat = categories.find(c => c && c.id === selectedCategory);
+      if (cat && cat.content) filtered = cat.content;
     }
 
     this.setData({ filteredCopywritings: filtered });
