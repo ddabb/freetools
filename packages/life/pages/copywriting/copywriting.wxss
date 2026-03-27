@@ -84,6 +84,34 @@
   color: #999;
 }
 
+/* 刷新按钮 */
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70rpx;
+  height: 70rpx;
+  margin-left: 10rpx;
+  border-radius: 15rpx;
+  background-color: #27ae60;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+  background-color: #219a52;
+}
+
+.refresh-btn:active {
+  transform: scale(0.95);
+}
+
+.refresh-icon {
+  font-size: 36rpx;
+  color: white;
+}
+
 
 
 /* 分类样式 */

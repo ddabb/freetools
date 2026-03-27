@@ -21,15 +21,11 @@ Component({
 
   methods: {
     onTap() {
-      if (!this.properties.url) {
-        wx.showToast({ title: '页面开发中', icon: 'none' });
-        return;
-      }
-      wx.navigateTo({
+      this.triggerEvent('tap', {
+        id: this.properties.id,
         url: this.properties.url,
-        fail: () => {
-          wx.showToast({ title: '页面开发中', icon: 'none' });
-        }
+        name: this.properties.name,
+        icon: this.properties.icon
       });
     }
   }

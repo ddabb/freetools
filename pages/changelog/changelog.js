@@ -14,24 +14,31 @@ Page({
 
   // 从 jsDelivr CDN 加载 changelog
   loadChangelog() {
+    console.log('[changelog] 开始加载版本日志');
     wx.request({
       url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/changelog.json',
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        console.log('[changelog] 请求成功', {
+          statusCode: res.statusCode,
+          hasData: !!res.data
+        });
         if (res.statusCode === 200 && res.data) {
           this.setData({
             loading: false,
             changelog: res.data
           });
         } else {
+          console.error('[changelog] 数据格式错误', res);
           this.setData({
             loading: false,
             error: '数据格式错误'
           });
         }
       },
-      fail: () => {
+      fail: (err) => {
+        console.error('[changelog] 网络请求失败', err);
         this.setData({
           loading: false,
           error: '网络请求失败，请检查网络连接'

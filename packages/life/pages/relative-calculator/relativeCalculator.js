@@ -7,7 +7,9 @@ class RelativeCalculator {
 
   // 从CDN加载亲属关系数据
   async loadRelationGraph() {
+    console.log('[relative-calculator] loadRelationGraph 开始执行');
     if (this.relationGraph) {
+      console.log('[relative-calculator] 使用内存中的关系图');
       return this.relationGraph;
     }
 
@@ -17,11 +19,23 @@ class RelativeCalculator {
     const now = Date.now();
     const cacheExpiry = 7 * 24 * 60 * 60 * 1000; // 7天过期
 
+    console.log('[relative-calculator] 缓存检查', {
+      hasCachedData: !!cachedData,
+      hasCachedTimestamp: !!cachedTimestamp,
+      cachedTimestamp,
+      now,
+      timeDiff: cachedTimestamp ? now - cachedTimestamp : null,
+      cacheExpiry,
+      isCacheValid: cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)
+    });
+
     if (cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)) {
+      console.log('[relative-calculator] 使用缓存数据');
       this.relationGraph = cachedData;
       return this.relationGraph;
     }
 
+    console.log('[relative-calculator] 缓存无效，开始从CDN加载');
     // 从CDN加载
     return new Promise((resolve, reject) => {
       wx.request({
@@ -29,19 +43,27 @@ class RelativeCalculator {
         method: 'GET',
         timeout: 10000,
         success: (res) => {
+          console.log('[relative-calculator] CDN请求成功', {
+            statusCode: res.statusCode,
+            hasData: !!res.data,
+            hasRelationGraph: !!(res.data && res.data.relationGraph)
+          });
           if (res.statusCode === 200 && res.data && res.data.relationGraph) {
             this.relationGraph = res.data.relationGraph;
             
             // 保存到缓存
             wx.setStorageSync('relation_graph', this.relationGraph);
             wx.setStorageSync('relation_graph_timestamp', now);
+            console.log('[relative-calculator] 数据已保存到缓存');
             
             resolve(this.relationGraph);
           } else {
+            console.error('[relative-calculator] 数据格式错误', res);
             reject(new Error('数据加载失败'));
           }
         },
-        fail: () => {
+        fail: (err) => {
+          console.error('[relative-calculator] CDN请求失败', err);
           reject(new Error('网络请求失败'));
         }
       });

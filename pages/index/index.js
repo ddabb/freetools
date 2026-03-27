@@ -51,7 +51,7 @@ Page({
     if (categoryName === '常用工具') return this.data.commonTools;
     return this.data.allTools
       .filter(tool => tool.categories && tool.categories.includes(categoryName))
-      .sort((a, b) => (toolFrequency[b.id] || 0) - (toolFrequency[a.id] || 0));
+      .sort((a, b) => (this.data.toolFrequency[b.id] || 0) - (this.data.toolFrequency[a.id] || 0));
   },
 
   // 获取工具分类样式
@@ -99,8 +99,20 @@ Page({
 
   // 导航到工具
   navigateToTool(e) {
-    const { url } = e.currentTarget.dataset;
-    const tool = this.data.allTools.find(t => t.url === url);
+    let tool = null;
+    let url = null;
+    
+    // 检查是来自 tool-card 组件的事件还是来自最近使用列表的事件
+    if (e.detail && e.detail.url) {
+      // 来自 tool-card 组件的事件
+      url = e.detail.url;
+      tool = this.data.allTools.find(t => t.url === url);
+    } else if (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.url) {
+      // 来自最近使用列表的事件
+      url = e.currentTarget.dataset.url;
+      tool = this.data.allTools.find(t => t.url === url);
+    }
+    
     if (!tool) return;
     
     this.addToRecentTools(tool);

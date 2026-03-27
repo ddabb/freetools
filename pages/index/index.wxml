@@ -67,6 +67,7 @@
               url="{{item.url}}"
               frequency="{{toolFrequency[item.id] || 50}}"
               category="{{getToolCategory(item.id)}}"
+              bind:tap="navigateToTool"
             />
           </view>
           <view wx:else class="no-result">
@@ -90,6 +91,7 @@
               url="{{item.url}}"
               frequency="{{toolFrequency[item.id] || 50}}"
               category="{{getToolCategory(item.id)}}"
+              bind:tap="navigateToTool"
             />
           </view>
           
@@ -105,6 +107,7 @@
               url="{{item.url}}"
               frequency="{{toolFrequency[item.id] || 50}}"
               category="{{getToolCategory(item.id)}}"
+              bind:tap="navigateToTool"
             />
           </view>
         </view>

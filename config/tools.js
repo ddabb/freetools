@@ -4,6 +4,7 @@
  */
 
 const categories = require('./categories');
+const { toolFrequency } = require('./constants');
 const { getToolFrequency, updateToolFrequency, getToolFrequencyRanking } = require('./frequency');
 const { searchTools, getToolById, debounce, clearSearchCache, getSearchHistory, addSearchHistory, deleteSearchHistory, clearSearchHistory, getSearchSuggestions } = require('./search');
 const { getToolsByCategory, getAllCategories, getCategoryInfo, groupToolsByCategory, getCategoryStats } = require('./category');
@@ -547,6 +548,7 @@ module.exports = {
   commonTools,
   discoveryTools,
   allTools,
+  toolFrequency,
   getToolFrequency,
   updateToolFrequency,
   getToolFrequencyRanking,

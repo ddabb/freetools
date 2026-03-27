@@ -31,21 +31,64 @@ Page({
     this.loadCategories();
   },
 
+  refreshData() {
+    console.log('[copywriting] 手动刷新数据，清除缓存');
+    wx.showLoading({ title: '刷新中...' });
+    
+    try {
+      wx.removeStorageSync('wordbank_categories');
+      wx.removeStorageSync('wordbank_timestamp');
+      console.log('[copywriting] 缓存已清除');
+      
+      allCategories = [];
+      this.setData({ 
+        categories: [], 
+        selectedCategory: '', 
+        searchKeyword: '',
+        filteredCopywritings: []
+      });
+      
+      setTimeout(() => {
+        this.loadCategories();
+        wx.hideLoading();
+        utils.showSuccess('刷新成功');
+      }, 300);
+    } catch (e) {
+      console.error('[copywriting] 刷新失败', e);
+      wx.hideLoading();
+      utils.showText('刷新失败，请重试');
+    }
+  },
+
   // 从CDN加载分类数据（带缓存机制）
   loadCategories() {
+    console.log('[copywriting] loadCategories 开始执行');
+    
     // 先尝试从缓存读取数据
     const cachedData = wx.getStorageSync('wordbank_categories');
     const cachedTimestamp = wx.getStorageSync('wordbank_timestamp');
     const now = Date.now();
     const cacheExpiry = 24 * 60 * 60 * 1000; // 24小时过期
 
+    console.log('[copywriting] 缓存检查', {
+      hasCachedData: !!cachedData,
+      hasCachedTimestamp: !!cachedTimestamp,
+      cachedTimestamp,
+      now,
+      timeDiff: cachedTimestamp ? now - cachedTimestamp : null,
+      cacheExpiry,
+      isCacheValid: cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)
+    });
+
     // 如果缓存存在且未过期，直接使用缓存数据
     if (cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)) {
+      console.log('[copywriting] 使用缓存数据，分类数量:', cachedData.length);
       allCategories = cachedData;
       this.setData({ categories: cachedData });
       return;
     }
 
+    console.log('[copywriting] 缓存无效，开始从CDN加载');
     // 缓存不存在或已过期，从CDN加载
     wx.showLoading({ title: '加载中...' });
     wx.request({
@@ -53,63 +96,87 @@ Page({
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        console.log('[copywriting] 主索引请求成功', {
+          statusCode: res.statusCode,
+          dataType: typeof res.data,
+          dataKeys: res.data ? Object.keys(res.data) : null
+        });
         wx.hideLoading();
         if (res.statusCode === 200 && res.data) {
           const categoryKeys = Object.keys(res.data);
           const categories = [];
+          console.log('[copywriting] 开始加载分类数据，共', categoryKeys.length, '个分类', categoryKeys);
           
           // 加载每个分类的数据
           let loadedCount = 0;
           categoryKeys.forEach(key => {
+            console.log('[copywriting] 加载分类:', key);
             wx.request({
               url: `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/wordbank/${key}.json`,
               method: 'GET',
               success: (categoryRes) => {
+                console.log('[copywriting] 分类', key, '加载成功', {
+                  statusCode: categoryRes.statusCode,
+                  hasData: !!categoryRes.data
+                });
                 if (categoryRes.statusCode === 200 && categoryRes.data) {
                   categories.push(categoryRes.data);
                 }
                 loadedCount++;
+                console.log('[copywriting] 加载进度:', loadedCount, '/', categoryKeys.length);
                 if (loadedCount === categoryKeys.length) {
+                  console.log('[copywriting] 所有分类加载完成，共', categories.length, '个分类');
                   allCategories = categories;
                   this.setData({ categories });
                   
                   // 保存数据到缓存
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
+                  console.log('[copywriting] 数据已保存到缓存');
                 }
               },
-              fail: () => {
+              fail: (err) => {
+                console.error('[copywriting] 分类', key, '加载失败', err);
                 loadedCount++;
+                console.log('[copywriting] 加载进度(失败):', loadedCount, '/', categoryKeys.length);
                 if (loadedCount === categoryKeys.length) {
+                  console.log('[copywriting] 所有分类加载完成(含失败)，成功加载', categories.length, '个分类');
                   allCategories = categories;
                   this.setData({ categories });
                   
                   // 保存数据到缓存（即使部分加载失败）
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
+                  console.log('[copywriting] 数据已保存到缓存(含部分失败)');
                 }
               }
             });
           });
         } else {
+          console.error('[copywriting] 主索引加载失败或数据为空', res);
           // 加载失败，尝试使用缓存数据
           if (cachedData) {
+            console.log('[copywriting] 使用缓存数据作为降级方案');
             allCategories = cachedData;
             this.setData({ categories: cachedData });
             utils.showText('网络异常，使用缓存数据');
           } else {
+            console.error('[copywriting] 没有缓存数据可用');
             utils.showText('分类数据加载失败');
           }
         }
       },
-      fail: () => {
+      fail: (err) => {
+        console.error('[copywriting] 主索引网络请求失败', err);
         wx.hideLoading();
         // 网络请求失败，尝试使用缓存数据
         if (cachedData) {
+          console.log('[copywriting] 网络失败，使用缓存数据作为降级方案');
           allCategories = cachedData;
           this.setData({ categories: cachedData });
           utils.showText('网络连接失败，使用缓存数据');
         } else {
+          console.error('[copywriting] 网络失败且无缓存数据');
           utils.showText('网络请求失败，请检查网络连接');
         }
       }
@@ -316,5 +383,20 @@ Page({
     } else {
       if (callback) callback();
     }
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '文案宝库 - 精选优质文案',
+      path: '/packages/life/pages/copywriting/copywriting'
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '文案宝库 - 精选优质文案'
+    };
   }
 });
