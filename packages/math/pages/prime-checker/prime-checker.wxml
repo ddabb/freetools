@@ -1,0 +1,176 @@
+<!--packages/math/pages/prime-checker/prime-checker.wxml-->
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">🔢</text>
+      </view>
+      <text class="main-title">质数判断</text>
+      <text class="subtitle">快速判断数字是否为质数</text>
+    </view>
+  </view>
+
+  <view class="content-wrapper">
+    <!-- 输入卡片 -->
+    <view class="input-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">输入数字</text>
+      </view>
+      
+      <view class="card-body">
+        <view class="input-section">
+          <view class="input-wrapper">
+            <text class="input-label">请输入一个正整数</text>
+            <view class="input-container">
+              <input
+                type="number"
+                value="{{inputValue}}"
+                bindinput="onInputChange"
+                class="modern-input"
+                placeholder="例如：97"
+                maxlength="16"
+                focus="{{inputFocus}}"
+              />
+              <view class="input-status {{inputValue ? 'valid' : ''}}">
+                <text class="status-dot"></text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮组 -->
+        <view class="action-section">
+          <button 
+            class="primary-btn {{inputValue ? 'ready' : ''}}" 
+            bindtap="checkPrime"
+            disabled="{{!inputValue}}"
+            hover-class="btn-primary-hover"
+          >
+            <text class="btn-icon">🔍</text>
+            <text class="btn-text">开始判断</text>
+            <view class="btn-shine" wx:if="{{inputValue}}"></view>
+          </button>
+          
+          <button 
+            class="secondary-btn" 
+            bindtap="clearInput"
+            wx:if="{{inputValue}}"
+            hover-class="btn-secondary-hover"
+          >
+            <text class="btn-icon">🗑️</text>
+            <text class="btn-text">清空</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-card card-shadow" wx:if="{{loading}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在判断中...</text>
+      </view>
+    </view>
+
+    <!-- 结果卡片 -->
+    <view wx:if="{{showResult}}" class="result-card card-shadow fade-in-up {{result.isPrime ? 'prime-card' : 'composite-card'}}" style="animation-delay: 0.2s">
+      <view class="result-header">
+        <view class="result-icon">{{result.isPrime ? '✨' : '📊'}}</view>
+        <text class="result-title">判断结果</text>
+        <view class="result-badge {{result.isPrime ? 'prime-badge' : 'composite-badge'}}">{{result.isPrime ? '质数' : '合数'}}</view>
+      </view>
+      
+      <view class="result-body">
+        <view class="info-grid">
+          <view class="info-item">
+            <view class="info-icon">📝</view>
+            <view class="info-content">
+              <text class="info-label">输入数字</text>
+              <text class="info-value highlight">{{result.number}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">🔍</view>
+            <view class="info-content">
+              <text class="info-label">判断结果</text>
+              <text class="info-value highlight">{{result.resultText}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item" wx:if="{{!result.isPrime}}">
+            <view class="info-icon">❌</view>
+            <view class="info-content">
+              <text class="info-label">原因</text>
+              <text class="info-value">{{result.reason}}</text>
+            </view>
+          </view>
+          
+          <view class="info-item">
+            <view class="info-icon">⏱️</view>
+            <view class="info-content">
+              <text class="info-label">计算耗时</text>
+              <text class="info-value">{{result.calculationTime}}ms</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 性质说明 -->
+        <view class="properties-section" wx:if="{{result.properties.length > 0}}">
+          <text class="section-title">数字性质：</text>
+          <view class="properties-list">
+            <view class="property-tag" wx:for="{{result.properties}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+
+        <!-- 相邻质数 -->
+        <view class="neighbor-section" wx:if="{{result.prevPrime || result.nextPrime}}">
+          <text class="section-title">相邻质数：</text>
+          <view class="neighbor-grid">
+            <view class="neighbor-item" wx:if="{{result.prevPrime}}">
+              <text class="neighbor-label">前一个</text>
+              <text class="neighbor-value">{{result.prevPrime}}</text>
+            </view>
+            <view class="neighbor-item" wx:if="{{result.nextPrime}}">
+              <text class="neighbor-label">后一个</text>
+              <text class="neighbor-value">{{result.nextPrime}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 结果说明 -->
+        <view class="explanation-section">
+          <text class="section-title">结果说明：</text>
+          <text class="explanation-text">{{result.explanation}}</text>
+        </view>
+      </view>
+      
+      <view class="result-actions">
+        <button class="action-btn copy-btn" bindtap="copyResult" hover-class="btn-action-hover">
+          <text class="btn-icon">📋</text>
+          <text>复制结果</text>
+        </button>
+        <button class="action-btn retry-btn" bindtap="reset" hover-class="btn-action-hover">
+          <text class="btn-icon">🔄</text>
+          <text>重新判断</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 概念说明 -->
+    <view class="concept-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="concept-header">
+        <view class="concept-icon">ℹ️</view>
+        <text class="concept-title">概念说明</text>
+      </view>
+      <view class="concept-content">
+        <text class="concept-text"><text class="concept-highlight">质数（素数）：</text>大于1的自然数，除了1和它本身外，不能被其他自然数整除。</text>
+        <text class="concept-text"><text class="concept-highlight">合数：</text>大于1的自然数，除了1和它本身外，还能被其他自然数整除。</text>
+        <text class="concept-text"><text class="concept-highlight">判断算法：</text>采用6k±1优化算法，时间复杂度O(√n)，性能优异。</text>
+        <text class="concept-text"><text class="concept-highlight">特殊质数：</text>梅森质数(2^p-1)、孪生质数(p,p+2)、安全质数(2q+1)。</text>
+      </view>
+    </view>
+  </view>
+</view>

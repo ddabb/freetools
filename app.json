@@ -60,6 +60,7 @@
         "pages/prime-factorization/prime-factorization",
         "pages/24point/24point",
         "pages/oddEven/oddEven",
+        "pages/prime-checker/prime-checker",
         "pages/random-selector/random-selector",
         "pages/sudoku-solver/sudoku-solver",
         "pages/sudoku-generator/sudoku-generator",

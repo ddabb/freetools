@@ -243,6 +243,16 @@ const tools = [
     description: '判断数字的奇偶性'
   },
   {
+    id: 'prime-checker',
+    name: '质数判断',
+    icon: '🔢',
+    color: 'indigo',
+    url: '/packages/math/pages/prime-checker/prime-checker',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['质数', '素数', '判断', '数字', '合数', '6k±1'],
+    description: '快速判断数字是否为质数，采用6k±1优化算法'
+  },
+  {
     id: 'leapyear',
     name: '闰年判断',
     icon: '📅',
