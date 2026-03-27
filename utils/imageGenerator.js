@@ -9,6 +9,39 @@ const utils = require('./index');
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
+// 日志收集数组
+let drawLogs = [];
+
+/**
+ * 记录绘制日志
+ * @param {string} message - 日志信息
+ * @param {object} data - 附加数据
+ */
+function logDraw(message, data = {}) {
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    message,
+    data
+  };
+  drawLogs.push(logEntry);
+  console.log(`[ImageGenerator] ${message}`, data);
+}
+
+/**
+ * 获取所有绘制日志
+ * @returns {string} 日志列表的字符串表示
+ */
+function getDrawLogs() {
+  return JSON.stringify(drawLogs, null, 2);
+}
+
+/**
+ * 清空绘制日志
+ */
+function clearDrawLogs() {
+  drawLogs = [];
+}
+
 /**
  * 默认配置
  */
@@ -117,19 +150,61 @@ function drawBackground(ctx, width, height, options = {}) {
  * @param {boolean} isBold - 是否加粗
  */
 function setCanvasFont(ctx, fontSize, fontType = 'handwriting', isBold = false) {
-  const fontStacks = {
-    title: 'Montserrat, Pacifico, Inter, Roboto, -apple-system, sans-serif',
-    body: 'Inter, Roboto, Open Sans, -apple-system, sans-serif',
-    handwriting: 'Pacifico, Dancing Script, cursive, STKaiti, KaiTi, serif',
-    elegant: 'Raleway, Lato, Source Sans Pro, STKaiti, serif'
-  };
+  // 尝试获取全局应用实例，检查字体加载状态
+  let loadedFonts = [];
+  let fontsFailed = false;
   
-  const fontFamily = fontStacks[fontType] || fontStacks.body;
+  try {
+    if (typeof getApp === 'function') {
+      const app = getApp();
+      if (app && app.globalData) {
+        loadedFonts = app.globalData.loadedFonts || [];
+        fontsFailed = app.globalData.fontsFailed || false;
+        logDraw('获取全局字体加载状态', { loadedFonts, fontsFailed });
+      }
+    }
+  } catch (e) {
+    logDraw('获取全局应用实例失败', { error: e.message });
+  }
+
+  // 基础字体栈
+  const baseFontStacks = {
+    title: ['Montserrat', 'Pacifico', 'Inter', 'Roboto', 'Noto Sans SC', '-apple-system', 'sans-serif'],
+    body: ['Inter', 'Roboto', 'Open Sans', 'Noto Sans SC', '-apple-system', 'sans-serif'],
+    handwriting: ['Pacifico', 'Dancing Script', 'Noto Sans SC', 'Inter', 'Roboto', 'cursive', 'STKaiti', 'KaiTi', 'serif'],
+    elegant: ['Raleway', 'Lato', 'Source Sans 3', 'Noto Sans SC', 'STKaiti', 'serif']
+  };
+
+  // 根据加载状态构建字体栈
+  const buildFontFamily = (fontList) => {
+    const availableFonts = [];
+    const fallbackFonts = [];
+    
+    fontList.forEach(font => {
+      // 处理带引号的字体名称
+      const fontName = font.replace(/"/g, '');
+      if (loadedFonts.includes(fontName) || font === '-apple-system' || font === 'sans-serif' || font === 'serif' || font === 'cursive') {
+        availableFonts.push(font);
+      } else {
+        fallbackFonts.push(font);
+      }
+    });
+    
+    // 优先使用已加载的字体，然后是回退字体
+    return [...availableFonts, ...fallbackFonts].join(', ');
+  };
+
+  const fontList = baseFontStacks[fontType] || baseFontStacks.body;
+  const fontFamily = buildFontFamily(fontList);
   const style = isBold ? 'bold ' : '';
   
   ctx.font = `${style}${fontSize}px ${fontFamily}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
+  
+  // 获取实际使用的字体
+  const actualFont = ctx.font;
+  logDraw('设置Canvas字体', { fontSize, fontType, isBold, fontFamily, actualFont, loadedFonts });
 }
 
 /**
@@ -208,6 +283,8 @@ function drawText(ctx, text, options = {}) {
   const { fontSize, lineHeight, maxLines } = params;
 
   setCanvasFont(ctx, fontSize, 'handwriting', true);
+  // 绘制文案前设置字体，包含实际使用的字体
+  logDraw('绘制文案前设置字体', { fontSize, fontType: 'handwriting', isBold: true, actualFont: ctx.font });
 
   // 根据文本长度动态调整maxWidth
   let adjustedMaxWidth = maxWidth;
@@ -287,7 +364,9 @@ function drawFrom(ctx, from, options = {}) {
   const { x = 10, y, maxWidth = 285, align = 'right' } = options;
   
   if (from && from !== '佚名') {
-    setCanvasFont(ctx, 16, 'elegant', false, true);
+    setCanvasFont(ctx, 16, 'elegant', false);
+    // 绘制来源信息前设置字体，包含实际使用的字体
+    logDraw('绘制来源信息前设置字体', { fontSize: 16, fontType: 'elegant', isBold: false, actualFont: ctx.font });
     ctx.fillStyle = '#8a9aaf';
     ctx.textAlign = align;
     const text = '—— ' + from;
@@ -327,10 +406,14 @@ function drawDate(ctx, options = {}) {
   const qrCenterY = qrY + qrSize / 2;
   
   setCanvasFont(ctx, 14, 'title', true);
+  // 绘制日期信息前设置字体，包含实际使用的字体
+  logDraw('绘制日期信息前设置字体', { fontSize: 14, fontType: 'title', isBold: true, actualFont: ctx.font });
   ctx.fillStyle = '#4a5568';
   ctx.fillText(dateStr, x, qrCenterY - 20);
   
   setCanvasFont(ctx, 12, 'body');
+  // 绘制星期信息前设置字体，包含实际使用的字体
+  logDraw('绘制星期信息前设置字体', { fontSize: 12, fontType: 'body', isBold: false, actualFont: ctx.font });
   ctx.fillStyle = '#718096';
   const weekText = lunarInfo ? `星期${weekDay} ${lunarInfo}` : `星期${weekDay}`;
   ctx.fillText(weekText, x, qrCenterY + 5);
@@ -434,5 +517,9 @@ module.exports = {
   drawDate,
   drawQRCode,
   exportImage,
-  saveToAlbum
+  saveToAlbum,
+  // 日志相关函数
+  logDraw,
+  getDrawLogs,
+  clearDrawLogs
 };

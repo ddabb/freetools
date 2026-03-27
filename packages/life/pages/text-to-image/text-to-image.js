@@ -165,6 +165,9 @@ Page({
 
     wx.showLoading({ title: '生成中...' });
 
+    // 清空之前的日志
+    imgGen.clearDrawLogs();
+
     const query = wx.createSelectorQuery().in(this);
     query.select('#cvsTextToImage')
       .fields({ node: true, size: true })
@@ -187,6 +190,10 @@ Page({
 
         // 绘制完整图片
         this.drawImage(ctx, canvas, this.data.canvaswidth, this.data.canvasheight, () => {
+          // 获取字体相关日志
+          const logs = imgGen.getDrawLogs();
+          console.log('字体绘制日志:', logs);
+          
           // 导出图片
           wx.canvasToTempFilePath({
             canvas: canvas,
@@ -205,6 +212,8 @@ Page({
                 filePath: result.tempFilePath,
                 success: () => {
                   utils.showSuccess('保存相册成功');
+                  // 再次打印日志，方便复制
+                  console.log('字体绘制日志:', logs);
                 },
                 fail: (err) => {
                   if (err.errMsg && err.errMsg.includes('auth denied')) {
