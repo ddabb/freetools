@@ -9,7 +9,6 @@
           class="textarea"
           placeholder="请输入要生成图片的文字内容（建议20字以内效果更佳）"
           bindinput="onTextInput"
-          bindblur="onInputBlur"
           maxlength="100"
           value="{{text}}"
         ></textarea>
@@ -21,7 +20,6 @@
           class="input" 
           placeholder="请输入出处信息" 
           bindinput="onFromInput" 
-          bindblur="onInputBlur"
           value="{{from}}" 
           maxlength="15"
         ></input>

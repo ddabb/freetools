@@ -86,7 +86,7 @@ Page({
       : '/images/text2image.jpg';
 
     // 加载并绘制二维码
-    if (qrPath.startsWith('/') || qrPath.startsWith('http')) {
+    if (qrPath) {
       const img = canvas.createImage();
       img.src = qrPath;
       img.onload = () => {
@@ -95,6 +95,10 @@ Page({
           qrY,
           qrSize
         });
+        if (callback) callback();
+      };
+      img.onerror = () => {
+        console.warn('二维码图片加载失败:', qrPath);
         if (callback) callback();
       };
     } else {
