@@ -2,14 +2,23 @@
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
 
-// 预设数独题目
-const presetList = [
+// CDN 数据源地址
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const PRESET_KEY = 'sudoku_presets';
+const PRESET_TIMESTAMP_KEY = 'sudoku_presets_timestamp';
+const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存
+
+// 预设数独题目（本地备用）
+const localPresetList = [
   { name: '入门', level: '★☆☆☆☆', puzzle: [[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]] },
   { name: '初级', level: '★★☆☆☆', puzzle: [[0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],[8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],[0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0]] },
   { name: '中级', level: '★★★☆☆', puzzle: [[0,2,0,6,0,0,8,0,0],[5,8,0,0,0,9,7,0,0],[0,0,0,0,4,0,0,0,0],[3,7,0,0,0,0,5,0,0],[6,0,0,0,0,0,0,0,4],[0,0,8,0,0,0,0,1,3],[0,0,0,0,2,0,0,0,0],[0,0,9,8,0,0,0,3,6],[0,0,0,0,0,0,0,9,0]] },
   { name: '高级', level: '★★★★☆', puzzle: [[0,0,0,0,0,0,2,0,0],[0,0,0,6,0,0,0,0,3],[0,7,4,8,0,0,0,0,0],[8,0,0,0,0,1,0,0,0],[0,4,6,0,0,0,7,0,0],[0,0,0,3,0,0,0,0,5],[0,0,0,0,0,9,6,0,0],[9,0,0,0,0,3,0,0,0],[0,0,1,0,0,0,0,0,0]] },
   { name: '骨灰级', level: '★★★★★', puzzle: [[0,0,0,0,0,0,0,1,2],[0,0,0,0,0,0,0,0,3],[0,0,2,3,0,0,4,0,0],[0,0,1,8,0,0,0,9,0],[0,5,0,0,9,0,0,4,0],[0,4,0,0,0,6,7,0,0],[0,0,8,5,0,0,9,0,0],[2,0,0,0,0,0,0,0,0],[9,1,0,0,0,0,5,0,0]] }
 ];
+
+// 全局预设数据
+let presetList = localPresetList;
 
 Page({
   data: {
@@ -29,6 +38,44 @@ Page({
   onLoad() {
     this.initBoard();
     wx.setNavigationBarTitle({ title: '数独求解器' });
+    this.loadPresets();
+  },
+
+  // 从CDN加载预设题目
+  loadPresets() {
+    const cached = wx.getStorageSync(PRESET_KEY);
+    const timestamp = wx.getStorageSync(PRESET_TIMESTAMP_KEY);
+    const now = Date.now();
+
+    // 检查缓存是否有效
+    if (cached && timestamp && (now - timestamp < CACHE_EXPIRE)) {
+      console.log('[sudoku-solver] 使用缓存数据');
+      presetList = cached;
+      this.setData({ presetList });
+      return;
+    }
+
+    console.log('[sudoku-solver] 从CDN加载预设题目');
+    wx.request({
+      url: `${CDN_BASE}/sudoku-presets.json`,
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.presets) {
+          presetList = res.data.presets;
+          // 保存到缓存
+          wx.setStorageSync(PRESET_KEY, presetList);
+          wx.setStorageSync(PRESET_TIMESTAMP_KEY, now);
+          this.setData({ presetList });
+          console.log('[sudoku-solver] CDN数据加载成功，共', presetList.length, '道题目');
+        } else {
+          console.warn('[sudoku-solver] CDN数据格式错误，使用本地数据');
+        }
+      },
+      fail: (err) => {
+        console.warn('[sudoku-solver] CDN请求失败，使用本地数据', err);
+      }
+    });
   },
 
   initBoard() {

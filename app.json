@@ -35,6 +35,7 @@
         "pages/leapyear/leapyear",
         "pages/copywriting/copywriting",
         "pages/text-to-image/text-to-image",
+        "pages/article-cover/article-cover",
         "pages/qrcode/qrcode"
       ]
     },
@@ -89,7 +90,8 @@
         "pages/mdconvert/mdconvert",
         "pages/onlychinese/onlychinese",
         "pages/password-generator/password-generator",
-        "pages/regex-tester/regex-tester"
+        "pages/regex-tester/regex-tester",
+        "pages/poster-generator/poster-generator"
       ]
     },
     {

@@ -478,6 +478,26 @@ const tools = [
     description: '将文字转换为图片，支持添加出处和二维码'
   },
   {
+    id: 'article-cover',
+    name: '公众号配图',
+    icon: '🎨',
+    color: 'blue',
+    url: '/packages/life/pages/article-cover/article-cover',
+    categories: ['生活工具', '学习工具'],
+    keywords: ['公众号', '配图', '封面', '图片', '生成', '2.35'],
+    description: '生成公众号封面配图，支持2.35:1标准比例，多种配色风格'
+  },
+  {
+    id: 'poster-generator',
+    name: '海报生成',
+    icon: '📄',
+    color: 'blue',
+    url: '/packages/text/pages/poster-generator/poster-generator',
+    categories: ['学习工具', '生活工具'],
+    keywords: ['海报', '生成', '图片', '宣传'],
+    description: '快速生成精美的海报图片，支持多种样式'
+  },
+  {
     id: 'sudoku-solver',
     name: '数独求解器',
     icon: '🧩',

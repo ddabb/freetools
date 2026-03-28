@@ -1,0 +1,84 @@
+<view class="container">
+  <!-- 内容区域 -->
+  <view class="content-area">
+    <!-- 输入区域 -->
+    <view class="input-section">
+      <view class="form-group">
+        <text class="label">海报标题（30字以内）</text>
+        <input 
+          class="input" 
+          placeholder="请输入海报标题" 
+          bindinput="onTitleInput" 
+          value="{{title}}" 
+          maxlength="30"
+        ></input>
+        <text class="count">{{title ? title.length : 0}}/30</text>
+      </view>
+      <view class="form-group">
+        <text class="label">海报内容（200字以内）</text>
+        <textarea
+          class="textarea"
+          placeholder="请输入海报内容"
+          bindinput="onContentInput"
+          maxlength="200"
+          value="{{content}}"
+        ></textarea>
+        <text class="count">{{contentLength}}/200</text>
+      </view>
+      <view class="form-group">
+        <text class="label">底部信息（20字以内）</text>
+        <input 
+          class="input" 
+          placeholder="请输入底部信息（如二维码说明）" 
+          bindinput="onFooterInput" 
+          value="{{footer}}" 
+          maxlength="20"
+        ></input>
+        <text class="count">{{footer ? footer.length : 0}}/20</text>
+      </view>
+      
+      <!-- 样式选择 -->
+      <view class="form-group">
+        <text class="label">选择样式</text>
+        <view class="style-selection">
+          <view class="style-option {{selectedStyle === 'style1' ? 'active' : ''}}" bindtap="selectStyle" data-style="style1">
+            <text class="style-icon">🎨</text>
+            <text class="style-label">样式1</text>
+          </view>
+          <view class="style-option {{selectedStyle === 'style2' ? 'active' : ''}}" bindtap="selectStyle" data-style="style2">
+            <text class="style-icon">✨</text>
+            <text class="style-label">样式2</text>
+          </view>
+          <view class="style-option {{selectedStyle === 'style3' ? 'active' : ''}}" bindtap="selectStyle" data-style="style3">
+            <text class="style-icon">🌟</text>
+            <text class="style-label">样式3</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 生成图片按钮 -->
+      <view class="action-buttons">
+        <button class="btn-primary" bindtap="generatePoster">💾 保存到相册</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 预览区域 -->
+  <view class="preview-section" wx:if="{{title || content}}">
+    <text class="section-title">海报预览</text>
+    <view class="wxml2canvas-container">
+      <view id="poster-container" class="wxml2canvas-item poster-preview {{selectedStyle}}">
+        <view class="poster-header">
+          <text class="poster-title">{{title || '海报标题'}}</text>
+        </view>
+        <view class="poster-content">
+          <text class="poster-text">{{content || '海报内容'}}</text>
+        </view>
+        <view class="poster-footer">
+          <text class="poster-footer-text">{{footer || '底部信息'}}</text>
+        </view>
+      </view>
+    </view>
+    <wxml2canvas id="wxml2canvas" class="wxml2canvas-component" style="display: none;"></wxml2canvas>
+  </view>
+</view>

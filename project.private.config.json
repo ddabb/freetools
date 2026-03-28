@@ -23,6 +23,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "海报生成器",
+          "pathName": "packages/text/pages/poster-generator/poster-generator",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "人生A4纸",
           "pathName": "packages/life/pages/life-countdown/life-countdown",
           "query": "",

@@ -1,0 +1,79 @@
+<view class="container">
+  <!-- 封面预览 -->
+  <view class="preview-section">
+    <view class="preview-wrapper">
+      <image class="preview-image" src="{{previewUrl}}" mode="aspectFit" wx:if="{{previewUrl}}"></image>
+      <view class="preview-placeholder" wx:else>
+        <text class="placeholder-text">封面预览</text>
+      </view>
+    </view>
+    <text class="preview-hint">比例：2.35:1（公众号封面标准）</text>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="form-group">
+      <text class="label">标题</text>
+      <textarea
+        class="textarea"
+        placeholder="请输入标题（建议10字以内效果最佳）"
+        bindinput="onTitleInput"
+        maxlength="30"
+        value="{{title}}"
+      ></textarea>
+      <text class="count">{{titleLength}}/30</text>
+    </view>
+
+    <view class="form-group">
+      <text class="label">副标题（可选）</text>
+      <textarea
+        class="textarea small"
+        placeholder="请输入副标题"
+        bindinput="onSubtitleInput"
+        maxlength="50"
+        value="{{subtitle}}"
+      ></textarea>
+      <text class="count">{{subtitleLength}}/50</text>
+    </view>
+
+    <view class="form-group">
+      <text class="label">作者（可选）</text>
+      <input
+        class="input"
+        placeholder="请输入作者名称"
+        bindinput="onAuthorInput"
+        maxlength="20"
+        value="{{author}}"
+      ></input>
+    </view>
+  </view>
+
+  <!-- 样式选择 -->
+  <view class="style-section">
+    <text class="section-title">选择配色</text>
+    <scroll-view class="style-scroll" scroll-x>
+      <view class="style-list">
+        <view
+          class="style-item {{styleIndex === index ? 'active' : ''}}"
+          wx:for="{{styles}}"
+          wx:key="index"
+          bindtap="onStyleSelect"
+          data-index="{{index}}"
+        >
+          <view class="style-preview" style="background: linear-gradient(135deg, {{item.bgColors[0]}}, {{item.bgColors[1] || item.bgColors[0]}})">
+            <text class="style-name" style="color: {{item.textColor}}">标题</text>
+          </view>
+          <text class="style-label">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 生成按钮 -->
+  <view class="action-section">
+    <button class="btn-primary" bindtap="generateCover">💾 保存到相册</button>
+  </view>
+
+  <!-- 隐藏的画布 -->
+  <canvas id="cvsArticleCover" type="2d" style="width: 750px; height: 320px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+</view>

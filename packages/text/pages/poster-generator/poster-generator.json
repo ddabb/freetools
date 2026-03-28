@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "海报生成",
+  "usingComponents": {
+    "wxml2canvas": "wxml2canvas-2d"
+  }
+}

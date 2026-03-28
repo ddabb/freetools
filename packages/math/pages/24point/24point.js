@@ -1,4 +1,39 @@
 // packages/math/pages/24point/24point.js
+
+// CDN 数据源地址
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const QUESTION_KEY = '24point_questions';
+const QUESTION_TIMESTAMP_KEY = '24point_questions_timestamp';
+const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存
+
+// 本地备用题目
+const localQuestionBank = [
+  { numbers: [1, 2, 3, 4], solutions: [
+    { expression: "(1+2+3)×4", description: "先相加得到6，再乘以4" },
+    { expression: "(1×2×3)×4", description: "连乘得到24" }
+  ]},
+  { numbers: [2, 3, 4, 6], solutions: [
+    { expression: "6×4×(3-2)", description: "利用差值简化计算" },
+    { expression: "(6-3)×2×4", description: "先做减法得到3" }
+  ]},
+  { numbers: [3, 3, 8, 8], solutions: [
+    { expression: "8÷(3-8÷3)", description: "经典的分式解法" }
+  ]},
+  { numbers: [1, 3, 5, 7], solutions: [
+    { expression: "(7-3)×(1+5)", description: "分组计算得到4和6" }
+  ]},
+  { numbers: [4, 4, 10, 10], solutions: [
+    { expression: "(10×10-4)÷4", description: "利用平方差公式思路" }
+  ]},
+  { numbers: [5, 5, 5, 1], solutions: [
+    { expression: "(5-1÷5)×5", description: "分数运算的经典例子" }
+  ]},
+  { numbers: [6, 6, 8, 8], solutions: [
+    { expression: "(6÷(8-6))×8", description: "先做减法，再除法，最后乘法" },
+    { expression: "(8÷(8-6))×6", description: "另一种顺序" }
+  ]}
+];
+
 Page({
   data: {
     numbers: [1, 2, 3, 4], // 当前游戏的4个数字
@@ -32,33 +67,8 @@ Page({
       "试试先把两个数字相加或相减，看看能不能简化问题",
       "记住：每个数字必须使用且只能使用一次"
     ],
-    // 预定义的一些24点题目和答案
-    questionBank: [
-      { numbers: [1, 2, 3, 4], solutions: [
-        { expression: "(1+2+3)×4", description: "先相加得到6，再乘以4" },
-        { expression: "(1×2×3)×4", description: "连乘得到24" }
-      ]},
-      { numbers: [2, 3, 4, 6], solutions: [
-        { expression: "6×4×(3-2)", description: "利用差值简化计算" },
-        { expression: "(6-3)×2×4", description: "先做减法得到3" }
-      ]},
-      { numbers: [3, 3, 8, 8], solutions: [
-        { expression: "8÷(3-8÷3)", description: "经典的分式解法" }
-      ]},
-      { numbers: [1, 3, 5, 7], solutions: [
-        { expression: "(7-3)×(1+5)", description: "分组计算得到4和6" }
-      ]},
-      { numbers: [4, 4, 10, 10], solutions: [
-        { expression: "(10×10-4)÷4", description: "利用平方差公式思路" }
-      ]},
-      { numbers: [5, 5, 5, 1], solutions: [
-        { expression: "(5-1÷5)×5", description: "分数运算的经典例子" }
-      ]},
-      { numbers: [6, 6, 8, 8], solutions: [
-        { expression: "(6÷(8-6))×8", description: "先做减法，再除法，最后乘法" },
-        { expression: "(8÷(8-6))×6", description: "另一种顺序" }
-      ]}
-    ]
+    // 预设题目库（初始用本地数据）
+    questionBank: localQuestionBank
   },
 
   // 设置表达式
@@ -483,6 +493,13 @@ Page({
   generateNewGame() {
     console.log('generateNewGame called');
     try {
+      // 检查题目库是否已加载
+      if (!this.data.questionBank || this.data.questionBank.length === 0) {
+        console.warn('questionBank not loaded yet, waiting...');
+        setTimeout(() => this.generateNewGame(), 500);
+        return;
+      }
+      
       // 随机选择一个预设题目
       const randomIndex = Math.floor(Math.random() * this.data.questionBank.length);
       const selectedQuestion = this.data.questionBank[randomIndex];
@@ -711,6 +728,9 @@ Page({
       title: '24点速算'
     });
     
+    // 从CDN加载预设题目
+    this.loadQuestionBank();
+    
     // 生成初始游戏（仅在预设模式下）
     if (this.data.gameMode === 'preset') {
       this.generateNewGame();
@@ -718,25 +738,41 @@ Page({
     
     // 加载统计数据
     this.loadStats();
-    
-    // 测试 [6,6,8,8] 是否有解
-    const testNumbers = [6, 6, 8, 8];
-    const testSolutions = this.solve24(testNumbers);
-    console.log(`测试数字 [${testNumbers}] 的求解结果:`, testSolutions.length > 0 ? '有解' : '无解');
-    if (testSolutions.length > 0) {
-      console.log('解法:', testSolutions.map(s => s.expression));
-    } else {
-      console.log('算法未找到解法，但正确解法应为 (6÷(8-6))×8');
-      // 尝试手动验证
-      const manualExpr = '(6÷(8-6))×8';
-      const calcExpr = manualExpr.replace(/÷/g, '/').replace(/×/g, '*');
-      try {
-        const result = this.safeEval(calcExpr);
-        console.log('手动验证表达式:', manualExpr, '=', result);
-      } catch (e) {
-        console.log('手动验证失败:', e);
-      }
+  },
+
+  // 从CDN加载预设题目
+  loadQuestionBank() {
+    const cached = wx.getStorageSync(QUESTION_KEY);
+    const timestamp = wx.getStorageSync(QUESTION_TIMESTAMP_KEY);
+    const now = Date.now();
+
+    // 检查缓存是否有效
+    if (cached && timestamp && (now - timestamp < CACHE_EXPIRE)) {
+      console.log('[24point] 使用缓存题目');
+      this.setData({ questionBank: cached });
+      return;
     }
+
+    console.log('[24point] 从CDN加载预设题目');
+    wx.request({
+      url: `${CDN_BASE}/24point-questions.json`,
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.questions) {
+          this.setData({ questionBank: res.data.questions });
+          // 保存到缓存
+          wx.setStorageSync(QUESTION_KEY, res.data.questions);
+          wx.setStorageSync(QUESTION_TIMESTAMP_KEY, now);
+          console.log('[24point] CDN题目加载成功，共', res.data.questions.length, '道');
+        } else {
+          console.warn('[24point] CDN数据格式错误，使用本地数据');
+        }
+      },
+      fail: (err) => {
+        console.warn('[24point] CDN请求失败，使用本地数据', err);
+      }
+    });
   },
 
   // 页面显示时执行
