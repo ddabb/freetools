@@ -21,8 +21,9 @@ Page({
     pastedText: '',
     presetList: presetList,
     selectedPreset: -1,
-    showCandidates: true,
-    hasCandidates: false
+    showCandidates: false,
+    showInputPanel: false,
+    selectedCell: { row: -1, col: -1 }
   },
 
   onLoad() {
@@ -35,12 +36,17 @@ Page({
     for (let r = 0; r < 9; r++) {
       const row = [];
       for (let c = 0; c < 9; c++) {
-        row.push({ value: '', fixed: false, candidates: [], showCandidates: false });
+        row.push({ value: '', fixed: false, candidates: [] });
       }
       board.push(row);
     }
-    this.setData({ board: board, hasSolution: false, solutionMessage: '', selectedPreset: -1, hasCandidates: false });
-    this.calculateCandidates();
+    this.setData({ 
+      board: board, 
+      hasSolution: false, 
+      solutionMessage: '', 
+      selectedPreset: -1,
+      selectedCell: { row: -1, col: -1 }
+    });
   },
 
   switchImportMode(e) {
@@ -134,12 +140,19 @@ Page({
       const row = [];
       for (let c = 0; c < 9; c++) {
         const num = puzzle[r][c];
-        row.push({ value: num === 0 ? '' : String(num), fixed: num !== 0, candidates: [], showCandidates: false });
+        row.push({ value: num === 0 ? '' : String(num), fixed: num !== 0, candidates: [] });
       }
       board.push(row);
     }
-    this.setData({ board: board, hasSolution: false, solutionMessage: '', pastedText: '', selectedPreset: -1, hasCandidates: false });
-    this.calculateCandidates();
+    this.setData({ 
+      board: board, 
+      hasSolution: false, 
+      solutionMessage: '', 
+      pastedText: '', 
+      selectedPreset: -1,
+      selectedCell: { row: -1, col: -1 }
+    });
+    if (this.data.showCandidates) this.calculateCandidates();
   },
 
   calculateCandidates() {
@@ -154,55 +167,83 @@ Page({
       grid.push(row);
     }
     const candidates = sudoku.calculateAllCandidates(grid);
-    let hasCandidates = false;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         if (grid[r][c] === 0) {
           board[r][c].candidates = candidates[r][c];
-          board[r][c].showCandidates = true;
-          if (candidates[r][c].length > 0) hasCandidates = true;
         } else {
           board[r][c].candidates = [];
-          board[r][c].showCandidates = false;
         }
       }
     }
-    this.setData({ board: board, hasCandidates: hasCandidates });
+    this.setData({ board: board });
   },
 
+  // 点击格子
+  onCellTap(e) {
+    const row = e.currentTarget.dataset.row;
+    const col = e.currentTarget.dataset.col;
+    const cell = this.data.board[row][col];
+    
+    // 如果是固定格子，不允许编辑
+    if (cell.fixed) return;
+    
+    // 打开输入面板
+    this.setData({ 
+      showInputPanel: true,
+      selectedCell: { row, col }
+    });
+  },
+
+  // 点击候选数
   onCandidateTap(e) {
     const row = e.currentTarget.dataset.row;
     const col = e.currentTarget.dataset.col;
     const num = e.currentTarget.dataset.num;
     const board = this.data.board;
+    
     if (board[row][col].candidates.indexOf(num) !== -1) {
       board[row][col].value = String(num);
-      board[row][col].fixed = true;
       board[row][col].candidates = [];
-      board[row][col].showCandidates = false;
       this.setData({ board: board, hasSolution: false, solutionMessage: '' });
       this.calculateCandidates();
     }
   },
 
-  onInput(e) {
-    const row = e.currentTarget.dataset.row;
-    const col = e.currentTarget.dataset.col;
-    let value = e.detail.value;
-    const num = parseInt(value, 10);
-    if (isNaN(num) || num < 1 || num > 9) value = '';
-    else value = String(num);
+  // 输入数字
+  onNumberInput(e) {
+    const num = e.currentTarget.dataset.num;
+    const { row, col } = this.data.selectedCell;
     const board = this.data.board;
-    board[row][col].value = value;
-    board[row][col].fixed = value !== '';
-    board[row][col].candidates = [];
-    board[row][col].showCandidates = false;
-    this.setData({ board: board, hasSolution: false, solutionMessage: '' });
+    
+    board[row][col].value = String(num);
+    this.setData({ 
+      board: board, 
+      showInputPanel: false,
+      hasSolution: false, 
+      solutionMessage: '' 
+    });
     this.calculateCandidates();
   },
 
-  onCellBlur() {
-    if (this.data.showCandidates) this.calculateCandidates();
+  // 清除格子
+  onClearCell() {
+    const { row, col } = this.data.selectedCell;
+    const board = this.data.board;
+    
+    board[row][col].value = '';
+    this.setData({ 
+      board: board, 
+      showInputPanel: false,
+      hasSolution: false, 
+      solutionMessage: '' 
+    });
+    this.calculateCandidates();
+  },
+
+  // 关闭输入面板
+  closeInputPanel() {
+    this.setData({ showInputPanel: false });
   },
 
   clearBoard() {
@@ -241,11 +282,16 @@ Page({
           if (!board[r][c].fixed) {
             board[r][c].value = String(solved[r][c]);
             board[r][c].candidates = [];
-            board[r][c].showCandidates = false;
           }
         }
       }
-      this.setData({ board: board, solving: false, hasSolution: true, solutionMessage: '求解成功', hasCandidates: false });
+      this.setData({ 
+        board: board, 
+        solving: false, 
+        hasSolution: true, 
+        solutionMessage: '求解成功',
+        showCandidates: false 
+      });
       utils.showSuccess('求解成功');
     }, 60);
   },

@@ -1,3 +1,4 @@
+/* 数独求解器样式 */
 page {
   min-height: 100vh;
   background: linear-gradient(135deg, #fff5eb 0%, #ffe8d6 100%);
@@ -9,6 +10,7 @@ page {
   box-sizing: border-box;
 }
 
+/* 头部区域 */
 .header-section {
   background: rgba(255, 255, 255, 0.98);
   border-radius: 20rpx;
@@ -31,7 +33,7 @@ page {
   line-height: 1.4;
 }
 
-/* 快速导入区域 */
+/* 导入区域 */
 .import-section {
   background: rgba(255, 255, 255, 0.98);
   border-radius: 20rpx;
@@ -41,6 +43,9 @@ page {
 }
 
 .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16rpx;
 }
 
@@ -50,6 +55,22 @@ page {
   color: #333;
 }
 
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.switch-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.candidate-switch {
+  transform: scale(0.8);
+}
+
+/* 标签页 */
 .import-tabs {
   display: flex;
   gap: 12rpx;
@@ -64,6 +85,7 @@ page {
   font-size: 26rpx;
   color: #666;
   text-align: center;
+  transition: all 0.3s;
 }
 
 .tab-item.active {
@@ -83,21 +105,6 @@ page {
   margin-bottom: 12rpx;
 }
 
-.paste-format {
-  font-size: 22rpx;
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 8rpx;
-  padding: 10rpx;
-  background: #f9f9f9;
-  border-radius: 8rpx;
-}
-
-.paste-format .highlight {
-  color: #ff6b35;
-  font-weight: 600;
-}
-
 .paste-input {
   width: 100%;
   height: 120rpx;
@@ -108,7 +115,6 @@ page {
   font-size: 26rpx;
   color: #333;
   box-sizing: border-box;
-  margin-top: 12rpx;
 }
 
 .paste-actions {
@@ -147,6 +153,7 @@ page {
   border-radius: 12rpx;
   text-align: center;
   border: 2rpx solid transparent;
+  transition: all 0.3s;
 }
 
 .preset-item.active {
@@ -168,10 +175,6 @@ page {
   color: #ff6b35;
 }
 
-.preset-actions {
-  margin-top: 8rpx;
-}
-
 /* 棋盘区域 */
 .board-section {
   background: rgba(255, 255, 255, 0.98);
@@ -186,6 +189,8 @@ page {
 .board {
   width: 630rpx;
   border: 4rpx solid #333;
+  border-radius: 8rpx;
+  overflow: hidden;
 }
 
 .row {
@@ -199,6 +204,9 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  background: #fff;
+  transition: all 0.2s;
 }
 
 .cell.right-border {
@@ -213,21 +221,176 @@ page {
   background: #f0f0f0;
 }
 
-.cell input {
+.cell.selected {
+  background: rgba(255, 127, 77, 0.2);
+}
+
+/* 单元格内容 */
+.cell-value {
   width: 100%;
   height: 100%;
-  text-align: center;
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.cell.fixed input {
+.value-text {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.fixed-text {
   color: #2c3e50;
   font-weight: 800;
+}
+
+.user-text {
+  color: #4ecdc4;
+}
+
+/* 空格子 */
+.cell-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-placeholder {
+  font-size: 32rpx;
+  color: #ccc;
+  font-weight: 300;
+}
+
+/* 候选数网格 */
+.candidates-grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 4rpx;
+  box-sizing: border-box;
+  background: rgba(78, 205, 196, 0.08);
+}
+
+.candidate-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18rpx;
+  font-weight: 600;
+}
+
+.candidate-item text {
+  line-height: 1;
+}
+
+.candidate-item .has {
+  color: #4ecdc4;
+}
+
+.candidate-item .empty {
+  color: transparent;
+}
+
+/* 输入面板 */
+.input-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.panel-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.panel-content {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx;
+  box-sizing: border-box;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.panel-title {
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.number-item {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.number-item:active {
+  background: #ff7f4d;
+  color: #fff;
+}
+
+.clear-item {
+  background: #ffebee;
+  color: #f44336;
+}
+
+.clear-item:active {
+  background: #f44336;
+  color: #fff;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.panel-btn {
+  width: 100%;
+  padding: 20rpx;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #666;
 }
 
 /* 按钮区域 */
@@ -249,6 +412,11 @@ page {
   flex-direction: column;
   align-items: center;
   gap: 8rpx;
+  transition: all 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn-icon {
@@ -338,100 +506,4 @@ page {
   font-size: 24rpx;
   color: #666;
   line-height: 1.5;
-}
-
-/* 候选解相关样式 */
-.candidate-switch {
-  transform: scale(0.8);
-}
-
-.switch-label {
-  font-size: 24rpx;
-  color: #666;
-  margin-left: 8rpx;
-}
-
-.candidate-tip {
-  text-align: center;
-  padding: 12rpx;
-  background: rgba(78, 205, 196, 0.1);
-  border-radius: 12rpx;
-  margin-bottom: 16rpx;
-}
-
-.tip-text {
-  font-size: 24rpx;
-  color: #4ecdc4;
-}
-
-/* 候选解网格 */
-.candidates-grid {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  padding: 2rpx;
-  box-sizing: border-box;
-}
-
-.candidate-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16rpx;
-  color: #4ecdc4;
-  font-weight: 500;
-}
-
-.candidate-item .has {
-  color: #4ecdc4;
-}
-
-.candidate-item .empty {
-  color: transparent;
-}
-
-.cell-value {
-  width: 100%;
-  height: 100%;
-}
-
-.cell-value input {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #4ecdc4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-}
-
-.cell-empty {
-  width: 100%;
-  height: 100%;
-}
-
-.cell-empty input {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  font-size: 24rpx;
-  color: #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-}
-
-/* 候选模式下的空格子 */
-.show-candidates .cell-empty {
-  background: rgba(78, 205, 196, 0.05);
-}
-
-.show-candidates .cell-empty input {
-  color: transparent;
 }
