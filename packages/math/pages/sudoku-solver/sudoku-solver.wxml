@@ -61,16 +61,16 @@
   <!-- 数独棋盘 -->
   <view class="board-section">
     <view class="board">
-      <view class="row" wx:for="{{board}}" wx:key="row">
+      <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
         <view 
-          class="cell {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'right-border' : ''}} {{(index + 1) % 3 === 0 && index !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}} {{selectedCell.row === index && selectedCell.col === itemIndex ? 'selected' : ''}}"
-          wx:for="{{item}}" 
+          class="cell {{(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'right-border' : ''}} {{(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}} {{selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}}"
+          wx:for="{{row}}" 
           wx:for-item="cell" 
-          wx:for-index="itemIndex"
+          wx:for-index="colIndex"
           wx:key="cell"
           bindtap="onCellTap"
-          data-row="{{index}}"
-          data-col="{{itemIndex}}"
+          data-row="{{rowIndex}}"
+          data-col="{{colIndex}}"
         >
           <!-- 有数字的格子 -->
           <view class="cell-value" wx:if="{{cell.value}}">
@@ -83,10 +83,11 @@
               class="candidate-item"
               wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
               wx:for-item="num"
+              wx:for-index="numIndex"
               wx:key="num"
               bindtap="onCandidateTap"
-              data-row="{{index}}"
-              data-col="{{itemIndex}}"
+              data-row="{{rowIndex}}"
+              data-col="{{colIndex}}"
               data-num="{{num}}"
             >
               <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>

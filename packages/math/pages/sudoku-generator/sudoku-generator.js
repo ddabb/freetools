@@ -1,15 +1,28 @@
 // packages/math/pages/sudoku-generator/sudoku-generator.js
 const sudoku = require('../../utils/sudoku');
 
+// CDN 数据源
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const DAILY_KEY = 'daily_sudoku';
+const DAILY_TS_KEY = 'daily_sudoku_ts';
+const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时
+
 Page({
   data: {
     board: [],
     difficulty: 'medium',
+    difficultyKey: 'medium',
     showingAnswer: false,
     answerBoard: [],
     generating: false,
     showCandidates: true,
     hasCandidates: false,
+    mode: 'random', // random | daily
+    dailyInfo: {
+      name: '',
+      difficulty: '',
+      level: ''
+    },
     difficulties: [
       { key: 'easy', name: '入门', hint: '⭐ 简单' },
       { key: 'medium', name: '初级', hint: '⭐⭐ 中等' },
@@ -19,7 +32,132 @@ Page({
 
   onLoad() {
     wx.setNavigationBarTitle({ title: '数独生成器' });
-    this.generateSudoku();
+    this.loadDailySudoku();
+  },
+
+  // 加载每日数独
+  loadDailySudoku() {
+    const now = Date.now();
+    const cached = wx.getStorageSync(DAILY_KEY);
+    const timestamp = wx.getStorageSync(DAILY_TS_KEY);
+
+    // 检查缓存是否有效（每天只缓存当天）
+    if (cached && timestamp) {
+      const cacheDate = new Date(timestamp).toDateString();
+      const today = new Date().toDateString();
+      if (cacheDate === today) {
+        console.log('[daily-sudoku] 使用今日缓存');
+        this.setTodaySudoku(cached);
+        return;
+      }
+    }
+
+    console.log('[daily-sudoku] 从CDN加载');
+    wx.request({
+      url: `${CDN_BASE}/daily-sudoku.json`,
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.puzzles) {
+          // 保存到缓存
+          wx.setStorageSync(DAILY_KEY, res.data);
+          wx.setStorageSync(DAILY_TS_KEY, now);
+          this.setTodaySudoku(res.data);
+        }
+      },
+      fail: (err) => {
+        console.warn('[daily-sudoku] CDN加载失败', err);
+        // 使用本地备用
+        this.useLocalDailySudoku();
+      }
+    });
+  },
+
+  // 设置今日数独
+  setTodaySudoku(data) {
+    const today = new Date();
+    const dayOfYear = this.getDayOfYear(today);
+    
+    // 查找今天的数独
+    let todayPuzzle = data.puzzles.find(p => p.dayOfYear === dayOfYear);
+    
+    // 如果没找到今天的，找最近的
+    if (!todayPuzzle) {
+      todayPuzzle = data.puzzles[0];
+    }
+
+    if (todayPuzzle) {
+      this.setData({
+        dailyInfo: {
+          name: todayPuzzle.name,
+          difficulty: todayPuzzle.difficulty,
+          level: todayPuzzle.level
+        },
+        board: sudoku.toDisplayBoard(todayPuzzle.puzzle, this.data.showCandidates),
+        answerBoard: todayPuzzle.solution,
+        showingAnswer: false,
+        mode: 'daily'
+      });
+    }
+  },
+
+  // 获取今天是第几天
+  getDayOfYear(date) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const diff = date - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  },
+
+  // 本地备用每日数独
+  useLocalDailySudoku() {
+    const today = new Date();
+    const dayOfYear = this.getDayOfYear(today);
+    
+    // 本地备用数据
+    const localData = {
+      puzzles: [{
+        date: today.toISOString().split('T')[0],
+        dayOfYear: dayOfYear,
+        name: '3月' + today.getDate() + '日',
+        difficulty: '入门',
+        level: '★☆☆☆☆',
+        puzzle: [
+          [5, 3, 0, 0, 7, 0, 0, 0, 0],
+          [6, 0, 0, 1, 9, 5, 0, 0, 0],
+          [0, 9, 8, 0, 0, 0, 0, 6, 0],
+          [8, 0, 0, 0, 6, 0, 0, 0, 3],
+          [4, 0, 0, 8, 0, 3, 0, 0, 1],
+          [7, 0, 0, 0, 2, 0, 0, 0, 6],
+          [0, 6, 0, 0, 0, 0, 2, 8, 0],
+          [0, 0, 0, 4, 1, 9, 0, 0, 5],
+          [0, 0, 0, 0, 8, 0, 0, 7, 9]
+        ],
+        solution: [
+          [5, 3, 4, 6, 7, 8, 9, 1, 2],
+          [6, 7, 2, 1, 9, 5, 3, 4, 8],
+          [1, 9, 8, 3, 4, 2, 5, 6, 7],
+          [8, 5, 9, 7, 6, 1, 4, 2, 3],
+          [4, 2, 6, 8, 5, 3, 7, 9, 1],
+          [7, 1, 3, 9, 2, 4, 8, 5, 6],
+          [9, 6, 1, 5, 3, 7, 2, 8, 4],
+          [2, 8, 7, 4, 1, 9, 6, 3, 5],
+          [3, 4, 5, 2, 8, 6, 1, 7, 9]
+        ]
+      }]
+    };
+
+    this.setTodaySudoku(localData);
+  },
+
+  // 切换模式
+  switchMode(e) {
+    const mode = e.currentTarget.dataset.mode;
+    this.setData({ mode });
+    
+    if (mode === 'daily') {
+      this.loadDailySudoku();
+    }
   },
 
   generateSudoku() {

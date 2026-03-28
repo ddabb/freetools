@@ -4,8 +4,35 @@
     <view class="desc">随机生成不同难度的数独题目</view>
   </view>
 
-  <!-- 难度选择 -->
+  <!-- 模式选择 -->
   <view class="difficulty-section">
+    <view class="difficulty-tabs">
+      <view 
+        class="difficulty-tab {{mode === 'random' ? 'active' : ''}}" 
+        bindtap="switchMode" 
+        data-mode="random"
+      >
+        <text class="tab-name">随机生成</text>
+      </view>
+      <view 
+        class="difficulty-tab {{mode === 'daily' ? 'active' : ''}}" 
+        bindtap="switchMode" 
+        data-mode="daily"
+      >
+        <text class="tab-name">📅 每日数独</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 每日数独信息 -->
+  <view class="daily-info" wx:if="{{mode === 'daily'}}">
+    <text class="daily-date">{{dailyInfo.name}}</text>
+    <text class="daily-difficulty">{{dailyInfo.level}} {{dailyInfo.difficulty}}</text>
+    <text class="daily-hint">每日一题，全球同题</text>
+  </view>
+
+  <!-- 难度选择（仅随机模式） -->
+  <view class="difficulty-section" wx:if="{{mode === 'random'}}">
     <view class="difficulty-tabs">
       <view 
         class="difficulty-tab {{difficulty === 'easy' ? 'active' : ''}}" 
@@ -48,18 +75,18 @@
   <!-- 数独棋盘 -->
   <view class="board-section">
     <view class="board {{showCandidates ? 'show-candidates' : ''}}">
-      <view class="row" wx:for="{{board}}" wx:key="row">
+      <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
         <view 
-          class="cell {{(itemIndex + 1) % 3 === 0 && itemIndex !== 8 ? 'right-border' : ''}} {{(index + 1) % 3 === 0 && index !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
-          wx:for="{{item}}" 
+          class="cell {{(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'right-border' : ''}} {{(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
+          wx:for="{{row}}" 
           wx:for-item="cell" 
-          wx:for-index="itemIndex"
+          wx:for-index="colIndex"
           wx:key="cell"
         >
           <!-- 已有数字 -->
           <view class="cell-content" wx:if="{{cell.value && !cell.showCandidates}}">
             <text class="cell-value {{showingAnswer ? 'answer' : ''}}">
-              {{showingAnswer ? answerBoard[index][itemIndex] : cell.value}}
+              {{showingAnswer ? answerBoard[rowIndex][colIndex] : cell.value}}
             </text>
           </view>
           
@@ -68,10 +95,11 @@
             <view 
               class="candidate-item"
               wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
+              wx:for-item="num"
               wx:key="num"
               bindtap="onCandidateTap"
-              data-row="{{index}}"
-              data-col="{{itemIndex}}"
+              data-row="{{rowIndex}}"
+              data-col="{{colIndex}}"
               data-num="{{num}}"
             >
               <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>

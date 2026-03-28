@@ -65,6 +65,11 @@ Page({
       result: true,
       match: true,
       investment: true
+    },
+    // 奖池信息
+    prizePool: {
+      amount: 800000000, // 默认8亿
+      lastUpdated: null
     }
   },
 
@@ -301,6 +306,7 @@ Page({
   // 计算匹配结果
   calculateMatch() {
     const { selectedNotes, drawResult, mode } = this.data;
+    const prizeStandards = this.getPrizeStandards();
     
     // 计算每注的匹配情况和收益
     const costPerNote = 2; // 每注成本
@@ -316,82 +322,91 @@ Page({
       
       // 根据模式计算匹配等级和收益
       if (mode === 'double') {
-        // 模式1（6棕1绿）模式匹配规则 - 实际奖金标准
+        // 双色球模式
         if (matchedBrown === 6 && matchedGreen === 1) {
           matchLevel = '一等奖';
-          revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
+          revenue = prizeStandards['一等奖'];
         } else if (matchedBrown === 6 && matchedGreen === 0) {
           matchLevel = '二等奖';
-          revenue = 200000; // 二等奖（浮动奖金，模拟20万）
+          revenue = prizeStandards['二等奖'];
         } else if (matchedBrown === 5 && matchedGreen === 1) {
           matchLevel = '三等奖';
-          revenue = 3000; // 三等奖（3000元）
+          revenue = prizeStandards['三等奖'];
         } else if (matchedBrown === 5 && matchedGreen === 0) {
           matchLevel = '四等奖';
-          revenue = 200; // 四等奖（200元）
+          revenue = prizeStandards['四等奖'];
         } else if (matchedBrown === 4 && matchedGreen === 1) {
           matchLevel = '四等奖';
-          revenue = 200; // 四等奖（200元）
+          revenue = prizeStandards['四等奖'];
         } else if (matchedBrown === 4 && matchedGreen === 0) {
           matchLevel = '五等奖';
-          revenue = 10; // 五等奖（10元）
+          revenue = prizeStandards['五等奖'];
         } else if (matchedBrown === 3 && matchedGreen === 1) {
           matchLevel = '五等奖';
-          revenue = 10; // 五等奖（10元）
+          revenue = prizeStandards['五等奖'];
         } else if (matchedBrown === 2 && matchedGreen === 1) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else if (matchedBrown === 1 && matchedGreen === 1) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else if (matchedBrown === 0 && matchedGreen === 1) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else {
           matchLevel = '未中奖';
           revenue = 0;
         }
       } else {
-        // 模式2（5棕2绿）模式匹配规则 - 实际奖金标准
+        // 大乐透模式（2026年新规则，7个奖级）
         if (matchedBrown === 5 && matchedGreen === 2) {
           matchLevel = '一等奖';
-          revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
+          revenue = prizeStandards['一等奖'];
         } else if (matchedBrown === 5 && matchedGreen === 1) {
           matchLevel = '二等奖';
-          revenue = 500000; // 二等奖（浮动奖金，模拟50万）
+          revenue = prizeStandards['二等奖'];
         } else if (matchedBrown === 5 && matchedGreen === 0) {
           matchLevel = '三等奖';
-          revenue = 200; // 三等奖（200元）
+          revenue = prizeStandards['三等奖'];
         } else if (matchedBrown === 4 && matchedGreen === 2) {
           matchLevel = '三等奖';
-          revenue = 200; // 三等奖（200元）
+          revenue = prizeStandards['三等奖'];
         } else if (matchedBrown === 4 && matchedGreen === 1) {
           matchLevel = '四等奖';
-          revenue = 50; // 四等奖（50元）
+          revenue = prizeStandards['四等奖'];
         } else if (matchedBrown === 3 && matchedGreen === 2) {
           matchLevel = '四等奖';
-          revenue = 50; // 四等奖（50元）
+          revenue = prizeStandards['四等奖'];
         } else if (matchedBrown === 4 && matchedGreen === 0) {
           matchLevel = '五等奖';
-          revenue = 10; // 五等奖（10元）
+          revenue = prizeStandards['五等奖'];
         } else if (matchedBrown === 3 && matchedGreen === 1) {
           matchLevel = '五等奖';
-          revenue = 10; // 五等奖（10元）
+          revenue = prizeStandards['五等奖'];
         } else if (matchedBrown === 2 && matchedGreen === 2) {
           matchLevel = '五等奖';
-          revenue = 10; // 五等奖（10元）
+          revenue = prizeStandards['五等奖'];
         } else if (matchedBrown === 3 && matchedGreen === 0) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else if (matchedBrown === 1 && matchedGreen === 2) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else if (matchedBrown === 2 && matchedGreen === 1) {
           matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          revenue = prizeStandards['六等奖'];
         } else if (matchedBrown === 0 && matchedGreen === 2) {
-          matchLevel = '六等奖';
-          revenue = 5; // 六等奖（5元）
+          matchLevel = '七等奖';
+          revenue = prizeStandards['七等奖'];
+        } else if (matchedBrown === 2 && matchedGreen === 0) {
+          matchLevel = '七等奖';
+          revenue = prizeStandards['七等奖'];
+        } else if (matchedBrown === 1 && matchedGreen === 1) {
+          matchLevel = '七等奖';
+          revenue = prizeStandards['七等奖'];
+        } else if (matchedBrown === 0 && matchedGreen === 1) {
+          matchLevel = '七等奖';
+          revenue = prizeStandards['七等奖'];
         } else {
           matchLevel = '未中奖';
           revenue = 0;
@@ -416,7 +431,8 @@ Page({
       costPerNote: 2,
       totalCost,
       totalRevenue,
-      netProfit
+      netProfit,
+      prizeStandards
     });
     
     this.setData({
@@ -644,6 +660,9 @@ Page({
       const totalNotes = selectedNotes.length;
       const totalCost = totalPeriods * totalNotes * costPerNote;
       
+      // 获取奖金标准
+      const prizeStandards = this.getPrizeStandards();
+      
       // 模拟收入（根据命中情况）
       let totalRevenue = 0;
       
@@ -654,88 +673,24 @@ Page({
         { name: '三等奖', count: 0, revenue: 0 },
         { name: '四等奖', count: 0, revenue: 0 },
         { name: '五等奖', count: 0, revenue: 0 },
-        { name: '六等奖', count: 0, revenue: 0 }
+        { name: '六等奖', count: 0, revenue: 0 },
+        { name: '七等奖', count: 0, revenue: 0 }
       ];
       
       hitDetails.forEach(detail => {
         if (detail.hasHit) {
           detail.hitStatus.forEach(status => {
             if (status.matchLevel !== '未中奖') {
-              // 根据命中等级模拟奖金 - 使用与calculateMatch方法一致的奖金标准
-              let revenue = 0;
-              if (mode === 'double') {
-                // 模式1奖金标准
-                switch (status.matchLevel) {
-                  case '一等奖':
-                    revenue = 5000000; // 模拟大奖
-                    break;
-                  case '二等奖':
-                    revenue = 200000; // 二等奖（浮动奖金，模拟20万）
-                    break;
-                  case '三等奖':
-                    revenue = 3000; // 三等奖（3000元）
-                    break;
-                  case '四等奖':
-                    revenue = 200; // 四等奖（200元）
-                    break;
-                  case '五等奖':
-                    revenue = 10; // 五等奖（10元）
-                    break;
-                  case '六等奖':
-                    revenue = 5; // 六等奖（5元）
-                    break;
-                }
-              } else {
-                // 模式2奖金标准
-                switch (status.matchLevel) {
-                  case '一等奖':
-                    revenue = 5000000; // 一等奖（浮动奖金，模拟500万）
-                    break;
-                  case '二等奖':
-                    revenue = 500000; // 二等奖（浮动奖金，模拟50万）
-                    break;
-                  case '三等奖':
-                    revenue = 200; // 三等奖（200元）
-                    break;
-                  case '四等奖':
-                    revenue = 50; // 四等奖（50元）
-                    break;
-                  case '五等奖':
-                    revenue = 10; // 五等奖（10元）
-                    break;
-                  case '六等奖':
-                    revenue = 5; // 六等奖（5元）
-                    break;
-                }
-              }
+              // 根据奖金标准获取奖金
+              const revenue = prizeStandards[status.matchLevel] || 0;
               
               // 更新奖项统计
-              switch (status.matchLevel) {
-                case '一等奖':
-                  awardStats[0].count++;
-                  awardStats[0].revenue += revenue;
-                  break;
-                case '二等奖':
-                  awardStats[1].count++;
-                  awardStats[1].revenue += revenue;
-                  break;
-                case '三等奖':
-                  awardStats[2].count++;
-                  awardStats[2].revenue += revenue;
-                  break;
-                case '四等奖':
-                  awardStats[3].count++;
-                  awardStats[3].revenue += revenue;
-                  break;
-                case '五等奖':
-                  awardStats[4].count++;
-                  awardStats[4].revenue += revenue;
-                  break;
-                case '六等奖':
-                  awardStats[5].count++;
-                  awardStats[5].revenue += revenue;
-                  break;
+              const awardIndex = ['一等奖', '二等奖', '三等奖', '四等奖', '五等奖', '六等奖', '七等奖'].indexOf(status.matchLevel);
+              if (awardIndex !== -1) {
+                awardStats[awardIndex].count++;
+                awardStats[awardIndex].revenue += revenue;
               }
+              
               totalRevenue += revenue;
             }
           });
@@ -802,12 +757,95 @@ Page({
     };
   },
 
+  // 获取奖池信息
+  async fetchPrizePool() {
+    try {
+      wx.showLoading({
+        title: '更新奖池信息...'
+      });
+      
+      // 模拟获取奖池信息（实际项目中应该调用真实的API）
+      // 这里使用模拟数据，实际应该从体彩官方API获取
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const prizePoolAmount = 860000000; // 模拟8.6亿奖池
+      
+      this.setData({
+        prizePool: {
+          amount: prizePoolAmount,
+          lastUpdated: new Date().toLocaleString()
+        }
+      });
+      
+      wx.hideLoading();
+      wx.showToast({
+        title: '奖池信息已更新',
+        icon: 'success'
+      });
+      
+      console.log('[fetchPrizePool] 奖池信息更新成功:', prizePoolAmount);
+    } catch (error) {
+      wx.hideLoading();
+      console.error('[fetchPrizePool] 获取奖池信息失败:', error);
+      wx.showToast({
+        title: '获取奖池信息失败',
+        icon: 'none'
+      });
+    }
+  },
+  
+  // 获取奖金标准（根据奖池金额）
+  getPrizeStandards() {
+    const { prizePool, mode } = this.data;
+    const isHighPool = prizePool.amount >= 800000000;
+    
+    if (mode === 'double') {
+      // 双色球模式
+      return {
+        一等奖: 5000000,
+        二等奖: 200000,
+        三等奖: 3000,
+        四等奖: 200,
+        五等奖: 10,
+        六等奖: 5
+      };
+    } else {
+      // 大乐透模式（2026年新规则）
+      if (isHighPool) {
+        // 奖池≥8亿时的奖金标准
+        return {
+          一等奖: 5000000,
+          二等奖: 500000,
+          三等奖: 6666,
+          四等奖: 380,
+          五等奖: 200,
+          六等奖: 18,
+          七等奖: 7
+        };
+      } else {
+        // 奖池<8亿时的奖金标准
+        return {
+          一等奖: 5000000,
+          二等奖: 500000,
+          三等奖: 5000,
+          四等奖: 300,
+          五等奖: 150,
+          六等奖: 15,
+          七等奖: 5
+        };
+      }
+    }
+  },
+  
   // 页面加载时执行
   onLoad() {
     // 设置导航栏标题
     wx.setNavigationBarTitle({
       title: '取数模拟器'
     });
+    
+    // 页面加载时获取奖池信息
+    this.fetchPrizePool();
   },
   
   // 页面显示时执行
