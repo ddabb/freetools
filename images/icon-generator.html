@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SVG to PNG Converter</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { color: #2980b9; margin-bottom: 30px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 30px 0; }
+    .icon-item { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; }
+    .icon-item canvas { border: 1px solid #ddd; border-radius: 8px; background: white; }
+    .icon-item p { margin: 12px 0 8px; font-weight: 600; color: #333; }
+    .icon-item .size { font-size: 12px; color: #666; }
+    button { background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; margin: 4px; }
+    button:hover { background: #2980b9; }
+    .download-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+    .download-section h3 { color: #333; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 随身工具宝 - 图标生成器</h1>
+    
+    <div class="icon-grid">
+      <!-- Logo -->
+      <div class="icon-item">
+        <canvas id="logo-512" width="192" height="192"></canvas>
+        <p>Logo (512×512)</p>
+        <span class="size">用于小程序头像</span>
+        <br><button onclick="download('logo', 512)">下载 PNG</button>
+      </div>
+      
+      <!-- 首页图标 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="home-normal" width="128" height="128"></canvas>
+        <p>首页 (未选中)</p>
+        <span class="size">128×128, #7f8c8d</span>
+        <br><button onclick="download('home-normal', 128)">下载 PNG</button>
+      </div>
+      
+      <!-- 首页图标 - 选中 -->
+      <div class="icon-item">
+        <canvas id="home-active" width="128" height="128"></canvas>
+        <p>首页 (选中)</p>
+        <span class="size">128×128, #2980b9</span>
+        <br><button onclick="download('home-active', 128)">下载 PNG</button>
+      </div>
+      
+      <!-- 关于图标 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="about-normal" width="128" height="128"></canvas>
+        <p>关于 (未选中)</p>
+        <span class="size">128×128, #7f8c8d</span>
+        <br><button onclick="download('about-normal', 128)">下载 PNG</button>
+      </div>
+      
+      <!-- 关于图标 - 选中 -->
+      <div class="icon-item">
+        <canvas id="about-active" width="128" height="128"></canvas>
+        <p>关于 (选中)</p>
+        <span class="size">128×128, #2980b9</span>
+        <br><button onclick="download('about-active', 128)">下载 PNG</button>
+      </div>
+    </div>
+    
+    <div class="download-section">
+      <h3>📥 一键下载全部</h3>
+      <button onclick="downloadAll()">下载全部图标</button>
+    </div>
+  </div>
+
+  <script>
+    // Logo SVG
+    const logoSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <defs>
+          <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3498db"/>
+            <stop offset="100%" style="stop-color:#2980b9"/>
+          </linearGradient>
+        </defs>
+        <rect x="32" y="32" width="448" height="448" rx="96" ry="96" fill="url(#bgGrad)"/>
+        <rect x="96" y="160" width="320" height="240" rx="24" ry="24" fill="#ffffff" opacity="0.95"/>
+        <rect x="192" y="120" width="128" height="48" rx="12" ry="12" fill="#ffffff" opacity="0.95"/>
+        <rect x="224" y="120" width="64" height="24" rx="8" ry="8" fill="url(#bgGrad)"/>
+        <g transform="translate(120, 200)">
+          <path d="M40 0 L60 20 L40 40 L20 20 Z" fill="#2980b9" opacity="0.9"/>
+          <rect x="10" y="35" width="40" height="12" rx="4" transform="rotate(-45, 30, 41)" fill="#2980b9" opacity="0.9"/>
+        </g>
+        <g transform="translate(220, 195)">
+          <circle cx="30" cy="30" r="20" fill="none" stroke="#2980b9" stroke-width="8"/>
+          <circle cx="30" cy="30" r="8" fill="#2980b9"/>
+          <rect x="26" y="0" width="8" height="12" fill="#2980b9"/>
+          <rect x="26" y="48" width="8" height="12" fill="#2980b9"/>
+          <rect x="0" y="26" width="12" height="8" fill="#2980b9"/>
+          <rect x="48" y="26" width="12" height="8" fill="#2980b9"/>
+        </g>
+        <g transform="translate(320, 195)">
+          <rect x="0" y="0" width="56" height="72" rx="8" fill="none" stroke="#2980b9" stroke-width="6"/>
+          <rect x="8" y="8" width="40" height="16" rx="4" fill="#2980b9" opacity="0.3"/>
+          <circle cx="16" cy="40" r="4" fill="#2980b9"/>
+          <circle cx="28" cy="40" r="4" fill="#2980b9"/>
+          <circle cx="40" cy="40" r="4" fill="#2980b9"/>
+          <circle cx="16" cy="56" r="4" fill="#2980b9"/>
+          <circle cx="28" cy="56" r="4" fill="#2980b9"/>
+          <circle cx="40" cy="56" r="4" fill="#2980b9"/>
+        </g>
+        <rect x="120" y="370" width="272" height="6" rx="3" fill="#ffffff" opacity="0.5"/>
+      </svg>
+    `;
+    
+    // 首页图标 SVG
+    function getHomeSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <polygon points="64,12 12,56 24,56 24,104 104,104 104,56 116,56" fill="${color}" opacity="0.8"/>
+          <rect x="36" y="60" width="56" height="44" rx="4" fill="${color}" opacity="0.5"/>
+          <rect x="52" y="80" width="24" height="32" rx="2" fill="${color}" opacity="0.3"/>
+          <circle cx="72" cy="96" r="2" fill="${color}"/>
+          <rect x="40" y="68" width="16" height="16" rx="2" fill="${color}" opacity="0.4"/>
+          <rect x="72" y="68" width="16" height="16" rx="2" fill="${color}" opacity="0.4"/>
+        </svg>
+      `;
+    }
+    
+    // 关于图标 SVG
+    function getAboutSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <circle cx="64" cy="64" r="52" fill="none" stroke="${color}" stroke-width="10" opacity="0.6"/>
+          <circle cx="64" cy="40" r="6" fill="${color}"/>
+          <rect x="58" y="52" width="12" height="40" rx="6" fill="${color}"/>
+        </svg>
+      `;
+    }
+    
+    // 绘制 SVG 到 Canvas
+    function drawSVG(canvasId, svgString, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      
+      const img = new Image();
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      img.onload = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+    
+    // 下载 PNG
+    function download(canvasId, size) {
+      let svgString;
+      
+      if (canvasId === 'logo') {
+        svgString = logoSVG;
+      } else if (canvasId.startsWith('home')) {
+        const color = canvasId.includes('active') ? '#2980b9' : '#7f8c8d';
+        svgString = getHomeSVG(color);
+      } else if (canvasId.startsWith('about')) {
+        const color = canvasId.includes('active') ? '#2980b9' : '#7f8c8d';
+        svgString = getAboutSVG(color);
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      const img = new Image();
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, size, size);
+        URL.revokeObjectURL(url);
+        
+        const link = document.createElement('a');
+        link.download = `${canvasId}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      img.src = url;
+    }
+    
+    // 下载全部
+    function downloadAll() {
+      download('logo', 512);
+      setTimeout(() => download('home-normal', 128), 100);
+      setTimeout(() => download('home-active', 128), 200);
+      setTimeout(() => download('about-normal', 128), 300);
+      setTimeout(() => download('about-active', 128), 400);
+    }
+    
+    // 初始化绘制预览
+    window.onload = function() {
+      drawSVG('logo-512', logoSVG, 192);
+      drawSVG('home-normal', getHomeSVG('#7f8c8d'), 128);
+      drawSVG('home-active', getHomeSVG('#2980b9'), 128);
+      drawSVG('about-normal', getAboutSVG('#7f8c8d'), 128);
+      drawSVG('about-active', getAboutSVG('#2980b9'), 128);
+    };
+  </script>
+</body>
+</html>

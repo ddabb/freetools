@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- 关于图标 - 圆圈里的 i -->
+  <defs>
+    <style>
+      .icon-about { fill: currentColor; }
+    </style>
+  </defs>
+  
+  <!-- 外圈 -->
+  <circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-width="16" class="icon-about" opacity="0.6"/>
+  
+  <!-- i 点 -->
+  <circle cx="128" cy="80" r="12" class="icon-about"/>
+  
+  <!-- i 柱 -->
+  <rect x="116" y="104" width="24" height="80" rx="12" class="icon-about"/>
+</svg>
