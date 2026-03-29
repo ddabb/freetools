@@ -6,6 +6,8 @@ const utils = require('../../../../utils/index');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const PRESET_KEY = 'sudoku_presets';
 const PRESET_TIMESTAMP_KEY = 'sudoku_presets_timestamp';
+const DAILY_KEY = 'daily_sudoku';
+const DAILY_TS_KEY = 'daily_sudoku_ts';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存
 
 // 预设数独题目（本地备用）
@@ -32,13 +34,131 @@ Page({
     selectedPreset: -1,
     showCandidates: false,
     showInputPanel: false,
-    selectedCell: { row: -1, col: -1 }
+    selectedCell: { row: -1, col: -1 },
+    mode: 'daily', // daily | preset | paste
+    dailyInfo: {
+      name: '',
+      difficulty: '',
+      level: ''
+    }
   },
 
   onLoad() {
     this.initBoard();
     wx.setNavigationBarTitle({ title: '数独求解器' });
     this.loadPresets();
+    this.loadDailySudoku();
+  },
+
+  // 加载每日数独
+  loadDailySudoku() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const dateStr = `${year}${month}${day}`;
+    
+    const now = Date.now();
+    const cached = wx.getStorageSync(DAILY_KEY);
+    const timestamp = wx.getStorageSync(DAILY_TS_KEY);
+
+    // 检查缓存是否有效（每天只缓存当天）
+    if (cached && timestamp) {
+      const cacheDate = new Date(timestamp).toDateString();
+      const todayStr = today.toDateString();
+      if (cacheDate === todayStr) {
+        console.log('[daily-sudoku] 使用今日缓存');
+        this.setTodaySudoku(cached);
+        return;
+      }
+    }
+
+    console.log('[daily-sudoku] 从CDN加载');
+    wx.request({
+      url: `${CDN_BASE}/sudoku/${dateStr}.json`,
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        if (res.statusCode === 200 && res.data) {
+          // 保存到缓存
+          wx.setStorageSync(DAILY_KEY, res.data);
+          wx.setStorageSync(DAILY_TS_KEY, now);
+          this.setTodaySudoku(res.data);
+        }
+      },
+      fail: (err) => {
+        console.warn('[daily-sudoku] CDN加载失败', err);
+        // 使用本地备用
+        this.useLocalDailySudoku();
+      }
+    });
+  },
+
+  // 设置今日数独
+  setTodaySudoku(data) {
+    if (data && data.puzzle) {
+      this.loadPuzzle(data.puzzle);
+      this.setData({
+        dailyInfo: {
+          name: data.name,
+          difficulty: data.difficulty,
+          level: data.level
+        },
+        mode: 'daily'
+      });
+    }
+  },
+
+  // 获取今天是第几天
+  getDayOfYear(date) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const diff = date - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  },
+
+  // 本地备用每日数独
+  useLocalDailySudoku() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    // 本地备用数据（新格式）
+    const localData = {
+      date: `${year}-${month}-${day}`,
+      name: `${year}年${month}月${day}日数独`,
+      level: '★☆☆☆☆',
+      difficulty: '简单',
+      puzzle: [
+        [5, 3, 0, 0, 7, 0, 0, 0, 0],
+        [6, 0, 0, 1, 9, 5, 0, 0, 0],
+        [0, 9, 8, 0, 0, 0, 0, 6, 0],
+        [8, 0, 0, 0, 6, 0, 0, 0, 3],
+        [4, 0, 0, 8, 0, 3, 0, 0, 1],
+        [7, 0, 0, 0, 2, 0, 0, 0, 6],
+        [0, 6, 0, 0, 0, 0, 2, 8, 0],
+        [0, 0, 0, 4, 1, 9, 0, 0, 5],
+        [0, 0, 0, 0, 8, 0, 0, 7, 9]
+      ],
+      emptyCells: 35
+    };
+
+    this.setTodaySudoku(localData);
+  },
+
+  // 切换模式
+  switchMode(e) {
+    const mode = e.currentTarget.dataset.mode;
+    this.setData({ mode });
+    
+    if (mode === 'daily') {
+      this.loadDailySudoku();
+    } else if (mode === 'preset') {
+      this.setData({ selectedPreset: -1 });
+    } else if (mode === 'paste') {
+      this.setData({ pastedText: '' });
+    }
   },
 
   // 从CDN加载预设题目
@@ -204,6 +324,8 @@ Page({
 
   calculateCandidates() {
     if (!this.data.showCandidates) return;
+    console.log('开始计算候选数...');
+    
     const board = this.data.board;
     const grid = [];
     for (let r = 0; r < 9; r++) {
@@ -213,17 +335,49 @@ Page({
       }
       grid.push(row);
     }
-    const candidates = sudoku.calculateAllCandidates(grid);
+    
+    console.log('当前棋盘数据:', grid);
+    
+    // 使用与生成器相同的 toDisplayBoard 函数
+    const displayBoard = sudoku.toDisplayBoard(grid, true);
+    console.log('使用toDisplayBoard后的数据:', displayBoard);
+    
+    // 更新棋盘数据
+    let totalCandidates = 0;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
+        board[r][c].candidates = displayBoard[r][c].candidates;
         if (grid[r][c] === 0) {
-          board[r][c].candidates = candidates[r][c];
-        } else {
-          board[r][c].candidates = [];
+          console.log(`格子[${r}][${c}]的候选数:`, board[r][c].candidates, '长度:', board[r][c].candidates.length);
+          totalCandidates += board[r][c].candidates.length;
         }
       }
     }
+    
+    console.log('总候选数数量:', totalCandidates);
+    
+    // 检查第一个空白格子的详细数据
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (grid[r][c] === 0) {
+          console.log('第一个空白格子的详细数据:', {
+            row: r,
+            col: c,
+            value: board[r][c].value,
+            valueType: typeof board[r][c].value,
+            candidates: board[r][c].candidates,
+            candidatesLength: board[r][c].candidates.length,
+            showCandidates: this.data.showCandidates,
+            isEmpty: board[r][c].value === ''
+          });
+          break;
+        }
+      }
+      break;
+    }
+    
     this.setData({ board: board });
+    console.log('候选数计算完成');
   },
 
   // 点击格子
@@ -240,21 +394,6 @@ Page({
       showInputPanel: true,
       selectedCell: { row, col }
     });
-  },
-
-  // 点击候选数
-  onCandidateTap(e) {
-    const row = e.currentTarget.dataset.row;
-    const col = e.currentTarget.dataset.col;
-    const num = e.currentTarget.dataset.num;
-    const board = this.data.board;
-    
-    if (board[row][col].candidates.indexOf(num) !== -1) {
-      board[row][col].value = String(num);
-      board[row][col].candidates = [];
-      this.setData({ board: board, hasSolution: false, solutionMessage: '' });
-      this.calculateCandidates();
-    }
   },
 
   // 输入数字

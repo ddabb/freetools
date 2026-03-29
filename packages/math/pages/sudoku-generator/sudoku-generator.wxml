@@ -4,35 +4,8 @@
     <view class="desc">随机生成不同难度的数独题目</view>
   </view>
 
-  <!-- 模式选择 -->
+  <!-- 难度选择 -->
   <view class="difficulty-section">
-    <view class="difficulty-tabs">
-      <view 
-        class="difficulty-tab {{mode === 'random' ? 'active' : ''}}" 
-        bindtap="switchMode" 
-        data-mode="random"
-      >
-        <text class="tab-name">随机生成</text>
-      </view>
-      <view 
-        class="difficulty-tab {{mode === 'daily' ? 'active' : ''}}" 
-        bindtap="switchMode" 
-        data-mode="daily"
-      >
-        <text class="tab-name">📅 每日数独</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 每日数独信息 -->
-  <view class="daily-info" wx:if="{{mode === 'daily'}}">
-    <text class="daily-date">{{dailyInfo.name}}</text>
-    <text class="daily-difficulty">{{dailyInfo.level}} {{dailyInfo.difficulty}}</text>
-    <text class="daily-hint">每日一题，全球同题</text>
-  </view>
-
-  <!-- 难度选择（仅随机模式） -->
-  <view class="difficulty-section" wx:if="{{mode === 'random'}}">
     <view class="difficulty-tabs">
       <view 
         class="difficulty-tab {{difficulty === 'easy' ? 'active' : ''}}" 
@@ -84,25 +57,26 @@
           wx:key="cell"
         >
           <!-- 已有数字 -->
-          <view class="cell-content" wx:if="{{cell.value && !cell.showCandidates}}">
-            <text class="cell-value {{showingAnswer ? 'answer' : ''}}">
-              {{showingAnswer ? answerBoard[rowIndex][colIndex] : cell.value}}
-            </text>
+          <view class="cell-value" wx:if="{{cell.value && !cell.showCandidates}}">
+            <text class="value-text {{showingAnswer ? 'answer' : ''}}">{{showingAnswer ? answerBoard[rowIndex][colIndex] : cell.value}}</text>
           </view>
           
           <!-- 候选解显示 -->
-          <view class="candidates-grid" wx:if="{{cell.showCandidates && cell.candidates && cell.candidates.length > 0}}">
+          <view 
+            class="candidates-grid" 
+            wx:if="{{showCandidates && !cell.value && cell.candidates}}"
+            bindtap="onCellTap"
+            data-row="{{rowIndex}}"
+            data-col="{{colIndex}}"
+          >
             <view 
               class="candidate-item"
-              wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
-              wx:for-item="num"
-              wx:key="num"
-              bindtap="onCandidateTap"
-              data-row="{{rowIndex}}"
-              data-col="{{colIndex}}"
-              data-num="{{num}}"
+              wx:for="{{cell.candidates}}"
+              wx:for-item="candidateNum"
+              wx:for-index="index"
+              wx:key="index"
             >
-              <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>
+              <text class="{{candidateNum !== 0 ? 'has' : 'empty'}}" style="font-size: 16rpx;">{{candidateNum !== 0 ? candidateNum : ''}}</text>
             </view>
           </view>
           
@@ -127,6 +101,31 @@
     </button>
   </view>
 
+  <!-- 数字输入面板 -->
+  <view class="input-panel" wx:if="{{showInputPanel}}">
+    <view class="panel-mask" bindtap="closeInputPanel"></view>
+    <view class="panel-content">
+      <view class="panel-title">输入数字</view>
+      <view class="number-grid">
+        <view 
+          class="number-item" 
+          wx:for="{{[1,2,3,4,5,6,7,8,9]}}" 
+          wx:key="*this"
+          bindtap="onNumberInput"
+          data-num="{{item}}"
+        >
+          {{item}}
+        </view>
+        <view class="number-item clear-item" bindtap="onClearCell">
+          清除
+        </view>
+      </view>
+      <view class="panel-actions">
+        <button class="panel-btn" bindtap="closeInputPanel">取消</button>
+      </view>
+    </view>
+  </view>
+
   <!-- 提示 -->
   <view class="tips-section">
     <view class="tips-title">💡 使用提示</view>
@@ -134,7 +133,7 @@
       <view class="tip-item">• 选择难度后自动生成数独题目</view>
       <view class="tip-item">• 点击"显示答案"查看完整解答</view>
       <view class="tip-item">• 开启候选解可查看可能的数字</view>
-      <view class="tip-item">• 点击候选数字可直接填入（需先开启）</view>
+      <view class="tip-item">• 点击空格子弹出数字输入面板</view>
     </view>
   </view>
 </view>

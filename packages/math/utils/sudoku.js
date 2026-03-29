@@ -49,10 +49,19 @@ function toDisplayBoard(grid, showCandidates) {
   for (let r = 0; r < 9; r++) {
     const row = [];
     for (let c = 0; c < 9; c++) {
+      // 创建固定长度的候选数数组，用0表示占位
+      let candidateNumbers = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      if (showCandidates && grid[r][c] === 0 && allCandidates) {
+        // 将实际的候选数放在对应的位置
+        allCandidates[r][c].forEach(num => {
+          candidateNumbers[num - 1] = num;
+        });
+      }
+      
       row.push({
         value: grid[r][c] === 0 ? '' : String(grid[r][c]),
         fixed: grid[r][c] !== 0,
-        candidates: allCandidates ? allCandidates[r][c] : [],
+        candidates: candidateNumbers,
         showCandidates: showCandidates && grid[r][c] === 0
       });
     }

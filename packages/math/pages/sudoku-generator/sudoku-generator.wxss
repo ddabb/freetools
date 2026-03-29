@@ -1,6 +1,7 @@
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f8f5 0%, #d1f2eb 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 .container {
@@ -10,25 +11,31 @@ page {
 }
 
 .header-section {
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 20rpx;
-  padding: 20rpx 15rpx;
-  margin-bottom: 15rpx;
-  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24rpx;
+  padding: 32rpx 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
   text-align: center;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
 }
 
 .title {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: 800;
-  color: #1abc9c;
-  margin-bottom: 10rpx;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12rpx;
 }
 
 .desc {
-  font-size: 24rpx;
-  color: #666;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.4;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
 }
 
 .difficulty-section {
@@ -103,6 +110,8 @@ page {
 .board {
   width: 630rpx;
   border: 4rpx solid #333;
+  border-radius: 8rpx;
+  overflow: hidden;
 }
 
 .row {
@@ -116,6 +125,9 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  background: #fff;
+  transition: all 0.2s;
 }
 
 .cell.right-border {
@@ -130,13 +142,30 @@ page {
   background: #f0f0f0;
 }
 
-.cell-value {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
+/* 单元格内容 */
+.cell-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.cell.fixed .cell-value {
+.cell-value {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-text {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.cell.fixed .value-text {
   color: #2c3e50;
   font-weight: 800;
 }
@@ -240,41 +269,28 @@ page {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  padding: 2rpx;
+  padding: 4rpx;
   box-sizing: border-box;
+  background: rgba(78, 205, 196, 0.08);
 }
 
 .candidate-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16rpx;
+  font-size: 18rpx;
+  font-weight: 600;
+}
+
+.candidate-item text {
+  line-height: 1;
 }
 
 .candidate-item .has {
   color: #4ecdc4;
-  font-weight: 500;
 }
 
-.candidate-item .empty {
-  color: transparent;
-}
-
-.cell-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cell-value {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-}
-
-.cell-value.answer {
+.value-text.answer {
   color: #1abc9c;
 }
 
@@ -309,4 +325,102 @@ page {
   display: block;
   font-size: 22rpx;
   opacity: 0.8;
+}
+
+/* 输入面板样式 */
+.input-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.panel-content {
+  position: relative;
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  width: 80%;
+  max-width: 600rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.2);
+}
+
+.panel-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15rpx;
+  margin-bottom: 30rpx;
+}
+
+.number-item {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.number-item:active {
+  background: #e9ecef;
+}
+
+.clear-item {
+  background: #e74c3c;
+  color: white;
+}
+
+.clear-item:active {
+  background: #c0392b;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.panel-btn {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 10rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.panel-btn:active {
+  background: #7f8c8d;
+}
+
+/* 选中格子样式 */
+.cell.selected {
+  background: rgba(78, 205, 196, 0.2) !important;
+  border: 2rpx solid #4ecdc4 !important;
 }

@@ -1,29 +1,60 @@
 <view class="container">
-  <view class="header-section">
-    <view class="title">🧩 数独求解器</view>
-    <view class="desc">输入数独题目，点击求解按钮自动获得答案</view>
-  </view>
 
-  <!-- 快速导入区域 -->
-  <view class="import-section">
-    <view class="section-header">
-      <text class="section-title">📋 快速导入</text>
-      <view class="switch-wrapper">
-        <text class="switch-label">候选数</text>
-        <switch class="candidate-switch" checked="{{showCandidates}}" bindchange="toggleCandidates" size="mini"/>
+
+  <!-- 全局控制区域 -->
+  <view class="control-section">
+    <!-- 模式选择 -->
+    <view class="mode-tabs">
+      <view 
+        class="mode-tab {{mode === 'daily' ? 'active' : ''}}" 
+        bindtap="switchMode" 
+        data-mode="daily"
+      >
+        <text class="tab-icon">📅</text>
+        <text class="tab-name">每日数独</text>
       </view>
-    </view>
-    <view class="import-tabs">
-      <view class="tab-item {{importMode === 'paste' ? 'active' : ''}}" bindtap="switchImportMode" data-mode="paste">
-        粘贴题目
+      <view 
+        class="mode-tab {{mode === 'preset' ? 'active' : ''}}" 
+        bindtap="switchMode" 
+        data-mode="preset"
+      >
+        <text class="tab-icon">📚</text>
+        <text class="tab-name">预设题目</text>
       </view>
-      <view class="tab-item {{importMode === 'preset' ? 'active' : ''}}" bindtap="switchImportMode" data-mode="preset">
-        预设题目
+      <view 
+        class="mode-tab {{mode === 'paste' ? 'active' : ''}}" 
+        bindtap="switchMode" 
+        data-mode="paste"
+      >
+        <text class="tab-icon">📋</text>
+        <text class="tab-name">粘贴题目</text>
       </view>
     </view>
     
+    <!-- 全局控制开关 -->
+    <view class="global-controls">
+      <view class="control-item">
+        <text class="control-label">候选数</text>
+        <switch class="candidate-switch" checked="{{showCandidates}}" bindchange="toggleCandidates" size="mini"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 每日数独信息 -->
+  <view class="daily-info" wx:if="{{mode === 'daily'}}">
+    <text class="daily-date">{{dailyInfo.name}}</text>
+    <text class="daily-difficulty">{{dailyInfo.level}} {{dailyInfo.difficulty}}</text>
+    <text class="daily-hint">💡 每日一题，全球同题</text>
+  </view>
+
+  <!-- 快速导入区域（预设和粘贴模式） -->
+  <view class="import-section" wx:if="{{mode === 'preset' || mode === 'paste'}}">
+    <view class="section-header">
+      <text class="section-title">📋 快速导入</text>
+    </view>
+    
     <!-- 粘贴模式 -->
-    <view class="import-content" wx:if="{{importMode === 'paste'}}">
+    <view class="import-content" wx:if="{{mode === 'paste'}}">
       <view class="paste-hint">支持3种格式：81位字符串、纯数字、9行格式</view>
       <textarea 
         class="paste-input" 
@@ -39,7 +70,7 @@
     </view>
     
     <!-- 预设模式 -->
-    <view class="import-content" wx:if="{{importMode === 'preset'}}">
+    <view class="import-content" wx:if="{{mode === 'preset'}}">
       <view class="preset-grid">
         <view 
           class="preset-item {{selectedPreset === index ? 'active' : ''}}" 
@@ -77,24 +108,26 @@
             <text class="value-text {{cell.fixed ? 'fixed-text' : 'user-text'}}">{{cell.value}}</text>
           </view>
           
-          <!-- 空格子 - 候选数模式开启 -->
-          <view class="candidates-grid" wx:elif="{{showCandidates && cell.candidates && cell.candidates.length > 0}}">
+          <!-- 候选数模式开启 -->
+          <view 
+            class="candidates-grid" 
+            wx:elif="{{showCandidates && cell.value === '' && cell.candidates}}"
+            bindtap="onCellTap"
+            data-row="{{rowIndex}}"
+            data-col="{{colIndex}}"
+          >
             <view 
               class="candidate-item"
-              wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
-              wx:for-item="num"
-              wx:for-index="numIndex"
-              wx:key="num"
-              bindtap="onCandidateTap"
-              data-row="{{rowIndex}}"
-              data-col="{{colIndex}}"
-              data-num="{{num}}"
+              wx:for="{{cell.candidates}}"
+              wx:for-item="candidateNum"
+              wx:for-index="index"
+              wx:key="index"
             >
-              <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>
+              <text class="{{candidateNum !== 0 ? 'has' : 'empty'}}" style="font-size: 16rpx;">{{candidateNum !== 0 ? candidateNum : ''}}</text>
             </view>
           </view>
           
-          <!-- 空格子 - 候选数模式关闭或无候选 -->
+          <!-- 空格子 -->
           <view class="cell-empty" wx:else>
             <text class="empty-placeholder">+</text>
           </view>
@@ -130,15 +163,15 @@
 
   <!-- 操作按钮 -->
   <view class="buttons-section">
-    <button class="btn clear-btn" bindtap="clearBoard" disabled="{{solving}}">
+    <button class="btn btn-sm clear-btn" bindtap="clearBoard" disabled="{{solving}}">
       <text class="btn-icon">🗑️</text>
       <text class="btn-text">清空</text>
     </button>
-    <button class="btn solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
+    <button class="btn btn-lg solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
       <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
       <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
     </button>
-    <button class="btn copy-btn" bindtap="copyBoard" disabled="{{solving}}">
+    <button class="btn btn-sm copy-btn" bindtap="copyBoard" disabled="{{solving}}">
       <text class="btn-icon">📋</text>
       <text class="btn-text">复制</text>
     </button>

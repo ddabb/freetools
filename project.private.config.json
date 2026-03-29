@@ -23,11 +23,25 @@
     "miniprogram": {
       "list": [
         {
-          "name": "海报生成器",
-          "pathName": "packages/text/pages/poster-generator/poster-generator",
+          "name": "数独求解器",
+          "pathName": "packages/math/pages/sudoku-solver/sudoku-solver",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "数独生成器",
+          "pathName": "packages/math/pages/sudoku-generator/sudoku-generator",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "海报生成器",
+          "pathName": "packages/text/pages/poster-generator/poster-generator",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "人生A4纸",

@@ -1,163 +1,28 @@
 // packages/math/pages/sudoku-generator/sudoku-generator.js
 const sudoku = require('../../utils/sudoku');
 
-// CDN 数据源
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
-const DAILY_KEY = 'daily_sudoku';
-const DAILY_TS_KEY = 'daily_sudoku_ts';
-const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时
-
 Page({
   data: {
     board: [],
     difficulty: 'medium',
-    difficultyKey: 'medium',
     showingAnswer: false,
     answerBoard: [],
+    puzzleBoard: [], // 保存原始谜题数据
     generating: false,
     showCandidates: true,
     hasCandidates: false,
-    mode: 'random', // random | daily
-    dailyInfo: {
-      name: '',
-      difficulty: '',
-      level: ''
-    },
     difficulties: [
       { key: 'easy', name: '入门', hint: '⭐ 简单' },
       { key: 'medium', name: '初级', hint: '⭐⭐ 中等' },
       { key: 'hard', name: '高级', hint: '⭐⭐⭐ 困难' }
-    ]
+    ],
+    showInputPanel: false,
+    selectedCell: { row: -1, col: -1 }
   },
 
   onLoad() {
     wx.setNavigationBarTitle({ title: '数独生成器' });
-    this.loadDailySudoku();
-  },
-
-  // 加载每日数独
-  loadDailySudoku() {
-    const now = Date.now();
-    const cached = wx.getStorageSync(DAILY_KEY);
-    const timestamp = wx.getStorageSync(DAILY_TS_KEY);
-
-    // 检查缓存是否有效（每天只缓存当天）
-    if (cached && timestamp) {
-      const cacheDate = new Date(timestamp).toDateString();
-      const today = new Date().toDateString();
-      if (cacheDate === today) {
-        console.log('[daily-sudoku] 使用今日缓存');
-        this.setTodaySudoku(cached);
-        return;
-      }
-    }
-
-    console.log('[daily-sudoku] 从CDN加载');
-    wx.request({
-      url: `${CDN_BASE}/daily-sudoku.json`,
-      method: 'GET',
-      timeout: 10000,
-      success: (res) => {
-        if (res.statusCode === 200 && res.data && res.data.puzzles) {
-          // 保存到缓存
-          wx.setStorageSync(DAILY_KEY, res.data);
-          wx.setStorageSync(DAILY_TS_KEY, now);
-          this.setTodaySudoku(res.data);
-        }
-      },
-      fail: (err) => {
-        console.warn('[daily-sudoku] CDN加载失败', err);
-        // 使用本地备用
-        this.useLocalDailySudoku();
-      }
-    });
-  },
-
-  // 设置今日数独
-  setTodaySudoku(data) {
-    const today = new Date();
-    const dayOfYear = this.getDayOfYear(today);
-    
-    // 查找今天的数独
-    let todayPuzzle = data.puzzles.find(p => p.dayOfYear === dayOfYear);
-    
-    // 如果没找到今天的，找最近的
-    if (!todayPuzzle) {
-      todayPuzzle = data.puzzles[0];
-    }
-
-    if (todayPuzzle) {
-      this.setData({
-        dailyInfo: {
-          name: todayPuzzle.name,
-          difficulty: todayPuzzle.difficulty,
-          level: todayPuzzle.level
-        },
-        board: sudoku.toDisplayBoard(todayPuzzle.puzzle, this.data.showCandidates),
-        answerBoard: todayPuzzle.solution,
-        showingAnswer: false,
-        mode: 'daily'
-      });
-    }
-  },
-
-  // 获取今天是第几天
-  getDayOfYear(date) {
-    const start = new Date(date.getFullYear(), 0, 0);
-    const diff = date - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
-  },
-
-  // 本地备用每日数独
-  useLocalDailySudoku() {
-    const today = new Date();
-    const dayOfYear = this.getDayOfYear(today);
-    
-    // 本地备用数据
-    const localData = {
-      puzzles: [{
-        date: today.toISOString().split('T')[0],
-        dayOfYear: dayOfYear,
-        name: '3月' + today.getDate() + '日',
-        difficulty: '入门',
-        level: '★☆☆☆☆',
-        puzzle: [
-          [5, 3, 0, 0, 7, 0, 0, 0, 0],
-          [6, 0, 0, 1, 9, 5, 0, 0, 0],
-          [0, 9, 8, 0, 0, 0, 0, 6, 0],
-          [8, 0, 0, 0, 6, 0, 0, 0, 3],
-          [4, 0, 0, 8, 0, 3, 0, 0, 1],
-          [7, 0, 0, 0, 2, 0, 0, 0, 6],
-          [0, 6, 0, 0, 0, 0, 2, 8, 0],
-          [0, 0, 0, 4, 1, 9, 0, 0, 5],
-          [0, 0, 0, 0, 8, 0, 0, 7, 9]
-        ],
-        solution: [
-          [5, 3, 4, 6, 7, 8, 9, 1, 2],
-          [6, 7, 2, 1, 9, 5, 3, 4, 8],
-          [1, 9, 8, 3, 4, 2, 5, 6, 7],
-          [8, 5, 9, 7, 6, 1, 4, 2, 3],
-          [4, 2, 6, 8, 5, 3, 7, 9, 1],
-          [7, 1, 3, 9, 2, 4, 8, 5, 6],
-          [9, 6, 1, 5, 3, 7, 2, 8, 4],
-          [2, 8, 7, 4, 1, 9, 6, 3, 5],
-          [3, 4, 5, 2, 8, 6, 1, 7, 9]
-        ]
-      }]
-    };
-
-    this.setTodaySudoku(localData);
-  },
-
-  // 切换模式
-  switchMode(e) {
-    const mode = e.currentTarget.dataset.mode;
-    this.setData({ mode });
-    
-    if (mode === 'daily') {
-      this.loadDailySudoku();
-    }
+    this.generateSudoku();
   },
 
   generateSudoku() {
@@ -171,8 +36,22 @@ Page({
         const removeCount = { easy: 30, medium: 45, hard: 55 }[this.data.difficulty] || 45;
         const puzzle = sudoku.createPuzzle(fullBoard, removeCount);
         
-        // 使用公共方法
-        const displayBoard = sudoku.toDisplayBoard(puzzle, this.data.showCandidates);
+        // 创建自定义的棋盘数据，确保只有原始题目格子是固定的
+        const board = [];
+        for (let r = 0; r < 9; r++) {
+          const row = [];
+          for (let c = 0; c < 9; c++) {
+            const num = puzzle[r][c];
+            row.push({
+              value: num === 0 ? '' : String(num),
+              fixed: num !== 0, // 只有原始题目格子是固定的
+              candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+              showCandidates: this.data.showCandidates && num === 0
+            });
+          }
+          board.push(row);
+        }
+        
         const answerStr = [];
         for (let r = 0; r < 9; r++) {
           const row = [];
@@ -182,9 +61,20 @@ Page({
           answerStr.push(row);
         }
 
+        // 保存原始谜题数据
+        const puzzleStr = [];
+        for (let r = 0; r < 9; r++) {
+          const row = [];
+          for (let c = 0; c < 9; c++) {
+            row.push(String(puzzle[r][c]));
+          }
+          puzzleStr.push(row);
+        }
+
         this.setData({
-          board: displayBoard,
+          board: board,
           answerBoard: answerStr,
+          puzzleBoard: puzzleStr, // 保存谜题数据
           showingAnswer: false,
           generating: false,
           hasCandidates: this.data.showCandidates
@@ -215,21 +105,57 @@ Page({
   },
 
   refreshBoard() {
+    // 基于当前棋盘状态计算候选解
     const grid = [];
     for (let r = 0; r < 9; r++) {
       const row = [];
       for (let c = 0; c < 9; c++) {
-        const v = this.data.answerBoard[r][c];
-        row.push(v ? parseInt(v, 10) : 0);
+        const cell = this.data.board[r][c];
+        // 使用当前棋盘的实际值
+        if (cell.value) {
+          row.push(parseInt(cell.value, 10));
+        } else {
+          // 使用原始谜题数据
+          const v = this.data.puzzleBoard[r][c];
+          row.push(v ? parseInt(v, 10) : 0);
+        }
       }
       grid.push(row);
     }
-    const displayBoard = sudoku.toDisplayBoard(grid, this.data.showCandidates);
-    this.setData({ board: displayBoard, hasCandidates: this.data.showCandidates });
+    
+    const candidates = sudoku.calculateAllCandidates(grid);
+    const board = this.data.board;
+    
+    // 调试：检查候选解数据
+    console.log('候选解开关状态:', this.data.showCandidates);
+    
+    // 确保有候选解时才显示提示
+    let hasCandidates = false;
+    
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (this.data.showCandidates && grid[r][c] === 0) {
+          // 创建固定长度的候选数数组
+          const candidateNumbers = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+          candidates[r][c].forEach(num => {
+            candidateNumbers[num - 1] = num;
+          });
+          
+          board[r][c].candidates = candidateNumbers;
+          board[r][c].showCandidates = true;
+          
+          if (candidates[r][c].length > 0) hasCandidates = true;
+        } else {
+          board[r][c].showCandidates = false;
+        }
+      }
+    }
+    
+    this.setData({ board: board, hasCandidates: hasCandidates });
   },
 
   toggleAnswer() {
-    const { showingAnswer, answerBoard, showCandidates } = this.data;
+    const { showingAnswer, answerBoard } = this.data;
     
     if (!showingAnswer) {
       // 显示答案
@@ -250,23 +176,57 @@ Page({
     }
   },
 
-  onCandidateTap(e) {
+  // 点击格子
+  onCellTap(e) {
     if (this.data.showingAnswer) return;
     
     const row = e.currentTarget.dataset.row;
     const col = e.currentTarget.dataset.col;
+    
+    // 打开输入面板
+    this.setData({ 
+      showInputPanel: true,
+      selectedCell: { row, col }
+    });
+  },
+
+  // 输入数字
+  onNumberInput(e) {
     const num = e.currentTarget.dataset.num;
+    const { row, col } = this.data.selectedCell;
     const board = this.data.board;
     
-    const candidates = board[row][col].candidates;
-    if (candidates && candidates.indexOf(num) !== -1) {
-      board[row][col].value = String(num);
-      board[row][col].fixed = true;
-      board[row][col].candidates = [];
-      board[row][col].showCandidates = false;
-      this.setData({ board: board });
-      this.recalculateCandidates();
-    }
+    board[row][col].value = String(num);
+    // 不要标记为 fixed，保持可编辑状态
+    board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    board[row][col].showCandidates = false;
+    
+    this.setData({ 
+      board: board, 
+      showInputPanel: false,
+    });
+    this.recalculateCandidates();
+  },
+
+  // 清除格子
+  onClearCell() {
+    const { row, col } = this.data.selectedCell;
+    const board = this.data.board;
+    
+    board[row][col].value = '';
+    board[row][col].fixed = false;
+    board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    
+    this.setData({ 
+      board: board, 
+      showInputPanel: false,
+    });
+    this.recalculateCandidates();
+  },
+
+  // 关闭输入面板
+  closeInputPanel() {
+    this.setData({ showInputPanel: false });
   },
 
   recalculateCandidates() {
@@ -282,14 +242,17 @@ Page({
       grid.push(row);
     }
     
-    const candidates = sudoku.calculateAllCandidates(grid);
+    // 使用toDisplayBoard确保数据结构一致
+    const displayBoard = sudoku.toDisplayBoard(grid, this.data.showCandidates);
     let hasCandidates = false;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         if (grid[r][c] === 0) {
-          board[r][c].candidates = candidates[r][c];
+          board[r][c].candidates = displayBoard[r][c].candidates;
           board[r][c].showCandidates = true;
-          if (candidates[r][c].length > 0) hasCandidates = true;
+          if (displayBoard[r][c].candidates.some(num => num !== 0)) hasCandidates = true;
+        } else {
+          board[r][c].showCandidates = false;
         }
       }
     }
