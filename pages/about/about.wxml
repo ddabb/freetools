@@ -79,12 +79,17 @@
         
         <view class="cache-info">
           <text class="cache-label">CDN缓存状态：</text>
-          <text class="cache-value {{cacheCleared ? 'success' : ''}}">{{cacheCleared ? '已清除' : '正常'}}</text>
+          <text class="cache-value {{cacheCleared ? 'success' : ''}}">{{cacheCleared ? '已清除' : '缓存正常'}}</text>
+        </view>
+        
+        <view class="cache-hint">
+          <text class="hint-icon">💡</text>
+          <text class="hint-text">CDN缓存 key 统一使用 cdn_ 前缀</text>
         </view>
         
         <button class="cache-btn" bindtap="clearCache" hover-class="cache-btn-hover">
           <text class="cache-icon">🗑️</text>
-          <text class="cache-text">清除CDN缓存</text>
+          <text class="cache-text">清除 CDN 缓存</text>
         </button>
       </view>
     </view>

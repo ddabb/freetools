@@ -19,7 +19,7 @@ Page({
 
   onShow() {
     // 检查本地缓存状态
-    const cacheCleared = wx.getStorageSync('cdnCacheCleared') || false;
+    const cacheCleared = wx.getStorageSync('cdn_cached') || false;
     this.setData({ cacheCleared });
   },
 
@@ -30,14 +30,13 @@ Page({
       content: '确定要清除CDN缓存数据吗？这将重新加载最新数据。',
       success: (res) => {
         if (res.confirm) {
-          // 清除本地存储的CDN缓存标记
-          wx.removeStorageSync('cdnCacheCleared');
-          wx.removeStorageSync('constellationCache');
-          wx.removeStorageSync('dailySudokuCache');
-          wx.removeStorageSync('hotToolsCache');
+          // 清除所有 CDN 缓存（通过前缀识别）
+          const keys = wx.getStorageInfoSync().keys || [];
+          const cdnKeys = keys.filter(key => key.startsWith('cdn_'));
+          cdnKeys.forEach(key => wx.removeStorageSync(key));
           
           this.setData({ cacheCleared: false });
-          utils.showSuccess('缓存已清除');
+          utils.showSuccess(`已清除 ${cdnKeys.length} 个缓存`);
         }
       }
     });
