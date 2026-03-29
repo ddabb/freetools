@@ -5,6 +5,10 @@
     "ignore": [
       {
         "type": "file",
+        "value": "data/**/*"
+      },
+      {
+        "type": "file",
         "value": "docs/**/*"
       },
       {
