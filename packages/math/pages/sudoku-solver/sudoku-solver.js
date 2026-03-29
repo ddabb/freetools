@@ -3,7 +3,7 @@ const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
 
 // CDN 数据源地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const PRESET_KEY = 'sudoku_presets';
 const PRESET_TIMESTAMP_KEY = 'sudoku_presets_timestamp';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存

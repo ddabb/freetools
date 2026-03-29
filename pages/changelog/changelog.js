@@ -16,7 +16,7 @@ Page({
   loadChangelog() {
     console.log('[changelog] 开始加载版本日志');
     wx.request({
-      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/changelog.json',
+      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json',
       method: 'GET',
       timeout: 10000,
       success: (res) => {

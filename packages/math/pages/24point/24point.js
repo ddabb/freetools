@@ -1,7 +1,7 @@
 // packages/math/pages/24point/24point.js
 
 // CDN 数据源地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const QUESTION_KEY = '24point_questions';
 const QUESTION_TIMESTAMP_KEY = '24point_questions_timestamp';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存

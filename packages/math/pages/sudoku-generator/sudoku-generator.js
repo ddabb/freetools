@@ -2,7 +2,7 @@
 const sudoku = require('../../utils/sudoku');
 
 // CDN 数据源
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const DAILY_KEY = 'daily_sudoku';
 const DAILY_TS_KEY = 'daily_sudoku_ts';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时
