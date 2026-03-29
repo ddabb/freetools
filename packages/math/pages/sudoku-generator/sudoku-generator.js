@@ -17,7 +17,6 @@ Page({
       { key: 'medium', name: '初级', hint: '⭐⭐ 中等' },
       { key: 'hard', name: '高级', hint: '⭐⭐⭐ 困难' }
     ],
-    showInputPanel: false,
     selectedCell: { row: -1, col: -1 }
   },
 
@@ -110,8 +109,8 @@ Page({
     this.generateSudoku();
   },
 
-  toggleCandidates(e) {
-    const showCandidates = e.detail.value;
+  toggleCandidates() {
+    const showCandidates = !this.data.showCandidates;
     this.setData({ showCandidates: showCandidates });
     this.refreshBoard();
   },
@@ -167,30 +166,41 @@ Page({
   },
 
   toggleAnswer() {
-    const { showingAnswer, answerBoard, puzzleBoard, difficulty, showCandidates } = this.data;
+    const { showingAnswer, answerBoard, puzzleBoard, userBoard } = this.data;
     
     if (!showingAnswer) {
       // 显示答案
-      const grid = [];
-      for (let r = 0; r < 9; r++) {
-        const row = [];
-        for (let c = 0; c < 9; c++) {
-          row.push(answerBoard[r][c] ? parseInt(answerBoard[r][c], 10) : 0);
-        }
-        grid.push(row);
-      }
-      // 创建答案棋盘，确保答案单元格有特殊标记
       const answerDisplay = [];
       for (let r = 0; r < 9; r++) {
         const row = [];
         for (let c = 0; c < 9; c++) {
-          const value = grid[r][c] === 0 ? '' : String(grid[r][c]);
           // 检查是否是原始谜题中的固定数字
           const isFixed = puzzleBoard[r][c] !== '0';
+          // 检查用户是否填写了内容
+          const userValue = userBoard[r][c];
+          const answerValue = answerBoard[r][c];
+          
+          let value, isError, isAnswer;
+          if (userValue) {
+            // 用户填写了内容，显示用户的内容
+            value = userValue;
+            // 检查是否错误
+            isError = userValue !== answerValue;
+            // 用户填写的不是答案
+            isAnswer = false;
+          } else {
+            // 用户未填写，显示答案
+            value = answerValue;
+            isError = false;
+            // 非固定数字的答案标记为答案
+            isAnswer = !isFixed;
+          }
+          
           row.push({
             value: value,
             fixed: isFixed,
-            isAnswer: !isFixed, // 标记为答案数字
+            isAnswer: isAnswer,
+            isError: isError,
             candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
             showCandidates: false
           });
@@ -206,7 +216,7 @@ Page({
 
   // 恢复原始谜题状态，不显示弹窗
   restorePuzzle() {
-    const { puzzleBoard, showCandidates, userBoard, answerBoard } = this.data;
+    const { puzzleBoard, showCandidates, userBoard } = this.data;
     
     // 创建自定义的棋盘数据，确保只有原始题目格子是固定的
     const board = [];
@@ -214,13 +224,12 @@ Page({
       const row = [];
       for (let c = 0; c < 9; c++) {
         const num = puzzleBoard[r][c];
-        // 优先使用用户填写的内容
-        const userValue = userBoard[r][c];
-        const value = userValue || (num === '0' ? '' : num);
+        // 直接使用原始谜题数据
+        const value = num === '0' ? '' : num;
         row.push({
           value: value,
           fixed: num !== '0', // 只有原始题目格子是固定的
-          isError: userValue && answerBoard[r][c] !== userValue, // 检查用户填写的是否正确
+          isError: false, // 隐藏答案时不标记错误
           candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           showCandidates: showCandidates && !value
         });
@@ -228,48 +237,79 @@ Page({
       board.push(row);
     }
     
+    // 清空用户填写的内容
+    const emptyUserBoard = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push('');
+      }
+      emptyUserBoard.push(row);
+    }
+    
     this.setData({
       board: board,
+      userBoard: emptyUserBoard,
       showingAnswer: false,
-      hasCandidates: showCandidates
+      hasCandidates: showCandidates,
+      selectedCell: { row: -1, col: -1 }
     });
   },
 
   // 点击格子
   onCellTap(e) {
-    if (this.data.showingAnswer) return;
-    
     const row = e.currentTarget.dataset.row;
     const col = e.currentTarget.dataset.col;
+    const cell = this.data.board[row][col];
     
-    // 打开输入面板
-    this.setData({ 
-      showInputPanel: true,
-      selectedCell: { row, col }
-    });
+    // 只有非固定数字可以编辑
+    if (!cell.fixed) {
+      // 先移除所有单元格的 selected 类
+      const board = this.data.board;
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          board[r][c].selected = false;
+        }
+      }
+      // 为当前点击的单元格添加 selected 类
+      board[row][col].selected = true;
+      
+      // 更新选中的单元格
+      this.setData({ 
+        board: board,
+        selectedCell: { row, col }
+      });
+    }
   },
 
   // 输入数字
   onNumberInput(e) {
     const num = e.currentTarget.dataset.num;
     const { row, col } = this.data.selectedCell;
+    
+    // 只有选中了单元格才执行操作
+    if (row === -1 || col === -1) return;
+    
     const board = this.data.board;
-    const answerBoard = this.data.answerBoard;
     const userBoard = this.data.userBoard;
     
     board[row][col].value = String(num);
     // 保存用户填写的内容
     userBoard[row][col] = String(num);
-    // 检查数字是否正确
-    board[row][col].isError = answerBoard[row][col] !== String(num);
+    // 填写时不标记错误，只在显示答案时标记
+    board[row][col].isError = false;
     // 不要标记为 fixed，保持可编辑状态
     board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     board[row][col].showCandidates = false;
+    // 如果在显示答案状态，保持 isAnswer 为 false（用户填写的不是答案）
+    board[row][col].isAnswer = false;
+    // 保持选中状态
+    board[row][col].selected = true;
     
     this.setData({ 
       board: board, 
-      userBoard: userBoard,
-      showInputPanel: false,
+      userBoard: userBoard
+      // 保持选中状态，不重置 selectedCell
     });
     this.recalculateCandidates();
   },
@@ -277,26 +317,43 @@ Page({
   // 清除格子
   onClearCell() {
     const { row, col } = this.data.selectedCell;
+    
+    // 只有选中了单元格才执行操作
+    if (row === -1 || col === -1) return;
+    
     const board = this.data.board;
     const userBoard = this.data.userBoard;
+    const answerBoard = this.data.answerBoard;
+    const puzzleBoard = this.data.puzzleBoard;
     
     board[row][col].value = '';
     // 清除用户填写的内容
     userBoard[row][col] = '';
     board[row][col].fixed = false;
     board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    board[row][col].isError = false;
+    // 移除选中状态
+    board[row][col].selected = false;
+    
+    // 如果在显示答案状态，清除后显示答案
+    if (this.data.showingAnswer) {
+      const isFixed = puzzleBoard[row][col] !== '0';
+      board[row][col].value = answerBoard[row][col];
+      board[row][col].isAnswer = !isFixed;
+    }
     
     this.setData({ 
       board: board, 
       userBoard: userBoard,
-      showInputPanel: false,
+      selectedCell: { row: -1, col: -1 }
     });
     this.recalculateCandidates();
   },
 
-  // 关闭输入面板
-  closeInputPanel() {
-    this.setData({ showInputPanel: false });
+  // 重置棋盘
+  resetBoard() {
+    // 恢复到原始谜题状态
+    this.restorePuzzle();
   },
 
   recalculateCandidates() {

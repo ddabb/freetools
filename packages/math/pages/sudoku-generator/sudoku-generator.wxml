@@ -1,9 +1,4 @@
 <view class="container">
-  <view class="header-section">
-    <view class="title">🎲 数独生成器</view>
-    <view class="desc">随机生成不同难度的数独题目</view>
-  </view>
-
   <!-- 难度选择 -->
   <view class="difficulty-section">
     <view class="difficulty-tabs">
@@ -34,30 +29,25 @@
     </view>
   </view>
 
-  <!-- 候选解开关 -->
-  <view class="option-section">
-    <view class="option-item">
-      <switch checked="{{showCandidates}}" bindchange="toggleCandidates" color="#4ecdc4"/>
-      <text class="option-label">显示候选解</text>
-    </view>
-    <view class="candidate-hint" wx:if="{{showCandidates && !showingAnswer && hasCandidates}}">
-      💡 点击候选数字可直接填入
-    </view>
-  </view>
-
   <!-- 数独棋盘 -->
   <view class="board-section">
     <view class="board {{showCandidates ? 'show-candidates' : ''}}">
       <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
         <view 
-          class="cell {{(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'right-border' : ''}} {{(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}}"
+          class="cell {{(colIndex + 1) % 3 === 0 && colIndex !== 8 ? 'right-border' : ''}} {{(rowIndex + 1) % 3 === 0 && rowIndex !== 8 ? 'bottom-border' : ''}} {{cell.fixed ? 'fixed' : ''}} {{cell.selected ? 'selected' : ''}}"
           wx:for="{{row}}" 
           wx:for-item="cell" 
           wx:for-index="colIndex"
           wx:key="cell"
         >
           <!-- 已有数字 -->
-          <view class="cell-value" wx:if="{{cell.value && !cell.showCandidates}}">
+          <view 
+            class="cell-value" 
+            wx:if="{{cell.value && !cell.showCandidates}}"
+            bindtap="onCellTap"
+            data-row="{{rowIndex}}"
+            data-col="{{colIndex}}"
+          >
             <text class="value-text {{cell.isAnswer ? 'answer' : ''}} {{cell.isError ? 'error' : ''}}">{{cell.value}}</text>
           </view>
           
@@ -81,8 +71,13 @@
           </view>
           
           <!-- 空格子 -->
-          <view class="cell-empty" wx:if="{{!cell.value && !cell.showCandidates}}">
-            <text class="empty-text">-</text>
+          <view 
+            class="cell-empty" 
+            wx:if="{{!cell.value && !cell.showCandidates}}"
+            bindtap="onCellTap"
+            data-row="{{rowIndex}}"
+            data-col="{{colIndex}}"
+          >
           </view>
         </view>
       </view>
@@ -101,39 +96,48 @@
     </button>
   </view>
 
-  <!-- 数字输入面板 -->
-  <view class="input-panel" wx:if="{{showInputPanel}}">
-    <view class="panel-mask" bindtap="closeInputPanel"></view>
-    <view class="panel-content">
-      <view class="panel-title">输入数字</view>
+  <!-- 数字输入和候选数控制区 -->
+  <view class="control-section">
+    <!-- 数字输入面板 -->
+    <view class="number-input-section">
+
       <view class="number-grid">
+        <!-- 第一行：1-6 -->
         <view 
-          class="number-item" 
-          wx:for="{{[1,2,3,4,5,6,7,8,9]}}" 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          wx:for="{{[1,2,3,4,5,6]}}" 
           wx:key="*this"
           bindtap="onNumberInput"
           data-num="{{item}}"
         >
           {{item}}
         </view>
-        <view class="number-item clear-item" bindtap="onClearCell">
+        <!-- 第二行：7-9, 候选, 清除, 重置 -->
+        <view 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          wx:for="{{[7,8,9]}}" 
+          wx:key="*this"
+          bindtap="onNumberInput"
+          data-num="{{item}}"
+        >
+          {{item}}
+        </view>
+        <!-- 候选解按钮 -->
+        <view 
+          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
+          bindtap="toggleCandidates"
+        >
+          {{showCandidates ? '💡' : '🔴'}}
+        </view>
+        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
           清除
         </view>
+        <!-- 重置按钮 -->
+        <view class="number-item reset-item" bindtap="resetBoard">
+          重置
+        </view>
       </view>
-      <view class="panel-actions">
-        <button class="panel-btn" bindtap="closeInputPanel">取消</button>
-      </view>
-    </view>
-  </view>
 
-  <!-- 提示 -->
-  <view class="tips-section">
-    <view class="tips-title">💡 使用提示</view>
-    <view class="tips-list">
-      <view class="tip-item">• 选择难度后自动生成数独题目</view>
-      <view class="tip-item">• 点击"显示答案"查看完整解答</view>
-      <view class="tip-item">• 开启候选解可查看可能的数字</view>
-      <view class="tip-item">• 点击空格子弹出数字输入面板</view>
     </view>
   </view>
 </view>

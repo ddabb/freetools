@@ -1,6 +1,4 @@
 <view class="container">
-
-
   <!-- 全局控制区域 -->
   <view class="control-section">
     <!-- 模式选择 -->
@@ -21,14 +19,6 @@
       >
         <text class="tab-icon">📋</text>
         <text class="tab-name">粘贴题目</text>
-      </view>
-    </view>
-    
-    <!-- 全局控制开关 -->
-    <view class="global-controls">
-      <view class="control-item">
-        <text class="control-label">候选数</text>
-        <switch class="candidate-switch" checked="{{showCandidates}}" bindchange="toggleCandidates" size="mini"/>
       </view>
     </view>
   </view>
@@ -80,22 +70,19 @@
             <text class="value-text {{cell.fixed ? 'fixed-text' : 'user-text'}}">{{cell.value}}</text>
           </view>
           
-          <!-- 候选数模式开启 -->
-          <view 
-            class="candidates-grid" 
-            wx:elif="{{showCandidates && cell.value === '' && cell.candidates}}"
-            bindtap="onCellTap"
-            data-row="{{rowIndex}}"
-            data-col="{{colIndex}}"
-          >
+          <!-- 候选数模式开启 - 3x3网格显示 -->
+          <view class="candidates-grid" wx:elif="{{showCandidates && cell.value === '' && cell.candidates}}">
             <view 
               class="candidate-item"
-              wx:for="{{cell.candidates}}"
-              wx:for-item="candidateNum"
-              wx:for-index="index"
-              wx:key="index"
+              wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
+              wx:for-item="num"
+              wx:key="num"
+              bindtap="onCandidateTap"
+              data-row="{{rowIndex}}"
+              data-col="{{colIndex}}"
+              data-num="{{num}}"
             >
-              <text class="{{candidateNum !== 0 ? 'has' : 'empty'}}" style="font-size: 16rpx;">{{candidateNum !== 0 ? candidateNum : ''}}</text>
+              <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>
             </view>
           </view>
           
@@ -104,31 +91,6 @@
             <text class="empty-placeholder"></text>
           </view>
         </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 数字输入面板 -->
-  <view class="input-panel" wx:if="{{showInputPanel}}">
-    <view class="panel-mask" bindtap="closeInputPanel"></view>
-    <view class="panel-content">
-      <view class="panel-title">输入数字</view>
-      <view class="number-grid">
-        <view 
-          class="number-item" 
-          wx:for="{{[1,2,3,4,5,6,7,8,9]}}" 
-          wx:key="*this"
-          bindtap="onNumberInput"
-          data-num="{{item}}"
-        >
-          {{item}}
-        </view>
-        <view class="number-item clear-item" bindtap="onClearCell">
-          清除
-        </view>
-      </view>
-      <view class="panel-actions">
-        <button class="panel-btn" bindtap="closeInputPanel">取消</button>
       </view>
     </view>
   </view>
@@ -157,14 +119,49 @@
     </view>
   </view>
 
-  <!-- 使用提示 -->
-  <view class="tips-section">
-    <view class="tips-title">💡 使用提示</view>
-    <view class="tips-list">
-      <view class="tip-item">• 点击空格子弹出数字输入面板</view>
-      <view class="tip-item">• 打开"候选数"开关可显示可能的数字</view>
-      <view class="tip-item">• 深色格子是题目给出的固定数字</view>
-      <view class="tip-item">• 点击候选数字可直接填入</view>
+  <!-- 底部固定输入面板 -->
+  <view class="input-panel-fixed">
+    <view class="panel-title">
+      <text>输入数字</text>
+      <text class="selected-info" wx:if="{{selectedCell.row >= 0}}">选中: 第{{selectedCell.row + 1}}行 第{{selectedCell.col + 1}}列</text>
+      <text class="selected-info" wx:else>请先点击格子</text>
+    </view>
+    <view class="number-grid">
+      <!-- 第一行：1-6 -->
+      <view 
+        class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+        wx:for="{{[1,2,3,4,5,6]}}" 
+        wx:key="*this"
+        bindtap="onNumberInput"
+        data-num="{{item}}"
+      >
+        {{item}}
+      </view>
+      <!-- 第二行：7-9, 候选, 清除, 重置 -->
+      <view 
+        class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+        wx:for="{{[7,8,9]}}" 
+        wx:key="*this"
+        bindtap="onNumberInput"
+        data-num="{{item}}"
+      >
+        {{item}}
+      </view>
+      <!-- 候选数开关 -->
+      <view 
+        class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
+        bindtap="toggleCandidates"
+      >
+        {{showCandidates ? '💡' : '🔴'}}
+      </view>
+      <!-- 清除按钮 -->
+      <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
+        清除
+      </view>
+      <!-- 重置按钮 -->
+      <view class="number-item reset-item" bindtap="clearBoard">
+        重置
+      </view>
     </view>
   </view>
 </view>

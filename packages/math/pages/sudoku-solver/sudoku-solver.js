@@ -16,7 +16,6 @@ Page({
     importMode: 'paste',
     pastedText: '',
     showCandidates: false,
-    showInputPanel: false,
     selectedCell: { row: -1, col: -1 },
     mode: 'daily', // daily | paste
     dailyInfo: {
@@ -349,9 +348,8 @@ Page({
     // 如果是固定格子，不允许编辑
     if (cell.fixed) return;
     
-    // 打开输入面板
+    // 选中格子（固定底部面板一直显示）
     this.setData({ 
-      showInputPanel: true,
       selectedCell: { row, col }
     });
   },
@@ -360,12 +358,17 @@ Page({
   onNumberInput(e) {
     const num = e.currentTarget.dataset.num;
     const { row, col } = this.data.selectedCell;
-    const board = this.data.board;
     
+    // 检查是否选中格子
+    if (row === undefined || row === -1) {
+      utils.showText('请先点击格子');
+      return;
+    }
+    
+    const board = this.data.board;
     board[row][col].value = String(num);
     this.setData({ 
       board: board, 
-      showInputPanel: false,
       hasSolution: false, 
       solutionMessage: '' 
     });
@@ -375,21 +378,42 @@ Page({
   // 清除格子
   onClearCell() {
     const { row, col } = this.data.selectedCell;
-    const board = this.data.board;
     
+    // 检查是否选中格子
+    if (row === undefined || row === -1) {
+      utils.showText('请先点击格子');
+      return;
+    }
+    
+    const board = this.data.board;
     board[row][col].value = '';
     this.setData({ 
       board: board, 
-      showInputPanel: false,
       hasSolution: false, 
       solutionMessage: '' 
     });
     this.calculateCandidates();
   },
 
-  // 关闭输入面板
-  closeInputPanel() {
-    this.setData({ showInputPanel: false });
+  // 点击候选数填入
+  onCandidateTap(e) {
+    const row = e.currentTarget.dataset.row;
+    const col = e.currentTarget.dataset.col;
+    const num = e.currentTarget.dataset.num;
+    const board = this.data.board;
+    
+    // 检查该候选数是否存在
+    if (board[row][col].candidates && board[row][col].candidates.includes(num)) {
+      board[row][col].value = String(num);
+      board[row][col].candidates = [];
+      this.setData({ 
+        board: board, 
+        selectedCell: { row, col },
+        hasSolution: false, 
+        solutionMessage: '' 
+      });
+      this.calculateCandidates();
+    }
   },
 
   clearBoard() {
