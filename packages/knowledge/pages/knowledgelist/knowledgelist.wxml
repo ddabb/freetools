@@ -36,7 +36,7 @@
         class="article-card" 
         wx:for="{{list}}" 
         wx:key="id"
-        data-id="{{item.id}}"
+        data-filename="{{item.filename}}"
         bindtap="onArticleTap"
       >
         <view class="article-header">
@@ -63,6 +63,7 @@
             wx:for="{{item.tags}}" 
             wx:key="*this"
             data-tag="{{item}}"
+            bindtap="onTagTap"
           >
             #{{item}}
           </text>
@@ -74,8 +75,14 @@
         <text>加载中...</text>
       </view>
 
+      <!-- 错误提示 -->
+      <view class="error-state" wx:if="{{error}}">
+        <text>{{errorMsg}}</text>
+        <button class="retry-btn" bindtap="loadArticles">重试</button>
+      </view>
+
       <!-- 结束提示 -->
-      <view class="end-state" wx:if="{{isOver && !loading}}">
+      <view class="end-state" wx:if="{{isOver && !loading && !error}}">
         <text>--- 已加载全部内容 ---</text>
       </view>
     </view>

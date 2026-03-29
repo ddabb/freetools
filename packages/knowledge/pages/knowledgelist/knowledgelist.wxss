@@ -174,3 +174,25 @@ page {
   font-size: 26rpx;
   color: #bbb;
 }
+
+/* 错误状态 */
+.error-state {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #e74c3c;
+  font-size: 24rpx;
+}
+
+.retry-btn {
+  margin-top: 20rpx;
+  padding: 12rpx 40rpx;
+  font-size: 24rpx;
+  color: #2980b9;
+  border: 1rpx solid #2980b9;
+  border-radius: 8rpx;
+  background-color: #fff;
+}
+
+.retry-btn:hover {
+  background-color: #f0f8ff;
+}

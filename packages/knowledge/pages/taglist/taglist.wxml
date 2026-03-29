@@ -1,0 +1,42 @@
+<!-- packages/knowledge/pages/taglist/taglist.wxml -->
+
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">知识库标签</text>
+    <text class="page-subtitle">按标签浏览知识内容</text>
+  </view>
+
+  <!-- 标签列表 -->
+  <view class="tag-list">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 错误提示 -->
+    <view class="error-state" wx:if="{{error}}">
+      <text>{{errorMsg}}</text>
+      <button class="retry-btn" bindtap="loadTags">重试</button>
+    </view>
+
+    <!-- 标签项 -->
+    <view class="tag-container">
+      <view 
+        class="tag-item" 
+        wx:for="{{tags}}" 
+        wx:key="name"
+        data-tag="{{item.name}}"
+        bindtap="onTagTap"
+      >
+        <text class="tag-name">#{{item.name}}</text>
+        <text class="tag-count">{{item.count}}</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && !error && tags.length === 0}}">
+      <text>暂无标签</text>
+    </view>
+  </view>
+</view>

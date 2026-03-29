@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "category": "项目经理的角色",
+    "count": 10,
+    "generatedAt": "2026-03-29T14:57:05.877Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225833",
+      "filename": "技术项目管理技能.json",
+      "title": "技术项目管理技能",
+      "description": "",
+      "tags": [
+        "项目经理的能力"
+      ],
+      "wordCount": 317,
+      "updateTime": "2026-03-29T14:26:13.234Z",
+      "order": 114
+    },
+    {
+      "id": "article-1774796225856",
+      "filename": "项目.json",
+      "title": "项目",
+      "description": "",
+      "tags": [
+        "项目经理的影响力范围"
+      ],
+      "wordCount": 653,
+      "updateTime": "2026-03-29T14:26:13.232Z",
+      "order": 115
+    },
+    {
+      "id": "article-1774796225848",
+      "filename": "行业.json",
+      "title": "行业",
+      "description": "",
+      "tags": [
+        "项目经理的影响力范围"
+      ],
+      "wordCount": 156,
+      "updateTime": "2026-03-29T14:26:13.231Z",
+      "order": 116
+    },
+    {
+      "id": "article-1774796225843",
+      "filename": "组织.json",
+      "title": "组织",
+      "description": "",
+      "tags": [
+        "项目经理的影响力范围"
+      ],
+      "wordCount": 634,
+      "updateTime": "2026-03-29T14:26:13.230Z",
+      "order": 117
+    },
+    {
+      "id": "article-1774796225820",
+      "filename": "专业学科.json",
+      "title": "专业学科",
+      "description": "",
+      "tags": [
+        "项目经理的影响力范围"
+      ],
+      "wordCount": 186,
+      "updateTime": "2026-03-29T14:26:13.227Z",
+      "order": 118
+    },
+    {
+      "id": "article-1774796225846",
+      "filename": "背景层面的整合.json",
+      "title": "背景层面的整合",
+      "description": "",
+      "tags": [
+        "执行整合"
+      ],
+      "wordCount": 205,
+      "updateTime": "2026-03-29T14:26:13.224Z",
+      "order": 119
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "认知层面的整合.json",
+      "title": "认知层面的整合",
+      "description": "",
+      "tags": [
+        "执行整合"
+      ],
+      "wordCount": 194,
+      "updateTime": "2026-03-29T14:26:13.224Z",
+      "order": 120
+    },
+    {
+      "id": "article-1774796225837",
+      "filename": "整合与复杂性.json",
+      "title": "整合与复杂性",
+      "description": "",
+      "tags": [
+        "执行整合"
+      ],
+      "wordCount": 448,
+      "updateTime": "2026-03-29T14:26:13.222Z",
+      "order": 121
+    },
+    {
+      "id": "article-1774796225833",
+      "filename": "执行整合.json",
+      "title": "执行整合",
+      "description": "",
+      "tags": [
+        "执行整合"
+      ],
+      "wordCount": 256,
+      "updateTime": "2026-03-29T14:26:13.221Z",
+      "order": 122
+    },
+    {
+      "id": "article-1774796225828",
+      "filename": "在过程层面执行整合.json",
+      "title": "在过程层面执行整合",
+      "description": "",
+      "tags": [
+        "执行整合"
+      ],
+      "wordCount": 237,
+      "updateTime": "2026-03-29T14:26:13.218Z",
+      "order": 123
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "管理团队",
+    "count": 1,
+    "generatedAt": "2026-03-29T14:57:05.936Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225842",
+      "filename": "管理团队.json",
+      "title": "管理团队",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 328,
+      "updateTime": "2026-03-29T14:26:13.269Z",
+      "order": 82
+    }
+  ]
+}

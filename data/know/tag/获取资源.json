@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "tag": "获取资源",
+    "count": 6,
+    "generatedAt": "2026-03-29T14:57:05.935Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225860",
+      "filename": "预分派.json",
+      "title": "预分派",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 112,
+      "updateTime": "2026-03-29T14:26:13.276Z",
+      "order": 76
+    },
+    {
+      "id": "article-1774796225851",
+      "filename": "资源日历.json",
+      "title": "资源日历",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 161,
+      "updateTime": "2026-03-29T14:26:13.274Z",
+      "order": 77
+    },
+    {
+      "id": "article-1774796225856",
+      "filename": "项目团队派工单.json",
+      "title": "项目团队派工单",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 71,
+      "updateTime": "2026-03-29T14:26:13.274Z",
+      "order": 78
+    },
+    {
+      "id": "article-1774796225847",
+      "filename": "获取资源.json",
+      "title": "获取资源",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 548,
+      "updateTime": "2026-03-29T14:26:13.272Z",
+      "order": 79
+    },
+    {
+      "id": "article-1774796225847",
+      "filename": "虚拟团队.json",
+      "title": "虚拟团队",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 362,
+      "updateTime": "2026-03-29T14:26:13.272Z",
+      "order": 80
+    },
+    {
+      "id": "article-1774796225830",
+      "filename": "实物资源分配单.json",
+      "title": "实物资源分配单",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 35,
+      "updateTime": "2026-03-29T14:26:13.271Z",
+      "order": 81
+    }
+  ]
+}

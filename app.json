@@ -128,7 +128,9 @@
       "name": "knowledge",
       "pages": [
         "pages/knowledgelist/knowledgelist",
-        "pages/knowledgedetail/knowledgedetail"
+        "pages/knowledgedetail/knowledgedetail",
+        "pages/categorylist/categorylist",
+        "pages/taglist/taglist"
       ]
     },
     {

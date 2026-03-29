@@ -1,0 +1,45 @@
+<!-- packages/knowledge/pages/categorylist/categorylist.wxml -->
+
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">知识库分类</text>
+    <text class="page-subtitle">按分类浏览知识内容</text>
+  </view>
+
+  <!-- 分类列表 -->
+  <view class="category-list">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 错误提示 -->
+    <view class="error-state" wx:if="{{error}}">
+      <text>{{errorMsg}}</text>
+      <button class="retry-btn" bindtap="loadCategories">重试</button>
+    </view>
+
+    <!-- 分类项 -->
+    <view 
+      class="category-item" 
+      wx:for="{{categories}}" 
+      wx:key="name"
+      data-category="{{item.name}}"
+      bindtap="onCategoryTap"
+    >
+      <view class="category-info">
+        <text class="category-name">{{item.name}}</text>
+        <text class="category-count">{{item.count}} 篇</text>
+      </view>
+      <view class="category-arrow">
+        <text class="arrow">→</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && !error && categories.length === 0}}">
+      <text>暂无分类</text>
+    </view>
+  </view>
+</view>

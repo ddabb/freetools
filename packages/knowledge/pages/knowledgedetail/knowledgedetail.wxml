@@ -9,6 +9,7 @@
   <!-- 错误状态 -->
   <view class="error-state" wx:if="{{error && !loading}}">
     <text>{{errorMsg}}</text>
+    <button class="retry-btn" bindtap="loadDetail">重试</button>
   </view>
 
   <!-- 文章内容 -->

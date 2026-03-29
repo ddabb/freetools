@@ -1,87 +1,288 @@
 {
-  "生活": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "cold-id-photo",
-        "title": "为什么身份证照片都是白底？",
-        "category": "冷知识"
-      }
-    ]
+  "meta": {
+    "totalTags": 70,
+    "generatedAt": "2026-03-29T14:57:06.367Z"
   },
-  "冷知识": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "cold-id-photo",
-        "title": "为什么身份证照片都是白底？",
-        "category": "冷知识"
-      }
-    ]
-  },
-  "身份证": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "cold-id-photo",
-        "title": "为什么身份证照片都是白底？",
-        "category": "冷知识"
-      }
-    ]
-  },
-  "PMP": {
-    "count": 2,
-    "articles": [
-      {
-        "id": "pmp-knowledge-areas",
-        "title": "十大知识领域速记",
-        "category": "项目管理"
-      },
-      {
-        "id": "pmp-process-groups",
-        "title": "PMP五大过程组详解",
-        "category": "项目管理"
-      }
-    ]
-  },
-  "知识领域": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "pmp-knowledge-areas",
-        "title": "十大知识领域速记",
-        "category": "项目管理"
-      }
-    ]
-  },
-  "速记": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "pmp-knowledge-areas",
-        "title": "十大知识领域速记",
-        "category": "项目管理"
-      }
-    ]
-  },
-  "项目管理": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "pmp-process-groups",
-        "title": "PMP五大过程组详解",
-        "category": "项目管理"
-      }
-    ]
-  },
-  "过程组": {
-    "count": 1,
-    "articles": [
-      {
-        "id": "pmp-process-groups",
-        "title": "PMP五大过程组详解",
-        "category": "项目管理"
-      }
-    ]
-  }
+  "tags": [
+    {
+      "name": "规划过程组",
+      "count": 92
+    },
+    {
+      "name": "执行过程组",
+      "count": 30
+    },
+    {
+      "name": "监控过程组",
+      "count": 23
+    },
+    {
+      "name": "基本要素",
+      "count": 12
+    },
+    {
+      "name": "规划采购管理",
+      "count": 9
+    },
+    {
+      "name": "制定进度计划",
+      "count": 9
+    },
+    {
+      "name": "启动过程组",
+      "count": 9
+    },
+    {
+      "name": "制定项目章程",
+      "count": 7
+    },
+    {
+      "name": "制定预算",
+      "count": 7
+    },
+    {
+      "name": "数据收集",
+      "count": 7
+    },
+    {
+      "name": "估算活动持续时间",
+      "count": 6
+    },
+    {
+      "name": "获取资源",
+      "count": 6
+    },
+    {
+      "name": "指导与管理项目工作",
+      "count": 6
+    },
+    {
+      "name": "指南的组成部分",
+      "count": 6
+    },
+    {
+      "name": "人际关系与团队技能",
+      "count": 6
+    },
+    {
+      "name": "规划风险应对",
+      "count": 5
+    },
+    {
+      "name": "排列活动顺序",
+      "count": 5
+    },
+    {
+      "name": "规划资源管理",
+      "count": 5
+    },
+    {
+      "name": "收集需求",
+      "count": 5
+    },
+    {
+      "name": "执行整合",
+      "count": 5
+    },
+    {
+      "name": "项目管理商业文件",
+      "count": 5
+    },
+    {
+      "name": "识别风险",
+      "count": 4
+    },
+    {
+      "name": "实施采购",
+      "count": 4
+    },
+    {
+      "name": "定义活动",
+      "count": 4
+    },
+    {
+      "name": "估算活动资源",
+      "count": 4
+    },
+    {
+      "name": "规划质量管理",
+      "count": 4
+    },
+    {
+      "name": "管理质量",
+      "count": 4
+    },
+    {
+      "name": "项目经理的影响力范围",
+      "count": 4
+    },
+    {
+      "name": "监控项目工作",
+      "count": 4
+    },
+    {
+      "name": "指南概述和目的",
+      "count": 4
+    },
+    {
+      "name": "控制采购",
+      "count": 3
+    },
+    {
+      "name": "建设团队",
+      "count": 3
+    },
+    {
+      "name": "控制质量",
+      "count": 3
+    },
+    {
+      "name": "规划范围管理",
+      "count": 3
+    },
+    {
+      "name": "定义范围",
+      "count": 3
+    },
+    {
+      "name": "创建WBS",
+      "count": 3
+    },
+    {
+      "name": "收尾过程组",
+      "count": 3
+    },
+    {
+      "name": "结束项目或阶段",
+      "count": 3
+    },
+    {
+      "name": "决策",
+      "count": 3
+    },
+    {
+      "name": "实时定量风险分析",
+      "count": 2
+    },
+    {
+      "name": "实施定性风险分析",
+      "count": 2
+    },
+    {
+      "name": "规划进度管理",
+      "count": 2
+    },
+    {
+      "name": "控制进度",
+      "count": 2
+    },
+    {
+      "name": "组织过程资产",
+      "count": 2
+    },
+    {
+      "name": "组织系统",
+      "count": 2
+    },
+    {
+      "name": "组织结构类型",
+      "count": 2
+    },
+    {
+      "name": "确认范围",
+      "count": 2
+    },
+    {
+      "name": "规划相关方参与",
+      "count": 2
+    },
+    {
+      "name": "管理相关方参与",
+      "count": 2
+    },
+    {
+      "name": "识别相关方",
+      "count": 2
+    },
+    {
+      "name": "规划沟通管理",
+      "count": 2
+    },
+    {
+      "name": "制定项目管理计划",
+      "count": 2
+    },
+    {
+      "name": "实施整体变更控制",
+      "count": 2
+    },
+    {
+      "name": "管理项目知识",
+      "count": 2
+    },
+    {
+      "name": "规划成本管理",
+      "count": 2
+    },
+    {
+      "name": "控制成本",
+      "count": 2
+    },
+    {
+      "name": "数据表现",
+      "count": 2
+    },
+    {
+      "name": "规划风险管理",
+      "count": 1
+    },
+    {
+      "name": "监督风险",
+      "count": 1
+    },
+    {
+      "name": "实施风险应对",
+      "count": 1
+    },
+    {
+      "name": "事业环境因素",
+      "count": 1
+    },
+    {
+      "name": "控制资源",
+      "count": 1
+    },
+    {
+      "name": "管理团队",
+      "count": 1
+    },
+    {
+      "name": "控制范围",
+      "count": 1
+    },
+    {
+      "name": "项目经理的能力",
+      "count": 1
+    },
+    {
+      "name": "监督相关方参与",
+      "count": 1
+    },
+    {
+      "name": "监督沟通",
+      "count": 1
+    },
+    {
+      "name": "管理沟通",
+      "count": 1
+    },
+    {
+      "name": "估算成本",
+      "count": 1
+    },
+    {
+      "name": "数据分析",
+      "count": 1
+    }
+  ]
 }

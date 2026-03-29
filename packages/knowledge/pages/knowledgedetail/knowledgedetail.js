@@ -4,7 +4,7 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
 Page({
   data: {
-    id: '',
+    filename: '',
     article: null,
     loading: true,
     error: false,
@@ -12,12 +12,12 @@ Page({
   },
 
   onLoad(options) {
-    if (options.id) {
-      this.loadDetail(options.id);
+    if (options.filename) {
+      this.loadDetail(options.filename);
     } else {
       this.setData({
         error: true,
-        errorMsg: '文章ID不存在',
+        errorMsg: '文章不存在',
         loading: false
       });
     }
@@ -26,40 +26,48 @@ Page({
   /**
    * 从 CDN 加载文章详情
    */
-  loadDetail(id) {
-    const url = CDN_BASE + `detail/${id}.json`;
+  async loadDetail(filename) {
+    // 如果没有传入 filename，从 data 中获取
+    const targetFilename = filename || this.data.filename;
+    if (!targetFilename) {
+      this.showError('文章不存在');
+      return;
+    }
 
-    wx.request({
-      url,
-      method: 'GET',
-      timeout: 10000,
-      success: (res) => {
-        if (res.statusCode === 200) {
-          const article = res.data;
-          
-          // 设置导航栏标题
-          wx.setNavigationBarTitle({
-            title: article.title || '文章详情'
-          });
-
-          this.setData({
-            id,
-            article,
-            loading: false,
-            error: false
-          });
-
-          // 记录分享ID
-          wx.setStorageSync('shareId', id);
-        } else {
-          this.showError('文章不存在');
-        }
-      },
-      fail: (err) => {
-        console.error('加载文章详情失败:', err);
-        this.showError('网络错误，请检查连接');
-      }
+    this.setData({
+      loading: true,
+      error: false,
+      errorMsg: ''
     });
+
+    const url = CDN_BASE + `detail/${targetFilename}`;
+
+    try {
+      // 使用带缓存的请求
+      const app = getApp();
+      const article = await app.requestWithCache(url, {
+        method: 'GET',
+        timeout: 10000
+      }, 7200); // 2小时缓存
+
+      // 设置导航栏标题
+      wx.setNavigationBarTitle({
+        title: article.title || '文章详情'
+      });
+
+      this.setData({
+        filename: targetFilename,
+        article,
+        loading: false,
+        error: false
+      });
+
+      // 记录分享ID
+      wx.setStorageSync('shareId', targetFilename);
+    } catch (err) {
+      console.error('加载文章详情失败:', err);
+      this.showError('网络错误，请检查连接');
+    }
   },
 
   /**
@@ -103,10 +111,10 @@ Page({
    * 分享文章
    */
   onShareAppMessage() {
-    const { article } = this.data;
+    const { article, filename } = this.data;
     return {
       title: article.title,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${article.id}`,
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`,
       imageUrl: '../../images/share.png'
     };
   },

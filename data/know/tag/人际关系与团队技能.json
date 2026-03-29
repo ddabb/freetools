@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "tag": "人际关系与团队技能",
+    "count": 6,
+    "generatedAt": "2026-03-29T14:57:06.011Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225851",
+      "filename": "质量功能展开.json",
+      "title": "质量功能展开",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 85,
+      "updateTime": "2026-03-29T14:26:13.006Z",
+      "order": 203
+    },
+    {
+      "id": "article-1774796225848",
+      "filename": "观察和交谈.json",
+      "title": "观察和交谈",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 169,
+      "updateTime": "2026-03-29T14:26:13.003Z",
+      "order": 204
+    },
+    {
+      "id": "article-1774796225846",
+      "filename": "联合应用设计或开发.json",
+      "title": "联合应用设计或开发",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 64,
+      "updateTime": "2026-03-29T14:26:12.990Z",
+      "order": 205
+    },
+    {
+      "id": "article-1774796225832",
+      "filename": "引导.json",
+      "title": "引导",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 99,
+      "updateTime": "2026-03-29T14:26:12.987Z",
+      "order": 206
+    },
+    {
+      "id": "article-1774796225827",
+      "filename": "名义小组技术.json",
+      "title": "名义小组技术",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 235,
+      "updateTime": "2026-03-29T14:26:12.977Z",
+      "order": 207
+    },
+    {
+      "id": "article-1774796225824",
+      "filename": "冲突管理.json",
+      "title": "冲突管理",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 250,
+      "updateTime": "2026-03-29T14:26:12.958Z",
+      "order": 208
+    }
+  ]
+}

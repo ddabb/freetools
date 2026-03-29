@@ -1,0 +1,217 @@
+{
+  "meta": {
+    "category": "项目采购管理",
+    "count": 16,
+    "generatedAt": "2026-03-29T14:57:05.868Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225854",
+      "filename": "采购策略.json",
+      "title": "采购策略",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 599,
+      "updateTime": "2026-03-29T14:26:13.345Z",
+      "order": 17
+    },
+    {
+      "id": "article-1774796225854",
+      "filename": "采购管理计划.json",
+      "title": "采购管理计划",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 359,
+      "updateTime": "2026-03-29T14:26:13.345Z",
+      "order": 18
+    },
+    {
+      "id": "article-1774796225853",
+      "filename": "采购工作说明书.json",
+      "title": "采购工作说明书",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 440,
+      "updateTime": "2026-03-29T14:26:13.344Z",
+      "order": 19
+    },
+    {
+      "id": "article-1774796225849",
+      "filename": "规划采购管理.json",
+      "title": "规划采购管理",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 572,
+      "updateTime": "2026-03-29T14:26:13.343Z",
+      "order": 20
+    },
+    {
+      "id": "article-1774796225840",
+      "filename": "独立成本估算.json",
+      "title": "独立成本估算",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 114,
+      "updateTime": "2026-03-29T14:26:13.342Z",
+      "order": 21
+    },
+    {
+      "id": "article-1774796225846",
+      "filename": "自制或外购决策.json",
+      "title": "自制或外购决策",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 45,
+      "updateTime": "2026-03-29T14:26:13.342Z",
+      "order": 22
+    },
+    {
+      "id": "article-1774796225833",
+      "filename": "招标文件.json",
+      "title": "招标文件",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 562,
+      "updateTime": "2026-03-29T14:26:13.341Z",
+      "order": 23
+    },
+    {
+      "id": "article-1774796225823",
+      "filename": "供方选择分析.json",
+      "title": "供方选择分析",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 709,
+      "updateTime": "2026-03-29T14:26:13.339Z",
+      "order": 24
+    },
+    {
+      "id": "article-1774796225823",
+      "filename": "供方选择标准.json",
+      "title": "供方选择标准",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划采购管理"
+      ],
+      "wordCount": 307,
+      "updateTime": "2026-03-29T14:26:13.339Z",
+      "order": 25
+    },
+    {
+      "id": "article-1774796225854",
+      "filename": "采购文档更新.json",
+      "title": "采购文档更新",
+      "description": "",
+      "tags": [
+        "监控过程组",
+        "控制采购"
+      ],
+      "wordCount": 127,
+      "updateTime": "2026-03-29T14:26:13.338Z",
+      "order": 26
+    },
+    {
+      "id": "article-1774796225836",
+      "filename": "控制采购.json",
+      "title": "控制采购",
+      "description": "",
+      "tags": [
+        "监控过程组",
+        "控制采购"
+      ],
+      "wordCount": 819,
+      "updateTime": "2026-03-29T14:26:13.334Z",
+      "order": 27
+    },
+    {
+      "id": "article-1774796225853",
+      "filename": "采购关闭.json",
+      "title": "采购关闭",
+      "description": "",
+      "tags": [
+        "监控过程组",
+        "控制采购"
+      ],
+      "wordCount": 153,
+      "updateTime": "2026-03-29T14:26:13.334Z",
+      "order": 28
+    },
+    {
+      "id": "article-1774796225833",
+      "filename": "投标人会议.json",
+      "title": "投标人会议",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "实施采购"
+      ],
+      "wordCount": 101,
+      "updateTime": "2026-03-29T14:26:13.333Z",
+      "order": 29
+    },
+    {
+      "id": "article-1774796225830",
+      "filename": "实施采购.json",
+      "title": "实施采购",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "实施采购"
+      ],
+      "wordCount": 144,
+      "updateTime": "2026-03-29T14:26:13.331Z",
+      "order": 30
+    },
+    {
+      "id": "article-1774796225826",
+      "filename": "卖方建议书.json",
+      "title": "卖方建议书",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "实施采购"
+      ],
+      "wordCount": 124,
+      "updateTime": "2026-03-29T14:26:13.330Z",
+      "order": 31
+    },
+    {
+      "id": "article-1774796225825",
+      "filename": "协议.json",
+      "title": "协议",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "实施采购"
+      ],
+      "wordCount": 228,
+      "updateTime": "2026-03-29T14:26:13.328Z",
+      "order": 32
+    }
+  ]
+}

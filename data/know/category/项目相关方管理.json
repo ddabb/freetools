@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "category": "项目相关方管理",
+    "count": 7,
+    "generatedAt": "2026-03-29T14:57:05.879Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225848",
+      "filename": "规划相关方参与.json",
+      "title": "规划相关方参与",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划相关方参与"
+      ],
+      "wordCount": 441,
+      "updateTime": "2026-03-29T14:26:13.215Z",
+      "order": 124
+    },
+    {
+      "id": "article-1774796225841",
+      "filename": "相关方参与计划.json",
+      "title": "相关方参与计划",
+      "description": "",
+      "tags": [
+        "规划过程组",
+        "规划相关方参与"
+      ],
+      "wordCount": 125,
+      "updateTime": "2026-03-29T14:26:13.213Z",
+      "order": 125
+    },
+    {
+      "id": "article-1774796225840",
+      "filename": "监督相关方参与.json",
+      "title": "监督相关方参与",
+      "description": "",
+      "tags": [
+        "监控过程组",
+        "监督相关方参与"
+      ],
+      "wordCount": 102,
+      "updateTime": "2026-03-29T14:26:13.211Z",
+      "order": 126
+    },
+    {
+      "id": "article-1774796225842",
+      "filename": "管理相关方参与.json",
+      "title": "管理相关方参与",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "管理相关方参与"
+      ],
+      "wordCount": 284,
+      "updateTime": "2026-03-29T14:26:13.210Z",
+      "order": 127
+    },
+    {
+      "id": "article-1774796225828",
+      "filename": "基本规则.json",
+      "title": "基本规则",
+      "description": "",
+      "tags": [
+        "执行过程组",
+        "管理相关方参与"
+      ],
+      "wordCount": 47,
+      "updateTime": "2026-03-29T14:26:13.208Z",
+      "order": 128
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "识别相关方.json",
+      "title": "识别相关方",
+      "description": "",
+      "tags": [
+        "启动过程组",
+        "识别相关方"
+      ],
+      "wordCount": 267,
+      "updateTime": "2026-03-29T14:26:13.207Z",
+      "order": 129
+    },
+    {
+      "id": "article-1774796225841",
+      "filename": "相关方登记册.json",
+      "title": "相关方登记册",
+      "description": "",
+      "tags": [
+        "启动过程组",
+        "识别相关方"
+      ],
+      "wordCount": 186,
+      "updateTime": "2026-03-29T14:26:13.205Z",
+      "order": 130
+    }
+  ]
+}

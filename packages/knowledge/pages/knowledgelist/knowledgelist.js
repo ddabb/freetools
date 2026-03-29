@@ -9,6 +9,8 @@ Page({
     list: [],
     loading: false,
     isOver: false,
+    error: false,
+    errorMsg: '',
     scrollHeight: 0,
     sortField: 'order',
     sortOrder: 'asc',
@@ -37,59 +39,55 @@ Page({
   /**
    * 从 CDN 加载文章列表
    */
-  loadArticles() {
+  async loadArticles() {
     if (this.data.loading || this.data.isOver) return;
 
-    this.setData({ loading: true });
-
-    // 根据分类或标签加载数据
-    const { category, tag } = this.data;
-    let url = CDN_BASE + 'articles.json';
-
-    if (category) {
-      url = CDN_BASE + `category/${category}.json`;
-    }
-
-    wx.request({
-      url,
-      method: 'GET',
-      timeout: 10000,
-      success: (res) => {
-        if (res.statusCode === 200) {
-          let articles = [];
-
-          if (category) {
-            // 分类数据
-            articles = res.data.articles || [];
-          } else if (tag) {
-            // 标签过滤
-            articles = (res.data.articles || []).filter(a => 
-              a.tags && a.tags.includes(tag)
-            );
-          } else {
-            // 全部文章
-            articles = res.data.articles || [];
-          }
-
-          // 排序
-          this.sortArticles(articles);
-
-          this.setData({
-            list: articles,
-            loading: false,
-            isOver: true
-          });
-        } else {
-          this.showError('加载失败，请重试');
-          this.setData({ loading: false });
-        }
-      },
-      fail: (err) => {
-        console.error('加载文章失败:', err);
-        this.showError('网络错误，请检查连接');
-        this.setData({ loading: false });
-      }
+    this.setData({ 
+      loading: true,
+      error: false,
+      errorMsg: ''
     });
+
+    try {
+      // 根据分类或标签加载数据
+      const { category, tag } = this.data;
+      let url = CDN_BASE + 'articles.json';
+
+      if (category) {
+        url = CDN_BASE + `category/${category}.json`;
+      } else if (tag) {
+        url = CDN_BASE + `tag/${tag}.json`;
+      }
+
+      // 使用带缓存的请求
+      const app = getApp();
+      const res = await app.requestWithCache(url, {
+        method: 'GET',
+        timeout: 10000
+      }, 3600); // 1小时缓存
+
+      let articles = [];
+      if (category || tag) {
+        // 分类或标签数据
+        articles = res.articles || [];
+      } else {
+        // 全部文章
+        articles = res.articles || [];
+      }
+
+      // 排序
+      this.sortArticles(articles);
+
+      this.setData({
+        list: articles,
+        loading: false,
+        isOver: true
+      });
+    } catch (err) {
+      console.error('加载文章失败:', err);
+      this.showError('网络错误，请检查连接');
+      this.setData({ loading: false });
+    }
   },
 
   /**
@@ -138,9 +136,9 @@ Page({
    * 点击文章进入详情页
    */
   onArticleTap(e) {
-    const { id } = e.currentTarget.dataset;
+    const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${id}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 
@@ -148,10 +146,26 @@ Page({
    * 显示错误提示
    */
   showError(message) {
+    this.setData({
+      error: true,
+      errorMsg: message,
+      loading: false
+    });
+
     wx.showToast({
       title: message,
       icon: 'error',
       duration: 2000
+    });
+  },
+
+  /**
+   * 点击标签跳转到标签页
+   */
+  onTagTap(e) {
+    const { tag } = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
     });
   },
 

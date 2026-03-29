@@ -1,56 +1,128 @@
 {
   "meta": {
-    "generatedAt": "2026-03-29T00:00:00.000Z",
-    "totalFiles": 3
+    "generatedAt": "2026-03-29T14:57:06.372Z",
+    "totalArticles": 209,
+    "totalCategories": 16,
+    "totalTags": 70
   },
-  "taxonomy": {
-    "categories": {
-      "PMP": 2,
-      "冷知识": 1
+  "categories": [
+    {
+      "name": "项目进度管理",
+      "count": 28
     },
-    "tags": {
-      "项目管理": 2,
-      "PMP": 2,
-      "冷知识": 1,
-      "科技": 1
+    {
+      "name": "项目整合管理",
+      "count": 26
+    },
+    {
+      "name": "项目资源管理",
+      "count": 20
+    },
+    {
+      "name": "工具与技术",
+      "count": 19
+    },
+    {
+      "name": "项目范围管理",
+      "count": 17
+    },
+    {
+      "name": "项目风险管理",
+      "count": 16
+    },
+    {
+      "name": "项目采购管理",
+      "count": 16
+    },
+    {
+      "name": "引论",
+      "count": 16
+    },
+    {
+      "name": "项目成本管理",
+      "count": 12
+    },
+    {
+      "name": "项目质量管理",
+      "count": 11
+    },
+    {
+      "name": "项目经理的角色",
+      "count": 10
+    },
+    {
+      "name": "项目相关方管理",
+      "count": 7
+    },
+    {
+      "name": "项目运行环境",
+      "count": 5
+    },
+    {
+      "name": "项目沟通管理",
+      "count": 4
+    },
+    {
+      "name": "数据流向图",
+      "count": 1
+    },
+    {
+      "name": "未分类",
+      "count": 1
     }
-  },
-  "files": [
+  ],
+  "recentArticles": [
     {
-      "id": "pmp-1",
-      "name": "pmp-introduction.md",
-      "title": "PMP认证介绍",
-      "description": "PMP（项目管理专业人士）认证是项目管理领域的全球标准，由PMI（项目管理协会）颁发。",
-      "category": "PMP",
-      "tags": ["项目管理", "PMP"],
-      "birthtime": "2026-03-01T00:00:00.000Z",
-      "updateTime": "2026-03-28T00:00:00.000Z",
-      "wordCount": 1000,
-      "content": "PMP认证是项目管理领域的权威认证，获得PMP认证可以证明你具备项目管理的专业知识和技能。PMP认证考试涵盖五大过程组：启动、规划、执行、监控和收尾，以及十大知识领域。"
+      "id": "article-1774796225861",
+      "filename": "风险登记册.json",
+      "title": "风险登记册",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.366Z"
     },
     {
-      "id": "pmp-process",
-      "name": "pmp-process-groups.md",
-      "title": "PMP过程组详解",
-      "description": "详细介绍PMP考试中的五大过程组及其主要活动。",
-      "category": "PMP",
-      "tags": ["项目管理", "PMP"],
-      "birthtime": "2026-03-02T00:00:00.000Z",
-      "updateTime": "2026-03-27T00:00:00.000Z",
-      "wordCount": 1500,
-      "content": "五大过程组包括：1. 启动过程组：定义项目并授权开始；2. 规划过程组：制定项目管理计划；3. 执行过程组：执行项目管理计划；4. 监控过程组：监控项目进展并采取纠正措施；5. 收尾过程组：正式结束项目。"
+      "id": "article-1774796225860",
+      "filename": "风险报告.json",
+      "title": "风险报告",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.365Z"
     },
     {
-      "id": "cold-1",
-      "name": "cold-knowledge-1.md",
-      "title": "有趣的冷知识",
-      "description": "一些你可能不知道的有趣冷知识。",
-      "category": "冷知识",
-      "tags": ["冷知识", "科技"],
-      "birthtime": "2026-03-03T00:00:00.000Z",
-      "updateTime": "2026-03-26T00:00:00.000Z",
-      "wordCount": 800,
-      "content": "1. 蜜蜂的翅膀每分钟振动约200次；2. 人类的DNA与香蕉有50%的相似度；3. 一个人每天大约会产生25000个想法。"
+      "id": "article-1774796225850",
+      "filename": "识别风险.json",
+      "title": "识别风险",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.364Z"
+    },
+    {
+      "id": "article-1774796225836",
+      "filename": "提示清单.json",
+      "title": "提示清单",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.363Z"
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "规划风险管理.json",
+      "title": "规划风险管理",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.362Z"
     }
+  ],
+  "popularTags": [
+    "规划过程组",
+    "执行过程组",
+    "监控过程组",
+    "基本要素",
+    "规划采购管理",
+    "制定进度计划",
+    "启动过程组",
+    "制定项目章程",
+    "制定预算",
+    "数据收集"
   ]
 }

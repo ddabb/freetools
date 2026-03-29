@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "tag": "规划资源管理",
+    "count": 5,
+    "generatedAt": "2026-03-29T14:57:05.933Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225852",
+      "filename": "资源管理计划.json",
+      "title": "资源管理计划",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 747,
+      "updateTime": "2026-03-29T14:26:13.288Z",
+      "order": 66
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "责任分配矩阵.json",
+      "title": "责任分配矩阵",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 398,
+      "updateTime": "2026-03-29T14:26:13.287Z",
+      "order": 67
+    },
+    {
+      "id": "article-1774796225849",
+      "filename": "规划资源管理.json",
+      "title": "规划资源管理",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 279,
+      "updateTime": "2026-03-29T14:26:13.286Z",
+      "order": 68
+    },
+    {
+      "id": "article-1774796225827",
+      "filename": "团队章程.json",
+      "title": "团队章程",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 268,
+      "updateTime": "2026-03-29T14:26:13.284Z",
+      "order": 69
+    },
+    {
+      "id": "article-1774796225844",
+      "filename": "组织理论.json",
+      "title": "组织理论",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 139,
+      "updateTime": "2026-03-29T14:26:13.284Z",
+      "order": 70
+    }
+  ]
+}
