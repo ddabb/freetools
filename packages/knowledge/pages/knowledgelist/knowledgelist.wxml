@@ -1,90 +1,116 @@
 <!-- packages/knowledge/pages/knowledgelist/knowledgelist.wxml -->
+<wxs module="utils" src="../../../../utils/index.wxs"></wxs>
 
 <view class="container">
-  <!-- 排序栏 -->
-  <view class="sort-bar">
-    <text class="sort-label">排序方式</text>
-    <view class="sort-btn" bindtap="toggleSort">
-      <text style="color: {{sortColor}}">
-        {{sortOrder === 'asc' ? '↑ 升序' : '↓ 降序'}}
-      </text>
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="iconfont icon-search">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索知识..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <text class="iconfont icon-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
     </view>
   </view>
 
-  <!-- 筛选标签 -->
-  <view class="filter-bar" wx:if="{{tag}}">
-    <text class="filter-label">标签：</text>
-    <text class="filter-tag">{{tag}}</text>
-  </view>
+  <!-- 分类导航 -->
+  <scroll-view class="category-nav" scroll-x enable-flex>
+    <view 
+      class="category-item {{currentCategory === '' ? 'active' : ''}}"
+      bindtap="switchCategory"
+      data-category=""
+    >
+      <text>全部</text>
+    </view>
+    <view 
+      class="category-item {{currentCategory === item ? 'active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="*this"
+      bindtap="switchCategory"
+      data-category="{{item}}"
+    >
+      <text>{{item}}</text>
+    </view>
+  </scroll-view>
 
-  <!-- 分类标签 -->
-  <view class="filter-bar" wx:if="{{category}}">
-    <text class="filter-label">分类：</text>
-    <text class="filter-tag">{{category}}</text>
+  <!-- 统计信息 -->
+  <view class="stats-bar">
+    <text class="stats-text">共 {{totalCount}} 篇知识</text>
+    <view class="sort-wrap" bindtap="toggleSort">
+      <text class="sort-icon">{{sortOrder === 'desc' ? '↓' : '↑'}}</text>
+      <text class="sort-text">{{sortField === 'updateTime' ? '时间' : '序号'}}</text>
+    </view>
   </view>
 
   <!-- 文章列表 -->
   <scroll-view 
+    class="article-scroll"
     scroll-y 
     style="height: {{scrollHeight}}px;"
-    lower-threshold="50"
-    bindscrolltolower="lower"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{refreshing}}"
+    lower-threshold="100"
+    bindscrolltolower="loadMore"
   >
+    <!-- 文章卡片列表 -->
     <view class="article-list">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
+        <text class="empty-icon">📚</text>
+        <text class="empty-text">暂无相关知识</text>
+        <text class="empty-hint">换个关键词试试吧~</text>
+      </view>
+
       <!-- 文章卡片 -->
       <view 
-        class="article-card" 
-        wx:for="{{list}}" 
+        class="article-card {{index % 2 === 0 ? 'card-left' : 'card-right'}}"
+        wx:for="{{list}}"
         wx:key="id"
-        data-filename="{{item.filename}}"
         bindtap="onArticleTap"
+        data-id="{{item.id}}"
       >
-        <view class="article-header">
-          <text class="article-title">{{item.title}}</text>
-          <text class="article-order">#{{item.order}}</text>
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="card-category {{item.category}}">{{item.category}}</view>
+          <text class="card-order">#{{item.order}}</text>
         </view>
 
-        <text class="article-desc">{{item.description}}</text>
+        <!-- 卡片标题 -->
+        <text class="card-title">{{item.title}}</text>
 
-        <view class="article-meta">
-          <view class="meta-left">
-            <text class="category-tag" bindtap="onCategoryTap">{{item.category}}</text>
-            <text class="word-count">{{item.wordCount}} 字</text>
+        <!-- 卡片描述 -->
+        <text class="card-desc">{{item.description}}</text>
+
+        <!-- 卡片底部 -->
+        <view class="card-footer">
+          <view class="card-tags">
+            <text class="card-tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">#{{tag}}</text>
           </view>
-          <view class="meta-right">
-            <text class="update-time">{{item.updateTime}}</text>
+          <view class="card-meta">
+            <text class="card-words">{{item.wordCount}}字</text>
+            <text class="card-time">{{utils.formatDate(item.updateTime)}}</text>
           </view>
         </view>
 
-        <!-- 标签 -->
-        <view class="tags" wx:if="{{item.tags && item.tags.length > 0}}">
-          <text 
-            class="tag" 
-            wx:for="{{item.tags}}" 
-            wx:key="*this"
-            data-tag="{{item}}"
-            bindtap="onTagTap"
-          >
-            #{{item}}
-          </text>
-        </view>
+        <!-- 装饰元素 -->
+        <view class="card-decoration {{index % 3 === 0 ? 'deco-1' : (index % 3 === 1 ? 'deco-2' : 'deco-3')}}"></view>
       </view>
+    </view>
 
-      <!-- 加载状态 -->
-      <view class="loading-state" wx:if="{{loading}}">
-        <text>加载中...</text>
-      </view>
+    <!-- 加载状态 -->
+    <view class="loading-more" wx:if="{{loading && list.length > 0}}">
+      <text>加载中...</text>
+    </view>
 
-      <!-- 错误提示 -->
-      <view class="error-state" wx:if="{{error}}">
-        <text>{{errorMsg}}</text>
-        <button class="retry-btn" bindtap="loadArticles">重试</button>
-      </view>
-
-      <!-- 结束提示 -->
-      <view class="end-state" wx:if="{{isOver && !loading && !error}}">
-        <text>--- 已加载全部内容 ---</text>
-      </view>
+    <!-- 结束提示 -->
+    <view class="list-end" wx:if="{{isOver && list.length > 0}}">
+      <view class="end-line"></view>
+      <text class="end-text">— 已加载全部 —</text>
+      <view class="end-line"></view>
     </view>
   </scroll-view>
 </view>

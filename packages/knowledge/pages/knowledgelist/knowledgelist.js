@@ -4,28 +4,44 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
 Page({
   data: {
-    category: '',
-    tag: '',
+    // 搜索和筛选
+    searchKeyword: '',
+    currentCategory: '',
+    categories: [],
+    
+    // 列表数据
     list: [],
-    loading: false,
+    totalCount: 0,
+    
+    // 分页
+    page: 1,
+    pageSize: 20,
     isOver: false,
-    error: false,
-    errorMsg: '',
-    scrollHeight: 0,
+    loading: false,
+    refreshing: false,
+    
+    // 排序
     sortField: 'order',
     sortOrder: 'asc',
-    sortColor: '#2980b9',
-    otherColor: '#7f8c8d'
+    
+    // UI
+    scrollHeight: 0,
+    
+    // 原始数据
+    allArticles: []
   },
 
   onLoad(options) {
-    // 获取分类或标签参数
-    const { category, tag } = options;
+    const { category, tag } = options || {};
+    
+    // 设置页面高度
+    const systemInfo = wx.getSystemInfoSync();
+    const scrollHeight = systemInfo.windowHeight - 100; // 减去搜索栏和导航的高度
     
     this.setData({
-      category: category || '',
-      tag: tag || '',
-      scrollHeight: wx.getSystemInfoSync().windowHeight - 50
+      scrollHeight,
+      currentCategory: category || '',
+      searchKeyword: tag ? `#${tag}` : ''
     });
 
     // 设置导航栏标题
@@ -36,140 +52,201 @@ Page({
     this.loadArticles();
   },
 
-  /**
-   * 从 CDN 加载文章列表
-   */
-  async loadArticles() {
-    if (this.data.loading || this.data.isOver) return;
+  onShow() {
+    // 页面显示时可以刷新
+  },
 
-    this.setData({ 
-      loading: true,
-      error: false,
-      errorMsg: ''
-    });
-
-    try {
-      // 根据分类或标签加载数据
-      const { category, tag } = this.data;
-      let url = CDN_BASE + 'articles.json';
-
-      if (category) {
-        url = CDN_BASE + `category/${category}.json`;
-      } else if (tag) {
-        url = CDN_BASE + `tag/${tag}.json`;
-      }
-
-      // 使用带缓存的请求
-      const app = getApp();
-      const res = await app.requestWithCache(url, {
-        method: 'GET',
-        timeout: 10000
-      }, 3600); // 1小时缓存
-
-      let articles = [];
-      if (category || tag) {
-        // 分类或标签数据
-        articles = res.articles || [];
-      } else {
-        // 全部文章
-        articles = res.articles || [];
-      }
-
-      // 排序
-      this.sortArticles(articles);
-
-      this.setData({
-        list: articles,
-        loading: false,
-        isOver: true
-      });
-    } catch (err) {
-      console.error('加载文章失败:', err);
-      this.showError('网络错误，请检查连接');
-      this.setData({ loading: false });
-    }
+  onPullDownRefresh() {
+    this.onRefresh();
   },
 
   /**
-   * 排序文章
+   * 加载文章列表
    */
-  sortArticles(articles) {
-    const { sortField, sortOrder } = this.data;
+  loadArticles() {
+    if (this.data.loading) return;
+
+    this.setData({ loading: true });
+
+    const url = CDN_BASE + 'articles.json';
+
+    wx.request({
+      url,
+      method: 'GET',
+      timeout: 10000,
+      success: (res) => {
+        if (res.statusCode === 200 && res.data) {
+          let articles = res.data.articles || [];
+          
+          // 保存原始数据
+          this.setData({ allArticles: articles });
+          
+          // 更新分类列表
+          const categories = Object.keys(res.data.taxonomy?.categories || {});
+          this.setData({ categories });
+          
+          // 应用筛选和排序
+          this.applyFiltersAndSort();
+          
+          this.setData({ loading: false, refreshing: false });
+          wx.stopPullDownRefresh();
+        } else {
+          this.showError('加载失败，请重试');
+          this.setData({ loading: false, refreshing: false });
+          wx.stopPullDownRefresh();
+        }
+      },
+      fail: (err) => {
+        console.error('加载文章失败:', err);
+        this.showError('网络错误，请检查连接');
+        this.setData({ loading: false, refreshing: false });
+        wx.stopPullDownRefresh();
+      }
+    });
+  },
+
+  /**
+   * 应用筛选和排序
+   */
+  applyFiltersAndSort() {
+    let { allArticles, currentCategory, searchKeyword, sortField, sortOrder } = this.data;
     
-    articles.sort((a, b) => {
+    // 分类筛选
+    if (currentCategory) {
+      allArticles = allArticles.filter(a => a.category === currentCategory);
+    }
+    
+    // 搜索筛选
+    if (searchKeyword) {
+      const keyword = searchKeyword.toLowerCase();
+      allArticles = allArticles.filter(a => 
+        a.title.toLowerCase().includes(keyword) ||
+        (a.description && a.description.toLowerCase().includes(keyword)) ||
+        (a.tags && a.tags.some(t => t.toLowerCase().includes(keyword)))
+      );
+    }
+    
+    // 排序
+    allArticles.sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
-
+      
       if (sortField === 'updateTime' || sortField === 'birthtime') {
         aVal = new Date(aVal).getTime();
         bVal = new Date(bVal).getTime();
       }
-
-      if (sortOrder === 'asc') {
-        return aVal > bVal ? 1 : -1;
-      } else {
-        return aVal < bVal ? 1 : -1;
-      }
+      
+      return sortOrder === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
     });
+    
+    this.setData({
+      list: allArticles,
+      totalCount: allArticles.length,
+      isOver: true // 一次性加载全部
+    });
+  },
+
+  /**
+   * 搜索输入
+   */
+  onSearchInput(e) {
+    const value = e.detail.value;
+    this.setData({ searchKeyword: value });
+    this.applyFiltersAndSort();
+  },
+
+  /**
+   * 清除搜索
+   */
+  clearSearch() {
+    this.setData({ searchKeyword: '' });
+    this.applyFiltersAndSort();
+  },
+
+  /**
+   * 切换分类
+   */
+  switchCategory(e) {
+    const category = e.currentTarget.dataset.category;
+    if (this.data.currentCategory === category) return;
+    
+    this.setData({ 
+      currentCategory: category,
+      searchKeyword: ''
+    });
+    
+    // 更新导航栏标题
+    const title = category ? `${category}` : '知识库';
+    wx.setNavigationBarTitle({ title });
+    
+    this.applyFiltersAndSort();
   },
 
   /**
    * 切换排序
    */
   toggleSort() {
-    if (this.data.loading) return;
-
     const newOrder = this.data.sortOrder === 'asc' ? 'desc' : 'asc';
-    const newColor = this.data.sortColor === '#2980b9' ? '#7f8c8d' : '#2980b9';
-
+    const newField = this.data.sortField === 'order' ? 'updateTime' : 'order';
+    
     this.setData({
-      sortOrder: newOrder,
-      sortColor: newColor,
-      otherColor: newColor === '#2980b9' ? '#7f8c8d' : '#2980b9'
+      sortField: newField,
+      sortOrder: newOrder
     });
+    
+    this.applyFiltersAndSort();
+  },
 
-    this.sortArticles(this.data.list);
-    this.setData({ list: this.data.list });
+  /**
+   * 下拉刷新
+   */
+  onRefresh() {
+    this.setData({ refreshing: true, page: 1 });
+    this.loadArticles();
+  },
+
+  /**
+   * 加载更多
+   */
+  loadMore() {
+    // 一次性加载，不需要分页
   },
 
   /**
    * 点击文章进入详情页
    */
   onArticleTap(e) {
-    const { filename } = e.currentTarget.dataset;
+    const { id } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${id}`
     });
+  },
+
+  /**
+   * 标签点击
+   */
+  onTagTap(e) {
+    const { tag } = e.currentTarget.dataset;
+    this.setData({ searchKeyword: `#${tag}` });
+    this.applyFiltersAndSort();
+  },
+
+  /**
+   * 分类点击
+   */
+  onCategoryTap(e) {
+    const { category } = e.currentTarget.dataset;
+    this.switchCategory({ currentTarget: { dataset: { category } } });
   },
 
   /**
    * 显示错误提示
    */
   showError(message) {
-    this.setData({
-      error: true,
-      errorMsg: message,
-      loading: false
-    });
-
     wx.showToast({
       title: message,
-      icon: 'error',
+      icon: 'none',
       duration: 2000
     });
-  },
-
-  /**
-   * 点击标签跳转到标签页
-   */
-  onTagTap(e) {
-    const { tag } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
-    });
-  },
-
-  onShow() {
-    // 页面显示时可以刷新数据
   }
 });
