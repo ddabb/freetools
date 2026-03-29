@@ -1,19 +1,15 @@
-// mine.js
+// about.js
 const utils = require('../../utils/index');
 
 Page({
   data: {
-    // 无登录态，固定展示
-    menuList: [],
-    // ICP备案信息
-    icpInfo: {
-      number: '粤ICP备2026023418号'
-    }
+    // 版本号（从 app.json 读取）
+    version: '2.0.12',
+    // CDN缓存是否已清除
+    cacheCleared: false
   },
 
   onLoad() {
-    // 无需加载用户信息或统计，直接使用 wxml 固定数据
-    
     // 显示分享按钮
     utils.showShareMenu({
       withShareTicket: true,
@@ -22,30 +18,35 @@ Page({
   },
 
   onShow() {
-    // 无需刷新用户数据
+    // 检查本地缓存状态
+    const cacheCleared = wx.getStorageSync('cdnCacheCleared') || false;
+    this.setData({ cacheCleared });
   },
 
-  onMenuTap(e) {
-    const index = e.currentTarget.dataset.index
-    const item = this.data.menuList[index]
-
-    utils.showText(`${item.title}功能开发中`)
-  },
-
-  // 打开GitHub链接
-  openGitHub() {
-    wx.setClipboardData({
-      data: 'https://github.com/ddabb/freetools.git',
-      success: () => {
-        utils.showSuccess('GitHub地址已复制到剪贴板')
+  // 清除CDN缓存
+  clearCache() {
+    wx.showModal({
+      title: '清除缓存',
+      content: '确定要清除CDN缓存数据吗？这将重新加载最新数据。',
+      success: (res) => {
+        if (res.confirm) {
+          // 清除本地存储的CDN缓存标记
+          wx.removeStorageSync('cdnCacheCleared');
+          wx.removeStorageSync('constellationCache');
+          wx.removeStorageSync('dailySudokuCache');
+          wx.removeStorageSync('hotToolsCache');
+          
+          this.setData({ cacheCleared: false });
+          utils.showSuccess('缓存已清除');
+        }
       }
-    })
+    });
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '实用工具箱 - 关于我们',
+      title: '随身工具宝 - 关于我们',
       path: '/pages/about/about'
     }
   },
@@ -53,47 +54,32 @@ Page({
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '实用工具箱 - 关于我们',
+      title: '随身工具宝 - 关于我们',
       query: 'about'
     }
   },
 
   // 添加到我的小程序（收藏功能）
   addToFavorite() {
-    // 检查是否支持添加到我的小程序功能
     if (wx.addShortcut) {
       wx.addShortcut({
         success: (res) => {
-          console.log('添加到我的小程序成功', res)
-          utils.showSuccess('已添加到我的小程序')
+          utils.showSuccess('已添加到我的小程序');
         },
         fail: (err) => {
-          console.error('添加到我的小程序失败', err)
-          // 如果API不支持或用户取消，给出友好提示
           if (err.errMsg && err.errMsg.includes('cancel')) {
-            utils.showText('已取消收藏')
+            utils.showText('已取消收藏');
           } else {
-            utils.showText('收藏功能暂不可用')
+            utils.showText('收藏功能暂不可用');
           }
         }
-      })
+      });
     } else {
-      // 兼容处理：如果API不存在，引导用户手动操作
       utils.showAlert({
         title: '收藏小程序',
         content: '请在微信首页下拉，找到小程序后长按选择「添加到我的小程序」',
         confirmText: '知道了'
-      })
+      });
     }
-  },
-
-  // 跳转到版本日志页
-  goToChangelog() {
-    wx.navigateTo({
-      url: '/pages/changelog/changelog',
-      fail: () => {
-        utils.showText('页面跳转失败')
-      }
-    })
   }
-})
+});

@@ -1,9 +1,6 @@
-<!-- mine.wxml -->
+<!-- about.wxml -->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <!-- 顶部背景已移除，由 page 背景统一 -->
-    <!-- 通用欢迎区 -->
-
     <!-- 小程序码卡片 -->
     <view class="project-card">
       <view class="project-header">
@@ -64,6 +61,34 @@
       </view>
     </view>
 
+    <!-- 版本与缓存卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">🔧 版本与缓存</text>
+      </view>
+      <view class="project-content">
+        <view class="version-info">
+          <text class="version-label">当前版本：</text>
+          <text class="version-value">v{{version}}</text>
+        </view>
+        
+        <view class="upgrade-hint">
+          <text class="hint-icon">💡</text>
+          <text class="hint-text">版本升级后如遇数据异常，可尝试清除缓存</text>
+        </view>
+        
+        <view class="cache-info">
+          <text class="cache-label">CDN缓存状态：</text>
+          <text class="cache-value {{cacheCleared ? 'success' : ''}}">{{cacheCleared ? '已清除' : '正常'}}</text>
+        </view>
+        
+        <button class="cache-btn" bindtap="clearCache" hover-class="cache-btn-hover">
+          <text class="cache-icon">🗑️</text>
+          <text class="cache-text">清除CDN缓存</text>
+        </button>
+      </view>
+    </view>
+
     <!-- 隐私声明卡片 -->
     <view class="project-card">
       <view class="project-header">
@@ -73,20 +98,6 @@
         <text class="project-description">本项目不涉及数据收集、采集等功能，</text>
         <text class="project-description">无后台数据库，所有数据仅保存在本地，</text>
         <text class="project-description">请放心使用。</text>
-      </view>
-    </view>
-
-    <!-- 版本日志卡片 -->
-    <view class="project-card">
-      <view class="project-header">
-        <text class="project-title">📜 版本日志</text>
-      </view>
-      <view class="project-content">
-        <text class="project-description">查看小程序更新历史，了解最新功能</text>
-        <button class="changelog-btn" bindtap="goToChangelog" hover-class="changelog-btn-hover">
-          <text class="changelog-icon">📋</text>
-          <text class="changelog-text">查看版本日志</text>
-        </button>
       </view>
     </view>
 
