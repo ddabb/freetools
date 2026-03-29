@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "许可证",
+    "count": 1,
+    "generatedAt": "2026-03-29T16:02:06.550Z"
+  },
+  "articles": [
+    {
+      "id": "mit",
+      "filename": "MIT开源协议.json",
+      "title": "MIT 协议开源",
+      "description": "为什么要选择 MIT 协议进行开源",
+      "category": "开发实践",
+      "wordCount": 2626,
+      "updateTime": "2026-03-29T15:57:46.824Z",
+      "order": 1
+    }
+  ]
+}

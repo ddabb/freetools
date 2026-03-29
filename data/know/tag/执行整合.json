@@ -2,58 +2,58 @@
   "meta": {
     "tag": "执行整合",
     "count": 5,
-    "generatedAt": "2026-03-29T15:10:37.583Z"
+    "generatedAt": "2026-03-29T16:02:06.617Z"
   },
   "articles": [
     {
-      "id": "article-1774797037400",
+      "id": "article-1774800126518",
       "filename": "认知层面的整合.json",
       "title": "认知层面的整合",
-      "description": "",
+      "description": "管理项目的方法有很多，而方法的选择通常取决于项目的具体特点，包括规模、项目或组织的复杂性，以及执行组织的文化。",
       "category": "项目经理的角色",
       "wordCount": 194,
-      "updateTime": "2026-03-29T14:58:37.561Z",
-      "order": 66
+      "updateTime": "2026-03-29T15:52:18.833Z",
+      "order": 78
     },
     {
-      "id": "article-1774797037390",
+      "id": "article-1774800126514",
       "filename": "背景层面的整合.json",
       "title": "背景层面的整合",
-      "description": "",
+      "description": "与几十年前相比，当今企业和项目所处的环境有了很大的变化。新技术不断涌现。",
       "category": "项目经理的角色",
       "wordCount": 205,
-      "updateTime": "2026-03-29T14:58:37.543Z",
-      "order": 86
+      "updateTime": "2026-03-29T15:52:18.816Z",
+      "order": 99
     },
     {
-      "id": "article-1774797037371",
+      "id": "article-1774800126507",
       "filename": "整合与复杂性.json",
       "title": "整合与复杂性",
-      "description": "",
+      "description": "有些项目可能非常复杂，难以管理。简单来说，“复杂”一词通常被用来描述难以理解或错综复杂的事物。",
       "category": "项目经理的角色",
       "wordCount": 448,
-      "updateTime": "2026-03-29T14:58:37.505Z",
-      "order": 125
+      "updateTime": "2026-03-29T15:52:18.787Z",
+      "order": 141
     },
     {
-      "id": "article-1774797037361",
+      "id": "article-1774800126503",
       "filename": "执行整合.json",
       "title": "执行整合",
-      "description": "",
+      "description": "项目经理扮演重要角色，与项目发起人携手合作，既要了解战略目标并确保项目目标和成果与项目组合、项目集以及业务领域保持一致。",
       "category": "项目经理的角色",
       "wordCount": 256,
-      "updateTime": "2026-03-29T14:58:37.486Z",
-      "order": 150
+      "updateTime": "2026-03-29T15:52:18.770Z",
+      "order": 164
     },
     {
-      "id": "article-1774797037348",
+      "id": "article-1774800126499",
       "filename": "在过程层面执行整合.json",
       "title": "在过程层面执行整合",
-      "description": "",
+      "description": "项目管理可被看作为实现项目目标而采取的一系列过程和活动。",
       "category": "项目经理的角色",
       "wordCount": 237,
-      "updateTime": "2026-03-29T14:58:37.470Z",
-      "order": 171
+      "updateTime": "2026-03-29T15:52:18.753Z",
+      "order": 186
     }
   ]
 }

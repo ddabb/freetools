@@ -2,38 +2,38 @@
   "meta": {
     "tag": "建设团队",
     "count": 3,
-    "generatedAt": "2026-03-29T15:10:37.533Z"
+    "generatedAt": "2026-03-29T16:02:06.603Z"
   },
   "articles": [
     {
-      "id": "article-1774797037414",
+      "id": "article-1774800126524",
       "filename": "集中办公.json",
       "title": "集中办公",
-      "description": "",
+      "description": "集中办公是指把许多或全部最活跃的项目团队成员安排在同一个物理地点工作，以增强团队工作能力。",
       "category": "项目资源管理",
       "wordCount": 126,
-      "updateTime": "2026-03-29T14:58:37.591Z",
-      "order": 32
+      "updateTime": "2026-03-29T15:52:18.856Z",
+      "order": 45
     },
     {
-      "id": "article-1774797037357",
+      "id": "article-1774800126502",
       "filename": "建设团队.json",
       "title": "建设团队",
-      "description": "",
+      "description": "建设团队是提高工作能力，促进团队成员互动，改善团队整体氛围，以提高项目绩效的过程。",
       "category": "项目资源管理",
       "wordCount": 1298,
-      "updateTime": "2026-03-29T14:58:37.483Z",
-      "order": 153
+      "updateTime": "2026-03-29T15:52:18.765Z",
+      "order": 170
     },
     {
-      "id": "article-1774797037347",
+      "id": "article-1774800126498",
       "filename": "团队绩效评价.json",
       "title": "团队绩效评价",
-      "description": "",
+      "description": "随着项目团队建设工作（如培训、团队建设和集中办公等）的开展，项目管理团队应该对项目团队的有效性进行正式或非正式的评价。",
       "category": "项目资源管理",
       "wordCount": 305,
-      "updateTime": "2026-03-29T14:58:37.469Z",
-      "order": 174
+      "updateTime": "2026-03-29T15:52:18.751Z",
+      "order": 189
     }
   ]
 }

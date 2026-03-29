@@ -2,48 +2,48 @@
   "meta": {
     "tag": "管理质量",
     "count": 4,
-    "generatedAt": "2026-03-29T15:10:37.528Z"
+    "generatedAt": "2026-03-29T16:02:06.600Z"
   },
   "articles": [
     {
       "id": "x",
       "filename": "面向 X 的设计.json",
       "title": "面向 X 的设计",
-      "description": "",
+      "description": "面向 X 的设计 (DfX) 是产品设计期间可采用的一系列技术指南，旨在优化设计的特定方面，可以控制或提高产品最终特性。",
       "category": "项目质量管理",
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:58:37.593Z",
-      "order": 29
+      "updateTime": "2026-03-29T15:52:18.859Z",
+      "order": 40
     },
     {
-      "id": "article-1774797037413",
+      "id": "article-1774800126524",
       "filename": "问题解决.json",
       "title": "问题解决",
-      "description": "",
+      "description": "问题解决发现解决问题或应对挑战的解决方案。",
       "category": "项目质量管理",
       "wordCount": 224,
-      "updateTime": "2026-03-29T14:58:37.590Z",
-      "order": 33
+      "updateTime": "2026-03-29T15:52:18.854Z",
+      "order": 47
     },
     {
-      "id": "article-1774797037382",
+      "id": "article-1774800126511",
       "filename": "管理质量.json",
       "title": "管理质量",
-      "description": "",
+      "description": "管理质量是把组织的质量政策用于项目，并将质量管理计划转化为可执行的质量活动的过程。",
       "category": "项目质量管理",
       "wordCount": 795,
-      "updateTime": "2026-03-29T14:58:37.530Z",
-      "order": 102
+      "updateTime": "2026-03-29T15:52:18.807Z",
+      "order": 114
     },
     {
-      "id": "article-1774797037376",
+      "id": "article-1774800126509",
       "filename": "测试与评估文件.json",
       "title": "测试与评估文件",
-      "description": "",
+      "description": "可基于行业需求和组织模板创建测试与评估文件。",
       "category": "项目质量管理",
       "wordCount": 74,
-      "updateTime": "2026-03-29T14:58:37.515Z",
-      "order": 115
+      "updateTime": "2026-03-29T15:52:18.794Z",
+      "order": 129
     }
   ]
 }

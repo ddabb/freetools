@@ -2,238 +2,238 @@
   "meta": {
     "tag": "监控过程组",
     "count": 23,
-    "generatedAt": "2026-03-29T15:10:37.485Z"
+    "generatedAt": "2026-03-29T16:02:06.581Z"
   },
   "articles": [
     {
-      "id": "article-1774797037428",
+      "id": "article-1774800126529",
       "filename": "验收的可交付成果.json",
       "title": "验收的可交付成果",
-      "description": "",
+      "description": "符合验收标准的可交付成果应该由客户或发起人正式签字批准。",
       "category": "项目范围管理",
       "wordCount": 90,
-      "updateTime": "2026-03-29T14:58:37.635Z",
-      "order": 1
+      "updateTime": "2026-03-29T15:52:18.878Z",
+      "order": 16
     },
     {
-      "id": "article-1774797037411",
+      "id": "article-1774800126522",
       "filename": "采购文档更新.json",
       "title": "采购文档更新",
-      "description": "",
+      "description": "采购文档更新可包括用于支持合同的全部进度计划、已提出但未批准的合同变更，以及已批准的变更请求。",
       "category": "项目采购管理",
       "wordCount": 127,
-      "updateTime": "2026-03-29T14:58:37.584Z",
-      "order": 40
+      "updateTime": "2026-03-29T15:52:18.850Z",
+      "order": 54
     },
     {
-      "id": "article-1774797037410",
+      "id": "article-1774800126522",
       "filename": "采购关闭.json",
       "title": "采购关闭",
-      "description": "",
+      "description": "买方通常通过其授权的采购管理员，向卖方发出合同已经完成的正式书面通知。",
       "category": "项目采购管理",
       "wordCount": 153,
-      "updateTime": "2026-03-29T14:58:37.582Z",
-      "order": 42
+      "updateTime": "2026-03-29T15:52:18.848Z",
+      "order": 55
     },
     {
-      "id": "article-1774797037408",
+      "id": "article-1774800126521",
       "filename": "进度预测.json",
       "title": "进度预测",
-      "description": "",
+      "description": "进度更新即进度预测，指根据已有的信息和知识，对项目未来的情况和事件进行的估算或预计。",
       "category": "项目进度管理",
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:58:37.579Z",
-      "order": 44
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 57
     },
     {
-      "id": "article-1774797037403",
+      "id": "article-1774800126519",
       "filename": "质量控制测量结果.json",
       "title": "质量控制测量结果",
-      "description": "",
+      "description": "控制质量的测量结果是对质量控制活动的结果的书面记录，应以质量管理计划所确定的格式加以记录。",
       "category": "项目质量管理",
       "wordCount": 45,
-      "updateTime": "2026-03-29T14:58:37.567Z",
-      "order": 60
+      "updateTime": "2026-03-29T15:52:18.837Z",
+      "order": 73
     },
     {
-      "id": "article-1774797037381",
+      "id": "article-1774800126511",
       "filename": "确认范围.json",
       "title": "确认范围",
-      "description": "",
+      "description": "确认范围是正式验收已完成的项目可交付成果的过程。",
       "category": "项目范围管理",
       "wordCount": 362,
-      "updateTime": "2026-03-29T14:58:37.526Z",
-      "order": 105
+      "updateTime": "2026-03-29T15:52:18.804Z",
+      "order": 118
     },
     {
-      "id": "article-1774797037379",
+      "id": "article-1774800126510",
       "filename": "监督风险.json",
       "title": "监督风险",
-      "description": "",
+      "description": "监督风险是在整个项目期间，监督商定的风险应对计划的实施、跟踪已识别风险、识别和分析新风险，以及评估风险管理有效性的过程。",
       "category": "项目风险管理",
       "wordCount": 391,
-      "updateTime": "2026-03-29T14:58:37.522Z",
-      "order": 108
-    },
-    {
-      "id": "article-1774797037378",
-      "filename": "监督沟通.json",
-      "title": "监督沟通",
-      "description": "",
-      "category": "项目沟通管理",
-      "wordCount": 405,
-      "updateTime": "2026-03-29T14:58:37.520Z",
-      "order": 110
-    },
-    {
-      "id": "article-1774797037378",
-      "filename": "监督相关方参与.json",
-      "title": "监督相关方参与",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 102,
-      "updateTime": "2026-03-29T14:58:37.520Z",
-      "order": 111
-    },
-    {
-      "id": "article-1774797037377",
-      "filename": "监控项目工作.json",
-      "title": "监控项目工作",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 477,
-      "updateTime": "2026-03-29T14:58:37.519Z",
-      "order": 112
-    },
-    {
-      "id": "article-1774797037372",
-      "filename": "核实的可交付成果.json",
-      "title": "核实的可交付成果",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 119,
-      "updateTime": "2026-03-29T14:58:37.507Z",
+      "updateTime": "2026-03-29T15:52:18.800Z",
       "order": 123
     },
     {
-      "id": "article-1774797037369",
-      "filename": "数据分析.json",
-      "title": "数据分析",
-      "description": "",
+      "id": "article-1774800126510",
+      "filename": "监督相关方参与.json",
+      "title": "监督相关方参与",
+      "description": "监督相关方参与是监督项目相关方关系，并通过修订参与策略和计划来引导相关方合理参与项目的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 102,
+      "updateTime": "2026-03-29T15:52:18.799Z",
+      "order": 124
+    },
+    {
+      "id": "article-1774800126510",
+      "filename": "监督沟通.json",
+      "title": "监督沟通",
+      "description": "监督沟通是确保满足项目及其相关方的信息需求的过程。",
+      "category": "项目沟通管理",
+      "wordCount": 405,
+      "updateTime": "2026-03-29T15:52:18.798Z",
+      "order": 125
+    },
+    {
+      "id": "article-1774800126510",
+      "filename": "监控项目工作.json",
+      "title": "监控项目工作",
+      "description": "控项目工作是跟踪、审查和报告整体项目进展，以实现项目管理计划中确定的绩效目标的过程。",
       "category": "项目整合管理",
-      "wordCount": 517,
-      "updateTime": "2026-03-29T14:58:37.501Z",
-      "order": 130
+      "wordCount": 477,
+      "updateTime": "2026-03-29T15:52:18.797Z",
+      "order": 126
     },
     {
-      "id": "article-1774797037366",
-      "filename": "控制进度.json",
-      "title": "控制进度",
-      "description": "",
-      "category": "项目进度管理",
-      "wordCount": 571,
-      "updateTime": "2026-03-29T14:58:37.496Z",
-      "order": 135
-    },
-    {
-      "id": "article-1774797037367",
-      "filename": "控制采购.json",
-      "title": "控制采购",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 819,
-      "updateTime": "2026-03-29T14:58:37.496Z",
-      "order": 136
-    },
-    {
-      "id": "article-1774797037365",
-      "filename": "控制质量.json",
-      "title": "控制质量",
-      "description": "",
+      "id": "article-1774800126508",
+      "filename": "核实的可交付成果.json",
+      "title": "核实的可交付成果",
+      "description": "控制质量过程的一个目的就是确定可交付成果的正确性。",
       "category": "项目质量管理",
-      "wordCount": 487,
-      "updateTime": "2026-03-29T14:58:37.495Z",
+      "wordCount": 119,
+      "updateTime": "2026-03-29T15:52:18.790Z",
       "order": 137
     },
     {
-      "id": "article-1774797037366",
+      "id": "article-1774800126506",
+      "filename": "数据分析.json",
+      "title": "数据分析",
+      "description": "可用于本过程的数据分析技术包括（但不限于）：",
+      "category": "项目整合管理",
+      "wordCount": 517,
+      "updateTime": "2026-03-29T15:52:18.783Z",
+      "order": 144
+    },
+    {
+      "id": "article-1774800126505",
       "filename": "控制资源.json",
       "title": "控制资源",
-      "description": "",
+      "description": "控制资源是确保按计划为项目分配实物资源，以及根据资源使用计划监督资源实际使用情况，并采取必要纠正措施的过程。",
       "category": "项目资源管理",
       "wordCount": 444,
-      "updateTime": "2026-03-29T14:58:37.495Z",
-      "order": 138
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 149
     },
     {
-      "id": "article-1774797037365",
-      "filename": "控制范围.json",
-      "title": "控制范围",
-      "description": "",
-      "category": "项目范围管理",
-      "wordCount": 285,
-      "updateTime": "2026-03-29T14:58:37.493Z",
-      "order": 139
+      "id": "article-1774800126505",
+      "filename": "控制进度.json",
+      "title": "控制进度",
+      "description": "控制进度是监督项目状态，以更新项目进度和管理进度基准变更的过程。",
+      "category": "项目进度管理",
+      "wordCount": 571,
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 150
     },
     {
-      "id": "article-1774797037365",
+      "id": "article-1774800126505",
+      "filename": "控制采购.json",
+      "title": "控制采购",
+      "description": "控制采购是管理采购关系，监督合同绩效，实施必要的变更和纠偏，以及关闭合同的过程。",
+      "category": "项目采购管理",
+      "wordCount": 819,
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 151
+    },
+    {
+      "id": "article-1774800126505",
+      "filename": "控制质量.json",
+      "title": "控制质量",
+      "description": "控制质量是为了评估绩效，确保项目输出完整、正确且满足客户期望，而监督和记录质量管理活动执行结果的过程。",
+      "category": "项目质量管理",
+      "wordCount": 487,
+      "updateTime": "2026-03-29T15:52:18.779Z",
+      "order": 152
+    },
+    {
+      "id": "article-1774800126505",
       "filename": "控制成本.json",
       "title": "控制成本",
-      "description": "",
+      "description": "控制成本是监督项目状态，以更新项目成本和管理成本基准变更的过程。",
       "category": "项目成本管理",
       "wordCount": 494,
-      "updateTime": "2026-03-29T14:58:37.492Z",
-      "order": 140
+      "updateTime": "2026-03-29T15:52:18.778Z",
+      "order": 153
     },
     {
-      "id": "article-1774797037355",
+      "id": "article-1774800126505",
+      "filename": "控制范围.json",
+      "title": "控制范围",
+      "description": "控制范围是监督项目和产品的范围状态，管理范围基准变更的过程。",
+      "category": "项目范围管理",
+      "wordCount": 285,
+      "updateTime": "2026-03-29T15:52:18.778Z",
+      "order": 154
+    },
+    {
+      "id": "article-1774800126502",
       "filename": "工作绩效报告.json",
       "title": "工作绩效报告",
-      "description": "",
+      "description": "工作绩效信息可以用实体或电子形式加以合并、记录和分发。",
       "category": "项目整合管理",
       "wordCount": 255,
-      "updateTime": "2026-03-29T14:58:37.481Z",
-      "order": 157
+      "updateTime": "2026-03-29T15:52:18.764Z",
+      "order": 171
     },
     {
-      "id": "article-1774797037354",
+      "id": "article-1774800126501",
       "filename": "工作绩效信息.json",
       "title": "工作绩效信息",
-      "description": "",
+      "description": "在工作执行过程中收集工作绩效数据，再交由控制过程做进一步分析。",
       "category": "项目整合管理",
       "wordCount": 357,
-      "updateTime": "2026-03-29T14:58:37.480Z",
-      "order": 159
+      "updateTime": "2026-03-29T15:52:18.763Z",
+      "order": 174
     },
     {
-      "id": "article-1774797037352",
+      "id": "article-1774800126500",
       "filename": "实施整体变更控制.json",
       "title": "实施整体变更控制",
-      "description": "",
+      "description": "实施整体变更控制是审查所有变更请求、批准变更，管理对可交付成果、项目文件和项目管理计划的变更，并对变更处理结果进行沟通的过程。",
       "category": "项目整合管理",
       "wordCount": 897,
-      "updateTime": "2026-03-29T14:58:37.475Z",
-      "order": 166
+      "updateTime": "2026-03-29T15:52:18.759Z",
+      "order": 179
     },
     {
-      "id": "article-1774797037350",
+      "id": "article-1774800126500",
       "filename": "完工尚需绩效指数.json",
       "title": "完工尚需绩效指数",
-      "description": "",
+      "description": "完工尚需绩效指数（TCPI）是一种为了实现特定的管理目标，剩余资源的使用必须达到的成本绩效指标，是完成剩余工作所需的成本与剩余预算之比。",
       "category": "项目成本管理",
       "wordCount": 494,
-      "updateTime": "2026-03-29T14:58:37.473Z",
-      "order": 167
+      "updateTime": "2026-03-29T15:52:18.756Z",
+      "order": 182
     },
     {
-      "id": "article-1774797037345",
+      "id": "article-1774800126498",
       "filename": "变更控制工具.json",
       "title": "变更控制工具",
-      "description": "",
+      "description": "为了便于开展配置和变更管理，可以使用一些手动或自动化的工具。",
       "category": "项目整合管理",
       "wordCount": 504,
-      "updateTime": "2026-03-29T14:58:37.465Z",
-      "order": 181
+      "updateTime": "2026-03-29T15:52:18.747Z",
+      "order": 195
     }
   ]
 }

@@ -8,6 +8,7 @@ Page({
     searchKeyword: '',
     currentCategory: '',
     categories: [],
+    categoryStats: {},
     
     // 列表数据
     list: [],
@@ -28,7 +29,8 @@ Page({
     scrollHeight: 0,
     
     // 原始数据
-    allArticles: []
+    allArticles: [],
+    taxonomy: null
   },
 
   onLoad(options) {
@@ -36,7 +38,7 @@ Page({
     
     // 设置页面高度
     const systemInfo = wx.getSystemInfoSync();
-    const scrollHeight = systemInfo.windowHeight - 100; // 减去搜索栏和导航的高度
+    const scrollHeight = systemInfo.windowHeight - 180; // 减去搜索栏和导航的高度
     
     this.setData({
       scrollHeight,
@@ -76,14 +78,35 @@ Page({
       timeout: 10000,
       success: (res) => {
         if (res.statusCode === 200 && res.data) {
-          let articles = res.data.articles || [];
+          const articles = res.data.articles || [];
+          const taxonomy = res.data.taxonomy || {};
           
           // 保存原始数据
-          this.setData({ allArticles: articles });
+          this.setData({ 
+            allArticles: articles,
+            taxonomy
+          });
           
-          // 更新分类列表
-          const categories = Object.keys(res.data.taxonomy?.categories || {});
-          this.setData({ categories });
+          // 更新分类列表（包含统计）
+          const categoryStats = {};
+          
+          // 添加"全部"统计
+          categoryStats[''] = articles.length;
+          categoryStats['全部'] = articles.length;
+          
+          // 添加各分类统计
+          Object.entries(taxonomy.categories || {}).forEach(([name, count]) => {
+            categoryStats[name] = count;
+          });
+          
+          const categories = Object.entries(taxonomy.categories || {})
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+          
+          this.setData({ 
+            categories,
+            categoryStats
+          });
           
           // 应用筛选和排序
           this.applyFiltersAndSort();
@@ -116,9 +139,9 @@ Page({
       allArticles = allArticles.filter(a => a.category === currentCategory);
     }
     
-    // 搜索筛选
+    // 搜索筛选（标题、描述、标签）
     if (searchKeyword) {
-      const keyword = searchKeyword.toLowerCase();
+      const keyword = searchKeyword.toLowerCase().replace('#', '');
       allArticles = allArticles.filter(a => 
         a.title.toLowerCase().includes(keyword) ||
         (a.description && a.description.toLowerCase().includes(keyword)) ||
@@ -156,10 +179,31 @@ Page({
   },
 
   /**
+   * 搜索确认
+   */
+  onSearchConfirm(e) {
+    const value = e.detail.value;
+    this.setData({ searchKeyword: value });
+    this.applyFiltersAndSort();
+  },
+
+  /**
    * 清除搜索
    */
   clearSearch() {
     this.setData({ searchKeyword: '' });
+    this.applyFiltersAndSort();
+  },
+
+  /**
+   * 清除所有筛选
+   */
+  clearFilters() {
+    this.setData({ 
+      searchKeyword: '',
+      currentCategory: ''
+    });
+    wx.setNavigationBarTitle({ title: '知识库' });
     this.applyFiltersAndSort();
   },
 

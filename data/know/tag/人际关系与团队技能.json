@@ -2,68 +2,68 @@
   "meta": {
     "tag": "人际关系与团队技能",
     "count": 6,
-    "generatedAt": "2026-03-29T15:10:37.576Z"
+    "generatedAt": "2026-03-29T16:02:06.615Z"
   },
   "articles": [
     {
-      "id": "article-1774797037402",
+      "id": "article-1774800126519",
       "filename": "质量功能展开.json",
       "title": "质量功能展开",
-      "description": "",
+      "description": "制造行业则采用 QFD 这种引导技能来帮助确定新产品的关键特征。",
       "category": "工具与技术",
       "wordCount": 85,
-      "updateTime": "2026-03-29T14:58:37.567Z",
-      "order": 59
+      "updateTime": "2026-03-29T15:52:18.836Z",
+      "order": 76
     },
     {
-      "id": "article-1774797037396",
+      "id": "article-1774800126516",
       "filename": "观察和交谈.json",
       "title": "观察和交谈",
-      "description": "",
+      "description": "观察和交谈是指直接察看个人在各自的环境中如何执行工作（或任务）和实施流程。",
       "category": "工具与技术",
       "wordCount": 169,
-      "updateTime": "2026-03-29T14:58:37.553Z",
-      "order": 75
+      "updateTime": "2026-03-29T15:52:18.824Z",
+      "order": 91
     },
     {
-      "id": "article-1774797037390",
+      "id": "article-1774800126514",
       "filename": "联合应用设计或开发.json",
       "title": "联合应用设计或开发",
-      "description": "",
+      "description": "联合应用设计或开发 JAD 会议适用于软件开发行业。这种研讨会注重把业务主题专家和开发团队集中在一起，以收集需求和改进软件开发过程。",
       "category": "工具与技术",
       "wordCount": 64,
-      "updateTime": "2026-03-29T14:58:37.542Z",
-      "order": 87
+      "updateTime": "2026-03-29T15:52:18.814Z",
+      "order": 103
     },
     {
-      "id": "article-1774797037357",
+      "id": "article-1774800126503",
       "filename": "引导.json",
       "title": "引导",
-      "description": "",
+      "description": "引导是指有效引导团队活动成功以达成决定、解决方案或结论的能力。",
       "category": "工具与技术",
       "wordCount": 99,
-      "updateTime": "2026-03-29T14:58:37.483Z",
-      "order": 154
+      "updateTime": "2026-03-29T15:52:18.767Z",
+      "order": 167
     },
     {
-      "id": "article-1774797037346",
+      "id": "article-1774800126498",
       "filename": "名义小组技术.json",
       "title": "名义小组技术",
-      "description": "",
+      "description": "名义小组技术是用于促进头脑风暴的一种技术，通过投票排列最有用的创意，以便进一步开展头脑风暴或优先排序。名义小组技术是一种结构化的头脑风暴形式，由四个步骤组成：",
       "category": "工具与技术",
       "wordCount": 235,
-      "updateTime": "2026-03-29T14:58:37.467Z",
-      "order": 177
+      "updateTime": "2026-03-29T15:52:18.750Z",
+      "order": 190
     },
     {
-      "id": "article-1774797037339",
+      "id": "article-1774800126495",
       "filename": "冲突管理.json",
       "title": "冲突管理",
-      "description": "",
+      "description": "在项目环境中，冲突不可避免。冲突的来源包括资源稀缺、进度优先级排序和个人工作风格差异等。",
       "category": "工具与技术",
       "wordCount": 250,
-      "updateTime": "2026-03-29T14:58:37.457Z",
-      "order": 192
+      "updateTime": "2026-03-29T15:52:18.678Z",
+      "order": 206
     }
   ]
 }

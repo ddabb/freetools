@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "使用场景",
+    "count": 1,
+    "generatedAt": "2026-03-29T16:02:06.571Z"
+  },
+  "articles": [
+    {
+      "id": "freetools",
+      "filename": "使用场景.json",
+      "title": "FreeTools 使用场景",
+      "description": "随身工具宝小程序的各种使用场景详解",
+      "category": "产品设计",
+      "wordCount": 2292,
+      "updateTime": "2026-03-29T15:57:46.804Z",
+      "order": 12
+    }
+  ]
+}

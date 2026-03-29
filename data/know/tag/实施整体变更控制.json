@@ -2,28 +2,28 @@
   "meta": {
     "tag": "实施整体变更控制",
     "count": 2,
-    "generatedAt": "2026-03-29T15:10:37.633Z"
+    "generatedAt": "2026-03-29T16:02:06.647Z"
   },
   "articles": [
     {
-      "id": "article-1774797037352",
+      "id": "article-1774800126500",
       "filename": "实施整体变更控制.json",
       "title": "实施整体变更控制",
-      "description": "",
+      "description": "实施整体变更控制是审查所有变更请求、批准变更，管理对可交付成果、项目文件和项目管理计划的变更，并对变更处理结果进行沟通的过程。",
       "category": "项目整合管理",
       "wordCount": 897,
-      "updateTime": "2026-03-29T14:58:37.475Z",
-      "order": 166
+      "updateTime": "2026-03-29T15:52:18.759Z",
+      "order": 179
     },
     {
-      "id": "article-1774797037345",
+      "id": "article-1774800126498",
       "filename": "变更控制工具.json",
       "title": "变更控制工具",
-      "description": "",
+      "description": "为了便于开展配置和变更管理，可以使用一些手动或自动化的工具。",
       "category": "项目整合管理",
       "wordCount": 504,
-      "updateTime": "2026-03-29T14:58:37.465Z",
-      "order": 181
+      "updateTime": "2026-03-29T15:52:18.747Z",
+      "order": 195
     }
   ]
 }

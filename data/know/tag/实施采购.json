@@ -2,48 +2,48 @@
   "meta": {
     "tag": "实施采购",
     "count": 4,
-    "generatedAt": "2026-03-29T15:10:37.623Z"
+    "generatedAt": "2026-03-29T16:02:06.643Z"
   },
   "articles": [
     {
-      "id": "article-1774797037362",
+      "id": "article-1774800126504",
       "filename": "投标人会议.json",
       "title": "投标人会议",
-      "description": "",
+      "description": "投标人会议（又称承包商会议、供应商会议或投标前会议）是在卖方提交建议书之前，  在买方和潜在卖方之间召开的会议，其目的是确保所有潜在投标人对采购要求都有清楚且一致的理解，并确保没有任何投标人会得到特别...",
       "category": "项目采购管理",
       "wordCount": 101,
-      "updateTime": "2026-03-29T14:58:37.488Z",
-      "order": 146
+      "updateTime": "2026-03-29T15:52:18.772Z",
+      "order": 160
     },
     {
-      "id": "article-1774797037352",
+      "id": "article-1774800126501",
       "filename": "实施采购.json",
       "title": "实施采购",
-      "description": "",
+      "description": "实施采购是获取卖方应答、选择卖方并授予合同的过程。",
       "category": "项目采购管理",
       "wordCount": 144,
-      "updateTime": "2026-03-29T14:58:37.476Z",
-      "order": 163
+      "updateTime": "2026-03-29T15:52:18.761Z",
+      "order": 176
     },
     {
-      "id": "article-1774797037343",
+      "id": "article-1774800126497",
       "filename": "卖方建议书.json",
       "title": "卖方建议书",
-      "description": "",
+      "description": "卖方为响应采购文件包而编制的建议书，其中包含的基本信息将被评估团队用于选定一个或多个投标人（卖方）。",
       "category": "项目采购管理",
       "wordCount": 124,
-      "updateTime": "2026-03-29T14:58:37.462Z",
-      "order": 184
+      "updateTime": "2026-03-29T15:52:18.737Z",
+      "order": 198
     },
     {
-      "id": "article-1774797037343",
+      "id": "article-1774800126496",
       "filename": "协议.json",
       "title": "协议",
-      "description": "",
+      "description": "它强制卖方提供规定的产品、服务或成果，强制买方向卖方支付相应的报酬。",
       "category": "项目采购管理",
       "wordCount": 228,
-      "updateTime": "2026-03-29T14:58:37.461Z",
-      "order": 186
+      "updateTime": "2026-03-29T15:52:18.736Z",
+      "order": 199
     }
   ]
 }

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "tag": "干系人管理",
+    "count": 6,
+    "generatedAt": "2026-03-29T16:02:06.617Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774800126518",
+      "filename": "识别相关方.json",
+      "title": "识别相关方",
+      "description": "识别相关方是定期识别项目相关方，分析和记录他们的利益、参与度、相互依赖性、影响力和对项目成功的潜在影响的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 267,
+      "updateTime": "2026-03-29T15:52:18.835Z",
+      "order": 77
+    },
+    {
+      "id": "article-1774800126517",
+      "filename": "规划相关方参与.json",
+      "title": "规划相关方参与",
+      "description": "规划相关方参与是根据相关方的需求、期望、利益和对项目的潜在影响，制定项目相关方参与项目的方法的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 441,
+      "updateTime": "2026-03-29T15:52:18.827Z",
+      "order": 87
+    },
+    {
+      "id": "article-1774800126511",
+      "filename": "管理相关方参与.json",
+      "title": "管理相关方参与",
+      "description": "管理相关方参与是与相关方进行沟通和协作以满足其需求与期望、处理问题，并促进相关方合理参与的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 284,
+      "updateTime": "2026-03-29T15:52:18.805Z",
+      "order": 117
+    },
+    {
+      "id": "article-1774800126510",
+      "filename": "相关方参与计划.json",
+      "title": "相关方参与计划",
+      "description": "它确定用于促进相关方有效参与决策和执行的策略和行动。",
+      "category": "项目相关方管理",
+      "wordCount": 125,
+      "updateTime": "2026-03-29T15:52:18.801Z",
+      "order": 121
+    },
+    {
+      "id": "article-1774800126510",
+      "filename": "相关方登记册.json",
+      "title": "相关方登记册",
+      "description": "相关方登记册是识别相关方过程的主要输出。它记录关于已识别相关方的信息，包括（但不限于）：",
+      "category": "项目相关方管理",
+      "wordCount": 186,
+      "updateTime": "2026-03-29T15:52:18.801Z",
+      "order": 122
+    },
+    {
+      "id": "article-1774800126510",
+      "filename": "监督相关方参与.json",
+      "title": "监督相关方参与",
+      "description": "监督相关方参与是监督项目相关方关系，并通过修订参与策略和计划来引导相关方合理参与项目的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 102,
+      "updateTime": "2026-03-29T15:52:18.799Z",
+      "order": 124
+    }
+  ]
+}

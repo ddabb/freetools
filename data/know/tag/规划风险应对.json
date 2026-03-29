@@ -2,58 +2,58 @@
   "meta": {
     "tag": "规划风险应对",
     "count": 5,
-    "generatedAt": "2026-03-29T15:10:37.585Z"
+    "generatedAt": "2026-03-29T16:02:06.618Z"
   },
   "articles": [
     {
-      "id": "article-1774797037399",
+      "id": "article-1774800126517",
       "filename": "规划风险应对.json",
       "title": "规划风险应对",
-      "description": "",
+      "description": "规划风险应对是为处理整体项目风险敞口，以及应对单个项目风险，而制定可选方案、选择应对策略并商定应对行动的过程。",
       "category": "项目风险管理",
       "wordCount": 692,
-      "updateTime": "2026-03-29T14:58:37.559Z",
-      "order": 69
+      "updateTime": "2026-03-29T15:52:18.831Z",
+      "order": 80
     },
     {
-      "id": "article-1774797037372",
+      "id": "article-1774800126507",
       "filename": "机会应对策略.json",
       "title": "机会应对策略",
-      "description": "",
+      "description": "- $\\color{red}{上报}$。如果项目团队或项目发起人认为某机会不在项目范围内，或提议的应对措施超出了项目经理的权限，就应该取用上报策略。被上报的机会将在项目集层面、项目组合层面或组织的其他...",
       "category": "项目风险管理",
       "wordCount": 937,
-      "updateTime": "2026-03-29T14:58:37.506Z",
-      "order": 124
+      "updateTime": "2026-03-29T15:52:18.789Z",
+      "order": 138
     },
     {
-      "id": "article-1774797037370",
+      "id": "article-1774800126507",
       "filename": "整体项目风险应对策略.json",
       "title": "整体项目风险应对策略",
-      "description": "",
+      "description": "风险应对措施的规划和实施不应只针对单个项目风险，还应针对整体项目风险。用于应对单个项目风险的策略也适用于整体项目风险：",
       "category": "项目风险管理",
       "wordCount": 967,
-      "updateTime": "2026-03-29T14:58:37.504Z",
-      "order": 127
+      "updateTime": "2026-03-29T15:52:18.787Z",
+      "order": 140
     },
     {
-      "id": "article-1774797037356",
+      "id": "article-1774800126502",
       "filename": "应急应对策略.json",
       "title": "应急应对策略",
-      "description": "",
+      "description": "可以设计一些仅在特定事件发生时才采用的应对措施。",
       "category": "项目风险管理",
       "wordCount": 193,
-      "updateTime": "2026-03-29T14:58:37.482Z",
-      "order": 156
+      "updateTime": "2026-03-29T15:52:18.765Z",
+      "order": 169
     },
     {
-      "id": "article-1774797037349",
+      "id": "article-1774800126499",
       "filename": "威胁应对策略.json",
       "title": "威胁应对策略",
-      "description": "",
+      "description": "- $\\color{red}{上报}$。如果项目团队或项目发起人认为某威胁不在项目范围内，或提议的应对措施超出了项目经理的权限，就应该采用上报策略。被上报的风险将在项目集层面、项目组合层面或组织的其他...",
       "category": "项目风险管理",
       "wordCount": 1101,
-      "updateTime": "2026-03-29T14:58:37.471Z",
-      "order": 170
+      "updateTime": "2026-03-29T15:52:18.756Z",
+      "order": 181
     }
   ]
 }

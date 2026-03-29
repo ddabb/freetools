@@ -2,18 +2,18 @@
   "meta": {
     "tag": "规划风险管理",
     "count": 1,
-    "generatedAt": "2026-03-29T15:10:37.581Z"
+    "generatedAt": "2026-03-29T16:02:06.619Z"
   },
   "articles": [
     {
-      "id": "article-1774797037400",
+      "id": "article-1774800126518",
       "filename": "规划风险管理.json",
       "title": "规划风险管理",
-      "description": "",
+      "description": "规划风险管理是定义如何实施项目风险管理活动的过程。",
       "category": "项目风险管理",
       "wordCount": 258,
-      "updateTime": "2026-03-29T14:58:37.561Z",
-      "order": 65
+      "updateTime": "2026-03-29T15:52:18.831Z",
+      "order": 81
     }
   ]
 }

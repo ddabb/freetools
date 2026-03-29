@@ -16,7 +16,7 @@ page {
 
 /* ========== 搜索栏 ========== */
 .search-bar {
-  padding: 24rpx 30rpx;
+  padding: 20rpx 30rpx 10rpx;
   background: white;
   box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.15);
 }
@@ -64,28 +64,37 @@ page {
   color: #999;
 }
 
+.search-count {
+  font-size: 22rpx;
+  color: #667eea;
+  margin-top: 10rpx;
+  padding-left: 10rpx;
+}
+
 /* ========== 分类导航 ========== */
 .category-nav {
   display: flex;
   white-space: nowrap;
-  padding: 20rpx 0;
+  padding: 16rpx 0;
   background: white;
   border-bottom: 1rpx solid #f0f0f0;
 }
 
 .category-item {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-width: 120rpx;
-  height: 64rpx;
-  padding: 0 30rpx;
-  margin: 0 10rpx;
+  height: 72rpx;
+  padding: 0 24rpx;
+  margin: 0 8rpx;
   font-size: 26rpx;
   color: #666;
   background: #f5f6f8;
-  border-radius: 32rpx;
+  border-radius: 36rpx;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .category-item:first-child {
@@ -96,11 +105,25 @@ page {
   margin-right: 20rpx;
 }
 
+.category-item text {
+  line-height: 1.2;
+}
+
+.category-item .count {
+  font-size: 18rpx;
+  color: #999;
+  margin-top: 2rpx;
+}
+
 .category-item.active {
   color: white;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-weight: 600;
   box-shadow: 0 6rpx 16rpx rgba(102, 126, 234, 0.4);
+}
+
+.category-item.active .count {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .category-item:active {
@@ -112,14 +135,26 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx 30rpx;
+  padding: 16rpx 30rpx;
   background: white;
   margin-bottom: 4rpx;
+}
+
+.stats-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
 }
 
 .stats-text {
   font-size: 24rpx;
   color: #999;
+}
+
+.stats-filter {
+  font-size: 22rpx;
+  color: #667eea;
+  font-weight: 500;
 }
 
 .sort-wrap {
@@ -197,16 +232,24 @@ page {
   border-radius: 12rpx;
 }
 
-.card-category.项目管理 {
+.card-category.产品使用 {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.card-category.冷知识 {
+.card-category.产品设计 {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.card-category.技术 {
+.card-category.产品思考 {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.card-category.开发实践 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.card-category.开发者故事 {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 
 .card-order {
@@ -264,6 +307,10 @@ page {
   background: rgba(102, 126, 234, 0.08);
   padding: 4rpx 10rpx;
   border-radius: 8rpx;
+}
+
+.card-tag:active {
+  background: rgba(102, 126, 234, 0.15);
 }
 
 .card-meta {
@@ -336,6 +383,20 @@ page {
 .empty-hint {
   font-size: 26rpx;
   color: #999;
+  margin-bottom: 30rpx;
+}
+
+.empty-btn {
+  padding: 16rpx 40rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+}
+
+.empty-btn::after {
+  border: none;
 }
 
 /* ========== 加载更多 ========== */

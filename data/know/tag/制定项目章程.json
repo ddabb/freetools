@@ -2,78 +2,78 @@
   "meta": {
     "tag": "制定项目章程",
     "count": 7,
-    "generatedAt": "2026-03-29T15:10:37.519Z"
+    "generatedAt": "2026-03-29T16:02:06.598Z"
   },
   "articles": [
     {
-      "id": "article-1774797037420",
+      "id": "article-1774800126526",
       "filename": "项目章程.json",
       "title": "项目章程",
-      "description": "",
+      "description": "项目章程在项目执行组织与需求组织之间建立起伙伴关系。在执行外部项目时，通常需要用正式的合同来达成合作协议。",
       "category": "项目整合管理",
       "wordCount": 462,
-      "updateTime": "2026-03-29T14:58:37.601Z",
-      "order": 20
+      "updateTime": "2026-03-29T15:52:18.864Z",
+      "order": 33
     },
     {
-      "id": "article-1774797037369",
+      "id": "article-1774800126506",
       "filename": "数据收集.json",
       "title": "数据收集",
-      "description": "",
+      "description": "可用于本过程的数据收集技术包括（但不限于）：",
       "category": "项目整合管理",
       "wordCount": 246,
-      "updateTime": "2026-03-29T14:58:37.503Z",
-      "order": 128
+      "updateTime": "2026-03-29T15:52:18.783Z",
+      "order": 145
     },
     {
-      "id": "article-1774797037346",
+      "id": "article-1774800126498",
       "filename": "商业文件.json",
       "title": "商业文件",
-      "description": "",
+      "description": "在商业论证（见 1.2.6.1 节）和效益管理计划（见 1.2.6.2 节）中，可以找到关于项目目标以及项目对业务目标的贡献的相关信息。",
       "category": "项目整合管理",
       "wordCount": 630,
-      "updateTime": "2026-03-29T14:58:37.467Z",
-      "order": 178
+      "updateTime": "2026-03-29T15:52:18.750Z",
+      "order": 191
     },
     {
-      "id": "article-1774797037341",
+      "id": "article-1774800126496",
       "filename": "制定项目章程.json",
       "title": "制定项目章程",
-      "description": "",
+      "description": "制定项目章程是编写一份正式批准项目并授权项目经理在项目活动中使用组织资源的文件的过程。",
       "category": "项目整合管理",
       "wordCount": 156,
-      "updateTime": "2026-03-29T14:58:37.459Z",
-      "order": 189
+      "updateTime": "2026-03-29T15:52:18.719Z",
+      "order": 203
     },
     {
-      "id": "article-1774797037338",
+      "id": "article-1774800126494",
       "filename": "假设日志.json",
       "title": "假设日志",
-      "description": "",
+      "description": "通常，在项目启动之前编制商业论证时，识别高层级的战略和运营假设条件与制约因素。",
       "category": "项目整合管理",
       "wordCount": 136,
-      "updateTime": "2026-03-29T14:58:37.456Z",
-      "order": 193
+      "updateTime": "2026-03-29T15:52:18.654Z",
+      "order": 208
     },
     {
-      "id": "article-1774797037335",
+      "id": "article-1774800126492",
       "filename": "人际关系与团队技能.json",
       "title": "人际关系与团队技能",
-      "description": "",
+      "description": "可用于本过程的人际关系与团队技能包括（但不限于）：",
       "category": "项目整合管理",
       "wordCount": 256,
-      "updateTime": "2026-03-29T14:58:37.452Z",
-      "order": 201
+      "updateTime": "2026-03-29T15:52:18.594Z",
+      "order": 215
     },
     {
-      "id": "article-1774797037332",
+      "id": "article-1774800126491",
       "filename": "专家判断.json",
       "title": "专家判断",
-      "description": "",
+      "description": "专家判断是指基于某应用领域、知识领域、学科和行业等的专业知识而做出的，关于当前活动的合理判断，这些专业知识可来自具有专业学历、知识、技能、经验或培训经历的任何小组或个人。",
       "category": "项目整合管理",
       "wordCount": 179,
-      "updateTime": "2026-03-29T14:58:37.449Z",
-      "order": 205
+      "updateTime": "2026-03-29T15:52:18.579Z",
+      "order": 220
     }
   ]
 }

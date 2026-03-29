@@ -2,48 +2,48 @@
   "meta": {
     "tag": "指南概述和目的",
     "count": 4,
-    "generatedAt": "2026-03-29T15:10:37.506Z"
+    "generatedAt": "2026-03-29T16:02:06.594Z"
   },
   "articles": [
     {
-      "id": "article-1774797037422",
+      "id": "article-1774800126527",
       "filename": "项目管理标准.json",
       "title": "项目管理标准",
-      "description": "",
+      "description": "本指南基于《项目管理标准》[1]。标准是基于权威、惯例或共识而建立并用作模式或范例的文件。",
       "category": "引论",
       "wordCount": 496,
-      "updateTime": "2026-03-29T14:58:37.605Z",
-      "order": 14
+      "updateTime": "2026-03-29T15:52:18.869Z",
+      "order": 28
     },
     {
-      "id": "article-1774797037409",
-      "filename": "道德与专业行为规范.json",
-      "title": "道德与专业行为规范",
-      "description": "",
-      "category": "引论",
-      "wordCount": 326,
-      "updateTime": "2026-03-29T14:58:37.581Z",
-      "order": 43
-    },
-    {
-      "id": "article-1774797037409",
+      "id": "article-1774800126522",
       "filename": "通用词汇.json",
       "title": "通用词汇",
-      "description": "",
+      "description": "《PMI 项目管理术语词典》[4] 收录了基本的专业词汇，供组织、项目组合、项目集和项目经理及其他项目相关方统一使用。",
       "category": "引论",
       "wordCount": 142,
-      "updateTime": "2026-03-29T14:58:37.579Z",
-      "order": 45
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 58
     },
     {
-      "id": "article-1774797037363",
+      "id": "article-1774800126522",
+      "filename": "道德与专业行为规范.json",
+      "title": "道德与专业行为规范",
+      "description": "PMI 发布了《道德与专业行为规范》[5]，为项目管理专业人员增强了信心并帮助个人做出明智的决策，尤其是在面对被要求违背正直诚信或价值观的困境时。",
+      "category": "引论",
+      "wordCount": 326,
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 59
+    },
+    {
+      "id": "article-1774800126504",
       "filename": "指南概述和目的.json",
       "title": "指南概述和目的",
-      "description": "",
+      "description": "项目管理并非新概念，它已存在数百年之久。项目成果的例子包括：",
       "category": "引论",
       "wordCount": 918,
-      "updateTime": "2026-03-29T14:58:37.489Z",
-      "order": 144
+      "updateTime": "2026-03-29T15:52:18.775Z",
+      "order": 158
     }
   ]
 }

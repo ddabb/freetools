@@ -2,48 +2,48 @@
   "meta": {
     "tag": "规划质量管理",
     "count": 4,
-    "generatedAt": "2026-03-29T15:10:37.572Z"
+    "generatedAt": "2026-03-29T16:02:06.613Z"
   },
   "articles": [
     {
-      "id": "article-1774797037404",
+      "id": "article-1774800126519",
       "filename": "质量管理计划.json",
       "title": "质量管理计划",
-      "description": "",
+      "description": "质量管理计划是项目管理计划的组成部分，描述如何实施适用的政策、程序和指南以实现质量目标。",
       "category": "项目质量管理",
       "wordCount": 339,
-      "updateTime": "2026-03-29T14:58:37.570Z",
-      "order": 57
-    },
-    {
-      "id": "article-1774797037403",
-      "filename": "质量测量指标.json",
-      "title": "质量测量指标",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 136,
-      "updateTime": "2026-03-29T14:58:37.568Z",
-      "order": 58
-    },
-    {
-      "id": "article-1774797037398",
-      "filename": "规划质量管理.json",
-      "title": "规划质量管理",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 282,
-      "updateTime": "2026-03-29T14:58:37.557Z",
+      "updateTime": "2026-03-29T15:52:18.839Z",
       "order": 70
     },
     {
-      "id": "article-1774797037375",
+      "id": "article-1774800126519",
+      "filename": "质量测量指标.json",
+      "title": "质量测量指标",
+      "description": "质量测量指标专用于描述项目或产品属性，以及控制质量过程将如何验证符合程度。",
+      "category": "项目质量管理",
+      "wordCount": 136,
+      "updateTime": "2026-03-29T15:52:18.838Z",
+      "order": 72
+    },
+    {
+      "id": "article-1774800126517",
+      "filename": "规划质量管理.json",
+      "title": "规划质量管理",
+      "description": "规划质量管理是识别项目及其可交付成果的质量要求和（或）标准，并书面描述项目将如何证明符合质量要求和（或）标准的过程。",
+      "category": "项目质量管理",
+      "wordCount": 282,
+      "updateTime": "2026-03-29T15:52:18.828Z",
+      "order": 86
+    },
+    {
+      "id": "article-1774800126508",
       "filename": "测试与检查的规划.json",
       "title": "测试与检查的规划",
-      "description": "",
+      "description": "在规划阶段，项目经理和项目团队决定如何测试或检查产品、可交付成果或服务，以满足相关方的需求和期望，以及如何满足产品的绩效和可靠性目标。",
       "category": "项目质量管理",
       "wordCount": 130,
-      "updateTime": "2026-03-29T14:58:37.513Z",
-      "order": 117
+      "updateTime": "2026-03-29T15:52:18.793Z",
+      "order": 133
     }
   ]
 }

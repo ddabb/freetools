@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "产品经理",
+    "count": 1,
+    "generatedAt": "2026-03-29T16:02:06.651Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774800126491",
+      "filename": "产品分析.json",
+      "title": "产品分析",
+      "description": "产品分析可用于定义产品和服务，包括针对产品或服务提问并回答，以描述要交付的产品的用途、特征及其他方面。",
+      "category": "项目范围管理",
+      "wordCount": 182,
+      "updateTime": "2026-03-29T15:52:18.586Z",
+      "order": 218
+    }
+  ]
+}

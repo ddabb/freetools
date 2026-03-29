@@ -5,14 +5,18 @@
   <!-- 顶部搜索栏 -->
   <view class="search-bar">
     <view class="search-input-wrap">
-      <text class="iconfont icon-search">🔍</text>
+      <text class="icon-search">🔍</text>
       <input 
         class="search-input" 
-        placeholder="搜索知识..."
+        placeholder="搜索标题、描述或标签..."
         value="{{searchKeyword}}"
         bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
       />
-      <text class="iconfont icon-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+      <text class="icon-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+    </view>
+    <view class="search-count" wx:if="{{searchKeyword && list.length > 0}}">
+      找到 {{list.length}} 条结果
     </view>
   </view>
 
@@ -24,21 +28,29 @@
       data-category=""
     >
       <text>全部</text>
+      <text class="count" wx:if="{{categoryStats['']}}">{{categoryStats['']}}</text>
     </view>
     <view 
-      class="category-item {{currentCategory === item ? 'active' : ''}}"
+      class="category-item {{currentCategory === item.name ? 'active' : ''}}"
       wx:for="{{categories}}"
-      wx:key="*this"
+      wx:key="name"
       bindtap="switchCategory"
-      data-category="{{item}}"
+      data-category="{{item.name}}"
     >
-      <text>{{item}}</text>
+      <text>{{item.name}}</text>
+      <text class="count">{{item.count}}</text>
     </view>
   </scroll-view>
 
   <!-- 统计信息 -->
   <view class="stats-bar">
-    <text class="stats-text">共 {{totalCount}} 篇知识</text>
+    <view class="stats-left">
+      <text class="stats-text">共 {{totalCount}} 篇文章</text>
+      <text class="stats-filter" wx:if="{{currentCategory || searchKeyword}}">
+        {{currentCategory ? '分类: ' + currentCategory : ''}}
+        {{searchKeyword ? '关键词: ' + searchKeyword : ''}}
+      </text>
+    </view>
     <view class="sort-wrap" bindtap="toggleSort">
       <text class="sort-icon">{{sortOrder === 'desc' ? '↓' : '↑'}}</text>
       <text class="sort-text">{{sortField === 'updateTime' ? '时间' : '序号'}}</text>
@@ -56,16 +68,23 @@
     lower-threshold="100"
     bindscrolltolower="loadMore"
   >
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">没有找到相关文章</text>
+      <text class="empty-hint" wx:if="{{searchKeyword}}">
+        换个关键词试试吧~
+      </text>
+      <text class="empty-hint" wx:else>
+        该分类下暂无文章
+      </text>
+      <button class="empty-btn" wx:if="{{searchKeyword || currentCategory}}" bindtap="clearFilters">
+        清除筛选
+      </button>
+    </view>
+
     <!-- 文章卡片列表 -->
     <view class="article-list">
-      <!-- 空状态 -->
-      <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
-        <text class="empty-icon">📚</text>
-        <text class="empty-text">暂无相关知识</text>
-        <text class="empty-hint">换个关键词试试吧~</text>
-      </view>
-
-      <!-- 文章卡片 -->
       <view 
         class="article-card {{index % 2 === 0 ? 'card-left' : 'card-right'}}"
         wx:for="{{list}}"
@@ -88,7 +107,13 @@
         <!-- 卡片底部 -->
         <view class="card-footer">
           <view class="card-tags">
-            <text class="card-tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">#{{tag}}</text>
+            <text class="card-tag" 
+              wx:for="{{item.tags}}" 
+              wx:for-item="tag" 
+              wx:key="*this"
+              data-tag="{{tag}}"
+              catchtap="onTagTap"
+            >#{{tag}}</text>
           </view>
           <view class="card-meta">
             <text class="card-words">{{item.wordCount}}字</text>

@@ -2,308 +2,308 @@
   "meta": {
     "tag": "执行过程组",
     "count": 30,
-    "generatedAt": "2026-03-29T15:10:37.493Z"
+    "generatedAt": "2026-03-29T16:02:06.585Z"
   },
   "articles": [
     {
-      "id": "article-1774797037426",
+      "id": "article-1774800126528",
       "filename": "预分派.json",
       "title": "预分派",
-      "description": "",
+      "description": "预分派指事先确定项目的实物或团队资源，可在下列情况下发生：在竞标过程中承诺分派特定人员进行项目工作；项目取决于特定人员的专有技能；在完成资源管理计划的前期工作之前，制定项目章程过程或其他过程已经指定了...",
       "category": "项目资源管理",
       "wordCount": 112,
-      "updateTime": "2026-03-29T14:58:37.631Z",
-      "order": 5
+      "updateTime": "2026-03-29T15:52:18.875Z",
+      "order": 20
     },
     {
-      "id": "article-1774797037421",
+      "id": "article-1774800126526",
       "filename": "项目管理信息系统.json",
       "title": "项目管理信息系统",
-      "description": "",
+      "description": "PMIS 提供信息技术 (IT) 软件工具，例如进度计划软件工具、工作授权系统、配置管理系统、信息收集与发布系统，以及进入其他在线自动化系统（如公司知识库）的界面。",
       "category": "项目整合管理",
       "wordCount": 109,
-      "updateTime": "2026-03-29T14:58:37.603Z",
-      "order": 17
+      "updateTime": "2026-03-29T15:52:18.865Z",
+      "order": 32
     },
     {
-      "id": "article-1774797037418",
+      "id": "article-1774800126525",
       "filename": "项目团队派工单.json",
       "title": "项目团队派工单",
-      "description": "",
+      "description": "项目团队派工单记录了团队成员及其在项目中的角色和职责，可包括项目团队名录，还需要把人员姓名插入项目管理计划的其他部分，如项目组织图和进度计划。",
       "category": "项目资源管理",
       "wordCount": 71,
-      "updateTime": "2026-03-29T14:58:37.597Z",
-      "order": 24
+      "updateTime": "2026-03-29T15:52:18.861Z",
+      "order": 38
     },
     {
       "id": "x",
       "filename": "面向 X 的设计.json",
       "title": "面向 X 的设计",
-      "description": "",
+      "description": "面向 X 的设计 (DfX) 是产品设计期间可采用的一系列技术指南，旨在优化设计的特定方面，可以控制或提高产品最终特性。",
       "category": "项目质量管理",
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:58:37.593Z",
-      "order": 29
+      "updateTime": "2026-03-29T15:52:18.859Z",
+      "order": 40
     },
     {
-      "id": "article-1774797037414",
+      "id": "article-1774800126524",
       "filename": "集中办公.json",
       "title": "集中办公",
-      "description": "",
+      "description": "集中办公是指把许多或全部最活跃的项目团队成员安排在同一个物理地点工作，以增强团队工作能力。",
       "category": "项目资源管理",
       "wordCount": 126,
-      "updateTime": "2026-03-29T14:58:37.591Z",
-      "order": 32
+      "updateTime": "2026-03-29T15:52:18.856Z",
+      "order": 45
     },
     {
-      "id": "article-1774797037413",
+      "id": "article-1774800126524",
       "filename": "问题解决.json",
       "title": "问题解决",
-      "description": "",
+      "description": "问题解决发现解决问题或应对挑战的解决方案。",
       "category": "项目质量管理",
       "wordCount": 224,
-      "updateTime": "2026-03-29T14:58:37.590Z",
-      "order": 33
+      "updateTime": "2026-03-29T15:52:18.854Z",
+      "order": 47
     },
     {
-      "id": "article-1774797037413",
+      "id": "article-1774800126523",
       "filename": "问题日志.json",
       "title": "问题日志",
-      "description": "",
+      "description": "在整个项目生命周期中，项目经理通常会遇到问题、差距、不一致或意外冲突。",
       "category": "项目整合管理",
       "wordCount": 257,
-      "updateTime": "2026-03-29T14:58:37.589Z",
-      "order": 35
+      "updateTime": "2026-03-29T15:52:18.853Z",
+      "order": 50
     },
     {
-      "id": "article-1774797037405",
+      "id": "article-1774800126520",
       "filename": "资源日历.json",
       "title": "资源日历",
-      "description": "",
+      "description": "资源日历识别了每种具体资源可用时的工作日、班次、正常营业的上下班时间、周末和公共假期。",
       "category": "项目资源管理",
       "wordCount": 161,
-      "updateTime": "2026-03-29T14:58:37.573Z",
-      "order": 52
+      "updateTime": "2026-03-29T15:52:18.841Z",
+      "order": 67
     },
     {
-      "id": "article-1774797037394",
+      "id": "article-1774800126515",
       "filename": "虚拟团队.json",
       "title": "虚拟团队",
-      "description": "",
+      "description": "虚拟团队的使用为招募项目团队成员提供了新的可能性。",
       "category": "项目资源管理",
       "wordCount": 362,
-      "updateTime": "2026-03-29T14:58:37.549Z",
-      "order": 80
+      "updateTime": "2026-03-29T15:52:18.821Z",
+      "order": 94
     },
     {
-      "id": "article-1774797037393",
+      "id": "article-1774800126515",
       "filename": "获取资源.json",
       "title": "获取资源",
-      "description": "",
+      "description": "获取资源是获取项目所需的团队成员、设施、设备、材料、用品和其他资源的过程。",
       "category": "项目资源管理",
       "wordCount": 548,
-      "updateTime": "2026-03-29T14:58:37.548Z",
-      "order": 81
+      "updateTime": "2026-03-29T15:52:18.820Z",
+      "order": 95
     },
     {
-      "id": "article-1774797037388",
+      "id": "article-1774800126514",
       "filename": "经验教训登记册.json",
       "title": "经验教训登记册",
-      "description": "",
+      "description": "经验教训登记册可以包含情况的类别和描述，经验教训登记册还可包括与情况相关的影响、建议和行动方案。",
       "category": "项目整合管理",
       "wordCount": 242,
-      "updateTime": "2026-03-29T14:58:37.539Z",
-      "order": 91
+      "updateTime": "2026-03-29T15:52:18.813Z",
+      "order": 105
     },
     {
-      "id": "article-1774797037383",
-      "filename": "管理项目知识.json",
-      "title": "管理项目知识",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 733,
-      "updateTime": "2026-03-29T14:58:37.532Z",
-      "order": 100
-    },
-    {
-      "id": "article-1774797037382",
-      "filename": "管理相关方参与.json",
-      "title": "管理相关方参与",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 284,
-      "updateTime": "2026-03-29T14:58:37.530Z",
-      "order": 101
-    },
-    {
-      "id": "article-1774797037382",
+      "id": "article-1774800126511",
       "filename": "管理质量.json",
       "title": "管理质量",
-      "description": "",
+      "description": "管理质量是把组织的质量政策用于项目，并将质量管理计划转化为可执行的质量活动的过程。",
       "category": "项目质量管理",
       "wordCount": 795,
-      "updateTime": "2026-03-29T14:58:37.530Z",
-      "order": 102
+      "updateTime": "2026-03-29T15:52:18.807Z",
+      "order": 114
     },
     {
-      "id": "article-1774797037382",
-      "filename": "管理沟通.json",
-      "title": "管理沟通",
-      "description": "",
-      "category": "项目沟通管理",
-      "wordCount": 647,
-      "updateTime": "2026-03-29T14:58:37.529Z",
-      "order": 103
-    },
-    {
-      "id": "article-1774797037381",
-      "filename": "管理团队.json",
-      "title": "管理团队",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 328,
-      "updateTime": "2026-03-29T14:58:37.527Z",
-      "order": 104
-    },
-    {
-      "id": "article-1774797037376",
-      "filename": "测试与评估文件.json",
-      "title": "测试与评估文件",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 74,
-      "updateTime": "2026-03-29T14:58:37.515Z",
+      "id": "article-1774800126512",
+      "filename": "管理项目知识.json",
+      "title": "管理项目知识",
+      "description": "管理项目知识是使用现有知识并生成新知识，以实现项目目标，并且帮助组织学习的过程。",
+      "category": "项目整合管理",
+      "wordCount": 733,
+      "updateTime": "2026-03-29T15:52:18.807Z",
       "order": 115
     },
     {
-      "id": "article-1774797037364",
+      "id": "article-1774800126511",
+      "filename": "管理沟通.json",
+      "title": "管理沟通",
+      "description": "管理沟通是确保项目信息及时且恰当地收集、生成、发布、存储、检索、管理、监督和最终处置的过程。",
+      "category": "项目沟通管理",
+      "wordCount": 647,
+      "updateTime": "2026-03-29T15:52:18.805Z",
+      "order": 116
+    },
+    {
+      "id": "article-1774800126511",
+      "filename": "管理相关方参与.json",
+      "title": "管理相关方参与",
+      "description": "管理相关方参与是与相关方进行沟通和协作以满足其需求与期望、处理问题，并促进相关方合理参与的过程。",
+      "category": "项目相关方管理",
+      "wordCount": 284,
+      "updateTime": "2026-03-29T15:52:18.805Z",
+      "order": 117
+    },
+    {
+      "id": "article-1774800126511",
+      "filename": "管理团队.json",
+      "title": "管理团队",
+      "description": "管理团队是跟踪团队成员工作表现，提供反馈，解决问题并管理团队变更，以优化项目绩效的过程。",
+      "category": "项目资源管理",
+      "wordCount": 328,
+      "updateTime": "2026-03-29T15:52:18.804Z",
+      "order": 119
+    },
+    {
+      "id": "article-1774800126509",
+      "filename": "测试与评估文件.json",
+      "title": "测试与评估文件",
+      "description": "可基于行业需求和组织模板创建测试与评估文件。",
+      "category": "项目质量管理",
+      "wordCount": 74,
+      "updateTime": "2026-03-29T15:52:18.794Z",
+      "order": 129
+    },
+    {
+      "id": "article-1774800126504",
       "filename": "指导与管理项目工作.json",
       "title": "指导与管理项目工作",
-      "description": "",
+      "description": "指导与管理项目工作是为实现项目目标而领导和执行项目管理计划中所确定的工作，并实施已批准变更的过程。",
       "category": "项目整合管理",
       "wordCount": 520,
-      "updateTime": "2026-03-29T14:58:37.491Z",
-      "order": 141
+      "updateTime": "2026-03-29T15:52:18.776Z",
+      "order": 156
     },
     {
-      "id": "article-1774797037362",
+      "id": "article-1774800126504",
       "filename": "投标人会议.json",
       "title": "投标人会议",
-      "description": "",
+      "description": "投标人会议（又称承包商会议、供应商会议或投标前会议）是在卖方提交建议书之前，  在买方和潜在卖方之间召开的会议，其目的是确保所有潜在投标人对采购要求都有清楚且一致的理解，并确保没有任何投标人会得到特别...",
       "category": "项目采购管理",
       "wordCount": 101,
-      "updateTime": "2026-03-29T14:58:37.488Z",
-      "order": 146
+      "updateTime": "2026-03-29T15:52:18.772Z",
+      "order": 160
     },
     {
-      "id": "article-1774797037357",
+      "id": "article-1774800126502",
       "filename": "建设团队.json",
       "title": "建设团队",
-      "description": "",
+      "description": "建设团队是提高工作能力，促进团队成员互动，改善团队整体氛围，以提高项目绩效的过程。",
       "category": "项目资源管理",
       "wordCount": 1298,
-      "updateTime": "2026-03-29T14:58:37.483Z",
-      "order": 153
+      "updateTime": "2026-03-29T15:52:18.765Z",
+      "order": 170
     },
     {
-      "id": "article-1774797037355",
+      "id": "article-1774800126502",
       "filename": "工作绩效数据.json",
       "title": "工作绩效数据",
-      "description": "",
+      "description": "工作绩效数据是在执行项目工作的过程中，从每个正在执行的活动中收集到的原始观察结果和测量值。",
       "category": "项目整合管理",
       "wordCount": 210,
-      "updateTime": "2026-03-29T14:58:37.481Z",
-      "order": 158
-    },
-    {
-      "id": "article-1774797037354",
-      "filename": "实物资源分配单.json",
-      "title": "实物资源分配单",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 35,
-      "updateTime": "2026-03-29T14:58:37.478Z",
-      "order": 161
-    },
-    {
-      "id": "article-1774797037353",
-      "filename": "实施风险应对.json",
-      "title": "实施风险应对",
-      "description": "",
-      "category": "项目风险管理",
-      "wordCount": 304,
-      "updateTime": "2026-03-29T14:58:37.477Z",
-      "order": 162
-    },
-    {
-      "id": "article-1774797037352",
-      "filename": "实施采购.json",
-      "title": "实施采购",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 144,
-      "updateTime": "2026-03-29T14:58:37.476Z",
-      "order": 163
-    },
-    {
-      "id": "article-1774797037348",
-      "filename": "基本规则.json",
-      "title": "基本规则",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 47,
-      "updateTime": "2026-03-29T14:58:37.470Z",
+      "updateTime": "2026-03-29T15:52:18.764Z",
       "order": 172
     },
     {
-      "id": "article-1774797037347",
-      "filename": "团队绩效评价.json",
-      "title": "团队绩效评价",
-      "description": "",
+      "id": "article-1774800126501",
+      "filename": "实物资源分配单.json",
+      "title": "实物资源分配单",
+      "description": "实物资源分配单记录了项目将使用的材料、设备、用品、地点和其他实物资源。",
       "category": "项目资源管理",
-      "wordCount": 305,
-      "updateTime": "2026-03-29T14:58:37.469Z",
-      "order": 174
+      "wordCount": 35,
+      "updateTime": "2026-03-29T15:52:18.763Z",
+      "order": 173
     },
     {
-      "id": "article-1774797037345",
-      "filename": "可交付成果.json",
-      "title": "可交付成果",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 137,
-      "updateTime": "2026-03-29T14:58:37.467Z",
+      "id": "article-1774800126501",
+      "filename": "实施采购.json",
+      "title": "实施采购",
+      "description": "实施采购是获取卖方应答、选择卖方并授予合同的过程。",
+      "category": "项目采购管理",
+      "wordCount": 144,
+      "updateTime": "2026-03-29T15:52:18.761Z",
       "order": 176
     },
     {
-      "id": "article-1774797037345",
+      "id": "article-1774800126501",
+      "filename": "实施风险应对.json",
+      "title": "实施风险应对",
+      "description": "实施风险应对是执行商定的风险应对计划的过程。",
+      "category": "项目风险管理",
+      "wordCount": 304,
+      "updateTime": "2026-03-29T15:52:18.761Z",
+      "order": 177
+    },
+    {
+      "id": "article-1774800126499",
+      "filename": "基本规则.json",
+      "title": "基本规则",
+      "description": "根据团队章程中定义的基本规则，来明确项目团队成员和其他相关方应该采取什么行为去引导相关方参与。",
+      "category": "项目相关方管理",
+      "wordCount": 47,
+      "updateTime": "2026-03-29T15:52:18.753Z",
+      "order": 187
+    },
+    {
+      "id": "article-1774800126498",
+      "filename": "团队绩效评价.json",
+      "title": "团队绩效评价",
+      "description": "随着项目团队建设工作（如培训、团队建设和集中办公等）的开展，项目管理团队应该对项目团队的有效性进行正式或非正式的评价。",
+      "category": "项目资源管理",
+      "wordCount": 305,
+      "updateTime": "2026-03-29T15:52:18.751Z",
+      "order": 189
+    },
+    {
+      "id": "article-1774800126498",
       "filename": "变更请求.json",
       "title": "变更请求",
-      "description": "",
+      "description": "变更请求是关于修改任何文件、可交付成果或基准的正式提议。",
       "category": "项目整合管理",
       "wordCount": 362,
-      "updateTime": "2026-03-29T14:58:37.466Z",
-      "order": 179
+      "updateTime": "2026-03-29T15:52:18.748Z",
+      "order": 192
     },
     {
-      "id": "article-1774797037343",
+      "id": "article-1774800126498",
+      "filename": "可交付成果.json",
+      "title": "可交付成果",
+      "description": "可交付成果是在某一过程、阶段或项目完成时，必须产出的任何独特并可核实的产品、成果或服务能力。",
+      "category": "项目整合管理",
+      "wordCount": 137,
+      "updateTime": "2026-03-29T15:52:18.748Z",
+      "order": 193
+    },
+    {
+      "id": "article-1774800126497",
       "filename": "卖方建议书.json",
       "title": "卖方建议书",
-      "description": "",
+      "description": "卖方为响应采购文件包而编制的建议书，其中包含的基本信息将被评估团队用于选定一个或多个投标人（卖方）。",
       "category": "项目采购管理",
       "wordCount": 124,
-      "updateTime": "2026-03-29T14:58:37.462Z",
-      "order": 184
+      "updateTime": "2026-03-29T15:52:18.737Z",
+      "order": 198
     },
     {
-      "id": "article-1774797037343",
+      "id": "article-1774800126496",
       "filename": "协议.json",
       "title": "协议",
-      "description": "",
+      "description": "它强制卖方提供规定的产品、服务或成果，强制买方向卖方支付相应的报酬。",
       "category": "项目采购管理",
       "wordCount": 228,
-      "updateTime": "2026-03-29T14:58:37.461Z",
-      "order": 186
+      "updateTime": "2026-03-29T15:52:18.736Z",
+      "order": 199
     }
   ]
 }

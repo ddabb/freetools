@@ -2,38 +2,38 @@
   "meta": {
     "tag": "结束项目或阶段",
     "count": 3,
-    "generatedAt": "2026-03-29T15:10:37.597Z"
+    "generatedAt": "2026-03-29T16:02:06.629Z"
   },
   "articles": [
     {
-      "id": "article-1774797037389",
+      "id": "article-1774800126514",
       "filename": "结束项目或阶段.json",
       "title": "结束项目或阶段",
-      "description": "",
+      "description": "结束项目或阶段是终结项目、阶段或合同的所有活动的过程。",
       "category": "项目整合管理",
       "wordCount": 696,
-      "updateTime": "2026-03-29T14:58:37.541Z",
-      "order": 88
+      "updateTime": "2026-03-29T15:52:18.814Z",
+      "order": 101
     },
     {
-      "id": "article-1774797037388",
+      "id": "article-1774800126514",
       "filename": "组织过程资产更新.json",
       "title": "组织过程资产更新",
-      "description": "",
+      "description": "- 项目文件。在项目活动中产生的各种文件，例如项目管理计划，范围文件、成本文件、进度文件和项目日历，以及变更管理文件。",
       "category": "项目整合管理",
       "wordCount": 407,
-      "updateTime": "2026-03-29T14:58:37.539Z",
-      "order": 90
+      "updateTime": "2026-03-29T15:52:18.813Z",
+      "order": 104
     },
     {
-      "id": "article-1774797037371",
+      "id": "article-1774800126507",
       "filename": "最终报告.json",
       "title": "最终报告",
-      "description": "",
+      "description": "用最终报告总结项目绩效，其中可包含诸如以下信息：",
       "category": "项目整合管理",
       "wordCount": 315,
-      "updateTime": "2026-03-29T14:58:37.505Z",
-      "order": 126
+      "updateTime": "2026-03-29T15:52:18.788Z",
+      "order": 139
     }
   ]
 }

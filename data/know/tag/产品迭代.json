@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "产品迭代",
+    "count": 1,
+    "generatedAt": "2026-03-29T16:02:06.570Z"
+  },
+  "articles": [
+    {
+      "id": "freetools",
+      "filename": "转型之路.json",
+      "title": "FreeTools 转型之路",
+      "description": "从工具集合到知识查询的产品转型思考",
+      "category": "产品设计",
+      "wordCount": 3684,
+      "updateTime": "2026-03-29T15:57:46.806Z",
+      "order": 11
+    }
+  ]
+}

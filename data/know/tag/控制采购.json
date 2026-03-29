@@ -2,38 +2,38 @@
   "meta": {
     "tag": "控制采购",
     "count": 3,
-    "generatedAt": "2026-03-29T15:10:37.546Z"
+    "generatedAt": "2026-03-29T16:02:06.607Z"
   },
   "articles": [
     {
-      "id": "article-1774797037411",
+      "id": "article-1774800126522",
       "filename": "采购文档更新.json",
       "title": "采购文档更新",
-      "description": "",
+      "description": "采购文档更新可包括用于支持合同的全部进度计划、已提出但未批准的合同变更，以及已批准的变更请求。",
       "category": "项目采购管理",
       "wordCount": 127,
-      "updateTime": "2026-03-29T14:58:37.584Z",
-      "order": 40
+      "updateTime": "2026-03-29T15:52:18.850Z",
+      "order": 54
     },
     {
-      "id": "article-1774797037410",
+      "id": "article-1774800126522",
       "filename": "采购关闭.json",
       "title": "采购关闭",
-      "description": "",
+      "description": "买方通常通过其授权的采购管理员，向卖方发出合同已经完成的正式书面通知。",
       "category": "项目采购管理",
       "wordCount": 153,
-      "updateTime": "2026-03-29T14:58:37.582Z",
-      "order": 42
+      "updateTime": "2026-03-29T15:52:18.848Z",
+      "order": 55
     },
     {
-      "id": "article-1774797037367",
+      "id": "article-1774800126505",
       "filename": "控制采购.json",
       "title": "控制采购",
-      "description": "",
+      "description": "控制采购是管理采购关系，监督合同绩效，实施必要的变更和纠偏，以及关闭合同的过程。",
       "category": "项目采购管理",
       "wordCount": 819,
-      "updateTime": "2026-03-29T14:58:37.496Z",
-      "order": 136
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 151
     }
   ]
 }

@@ -2,38 +2,38 @@
   "meta": {
     "tag": "创建WBS",
     "count": 3,
-    "generatedAt": "2026-03-29T15:10:37.594Z"
+    "generatedAt": "2026-03-29T16:02:06.626Z"
   },
   "articles": [
     {
-      "id": "article-1774797037392",
+      "id": "article-1774800126515",
       "filename": "范围基准.json",
       "title": "范围基准",
-      "description": "",
+      "description": "范围基准是经过批准的范围说明书、WBS 和相应的 WBS 词典，只有通过正式的变更控制程序才能进行变更，它被用作比较的基础。范围基准是项目管理计划的组成部分，包括：",
       "category": "项目范围管理",
       "wordCount": 692,
-      "updateTime": "2026-03-29T14:58:37.545Z",
-      "order": 83
-    },
-    {
-      "id": "article-1774797037340",
-      "filename": "分解.json",
-      "title": "分解",
-      "description": "",
-      "category": "项目范围管理",
-      "wordCount": 984,
-      "updateTime": "2026-03-29T14:58:37.458Z",
-      "order": 190
+      "updateTime": "2026-03-29T15:52:18.818Z",
+      "order": 97
     },
     {
       "id": "wbs",
       "filename": "创建WBS.json",
       "title": "创建WBS",
-      "description": "",
+      "description": "创建工作分解结构（WBS）是把项目可交付成果和项目工作分解成较小、更易于管理的组件的过程。",
       "category": "项目范围管理",
       "wordCount": 324,
-      "updateTime": "2026-03-29T14:58:37.458Z",
-      "order": 191
+      "updateTime": "2026-03-29T15:52:18.695Z",
+      "order": 204
+    },
+    {
+      "id": "article-1774800126495",
+      "filename": "分解.json",
+      "title": "分解",
+      "description": "分解是一种把项目范围和项目可交付成果逐步划分为更小、更便于管理的组成部分的技术；工作包是 WBS 最低层的工作，可对其成本和持续时间进行估算和管理。",
+      "category": "项目范围管理",
+      "wordCount": 984,
+      "updateTime": "2026-03-29T15:52:18.686Z",
+      "order": 205
     }
   ]
 }

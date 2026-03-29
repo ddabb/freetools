@@ -2,18 +2,18 @@
   "meta": {
     "tag": "监督相关方参与",
     "count": 1,
-    "generatedAt": "2026-03-29T15:10:37.610Z"
+    "generatedAt": "2026-03-29T16:02:06.636Z"
   },
   "articles": [
     {
-      "id": "article-1774797037378",
+      "id": "article-1774800126510",
       "filename": "监督相关方参与.json",
       "title": "监督相关方参与",
-      "description": "",
+      "description": "监督相关方参与是监督项目相关方关系，并通过修订参与策略和计划来引导相关方合理参与项目的过程。",
       "category": "项目相关方管理",
       "wordCount": 102,
-      "updateTime": "2026-03-29T14:58:37.520Z",
-      "order": 111
+      "updateTime": "2026-03-29T15:52:18.799Z",
+      "order": 124
     }
   ]
 }

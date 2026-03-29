@@ -2,18 +2,18 @@
   "meta": {
     "tag": "管理团队",
     "count": 1,
-    "generatedAt": "2026-03-29T15:10:37.605Z"
+    "generatedAt": "2026-03-29T16:02:06.634Z"
   },
   "articles": [
     {
-      "id": "article-1774797037381",
+      "id": "article-1774800126511",
       "filename": "管理团队.json",
       "title": "管理团队",
-      "description": "",
+      "description": "管理团队是跟踪团队成员工作表现，提供反馈，解决问题并管理团队变更，以优化项目绩效的过程。",
       "category": "项目资源管理",
       "wordCount": 328,
-      "updateTime": "2026-03-29T14:58:37.527Z",
-      "order": 104
+      "updateTime": "2026-03-29T15:52:18.804Z",
+      "order": 119
     }
   ]
 }

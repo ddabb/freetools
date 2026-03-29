@@ -104,16 +104,28 @@ page {
   margin-bottom: 24rpx;
 }
 
-.hero-category.项目管理 {
+.hero-category.产品使用 {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.hero-category.冷知识 {
+.hero-category.产品设计 {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.hero-category.技术 {
+.hero-category.产品思考 {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.hero-category.开发实践 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.hero-category.开发者故事 {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.hero-category.项目管理 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .hero-category.未分类 {
@@ -395,6 +407,105 @@ page {
   font-weight: 500;
 }
 
+/* ========== 相关推荐 ========== */
+.related-section {
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.1);
+}
+
+.related-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.related-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.related-count {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.related-scroll {
+  white-space: nowrap;
+}
+
+.related-card {
+  display: inline-block;
+  width: 320rpx;
+  padding: 24rpx;
+  margin-right: 20rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  vertical-align: top;
+  transition: all 0.3s ease;
+}
+
+.related-card:active {
+  transform: scale(0.98);
+  background: #f0f0f0;
+}
+
+.related-category {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  font-size: 18rpx;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10rpx;
+  margin-bottom: 12rpx;
+}
+
+.related-category.产品使用 {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.related-category.产品设计 {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.related-category.产品思考 {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.related-category.开发实践 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.related-category.开发者故事 {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.related-card-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.related-card-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 /* ========== 底部操作栏 ========== */
 .action-bar {
   display: flex;
@@ -465,61 +576,6 @@ page {
 
 .action-btn::after {
   border: none;
-}
-
-/* ========== 相关推荐 ========== */
-.related-section {
-  background: white;
-  border-radius: 24rpx;
-  padding: 30rpx;
-  margin-top: 20rpx;
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.1);
-}
-
-.related-header {
-  margin-bottom: 20rpx;
-}
-
-.related-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333;
-}
-
-.related-scroll {
-  white-space: nowrap;
-}
-
-.related-card {
-  display: inline-block;
-  width: 280rpx;
-  padding: 24rpx;
-  margin-right: 20rpx;
-  background: #f8f9fa;
-  border-radius: 16rpx;
-  vertical-align: top;
-}
-
-.related-card-title {
-  display: block;
-  font-size: 26rpx;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 12rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.related-card-desc {
-  display: block;
-  font-size: 22rpx;
-  color: #666;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
 /* ========== 返回按钮 ========== */

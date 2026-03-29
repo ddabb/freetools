@@ -2,18 +2,18 @@
   "meta": {
     "tag": "项目经理的能力",
     "count": 1,
-    "generatedAt": "2026-03-29T15:10:37.621Z"
+    "generatedAt": "2026-03-29T16:02:06.643Z"
   },
   "articles": [
     {
-      "id": "article-1774797037361",
+      "id": "article-1774800126504",
       "filename": "技术项目管理技能.json",
       "title": "技术项目管理技能",
-      "description": "",
+      "description": "技术项目管理技能指有效运用项目管理知识实现项目集或项目的预期成果的能力。",
       "category": "项目经理的角色",
       "wordCount": 317,
-      "updateTime": "2026-03-29T14:58:37.488Z",
-      "order": 145
+      "updateTime": "2026-03-29T15:52:18.771Z",
+      "order": 161
     }
   ]
 }

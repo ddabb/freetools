@@ -2,372 +2,385 @@
   "meta": {
     "category": "项目进度管理",
     "count": 28,
-    "generatedAt": "2026-03-29T15:10:37.454Z"
+    "generatedAt": "2026-03-29T16:02:06.540Z"
   },
   "articles": [
     {
-      "id": "article-1774797037425",
-      "filename": "项目进度计划.json",
-      "title": "项目进度计划",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "制定进度计划"
-      ],
-      "wordCount": 834,
-      "updateTime": "2026-03-29T14:58:37.628Z",
-      "order": 7
-    },
-    {
-      "id": "article-1774797037425",
+      "id": "article-1774800126528",
       "filename": "项目进度网络图.json",
       "title": "项目进度网络图",
-      "description": "",
+      "description": "项目进度网络图是表示项目进度活动之间的逻辑关系（也叫依赖关系）的图形。",
       "tags": [
         "规划过程组",
-        "排列活动顺序"
+        "排列活动顺序",
+        "项目管理"
       ],
       "wordCount": 289,
-      "updateTime": "2026-03-29T14:58:37.626Z",
-      "order": 8
+      "updateTime": "2026-03-29T15:52:18.873Z",
+      "order": 22
     },
     {
-      "id": "article-1774797037419",
+      "id": "article-1774800126528",
+      "filename": "项目进度计划.json",
+      "title": "项目进度计划",
+      "description": "项目进度计划是进度模型的输出，为各个相互关联的活动标注了计划日期、持续时间、里程碑和所需资源等星系。",
+      "tags": [
+        "规划过程组",
+        "制定进度计划",
+        "项目管理"
+      ],
+      "wordCount": 834,
+      "updateTime": "2026-03-29T15:52:18.873Z",
+      "order": 23
+    },
+    {
+      "id": "article-1774800126526",
       "filename": "项目日历.json",
       "title": "项目日历",
-      "description": "",
+      "description": "在项目日历中规定可以开展进度活动的可用工作日和工作班次，它把可用于开展进度活动的时间段（按天或更小的时间单位）与不可用的时间段区分开来。",
       "tags": [
         "规划过程组",
-        "制定进度计划"
+        "制定进度计划",
+        "项目管理"
       ],
       "wordCount": 134,
-      "updateTime": "2026-03-29T14:58:37.600Z",
-      "order": 21
+      "updateTime": "2026-03-29T15:52:18.863Z",
+      "order": 36
     },
     {
-      "id": "article-1774797037412",
+      "id": "article-1774800126523",
       "filename": "里程碑清单.json",
       "title": "里程碑清单",
-      "description": "",
+      "description": "里程碑是项目中的重要时点或事件，里程碑清单列出了$\\color{red}{所有项目里程碑}$，并指明每个里程碑是强制性的（如合同要求的）还是选择性的（如根据历史信息确定的）。",
       "tags": [
         "规划过程组",
-        "定义活动"
+        "定义活动",
+        "里程碑"
       ],
       "wordCount": 121,
-      "updateTime": "2026-03-29T14:58:37.587Z",
-      "order": 38
+      "updateTime": "2026-03-29T15:52:18.851Z",
+      "order": 53
     },
     {
-      "id": "article-1774797037408",
+      "id": "article-1774800126521",
       "filename": "进度预测.json",
       "title": "进度预测",
-      "description": "",
+      "description": "进度更新即进度预测，指根据已有的信息和知识，对项目未来的情况和事件进行的估算或预计。",
       "tags": [
         "监控过程组",
         "控制进度"
       ],
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:58:37.579Z",
-      "order": 44
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 57
     },
     {
-      "id": "article-1774797037407",
+      "id": "article-1774800126521",
       "filename": "进度管理计划.json",
       "title": "进度管理计划",
-      "description": "",
+      "description": "进度管理计划是项目管理计划的组成部分，为编制、监督和控制项目进度建立准则和明确活动。",
       "tags": [
         "规划过程组",
         "规划进度管理"
       ],
       "wordCount": 718,
-      "updateTime": "2026-03-29T14:58:37.577Z",
-      "order": 46
+      "updateTime": "2026-03-29T15:52:18.845Z",
+      "order": 60
     },
     {
-      "id": "article-1774797037408",
+      "id": "article-1774800126521",
       "filename": "进度网络分析.json",
       "title": "进度网络分析",
-      "description": "",
+      "description": "进度网络分析是创建项目进度模型的一种综合技术，它采用了其他几种技术，例如关键路径法（见6.5.2.2 节）、资源优化技术（见 6.5.2.3 节）和建模技术（见 6.5.2.4 节）。其他分析包括（但...",
       "tags": [
         "规划过程组",
         "制定进度计划"
       ],
       "wordCount": 242,
-      "updateTime": "2026-03-29T14:58:37.577Z",
-      "order": 47
+      "updateTime": "2026-03-29T15:52:18.845Z",
+      "order": 61
     },
     {
-      "id": "article-1774797037407",
-      "filename": "进度基准.json",
-      "title": "进度基准",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "制定进度计划"
-      ],
-      "wordCount": 138,
-      "updateTime": "2026-03-29T14:58:37.576Z",
-      "order": 48
-    },
-    {
-      "id": "article-1774797037407",
-      "filename": "进度数据.json",
-      "title": "进度数据",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "制定进度计划"
-      ],
-      "wordCount": 240,
-      "updateTime": "2026-03-29T14:58:37.576Z",
-      "order": 49
-    },
-    {
-      "id": "article-1774797037406",
+      "id": "article-1774800126521",
       "filename": "进度压缩.json",
       "title": "进度压缩",
-      "description": "",
+      "description": "进度压缩技术是指在不缩减项目范围的前提下，缩短或加快进度工期，以满足进度制约因素、强制日期或其他进度目标。",
       "tags": [
         "规划过程组",
         "制定进度计划"
       ],
       "wordCount": 474,
-      "updateTime": "2026-03-29T14:58:37.575Z",
-      "order": 51
+      "updateTime": "2026-03-29T15:52:18.843Z",
+      "order": 63
     },
     {
-      "id": "article-1774797037404",
+      "id": "article-1774800126521",
+      "filename": "进度基准.json",
+      "title": "进度基准",
+      "description": "进度基准是经过批准的进度模型，只有通过正式的变更控制程序才能进行变更，用作与实际结果进行比较的依据。",
+      "tags": [
+        "规划过程组",
+        "制定进度计划"
+      ],
+      "wordCount": 138,
+      "updateTime": "2026-03-29T15:52:18.843Z",
+      "order": 64
+    },
+    {
+      "id": "article-1774800126521",
+      "filename": "进度数据.json",
+      "title": "进度数据",
+      "description": "项目进度模型中的进度数据是用以描述和控制进度计划的信息集合。",
+      "tags": [
+        "规划过程组",
+        "制定进度计划"
+      ],
+      "wordCount": 240,
+      "updateTime": "2026-03-29T15:52:18.843Z",
+      "order": 65
+    },
+    {
+      "id": "article-1774800126519",
       "filename": "资源优化.json",
       "title": "资源优化",
-      "description": "",
+      "description": "资源优化用于调整活动的开始和完成日期，以调整计划使用的资源，使其等于或少于可用的资源。",
       "tags": [
         "规划过程组",
         "制定进度计划"
       ],
       "wordCount": 443,
-      "updateTime": "2026-03-29T14:58:37.571Z",
-      "order": 56
+      "updateTime": "2026-03-29T15:52:18.839Z",
+      "order": 71
     },
     {
-      "id": "article-1774797037399",
+      "id": "article-1774800126517",
       "filename": "规划进度管理.json",
       "title": "规划进度管理",
-      "description": "",
+      "description": "规划进度管理是为规划、编制、管理、执行和控制项目进度而制定政策、程序和文档的过程。",
       "tags": [
         "规划过程组",
-        "规划进度管理"
+        "规划进度管理",
+        "PMP"
       ],
       "wordCount": 85,
-      "updateTime": "2026-03-29T14:58:37.559Z",
-      "order": 67
+      "updateTime": "2026-03-29T15:52:18.830Z",
+      "order": 82
     },
     {
-      "id": "article-1774797037391",
+      "id": "article-1774800126514",
       "filename": "自下而上估算.json",
       "title": "自下而上估算",
-      "description": "",
+      "description": "自下而上估算是一种估算项目持续时间或成本的方法，通过从下到上逐层汇总 WBS 组成部分的估算而得到项目估算。",
       "tags": [
         "规划过程组",
         "估算活动持续时间"
       ],
       "wordCount": 188,
-      "updateTime": "2026-03-29T14:58:37.544Z",
-      "order": 85
+      "updateTime": "2026-03-29T15:52:18.816Z",
+      "order": 100
     },
     {
-      "id": "article-1774797037384",
-      "filename": "紧前关系绘图法.json",
-      "title": "紧前关系绘图法",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "排列活动顺序"
-      ],
-      "wordCount": 584,
-      "updateTime": "2026-03-29T14:58:37.535Z",
-      "order": 96
-    },
-    {
-      "id": "article-1774797037383",
+      "id": "article-1774800126512",
       "filename": "类比估算.json",
       "title": "类比估算",
-      "description": "",
+      "description": "类比估算是一种使用相似活动或项目的历史数据，来估算当前活动或项目的持续时间或成本的技术。",
       "tags": [
         "规划过程组",
         "估算活动持续时间"
       ],
       "wordCount": 387,
-      "updateTime": "2026-03-29T14:58:37.533Z",
-      "order": 98
+      "updateTime": "2026-03-29T15:52:18.808Z",
+      "order": 111
     },
     {
-      "id": "article-1774797037380",
+      "id": "article-1774800126512",
+      "filename": "紧前关系绘图法.json",
+      "title": "紧前关系绘图法",
+      "description": "紧前关系绘图法（PDM）是创建进度模型的一种技术，用节点表示活动，用一种或多种逻辑关系连接活动，以显示活动的实施顺序。",
+      "tags": [
+        "规划过程组",
+        "排列活动顺序"
+      ],
+      "wordCount": 584,
+      "updateTime": "2026-03-29T15:52:18.808Z",
+      "order": 113
+    },
+    {
+      "id": "article-1774800126510",
       "filename": "确定和整合依赖关系.json",
       "title": "确定和整合依赖关系",
-      "description": "",
+      "description": "如下所述，依赖关系可能是强制或选择的，内部或外部的。",
       "tags": [
         "规划过程组",
         "排列活动顺序"
       ],
       "wordCount": 843,
-      "updateTime": "2026-03-29T14:58:37.524Z",
-      "order": 107
+      "updateTime": "2026-03-29T15:52:18.803Z",
+      "order": 120
     },
     {
-      "id": "article-1774797037374",
+      "id": "article-1774800126508",
       "filename": "活动属性.json",
       "title": "活动属性",
-      "description": "",
+      "description": "活动属性是指每项活动所具有的多重属性，用来扩充对活动的描述，活动属性随时间演进。",
       "tags": [
         "规划过程组",
         "定义活动"
       ],
       "wordCount": 246,
-      "updateTime": "2026-03-29T14:58:37.510Z",
-      "order": 118
+      "updateTime": "2026-03-29T15:52:18.793Z",
+      "order": 131
     },
     {
-      "id": "article-1774797037375",
+      "id": "article-1774800126508",
       "filename": "活动清单.json",
       "title": "活动清单",
-      "description": "",
+      "description": "对于使用滚动式规划或敏捷技术的项目，活动清单会在项目进展过程中得到定期更新。",
       "tags": [
         "规划过程组",
         "定义活动"
       ],
       "wordCount": 93,
-      "updateTime": "2026-03-29T14:58:37.510Z",
-      "order": 119
+      "updateTime": "2026-03-29T15:52:18.793Z",
+      "order": 132
     },
     {
-      "id": "article-1774797037368",
+      "id": "article-1774800126506",
       "filename": "敏捷发布规划.json",
       "title": "敏捷发布规划",
-      "description": "",
+      "description": "敏捷发布规划基于项目路线图和产品发展愿景，提供了高度概括的发布进度时间轴（通常是 3 到 6个月）。",
       "tags": [
         "规划过程组",
-        "估算活动持续时间"
+        "估算活动持续时间",
+        "敏捷",
+        "Sprint"
       ],
       "wordCount": 192,
-      "updateTime": "2026-03-29T14:58:37.499Z",
-      "order": 131
+      "updateTime": "2026-03-29T15:52:18.783Z",
+      "order": 143
     },
     {
-      "id": "article-1774797037367",
+      "id": "article-1774800126505",
       "filename": "提前量和滞后量.json",
       "title": "提前量和滞后量",
-      "description": "",
+      "description": "提前量是相对于紧前活动，紧后活动可以提前的时间量。",
       "tags": [
         "规划过程组",
         "排列活动顺序"
       ],
       "wordCount": 111,
-      "updateTime": "2026-03-29T14:58:37.497Z",
-      "order": 134
+      "updateTime": "2026-03-29T15:52:18.782Z",
+      "order": 146
     },
     {
-      "id": "article-1774797037366",
+      "id": "article-1774800126505",
       "filename": "控制进度.json",
       "title": "控制进度",
-      "description": "",
+      "description": "控制进度是监督项目状态，以更新项目进度和管理进度基准变更的过程。",
       "tags": [
         "监控过程组",
-        "控制进度"
+        "控制进度",
+        "PMP"
       ],
       "wordCount": 571,
-      "updateTime": "2026-03-29T14:58:37.496Z",
-      "order": 135
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 150
     },
     {
-      "id": "article-1774797037364",
+      "id": "article-1774800126504",
       "filename": "排列活动顺序.json",
       "title": "排列活动顺序",
-      "description": "",
+      "description": "排列活动顺序是识别和记录项目活动之间的关系的过程，本过程的主要作用是定义工作之间的逻辑顺序，以便在既定的所有项目制约因素下获得最高的效率。",
       "tags": [
         "规划过程组",
-        "排列活动顺序"
+        "排列活动顺序",
+        "PMP"
       ],
       "wordCount": 288,
-      "updateTime": "2026-03-29T14:58:37.491Z",
-      "order": 142
+      "updateTime": "2026-03-29T15:52:18.777Z",
+      "order": 155
     },
     {
-      "id": "article-1774797037350",
+      "id": "article-1774800126500",
       "filename": "定义活动.json",
       "title": "定义活动",
-      "description": "",
+      "description": "定义活动是识别和记录为完成项目可交付成果而须采取的具体行动的过程。",
       "tags": [
         "规划过程组",
-        "定义活动"
+        "定义活动",
+        "PMP"
       ],
       "wordCount": 126,
-      "updateTime": "2026-03-29T14:58:37.473Z",
-      "order": 168
+      "updateTime": "2026-03-29T15:52:18.756Z",
+      "order": 183
     },
     {
-      "id": "article-1774797037344",
+      "id": "article-1774800126497",
       "filename": "参数估算.json",
       "title": "参数估算",
-      "description": "",
+      "description": "参数估算是一种基于历史数据和项目参数，使用某种算法来计算成本或持续时间的估算技术。",
       "tags": [
         "规划过程组",
         "估算活动持续时间"
       ],
       "wordCount": 316,
-      "updateTime": "2026-03-29T14:58:37.465Z",
-      "order": 180
-    },
-    {
-      "id": "article-1774797037341",
-      "filename": "制定进度计划.json",
-      "title": "制定进度计划",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "制定进度计划"
-      ],
-      "wordCount": 520,
-      "updateTime": "2026-03-29T14:58:37.459Z",
-      "order": 188
-    },
-    {
-      "id": "article-1774797037339",
-      "filename": "关键路径法.json",
-      "title": "关键路径法",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "制定进度计划"
-      ],
-      "wordCount": 824,
-      "updateTime": "2026-03-29T14:58:37.456Z",
+      "updateTime": "2026-03-29T15:52:18.747Z",
       "order": 194
     },
     {
-      "id": "article-1774797037336",
-      "filename": "估算活动持续时间.json",
-      "title": "估算活动持续时间",
-      "description": "",
+      "id": "article-1774800126495",
+      "filename": "制定进度计划.json",
+      "title": "制定进度计划",
+      "description": "制定进度计划是分析活动顺序、持续时间、资源需求和进度制约因素，创建进度模型，从而落实项目执行和监控的过程。",
       "tags": [
         "规划过程组",
-        "估算活动持续时间"
+        "制定进度计划",
+        "PMP"
       ],
-      "wordCount": 258,
-      "updateTime": "2026-03-29T14:58:37.454Z",
-      "order": 197
+      "wordCount": 520,
+      "updateTime": "2026-03-29T15:52:18.719Z",
+      "order": 202
     },
     {
-      "id": "article-1774797037330",
+      "id": "article-1774800126494",
+      "filename": "关键路径法.json",
+      "title": "关键路径法",
+      "description": "关键路径法用于在进度模型中估算项目最短工期，确定逻辑网络路径的进度灵活性大小。",
+      "tags": [
+        "规划过程组",
+        "制定进度计划",
+        "关键路径法"
+      ],
+      "wordCount": 824,
+      "updateTime": "2026-03-29T15:52:18.668Z",
+      "order": 207
+    },
+    {
+      "id": "article-1774800126493",
+      "filename": "估算活动持续时间.json",
+      "title": "估算活动持续时间",
+      "description": "估算活动持续时间是根据资源估算的结果，估算完成单项活动所需工作时段数的过程。",
+      "tags": [
+        "规划过程组",
+        "估算活动持续时间",
+        "PMP"
+      ],
+      "wordCount": 258,
+      "updateTime": "2026-03-29T15:52:18.628Z",
+      "order": 212
+    },
+    {
+      "id": "article-1774800126490",
       "filename": "三点估算.json",
       "title": "三点估算",
-      "description": "",
+      "description": "通过考虑估算中的$\\color{red}{不确定性}$和风险，可以提高持续时间估算的准确性。",
       "tags": [
         "规划过程组",
         "估算活动持续时间"
       ],
       "wordCount": 335,
-      "updateTime": "2026-03-29T14:58:37.446Z",
-      "order": 208
+      "updateTime": "2026-03-29T15:52:18.552Z",
+      "order": 222
     }
   ]
 }

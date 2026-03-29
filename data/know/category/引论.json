@@ -2,211 +2,228 @@
   "meta": {
     "category": "引论",
     "count": 16,
-    "generatedAt": "2026-03-29T15:10:37.445Z"
+    "generatedAt": "2026-03-29T16:02:06.538Z"
   },
   "articles": [
     {
-      "id": "article-1774797037426",
+      "id": "article-1774800126528",
       "filename": "项目阶段.json",
       "title": "项目阶段",
-      "description": "",
+      "description": "项目阶段是一组具有逻辑关系的项目活动的集合，通常以一个或多个可交付成果的完成为结束。",
       "tags": [
         "基本要素",
-        "指南的组成部分"
+        "指南的组成部分",
+        "项目管理"
       ],
       "wordCount": 577,
-      "updateTime": "2026-03-29T14:58:37.629Z",
-      "order": 6
-    },
-    {
-      "id": "article-1774797037424",
-      "filename": "项目管理过程组.json",
-      "title": "项目管理过程组",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "指南的组成部分"
-      ],
-      "wordCount": 421,
-      "updateTime": "2026-03-29T14:58:37.608Z",
-      "order": 10
-    },
-    {
-      "id": "article-1774797037423",
-      "filename": "项目管理过程.json",
-      "title": "项目管理过程",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "指南的组成部分"
-      ],
-      "wordCount": 466,
-      "updateTime": "2026-03-29T14:58:37.606Z",
-      "order": 13
-    },
-    {
-      "id": "article-1774797037422",
-      "filename": "项目管理标准.json",
-      "title": "项目管理标准",
-      "description": "",
-      "tags": [
-        "指南概述和目的"
-      ],
-      "wordCount": 496,
-      "updateTime": "2026-03-29T14:58:37.605Z",
-      "order": 14
-    },
-    {
-      "id": "article-1774797037422",
-      "filename": "项目管理的重要性.json",
-      "title": "项目管理的重要性",
-      "description": "",
-      "tags": [
-        "基本要素"
-      ],
-      "wordCount": 570,
-      "updateTime": "2026-03-29T14:58:37.605Z",
-      "order": 15
-    },
-    {
-      "id": "article-1774797037421",
-      "filename": "项目管理数据和信息.json",
-      "title": "项目管理数据和信息",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "指南的组成部分"
-      ],
-      "wordCount": 500,
-      "updateTime": "2026-03-29T14:58:37.604Z",
-      "order": 16
-    },
-    {
-      "id": "article-1774797037420",
-      "filename": "项目章程和项目管理计划.json",
-      "title": "项目章程和项目管理计划",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "项目管理商业文件"
-      ],
-      "wordCount": 103,
-      "updateTime": "2026-03-29T14:58:37.602Z",
+      "updateTime": "2026-03-29T15:52:18.875Z",
       "order": 19
     },
     {
-      "id": "article-1774797037419",
+      "id": "article-1774800126527",
+      "filename": "项目管理过程组.json",
+      "title": "项目管理过程组",
+      "description": "项目管理过程组指对项目管理过程进行逻辑分组，以达成项目的特定目标。过程组不同于项目阶段。项目管理过程可分为以下五个项目管理过程组：",
+      "tags": [
+        "基本要素",
+        "指南的组成部分",
+        "项目管理",
+        "项目管理知识体系"
+      ],
+      "wordCount": 421,
+      "updateTime": "2026-03-29T15:52:18.872Z",
+      "order": 24
+    },
+    {
+      "id": "article-1774800126527",
+      "filename": "项目管理过程.json",
+      "title": "项目管理过程",
+      "description": "项目生命周期是通过一系列项目管理活动进行的，即项目管理过程。",
+      "tags": [
+        "基本要素",
+        "指南的组成部分",
+        "项目管理",
+        "PMP",
+        "项目管理知识体系"
+      ],
+      "wordCount": 466,
+      "updateTime": "2026-03-29T15:52:18.870Z",
+      "order": 27
+    },
+    {
+      "id": "article-1774800126527",
+      "filename": "项目管理标准.json",
+      "title": "项目管理标准",
+      "description": "本指南基于《项目管理标准》[1]。标准是基于权威、惯例或共识而建立并用作模式或范例的文件。",
+      "tags": [
+        "指南概述和目的",
+        "项目管理",
+        "PMP"
+      ],
+      "wordCount": 496,
+      "updateTime": "2026-03-29T15:52:18.869Z",
+      "order": 28
+    },
+    {
+      "id": "article-1774800126527",
+      "filename": "项目管理的重要性.json",
+      "title": "项目管理的重要性",
+      "description": "项目管理就是将知识、技能、工具与技术应用于项目活动，以满足项目的要求。",
+      "tags": [
+        "基本要素",
+        "项目管理"
+      ],
+      "wordCount": 570,
+      "updateTime": "2026-03-29T15:52:18.869Z",
+      "order": 29
+    },
+    {
+      "id": "article-1774800126526",
+      "filename": "项目管理数据和信息.json",
+      "title": "项目管理数据和信息",
+      "description": "整个项目生命周期需要收集、分析和转化大量的数据。",
+      "tags": [
+        "基本要素",
+        "指南的组成部分",
+        "项目管理"
+      ],
+      "wordCount": 500,
+      "updateTime": "2026-03-29T15:52:18.868Z",
+      "order": 30
+    },
+    {
+      "id": "article-1774800126526",
+      "filename": "项目章程和项目管理计划.json",
+      "title": "项目章程和项目管理计划",
+      "description": "项目章程是由项目发起人发布的，正式批准项目成立，并授权项目经理动用组织资源开展项目活动的文件。",
+      "tags": [
+        "基本要素",
+        "项目管理商业文件",
+        "项目管理"
+      ],
+      "wordCount": 103,
+      "updateTime": "2026-03-29T15:52:18.864Z",
+      "order": 34
+    },
+    {
+      "id": "article-1774800126526",
       "filename": "项目效益管理计划.json",
       "title": "项目效益管理计划",
-      "description": "",
+      "description": "项目效益管理计划描述了项目实现效益的方式和时间，以及应制定的效益衡量机制。",
       "tags": [
         "基本要素",
-        "项目管理商业文件"
+        "项目管理商业文件",
+        "项目管理"
       ],
       "wordCount": 630,
-      "updateTime": "2026-03-29T14:58:37.599Z",
-      "order": 22
+      "updateTime": "2026-03-29T15:52:18.863Z",
+      "order": 35
     },
     {
-      "id": "article-1774797037418",
-      "filename": "项目成功标准.json",
-      "title": "项目成功标准",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "项目管理商业文件"
-      ],
-      "wordCount": 692,
-      "updateTime": "2026-03-29T14:58:37.598Z",
-      "order": 23
-    },
-    {
-      "id": "article-1774797037417",
+      "id": "article-1774800126525",
       "filename": "项目商业论证.json",
       "title": "项目商业论证",
-      "description": "",
+      "description": "项目商业论证指文档化的经济可行性研究报告，用来对尚缺乏充分定义的所选方案的收益进行有效性论证，是启动后续项目管理活动的依据。",
       "tags": [
         "基本要素",
-        "项目管理商业文件"
+        "项目管理商业文件",
+        "项目管理"
       ],
       "wordCount": 1007,
-      "updateTime": "2026-03-29T14:58:37.596Z",
-      "order": 25
+      "updateTime": "2026-03-29T15:52:18.861Z",
+      "order": 37
     },
     {
-      "id": "article-1774797037417",
-      "filename": "项目和开发生命周期.json",
-      "title": "项目和开发生命周期",
-      "description": "",
+      "id": "article-1774800126525",
+      "filename": "项目成功标准.json",
+      "title": "项目成功标准",
+      "description": "确定项目是否成功是项目管理中最常见的挑战之一。",
       "tags": [
         "基本要素",
-        "指南的组成部分"
+        "项目管理商业文件",
+        "项目管理"
       ],
-      "wordCount": 810,
-      "updateTime": "2026-03-29T14:58:37.595Z",
-      "order": 26
+      "wordCount": 692,
+      "updateTime": "2026-03-29T15:52:18.861Z",
+      "order": 39
     },
     {
-      "id": "article-1774797037413",
+      "id": "article-1774800126525",
+      "filename": "项目和开发生命周期.json",
+      "title": "项目和开发生命周期",
+      "description": "项目生命周期指项目从启动到完成所经历的一系列阶段。",
+      "tags": [
+        "基本要素",
+        "指南的组成部分",
+        "项目管理"
+      ],
+      "wordCount": 810,
+      "updateTime": "2026-03-29T15:52:18.859Z",
+      "order": 42
+    },
+    {
+      "id": "article-1774800126524",
       "filename": "阶段关口.json",
       "title": "阶段关口",
-      "description": "",
+      "description": "阶段关口在项目阶段结束时进行，将项目的绩效和进度与项目和业务文件比较，这些文件包括（ 但不限于）：",
       "tags": [
         "基本要素",
         "指南的组成部分"
       ],
       "wordCount": 238,
-      "updateTime": "2026-03-29T14:58:37.590Z",
-      "order": 34
+      "updateTime": "2026-03-29T15:52:18.854Z",
+      "order": 48
     },
     {
-      "id": "article-1774797037409",
-      "filename": "道德与专业行为规范.json",
-      "title": "道德与专业行为规范",
-      "description": "",
-      "tags": [
-        "指南概述和目的"
-      ],
-      "wordCount": 326,
-      "updateTime": "2026-03-29T14:58:37.581Z",
-      "order": 43
-    },
-    {
-      "id": "article-1774797037409",
+      "id": "article-1774800126522",
       "filename": "通用词汇.json",
       "title": "通用词汇",
-      "description": "",
+      "description": "《PMI 项目管理术语词典》[4] 收录了基本的专业词汇，供组织、项目组合、项目集和项目经理及其他项目相关方统一使用。",
       "tags": [
         "指南概述和目的"
       ],
       "wordCount": 142,
-      "updateTime": "2026-03-29T14:58:37.579Z",
-      "order": 45
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 58
     },
     {
-      "id": "article-1774797037395",
-      "filename": "裁剪.json",
-      "title": "裁剪",
-      "description": "",
-      "tags": [
-        "基本要素",
-        "项目管理商业文件"
-      ],
-      "wordCount": 642,
-      "updateTime": "2026-03-29T14:58:37.552Z",
-      "order": 77
-    },
-    {
-      "id": "article-1774797037363",
-      "filename": "指南概述和目的.json",
-      "title": "指南概述和目的",
-      "description": "",
+      "id": "article-1774800126522",
+      "filename": "道德与专业行为规范.json",
+      "title": "道德与专业行为规范",
+      "description": "PMI 发布了《道德与专业行为规范》[5]，为项目管理专业人员增强了信心并帮助个人做出明智的决策，尤其是在面对被要求违背正直诚信或价值观的困境时。",
       "tags": [
         "指南概述和目的"
       ],
+      "wordCount": 326,
+      "updateTime": "2026-03-29T15:52:18.846Z",
+      "order": 59
+    },
+    {
+      "id": "article-1774800126516",
+      "filename": "裁剪.json",
+      "title": "裁剪",
+      "description": "项目经理通常将项目管理方法论应用于工作。方法论是由专门的从业人员所采用的实践、技术、程序和规则所组成的体系。根据这一定义，本指南本身并不是方法论。",
+      "tags": [
+        "基本要素",
+        "项目管理商业文件",
+        "PMP"
+      ],
+      "wordCount": 642,
+      "updateTime": "2026-03-29T15:52:18.824Z",
+      "order": 90
+    },
+    {
+      "id": "article-1774800126504",
+      "filename": "指南概述和目的.json",
+      "title": "指南概述和目的",
+      "description": "项目管理并非新概念，它已存在数百年之久。项目成果的例子包括：",
+      "tags": [
+        "指南概述和目的",
+        "PMP"
+      ],
       "wordCount": 918,
-      "updateTime": "2026-03-29T14:58:37.489Z",
-      "order": 144
+      "updateTime": "2026-03-29T15:52:18.775Z",
+      "order": 158
     }
   ]
 }

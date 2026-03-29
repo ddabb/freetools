@@ -2,28 +2,28 @@
   "meta": {
     "tag": "组织过程资产",
     "count": 2,
-    "generatedAt": "2026-03-29T15:10:37.600Z"
+    "generatedAt": "2026-03-29T16:02:06.630Z"
   },
   "articles": [
     {
-      "id": "article-1774797037388",
+      "id": "article-1774800126513",
       "filename": "组织过程资产.json",
       "title": "组织过程资产",
-      "description": "",
+      "description": "组织过程资产是执行组织所特有并使用的计划、过程、政策、程序和知识库，会影响对具体项目的管理。",
       "category": "项目运行环境",
       "wordCount": 440,
-      "updateTime": "2026-03-29T14:58:37.537Z",
-      "order": 93
+      "updateTime": "2026-03-29T15:52:18.811Z",
+      "order": 107
     },
     {
-      "id": "article-1774797037387",
+      "id": "article-1774800126513",
       "filename": "组织知识库.json",
       "title": "组织知识库",
-      "description": "",
+      "description": "组织用来存取信息的知识库，包括（但不限于）：",
       "category": "项目运行环境",
       "wordCount": 309,
-      "updateTime": "2026-03-29T14:58:37.536Z",
-      "order": 95
+      "updateTime": "2026-03-29T15:52:18.810Z",
+      "order": 110
     }
   ]
 }

@@ -2,48 +2,48 @@
   "meta": {
     "tag": "项目经理的影响力范围",
     "count": 4,
-    "generatedAt": "2026-03-29T15:10:37.520Z"
+    "generatedAt": "2026-03-29T16:02:06.601Z"
   },
   "articles": [
     {
-      "id": "article-1774797037416",
+      "id": "article-1774800126525",
       "filename": "项目.json",
       "title": "项目",
-      "description": "",
+      "description": "项目经理领导项目团队实现项目目标和相关方的期望。",
       "category": "项目经理的角色",
       "wordCount": 653,
-      "updateTime": "2026-03-29T14:58:37.594Z",
-      "order": 27
+      "updateTime": "2026-03-29T15:52:18.859Z",
+      "order": 41
     },
     {
-      "id": "article-1774797037395",
+      "id": "article-1774800126516",
       "filename": "行业.json",
       "title": "行业",
-      "description": "",
+      "description": "项目经理应时刻关注行业的最新发展趋势，获得并思考这一信息对当前项目是否有影响或可用。",
       "category": "项目经理的角色",
       "wordCount": 156,
-      "updateTime": "2026-03-29T14:58:37.551Z",
-      "order": 78
+      "updateTime": "2026-03-29T15:52:18.822Z",
+      "order": 93
     },
     {
-      "id": "article-1774797037385",
+      "id": "article-1774800126513",
       "filename": "组织.json",
       "title": "组织",
-      "description": "",
+      "description": "项目经理需要积极地与其他项目经理互动。其他独立项目或同一项目集的其他项目可能会对项目造成影响，原因包括（但不限于）：",
       "category": "项目经理的角色",
       "wordCount": 634,
-      "updateTime": "2026-03-29T14:58:37.535Z",
-      "order": 97
+      "updateTime": "2026-03-29T15:52:18.810Z",
+      "order": 108
     },
     {
-      "id": "article-1774797037332",
+      "id": "article-1774800126491",
       "filename": "专业学科.json",
       "title": "专业学科",
-      "description": "",
+      "description": "对项目经理而言，持续的知识传递和整合非常重要。",
       "category": "项目经理的角色",
       "wordCount": 186,
-      "updateTime": "2026-03-29T14:58:37.448Z",
-      "order": 206
+      "updateTime": "2026-03-29T15:52:18.579Z",
+      "order": 219
     }
   ]
 }

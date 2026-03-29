@@ -2,18 +2,18 @@
   "meta": {
     "tag": "控制资源",
     "count": 1,
-    "generatedAt": "2026-03-29T15:10:37.616Z"
+    "generatedAt": "2026-03-29T16:02:06.640Z"
   },
   "articles": [
     {
-      "id": "article-1774797037366",
+      "id": "article-1774800126505",
       "filename": "控制资源.json",
       "title": "控制资源",
-      "description": "",
+      "description": "控制资源是确保按计划为项目分配实物资源，以及根据资源使用计划监督资源实际使用情况，并采取必要纠正措施的过程。",
       "category": "项目资源管理",
       "wordCount": 444,
-      "updateTime": "2026-03-29T14:58:37.495Z",
-      "order": 138
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 149
     }
   ]
 }

@@ -37,7 +37,7 @@ Page({
   loadDetail(id) {
     this.setData({ loading: true, error: false });
 
-    const url = CDN_BASE + `detail/${id}.json`;
+    const url = CDN_BASE + 'detail/' + encodeURIComponent(id) + '.json';
 
     wx.request({
       url,
@@ -229,12 +229,12 @@ Page({
 
     // 提取纯文本内容
     const content = article.content
-      .replace(/<[^>]+>/g, '\n')  // 移除 HTML 标签
-      .replace(/&nbsp;/g, ' ')     // 替换空格
-      .replace(/&lt;/g, '<')        // 替换 HTML 实体
+      .replace(/<[^>]+>/g, '\n')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&amp;/g, '&')
-      .replace(/\n\s*\n/g, '\n')   // 移除多余空行
+      .replace(/\n\s*\n/g, '\n')
       .trim();
 
     wx.setClipboardData({
@@ -320,10 +320,14 @@ Page({
    */
   getCategoryIcon(category) {
     const iconMap = {
+      '产品使用': '📖',
+      '产品设计': '💡',
+      '产品思考': '🧠',
+      '开发实践': '🔧',
+      '开发者故事': '💻',
       '项目管理': '📋',
-      '冷知识': '❄️',
-      '技术': '💻',
-      '生活': '🏠',
+      'PMP认证': '🎓',
+      '敏捷管理': '🏃',
       '未分类': '📚'
     };
     return iconMap[category] || '📚';

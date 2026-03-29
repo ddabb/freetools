@@ -2,268 +2,272 @@
   "meta": {
     "category": "项目资源管理",
     "count": 20,
-    "generatedAt": "2026-03-29T15:10:37.439Z"
+    "generatedAt": "2026-03-29T16:02:06.538Z"
   },
   "articles": [
     {
-      "id": "article-1774797037426",
+      "id": "article-1774800126528",
       "filename": "预分派.json",
       "title": "预分派",
-      "description": "",
+      "description": "预分派指事先确定项目的实物或团队资源，可在下列情况下发生：在竞标过程中承诺分派特定人员进行项目工作；项目取决于特定人员的专有技能；在完成资源管理计划的前期工作之前，制定项目章程过程或其他过程已经指定了...",
       "tags": [
         "执行过程组",
         "获取资源"
       ],
       "wordCount": 112,
-      "updateTime": "2026-03-29T14:58:37.631Z",
-      "order": 5
+      "updateTime": "2026-03-29T15:52:18.875Z",
+      "order": 20
     },
     {
-      "id": "article-1774797037418",
+      "id": "article-1774800126525",
       "filename": "项目团队派工单.json",
       "title": "项目团队派工单",
-      "description": "",
+      "description": "项目团队派工单记录了团队成员及其在项目中的角色和职责，可包括项目团队名录，还需要把人员姓名插入项目管理计划的其他部分，如项目组织图和进度计划。",
       "tags": [
         "执行过程组",
-        "获取资源"
+        "获取资源",
+        "项目管理"
       ],
       "wordCount": 71,
-      "updateTime": "2026-03-29T14:58:37.597Z",
-      "order": 24
+      "updateTime": "2026-03-29T15:52:18.861Z",
+      "order": 38
     },
     {
-      "id": "article-1774797037414",
+      "id": "article-1774800126524",
       "filename": "集中办公.json",
       "title": "集中办公",
-      "description": "",
+      "description": "集中办公是指把许多或全部最活跃的项目团队成员安排在同一个物理地点工作，以增强团队工作能力。",
       "tags": [
         "执行过程组",
         "建设团队"
       ],
       "wordCount": 126,
-      "updateTime": "2026-03-29T14:58:37.591Z",
-      "order": 32
+      "updateTime": "2026-03-29T15:52:18.856Z",
+      "order": 45
     },
     {
-      "id": "article-1774797037405",
-      "filename": "资源日历.json",
-      "title": "资源日历",
-      "description": "",
-      "tags": [
-        "执行过程组",
-        "获取资源"
-      ],
-      "wordCount": 161,
-      "updateTime": "2026-03-29T14:58:37.573Z",
-      "order": 52
-    },
-    {
-      "id": "article-1774797037405",
-      "filename": "资源管理计划.json",
-      "title": "资源管理计划",
-      "description": "",
-      "tags": [
-        "规划过程组",
-        "规划资源管理"
-      ],
-      "wordCount": 747,
-      "updateTime": "2026-03-29T14:58:37.573Z",
-      "order": 53
-    },
-    {
-      "id": "article-1774797037405",
+      "id": "article-1774800126520",
       "filename": "资源需求.json",
       "title": "资源需求",
-      "description": "",
+      "description": "资源需求识别了各个工作包或工作包中每个活动所需的资源类型和数量，可以汇总这些需求，以估算每个工作包、每个 WBS 分支以及整个项目所需的资源。",
       "tags": [
         "规划过程组",
         "估算活动资源"
       ],
       "wordCount": 129,
-      "updateTime": "2026-03-29T14:58:37.573Z",
-      "order": 54
+      "updateTime": "2026-03-29T15:52:18.842Z",
+      "order": 66
     },
     {
-      "id": "article-1774797037404",
+      "id": "article-1774800126520",
+      "filename": "资源日历.json",
+      "title": "资源日历",
+      "description": "资源日历识别了每种具体资源可用时的工作日、班次、正常营业的上下班时间、周末和公共假期。",
+      "tags": [
+        "执行过程组",
+        "获取资源"
+      ],
+      "wordCount": 161,
+      "updateTime": "2026-03-29T15:52:18.841Z",
+      "order": 67
+    },
+    {
+      "id": "article-1774800126520",
+      "filename": "资源管理计划.json",
+      "title": "资源管理计划",
+      "description": "作为项目管理计划的一部分，资源管理计划提供了关于如何分类、分配、管理和释放项目资源的指南。资源管理计划可以根据项目的具体情况分为团队管理计划和实物资源管理计划。资源管理计划可能包括（但不限于）：",
+      "tags": [
+        "规划过程组",
+        "规划资源管理"
+      ],
+      "wordCount": 747,
+      "updateTime": "2026-03-29T15:52:18.841Z",
+      "order": 68
+    },
+    {
+      "id": "article-1774800126520",
       "filename": "资源分解结构.json",
       "title": "资源分解结构",
-      "description": "",
+      "description": "资源分解结构是资源依类别和类型的层级展现（见图 9-7）。",
       "tags": [
         "规划过程组",
         "估算活动资源"
       ],
       "wordCount": 146,
-      "updateTime": "2026-03-29T14:58:37.572Z",
-      "order": 55
+      "updateTime": "2026-03-29T15:52:18.840Z",
+      "order": 69
     },
     {
-      "id": "article-1774797037402",
+      "id": "article-1774800126519",
       "filename": "责任分配矩阵.json",
       "title": "责任分配矩阵",
-      "description": "",
+      "description": "责任分配矩阵。责任分配矩阵展示项目资源在各个工作包中的任务分配。",
       "tags": [
         "规划过程组",
         "规划资源管理"
       ],
       "wordCount": 398,
-      "updateTime": "2026-03-29T14:58:37.565Z",
-      "order": 62
+      "updateTime": "2026-03-29T15:52:18.836Z",
+      "order": 75
     },
     {
-      "id": "article-1774797037398",
+      "id": "article-1774800126517",
       "filename": "规划资源管理.json",
       "title": "规划资源管理",
-      "description": "",
+      "description": "规划资源管理是定义如何估算、获取、管理和利用团队以及实物资源的过程。",
       "tags": [
         "规划过程组",
         "规划资源管理"
       ],
       "wordCount": 279,
-      "updateTime": "2026-03-29T14:58:37.557Z",
-      "order": 71
+      "updateTime": "2026-03-29T15:52:18.829Z",
+      "order": 84
     },
     {
-      "id": "article-1774797037394",
+      "id": "article-1774800126515",
       "filename": "虚拟团队.json",
       "title": "虚拟团队",
-      "description": "",
+      "description": "虚拟团队的使用为招募项目团队成员提供了新的可能性。",
       "tags": [
         "执行过程组",
         "获取资源"
       ],
       "wordCount": 362,
-      "updateTime": "2026-03-29T14:58:37.549Z",
-      "order": 80
+      "updateTime": "2026-03-29T15:52:18.821Z",
+      "order": 94
     },
     {
-      "id": "article-1774797037393",
+      "id": "article-1774800126515",
       "filename": "获取资源.json",
       "title": "获取资源",
-      "description": "",
+      "description": "获取资源是获取项目所需的团队成员、设施、设备、材料、用品和其他资源的过程。",
       "tags": [
         "执行过程组",
         "获取资源"
       ],
       "wordCount": 548,
-      "updateTime": "2026-03-29T14:58:37.548Z",
-      "order": 81
+      "updateTime": "2026-03-29T15:52:18.820Z",
+      "order": 95
     },
     {
-      "id": "article-1774797037386",
+      "id": "article-1774800126513",
       "filename": "组织理论.json",
       "title": "组织理论",
-      "description": "",
+      "description": "组织理论阐述个人、团队和组织部门的行为方式。",
       "tags": [
         "规划过程组",
         "规划资源管理"
       ],
       "wordCount": 139,
-      "updateTime": "2026-03-29T14:58:37.536Z",
-      "order": 94
+      "updateTime": "2026-03-29T15:52:18.810Z",
+      "order": 109
     },
     {
-      "id": "article-1774797037381",
+      "id": "article-1774800126511",
       "filename": "管理团队.json",
       "title": "管理团队",
-      "description": "",
+      "description": "管理团队是跟踪团队成员工作表现，提供反馈，解决问题并管理团队变更，以优化项目绩效的过程。",
       "tags": [
         "执行过程组",
-        "管理团队"
+        "管理团队",
+        "PMP"
       ],
       "wordCount": 328,
-      "updateTime": "2026-03-29T14:58:37.527Z",
-      "order": 104
+      "updateTime": "2026-03-29T15:52:18.804Z",
+      "order": 119
     },
     {
-      "id": "article-1774797037366",
+      "id": "article-1774800126505",
       "filename": "控制资源.json",
       "title": "控制资源",
-      "description": "",
+      "description": "控制资源是确保按计划为项目分配实物资源，以及根据资源使用计划监督资源实际使用情况，并采取必要纠正措施的过程。",
       "tags": [
         "监控过程组",
         "控制资源"
       ],
       "wordCount": 444,
-      "updateTime": "2026-03-29T14:58:37.495Z",
-      "order": 138
+      "updateTime": "2026-03-29T15:52:18.780Z",
+      "order": 149
     },
     {
-      "id": "article-1774797037357",
+      "id": "article-1774800126502",
       "filename": "建设团队.json",
       "title": "建设团队",
-      "description": "",
+      "description": "建设团队是提高工作能力，促进团队成员互动，改善团队整体氛围，以提高项目绩效的过程。",
       "tags": [
         "执行过程组",
         "建设团队"
       ],
       "wordCount": 1298,
-      "updateTime": "2026-03-29T14:58:37.483Z",
-      "order": 153
+      "updateTime": "2026-03-29T15:52:18.765Z",
+      "order": 170
     },
     {
-      "id": "article-1774797037354",
+      "id": "article-1774800126501",
       "filename": "实物资源分配单.json",
       "title": "实物资源分配单",
-      "description": "",
+      "description": "实物资源分配单记录了项目将使用的材料、设备、用品、地点和其他实物资源。",
       "tags": [
         "执行过程组",
         "获取资源"
       ],
       "wordCount": 35,
-      "updateTime": "2026-03-29T14:58:37.478Z",
-      "order": 161
+      "updateTime": "2026-03-29T15:52:18.763Z",
+      "order": 173
     },
     {
-      "id": "article-1774797037347",
-      "filename": "团队绩效评价.json",
-      "title": "团队绩效评价",
-      "description": "",
-      "tags": [
-        "执行过程组",
-        "建设团队"
-      ],
-      "wordCount": 305,
-      "updateTime": "2026-03-29T14:58:37.469Z",
-      "order": 174
-    },
-    {
-      "id": "article-1774797037347",
+      "id": "article-1774800126498",
       "filename": "团队章程.json",
       "title": "团队章程",
-      "description": "",
+      "description": "团队章程是为团队创建团队价值观、共识和工作指南的文件。团队章程可能包括（但不限于）：",
       "tags": [
         "规划过程组",
         "规划资源管理"
       ],
       "wordCount": 268,
-      "updateTime": "2026-03-29T14:58:37.468Z",
-      "order": 175
+      "updateTime": "2026-03-29T15:52:18.751Z",
+      "order": 188
     },
     {
-      "id": "article-1774797037337",
+      "id": "article-1774800126498",
+      "filename": "团队绩效评价.json",
+      "title": "团队绩效评价",
+      "description": "随着项目团队建设工作（如培训、团队建设和集中办公等）的开展，项目管理团队应该对项目团队的有效性进行正式或非正式的评价。",
+      "tags": [
+        "执行过程组",
+        "建设团队",
+        "绩效管理"
+      ],
+      "wordCount": 305,
+      "updateTime": "2026-03-29T15:52:18.751Z",
+      "order": 189
+    },
+    {
+      "id": "article-1774800126493",
       "filename": "估算活动资源.json",
       "title": "估算活动资源",
-      "description": "",
+      "description": "估算活动资源是估算执行项目所需的团队资源，以及材料、设备和用品的类型和数量的过程。",
       "tags": [
         "规划过程组",
-        "估算活动资源"
+        "估算活动资源",
+        "PMP"
       ],
       "wordCount": 333,
-      "updateTime": "2026-03-29T14:58:37.454Z",
-      "order": 198
+      "updateTime": "2026-03-29T15:52:18.637Z",
+      "order": 211
     },
     {
-      "id": "article-1774797037335",
+      "id": "article-1774800126493",
       "filename": "估算依据.json",
       "title": "估算依据",
-      "description": "",
+      "description": "见 6.4.3.2 节。资源估算所需的支持信息的数量和种类，因应用领域而异。",
       "tags": [
         "规划过程组",
         "估算活动资源"
       ],
       "wordCount": 165,
-      "updateTime": "2026-03-29T14:58:37.453Z",
-      "order": 199
+      "updateTime": "2026-03-29T15:52:18.596Z",
+      "order": 214
     }
   ]
 }

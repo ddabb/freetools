@@ -2,78 +2,78 @@
   "meta": {
     "tag": "制定预算",
     "count": 7,
-    "generatedAt": "2026-03-29T15:10:37.502Z"
+    "generatedAt": "2026-03-29T16:02:06.588Z"
   },
   "articles": [
     {
-      "id": "article-1774797037425",
+      "id": "article-1774800126528",
       "filename": "项目资金需求.json",
       "title": "项目资金需求",
-      "description": "",
+      "description": "根据成本基准，确定总资金需求和阶段性（如季度或年度）资金需求。",
       "category": "项目成本管理",
       "wordCount": 133,
-      "updateTime": "2026-03-29T14:58:37.609Z",
-      "order": 9
+      "updateTime": "2026-03-29T15:52:18.873Z",
+      "order": 21
     },
     {
-      "id": "article-1774797037406",
+      "id": "article-1774800126520",
       "filename": "资金限制平衡.json",
       "title": "资金限制平衡",
-      "description": "",
+      "description": "应该根据对项目资金的任何限制，来平衡资金支出。",
       "category": "项目成本管理",
       "wordCount": 90,
-      "updateTime": "2026-03-29T14:58:37.575Z",
-      "order": 50
+      "updateTime": "2026-03-29T15:52:18.843Z",
+      "order": 62
     },
     {
-      "id": "article-1774797037394",
+      "id": "article-1774800126515",
       "filename": "融资.json",
       "title": "融资",
-      "description": "",
+      "description": "长期的基础设施、工业和公共服务项目通常会寻求外部融资。",
       "category": "项目成本管理",
       "wordCount": 69,
-      "updateTime": "2026-03-29T14:58:37.550Z",
-      "order": 79
+      "updateTime": "2026-03-29T15:52:18.822Z",
+      "order": 92
     },
     {
-      "id": "article-1774797037360",
+      "id": "article-1774800126503",
       "filename": "成本汇总.json",
       "title": "成本汇总",
-      "description": "",
+      "description": "先把成本估算汇总到 WBS 中的工作包，再由工作包汇总至 WBS 的更高层次（如控制账户），最终得出整个项目的总成本。",
       "category": "项目成本管理",
       "wordCount": 55,
-      "updateTime": "2026-03-29T14:58:37.486Z",
-      "order": 148
+      "updateTime": "2026-03-29T15:52:18.770Z",
+      "order": 162
     },
     {
-      "id": "article-1774797037359",
+      "id": "article-1774800126503",
       "filename": "成本基准.json",
       "title": "成本基准",
-      "description": "",
+      "description": "成本基准是经过批准的、按时间段分配的项目预算，不包括任何管理储备，只有通过正式的变更控制程序才能变更，用作与实际结果进行比较的依据。",
       "category": "项目成本管理",
       "wordCount": 370,
-      "updateTime": "2026-03-29T14:58:37.484Z",
-      "order": 152
+      "updateTime": "2026-03-29T15:52:18.768Z",
+      "order": 165
     },
     {
-      "id": "article-1774797037343",
+      "id": "article-1774800126497",
       "filename": "历史信息审核.json",
       "title": "历史信息审核",
-      "description": "",
+      "description": "审核历史信息有助于进行参数估算或类比估算。",
       "category": "项目成本管理",
       "wordCount": 230,
-      "updateTime": "2026-03-29T14:58:37.464Z",
-      "order": 182
+      "updateTime": "2026-03-29T15:52:18.744Z",
+      "order": 197
     },
     {
-      "id": "article-1774797037342",
+      "id": "article-1774800126496",
       "filename": "制定预算.json",
       "title": "制定预算",
-      "description": "",
+      "description": "制定预算是汇总所有单个活动或工作包的估算成本，建立一个经批准的成本基准的过程。",
       "category": "项目成本管理",
       "wordCount": 192,
-      "updateTime": "2026-03-29T14:58:37.461Z",
-      "order": 185
+      "updateTime": "2026-03-29T15:52:18.729Z",
+      "order": 200
     }
   ]
 }

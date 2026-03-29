@@ -2,28 +2,28 @@
   "meta": {
     "tag": "数据表现",
     "count": 2,
-    "generatedAt": "2026-03-29T15:10:37.628Z"
+    "generatedAt": "2026-03-29T16:02:06.644Z"
   },
   "articles": [
     {
-      "id": "article-1774797037358",
+      "id": "article-1774800126503",
       "filename": "思维导图.json",
       "title": "思维导图",
-      "description": "",
+      "description": "把从头脑风暴中获得的创意整合成一张图，用以反映创意之间的共性与差异，激发新创意。",
       "category": "工具与技术",
       "wordCount": 40,
-      "updateTime": "2026-03-29T14:58:37.483Z",
-      "order": 155
+      "updateTime": "2026-03-29T15:52:18.767Z",
+      "order": 168
     },
     {
-      "id": "article-1774797037334",
+      "id": "article-1774800126492",
       "filename": "亲和图.json",
       "title": "亲和图",
-      "description": "",
+      "description": "用来对大量创意进行分组的技术，以便进一步审查和分析。",
       "category": "工具与技术",
       "wordCount": 26,
-      "updateTime": "2026-03-29T14:58:37.451Z",
-      "order": 203
+      "updateTime": "2026-03-29T15:52:18.589Z",
+      "order": 216
     }
   ]
 }

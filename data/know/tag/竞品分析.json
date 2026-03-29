@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "竞品分析",
+    "count": 1,
+    "generatedAt": "2026-03-29T16:02:06.569Z"
+  },
+  "articles": [
+    {
+      "id": "freetools",
+      "filename": "产品定位.json",
+      "title": "FreeTools 产品定位",
+      "description": "随身工具宝小程序的产品定位与差异化分析",
+      "category": "产品设计",
+      "wordCount": 2194,
+      "updateTime": "2026-03-29T15:57:46.809Z",
+      "order": 10
+    }
+  ]
+}

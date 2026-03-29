@@ -2,38 +2,38 @@
   "meta": {
     "tag": "定义范围",
     "count": 3,
-    "generatedAt": "2026-03-29T15:10:37.503Z"
+    "generatedAt": "2026-03-29T16:02:06.592Z"
   },
   "articles": [
     {
-      "id": "article-1774797037424",
+      "id": "article-1774800126527",
       "filename": "项目范围说明书.json",
       "title": "项目范围说明书",
-      "description": "",
+      "description": "项目范围说明书是对项目范围、主要可交付成果、假设条件和制约因素的描述。",
       "category": "项目范围管理",
       "wordCount": 593,
-      "updateTime": "2026-03-29T14:58:37.608Z",
-      "order": 11
+      "updateTime": "2026-03-29T15:52:18.872Z",
+      "order": 25
     },
     {
-      "id": "article-1774797037351",
+      "id": "article-1774800126500",
       "filename": "定义范围.json",
       "title": "定义范围",
-      "description": "",
+      "description": "本过程的主要作用是，描述产品、服务或成果的边界和验收标准。",
       "category": "项目范围管理",
       "wordCount": 430,
-      "updateTime": "2026-03-29T14:58:37.475Z",
-      "order": 164
+      "updateTime": "2026-03-29T15:52:18.758Z",
+      "order": 180
     },
     {
-      "id": "article-1774797037333",
+      "id": "article-1774800126491",
       "filename": "产品分析.json",
       "title": "产品分析",
-      "description": "",
+      "description": "产品分析可用于定义产品和服务，包括针对产品或服务提问并回答，以描述要交付的产品的用途、特征及其他方面。",
       "category": "项目范围管理",
       "wordCount": 182,
-      "updateTime": "2026-03-29T14:58:37.451Z",
-      "order": 202
+      "updateTime": "2026-03-29T15:52:18.586Z",
+      "order": 218
     }
   ]
 }

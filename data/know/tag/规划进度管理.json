@@ -2,28 +2,28 @@
   "meta": {
     "tag": "规划进度管理",
     "count": 2,
-    "generatedAt": "2026-03-29T15:10:37.555Z"
+    "generatedAt": "2026-03-29T16:02:06.609Z"
   },
   "articles": [
     {
-      "id": "article-1774797037407",
+      "id": "article-1774800126521",
       "filename": "进度管理计划.json",
       "title": "进度管理计划",
-      "description": "",
+      "description": "进度管理计划是项目管理计划的组成部分，为编制、监督和控制项目进度建立准则和明确活动。",
       "category": "项目进度管理",
       "wordCount": 718,
-      "updateTime": "2026-03-29T14:58:37.577Z",
-      "order": 46
+      "updateTime": "2026-03-29T15:52:18.845Z",
+      "order": 60
     },
     {
-      "id": "article-1774797037399",
+      "id": "article-1774800126517",
       "filename": "规划进度管理.json",
       "title": "规划进度管理",
-      "description": "",
+      "description": "规划进度管理是为规划、编制、管理、执行和控制项目进度而制定政策、程序和文档的过程。",
       "category": "项目进度管理",
       "wordCount": 85,
-      "updateTime": "2026-03-29T14:58:37.559Z",
-      "order": 67
+      "updateTime": "2026-03-29T15:52:18.830Z",
+      "order": 82
     }
   ]
 }

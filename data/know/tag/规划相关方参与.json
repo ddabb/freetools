@@ -2,28 +2,28 @@
   "meta": {
     "tag": "规划相关方参与",
     "count": 2,
-    "generatedAt": "2026-03-29T15:10:37.590Z"
+    "generatedAt": "2026-03-29T16:02:06.620Z"
   },
   "articles": [
     {
-      "id": "article-1774797037397",
+      "id": "article-1774800126517",
       "filename": "规划相关方参与.json",
       "title": "规划相关方参与",
-      "description": "",
+      "description": "规划相关方参与是根据相关方的需求、期望、利益和对项目的潜在影响，制定项目相关方参与项目的方法的过程。",
       "category": "项目相关方管理",
       "wordCount": 441,
-      "updateTime": "2026-03-29T14:58:37.555Z",
-      "order": 74
+      "updateTime": "2026-03-29T15:52:18.827Z",
+      "order": 87
     },
     {
-      "id": "article-1774797037379",
+      "id": "article-1774800126510",
       "filename": "相关方参与计划.json",
       "title": "相关方参与计划",
-      "description": "",
+      "description": "它确定用于促进相关方有效参与决策和执行的策略和行动。",
       "category": "项目相关方管理",
       "wordCount": 125,
-      "updateTime": "2026-03-29T14:58:37.522Z",
-      "order": 109
+      "updateTime": "2026-03-29T15:52:18.801Z",
+      "order": 121
     }
   ]
 }
