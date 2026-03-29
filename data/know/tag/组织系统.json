@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "tag": "组织系统",
+    "count": 2,
+    "generatedAt": "2026-03-29T14:57:05.930Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225858",
+      "filename": "项目管理办公室.json",
+      "title": "项目管理办公室",
+      "description": "",
+      "category": "项目运行环境",
+      "wordCount": 804,
+      "updateTime": "2026-03-29T14:26:13.294Z",
+      "order": 63
+    },
+    {
+      "id": "article-1774796225844",
+      "filename": "组织结构选择的考虑因素.json",
+      "title": "组织结构选择的考虑因素",
+      "description": "",
+      "category": "项目运行环境",
+      "wordCount": 254,
+      "updateTime": "2026-03-29T14:26:13.292Z",
+      "order": 64
+    }
+  ]
+}

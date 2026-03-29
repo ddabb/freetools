@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "tag": "实施采购",
+    "count": 4,
+    "generatedAt": "2026-03-29T14:57:05.917Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225833",
+      "filename": "投标人会议.json",
+      "title": "投标人会议",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 101,
+      "updateTime": "2026-03-29T14:26:13.333Z",
+      "order": 29
+    },
+    {
+      "id": "article-1774796225830",
+      "filename": "实施采购.json",
+      "title": "实施采购",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 144,
+      "updateTime": "2026-03-29T14:26:13.331Z",
+      "order": 30
+    },
+    {
+      "id": "article-1774796225826",
+      "filename": "卖方建议书.json",
+      "title": "卖方建议书",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 124,
+      "updateTime": "2026-03-29T14:26:13.330Z",
+      "order": 31
+    },
+    {
+      "id": "article-1774796225825",
+      "filename": "协议.json",
+      "title": "协议",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 228,
+      "updateTime": "2026-03-29T14:26:13.328Z",
+      "order": 32
+    }
+  ]
+}

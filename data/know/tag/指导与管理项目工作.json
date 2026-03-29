@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "tag": "指导与管理项目工作",
+    "count": 6,
+    "generatedAt": "2026-03-29T14:57:05.988Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225857",
+      "filename": "项目管理信息系统.json",
+      "title": "项目管理信息系统",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 109,
+      "updateTime": "2026-03-29T14:26:13.181Z",
+      "order": 148
+    },
+    {
+      "id": "article-1774796225834",
+      "filename": "指导与管理项目工作.json",
+      "title": "指导与管理项目工作",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 520,
+      "updateTime": "2026-03-29T14:26:13.179Z",
+      "order": 149
+    },
+    {
+      "id": "article-1774796225855",
+      "filename": "问题日志.json",
+      "title": "问题日志",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 257,
+      "updateTime": "2026-03-29T14:26:13.179Z",
+      "order": 150
+    },
+    {
+      "id": "article-1774796225831",
+      "filename": "工作绩效数据.json",
+      "title": "工作绩效数据",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 210,
+      "updateTime": "2026-03-29T14:26:13.178Z",
+      "order": 151
+    },
+    {
+      "id": "article-1774796225827",
+      "filename": "可交付成果.json",
+      "title": "可交付成果",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 137,
+      "updateTime": "2026-03-29T14:26:13.177Z",
+      "order": 152
+    },
+    {
+      "id": "article-1774796225827",
+      "filename": "变更请求.json",
+      "title": "变更请求",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 362,
+      "updateTime": "2026-03-29T14:26:13.175Z",
+      "order": 153
+    }
+  ]
+}

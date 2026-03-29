@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "tag": "创建WBS",
+    "count": 3,
+    "generatedAt": "2026-03-29T14:57:05.951Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225847",
+      "filename": "范围基准.json",
+      "title": "范围基准",
+      "description": "",
+      "category": "项目范围管理",
+      "wordCount": 692,
+      "updateTime": "2026-03-29T14:26:13.241Z",
+      "order": 108
+    },
+    {
+      "id": "wbs",
+      "filename": "创建WBS.json",
+      "title": "创建WBS",
+      "description": "",
+      "category": "项目范围管理",
+      "wordCount": 324,
+      "updateTime": "2026-03-29T14:26:13.240Z",
+      "order": 109
+    },
+    {
+      "id": "article-1774796225824",
+      "filename": "分解.json",
+      "title": "分解",
+      "description": "",
+      "category": "项目范围管理",
+      "wordCount": 984,
+      "updateTime": "2026-03-29T14:26:13.238Z",
+      "order": 110
+    }
+  ]
+}

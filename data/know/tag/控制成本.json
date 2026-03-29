@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "tag": "控制成本",
+    "count": 2,
+    "generatedAt": "2026-03-29T14:57:05.995Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225829",
+      "filename": "完工尚需绩效指数.json",
+      "title": "完工尚需绩效指数",
+      "description": "",
+      "category": "项目成本管理",
+      "wordCount": 494,
+      "updateTime": "2026-03-29T14:26:13.143Z",
+      "order": 171
+    },
+    {
+      "id": "article-1774796225834",
+      "filename": "控制成本.json",
+      "title": "控制成本",
+      "description": "",
+      "category": "项目成本管理",
+      "wordCount": 494,
+      "updateTime": "2026-03-29T14:26:13.143Z",
+      "order": 172
+    }
+  ]
+}

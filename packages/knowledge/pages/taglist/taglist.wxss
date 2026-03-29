@@ -1,0 +1,95 @@
+/* packages/knowledge/pages/taglist/taglist.wxss */
+
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.page-header {
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.page-subtitle {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.tag-list {
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  padding: 20rpx;
+  overflow: hidden;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background-color: #f0f8ff;
+  border-radius: 20rpx;
+  border: 1rpx solid #e0f0ff;
+  margin-right: 16rpx;
+  margin-bottom: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+  background-color: #e0f0ff;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(41, 128, 185, 0.15);
+}
+
+.tag-name {
+  font-size: 24rpx;
+  color: #2980b9;
+  margin-right: 12rpx;
+}
+
+.tag-count {
+  font-size: 20rpx;
+  color: #999;
+  background-color: #fff;
+  padding: 4rpx 8rpx;
+  border-radius: 10rpx;
+  min-width: 32rpx;
+  text-align: center;
+}
+
+.loading-state, .error-state, .empty-state {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.retry-btn {
+  margin-top: 20rpx;
+  padding: 12rpx 40rpx;
+  font-size: 24rpx;
+  color: #2980b9;
+  border: 1rpx solid #2980b9;
+  border-radius: 8rpx;
+  background-color: #fff;
+}
+
+.retry-btn:hover {
+  background-color: #f0f8ff;
+}

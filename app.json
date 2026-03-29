@@ -124,6 +124,16 @@
       ]
     },
     {
+      "root": "packages/knowledge",
+      "name": "knowledge",
+      "pages": [
+        "pages/knowledgelist/knowledgelist",
+        "pages/knowledgedetail/knowledgedetail",
+        "pages/categorylist/categorylist",
+        "pages/taglist/taglist"
+      ]
+    },
+    {
       "root": "packages/unit",
       "name": "unit",
       "pages": [

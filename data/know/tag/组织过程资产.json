@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "tag": "组织过程资产",
+    "count": 2,
+    "generatedAt": "2026-03-29T14:57:05.928Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225845",
+      "filename": "组织过程资产.json",
+      "title": "组织过程资产",
+      "description": "",
+      "category": "项目运行环境",
+      "wordCount": 440,
+      "updateTime": "2026-03-29T14:26:13.297Z",
+      "order": 61
+    },
+    {
+      "id": "article-1774796225844",
+      "filename": "组织知识库.json",
+      "title": "组织知识库",
+      "description": "",
+      "category": "项目运行环境",
+      "wordCount": 309,
+      "updateTime": "2026-03-29T14:26:13.295Z",
+      "order": 62
+    }
+  ]
+}

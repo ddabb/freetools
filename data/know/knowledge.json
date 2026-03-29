@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "generatedAt": "2026-03-29T14:57:06.372Z",
+    "totalArticles": 209,
+    "totalCategories": 16,
+    "totalTags": 70
+  },
+  "categories": [
+    {
+      "name": "项目进度管理",
+      "count": 28
+    },
+    {
+      "name": "项目整合管理",
+      "count": 26
+    },
+    {
+      "name": "项目资源管理",
+      "count": 20
+    },
+    {
+      "name": "工具与技术",
+      "count": 19
+    },
+    {
+      "name": "项目范围管理",
+      "count": 17
+    },
+    {
+      "name": "项目风险管理",
+      "count": 16
+    },
+    {
+      "name": "项目采购管理",
+      "count": 16
+    },
+    {
+      "name": "引论",
+      "count": 16
+    },
+    {
+      "name": "项目成本管理",
+      "count": 12
+    },
+    {
+      "name": "项目质量管理",
+      "count": 11
+    },
+    {
+      "name": "项目经理的角色",
+      "count": 10
+    },
+    {
+      "name": "项目相关方管理",
+      "count": 7
+    },
+    {
+      "name": "项目运行环境",
+      "count": 5
+    },
+    {
+      "name": "项目沟通管理",
+      "count": 4
+    },
+    {
+      "name": "数据流向图",
+      "count": 1
+    },
+    {
+      "name": "未分类",
+      "count": 1
+    }
+  ],
+  "recentArticles": [
+    {
+      "id": "article-1774796225861",
+      "filename": "风险登记册.json",
+      "title": "风险登记册",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.366Z"
+    },
+    {
+      "id": "article-1774796225860",
+      "filename": "风险报告.json",
+      "title": "风险报告",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.365Z"
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "识别风险.json",
+      "title": "识别风险",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.364Z"
+    },
+    {
+      "id": "article-1774796225836",
+      "filename": "提示清单.json",
+      "title": "提示清单",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.363Z"
+    },
+    {
+      "id": "article-1774796225850",
+      "filename": "规划风险管理.json",
+      "title": "规划风险管理",
+      "description": "",
+      "category": "项目风险管理",
+      "updateTime": "2026-03-29T14:26:13.362Z"
+    }
+  ],
+  "popularTags": [
+    "规划过程组",
+    "执行过程组",
+    "监控过程组",
+    "基本要素",
+    "规划采购管理",
+    "制定进度计划",
+    "启动过程组",
+    "制定项目章程",
+    "制定预算",
+    "数据收集"
+  ]
+}

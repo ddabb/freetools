@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "category": "项目运行环境",
+    "count": 5,
+    "generatedAt": "2026-03-29T14:57:05.871Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225845",
+      "filename": "组织过程资产.json",
+      "title": "组织过程资产",
+      "description": "",
+      "tags": [
+        "组织过程资产"
+      ],
+      "wordCount": 440,
+      "updateTime": "2026-03-29T14:26:13.297Z",
+      "order": 61
+    },
+    {
+      "id": "article-1774796225844",
+      "filename": "组织知识库.json",
+      "title": "组织知识库",
+      "description": "",
+      "tags": [
+        "组织过程资产"
+      ],
+      "wordCount": 309,
+      "updateTime": "2026-03-29T14:26:13.295Z",
+      "order": 62
+    },
+    {
+      "id": "article-1774796225858",
+      "filename": "项目管理办公室.json",
+      "title": "项目管理办公室",
+      "description": "",
+      "tags": [
+        "组织系统",
+        "组织结构类型"
+      ],
+      "wordCount": 804,
+      "updateTime": "2026-03-29T14:26:13.294Z",
+      "order": 63
+    },
+    {
+      "id": "article-1774796225844",
+      "filename": "组织结构选择的考虑因素.json",
+      "title": "组织结构选择的考虑因素",
+      "description": "",
+      "tags": [
+        "组织系统",
+        "组织结构类型"
+      ],
+      "wordCount": 254,
+      "updateTime": "2026-03-29T14:26:13.292Z",
+      "order": 64
+    },
+    {
+      "id": "article-1774796225821",
+      "filename": "事业环境因素.json",
+      "title": "事业环境因素",
+      "description": "",
+      "tags": [
+        "事业环境因素"
+      ],
+      "wordCount": 228,
+      "updateTime": "2026-03-29T14:26:13.289Z",
+      "order": 65
+    }
+  ]
+}

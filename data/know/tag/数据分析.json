@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tag": "数据分析",
+    "count": 1,
+    "generatedAt": "2026-03-29T14:57:06.008Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225832",
+      "filename": "成本效益分析.json",
+      "title": "成本效益分析",
+      "description": "",
+      "category": "工具与技术",
+      "wordCount": 154,
+      "updateTime": "2026-03-29T14:26:13.013Z",
+      "order": 199
+    }
+  ]
+}

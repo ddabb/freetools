@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "tag": "指南概述和目的",
+    "count": 4,
+    "generatedAt": "2026-03-29T14:57:06.000Z"
+  },
+  "articles": [
+    {
+      "id": "article-1774796225858",
+      "filename": "项目管理标准.json",
+      "title": "项目管理标准",
+      "description": "",
+      "category": "引论",
+      "wordCount": 496,
+      "updateTime": "2026-03-29T14:26:13.140Z",
+      "order": 174
+    },
+    {
+      "id": "article-1774796225853",
+      "filename": "道德与专业行为规范.json",
+      "title": "道德与专业行为规范",
+      "description": "",
+      "category": "引论",
+      "wordCount": 326,
+      "updateTime": "2026-03-29T14:26:13.139Z",
+      "order": 175
+    },
+    {
+      "id": "article-1774796225853",
+      "filename": "通用词汇.json",
+      "title": "通用词汇",
+      "description": "",
+      "category": "引论",
+      "wordCount": 142,
+      "updateTime": "2026-03-29T14:26:13.137Z",
+      "order": 176
+    },
+    {
+      "id": "article-1774796225834",
+      "filename": "指南概述和目的.json",
+      "title": "指南概述和目的",
+      "description": "",
+      "category": "引论",
+      "wordCount": 918,
+      "updateTime": "2026-03-29T14:26:13.136Z",
+      "order": 177
+    }
+  ]
+}
