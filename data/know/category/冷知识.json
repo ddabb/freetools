@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "category": "冷知识",
+    "count": 1,
+    "generatedAt": "2026-03-29T13:48:30.018Z"
+  },
+  "articles": [
+    {
+      "id": "cold-id-photo",
+      "title": "为什么身份证照片都是白底？",
+      "description": "揭秘身份证照片的配色原理",
+      "tags": [
+        "生活",
+        "冷知识",
+        "身份证"
+      ],
+      "wordCount": 336,
+      "updateTime": "2026-03-29T13:47:44.764Z",
+      "order": 1
+    }
+  ]
+}

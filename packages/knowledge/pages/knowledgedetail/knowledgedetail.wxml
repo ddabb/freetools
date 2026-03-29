@@ -1,0 +1,62 @@
+<!-- packages/knowledge/pages/knowledgedetail/knowledgedetail.wxml -->
+
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error && !loading}}">
+    <text>{{errorMsg}}</text>
+  </view>
+
+  <!-- 文章内容 -->
+  <view class="article-detail" wx:if="{{article && !loading && !error}}">
+    <!-- 文章头部 -->
+    <view class="article-header">
+      <text class="article-title">{{article.title}}</text>
+      <view class="article-info">
+        <text class="category" bindtap="onCategoryTap">{{article.category}}</text>
+        <text class="word-count">{{article.wordCount}} 字</text>
+        <text class="update-time">{{article.updateTime}}</text>
+      </view>
+    </view>
+
+    <!-- 文章描述 -->
+    <view class="article-description">
+      <text>{{article.description}}</text>
+    </view>
+
+    <!-- 文章内容 -->
+    <view class="article-content">
+      <rich-text nodes="{{article.content}}"></rich-text>
+    </view>
+
+    <!-- 标签 -->
+    <view class="tags-section" wx:if="{{article.tags && article.tags.length > 0}}">
+      <text class="tags-label">标签：</text>
+      <view class="tags">
+        <text 
+          class="tag" 
+          wx:for="{{article.tags}}" 
+          wx:key="*this"
+          data-tag="{{item}}"
+          bindtap="onTagTap"
+        >
+          #{{item}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        class="btn-share" 
+        open-type="share"
+      >
+        分享
+      </button>
+    </view>
+  </view>
+</view>

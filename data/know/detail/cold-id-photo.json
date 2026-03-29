@@ -1,0 +1,16 @@
+{
+  "id": "cold-id-photo",
+  "title": "为什么身份证照片都是白底？",
+  "description": "揭秘身份证照片的配色原理",
+  "category": "冷知识",
+  "tags": [
+    "生活",
+    "冷知识",
+    "身份证"
+  ],
+  "content": "<h1>为什么身份证照片都是白底？</h1>\n<h2>标准规定</h2>\n<p>根据《中华人民共和国居民身份证制证用数字相片技术要求》：</p>\n<h3>三大原因</h3>\n<h4>1. 便于人脸识别</h4>\n<ul>\n<li>白色背景便于抠图和后续处理</li>\n<li>高对比度有利于算法识别</li>\n<li>减少背景干扰</li>\n</ul>\n<h4>2. 标准统一</h4>\n<ul>\n<li>全球通用的证件照标准</li>\n<li>便于国际交流和识别</li>\n<li>提高安全性</li>\n</ul>\n<h4>3. 对比度最佳</h4>\n<ul>\n<li>白底让人脸特征更突出</li>\n<li>便于肉眼识别</li>\n<li>印刷效果最佳</li>\n</ul>\n<h2>其他证件照标准</h2>\n<table>\n<thead>\n<tr>\n<th>证件</th>\n<th>背景色</th>\n<th>说明</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>身份证</td>\n<td>白色</td>\n<td>国内标准</td>\n</tr>\n<tr>\n<td>港澳通行证</td>\n<td>蓝色</td>\n<td>区域特色</td>\n</tr>\n<tr>\n<td>护照</td>\n<td>白色/淡蓝</td>\n<td>国际标准</td>\n</tr>\n<tr>\n<td>驾驶证</td>\n<td>白色</td>\n<td>国内标准</td>\n</tr>\n</tbody>\n</table>\n<h2>小知识</h2>\n<p>💡 <strong>你知道吗？</strong> 身份证照片的白底不是真的白色，而是 RGB(255, 255, 255) 的纯白色，这样便于数字处理。</p>\n",
+  "wordCount": 336,
+  "birthtime": "2026-03-29T13:47:44.764Z",
+  "updateTime": "2026-03-29T13:47:44.764Z",
+  "order": 1
+}

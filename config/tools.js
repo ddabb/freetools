@@ -529,6 +529,17 @@ const tools = [
     keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
     description: '判断图形是否可以一笔画成并给出路径',
     publish: false
+  },
+  {
+    id: 'knowledge-query',
+    name: '知识查询',
+    icon: '📚',
+    color: 'blue',
+    url: '/packages/knowledge/pages/knowledgelist/knowledgelist',
+    categories: ['学习工具', '知识工具'],
+    keywords: ['知识', '查询', '学习', '备考', 'PMP'],
+    description: '查询各类知识，支持标签过滤和搜索',
+    publish: true
   }
 ];
 

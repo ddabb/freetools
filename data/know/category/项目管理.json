@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "category": "项目管理",
+    "count": 2,
+    "generatedAt": "2026-03-29T13:48:30.019Z"
+  },
+  "articles": [
+    {
+      "id": "pmp-knowledge-areas",
+      "title": "十大知识领域速记",
+      "description": "项目管理的十大知识领域及其关系",
+      "tags": [
+        "PMP",
+        "知识领域",
+        "速记"
+      ],
+      "wordCount": 879,
+      "updateTime": "2026-03-29T13:47:36.372Z",
+      "order": 2
+    },
+    {
+      "id": "pmp-process-groups",
+      "title": "PMP五大过程组详解",
+      "description": "启动、规划、执行、监控、收尾五大过程组的详细说明",
+      "tags": [
+        "PMP",
+        "项目管理",
+        "过程组"
+      ],
+      "wordCount": 530,
+      "updateTime": "2026-03-29T13:47:26.926Z",
+      "order": 3
+    }
+  ]
+}

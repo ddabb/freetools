@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "generatedAt": "2026-03-29T13:48:30.016Z",
+    "totalArticles": 3,
+    "totalCategories": 2,
+    "totalTags": 8
+  },
+  "taxonomy": {
+    "categories": {
+      "冷知识": 1,
+      "项目管理": 2
+    },
+    "tags": {
+      "生活": 1,
+      "冷知识": 1,
+      "身份证": 1,
+      "PMP": 2,
+      "知识领域": 1,
+      "速记": 1,
+      "项目管理": 1,
+      "过程组": 1
+    }
+  },
+  "articles": [
+    {
+      "id": "cold-id-photo",
+      "title": "为什么身份证照片都是白底？",
+      "description": "揭秘身份证照片的配色原理",
+      "category": "冷知识",
+      "tags": [
+        "生活",
+        "冷知识",
+        "身份证"
+      ],
+      "wordCount": 336,
+      "birthtime": "2026-03-29T13:47:44.764Z",
+      "updateTime": "2026-03-29T13:47:44.764Z",
+      "order": 1
+    },
+    {
+      "id": "pmp-knowledge-areas",
+      "title": "十大知识领域速记",
+      "description": "项目管理的十大知识领域及其关系",
+      "category": "项目管理",
+      "tags": [
+        "PMP",
+        "知识领域",
+        "速记"
+      ],
+      "wordCount": 879,
+      "birthtime": "2026-03-29T13:47:36.372Z",
+      "updateTime": "2026-03-29T13:47:36.372Z",
+      "order": 2
+    },
+    {
+      "id": "pmp-process-groups",
+      "title": "PMP五大过程组详解",
+      "description": "启动、规划、执行、监控、收尾五大过程组的详细说明",
+      "category": "项目管理",
+      "tags": [
+        "PMP",
+        "项目管理",
+        "过程组"
+      ],
+      "wordCount": 530,
+      "birthtime": "2026-03-29T13:47:26.925Z",
+      "updateTime": "2026-03-29T13:47:26.926Z",
+      "order": 3
+    }
+  ]
+}
