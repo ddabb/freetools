@@ -13,14 +13,7 @@
         <text class="tab-icon">📅</text>
         <text class="tab-name">每日数独</text>
       </view>
-      <view 
-        class="mode-tab {{mode === 'preset' ? 'active' : ''}}" 
-        bindtap="switchMode" 
-        data-mode="preset"
-      >
-        <text class="tab-icon">📚</text>
-        <text class="tab-name">预设题目</text>
-      </view>
+
       <view 
         class="mode-tab {{mode === 'paste' ? 'active' : ''}}" 
         bindtap="switchMode" 
@@ -47,14 +40,12 @@
     <text class="daily-hint">💡 每日一题，全球同题</text>
   </view>
 
-  <!-- 快速导入区域（预设和粘贴模式） -->
-  <view class="import-section" wx:if="{{mode === 'preset' || mode === 'paste'}}">
+  <!-- 粘贴模式 -->
+  <view class="import-section" wx:if="{{mode === 'paste'}}">
     <view class="section-header">
       <text class="section-title">📋 快速导入</text>
     </view>
-    
-    <!-- 粘贴模式 -->
-    <view class="import-content" wx:if="{{mode === 'paste'}}">
+    <view class="import-content">
       <view class="paste-hint">支持3种格式：81位字符串、纯数字、9行格式</view>
       <textarea 
         class="paste-input" 
@@ -66,25 +57,6 @@
       <view class="paste-actions">
         <button class="btn-sm" bindtap="importPasted">📥 导入</button>
         <button class="btn-sm btn-outline" bindtap="clearPasted">清空</button>
-      </view>
-    </view>
-    
-    <!-- 预设模式 -->
-    <view class="import-content" wx:if="{{mode === 'preset'}}">
-      <view class="preset-grid">
-        <view 
-          class="preset-item {{selectedPreset === index ? 'active' : ''}}" 
-          wx:for="{{presetList}}"
-          wx:key="index"
-          bindtap="selectPreset" 
-          data-index="{{index}}"
-        >
-          <text class="preset-name">{{item.name}}</text>
-          <text class="preset-level">{{item.level}}</text>
-        </view>
-      </view>
-      <view class="preset-actions">
-        <button class="btn-sm" bindtap="importPreset">📥 使用此题</button>
       </view>
     </view>
   </view>
@@ -129,7 +101,7 @@
           
           <!-- 空格子 -->
           <view class="cell-empty" wx:else>
-            <text class="empty-placeholder">+</text>
+            <text class="empty-placeholder"></text>
           </view>
         </view>
       </view>
