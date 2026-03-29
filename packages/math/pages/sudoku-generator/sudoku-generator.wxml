@@ -58,7 +58,7 @@
         >
           <!-- 已有数字 -->
           <view class="cell-value" wx:if="{{cell.value && !cell.showCandidates}}">
-            <text class="value-text {{showingAnswer ? 'answer' : ''}}">{{showingAnswer ? answerBoard[rowIndex][colIndex] : cell.value}}</text>
+            <text class="value-text {{cell.isAnswer ? 'answer' : ''}} {{cell.isError ? 'error' : ''}}">{{cell.value}}</text>
           </view>
           
           <!-- 候选解显示 -->

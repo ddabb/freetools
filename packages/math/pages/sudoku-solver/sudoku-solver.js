@@ -33,7 +33,7 @@ Page({
     this.loadDailySudoku();
   },
 
-  // 加载每日数独
+  // 加载每日数独（带缓存功能）
   loadDailySudoku() {
     const today = new Date();
     const year = today.getFullYear();
@@ -49,30 +49,50 @@ Page({
     if (cached && timestamp) {
       const cacheDate = new Date(timestamp).toDateString();
       const todayStr = today.toDateString();
+      console.log(`[daily-sudoku] 缓存日期: ${cacheDate}, 今日日期: ${todayStr}`);
       if (cacheDate === todayStr) {
         console.log('[daily-sudoku] 使用今日缓存');
+        console.log('[daily-sudoku] 题目名称:', cached.name);
+        console.log('[daily-sudoku] 难度:', cached.level, cached.difficulty);
         this.setTodaySudoku(cached);
         return;
+      } else {
+        console.log('[daily-sudoku] 缓存过期，重新从CDN加载');
       }
+    } else {
+      console.log('[daily-sudoku] 无缓存或缓存无效，从CDN加载');
     }
 
-    console.log('[daily-sudoku] 从CDN加载');
+    console.log(`[daily-sudoku] 从CDN加载: ${CDN_BASE}/sudoku/${dateStr}.json`);
+    console.log(`[daily-sudoku] 当前日期: ${year}-${month}-${day}`);
+    
     wx.request({
       url: `${CDN_BASE}/sudoku/${dateStr}.json`,
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        console.log(`[daily-sudoku] CDN响应状态码: ${res.statusCode}`);
         if (res.statusCode === 200 && res.data) {
+          console.log('[daily-sudoku] CDN数据加载成功，保存到缓存');
+          console.log('[daily-sudoku] 题目名称:', res.data.name);
+          console.log('[daily-sudoku] 难度:', res.data.level, res.data.difficulty);
+          console.log('[daily-sudoku] 题目数据:', JSON.stringify(res.data.puzzle));
           // 保存到缓存
           wx.setStorageSync(DAILY_KEY, res.data);
           wx.setStorageSync(DAILY_TS_KEY, now);
           this.setTodaySudoku(res.data);
+        } else if (res.statusCode === 404) {
+          console.warn('[daily-sudoku] CDN没有对应日期的数据，随机生成题目');
+          this.generateRandomSudoku();
+        } else {
+          console.warn('[daily-sudoku] CDN数据格式错误，使用随机题目');
+          this.generateRandomSudoku();
         }
       },
       fail: (err) => {
         console.warn('[daily-sudoku] CDN加载失败', err);
-        // 使用本地备用
-        this.useLocalDailySudoku();
+        console.log('[daily-sudoku] 使用随机题目');
+        this.generateRandomSudoku();
       }
     });
   },
@@ -128,6 +148,41 @@ Page({
     };
 
     this.setTodaySudoku(localData);
+  },
+
+  // 随机生成数独题目
+  generateRandomSudoku() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    console.log('[daily-sudoku] 开始随机生成数独题目');
+    
+    try {
+      // 使用数独生成器生成题目
+      const generatedPuzzle = sudoku.generate({ emptyCells: 40 }); // 生成40个空格的题目
+      
+      const randomData = {
+        date: `${year}-${month}-${day}`,
+        name: `${year}年${month}月${day}日随机数独`,
+        level: '★★☆☆☆',
+        difficulty: '中等',
+        puzzle: generatedPuzzle,
+        emptyCells: 40
+      };
+      
+      console.log('[daily-sudoku] 随机题目生成成功');
+      console.log('[daily-sudoku] 题目名称:', randomData.name);
+      console.log('[daily-sudoku] 难度:', randomData.level, randomData.difficulty);
+      console.log('[daily-sudoku] 题目数据:', JSON.stringify(randomData.puzzle));
+      
+      this.setTodaySudoku(randomData);
+    } catch (error) {
+      console.error('[daily-sudoku] 随机题目生成失败:', error);
+      console.log('[daily-sudoku] 使用本地备用数独');
+      this.useLocalDailySudoku();
+    }
   },
 
   // 切换模式
@@ -272,48 +327,17 @@ Page({
       grid.push(row);
     }
     
-    console.log('当前棋盘数据:', grid);
-    
     // 使用与生成器相同的 toDisplayBoard 函数
     const displayBoard = sudoku.toDisplayBoard(grid, true);
-    console.log('使用toDisplayBoard后的数据:', displayBoard);
     
     // 更新棋盘数据
-    let totalCandidates = 0;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         board[r][c].candidates = displayBoard[r][c].candidates;
-        if (grid[r][c] === 0) {
-          console.log(`格子[${r}][${c}]的候选数:`, board[r][c].candidates, '长度:', board[r][c].candidates.length);
-          totalCandidates += board[r][c].candidates.length;
-        }
       }
-    }
-    
-    console.log('总候选数数量:', totalCandidates);
-    
-    // 检查第一个空白格子的详细数据
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        if (grid[r][c] === 0) {
-          console.log('第一个空白格子的详细数据:', {
-            row: r,
-            col: c,
-            value: board[r][c].value,
-            valueType: typeof board[r][c].value,
-            candidates: board[r][c].candidates,
-            candidatesLength: board[r][c].candidates.length,
-            showCandidates: this.data.showCandidates,
-            isEmpty: board[r][c].value === ''
-          });
-          break;
-        }
-      }
-      break;
     }
     
     this.setData({ board: board });
-    console.log('候选数计算完成');
   },
 
   // 点击格子

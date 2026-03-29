@@ -8,6 +8,7 @@ Page({
     showingAnswer: false,
     answerBoard: [],
     puzzleBoard: [], // 保存原始谜题数据
+    userBoard: [], // 保存用户填写的内容
     generating: false,
     showCandidates: true,
     hasCandidates: false,
@@ -71,10 +72,21 @@ Page({
           puzzleStr.push(row);
         }
 
+        // 初始化用户填写的内容为空
+        const userBoard = [];
+        for (let r = 0; r < 9; r++) {
+          const row = [];
+          for (let c = 0; c < 9; c++) {
+            row.push('');
+          }
+          userBoard.push(row);
+        }
+
         this.setData({
           board: board,
           answerBoard: answerStr,
           puzzleBoard: puzzleStr, // 保存谜题数据
+          userBoard: userBoard, // 初始化用户填写的内容
           showingAnswer: false,
           generating: false,
           hasCandidates: this.data.showCandidates
@@ -155,7 +167,7 @@ Page({
   },
 
   toggleAnswer() {
-    const { showingAnswer, answerBoard } = this.data;
+    const { showingAnswer, answerBoard, puzzleBoard, difficulty, showCandidates } = this.data;
     
     if (!showingAnswer) {
       // 显示答案
@@ -167,13 +179,60 @@ Page({
         }
         grid.push(row);
       }
-      const answerDisplay = sudoku.toDisplayBoard(grid, false);
+      // 创建答案棋盘，确保答案单元格有特殊标记
+      const answerDisplay = [];
+      for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+          const value = grid[r][c] === 0 ? '' : String(grid[r][c]);
+          // 检查是否是原始谜题中的固定数字
+          const isFixed = puzzleBoard[r][c] !== '0';
+          row.push({
+            value: value,
+            fixed: isFixed,
+            isAnswer: !isFixed, // 标记为答案数字
+            candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            showCandidates: false
+          });
+        }
+        answerDisplay.push(row);
+      }
       this.setData({ board: answerDisplay, showingAnswer: true });
     } else {
-      // 隐藏答案
-      this.refreshBoard();
-      this.setData({ showingAnswer: false });
+      // 隐藏答案，恢复到原始谜题状态
+      this.restorePuzzle();
     }
+  },
+
+  // 恢复原始谜题状态，不显示弹窗
+  restorePuzzle() {
+    const { puzzleBoard, showCandidates, userBoard, answerBoard } = this.data;
+    
+    // 创建自定义的棋盘数据，确保只有原始题目格子是固定的
+    const board = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        const num = puzzleBoard[r][c];
+        // 优先使用用户填写的内容
+        const userValue = userBoard[r][c];
+        const value = userValue || (num === '0' ? '' : num);
+        row.push({
+          value: value,
+          fixed: num !== '0', // 只有原始题目格子是固定的
+          isError: userValue && answerBoard[r][c] !== userValue, // 检查用户填写的是否正确
+          candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          showCandidates: showCandidates && !value
+        });
+      }
+      board.push(row);
+    }
+    
+    this.setData({
+      board: board,
+      showingAnswer: false,
+      hasCandidates: showCandidates
+    });
   },
 
   // 点击格子
@@ -195,14 +254,21 @@ Page({
     const num = e.currentTarget.dataset.num;
     const { row, col } = this.data.selectedCell;
     const board = this.data.board;
+    const answerBoard = this.data.answerBoard;
+    const userBoard = this.data.userBoard;
     
     board[row][col].value = String(num);
+    // 保存用户填写的内容
+    userBoard[row][col] = String(num);
+    // 检查数字是否正确
+    board[row][col].isError = answerBoard[row][col] !== String(num);
     // 不要标记为 fixed，保持可编辑状态
     board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     board[row][col].showCandidates = false;
     
     this.setData({ 
       board: board, 
+      userBoard: userBoard,
       showInputPanel: false,
     });
     this.recalculateCandidates();
@@ -212,13 +278,17 @@ Page({
   onClearCell() {
     const { row, col } = this.data.selectedCell;
     const board = this.data.board;
+    const userBoard = this.data.userBoard;
     
     board[row][col].value = '';
+    // 清除用户填写的内容
+    userBoard[row][col] = '';
     board[row][col].fixed = false;
     board[row][col].candidates = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     
     this.setData({ 
       board: board, 
+      userBoard: userBoard,
       showInputPanel: false,
     });
     this.recalculateCandidates();

@@ -294,6 +294,11 @@ page {
   color: #1abc9c;
 }
 
+.value-text.error {
+  color: #e74c3c;
+  font-weight: 800;
+}
+
 .cell-empty {
   width: 100%;
   height: 100%;
