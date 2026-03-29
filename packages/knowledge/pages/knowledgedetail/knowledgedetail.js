@@ -334,27 +334,29 @@ Page({
   },
 
   /**
-   * 分享
+   * 分享给好友
    */
   onShareAppMessage() {
     const { article } = this.data;
     if (!article) return {};
 
     return {
-      title: article.title,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${article.id}`,
-      description: article.description
+      title: `${article.title} - 随身百科`,
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${encodeURIComponent(article.id)}`,
+      imageUrl: article.description ? `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png` : ''
     };
   },
 
+  /**
+   * 分享到朋友圈
+   */
   onShareTimeline() {
     const { article } = this.data;
     if (!article) return {};
 
     return {
-      title: article.title,
-      query: `id=${article.id}`,
-      imageUrl: ''
+      title: `📖 ${article.title}`,
+      query: `id=${encodeURIComponent(article.id)}`
     };
   }
 });

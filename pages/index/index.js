@@ -2,10 +2,17 @@
 const { commonTools, categories, allTools, toolFrequency, searchTools } = require('../../config/tools.js');
 const utils = require('../../utils/index');
 
+// 分类排序：置顶的排前面
+const sortedCategories = [...categories].sort((a, b) => {
+  if (a.pinned && !b.pinned) return -1;
+  if (!a.pinned && b.pinned) return 1;
+  return 0;
+});
+
 Page({
   data: {
-    // 分类和工具数据
-    categories: categories,
+    // 分类和工具数据（置顶的排前面）
+    categories: sortedCategories,
     activeCategory: '常用工具',
     commonTools: commonTools,
     allTools: allTools,
@@ -46,12 +53,18 @@ Page({
     });
   },
 
-  // 获取分类工具
+  // 获取分类工具（置顶的排前面）
   getToolsByCategory(categoryName) {
     if (categoryName === '常用工具') return this.data.commonTools;
     return this.data.allTools
       .filter(tool => tool.categories && tool.categories.includes(categoryName))
-      .sort((a, b) => (this.data.toolFrequency[b.id] || 0) - (this.data.toolFrequency[a.id] || 0));
+      .sort((a, b) => {
+        // 置顶的工具排前面
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        // 按使用频率排序
+        return (this.data.toolFrequency[b.id] || 0) - (this.data.toolFrequency[a.id] || 0);
+      });
   },
 
   // 获取工具分类样式

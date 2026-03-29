@@ -532,14 +532,15 @@ const tools = [
   },
   {
     id: 'knowledge-query',
-    name: '知识查询',
-    icon: '📚',
+    name: '随身百科',
+    icon: '📖',
     color: 'blue',
     url: '/packages/knowledge/pages/knowledgelist/knowledgelist',
-    categories: ['学习工具', '知识工具'],
-    keywords: ['知识', '查询', '学习', '备考', 'PMP'],
-    description: '查询各类知识，支持标签过滤和搜索',
-    publish: true
+    categories: ['学习工具', '生活工具'],
+    keywords: ['百科', '知识', '查询', '学习', 'PMP', '软考'],
+    description: '随身百科全书，精准分类随时查',
+    publish: true,
+    pinned: true
   }
 ];
 
@@ -566,6 +567,10 @@ allTools.forEach(tool => {
 
 // 常用工具（首页显示）
 const commonTools = [
+  // 置顶工具
+  tools[tools.length - 1],  // 随身百科（置顶）
+  
+  // 普通常用工具
   tools[10],  // 房贷计算
   tools[11],  // 人生A4纸
   tools[12],  // 生成二维码

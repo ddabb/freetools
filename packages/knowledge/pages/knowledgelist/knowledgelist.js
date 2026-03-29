@@ -292,5 +292,45 @@ Page({
       icon: 'none',
       duration: 2000
     });
+  },
+
+  /**
+   * 分享给好友
+   */
+  onShareAppMessage() {
+    const { currentCategory, searchKeyword, totalCount } = this.data;
+    let title = '随身百科 - 随身工具宝';
+    let desc = '精准分类随时查';
+
+    if (currentCategory) {
+      title = `${currentCategory} - 随身百科`;
+      desc = `共 ${totalCount} 篇知识文章`;
+    } else if (searchKeyword) {
+      title = `搜索"${searchKeyword.replace('#', '')}"结果`;
+      desc = `共找到 ${totalCount} 篇相关文章`;
+    } else {
+      title = `随身百科 - 共 ${totalCount} 篇知识`;
+    }
+
+    return {
+      title,
+      path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${encodeURIComponent(currentCategory)}&tag=${encodeURIComponent(searchKeyword.replace('#', ''))}`,
+      imageUrl: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png'
+    };
+  },
+
+  /**
+   * 分享到朋友圈
+   */
+  onShareTimeline() {
+    const { currentCategory, totalCount } = this.data;
+    const title = currentCategory 
+      ? `${currentCategory} - 随身百科` 
+      : `随身百科 - 共 ${totalCount} 篇知识`;
+
+    return {
+      title,
+      query: `category=${encodeURIComponent(currentCategory)}`
+    };
   }
 });
