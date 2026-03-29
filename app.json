@@ -165,6 +165,12 @@
         "selectedIconPath": "images/tabbar/home-active.png"
       },
       {
+        "pagePath": "pages/changelog/changelog",
+        "text": "日志",
+        "iconPath": "images/tabbar/log-normal.png",
+        "selectedIconPath": "images/tabbar/log-active.png"
+      },
+      {
         "pagePath": "pages/about/about",
         "text": "关于",
         "iconPath": "images/tabbar/about-normal.png",

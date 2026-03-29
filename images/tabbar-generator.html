@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TabBar 图标生成器 - 随身工具宝</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { color: #2980b9; margin-bottom: 10px; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 30px 0; }
+    .icon-item { text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; }
+    .icon-item canvas { border: 1px solid #ddd; border-radius: 8px; background: white; margin: 8px 0; }
+    .icon-item .name { font-weight: 600; color: #333; margin: 12px 0 4px; }
+    .icon-item .hint { font-size: 12px; color: #666; }
+    .btn-row { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+    button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #2980b9; }
+    button.secondary { background: #6c757d; }
+    button.secondary:hover { background: #5a6268; }
+    .download-all { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; }
+    .download-all button { padding: 14px 40px; font-size: 16px; }
+    .preview-section { margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 12px; }
+    .preview-title { font-weight: 600; margin-bottom: 16px; color: #333; }
+    .tabbar-preview { display: flex; justify-content: space-around; padding: 20px; background: white; border-radius: 8px; }
+    .tab-item { text-align: center; }
+    .tab-item canvas { width: 48px; height: 48px; }
+    .tab-item .label { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+    .tab-item.selected .label { color: #2980b9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 TabBar 图标生成器</h1>
+    <p class="subtitle">随身工具宝 - 首页 / 日志 / 关于</p>
+    
+    <div class="icon-grid">
+      <!-- 首页 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="home-normal" width="128" height="128"></canvas>
+        <div class="name">首页 (未选中)</div>
+        <div class="hint">128×128, #7f8c8d</div>
+        <div class="btn-row">
+          <button onclick="download('home-normal', 128)">下载</button>
+        </div>
+      </div>
+      
+      <!-- 首页 - 选中 -->
+      <div class="icon-item">
+        <canvas id="home-active" width="128" height="128"></canvas>
+        <div class="name">首页 (选中)</div>
+        <div class="hint">128×128, #2980b9</div>
+        <div class="btn-row">
+          <button onclick="download('home-active', 128)">下载</button>
+        </div>
+      </div>
+      
+      <div class="icon-item"></div>
+      
+      <!-- 日志 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="log-normal" width="128" height="128"></canvas>
+        <div class="name">日志 (未选中)</div>
+        <div class="hint">128×128, #7f8c8d</div>
+        <div class="btn-row">
+          <button onclick="download('log-normal', 128)">下载</button>
+        </div>
+      </div>
+      
+      <!-- 日志 - 选中 -->
+      <div class="icon-item">
+        <canvas id="log-active" width="128" height="128"></canvas>
+        <div class="name">日志 (选中)</div>
+        <div class="hint">128×128, #2980b9</div>
+        <div class="btn-row">
+          <button onclick="download('log-active', 128)">下载</button>
+        </div>
+      </div>
+      
+      <div class="icon-item"></div>
+      
+      <!-- 关于 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="about-normal" width="128" height="128"></canvas>
+        <div class="name">关于 (未选中)</div>
+        <div class="hint">128×128, #7f8c8d</div>
+        <div class="btn-row">
+          <button onclick="download('about-normal', 128)">下载</button>
+        </div>
+      </div>
+      
+      <!-- 关于 - 选中 -->
+      <div class="icon-item">
+        <canvas id="about-active" width="128" height="128"></canvas>
+        <div class="name">关于 (选中)</div>
+        <div class="hint">128×128, #2980b9</div>
+        <div class="btn-row">
+          <button onclick="download('about-active', 128)">下载</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-section">
+      <div class="preview-title">📱 TabBar 预览效果</div>
+      <div class="tabbar-preview">
+        <div class="tab-item selected">
+          <canvas id="preview-home" width="48" height="48"></canvas>
+          <div class="label">首页</div>
+        </div>
+        <div class="tab-item">
+          <canvas id="preview-log" width="48" height="48"></canvas>
+          <div class="label">日志</div>
+        </div>
+        <div class="tab-item">
+          <canvas id="preview-about" width="48" height="48"></canvas>
+          <div class="label">关于</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="download-all">
+      <button onclick="downloadAll()">📥 一键下载全部图标</button>
+    </div>
+  </div>
+
+  <script>
+    // 首页图标 SVG
+    function getHomeSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <path d="M64 14 L12 58 L12 114 L48 114 L48 78 L80 78 L80 114 L116 114 L116 58 Z" fill="${color}" opacity="0.85"/>
+          <rect x="32" y="42" width="28" height="20" rx="3" fill="white" opacity="0.6"/>
+          <rect x="72" y="42" width="24" height="20" rx="3" fill="white" opacity="0.6"/>
+          <rect x="54" y="78" width="20" height="36" rx="3" fill="white" opacity="0.4"/>
+        </svg>
+      `;
+    }
+    
+    // 日志图标 SVG
+    function getLogSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <rect x="20" y="12" width="88" height="104" rx="8" fill="${color}" opacity="0.85"/>
+          <rect x="28" y="24" width="72" height="80" rx="4" fill="white"/>
+          <rect x="36" y="36" width="40" height="6" rx="3" fill="${color}" opacity="0.3"/>
+          <rect x="36" y="50" width="56" height="6" rx="3" fill="${color}" opacity="0.3"/>
+          <rect x="36" y="64" width="48" height="6" rx="3" fill="${color}" opacity="0.3"/>
+          <rect x="36" y="78" width="52" height="6" rx="3" fill="${color}" opacity="0.3"/>
+          <rect x="36" y="92" width="44" height="6" rx="3" fill="${color}" opacity="0.3"/>
+        </svg>
+      `;
+    }
+    
+    // 关于图标 SVG
+    function getAboutSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <circle cx="64" cy="64" r="52" fill="none" stroke="${color}" stroke-width="10" opacity="0.6"/>
+          <circle cx="64" cy="40" r="6" fill="${color}"/>
+          <rect x="58" y="52" width="12" height="40" rx="6" fill="${color}"/>
+        </svg>
+      `;
+    }
+    
+    // 绘制 SVG 到 Canvas
+    function drawSVG(canvasId, svgString, size) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      const img = new Image();
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      img.onload = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+    
+    // 下载 PNG
+    function download(type, size) {
+      let svgString;
+      const color = type.includes('active') ? '#2980b9' : '#7f8c8d';
+      
+      if (type.startsWith('home')) {
+        svgString = getHomeSVG(color);
+      } else if (type.startsWith('log')) {
+        svgString = getLogSVG(color);
+      } else if (type.startsWith('about')) {
+        svgString = getAboutSVG(color);
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      const img = new Image();
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, size, size);
+        URL.revokeObjectURL(url);
+        
+        const link = document.createElement('a');
+        link.download = `${type}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      img.src = url;
+    }
+    
+    // 下载全部
+    function downloadAll() {
+      const items = ['home-normal', 'home-active', 'log-normal', 'log-active', 'about-normal', 'about-active'];
+      items.forEach((item, i) => {
+        setTimeout(() => download(item, 128), i * 200);
+      });
+    }
+    
+    // 初始化绘制
+    window.onload = function() {
+      // 大预览
+      drawSVG('home-normal', getHomeSVG('#7f8c8d'), 128);
+      drawSVG('home-active', getHomeSVG('#2980b9'), 128);
+      drawSVG('log-normal', getLogSVG('#7f8c8d'), 128);
+      drawSVG('log-active', getLogSVG('#2980b9'), 128);
+      drawSVG('about-normal', getAboutSVG('#7f8c8d'), 128);
+      drawSVG('about-active', getAboutSVG('#2980b9'), 128);
+      
+      // TabBar 预览
+      drawSVG('preview-home', getHomeSVG('#2980b9'), 48);
+      drawSVG('preview-log', getLogSVG('#7f8c8d'), 48);
+      drawSVG('preview-about', getAboutSVG('#7f8c8d'), 48);
+    };
+  </script>
+</body>
+</html>

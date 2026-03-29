@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- 日志/文档图标 -->
+  <rect x="20" y="12" width="88" height="104" rx="8" fill="currentColor" opacity="0.9"/>
+  <rect x="28" y="24" width="72" height="80" rx="4" fill="white"/>
+  <!-- 第一行 -->
+  <rect x="36" y="36" width="40" height="6" rx="3" fill="currentColor" opacity="0.4"/>
+  <!-- 第二行 -->
+  <rect x="36" y="50" width="56" height="6" rx="3" fill="currentColor" opacity="0.4"/>
+  <!-- 第三行 -->
+  <rect x="36" y="64" width="48" height="6" rx="3" fill="currentColor" opacity="0.4"/>
+  <!-- 第四行 -->
+  <rect x="36" y="78" width="52" height="6" rx="3" fill="currentColor" opacity="0.4"/>
+  <!-- 勾选标记 -->
+  <circle cx="96" cy="40" r="16" fill="#2ed573"/>
+  <path d="M90 40 L94 44 L102 36" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
