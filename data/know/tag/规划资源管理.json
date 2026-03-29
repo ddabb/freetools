@@ -2,58 +2,58 @@
   "meta": {
     "tag": "规划资源管理",
     "count": 5,
-    "generatedAt": "2026-03-29T14:57:05.933Z"
+    "generatedAt": "2026-03-29T15:10:37.564Z"
   },
   "articles": [
     {
-      "id": "article-1774796225852",
+      "id": "article-1774797037405",
       "filename": "资源管理计划.json",
       "title": "资源管理计划",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 747,
-      "updateTime": "2026-03-29T14:26:13.288Z",
-      "order": 66
+      "updateTime": "2026-03-29T14:58:37.573Z",
+      "order": 53
     },
     {
-      "id": "article-1774796225850",
+      "id": "article-1774797037402",
       "filename": "责任分配矩阵.json",
       "title": "责任分配矩阵",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 398,
-      "updateTime": "2026-03-29T14:26:13.287Z",
-      "order": 67
+      "updateTime": "2026-03-29T14:58:37.565Z",
+      "order": 62
     },
     {
-      "id": "article-1774796225849",
+      "id": "article-1774797037398",
       "filename": "规划资源管理.json",
       "title": "规划资源管理",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 279,
-      "updateTime": "2026-03-29T14:26:13.286Z",
-      "order": 68
+      "updateTime": "2026-03-29T14:58:37.557Z",
+      "order": 71
     },
     {
-      "id": "article-1774796225827",
-      "filename": "团队章程.json",
-      "title": "团队章程",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 268,
-      "updateTime": "2026-03-29T14:26:13.284Z",
-      "order": 69
-    },
-    {
-      "id": "article-1774796225844",
+      "id": "article-1774797037386",
       "filename": "组织理论.json",
       "title": "组织理论",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 139,
-      "updateTime": "2026-03-29T14:26:13.284Z",
-      "order": 70
+      "updateTime": "2026-03-29T14:58:37.536Z",
+      "order": 94
+    },
+    {
+      "id": "article-1774797037347",
+      "filename": "团队章程.json",
+      "title": "团队章程",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 268,
+      "updateTime": "2026-03-29T14:58:37.468Z",
+      "order": 175
     }
   ]
 }

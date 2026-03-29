@@ -9,6 +9,10 @@
       },
       {
         "type": "file",
+        "value": "pmpimages/**/*"
+      },
+      {
+        "type": "file",
         "value": "docs/**/*"
       },
       {

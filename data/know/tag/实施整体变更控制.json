@@ -2,28 +2,28 @@
   "meta": {
     "tag": "实施整体变更控制",
     "count": 2,
-    "generatedAt": "2026-03-29T14:57:05.981Z"
+    "generatedAt": "2026-03-29T15:10:37.633Z"
   },
   "articles": [
     {
-      "id": "article-1774796225826",
-      "filename": "变更控制工具.json",
-      "title": "变更控制工具",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 504,
-      "updateTime": "2026-03-29T14:26:13.190Z",
-      "order": 141
-    },
-    {
-      "id": "article-1774796225829",
+      "id": "article-1774797037352",
       "filename": "实施整体变更控制.json",
       "title": "实施整体变更控制",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 897,
-      "updateTime": "2026-03-29T14:26:13.190Z",
-      "order": 142
+      "updateTime": "2026-03-29T14:58:37.475Z",
+      "order": 166
+    },
+    {
+      "id": "article-1774797037345",
+      "filename": "变更控制工具.json",
+      "title": "变更控制工具",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 504,
+      "updateTime": "2026-03-29T14:58:37.465Z",
+      "order": 181
     }
   ]
 }

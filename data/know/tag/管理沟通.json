@@ -2,18 +2,18 @@
   "meta": {
     "tag": "管理沟通",
     "count": 1,
-    "generatedAt": "2026-03-29T14:57:05.975Z"
+    "generatedAt": "2026-03-29T15:10:37.603Z"
   },
   "articles": [
     {
-      "id": "article-1774796225842",
+      "id": "article-1774797037382",
       "filename": "管理沟通.json",
       "title": "管理沟通",
       "description": "",
       "category": "项目沟通管理",
       "wordCount": 647,
-      "updateTime": "2026-03-29T14:26:13.199Z",
-      "order": 134
+      "updateTime": "2026-03-29T14:58:37.529Z",
+      "order": 103
     }
   ]
 }

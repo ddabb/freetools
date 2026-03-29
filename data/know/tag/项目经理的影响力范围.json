@@ -2,48 +2,48 @@
   "meta": {
     "tag": "项目经理的影响力范围",
     "count": 4,
-    "generatedAt": "2026-03-29T14:57:05.960Z"
+    "generatedAt": "2026-03-29T15:10:37.520Z"
   },
   "articles": [
     {
-      "id": "article-1774796225856",
+      "id": "article-1774797037416",
       "filename": "项目.json",
       "title": "项目",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 653,
-      "updateTime": "2026-03-29T14:26:13.232Z",
-      "order": 115
+      "updateTime": "2026-03-29T14:58:37.594Z",
+      "order": 27
     },
     {
-      "id": "article-1774796225848",
+      "id": "article-1774797037395",
       "filename": "行业.json",
       "title": "行业",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 156,
-      "updateTime": "2026-03-29T14:26:13.231Z",
-      "order": 116
+      "updateTime": "2026-03-29T14:58:37.551Z",
+      "order": 78
     },
     {
-      "id": "article-1774796225843",
+      "id": "article-1774797037385",
       "filename": "组织.json",
       "title": "组织",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 634,
-      "updateTime": "2026-03-29T14:26:13.230Z",
-      "order": 117
+      "updateTime": "2026-03-29T14:58:37.535Z",
+      "order": 97
     },
     {
-      "id": "article-1774796225820",
+      "id": "article-1774797037332",
       "filename": "专业学科.json",
       "title": "专业学科",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 186,
-      "updateTime": "2026-03-29T14:26:13.227Z",
-      "order": 118
+      "updateTime": "2026-03-29T14:58:37.448Z",
+      "order": 206
     }
   ]
 }

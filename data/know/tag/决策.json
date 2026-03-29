@@ -2,38 +2,38 @@
   "meta": {
     "tag": "决策",
     "count": 3,
-    "generatedAt": "2026-03-29T14:57:06.009Z"
+    "generatedAt": "2026-03-29T15:10:37.614Z"
   },
   "articles": [
     {
-      "id": "article-1774796225840",
+      "id": "article-1774797037377",
       "filename": "独裁型决策制定.json",
       "title": "独裁型决策制定",
       "description": "",
       "category": "工具与技术",
       "wordCount": 24,
-      "updateTime": "2026-03-29T14:26:13.012Z",
-      "order": 200
+      "updateTime": "2026-03-29T14:58:37.517Z",
+      "order": 113
     },
     {
-      "id": "article-1774796225833",
+      "id": "article-1774797037362",
       "filename": "投票.json",
       "title": "投票",
       "description": "",
       "category": "工具与技术",
       "wordCount": 185,
-      "updateTime": "2026-03-29T14:26:13.009Z",
-      "order": 201
+      "updateTime": "2026-03-29T14:58:37.488Z",
+      "order": 147
     },
     {
-      "id": "article-1774796225828",
+      "id": "article-1774797037349",
       "filename": "多标准决策分析.json",
       "title": "多标准决策分析",
       "description": "",
       "category": "工具与技术",
       "wordCount": 55,
-      "updateTime": "2026-03-29T14:26:13.008Z",
-      "order": 202
+      "updateTime": "2026-03-29T14:58:37.470Z",
+      "order": 173
     }
   ]
 }

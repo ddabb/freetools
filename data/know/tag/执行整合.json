@@ -2,58 +2,58 @@
   "meta": {
     "tag": "执行整合",
     "count": 5,
-    "generatedAt": "2026-03-29T14:57:05.962Z"
+    "generatedAt": "2026-03-29T15:10:37.583Z"
   },
   "articles": [
     {
-      "id": "article-1774796225846",
-      "filename": "背景层面的整合.json",
-      "title": "背景层面的整合",
-      "description": "",
-      "category": "项目经理的角色",
-      "wordCount": 205,
-      "updateTime": "2026-03-29T14:26:13.224Z",
-      "order": 119
-    },
-    {
-      "id": "article-1774796225850",
+      "id": "article-1774797037400",
       "filename": "认知层面的整合.json",
       "title": "认知层面的整合",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 194,
-      "updateTime": "2026-03-29T14:26:13.224Z",
-      "order": 120
+      "updateTime": "2026-03-29T14:58:37.561Z",
+      "order": 66
     },
     {
-      "id": "article-1774796225837",
+      "id": "article-1774797037390",
+      "filename": "背景层面的整合.json",
+      "title": "背景层面的整合",
+      "description": "",
+      "category": "项目经理的角色",
+      "wordCount": 205,
+      "updateTime": "2026-03-29T14:58:37.543Z",
+      "order": 86
+    },
+    {
+      "id": "article-1774797037371",
       "filename": "整合与复杂性.json",
       "title": "整合与复杂性",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 448,
-      "updateTime": "2026-03-29T14:26:13.222Z",
-      "order": 121
+      "updateTime": "2026-03-29T14:58:37.505Z",
+      "order": 125
     },
     {
-      "id": "article-1774796225833",
+      "id": "article-1774797037361",
       "filename": "执行整合.json",
       "title": "执行整合",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 256,
-      "updateTime": "2026-03-29T14:26:13.221Z",
-      "order": 122
+      "updateTime": "2026-03-29T14:58:37.486Z",
+      "order": 150
     },
     {
-      "id": "article-1774796225828",
+      "id": "article-1774797037348",
       "filename": "在过程层面执行整合.json",
       "title": "在过程层面执行整合",
       "description": "",
       "category": "项目经理的角色",
       "wordCount": 237,
-      "updateTime": "2026-03-29T14:26:13.218Z",
-      "order": 123
+      "updateTime": "2026-03-29T14:58:37.470Z",
+      "order": 171
     }
   ]
 }

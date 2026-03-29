@@ -2,128 +2,128 @@
   "meta": {
     "tag": "基本要素",
     "count": 12,
-    "generatedAt": "2026-03-29T14:57:06.001Z"
+    "generatedAt": "2026-03-29T15:10:37.497Z"
   },
   "articles": [
     {
-      "id": "article-1774796225858",
-      "filename": "项目管理的重要性.json",
-      "title": "项目管理的重要性",
-      "description": "",
-      "category": "引论",
-      "wordCount": 570,
-      "updateTime": "2026-03-29T14:26:13.134Z",
-      "order": 178
-    },
-    {
-      "id": "article-1774796225857",
-      "filename": "项目章程和项目管理计划.json",
-      "title": "项目章程和项目管理计划",
-      "description": "",
-      "category": "引论",
-      "wordCount": 103,
-      "updateTime": "2026-03-29T14:26:13.132Z",
-      "order": 179
-    },
-    {
-      "id": "article-1774796225857",
-      "filename": "项目效益管理计划.json",
-      "title": "项目效益管理计划",
-      "description": "",
-      "category": "引论",
-      "wordCount": 630,
-      "updateTime": "2026-03-29T14:26:13.131Z",
-      "order": 180
-    },
-    {
-      "id": "article-1774796225857",
-      "filename": "项目成功标准.json",
-      "title": "项目成功标准",
-      "description": "",
-      "category": "引论",
-      "wordCount": 692,
-      "updateTime": "2026-03-29T14:26:13.130Z",
-      "order": 181
-    },
-    {
-      "id": "article-1774796225856",
-      "filename": "项目商业论证.json",
-      "title": "项目商业论证",
-      "description": "",
-      "category": "引论",
-      "wordCount": 1007,
-      "updateTime": "2026-03-29T14:26:13.128Z",
-      "order": 182
-    },
-    {
-      "id": "article-1774796225848",
-      "filename": "裁剪.json",
-      "title": "裁剪",
-      "description": "",
-      "category": "引论",
-      "wordCount": 642,
-      "updateTime": "2026-03-29T14:26:13.120Z",
-      "order": 183
-    },
-    {
-      "id": "article-1774796225859",
+      "id": "article-1774797037426",
       "filename": "项目阶段.json",
       "title": "项目阶段",
       "description": "",
       "category": "引论",
       "wordCount": 577,
-      "updateTime": "2026-03-29T14:26:13.111Z",
-      "order": 184
+      "updateTime": "2026-03-29T14:58:37.629Z",
+      "order": 6
     },
     {
-      "id": "article-1774796225858",
+      "id": "article-1774797037424",
       "filename": "项目管理过程组.json",
       "title": "项目管理过程组",
       "description": "",
       "category": "引论",
       "wordCount": 421,
-      "updateTime": "2026-03-29T14:26:13.103Z",
-      "order": 185
+      "updateTime": "2026-03-29T14:58:37.608Z",
+      "order": 10
     },
     {
-      "id": "article-1774796225858",
+      "id": "article-1774797037423",
       "filename": "项目管理过程.json",
       "title": "项目管理过程",
       "description": "",
       "category": "引论",
       "wordCount": 466,
-      "updateTime": "2026-03-29T14:26:13.095Z",
-      "order": 186
+      "updateTime": "2026-03-29T14:58:37.606Z",
+      "order": 13
     },
     {
-      "id": "article-1774796225858",
+      "id": "article-1774797037422",
+      "filename": "项目管理的重要性.json",
+      "title": "项目管理的重要性",
+      "description": "",
+      "category": "引论",
+      "wordCount": 570,
+      "updateTime": "2026-03-29T14:58:37.605Z",
+      "order": 15
+    },
+    {
+      "id": "article-1774797037421",
       "filename": "项目管理数据和信息.json",
       "title": "项目管理数据和信息",
       "description": "",
       "category": "引论",
       "wordCount": 500,
-      "updateTime": "2026-03-29T14:26:13.087Z",
-      "order": 187
+      "updateTime": "2026-03-29T14:58:37.604Z",
+      "order": 16
     },
     {
-      "id": "article-1774796225856",
+      "id": "article-1774797037420",
+      "filename": "项目章程和项目管理计划.json",
+      "title": "项目章程和项目管理计划",
+      "description": "",
+      "category": "引论",
+      "wordCount": 103,
+      "updateTime": "2026-03-29T14:58:37.602Z",
+      "order": 19
+    },
+    {
+      "id": "article-1774797037419",
+      "filename": "项目效益管理计划.json",
+      "title": "项目效益管理计划",
+      "description": "",
+      "category": "引论",
+      "wordCount": 630,
+      "updateTime": "2026-03-29T14:58:37.599Z",
+      "order": 22
+    },
+    {
+      "id": "article-1774797037418",
+      "filename": "项目成功标准.json",
+      "title": "项目成功标准",
+      "description": "",
+      "category": "引论",
+      "wordCount": 692,
+      "updateTime": "2026-03-29T14:58:37.598Z",
+      "order": 23
+    },
+    {
+      "id": "article-1774797037417",
+      "filename": "项目商业论证.json",
+      "title": "项目商业论证",
+      "description": "",
+      "category": "引论",
+      "wordCount": 1007,
+      "updateTime": "2026-03-29T14:58:37.596Z",
+      "order": 25
+    },
+    {
+      "id": "article-1774797037417",
       "filename": "项目和开发生命周期.json",
       "title": "项目和开发生命周期",
       "description": "",
       "category": "引论",
       "wordCount": 810,
-      "updateTime": "2026-03-29T14:26:13.078Z",
-      "order": 188
+      "updateTime": "2026-03-29T14:58:37.595Z",
+      "order": 26
     },
     {
-      "id": "article-1774796225855",
+      "id": "article-1774797037413",
       "filename": "阶段关口.json",
       "title": "阶段关口",
       "description": "",
       "category": "引论",
       "wordCount": 238,
-      "updateTime": "2026-03-29T14:26:13.067Z",
-      "order": 189
+      "updateTime": "2026-03-29T14:58:37.590Z",
+      "order": 34
+    },
+    {
+      "id": "article-1774797037395",
+      "filename": "裁剪.json",
+      "title": "裁剪",
+      "description": "",
+      "category": "引论",
+      "wordCount": 642,
+      "updateTime": "2026-03-29T14:58:37.552Z",
+      "order": 77
     }
   ]
 }

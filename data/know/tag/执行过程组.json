@@ -2,158 +2,38 @@
   "meta": {
     "tag": "执行过程组",
     "count": 30,
-    "generatedAt": "2026-03-29T14:57:05.905Z"
+    "generatedAt": "2026-03-29T15:10:37.493Z"
   },
   "articles": [
     {
-      "id": "article-1774796225830",
-      "filename": "实施风险应对.json",
-      "title": "实施风险应对",
-      "description": "",
-      "category": "项目风险管理",
-      "wordCount": 304,
-      "updateTime": "2026-03-29T14:26:13.347Z",
-      "order": 16
-    },
-    {
-      "id": "article-1774796225833",
-      "filename": "投标人会议.json",
-      "title": "投标人会议",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 101,
-      "updateTime": "2026-03-29T14:26:13.333Z",
-      "order": 29
-    },
-    {
-      "id": "article-1774796225830",
-      "filename": "实施采购.json",
-      "title": "实施采购",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 144,
-      "updateTime": "2026-03-29T14:26:13.331Z",
-      "order": 30
-    },
-    {
-      "id": "article-1774796225826",
-      "filename": "卖方建议书.json",
-      "title": "卖方建议书",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 124,
-      "updateTime": "2026-03-29T14:26:13.330Z",
-      "order": 31
-    },
-    {
-      "id": "article-1774796225825",
-      "filename": "协议.json",
-      "title": "协议",
-      "description": "",
-      "category": "项目采购管理",
-      "wordCount": 228,
-      "updateTime": "2026-03-29T14:26:13.328Z",
-      "order": 32
-    },
-    {
-      "id": "article-1774796225860",
+      "id": "article-1774797037426",
       "filename": "预分派.json",
       "title": "预分派",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 112,
-      "updateTime": "2026-03-29T14:26:13.276Z",
-      "order": 76
+      "updateTime": "2026-03-29T14:58:37.631Z",
+      "order": 5
     },
     {
-      "id": "article-1774796225851",
-      "filename": "资源日历.json",
-      "title": "资源日历",
+      "id": "article-1774797037421",
+      "filename": "项目管理信息系统.json",
+      "title": "项目管理信息系统",
       "description": "",
-      "category": "项目资源管理",
-      "wordCount": 161,
-      "updateTime": "2026-03-29T14:26:13.274Z",
-      "order": 77
+      "category": "项目整合管理",
+      "wordCount": 109,
+      "updateTime": "2026-03-29T14:58:37.603Z",
+      "order": 17
     },
     {
-      "id": "article-1774796225856",
+      "id": "article-1774797037418",
       "filename": "项目团队派工单.json",
       "title": "项目团队派工单",
       "description": "",
       "category": "项目资源管理",
       "wordCount": 71,
-      "updateTime": "2026-03-29T14:26:13.274Z",
-      "order": 78
-    },
-    {
-      "id": "article-1774796225847",
-      "filename": "获取资源.json",
-      "title": "获取资源",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 548,
-      "updateTime": "2026-03-29T14:26:13.272Z",
-      "order": 79
-    },
-    {
-      "id": "article-1774796225847",
-      "filename": "虚拟团队.json",
-      "title": "虚拟团队",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 362,
-      "updateTime": "2026-03-29T14:26:13.272Z",
-      "order": 80
-    },
-    {
-      "id": "article-1774796225830",
-      "filename": "实物资源分配单.json",
-      "title": "实物资源分配单",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 35,
-      "updateTime": "2026-03-29T14:26:13.271Z",
-      "order": 81
-    },
-    {
-      "id": "article-1774796225842",
-      "filename": "管理团队.json",
-      "title": "管理团队",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 328,
-      "updateTime": "2026-03-29T14:26:13.269Z",
-      "order": 82
-    },
-    {
-      "id": "article-1774796225831",
-      "filename": "建设团队.json",
-      "title": "建设团队",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 1298,
-      "updateTime": "2026-03-29T14:26:13.267Z",
-      "order": 83
-    },
-    {
-      "id": "article-1774796225855",
-      "filename": "集中办公.json",
-      "title": "集中办公",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 126,
-      "updateTime": "2026-03-29T14:26:13.267Z",
-      "order": 84
-    },
-    {
-      "id": "article-1774796225828",
-      "filename": "团队绩效评价.json",
-      "title": "团队绩效评价",
-      "description": "",
-      "category": "项目资源管理",
-      "wordCount": 305,
-      "updateTime": "2026-03-29T14:26:13.266Z",
-      "order": 85
+      "updateTime": "2026-03-29T14:58:37.597Z",
+      "order": 24
     },
     {
       "id": "x",
@@ -162,148 +42,268 @@
       "description": "",
       "category": "项目质量管理",
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:26:13.257Z",
-      "order": 93
+      "updateTime": "2026-03-29T14:58:37.593Z",
+      "order": 29
     },
     {
-      "id": "article-1774796225855",
+      "id": "article-1774797037414",
+      "filename": "集中办公.json",
+      "title": "集中办公",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 126,
+      "updateTime": "2026-03-29T14:58:37.591Z",
+      "order": 32
+    },
+    {
+      "id": "article-1774797037413",
       "filename": "问题解决.json",
       "title": "问题解决",
       "description": "",
       "category": "项目质量管理",
       "wordCount": 224,
-      "updateTime": "2026-03-29T14:26:13.255Z",
-      "order": 94
+      "updateTime": "2026-03-29T14:58:37.590Z",
+      "order": 33
     },
     {
-      "id": "article-1774796225839",
-      "filename": "测试与评估文件.json",
-      "title": "测试与评估文件",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 74,
-      "updateTime": "2026-03-29T14:26:13.254Z",
-      "order": 95
-    },
-    {
-      "id": "article-1774796225842",
-      "filename": "管理质量.json",
-      "title": "管理质量",
-      "description": "",
-      "category": "项目质量管理",
-      "wordCount": 795,
-      "updateTime": "2026-03-29T14:26:13.254Z",
-      "order": 96
-    },
-    {
-      "id": "article-1774796225842",
-      "filename": "管理相关方参与.json",
-      "title": "管理相关方参与",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 284,
-      "updateTime": "2026-03-29T14:26:13.210Z",
-      "order": 127
-    },
-    {
-      "id": "article-1774796225828",
-      "filename": "基本规则.json",
-      "title": "基本规则",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 47,
-      "updateTime": "2026-03-29T14:26:13.208Z",
-      "order": 128
-    },
-    {
-      "id": "article-1774796225842",
-      "filename": "管理沟通.json",
-      "title": "管理沟通",
-      "description": "",
-      "category": "项目沟通管理",
-      "wordCount": 647,
-      "updateTime": "2026-03-29T14:26:13.199Z",
-      "order": 134
-    },
-    {
-      "id": "article-1774796225845",
-      "filename": "经验教训登记册.json",
-      "title": "经验教训登记册",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 242,
-      "updateTime": "2026-03-29T14:26:13.184Z",
-      "order": 146
-    },
-    {
-      "id": "article-1774796225842",
-      "filename": "管理项目知识.json",
-      "title": "管理项目知识",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 733,
-      "updateTime": "2026-03-29T14:26:13.182Z",
-      "order": 147
-    },
-    {
-      "id": "article-1774796225857",
-      "filename": "项目管理信息系统.json",
-      "title": "项目管理信息系统",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 109,
-      "updateTime": "2026-03-29T14:26:13.181Z",
-      "order": 148
-    },
-    {
-      "id": "article-1774796225834",
-      "filename": "指导与管理项目工作.json",
-      "title": "指导与管理项目工作",
-      "description": "",
-      "category": "项目整合管理",
-      "wordCount": 520,
-      "updateTime": "2026-03-29T14:26:13.179Z",
-      "order": 149
-    },
-    {
-      "id": "article-1774796225855",
+      "id": "article-1774797037413",
       "filename": "问题日志.json",
       "title": "问题日志",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 257,
-      "updateTime": "2026-03-29T14:26:13.179Z",
-      "order": 150
+      "updateTime": "2026-03-29T14:58:37.589Z",
+      "order": 35
     },
     {
-      "id": "article-1774796225831",
+      "id": "article-1774797037405",
+      "filename": "资源日历.json",
+      "title": "资源日历",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 161,
+      "updateTime": "2026-03-29T14:58:37.573Z",
+      "order": 52
+    },
+    {
+      "id": "article-1774797037394",
+      "filename": "虚拟团队.json",
+      "title": "虚拟团队",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 362,
+      "updateTime": "2026-03-29T14:58:37.549Z",
+      "order": 80
+    },
+    {
+      "id": "article-1774797037393",
+      "filename": "获取资源.json",
+      "title": "获取资源",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 548,
+      "updateTime": "2026-03-29T14:58:37.548Z",
+      "order": 81
+    },
+    {
+      "id": "article-1774797037388",
+      "filename": "经验教训登记册.json",
+      "title": "经验教训登记册",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 242,
+      "updateTime": "2026-03-29T14:58:37.539Z",
+      "order": 91
+    },
+    {
+      "id": "article-1774797037383",
+      "filename": "管理项目知识.json",
+      "title": "管理项目知识",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 733,
+      "updateTime": "2026-03-29T14:58:37.532Z",
+      "order": 100
+    },
+    {
+      "id": "article-1774797037382",
+      "filename": "管理相关方参与.json",
+      "title": "管理相关方参与",
+      "description": "",
+      "category": "项目相关方管理",
+      "wordCount": 284,
+      "updateTime": "2026-03-29T14:58:37.530Z",
+      "order": 101
+    },
+    {
+      "id": "article-1774797037382",
+      "filename": "管理质量.json",
+      "title": "管理质量",
+      "description": "",
+      "category": "项目质量管理",
+      "wordCount": 795,
+      "updateTime": "2026-03-29T14:58:37.530Z",
+      "order": 102
+    },
+    {
+      "id": "article-1774797037382",
+      "filename": "管理沟通.json",
+      "title": "管理沟通",
+      "description": "",
+      "category": "项目沟通管理",
+      "wordCount": 647,
+      "updateTime": "2026-03-29T14:58:37.529Z",
+      "order": 103
+    },
+    {
+      "id": "article-1774797037381",
+      "filename": "管理团队.json",
+      "title": "管理团队",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 328,
+      "updateTime": "2026-03-29T14:58:37.527Z",
+      "order": 104
+    },
+    {
+      "id": "article-1774797037376",
+      "filename": "测试与评估文件.json",
+      "title": "测试与评估文件",
+      "description": "",
+      "category": "项目质量管理",
+      "wordCount": 74,
+      "updateTime": "2026-03-29T14:58:37.515Z",
+      "order": 115
+    },
+    {
+      "id": "article-1774797037364",
+      "filename": "指导与管理项目工作.json",
+      "title": "指导与管理项目工作",
+      "description": "",
+      "category": "项目整合管理",
+      "wordCount": 520,
+      "updateTime": "2026-03-29T14:58:37.491Z",
+      "order": 141
+    },
+    {
+      "id": "article-1774797037362",
+      "filename": "投标人会议.json",
+      "title": "投标人会议",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 101,
+      "updateTime": "2026-03-29T14:58:37.488Z",
+      "order": 146
+    },
+    {
+      "id": "article-1774797037357",
+      "filename": "建设团队.json",
+      "title": "建设团队",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 1298,
+      "updateTime": "2026-03-29T14:58:37.483Z",
+      "order": 153
+    },
+    {
+      "id": "article-1774797037355",
       "filename": "工作绩效数据.json",
       "title": "工作绩效数据",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 210,
-      "updateTime": "2026-03-29T14:26:13.178Z",
-      "order": 151
+      "updateTime": "2026-03-29T14:58:37.481Z",
+      "order": 158
     },
     {
-      "id": "article-1774796225827",
+      "id": "article-1774797037354",
+      "filename": "实物资源分配单.json",
+      "title": "实物资源分配单",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 35,
+      "updateTime": "2026-03-29T14:58:37.478Z",
+      "order": 161
+    },
+    {
+      "id": "article-1774797037353",
+      "filename": "实施风险应对.json",
+      "title": "实施风险应对",
+      "description": "",
+      "category": "项目风险管理",
+      "wordCount": 304,
+      "updateTime": "2026-03-29T14:58:37.477Z",
+      "order": 162
+    },
+    {
+      "id": "article-1774797037352",
+      "filename": "实施采购.json",
+      "title": "实施采购",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 144,
+      "updateTime": "2026-03-29T14:58:37.476Z",
+      "order": 163
+    },
+    {
+      "id": "article-1774797037348",
+      "filename": "基本规则.json",
+      "title": "基本规则",
+      "description": "",
+      "category": "项目相关方管理",
+      "wordCount": 47,
+      "updateTime": "2026-03-29T14:58:37.470Z",
+      "order": 172
+    },
+    {
+      "id": "article-1774797037347",
+      "filename": "团队绩效评价.json",
+      "title": "团队绩效评价",
+      "description": "",
+      "category": "项目资源管理",
+      "wordCount": 305,
+      "updateTime": "2026-03-29T14:58:37.469Z",
+      "order": 174
+    },
+    {
+      "id": "article-1774797037345",
       "filename": "可交付成果.json",
       "title": "可交付成果",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 137,
-      "updateTime": "2026-03-29T14:26:13.177Z",
-      "order": 152
+      "updateTime": "2026-03-29T14:58:37.467Z",
+      "order": 176
     },
     {
-      "id": "article-1774796225827",
+      "id": "article-1774797037345",
       "filename": "变更请求.json",
       "title": "变更请求",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 362,
-      "updateTime": "2026-03-29T14:26:13.175Z",
-      "order": 153
+      "updateTime": "2026-03-29T14:58:37.466Z",
+      "order": 179
+    },
+    {
+      "id": "article-1774797037343",
+      "filename": "卖方建议书.json",
+      "title": "卖方建议书",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 124,
+      "updateTime": "2026-03-29T14:58:37.462Z",
+      "order": 184
+    },
+    {
+      "id": "article-1774797037343",
+      "filename": "协议.json",
+      "title": "协议",
+      "description": "",
+      "category": "项目采购管理",
+      "wordCount": 228,
+      "updateTime": "2026-03-29T14:58:37.461Z",
+      "order": 186
     }
   ]
 }

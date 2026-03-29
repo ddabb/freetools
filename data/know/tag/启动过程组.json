@@ -2,98 +2,98 @@
   "meta": {
     "tag": "启动过程组",
     "count": 9,
-    "generatedAt": "2026-03-29T14:57:05.970Z"
+    "generatedAt": "2026-03-29T15:10:37.516Z"
   },
   "articles": [
     {
-      "id": "article-1774796225850",
-      "filename": "识别相关方.json",
-      "title": "识别相关方",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 267,
-      "updateTime": "2026-03-29T14:26:13.207Z",
-      "order": 129
-    },
-    {
-      "id": "article-1774796225841",
-      "filename": "相关方登记册.json",
-      "title": "相关方登记册",
-      "description": "",
-      "category": "项目相关方管理",
-      "wordCount": 186,
-      "updateTime": "2026-03-29T14:26:13.205Z",
-      "order": 130
-    },
-    {
-      "id": "article-1774796225857",
+      "id": "article-1774797037420",
       "filename": "项目章程.json",
       "title": "项目章程",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 462,
-      "updateTime": "2026-03-29T14:26:13.173Z",
-      "order": 154
+      "updateTime": "2026-03-29T14:58:37.601Z",
+      "order": 20
     },
     {
-      "id": "article-1774796225837",
+      "id": "article-1774797037401",
+      "filename": "识别相关方.json",
+      "title": "识别相关方",
+      "description": "",
+      "category": "项目相关方管理",
+      "wordCount": 267,
+      "updateTime": "2026-03-29T14:58:37.564Z",
+      "order": 63
+    },
+    {
+      "id": "article-1774797037380",
+      "filename": "相关方登记册.json",
+      "title": "相关方登记册",
+      "description": "",
+      "category": "项目相关方管理",
+      "wordCount": 186,
+      "updateTime": "2026-03-29T14:58:37.524Z",
+      "order": 106
+    },
+    {
+      "id": "article-1774797037369",
       "filename": "数据收集.json",
       "title": "数据收集",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 246,
-      "updateTime": "2026-03-29T14:26:13.172Z",
-      "order": 155
+      "updateTime": "2026-03-29T14:58:37.503Z",
+      "order": 128
     },
     {
-      "id": "article-1774796225827",
+      "id": "article-1774797037346",
       "filename": "商业文件.json",
       "title": "商业文件",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 630,
-      "updateTime": "2026-03-29T14:26:13.170Z",
-      "order": 156
+      "updateTime": "2026-03-29T14:58:37.467Z",
+      "order": 178
     },
     {
-      "id": "article-1774796225825",
+      "id": "article-1774797037341",
       "filename": "制定项目章程.json",
       "title": "制定项目章程",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 156,
-      "updateTime": "2026-03-29T14:26:13.167Z",
-      "order": 157
+      "updateTime": "2026-03-29T14:58:37.459Z",
+      "order": 189
     },
     {
-      "id": "article-1774796225823",
+      "id": "article-1774797037338",
       "filename": "假设日志.json",
       "title": "假设日志",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 136,
-      "updateTime": "2026-03-29T14:26:13.165Z",
-      "order": 158
+      "updateTime": "2026-03-29T14:58:37.456Z",
+      "order": 193
     },
     {
-      "id": "article-1774796225822",
+      "id": "article-1774797037335",
       "filename": "人际关系与团队技能.json",
       "title": "人际关系与团队技能",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 256,
-      "updateTime": "2026-03-29T14:26:13.164Z",
-      "order": 159
+      "updateTime": "2026-03-29T14:58:37.452Z",
+      "order": 201
     },
     {
-      "id": "article-1774796225820",
+      "id": "article-1774797037332",
       "filename": "专家判断.json",
       "title": "专家判断",
       "description": "",
       "category": "项目整合管理",
       "wordCount": 179,
-      "updateTime": "2026-03-29T14:26:13.162Z",
-      "order": 160
+      "updateTime": "2026-03-29T14:58:37.449Z",
+      "order": 205
     }
   ]
 }

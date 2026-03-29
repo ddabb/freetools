@@ -2,58 +2,58 @@
   "meta": {
     "tag": "项目管理商业文件",
     "count": 5,
-    "generatedAt": "2026-03-29T14:57:06.003Z"
+    "generatedAt": "2026-03-29T15:10:37.514Z"
   },
   "articles": [
     {
-      "id": "article-1774796225857",
+      "id": "article-1774797037420",
       "filename": "项目章程和项目管理计划.json",
       "title": "项目章程和项目管理计划",
       "description": "",
       "category": "引论",
       "wordCount": 103,
-      "updateTime": "2026-03-29T14:26:13.132Z",
-      "order": 179
+      "updateTime": "2026-03-29T14:58:37.602Z",
+      "order": 19
     },
     {
-      "id": "article-1774796225857",
+      "id": "article-1774797037419",
       "filename": "项目效益管理计划.json",
       "title": "项目效益管理计划",
       "description": "",
       "category": "引论",
       "wordCount": 630,
-      "updateTime": "2026-03-29T14:26:13.131Z",
-      "order": 180
+      "updateTime": "2026-03-29T14:58:37.599Z",
+      "order": 22
     },
     {
-      "id": "article-1774796225857",
+      "id": "article-1774797037418",
       "filename": "项目成功标准.json",
       "title": "项目成功标准",
       "description": "",
       "category": "引论",
       "wordCount": 692,
-      "updateTime": "2026-03-29T14:26:13.130Z",
-      "order": 181
+      "updateTime": "2026-03-29T14:58:37.598Z",
+      "order": 23
     },
     {
-      "id": "article-1774796225856",
+      "id": "article-1774797037417",
       "filename": "项目商业论证.json",
       "title": "项目商业论证",
       "description": "",
       "category": "引论",
       "wordCount": 1007,
-      "updateTime": "2026-03-29T14:26:13.128Z",
-      "order": 182
+      "updateTime": "2026-03-29T14:58:37.596Z",
+      "order": 25
     },
     {
-      "id": "article-1774796225848",
+      "id": "article-1774797037395",
       "filename": "裁剪.json",
       "title": "裁剪",
       "description": "",
       "category": "引论",
       "wordCount": 642,
-      "updateTime": "2026-03-29T14:26:13.120Z",
-      "order": 183
+      "updateTime": "2026-03-29T14:58:37.552Z",
+      "order": 77
     }
   ]
 }
