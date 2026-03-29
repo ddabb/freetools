@@ -1,6 +1,6 @@
 <view class="container">
   <!-- 全局控制区域 -->
-  <view class="control-section">
+  <view class="control-section" style="width: 724rpx; display: block; box-sizing: border-box" style="width: 724rpx; display: block; box-sizing: border-box">
     <!-- 模式选择 -->
     <view class="mode-tabs">
       <view 
@@ -21,13 +21,6 @@
         <text class="tab-name">粘贴题目</text>
       </view>
     </view>
-  </view>
-
-  <!-- 每日数独信息 -->
-  <view class="daily-info" wx:if="{{mode === 'daily'}}">
-    <text class="daily-date">{{dailyInfo.name}}</text>
-    <text class="daily-difficulty">{{dailyInfo.level}} {{dailyInfo.difficulty}}</text>
-    <text class="daily-hint">💡 每日一题，全球同题</text>
   </view>
 
   <!-- 粘贴模式 -->
@@ -95,6 +88,62 @@
     </view>
   </view>
 
+  <!-- 结果区域 -->
+  <view class="result-section" wx:if="{{solutionMessage}}">
+    <view class="result-box {{hasSolution ? 'success' : 'error'}}">
+      <text class="result-icon">{{hasSolution ? '✅' : '❌'}}</text>
+      <text class="result-text">{{solutionMessage}}</text>
+    </view>
+  </view>
+
+  <!-- 数字输入和候选数控制区 -->
+  <view class="control-section" style="width: 724rpx; display: block; box-sizing: border-box" style="width: 724rpx; display: block; box-sizing: border-box">
+    <view class="number-input-section">
+      <view class="panel-title">
+        <text>输入数字</text>
+        <text class="selected-info" wx:if="{{selectedCell.row >= 0}}">选中: 第{{selectedCell.row + 1}}行 第{{selectedCell.col + 1}}列</text>
+        <text class="selected-info" wx:else>请先点击格子</text>
+      </view>
+      <view class="number-grid">
+        <!-- 第一行：1-6 -->
+        <view 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          wx:for="{{[1,2,3,4,5,6]}}" 
+          wx:key="*this"
+          bindtap="onNumberInput"
+          data-num="{{item}}"
+        >
+          {{item}}
+        </view>
+        <!-- 第二行：7-9, 候选, 清除, 重置 -->
+        <view 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          wx:for="{{[7,8,9]}}" 
+          wx:key="*this"
+          bindtap="onNumberInput"
+          data-num="{{item}}"
+        >
+          {{item}}
+        </view>
+        <!-- 候选数开关 -->
+        <view 
+          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
+          bindtap="toggleCandidates"
+        >
+          {{showCandidates ? '💡' : '🔴'}}
+        </view>
+        <!-- 清除按钮 -->
+        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
+          清除
+        </view>
+        <!-- 重置按钮 -->
+        <view class="number-item reset-item" bindtap="clearBoard">
+          重置
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- 操作按钮 -->
   <view class="buttons-section">
     <button class="btn btn-sm clear-btn" bindtap="clearBoard" disabled="{{solving}}">
@@ -109,59 +158,5 @@
       <text class="btn-icon">📋</text>
       <text class="btn-text">复制</text>
     </button>
-  </view>
-
-  <!-- 结果区域 -->
-  <view class="result-section" wx:if="{{solutionMessage}}">
-    <view class="result-box {{hasSolution ? 'success' : 'error'}}">
-      <text class="result-icon">{{hasSolution ? '✅' : '❌'}}</text>
-      <text class="result-text">{{solutionMessage}}</text>
-    </view>
-  </view>
-
-  <!-- 底部固定输入面板 -->
-  <view class="input-panel-fixed">
-    <view class="panel-title">
-      <text>输入数字</text>
-      <text class="selected-info" wx:if="{{selectedCell.row >= 0}}">选中: 第{{selectedCell.row + 1}}行 第{{selectedCell.col + 1}}列</text>
-      <text class="selected-info" wx:else>请先点击格子</text>
-    </view>
-    <view class="number-grid">
-      <!-- 第一行：1-6 -->
-      <view 
-        class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
-        wx:for="{{[1,2,3,4,5,6]}}" 
-        wx:key="*this"
-        bindtap="onNumberInput"
-        data-num="{{item}}"
-      >
-        {{item}}
-      </view>
-      <!-- 第二行：7-9, 候选, 清除, 重置 -->
-      <view 
-        class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
-        wx:for="{{[7,8,9]}}" 
-        wx:key="*this"
-        bindtap="onNumberInput"
-        data-num="{{item}}"
-      >
-        {{item}}
-      </view>
-      <!-- 候选数开关 -->
-      <view 
-        class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
-        bindtap="toggleCandidates"
-      >
-        {{showCandidates ? '💡' : '🔴'}}
-      </view>
-      <!-- 清除按钮 -->
-      <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
-        清除
-      </view>
-      <!-- 重置按钮 -->
-      <view class="number-item reset-item" bindtap="clearBoard">
-        重置
-      </view>
-    </view>
   </view>
 </view>

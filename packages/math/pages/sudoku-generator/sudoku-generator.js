@@ -46,7 +46,7 @@ Page({
               value: num === 0 ? '' : String(num),
               fixed: num !== 0, // 只有原始题目格子是固定的
               candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-              showCandidates: this.data.showCandidates && num === 0
+              showCandidates: false // 初始时不显示候选数，由refreshBoard统一处理
             });
           }
           board.push(row);
@@ -90,6 +90,9 @@ Page({
           generating: false,
           hasCandidates: this.data.showCandidates
         });
+
+        // 生成后立即刷新候选数显示状态
+        this.refreshBoard();
 
         wx.hideLoading();
         wx.showToast({ title: '生成成功', icon: 'success' });

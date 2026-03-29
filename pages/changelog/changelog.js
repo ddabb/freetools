@@ -15,6 +15,10 @@ Page({
   // 从 jsDelivr CDN 加载 changelog
   loadChangelog() {
     console.log('[changelog] 开始加载版本日志');
+    this.setData({
+      loading: true,
+      error: ''
+    });
     wx.request({
       url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json',
       method: 'GET',
@@ -33,7 +37,7 @@ Page({
           console.error('[changelog] 数据格式错误', res);
           this.setData({
             loading: false,
-            error: '数据格式错误'
+            error: '数据格式错误，点击重试'
           });
         }
       },
@@ -41,10 +45,16 @@ Page({
         console.error('[changelog] 网络请求失败', err);
         this.setData({
           loading: false,
-          error: '网络请求失败，请检查网络连接'
+          error: '网络请求失败，点击重试'
         });
       }
     });
+  },
+
+  // 点击重试
+  onRetry() {
+    console.log('[changelog] 用户点击重试');
+    this.loadChangelog();
   },
 
   // 返回上一页

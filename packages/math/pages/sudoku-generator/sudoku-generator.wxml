@@ -84,18 +84,6 @@
     </view>
   </view>
 
-  <!-- 操作按钮 -->
-  <view class="buttons-section">
-    <button class="btn regenerate-btn" bindtap="generateSudoku" disabled="{{generating}}">
-      <text class="btn-icon">🎲</text>
-      <text class="btn-text">{{generating ? '生成中...' : '重新生成'}}</text>
-    </button>
-    <button class="btn answer-btn" bindtap="toggleAnswer" disabled="{{generating}}">
-      <text class="btn-icon">{{showingAnswer ? '🙈' : '👁️'}}</text>
-      <text class="btn-text">{{showingAnswer ? '隐藏答案' : '显示答案'}}</text>
-    </button>
-  </view>
-
   <!-- 数字输入和候选数控制区 -->
   <view class="control-section">
     <!-- 数字输入面板 -->
@@ -139,5 +127,17 @@
       </view>
 
     </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="buttons-section">
+    <button class="btn regenerate-btn" bindtap="generateSudoku" disabled="{{generating}}">
+      <text class="btn-icon">🎲</text>
+      <text class="btn-text">{{generating ? '生成中...' : '重新生成'}}</text>
+    </button>
+    <button class="btn answer-btn" bindtap="toggleAnswer" disabled="{{generating}}">
+      <text class="btn-icon">{{showingAnswer ? '🙈' : '👁️'}}</text>
+      <text class="btn-text">{{showingAnswer ? '隐藏答案' : '显示答案'}}</text>
+    </button>
   </view>
 </view>

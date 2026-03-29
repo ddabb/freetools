@@ -433,7 +433,7 @@ Page({
         rawBoard.push(row);
       }
       if (!sudoku.isValidInput(rawBoard)) {
-        this.setData({ solving: false, hasSolution: false, solutionMessage: '输入无效' });
+        this.setData({ solving: false, hasSolution: false, solutionMessage: '' });
         utils.showText('输入无效');
         return;
       }

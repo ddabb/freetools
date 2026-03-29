@@ -3,41 +3,16 @@
 page {
   background: #f5f6f8;
   min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .container {
   min-height: 100vh;
-  padding-bottom: 40rpx;
+  padding: 30rpx 20rpx 40rpx;
 }
 
-/* 顶部导航 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx;
-  background: #fff;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
 
-.back-btn {
-  font-size: 28rpx;
-  color: #3498db;
-  padding: 10rpx 20rpx;
-}
-
-.header-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: #333;
-}
-
-.header-placeholder {
-  width: 100rpx;
-}
 
 /* 状态区域 */
 .status-section {
@@ -45,7 +20,8 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 200rpx 0;
+  padding: 300rpx 0;
+  min-height: 60vh;
 }
 
 .loading-spinner {
