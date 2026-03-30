@@ -1,5 +1,5 @@
 // packages/knowledge/pages/knowledgelist/knowledgelist.js
-
+const utils = require('../../../../utils/index');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
 Page({
@@ -9,25 +9,25 @@ Page({
     currentCategory: '',
     categories: [],
     categoryStats: {},
-    
+
     // 列表数据
     list: [],
     totalCount: 0,
-    
+
     // 分页
     page: 1,
     pageSize: 20,
     isOver: false,
     loading: false,
     refreshing: false,
-    
+
     // 排序
     sortField: 'order',
     sortOrder: 'asc',
-    
+
     // UI
     scrollHeight: 0,
-    
+
     // 原始数据
     allArticles: [],
     taxonomy: null
@@ -103,11 +103,11 @@ Page({
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => b.count - a.count);
           
-          this.setData({ 
+          this.setData({
             categories,
             categoryStats
           });
-          
+
           // 应用筛选和排序
           this.applyFiltersAndSort();
           
@@ -162,8 +162,14 @@ Page({
       return sortOrder === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
     });
     
+    // 格式化日期
+    const formattedList = allArticles.map(item => ({
+      ...item,
+      formattedUpdateTime: utils.formatDate(item.updateTime)
+    }));
+
     this.setData({
-      list: allArticles,
+      list: formattedList,
       totalCount: allArticles.length,
       isOver: true // 一次性加载全部
     });
@@ -281,6 +287,24 @@ Page({
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
     this.switchCategory({ currentTarget: { dataset: { category } } });
+  },
+
+  /**
+   * 获取分类英文类名
+   */
+  getCategoryClass(category) {
+    const classMap = {
+      '产品使用': 'category-product-usage',
+      '产品设计': 'category-product-design',
+      '产品思考': 'category-product-thinking',
+      '开发实践': 'category-dev-practice',
+      '开发者故事': 'category-dev-story',
+      '项目管理': 'category-project-mgmt',
+      'PMP认证': 'category-pmp',
+      '敏捷管理': 'category-agile',
+      '未分类': 'category-uncategorized'
+    };
+    return classMap[category] || 'category-uncategorized';
   },
 
   /**

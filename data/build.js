@@ -33,13 +33,19 @@ function ensureDirectory(dirPath) {
   }
 }
 
-// 清空目录
+// 递归清空目录（删除所有文件和子目录）
 function emptyDirectory(dirPath) {
   if (fs.existsSync(dirPath)) {
     const files = fs.readdirSync(dirPath);
     files.forEach(file => {
       const filePath = path.join(dirPath, file);
-      if (fs.statSync(filePath).isFile()) {
+      const stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        // 递归删除子目录
+        emptyDirectory(filePath);
+        fs.rmdirSync(filePath);
+      } else {
+        // 删除文件
         fs.unlinkSync(filePath);
       }
     });
@@ -100,14 +106,29 @@ async function build() {
 
   // 确保目录存在
   ensureDirectory(config.sourceDir);
+
+  // 清空整个 know 输出目录（保留 source 子目录）
+  if (fs.existsSync(config.outputDir)) {
+    const files = fs.readdirSync(config.outputDir);
+    files.forEach(file => {
+      if (file !== 'source') {
+        const filePath = path.join(config.outputDir, file);
+        const stat = fs.statSync(filePath);
+        if (stat.isDirectory()) {
+          emptyDirectory(filePath);
+          fs.rmdirSync(filePath);
+        } else {
+          fs.unlinkSync(filePath);
+        }
+      }
+    });
+    console.log('✅ 已清空输出目录');
+  }
+
+  // 确保子目录存在
   ensureDirectory(config.categoryDir);
   ensureDirectory(config.tagDir);
   ensureDirectory(config.detailDir);
-
-  // 清空输出目录
-  emptyDirectory(config.categoryDir);
-  emptyDirectory(config.tagDir);
-  emptyDirectory(config.detailDir);
 
   try {
     // 读取并处理Markdown文件

@@ -1,6 +1,4 @@
 <!-- packages/knowledge/pages/knowledgedetail/knowledgedetail.wxml -->
-<wxs module="utils" src="../../../../utils/index.wxs"></wxs>
-
 <view class="container">
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{loading}}">
@@ -20,7 +18,7 @@
     <!-- 文章头部 -->
     <view class="article-hero">
       <!-- 分类标签 -->
-      <view class="hero-category {{article.category}}">
+      <view class="hero-category {{getCategoryClass(article.category)}}">
         <text class="category-icon">{{getCategoryIcon(article.category)}}</text>
         <text class="category-name">{{article.category}}</text>
       </view>
@@ -37,7 +35,7 @@
         <view class="meta-divider"></view>
         <view class="meta-item">
           <text class="meta-icon">📅</text>
-          <text class="meta-value">{{utils.formatDate(article.updateTime)}}</text>
+          <text class="meta-value">{{formattedUpdateTime}}</text>
         </view>
         <view class="meta-divider"></view>
         <view class="meta-item">
@@ -104,7 +102,7 @@
           bindtap="onRelatedTap"
           data-id="{{item.id}}"
         >
-          <view class="related-category {{item.category}}">{{item.category}}</view>
+          <view class="related-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
           <text class="related-card-title">{{item.title}}</text>
           <text class="related-card-desc">{{item.description}}</text>
         </view>

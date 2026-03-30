@@ -104,31 +104,31 @@ page {
   margin-bottom: 24rpx;
 }
 
-.hero-category.产品使用 {
+.hero-category.category-product-usage {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.hero-category.产品设计 {
+.hero-category.category-product-design {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.hero-category.产品思考 {
+.hero-category.category-product-thinking {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
-.hero-category.开发实践 {
+.hero-category.category-dev-practice {
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 }
 
-.hero-category.开发者故事 {
+.hero-category.category-dev-story {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 
-.hero-category.项目管理 {
+.hero-category.category-project-mgmt {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.hero-category.未分类 {
+.hero-category.category-uncategorized {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 
@@ -464,23 +464,31 @@ page {
   margin-bottom: 12rpx;
 }
 
-.related-category.产品使用 {
+.related-category.category-product-usage {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.related-category.产品设计 {
+.related-category.category-product-design {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.related-category.产品思考 {
+.related-category.category-product-thinking {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
-.related-category.开发实践 {
+.related-category.category-dev-practice {
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 }
 
-.related-category.开发者故事 {
+.related-category.category-dev-story {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.related-category.category-project-mgmt {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.related-category.category-uncategorized {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 

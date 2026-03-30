@@ -1,6 +1,4 @@
 <!-- packages/knowledge/pages/knowledgelist/knowledgelist.wxml -->
-<wxs module="utils" src="../../../../utils/index.wxs"></wxs>
-
 <view class="container">
   <!-- 顶部搜索栏 -->
   <view class="search-bar">
@@ -94,7 +92,7 @@
       >
         <!-- 卡片头部 -->
         <view class="card-header">
-          <view class="card-category {{item.category}}">{{item.category}}</view>
+          <view class="card-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
           <text class="card-order">#{{item.order}}</text>
         </view>
 
@@ -117,7 +115,7 @@
           </view>
           <view class="card-meta">
             <text class="card-words">{{item.wordCount}}字</text>
-            <text class="card-time">{{utils.formatDate(item.updateTime)}}</text>
+            <text class="card-time">{{item.formattedUpdateTime}}</text>
           </view>
         </view>
 

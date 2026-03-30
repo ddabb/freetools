@@ -2,11 +2,11 @@
   "meta": {
     "tag": "确认范围",
     "count": 2,
-    "generatedAt": "2026-03-29T16:02:06.581Z"
+    "generatedAt": "2026-03-30T00:45:15.199Z"
   },
   "articles": [
     {
-      "id": "article-1774800126529",
+      "id": "article-1774831515081",
       "filename": "验收的可交付成果.json",
       "title": "验收的可交付成果",
       "description": "符合验收标准的可交付成果应该由客户或发起人正式签字批准。",
@@ -16,7 +16,7 @@
       "order": 16
     },
     {
-      "id": "article-1774800126511",
+      "id": "article-1774831515059",
       "filename": "确认范围.json",
       "title": "确认范围",
       "description": "确认范围是正式验收已完成的项目可交付成果的过程。",

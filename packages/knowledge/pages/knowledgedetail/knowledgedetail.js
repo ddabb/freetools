@@ -1,21 +1,23 @@
 // packages/knowledge/pages/knowledgedetail/knowledgedetail.js
 
+const utils = require('../../../../utils/index');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
 Page({
   data: {
     id: '',
     article: null,
+    formattedUpdateTime: '',
     loading: true,
     error: false,
     errorMsg: '',
-    
+
     // 互动数据
     isLiked: false,
     likeCount: 0,
     isCollected: false,
     collectCount: 0,
-    
+
     // 相关推荐
     relatedArticles: []
   },
@@ -54,6 +56,7 @@ Page({
 
           this.setData({
             article,
+            formattedUpdateTime: utils.formatDate(article.updateTime),
             loading: false,
             likeCount: article.likeCount || 0,
             collectCount: article.collectCount || 0
@@ -331,6 +334,24 @@ Page({
       '未分类': '📚'
     };
     return iconMap[category] || '📚';
+  },
+
+  /**
+   * 获取分类英文类名
+   */
+  getCategoryClass(category) {
+    const classMap = {
+      '产品使用': 'category-product-usage',
+      '产品设计': 'category-product-design',
+      '产品思考': 'category-product-thinking',
+      '开发实践': 'category-dev-practice',
+      '开发者故事': 'category-dev-story',
+      '项目管理': 'category-project-mgmt',
+      'PMP认证': 'category-pmp',
+      '敏捷管理': 'category-agile',
+      '未分类': 'category-uncategorized'
+    };
+    return classMap[category] || 'category-uncategorized';
   },
 
   /**

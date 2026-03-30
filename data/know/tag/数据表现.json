@@ -2,11 +2,11 @@
   "meta": {
     "tag": "数据表现",
     "count": 2,
-    "generatedAt": "2026-03-29T16:02:06.644Z"
+    "generatedAt": "2026-03-30T00:45:15.288Z"
   },
   "articles": [
     {
-      "id": "article-1774800126503",
+      "id": "article-1774831515050",
       "filename": "思维导图.json",
       "title": "思维导图",
       "description": "把从头脑风暴中获得的创意整合成一张图，用以反映创意之间的共性与差异，激发新创意。",
@@ -16,7 +16,7 @@
       "order": 168
     },
     {
-      "id": "article-1774800126492",
+      "id": "article-1774831515038",
       "filename": "亲和图.json",
       "title": "亲和图",
       "description": "用来对大量创意进行分组的技术，以便进一步审查和分析。",
