@@ -161,7 +161,8 @@
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "随身工具宝",
-    "navigationBarBackgroundColor": "#3498db"
+    "navigationBarBackgroundColor": "#3498db",
+    "enablePullDownRefresh": true
   },
   "tabBar": {
     "color": "#7f8c8d",

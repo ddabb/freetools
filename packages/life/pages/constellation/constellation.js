@@ -284,5 +284,20 @@ Page({
     wx.navigateTo({
       url: '/packages/life/pages/zodiac/zodiac'
     });
+  },
+
+  onPullDownRefresh() {
+    this.onRefresh();
+  },
+
+  /**
+   * 下拉刷新
+   */
+  onRefresh() {
+    // 清空缓存
+    wx.clearStorageSync();
+    // 重新加载数据
+    this.loadConstellationData();
+    wx.stopPullDownRefresh();
   }
 });

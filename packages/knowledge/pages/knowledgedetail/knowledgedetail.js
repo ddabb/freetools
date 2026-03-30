@@ -44,6 +44,26 @@ Page({
     }
   },
 
+  onPullDownRefresh() {
+    this.onRefresh();
+  },
+
+  /**
+   * 下拉刷新
+   */
+  onRefresh() {
+    // 清空缓存
+    wx.clearStorageSync();
+    // 重新加载数据
+    const { filename } = this.data;
+    if (filename) {
+      this.loadDetail(filename);
+      this.checkLikeStatus(filename);
+      this.checkCollectStatus(filename);
+    }
+    wx.stopPullDownRefresh();
+  },
+
   /**
    * 加载文章详情
    */
@@ -444,8 +464,7 @@ Page({
 
     return {
       title: `${article.title} - 随身百科`,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`,
-      imageUrl: article.description ? `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png` : ''
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
     };
   },
 

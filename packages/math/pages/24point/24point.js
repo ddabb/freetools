@@ -778,5 +778,23 @@ Page({
   // 页面显示时执行
   onShow() {
     // 可以在这里添加动画或其他效果
+  },
+
+  onPullDownRefresh() {
+    this.onRefresh();
+  },
+
+  /**
+   * 下拉刷新
+   */
+  onRefresh() {
+    // 清空缓存
+    wx.clearStorageSync();
+    // 重新加载数据
+    this.loadQuestionBank();
+    if (this.data.gameMode === 'preset') {
+      this.generateNewGame();
+    }
+    wx.stopPullDownRefresh();
   }
 })

@@ -82,5 +82,20 @@ Page({
 
   onShow() {
     // 页面显示时的处理
+  },
+
+  onPullDownRefresh() {
+    this.onRefresh();
+  },
+
+  /**
+   * 下拉刷新
+   */
+  onRefresh() {
+    // 清空缓存
+    wx.clearStorageSync();
+    // 重新加载数据
+    this.loadTags();
+    wx.stopPullDownRefresh();
   }
 });

@@ -251,6 +251,9 @@ Page({
    * 下拉刷新
    */
   onRefresh() {
+    // 清空缓存
+    wx.clearStorageSync();
+    // 重新加载数据
     this.setData({ refreshing: true, page: 1 });
     this.loadArticles();
   },
