@@ -86,9 +86,9 @@
       <view 
         class="article-card {{index % 2 === 0 ? 'card-left' : 'card-right'}}"
         wx:for="{{list}}"
-        wx:key="id"
+        wx:key="filename"
         bindtap="onArticleTap"
-        data-id="{{item.id}}"
+        data-filename="{{item.filename}}"
       >
         <!-- 卡片头部 -->
         <view class="card-header">

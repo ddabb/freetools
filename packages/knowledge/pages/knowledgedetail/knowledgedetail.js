@@ -5,7 +5,7 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
 Page({
   data: {
-    id: '',
+    filename: '',
     article: null,
     formattedUpdateTime: '',
     loading: true,
@@ -23,31 +23,60 @@ Page({
   },
 
   onLoad(options) {
-    if (options.id) {
-      this.setData({ id: options.id });
-      this.loadDetail(options.id);
-      this.checkLikeStatus(options.id);
-      this.checkCollectStatus(options.id);
+    console.log('页面加载参数:', {
+      options: options,
+      timestamp: new Date().toISOString()
+    });
+    
+    if (options.filename) {
+      console.log('开始加载文章:', {
+        filename: options.filename
+      });
+      this.setData({ filename: options.filename });
+      this.loadDetail(options.filename);
+      this.checkLikeStatus(options.filename);
+      this.checkCollectStatus(options.filename);
     } else {
-      this.setError('文章ID不存在');
+      console.warn('缺少文章filename参数:', {
+        options: options
+      });
+      this.setError('文章不存在');
     }
   },
 
   /**
    * 加载文章详情
    */
-  loadDetail(id) {
+  loadDetail(filename) {
     this.setData({ loading: true, error: false });
 
-    const url = CDN_BASE + 'detail/' + encodeURIComponent(id) + '.json';
+    const url = CDN_BASE + 'detail/' + encodeURIComponent(filename);
+    console.log('开始加载文章详情:', {
+      filename,
+      url,
+      timestamp: new Date().toISOString()
+    });
 
     wx.request({
       url,
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        console.log('文章详情请求成功:', {
+          statusCode: res.statusCode,
+          data: res.data,
+          header: res.header,
+          timestamp: new Date().toISOString()
+        });
+        
         if (res.statusCode === 200 && res.data) {
           const article = res.data;
+          console.log('获取到文章数据:', {
+            id: article.id,
+            title: article.title,
+            category: article.category,
+            wordCount: article.wordCount
+          });
           
           // 设置导航栏标题
           wx.setNavigationBarTitle({
@@ -65,12 +94,28 @@ Page({
           // 加载相关推荐
           this.loadRelatedArticles(article);
         } else {
+          console.warn('文章详情请求返回异常:', {
+            statusCode: res.statusCode,
+            data: res.data,
+            message: '文章不存在或已被删除'
+          });
           this.setError('文章不存在或已被删除');
         }
       },
       fail: (err) => {
-        console.error('加载文章详情失败:', err);
+        console.error('加载文章详情失败:', {
+          error: err,
+          url: url,
+          filename: filename,
+          timestamp: new Date().toISOString()
+        });
         this.setError('网络错误，请检查网络连接');
+      },
+      complete: (res) => {
+        console.log('文章详情请求完成:', {
+          status: res.statusCode,
+          timestamp: new Date().toISOString()
+        });
       }
     });
   },
@@ -80,14 +125,29 @@ Page({
    */
   loadRelatedArticles(article) {
     const url = CDN_BASE + 'articles.json';
+    console.log('开始加载相关推荐:', {
+      articleId: article.id,
+      articleTitle: article.title,
+      url,
+      timestamp: new Date().toISOString()
+    });
 
     wx.request({
       url,
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        console.log('相关推荐请求成功:', {
+          statusCode: res.statusCode,
+          dataLength: res.data ? (res.data.articles ? res.data.articles.length : 0) : 0,
+          timestamp: new Date().toISOString()
+        });
+        
         if (res.statusCode === 200 && res.data) {
           const allArticles = res.data.articles || [];
+          console.log('获取到文章列表:', {
+            totalArticles: allArticles.length
+          });
           
           // 找出同类目或同标签的文章
           const related = allArticles
@@ -98,11 +158,32 @@ Page({
             )
             .slice(0, 5); // 只显示5篇
 
+          console.log('找到相关推荐:', {
+            relatedCount: related.length,
+            relatedTitles: related.map(a => a.title)
+          });
+
           this.setData({ relatedArticles: related });
+        } else {
+          console.warn('相关推荐请求返回异常:', {
+            statusCode: res.statusCode,
+            data: res.data
+          });
         }
       },
       fail: (err) => {
-        console.error('加载相关推荐失败:', err);
+        console.error('加载相关推荐失败:', {
+          error: err,
+          url: url,
+          articleId: article.id,
+          timestamp: new Date().toISOString()
+        });
+      },
+      complete: (res) => {
+        console.log('相关推荐请求完成:', {
+          status: res.statusCode,
+          timestamp: new Date().toISOString()
+        });
       }
     });
   },
@@ -110,10 +191,10 @@ Page({
   /**
    * 检查点赞状态
    */
-  checkLikeStatus(id) {
+  checkLikeStatus(filename) {
     try {
       const likeList = wx.getStorageSync('likeList') || [];
-      const isLiked = likeList.includes(id);
+      const isLiked = likeList.includes(filename);
       this.setData({ isLiked });
     } catch (e) {
       console.error('检查点赞状态失败:', e);
@@ -123,10 +204,10 @@ Page({
   /**
    * 检查收藏状态
    */
-  checkCollectStatus(id) {
+  checkCollectStatus(filename) {
     try {
       const collectList = wx.getStorageSync('collectList') || [];
-      const isCollected = collectList.includes(id);
+      const isCollected = collectList.includes(filename);
       this.setData({ isCollected });
     } catch (e) {
       console.error('检查收藏状态失败:', e);
@@ -137,14 +218,14 @@ Page({
    * 点赞
    */
   onLike() {
-    const { id, isLiked, likeCount } = this.data;
+    const { filename, isLiked, likeCount } = this.data;
     
     try {
       let likeList = wx.getStorageSync('likeList') || [];
       
       if (isLiked) {
         // 取消点赞
-        likeList = likeList.filter(item => item !== id);
+        likeList = likeList.filter(item => item !== filename);
         this.setData({
           isLiked: false,
           likeCount: Math.max(0, likeCount - 1)
@@ -156,7 +237,7 @@ Page({
         });
       } else {
         // 添加点赞
-        likeList.push(id);
+        likeList.push(filename);
         this.setData({
           isLiked: true,
           likeCount: likeCount + 1
@@ -182,14 +263,14 @@ Page({
    * 收藏
    */
   onCollect() {
-    const { id, isCollected } = this.data;
+    const { filename, isCollected } = this.data;
     
     try {
       let collectList = wx.getStorageSync('collectList') || [];
       
       if (isCollected) {
         // 取消收藏
-        collectList = collectList.filter(item => item !== id);
+        collectList = collectList.filter(item => item !== filename);
         this.setData({
           isCollected: false,
           collectCount: Math.max(0, this.data.collectCount - 1)
@@ -201,7 +282,7 @@ Page({
         });
       } else {
         // 添加收藏
-        collectList.push(id);
+        collectList.push(filename);
         this.setData({
           isCollected: true,
           collectCount: this.data.collectCount + 1
@@ -284,9 +365,9 @@ Page({
    * 相关推荐点击
    */
   onRelatedTap(e) {
-    const { id } = e.currentTarget.dataset;
+    const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${id}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 
@@ -301,9 +382,9 @@ Page({
    * 重试加载
    */
   onRetry() {
-    const { id } = this.data;
-    if (id) {
-      this.loadDetail(id);
+    const { filename } = this.data;
+    if (filename) {
+      this.loadDetail(filename);
     }
   },
 
@@ -358,12 +439,12 @@ Page({
    * 分享给好友
    */
   onShareAppMessage() {
-    const { article } = this.data;
+    const { article, filename } = this.data;
     if (!article) return {};
 
     return {
       title: `${article.title} - 随身百科`,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${encodeURIComponent(article.id)}`,
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`,
       imageUrl: article.description ? `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png` : ''
     };
   },
@@ -372,12 +453,12 @@ Page({
    * 分享到朋友圈
    */
   onShareTimeline() {
-    const { article } = this.data;
+    const { article, filename } = this.data;
     if (!article) return {};
 
     return {
       title: `📖 ${article.title}`,
-      query: `id=${encodeURIComponent(article.id)}`
+      query: `filename=${encodeURIComponent(filename)}`
     };
   }
 });

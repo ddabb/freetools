@@ -98,9 +98,9 @@
         <view 
           class="related-card"
           wx:for="{{relatedArticles}}"
-          wx:key="id"
+          wx:key="filename"
           bindtap="onRelatedTap"
-          data-id="{{item.id}}"
+          data-filename="{{item.filename}}"
         >
           <view class="related-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
           <text class="related-card-title">{{item.title}}</text>

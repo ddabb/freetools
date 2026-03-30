@@ -266,9 +266,9 @@ Page({
    * 点击文章进入详情页
    */
   onArticleTap(e) {
-    const { id } = e.currentTarget.dataset;
+    const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?id=${id}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 

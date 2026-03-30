@@ -6,7 +6,7 @@ const yaml = require('js-yaml');
 // 配置参数
 const config = {
   // 源文件目录（Markdown文件）
-  sourceDir: path.resolve(__dirname, 'know', 'source'),
+  sourceDir: path.resolve(__dirname, 'source'),
   // 输出目录
   outputDir: path.resolve(__dirname, 'know'),
   // 分类输出目录
@@ -107,21 +107,9 @@ async function build() {
   // 确保目录存在
   ensureDirectory(config.sourceDir);
 
-  // 清空整个 know 输出目录（保留 source 子目录）
+  // 清空整个 know 输出目录
   if (fs.existsSync(config.outputDir)) {
-    const files = fs.readdirSync(config.outputDir);
-    files.forEach(file => {
-      if (file !== 'source') {
-        const filePath = path.join(config.outputDir, file);
-        const stat = fs.statSync(filePath);
-        if (stat.isDirectory()) {
-          emptyDirectory(filePath);
-          fs.rmdirSync(filePath);
-        } else {
-          fs.unlinkSync(filePath);
-        }
-      }
-    });
+    emptyDirectory(config.outputDir);
     console.log('✅ 已清空输出目录');
   }
 

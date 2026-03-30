@@ -2,7 +2,7 @@
   "meta": {
     "tag": "管理质量",
     "count": 4,
-    "generatedAt": "2026-03-30T00:45:15.223Z"
+    "generatedAt": "2026-03-30T00:50:12.090Z"
   },
   "articles": [
     {
@@ -16,7 +16,7 @@
       "order": 40
     },
     {
-      "id": "article-1774831515074",
+      "id": "article-1774831811960",
       "filename": "问题解决.json",
       "title": "问题解决",
       "description": "问题解决发现解决问题或应对挑战的解决方案。",
@@ -26,7 +26,7 @@
       "order": 47
     },
     {
-      "id": "article-1774831515060",
+      "id": "article-1774831811945",
       "filename": "管理质量.json",
       "title": "管理质量",
       "description": "管理质量是把组织的质量政策用于项目，并将质量管理计划转化为可执行的质量活动的过程。",
@@ -36,7 +36,7 @@
       "order": 114
     },
     {
-      "id": "article-1774831515057",
+      "id": "article-1774831811941",
       "filename": "测试与评估文件.json",
       "title": "测试与评估文件",
       "description": "可基于行业需求和组织模板创建测试与评估文件。",

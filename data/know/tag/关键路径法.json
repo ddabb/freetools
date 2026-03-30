@@ -2,11 +2,11 @@
   "meta": {
     "tag": "关键路径法",
     "count": 1,
-    "generatedAt": "2026-03-30T00:45:15.294Z"
+    "generatedAt": "2026-03-30T00:50:12.175Z"
   },
   "articles": [
     {
-      "id": "article-1774831515041",
+      "id": "article-1774831811926",
       "filename": "关键路径法.json",
       "title": "关键路径法",
       "description": "关键路径法用于在进度模型中估算项目最短工期，确定逻辑网络路径的进度灵活性大小。",
