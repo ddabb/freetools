@@ -271,7 +271,7 @@ Page({
   onArticleTap(e) {
     const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
     });
   },
 
@@ -341,7 +341,7 @@ Page({
 
     return {
       title,
-      path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${encodeURIComponent(currentCategory)}&tag=${encodeURIComponent(searchKeyword.replace('#', ''))}`,
+      path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${currentCategory}&tag=${searchKeyword.replace('#', '')}`,
       imageUrl: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png'
     };
   },
@@ -357,7 +357,7 @@ Page({
 
     return {
       title,
-      query: `category=${encodeURIComponent(currentCategory)}`
+      query: `category=${currentCategory}`
     };
   }
 });

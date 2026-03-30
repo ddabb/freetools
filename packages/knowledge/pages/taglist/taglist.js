@@ -5,24 +5,26 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 Page({
   data: {
     tags: [],
+    filteredTags: [],
+    searchKeyword: '',
     loading: true,
     error: false,
-    errorMsg: ''
+    errorMsg: '',
+    scrollHeight: 0
   },
 
   onLoad() {
-    // 设置导航栏标题
+    const systemInfo = wx.getSystemInfoSync();
+    const scrollHeight = systemInfo.windowHeight - 180;
+    this.setData({ scrollHeight });
+
     wx.setNavigationBarTitle({
       title: '标签列表'
     });
 
-    // 加载标签列表
     this.loadTags();
   },
 
-  /**
-   * 加载标签列表
-   */
   async loadTags() {
     this.setData({
       loading: true,
@@ -33,17 +35,16 @@ Page({
     const url = CDN_BASE + 'tags.json';
 
     try {
-      // 使用带缓存的请求
       const app = getApp();
       const res = await app.requestWithCache(url, {
         method: 'GET',
         timeout: 10000
-      }, 7200); // 2小时缓存
+      }, 7200);
 
-      const tags = res.tags;
-
+      const tags = res.tags || [];
       this.setData({
-        tags: tags,
+        tags,
+        filteredTags: tags,
         loading: false,
         error: false
       });
@@ -54,8 +55,47 @@ Page({
   },
 
   /**
-   * 点击标签跳转到标签文章列表
+   * 搜索输入
    */
+  onSearchInput(e) {
+    const keyword = e.detail.value;
+    this.setData({ searchKeyword: keyword });
+    this.filterTags(keyword);
+  },
+
+  /**
+   * 搜索确认
+   */
+  onSearchConfirm(e) {
+    const keyword = e.detail.value;
+    this.setData({ searchKeyword: keyword });
+    this.filterTags(keyword);
+  },
+
+  /**
+   * 清除搜索
+   */
+  clearSearch() {
+    this.setData({ searchKeyword: '' });
+    this.filterTags('');
+  },
+
+  /**
+   * 过滤标签
+   */
+  filterTags(keyword) {
+    const { tags } = this.data;
+    if (!keyword) {
+      this.setData({ filteredTags: tags });
+      return;
+    }
+
+    const filtered = tags.filter(tag => 
+      tag.name.toLowerCase().includes(keyword.toLowerCase())
+    );
+    this.setData({ filteredTags: filtered });
+  },
+
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
     wx.navigateTo({
@@ -63,9 +103,6 @@ Page({
     });
   },
 
-  /**
-   * 显示错误提示
-   */
   showError(message) {
     this.setData({
       error: true,
@@ -75,26 +112,19 @@ Page({
 
     wx.showToast({
       title: message,
-      icon: 'error',
+      icon: 'none',
       duration: 2000
     });
   },
 
-  onShow() {
-    // 页面显示时的处理
-  },
+  onShow() {},
 
   onPullDownRefresh() {
     this.onRefresh();
   },
 
-  /**
-   * 下拉刷新
-   */
   onRefresh() {
-    // 清空缓存
     wx.clearStorageSync();
-    // 重新加载数据
     this.loadTags();
     wx.stopPullDownRefresh();
   }

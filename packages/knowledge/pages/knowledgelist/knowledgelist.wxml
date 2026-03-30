@@ -19,7 +19,7 @@
   </view>
 
   <!-- 分类导航 -->
-  <scroll-view class="category-nav" scroll-x enable-flex>
+  <scroll-view class="category-nav" scroll-x>
     <view 
       class="category-item {{currentCategory === '' ? 'active' : ''}}"
       bindtap="switchCategory"
@@ -45,8 +45,7 @@
     <view class="stats-left">
       <text class="stats-text">共 {{totalCount}} 篇文章</text>
       <text class="stats-filter" wx:if="{{currentCategory || searchKeyword}}">
-        {{currentCategory ? '分类: ' + currentCategory : ''}}
-        {{searchKeyword ? '关键词: ' + searchKeyword : ''}}
+        {{currentCategory ? '分类: ' + currentCategory : ''}}{{searchKeyword ? '关键词: ' + searchKeyword : ''}}
       </text>
     </view>
     <view class="sort-wrap" bindtap="toggleSort">
@@ -70,57 +69,56 @@
     <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
       <text class="empty-icon">🔍</text>
       <text class="empty-text">没有找到相关文章</text>
-      <text class="empty-hint" wx:if="{{searchKeyword}}">
-        换个关键词试试吧~
-      </text>
-      <text class="empty-hint" wx:else>
-        该分类下暂无文章
-      </text>
+      <text class="empty-hint" wx:if="{{searchKeyword}}">换个关键词试试吧~</text>
+      <text class="empty-hint" wx:else>该分类下暂无文章</text>
       <button class="empty-btn" wx:if="{{searchKeyword || currentCategory}}" bindtap="clearFilters">
         清除筛选
       </button>
     </view>
 
     <!-- 文章卡片列表 -->
-    <view class="article-list">
+    <view class="article-list" wx:if="{{list.length > 0}}">
       <view 
-        class="article-card {{index % 2 === 0 ? 'card-left' : 'card-right'}}"
+        class="article-card"
         wx:for="{{list}}"
         wx:key="filename"
         bindtap="onArticleTap"
         data-filename="{{item.filename}}"
       >
-        <!-- 卡片头部 -->
-        <view class="card-header">
-          <view class="card-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
-          <text class="card-order">#{{item.order}}</text>
-        </view>
-
-        <!-- 卡片标题 -->
-        <text class="card-title">{{item.title}}</text>
-
-        <!-- 卡片描述 -->
-        <text class="card-desc">{{item.description}}</text>
-
-        <!-- 卡片底部 -->
-        <view class="card-footer">
-          <view class="card-tags">
-            <text class="card-tag" 
-              wx:for="{{item.tags}}" 
-              wx:for-item="tag" 
-              wx:key="*this"
-              data-tag="{{tag}}"
-              catchtap="onTagTap"
-            >#{{tag}}</text>
+        <view class="card-inner">
+          <!-- 卡片头部 -->
+          <view class="card-header">
+            <view class="card-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
+            <text class="card-order">#{{item.order}}</text>
           </view>
-          <view class="card-meta">
-            <text class="card-words">{{item.wordCount}}字</text>
-            <text class="card-time">{{item.formattedUpdateTime}}</text>
-          </view>
-        </view>
 
-        <!-- 装饰元素 -->
-        <view class="card-decoration {{index % 3 === 0 ? 'deco-1' : (index % 3 === 1 ? 'deco-2' : 'deco-3')}}"></view>
+          <!-- 卡片标题 -->
+          <text class="card-title">{{item.title}}</text>
+
+          <!-- 卡片描述 -->
+          <text class="card-desc">{{item.description}}</text>
+
+          <!-- 卡片底部 -->
+          <view class="card-footer">
+            <view class="card-tags">
+              <text 
+                class="card-tag" 
+                wx:for="{{item.tags}}" 
+                wx:for-item="tag" 
+                wx:key="*this"
+                data-tag="{{tag}}"
+                catchtap="onTagTap"
+              >#{{tag}}</text>
+            </view>
+            <view class="card-meta">
+              <text class="card-words">{{item.wordCount}}字</text>
+              <text class="card-time">{{item.formattedUpdateTime}}</text>
+            </view>
+          </view>
+
+          <!-- 装饰元素 -->
+          <view class="card-decoration {{index % 3 === 0 ? 'deco-1' : (index % 3 === 1 ? 'deco-2' : 'deco-3')}}"></view>
+        </view>
       </view>
     </view>
 

@@ -7,22 +7,22 @@ Page({
     categories: [],
     loading: true,
     error: false,
-    errorMsg: ''
+    errorMsg: '',
+    scrollHeight: 0
   },
 
   onLoad() {
-    // 设置导航栏标题
+    const systemInfo = wx.getSystemInfoSync();
+    const scrollHeight = systemInfo.windowHeight - 180;
+    this.setData({ scrollHeight });
+
     wx.setNavigationBarTitle({
       title: '分类列表'
     });
 
-    // 加载分类列表
     this.loadCategories();
   },
 
-  /**
-   * 加载分类列表
-   */
   async loadCategories() {
     this.setData({
       loading: true,
@@ -33,12 +33,11 @@ Page({
     const url = CDN_BASE + 'articles.json';
 
     try {
-      // 使用带缓存的请求
       const app = getApp();
       const res = await app.requestWithCache(url, {
         method: 'GET',
         timeout: 10000
-      }, 7200); // 2小时缓存
+      }, 7200);
 
       const categories = res.taxonomy.categories;
       const categoryList = Object.keys(categories).map(category => ({
@@ -57,9 +56,6 @@ Page({
     }
   },
 
-  /**
-   * 点击分类跳转到分类文章列表
-   */
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
     wx.navigateTo({
@@ -67,9 +63,6 @@ Page({
     });
   },
 
-  /**
-   * 显示错误提示
-   */
   showError(message) {
     this.setData({
       error: true,
@@ -79,26 +72,19 @@ Page({
 
     wx.showToast({
       title: message,
-      icon: 'error',
+      icon: 'none',
       duration: 2000
     });
   },
 
-  onShow() {
-    // 页面显示时的处理
-  },
+  onShow() {},
 
   onPullDownRefresh() {
     this.onRefresh();
   },
 
-  /**
-   * 下拉刷新
-   */
   onRefresh() {
-    // 清空缓存
     wx.clearStorageSync();
-    // 重新加载数据
     this.loadCategories();
     wx.stopPullDownRefresh();
   }

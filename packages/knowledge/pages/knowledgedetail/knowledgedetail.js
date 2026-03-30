@@ -3,6 +3,14 @@
 const utils = require('../../../../utils/index');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
 
+// 使用 markdown-it 渲染 Markdown（项目已安装该库）
+let markdownIt = null;
+try {
+  markdownIt = require('markdown-it');
+} catch (e) {
+  console.warn('[knowledgedetail] markdown-it 未正确引入，请确保构建时打包了 markdown-it');
+}
+
 Page({
   data: {
     filename: '',
@@ -11,13 +19,8 @@ Page({
     loading: true,
     error: false,
     errorMsg: '',
-
-    // 互动数据
-    isLiked: false,
-    likeCount: 0,
-    isCollected: false,
-    collectCount: 0,
-
+    // Markdown 渲染后的 HTML（供 rich-text 使用）
+    contentHtml: '',
     // 相关推荐
     relatedArticles: []
   },
@@ -34,8 +37,6 @@ Page({
       });
       this.setData({ filename: options.filename });
       this.loadDetail(options.filename);
-      this.checkLikeStatus(options.filename);
-      this.checkCollectStatus(options.filename);
     } else {
       console.warn('缺少文章filename参数:', {
         options: options
@@ -52,16 +53,83 @@ Page({
    * 下拉刷新
    */
   onRefresh() {
-    // 清空缓存
     wx.clearStorageSync();
-    // 重新加载数据
     const { filename } = this.data;
     if (filename) {
       this.loadDetail(filename);
-      this.checkLikeStatus(filename);
-      this.checkCollectStatus(filename);
     }
     wx.stopPullDownRefresh();
+  },
+
+  /**
+   * 将 Markdown 转换为简化 HTML（供 rich-text 使用）
+   * 处理 towxml 不方便引入时的回退方案
+   */
+  markdownToHtml(markdown) {
+    if (!markdown) return '';
+    
+    // 使用 markdown-it（如果可用）
+    if (markdownIt) {
+      try {
+        const md = markdownIt();
+        return md.render(markdown);
+      } catch (e) {
+        console.error('[knowledgedetail] markdown-it 渲染失败:', e);
+      }
+    }
+    
+    // 无 markdown-it 时的手写解析器（基础功能）
+    return this._simpleMarkdownParser(markdown);
+  },
+
+  /**
+   * 简化的 Markdown 解析器（不依赖任何库）
+   */
+  _simpleMarkdownParser(text) {
+    if (!text) return '';
+    
+    let html = text
+      // 转义 HTML 特殊字符（放在最前面）
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      // 分隔线
+      .replace(/^---$/gm, '<view style="border-top:1px dashed #e0e0e0;margin:24rpx 0;"></view>')
+      // H1 ~ H6（代码块内的不处理，已被提前保护）
+      .replace(/^###### (.+)$/gm, '<view class="md-h6">$1</view>')
+      .replace(/^##### (.+)$/gm, '<view class="md-h5">$1</view>')
+      .replace(/^#### (.+)$/gm, '<view class="md-h4">$1</view>')
+      .replace(/^### (.+)$/gm, '<view class="md-h3">$1</view>')
+      .replace(/^## (.+)$/gm, '<view class="md-h2">$1</view>')
+      .replace(/^# (.+)$/gm, '<view class="md-h1">$1</view>')
+      // 引用块（多行）
+      .replace(/^&gt; (.+)$/gm, '<view class="md-blockquote">$1</view>')
+      // 无序列表项
+      .replace(/^[-*] (.+)$/gm, '<view class="md-li">• $1</view>')
+      // 有序列表项
+      .replace(/^\d+\. (.+)$/gm, '<view class="md-li">$1</view>')
+      // 表格行（简化处理：把 | 转为分隔）
+      .replace(/^\|(.+)\|$/gm, (match, content) => {
+        const cells = content.split('|').map(c => c.trim());
+        if (cells.some(c => /^-+$/.test(c))) {
+          return ''; // 分隔行跳过
+        }
+        const tds = cells.map(c => `<view class="md-td">${c}</view>`).join('');
+        return `<view class="md-tr">${tds}</view>`;
+      })
+      // 行内代码
+      .replace(/`([^`]+)`/g, '<view class="md-code">$1</view>')
+      // 加粗
+      .replace(/\*\*(.+?)\*\*/g, '<view class="md-bold">$1</view>')
+      // 斜体
+      .replace(/\*(.+?)\*/g, '<view class="md-em">$1</view>')
+      // 换行（保留段落结构）
+      .replace(/\n{2,}/g, '</view><view class="md-p">')
+      .replace(/\n/g, '<view class="md-br"></view>');
+
+    // 包裹段落
+    html = `<view class="md-article">${html}</view>`;
+    return html;
   },
 
   /**
@@ -70,7 +138,7 @@ Page({
   loadDetail(filename) {
     this.setData({ loading: true, error: false });
 
-    const url = CDN_BASE + 'detail/' + encodeURIComponent(filename);
+    const url = CDN_BASE + 'detail/' + filename;
     console.log('开始加载文章详情:', {
       filename,
       url,
@@ -84,7 +152,6 @@ Page({
       success: (res) => {
         console.log('文章详情请求成功:', {
           statusCode: res.statusCode,
-          data: res.data,
           header: res.header,
           timestamp: new Date().toISOString()
         });
@@ -98,17 +165,18 @@ Page({
             wordCount: article.wordCount
           });
           
-          // 设置导航栏标题
           wx.setNavigationBarTitle({
             title: article.title || '文章详情'
           });
 
+          // Markdown 内容渲染为 HTML
+          const contentHtml = this.markdownToHtml(article.content || '');
+
           this.setData({
             article,
             formattedUpdateTime: utils.formatDate(article.updateTime),
-            loading: false,
-            likeCount: article.likeCount || 0,
-            collectCount: article.collectCount || 0
+            contentHtml,
+            loading: false
           });
 
           // 加载相关推荐
@@ -116,7 +184,6 @@ Page({
         } else {
           console.warn('文章详情请求返回异常:', {
             statusCode: res.statusCode,
-            data: res.data,
             message: '文章不存在或已被删除'
           });
           this.setError('文章不存在或已被删除');
@@ -145,183 +212,30 @@ Page({
    */
   loadRelatedArticles(article) {
     const url = CDN_BASE + 'articles.json';
-    console.log('开始加载相关推荐:', {
-      articleId: article.id,
-      articleTitle: article.title,
-      url,
-      timestamp: new Date().toISOString()
-    });
 
     wx.request({
       url,
       method: 'GET',
       timeout: 10000,
       success: (res) => {
-        console.log('相关推荐请求成功:', {
-          statusCode: res.statusCode,
-          dataLength: res.data ? (res.data.articles ? res.data.articles.length : 0) : 0,
-          timestamp: new Date().toISOString()
-        });
-        
         if (res.statusCode === 200 && res.data) {
           const allArticles = res.data.articles || [];
-          console.log('获取到文章列表:', {
-            totalArticles: allArticles.length
-          });
           
-          // 找出同类目或同标签的文章
           const related = allArticles
             .filter(a => a.id !== article.id)
             .filter(a => 
               a.category === article.category ||
               (a.tags && article.tags && a.tags.some(t => article.tags.includes(t)))
             )
-            .slice(0, 5); // 只显示5篇
-
-          console.log('找到相关推荐:', {
-            relatedCount: related.length,
-            relatedTitles: related.map(a => a.title)
-          });
+            .slice(0, 5);
 
           this.setData({ relatedArticles: related });
-        } else {
-          console.warn('相关推荐请求返回异常:', {
-            statusCode: res.statusCode,
-            data: res.data
-          });
         }
       },
       fail: (err) => {
-        console.error('加载相关推荐失败:', {
-          error: err,
-          url: url,
-          articleId: article.id,
-          timestamp: new Date().toISOString()
-        });
-      },
-      complete: (res) => {
-        console.log('相关推荐请求完成:', {
-          status: res.statusCode,
-          timestamp: new Date().toISOString()
-        });
+        console.error('加载相关推荐失败:', err);
       }
     });
-  },
-
-  /**
-   * 检查点赞状态
-   */
-  checkLikeStatus(filename) {
-    try {
-      const likeList = wx.getStorageSync('likeList') || [];
-      const isLiked = likeList.includes(filename);
-      this.setData({ isLiked });
-    } catch (e) {
-      console.error('检查点赞状态失败:', e);
-    }
-  },
-
-  /**
-   * 检查收藏状态
-   */
-  checkCollectStatus(filename) {
-    try {
-      const collectList = wx.getStorageSync('collectList') || [];
-      const isCollected = collectList.includes(filename);
-      this.setData({ isCollected });
-    } catch (e) {
-      console.error('检查收藏状态失败:', e);
-    }
-  },
-
-  /**
-   * 点赞
-   */
-  onLike() {
-    const { filename, isLiked, likeCount } = this.data;
-    
-    try {
-      let likeList = wx.getStorageSync('likeList') || [];
-      
-      if (isLiked) {
-        // 取消点赞
-        likeList = likeList.filter(item => item !== filename);
-        this.setData({
-          isLiked: false,
-          likeCount: Math.max(0, likeCount - 1)
-        });
-        wx.showToast({
-          title: '取消点赞',
-          icon: 'success',
-          duration: 1500
-        });
-      } else {
-        // 添加点赞
-        likeList.push(filename);
-        this.setData({
-          isLiked: true,
-          likeCount: likeCount + 1
-        });
-        wx.showToast({
-          title: '点赞成功 ❤️',
-          icon: 'success',
-          duration: 1500
-        });
-      }
-      
-      wx.setStorageSync('likeList', likeList);
-    } catch (e) {
-      console.error('点赞操作失败:', e);
-      wx.showToast({
-        title: '操作失败',
-        icon: 'none'
-      });
-    }
-  },
-
-  /**
-   * 收藏
-   */
-  onCollect() {
-    const { filename, isCollected } = this.data;
-    
-    try {
-      let collectList = wx.getStorageSync('collectList') || [];
-      
-      if (isCollected) {
-        // 取消收藏
-        collectList = collectList.filter(item => item !== filename);
-        this.setData({
-          isCollected: false,
-          collectCount: Math.max(0, this.data.collectCount - 1)
-        });
-        wx.showToast({
-          title: '已取消收藏',
-          icon: 'success',
-          duration: 1500
-        });
-      } else {
-        // 添加收藏
-        collectList.push(filename);
-        this.setData({
-          isCollected: true,
-          collectCount: this.data.collectCount + 1
-        });
-        wx.showToast({
-          title: '收藏成功 ⭐',
-          icon: 'success',
-          duration: 1500
-        });
-      }
-      
-      wx.setStorageSync('collectList', collectList);
-    } catch (e) {
-      console.error('收藏操作失败:', e);
-      wx.showToast({
-        title: '操作失败',
-        icon: 'none'
-      });
-    }
   },
 
   /**
@@ -331,14 +245,10 @@ Page({
     const { article } = this.data;
     if (!article) return;
 
-    // 提取纯文本内容
     const content = article.content
-      .replace(/<[^>]+>/g, '\n')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&amp;/g, '&')
-      .replace(/\n\s*\n/g, '\n')
+      .replace(/```[\s\S]*?```/g, (m) => m.replace(/[#*`_]/g, ''))
+      .replace(/[#*`_\[\]]/g, '')
+      .replace(/\n{3,}/g, '\n\n')
       .trim();
 
     wx.setClipboardData({
@@ -365,7 +275,7 @@ Page({
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${encodeURIComponent(tag)}`
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
     });
   },
 
