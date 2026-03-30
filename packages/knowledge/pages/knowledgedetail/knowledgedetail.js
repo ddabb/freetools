@@ -1,7 +1,7 @@
 // packages/knowledge/pages/knowledgedetail/knowledgedetail.js
 
 const utils = require('../../../../utils/index');
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 // 使用 markdown-it 渲染 Markdown（项目已安装该库）
 let markdownIt = null;
@@ -287,7 +287,7 @@ Page({
     if (!article || !article.category) return;
     
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${encodeURIComponent(article.category)}`
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${article.category}`
     });
   },
 

@@ -1,6 +1,6 @@
 // packages/knowledge/pages/knowledgelist/knowledgelist.js
 const utils = require('../../../../utils/index');
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 Page({
   data: {
@@ -342,7 +342,7 @@ Page({
     return {
       title,
       path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${currentCategory}&tag=${searchKeyword.replace('#', '')}`,
-      imageUrl: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/images/baike-share.png'
+      imageUrl: 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/images/baike-share.png'
     };
   },
 

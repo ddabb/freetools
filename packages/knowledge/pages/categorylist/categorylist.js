@@ -1,6 +1,6 @@
 // packages/knowledge/pages/categorylist/categorylist.js
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 Page({
   data: {
