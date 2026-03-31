@@ -271,7 +271,7 @@ Page({
   onArticleTap(e) {
     const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 

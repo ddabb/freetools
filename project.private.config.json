@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "数独求解器",
-          "pathName": "packages/math/pages/sudoku-solver/sudoku-solver",
+          "name": "知识列表",
+          "pathName": "packages/knowledge/pages/knowledgelist/knowledgelist",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "数独求解器",
+          "pathName": "packages/math/pages/sudoku-solver/sudoku-solver",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "数独生成器",
