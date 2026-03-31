@@ -326,7 +326,7 @@ Page({
    */
   onShareAppMessage() {
     const { currentCategory, searchKeyword, totalCount } = this.data;
-    let title = '随身百科 - 随身工具宝';
+    let title = '随身百科-答疑小助手';
 
     if (currentCategory) {
       title = `${currentCategory} - 随身百科`;
