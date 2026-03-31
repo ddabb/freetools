@@ -374,7 +374,7 @@ Page({
 
     return {
       title: `${article.title} - 随身百科`,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     };
   },
 
@@ -386,8 +386,8 @@ Page({
     if (!article) return {};
 
     return {
-      title: `📖 ${article.title}`,
-      query: `filename=${encodeURIComponent(filename)}`
+      title: `${article.title}`,
+      query: `filename=${filename}`
     };
   }
 });
