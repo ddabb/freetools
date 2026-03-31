@@ -15,7 +15,6 @@ Page({
   data: {
     filename: '',
     article: null,
-    formattedUpdateTime: '',
     loading: true,
     error: false,
     errorMsg: '',
@@ -75,6 +74,22 @@ Page({
         return md.render(markdown);
       } catch (e) {
         console.error('[knowledgedetail] markdown-it 渲染失败:', e);
+        try {
+          const md = markdownIt({
+            html: true,         // 启用 HTML 标签解析
+            linkify: true,      // 自动将 URL 转换为链接
+            typographer: true,  // 启用排版优化
+            breaks: true        // 将换行符转换为 <br>
+          }).use(require('markdown-it-table'), {
+            multiline: true,    // 支持多行表格
+            rowspan: true       // 支持行合并
+          });
+
+          return md.render(markdown);
+        } catch (e) {
+          console.error('[knowledgedetail] markdown-it 渲染失败:', e);
+          return this._simpleMarkdownParser(markdown); // 失败时回退到简单解析器
+        }
       }
     }
     
@@ -174,7 +189,6 @@ Page({
 
           this.setData({
             article,
-            formattedUpdateTime: utils.formatDate(article.updateTime),
             contentHtml,
             loading: false
           });

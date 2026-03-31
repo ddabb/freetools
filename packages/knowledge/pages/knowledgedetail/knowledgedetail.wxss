@@ -162,27 +162,29 @@ page {
 .hero-category.category-uncategorized { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
 
 .category-icon { font-size: 28rpx; color: #333; }
-.category-name { color: #333; font-size: 24rpx; font-weight: 600; }
+.category-name { color: #333; font-size: 24rpx; font-weight: 600; user-select: text; }
+
+/* 标题和元信息容器 */
+.hero-title-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28rpx;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
 
 /* 标题 */
 .hero-title {
-  display: block;
   font-size: 42rpx;
   font-weight: 700;
   color: #1a1a1a;
   line-height: 1.35;
-  margin-bottom: 28rpx;
   letter-spacing: 1rpx;
-}
-
-/* 元信息 */
-.hero-meta {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  padding-top: 20rpx;
-  border-top: 2rpx solid #f0f0f0;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+  user-select: text;
 }
 
 .meta-item {
@@ -222,6 +224,7 @@ page {
   font-size: 28rpx;
   line-height: 1.65;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  user-select: text;
 }
 
 /* ========== 文章正文 ========== */
@@ -263,6 +266,7 @@ page {
   font-size: 30rpx;
   line-height: 1.8;
   color: #333;
+  user-select: text;
 }
 
 /* 回退：原始 Markdown 文本 */

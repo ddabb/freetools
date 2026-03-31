@@ -25,24 +25,12 @@
       <text class="category-name">{{article.category}}</text>
     </view>
 
-    <!-- 标题 -->
-    <text class="hero-title">{{article.title}}</text>
-
-    <!-- 元信息 -->
-    <view class="hero-meta">
+    <!-- 标题和元信息 -->
+    <view class="hero-title-meta">
+      <text class="hero-title">{{article.title}}</text>
       <view class="meta-item">
         <text class="meta-icon">📝</text>
         <text class="meta-value">{{article.wordCount}} 字</text>
-      </view>
-      <view class="meta-divider"></view>
-      <view class="meta-item">
-        <text class="meta-icon">📅</text>
-        <text class="meta-value">{{formattedUpdateTime}}</text>
-      </view>
-      <view class="meta-divider"></view>
-      <view class="meta-item">
-        <text class="meta-icon">🔢</text>
-        <text class="meta-value">#{{article.order}}</text>
       </view>
     </view>
   </view>

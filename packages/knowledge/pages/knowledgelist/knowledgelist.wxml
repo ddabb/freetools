@@ -19,11 +19,7 @@
       </view>
     </view>
 
-    <!-- 排序按钮 -->
-    <view class="sort-wrap" bindtap="toggleSort">
-      <text class="sort-icon">{{sortOrder === 'desc' ? '↓' : '↑'}}</text>
-      <text class="sort-text">{{sortField === 'updateTime' ? '时间' : '序号'}}</text>
-    </view>
+
   </view>
 
   <!-- 分类导航 -->
@@ -106,7 +102,7 @@
             </view>
             <view class="card-meta">
               <text class="card-words">{{item.wordCount}}字</text>
-              <text class="card-time">{{item.formattedUpdateTime}}</text>
+
             </view>
           </view>
 

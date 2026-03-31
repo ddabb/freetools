@@ -21,9 +21,7 @@ Page({
     loading: false,
     refreshing: false,
 
-    // 排序
-    sortField: 'order',
-    sortOrder: 'asc',
+
 
     // UI
     scrollHeight: 0,
@@ -129,10 +127,10 @@ Page({
   },
 
   /**
-   * 应用筛选和排序
+   * 应用筛选
    */
   applyFiltersAndSort() {
-    let { allArticles, currentCategory, searchKeyword, sortField, sortOrder } = this.data;
+    let { allArticles, currentCategory, searchKeyword } = this.data;
     
     // 分类筛选
     if (currentCategory) {
@@ -149,27 +147,8 @@ Page({
       );
     }
     
-    // 排序
-    allArticles.sort((a, b) => {
-      let aVal = a[sortField];
-      let bVal = b[sortField];
-      
-      if (sortField === 'updateTime' || sortField === 'birthtime') {
-        aVal = new Date(aVal).getTime();
-        bVal = new Date(bVal).getTime();
-      }
-      
-      return sortOrder === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
-    });
-    
-    // 格式化日期
-    const formattedList = allArticles.map(item => ({
-      ...item,
-      formattedUpdateTime: utils.formatDate(item.updateTime)
-    }));
-
     this.setData({
-      list: formattedList,
+      list: allArticles,
       totalCount: allArticles.length,
       isOver: true // 一次性加载全部
     });
@@ -232,20 +211,7 @@ Page({
     this.applyFiltersAndSort();
   },
 
-  /**
-   * 切换排序
-   */
-  toggleSort() {
-    const newOrder = this.data.sortOrder === 'asc' ? 'desc' : 'asc';
-    const newField = this.data.sortField === 'order' ? 'updateTime' : 'order';
-    
-    this.setData({
-      sortField: newField,
-      sortOrder: newOrder
-    });
-    
-    this.applyFiltersAndSort();
-  },
+
 
   /**
    * 下拉刷新
