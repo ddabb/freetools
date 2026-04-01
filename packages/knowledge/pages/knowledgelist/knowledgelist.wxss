@@ -396,3 +396,98 @@ page {
   color: rgba(255, 255, 255, 0.5);
   white-space: nowrap;
 }
+
+/* ========== 分类树弹窗 ========== */
+.category-container {
+  position: relative;
+}
+
+.category-tree-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 32rpx 32rpx 0 0;
+  width: 100%;
+  max-height: 80vh;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 32rpx 32rpx 0 0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-close {
+  font-size: 32rpx;
+  color: white;
+  padding: 8rpx;
+}
+
+.tree-scroll {
+  max-height: calc(80vh - 100rpx);
+  padding: 16rpx 0;
+}
+
+.tree-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+
+.tree-item:active {
+  background-color: #f5f5f5;
+}
+
+.tree-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.tree-count {
+  font-size: 24rpx;
+  color: #999;
+  background: #f5f5f5;
+  padding: 4rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.category-item .icon {
+  margin-left: 8rpx;
+  font-size: 24rpx;
+}

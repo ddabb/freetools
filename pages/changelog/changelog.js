@@ -20,7 +20,7 @@ Page({
       error: ''
     });
     wx.request({
-      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json',
+      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json'+ `?_t=${Date.now()}`,
       method: 'GET',
       timeout: 10000,
       success: (res) => {

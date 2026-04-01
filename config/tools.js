@@ -11,6 +11,21 @@ const { getToolsByCategory, getAllCategories, getCategoryInfo, groupToolsByCateg
 
 // 工具列表
 const tools = [
+  // ===== 学习工具（按排序顺序）=====
+  // 置顶工具
+  {
+    id: 'knowledge-query',
+    name: '随身百科',
+    icon: '📖',
+    color: 'blue',
+    url: '/packages/knowledge/pages/knowledgelist/knowledgelist',
+    categories: ['学习工具', '生活工具'],
+    keywords: ['百科', '知识', '查询', '学习', 'PMP', '软考'],
+    description: '随身百科全书，精准分类随时查',
+    publish: true,
+    pinned: true
+  },
+  // 基础换算
   {
     id: 'length-converter',
     name: '长度换算',
@@ -32,6 +47,16 @@ const tools = [
     description: '各种重量单位的快速换算'
   },
   {
+    id: 'base-converter',
+    name: '进制转换',
+    icon: '🔢',
+    color: 'cyan',
+    url: '/packages/unit/pages/base-converter/base-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['进制', '转换', '二进制', '十六进制', 'Base64'],
+    description: '在不同基数间转换数字，支持二进制、十六进制、Base64等'
+  },
+  {
     id: 'temperature-converter',
     name: '温度换算',
     icon: '🌡️',
@@ -41,6 +66,70 @@ const tools = [
     keywords: ['温度', '单位', '换算', '转换'],
     description: '各种温度单位的快速换算'
   },
+  // 数据转换
+  {
+    id: 'json-xml-converter',
+    name: 'JSON·XML转换器',
+    icon: '🔄',
+    color: 'lime',
+    url: '/packages/converter/pages/json-xml-converter/json-xml-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['JSON', 'XML', '转换', '数据格式'],
+    description: '在JSON和XML格式之间进行相互转换'
+  },
+  {
+    id: 'yaml-json-converter',
+    name: 'YAML·JSON转换器',
+    icon: '📋',
+    color: 'violet',
+    url: '/packages/converter/pages/yaml-json-converter/yaml-json-converter',
+    categories: ['学习工具', '转换工具'],
+    keywords: ['YAML', 'JSON', '转换', '配置文件'],
+    description: '在YAML和JSON格式之间进行相互转换'
+  },
+  {
+    id: 'regex-tester',
+    name: '正则校验',
+    icon: '🎯',
+    color: 'rose',
+    url: '/packages/text/pages/regex-tester/regex-tester',
+    categories: ['学习工具', '开发工具'],
+    keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
+    description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
+  },
+  // 数据统计
+  {
+    id: 'data-analyzer',
+    name: '数据统计器',
+    icon: '📈',
+    color: 'blue',
+    url: '/packages/data/pages/data-analyzer/data-analyzer',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数据', '统计', '分析', '分布'],
+    description: '数值统计与分布分析'
+  },
+  // 数学游戏/学习
+  {
+    id: '24point',
+    name: '24点速算',
+    icon: '🎮',
+    color: 'amber',
+    url: '/packages/math/pages/24point/24point',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['24点', '速算', '数学游戏', '四则运算', '挑战'],
+    description: '使用4个数字通过运算得到24的游戏'
+  },
+  {
+    id: 'permutation-combination',
+    name: '排列组合',
+    icon: '🔢',
+    color: 'rose',
+    url: '/packages/math/pages/permutation-combination/permutation-combination',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['排列', '组合', '概率', '计算', 'A', 'C'],
+    description: '计算排列 A(n,r) 和组合 C(n,r)'
+  },
+  // 更多单位换算
   {
     id: 'area-converter',
     name: '面积换算',
@@ -111,6 +200,7 @@ const tools = [
     keywords: ['时区', '转换', '时间', '全球'],
     description: '在不同时区之间转换时间'
   },
+  // ===== 财务工具 =====
   {
     id: 'mortgage',
     name: '房贷计算',
@@ -121,44 +211,15 @@ const tools = [
     keywords: ['房贷', '贷款', '计算', '房屋'],
     description: '计算房贷月供、利息和还款总额'
   },
-  {
-    id: 'life-countdown',
-    name: '人生A4纸',
-    icon: '⏰',
-    color: 'green',
-    url: '/packages/life/pages/life-countdown/life-countdown',
-    categories: ['生活工具'],
-    keywords: [ '人生', '日期', '剩余'],
-    description: '计算人生已过天数和剩余寿命'
-  },
-  {
-    id: 'qrcode',
-    name: '生成二维码',
-    icon: '📱',
-    color: 'orange',
-    url: '/packages/life/pages/qrcode/qrcode',
-    categories: ['安全工具'],
-    keywords: ['二维码', '生成', '码', '扫码'],
-    description: '生成文本和链接的二维码'
-  },
 
-  {
-    id: 'health-calculator',
-    name: '健康计算',
-    icon: '💪',
-    color: 'teal',
-    url: '/packages/health/pages/health-calculator/health-calculator',
-    categories: ['健康工具'],
-    keywords: ['健康', 'BMI', '体重', '身高'],
-    description: '计算BMI和健康指标'
-  },
+  // ===== 生活工具（按排序顺序）=====
   {
     id: 'calendar',
     name: '万年历',
     icon: '📅',
     color: 'red',
     url: '/packages/life/pages/calendar/calendar',
-    categories: ['生活工具', '学习工具'],
+    categories: ['生活工具'],
     keywords: ['日历', '万年历', '日期', '农历'],
     description: '查看日历和农历日期'
   },
@@ -171,6 +232,137 @@ const tools = [
     categories: ['生活工具'],
     keywords: ['时间', '秒表', '计时器', '时区'],
     description: '秒表、计时器和时区转换'
+  },
+  {
+    id: 'datediff',
+    name: '日期差计算',
+    icon: '📆',
+    color: 'teal',
+    url: '/packages/life/pages/datediff/datediff',
+    categories: ['生活工具'],
+    keywords: ['日期', '差', '计算', '天数'],
+    description: '计算两个日期之间的天数差'
+  },
+  {
+    id: 'zodiac',
+    name: '生肖查询',
+    icon: '🐴',
+    color: 'yellow',
+    url: '/packages/life/pages/zodiac/zodiac',
+    categories: ['生活工具'],
+    keywords: ['生肖', '查询', '年份', '年龄'],
+    description: '根据出生年份查询生肖和年龄'
+  },
+  {
+    id: 'constellation',
+    name: '星座查询',
+    icon: '🔯',
+    color: 'purple',
+    url: '/packages/life/pages/constellation/constellation',
+    categories: ['生活工具'],
+    keywords: ['星座', '查询', '生日', '性格'],
+    description: '根据出生日期查询星座和性格特点'
+  },
+  {
+    id: 'relative-calculator',
+    name: '亲戚计算器',
+    icon: '👥',
+    color: 'blue',
+    url: '/packages/life/pages/relative-calculator/relative-calculator',
+    categories: ['生活工具'],
+    keywords: ['亲戚', '关系', '计算', '称呼'],
+    description: '计算亲戚之间的关系和称呼'
+  },
+  {
+    id: 'text-to-image',
+    name: '文案生图',
+    icon: '🖼️',
+    color: 'purple',
+    url: '/packages/life/pages/text-to-image/text-to-image',
+    categories: ['生活工具'],
+    keywords: ['文字', '图片', '生成', '二维码'],
+    description: '将文字转换为图片，支持添加出处和二维码'
+  },
+  {
+    id: 'qrcode',
+    name: '生成二维码',
+    icon: '📱',
+    color: 'orange',
+    url: '/packages/life/pages/qrcode/qrcode',
+    categories: ['生活工具', '安全工具'],
+    keywords: ['二维码', '生成', '码', '扫码'],
+    description: '生成文本和链接的二维码'
+  },
+  {
+    id: 'copywriting',
+    name: '文案工具',
+    icon: '✍️',
+    color: 'pink',
+    url: '/packages/life/pages/copywriting/copywriting',
+    categories: ['生活工具'],
+    keywords: ['文案', '写作', '素材', '模板'],
+    description: '提供各种场景的文案素材，支持分类浏览和复制'
+  },
+  {
+    id: 'article-cover',
+    name: '公众号配图',
+    icon: '🎨',
+    color: 'blue',
+    url: '/packages/life/pages/article-cover/article-cover',
+    categories: ['生活工具'],
+    keywords: ['公众号', '配图', '封面', '图片', '生成', '2.35'],
+    description: '生成公众号封面配图，支持2.35:1标准比例，多种配色风格'
+  },
+  {
+    id: 'leapyear',
+    name: '闰年判断',
+    icon: '📅',
+    color: 'green',
+    url: '/packages/life/pages/leapyear/leapyear',
+    categories: ['生活工具'],
+    keywords: ['闰年', '判断', '年份', '日历'],
+    description: '判断是否为闰年'
+  },
+  {
+    id: 'what-to-eat',
+    name: '今天吃什么',
+    icon: '🍽️',
+    color: 'orange',
+    url: '/packages/food/pages/what-to-eat/what-to-eat',
+    categories: ['生活工具'],
+    keywords: ['吃什么', '食物', '随机', '饮食', '搭配'],
+    description: '随机生成饮食建议，解决选择困难症'
+  },
+  {
+    id: 'life-countdown',
+    name: '人生A4纸',
+    icon: '⏰',
+    color: 'green',
+    url: '/packages/life/pages/life-countdown/life-countdown',
+    categories: ['生活工具'],
+    keywords: ['人生', '日期', '剩余'],
+    description: '计算人生已过天数和剩余寿命'
+  },
+  {
+    id: 'battery-health',
+    name: '电池健康',
+    icon: '🔋',
+    color: 'green',
+    url: '/packages/life/pages/battery-health/battery-health',
+    categories: ['生活工具'],
+    keywords: ['电池', '健康', '电量', '检测'],
+    description: '查看设备电池健康状态'
+  },
+
+  {
+    id: 'health-calculator',
+    name: '健康计算',
+    icon: '💪',
+    color: 'teal',
+    url: '/packages/health/pages/health-calculator/health-calculator',
+    categories: ['健康工具'],
+    keywords: ['健康', 'BMI', '体重', '身高'],
+    description: '计算BMI和健康指标'
   },
   {
     id: 'password-generator',
@@ -253,16 +445,6 @@ const tools = [
     description: '快速判断数字是否为质数，采用6k±1优化算法'
   },
   {
-    id: 'leapyear',
-    name: '闰年判断',
-    icon: '📅',
-    color: 'green',
-    url: '/packages/life/pages/leapyear/leapyear',
-    categories: ['学习工具'],
-    keywords: ['闰年', '判断', '年份', '日历'],
-    description: '判断是否为闰年'
-  },
-  {
     id: 'onlychinese',
     name: '中文检测',
     icon: '✍',
@@ -281,26 +463,6 @@ const tools = [
     categories: ['更多工具', '生活工具'],
     keywords: ['旅行', '工具', '行程', '规划'],
     description: '旅行规划和辅助工具'
-  },
-  {
-    id: 'battery-health',
-    name: '电池健康',
-    icon: '🔋',
-    color: 'green',
-    url: '/packages/life/pages/battery-health/battery-health',
-    categories: ['生活工具'],
-    keywords: ['电池', '健康', '电量', '检测'],
-    description: '查看设备电池健康状态'
-  },
-  {
-    id: 'datediff',
-    name: '日期差计算',
-    icon: '📆',
-    color: 'teal',
-    url: '/packages/life/pages/datediff/datediff',
-    categories: ['生活工具'],
-    keywords: ['日期', '差', '计算', '天数'],
-    description: '计算两个日期之间的天数差'
   },
   // 数学工具分类开始
   {
@@ -334,26 +496,6 @@ const tools = [
     description: '找出正整数所有的约数（因数）'
   },
   {
-    id: 'permutation-combination',
-    name: '排列组合',
-    icon: '🔢',
-    color: 'rose',
-    url: '/packages/math/pages/permutation-combination/permutation-combination',
-    categories: ['学习工具', '数学工具'],
-    keywords: ['排列', '组合', '概率', '计算', 'A', 'C'],
-    description: '计算排列 A(n,r) 和组合 C(n,r)'
-  },
-  {
-    id: '24point',
-    name: '24点速算',
-    icon: '🎮',
-    color: 'amber',
-    url: '/packages/math/pages/24point/24point',
-    categories: ['学习工具', '数学工具'],
-    keywords: ['24点', '速算', '数学游戏', '四则运算', '挑战'],
-    description: '使用4个数字通过运算得到24的游戏'
-  },
-  {
     id: 'random-selector',
     name: '取数模拟器',
     icon: '🎰',
@@ -365,88 +507,6 @@ const tools = [
     frequency: 40
   },
   // 数学工具分类结束
-  // 转换工具分类开始
-  {
-    id: 'base-converter',
-    name: '进制转换',
-    icon: '🔢',
-    color: 'cyan',
-    url: '/packages/unit/pages/base-converter/base-converter',
-    categories: ['学习工具', '转换工具'],
-    keywords: ['进制', '转换', '二进制', '十六进制', 'Base64'],
-    description: '在不同基数间转换数字，支持二进制、十六进制、Base64等'
-  },
-  {
-    id: 'json-xml-converter',
-    name: 'JSON·XML转换器',
-    icon: '🔄',
-    color: 'lime',
-    url: '/packages/converter/pages/json-xml-converter/json-xml-converter',
-    categories: ['学习工具', '转换工具'],
-    keywords: ['JSON', 'XML', '转换', '数据格式'],
-    description: '在JSON和XML格式之间进行相互转换'
-  },
-  {
-    id: 'yaml-json-converter',
-    name: 'YAML·JSON转换器',
-    icon: '📋',
-    color: 'violet',
-    url: '/packages/converter/pages/yaml-json-converter/yaml-json-converter',
-    categories: ['学习工具', '转换工具'],
-    keywords: ['YAML', 'JSON', '转换', '配置文件'],
-    description: '在YAML和JSON格式之间进行相互转换'
-  },
-  {
-    id: 'regex-tester',
-    name: '正则校验',
-    icon: '🎯',
-    color: 'rose',
-    url: '/packages/text/pages/regex-tester/regex-tester',
-    categories: ['学习工具', '开发工具'],
-    keywords: ['正则', '正则表达式', '测试', '匹配', '调试'],
-    description: '在线测试和调试正则表达式，支持高亮显示匹配结果'
-  },
-  // 转换工具分类结束
-  {
-    id: 'what-to-eat',
-    name: '今天吃什么',
-    icon: '🍽️',
-    color: 'orange',
-    url: '/packages/food/pages/what-to-eat/what-to-eat',
-    categories: ['生活工具'],
-    keywords: ['吃什么', '食物', '随机', '饮食', '搭配'],
-    description: '随机生成饮食建议，解决选择困难症'
-  },
-  {
-    id: 'zodiac',
-    name: '生肖查询',
-    icon: '🐴',
-    color: 'yellow',
-    url: '/packages/life/pages/zodiac/zodiac',
-    categories: ['生活工具'],
-    keywords: ['生肖', '查询', '年份', '年龄'],
-    description: '根据出生年份查询生肖和年龄'
-  },
-  {
-    id: 'constellation',
-    name: '星座查询',
-    icon: '🔯',
-    color: 'purple',
-    url: '/packages/life/pages/constellation/constellation',
-    categories: ['生活工具'],
-    keywords: ['星座', '查询', '生日', '性格'],
-    description: '根据出生日期查询星座和性格特点'
-  },
-  {
-    id: 'relative-calculator',
-    name: '亲戚计算器',
-    icon: '👥',
-    color: 'blue',
-    url: '/packages/life/pages/relative-calculator/relative-calculator',
-    categories: ['生活工具'],
-    keywords: ['亲戚', '关系', '计算', '称呼'],
-    description: '计算亲戚之间的关系和称呼'
-  },
   {
     id: 'avatar-generator',
     name: '汉字头像',
@@ -476,36 +536,6 @@ const tools = [
     categories: ['生活工具', '学习工具'],
     keywords: ['文本', 'PNG', '图片', '生成'],
     description: '将文本转换为PNG图片，支持多行文本和样式设置'
-  },
-  {
-    id: 'copywriting',
-    name: '文案工具',
-    icon: '✍️',
-    color: 'pink',
-    url: '/packages/life/pages/copywriting/copywriting',
-    categories: ['生活工具', '学习工具'],
-    keywords: ['文案', '写作', '素材', '模板'],
-    description: '提供各种场景的文案素材，支持分类浏览和复制'
-  },
-  {
-    id: 'text-to-image',
-    name: '文案生图',
-    icon: '🖼️',
-    color: 'purple',
-    url: '/packages/life/pages/text-to-image/text-to-image',
-    categories: ['生活工具', '学习工具'],
-    keywords: ['文字', '图片', '生成', '二维码'],
-    description: '将文字转换为图片，支持添加出处和二维码'
-  },
-  {
-    id: 'article-cover',
-    name: '公众号配图',
-    icon: '🎨',
-    color: 'blue',
-    url: '/packages/life/pages/article-cover/article-cover',
-    categories: ['生活工具', '学习工具'],
-    keywords: ['公众号', '配图', '封面', '图片', '生成', '2.35'],
-    description: '生成公众号封面配图，支持2.35:1标准比例，多种配色风格'
   },
   {
     id: 'poster-generator',
@@ -549,18 +579,6 @@ const tools = [
     keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
     description: '判断图形是否可以一笔画成并给出路径',
     publish: false
-  },
-  {
-    id: 'knowledge-query',
-    name: '随身百科',
-    icon: '📖',
-    color: 'blue',
-    url: '/packages/knowledge/pages/knowledgelist/knowledgelist',
-    categories: ['学习工具', '生活工具'],
-    keywords: ['百科', '知识', '查询', '学习', 'PMP', '软考'],
-    description: '随身百科全书，精准分类随时查',
-    publish: true,
-    pinned: true
   }
 ];
 
@@ -588,18 +606,18 @@ allTools.forEach(tool => {
 // 常用工具（首页显示）
 const commonTools = [
   // 置顶工具
-  tools[tools.length - 1],  // 随身百科（置顶）
+  tools.find(t => t.id === 'knowledge-query'),  // 随身百科（置顶）
   
-  // 普通常用工具
-  tools[10],  // 房贷计算
-  tools[11],  // 人生A4纸
-  tools[12],  // 生成二维码
-  tools[13],  // 健康计算
-  tools[14],  // 万年历
-  tools[15],  // 时间工具
-  tools[16],  // 密码生成
-  tools[17],  // 身份证验证
-  tools[18]  // 价格对比
+  // 普通常用工具 - 按用户排序
+  tools.find(t => t.id === 'calendar'),      // 万年历
+  tools.find(t => t.id === 'time-tool'),     // 时间工具
+  tools.find(t => t.id === 'datediff'),       // 日期差计算
+  tools.find(t => t.id === 'qrcode'),        // 生成二维码
+  tools.find(t => t.id === 'copywriting'),   // 文案工具
+  tools.find(t => t.id === 'mortgage'),      // 房贷计算
+  tools.find(t => t.id === 'password-generator'), // 密码生成
+  tools.find(t => t.id === 'idcard'),        // 身份证验证
+  tools.find(t => t.id === 'price-comparison')  // 价格对比
 ];
 
 // 确保在导出前 allTools 已经定义

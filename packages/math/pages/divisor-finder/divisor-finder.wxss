@@ -107,26 +107,15 @@ page {
 
 /* 结果区域 */
 .result-section {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  z-index: 100;
   display: flex;
   flex-direction: column;
+  gap: 24rpx;
   animation: fadeIn 0.4s ease-out;
 }
 
 .result-section .result-card {
-  margin-top: 200rpx; /* 为输入区域留出空间 */
-  margin-left: 24rpx;
-  margin-right: 24rpx;
-  margin-bottom: 24rpx;
-  flex: 1;
   overflow-y: auto;
-  max-height: calc(100vh - 250rpx);
+  max-height: 60vh;
 }
 
 /* 滚动条样式 */
