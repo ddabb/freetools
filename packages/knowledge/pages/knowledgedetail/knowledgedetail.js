@@ -1,7 +1,9 @@
 // packages/knowledge/pages/knowledgedetail/knowledgedetail.js
 
 const utils = require('../../../../utils/index');
+const knowledgeCategory = require('../../../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
+
 
 // 使用 markdown-it 渲染 Markdown（项目已安装该库）
 let markdownIt = null;
@@ -169,6 +171,25 @@ Page({
     return html;
   },
 
+  getLeafCategoryName(category) {
+    return knowledgeCategory.getLeafCategoryName(category);
+  },
+
+  decorateArticle(article) {
+    if (!article) return article;
+
+    const displayCategory = this.getLeafCategoryName(article.category);
+    const categoryMeta = knowledgeCategory.getCategoryMeta(displayCategory);
+
+    return {
+      ...article,
+      displayCategory,
+      categoryIcon: categoryMeta.icon,
+      categoryClass: categoryMeta.className
+    };
+  },
+
+
   /**
    * 加载文章详情
    */
@@ -194,7 +215,7 @@ Page({
         });
         
         if (res.statusCode === 200 && res.data) {
-          const article = res.data;
+          const article = this.decorateArticle(res.data);
           console.log('获取到文章数据:', {
             id: article.id,
             title: article.title,
@@ -252,11 +273,17 @@ Page({
     });
   },
 
+
   /**
    * 加载相关推荐
    */
   loadRelatedArticles(article) {
     const url = CDN_BASE + 'articles.json';
+
+    if (!article || !article.filename) {
+      this.setData({ relatedArticles: [] });
+      return;
+    }
 
     wx.request({
       url: url + `?_t=${Date.now()}`,
@@ -267,21 +294,28 @@ Page({
           const allArticles = res.data.articles || [];
           
           const related = allArticles
-            .filter(a => a.id !== article.id)
+            .filter(a => a.filename && a.filename !== article.filename)
             .filter(a => 
               a.category === article.category ||
               (a.tags && article.tags && a.tags.some(t => article.tags.includes(t)))
             )
+            .map(a => this.decorateArticle(a))
             .slice(0, 5);
 
           this.setData({ relatedArticles: related });
+
+        } else {
+          this.setData({ relatedArticles: [] });
         }
       },
       fail: (err) => {
         console.error('加载相关推荐失败:', err);
+        this.setData({ relatedArticles: [] });
       }
     });
   },
+
+
 
   /**
    * 复制内容
@@ -431,37 +465,16 @@ Page({
    * 获取分类图标
    */
   getCategoryIcon(category) {
-    const iconMap = {
-      '产品使用': '📖',
-      '产品设计': '💡',
-      '产品思考': '🧠',
-      '开发实践': '🔧',
-      '开发者故事': '💻',
-      '项目管理': '📋',
-      'PMP认证': '🎓',
-      '敏捷管理': '🏃',
-      '未分类': '📚'
-    };
-    return iconMap[category] || '📚';
+    return knowledgeCategory.getCategoryIcon(category);
   },
 
   /**
    * 获取分类英文类名
    */
   getCategoryClass(category) {
-    const classMap = {
-      '产品使用': 'category-product-usage',
-      '产品设计': 'category-product-design',
-      '产品思考': 'category-product-thinking',
-      '开发实践': 'category-dev-practice',
-      '开发者故事': 'category-dev-story',
-      '项目管理': 'category-project-mgmt',
-      'PMP认证': 'category-pmp',
-      '敏捷管理': 'category-agile',
-      '未分类': 'category-uncategorized'
-    };
-    return classMap[category] || 'category-uncategorized';
+    return knowledgeCategory.getCategoryClass(category);
   },
+
 
   /**
    * 分享给好友

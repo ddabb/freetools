@@ -18,12 +18,13 @@
   <view class="article-hero" wx:if="{{article && !loading && !error}}">
     <!-- 分类标签 -->
     <view
-      class="hero-category {{getCategoryClass(article.category)}}"
+      class="hero-category {{article.categoryClass}}"
       bindtap="onCategoryTap"
     >
-      <text class="category-icon">{{getCategoryIcon(article.category)}}</text>
-      <text class="category-name">{{article.category}}</text>
+      <text class="category-icon">{{article.categoryIcon}}</text>
+      <text class="category-name">{{article.displayCategory || article.category}}</text>
     </view>
+
 
     <!-- 标题和元信息 -->
     <view class="hero-title-meta">
@@ -106,7 +107,8 @@
             bindtap="onRelatedTap"
             data-filename="{{item.filename}}"
           >
-            <view class="related-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
+            <view class="related-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
+
             <text class="related-card-title">{{item.title}}</text>
             <text class="related-card-desc">{{item.description}}</text>
           </view>

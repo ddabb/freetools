@@ -11,7 +11,46 @@ Page({
     scrollHeight: 0
   },
 
+  getLeafCategoryName(category) {
+    if (!category) return '未分类';
+
+    const parts = String(category).split('/').filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : category;
+  },
+
+  flattenCategories(node, list = []) {
+    Object.values((node && node.children) || {}).forEach(category => {
+      list.push({
+        name: category.path,
+        label: category.name || this.getLeafCategoryName(category.path),
+        count: category.count
+      });
+      this.flattenCategories(category, list);
+    });
+    return list;
+  },
+
+
+  requestData(url) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: url + `?_t=${Date.now()}`,
+        method: 'GET',
+        timeout: 10000,
+        success: (res) => {
+          if (res.statusCode === 200 && res.data) {
+            resolve(res.data);
+          } else {
+            reject(new Error('请求失败'));
+          }
+        },
+        fail: reject
+      });
+    });
+  },
+
   onLoad() {
+
     const systemInfo = wx.getSystemInfoSync();
     const scrollHeight = systemInfo.windowHeight - 180;
     this.setData({ scrollHeight });
@@ -30,20 +69,13 @@ Page({
       errorMsg: ''
     });
 
-    const url = CDN_BASE + 'articles.json';
+    const url = CDN_BASE + 'category-tree.json';
 
     try {
-      const app = getApp();
-      const res = await app.requestWithCache(url, {
-        method: 'GET',
-        timeout: 10000
-      }, 7200);
+      const res = await this.requestData(url);
+      const categoryList = this.flattenCategories(res)
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'zh-CN'));
 
-      const categories = res.taxonomy.categories;
-      const categoryList = Object.keys(categories).map(category => ({
-        name: category,
-        count: categories[category]
-      })).sort((a, b) => b.count - a.count);
 
       this.setData({
         categories: categoryList,
@@ -53,8 +85,11 @@ Page({
     } catch (err) {
       console.error('加载分类失败:', err);
       this.showError('网络错误，请检查连接');
+    } finally {
+      wx.stopPullDownRefresh();
     }
   },
+
 
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
@@ -86,6 +121,6 @@ Page({
   onRefresh() {
     wx.clearStorageSync();
     this.loadCategories();
-    wx.stopPullDownRefresh();
   }
 });
+

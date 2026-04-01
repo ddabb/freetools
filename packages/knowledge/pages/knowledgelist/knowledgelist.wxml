@@ -24,65 +24,86 @@
 
   <!-- 分类导航 -->
   <view class="category-container">
-    <scroll-view class="category-nav" scroll-x>
-      <view 
-        class="category-item {{currentCategory === '' ? 'active' : ''}}"
-        bindtap="switchCategory"
-        data-category=""
-      >
-        <text>全部</text>
-        <text class="count" wx:if="{{categoryStats['']}}">{{categoryStats['']}}</text>
+    <scroll-view class="category-nav" scroll-x="true" scroll-with-animation="true">
+      <view class="category-nav-inner">
+        <view 
+          class="category-item category-tree-trigger {{showCategoryTree ? 'tree-open' : ''}}"
+          bindtap="toggleCategoryTree">
+          <text>分类树</text>
+          <text class="icon">🌲</text>
+        </view>
+        <view 
+          class="category-item {{currentCategory === '' ? 'active' : ''}}"
+          bindtap="switchCategory"
+          data-category=""
+        >
+          <text>全部</text>
+          <text class="count" wx:if="{{categoryStats['']}}">{{categoryStats['']}}</text>
+        </view>
+        <view 
+          class="category-item {{currentCategory === item.name ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="name"
+          bindtap="switchCategory"
+          data-category="{{item.name}}"
+        >
+          <text>{{item.label}}</text>
+          <text class="count">{{item.count}}</text>
+        </view>
       </view>
-      <view 
-        class="category-item {{currentCategory === item.name ? 'active' : ''}}"
-        wx:for="{{categories}}"
-        wx:key="name"
-        bindtap="switchCategory"
-        data-category="{{item.name}}"
-      >
-        <text>{{item.label}}</text>
-        <text class="count">{{item.count}}</text>
-      </view>
-      <view 
-        class="category-item"
-        bindtap="toggleCategoryTree"
-      >
-        <text>分类树</text>
-        <text class="icon">📂</text>
-      </view>
+
     </scroll-view>
     
     <!-- 分类树弹窗 -->
-    <view class="category-tree-modal" wx:if="{{showCategoryTree}}">
+    <view class="category-tree-modal {{showCategoryTree ? 'show' : ''}}" wx:if="{{showCategoryTree}}">
       <view class="modal-overlay" bindtap="toggleCategoryTree"></view>
       <view class="modal-content">
         <view class="modal-header">
           <text class="modal-title">分类导航</text>
           <text class="modal-close" bindtap="toggleCategoryTree">✕</text>
         </view>
-        <scroll-view class="tree-scroll" scroll-y>
-          <view class="tree-item" bindtap="switchCategory" data-category="">
-            <text class="tree-label">全部</text>
-            <text class="tree-count">{{categoryStats['全部']}}</text>
+        <scroll-view class="tree-scroll" scroll-y style="max-height: 65vh;">
+          <view class="tree-root-outer">
+            <view class="tree-node tree-node-root {{currentCategory === '' ? 'active' : ''}}" bindtap="switchCategory" data-category="">
+              <view class="tree-node-main">
+                <text class="tree-node-icon">🏠</text>
+                <text class="tree-label">全部</text>
+              </view>
+              <text class="tree-count">{{categoryStats['全部']}}</text>
+            </view>
+            <view class="tree-root-children">
+              <template is="categoryTreeItem" data="{{item: categoryTreeNodes, level: 0, currentCategory: currentCategory}}" />
+            </view>
+
           </view>
-          <template is="categoryTreeItem" data="{{item: categoryTree.children, level: 0}}" />
         </scroll-view>
+
+        <view class="modal-footer">
+          <text class="modal-footer-text">轻触分类即可筛选对应知识</text>
+        </view>
       </view>
     </view>
   </view>
   
   <!-- 分类树模板 -->
   <template name="categoryTreeItem">
-    <block wx:for="{{item}}" wx:key="name">
-      <view class="tree-item" style="padding-left: {{level * 20}}px;" bindtap="switchCategory" data-category="{{item[name].path}}">
-        <text class="tree-label">{{item[name].name}}</text>
-        <text class="tree-count">{{item[name].count}}</text>
+    <block wx:for="{{item}}" wx:for-item="node" wx:key="path">
+      <view class="tree-branch level-{{level}}">
+        <view class="tree-node {{currentCategory === node.path ? 'active' : ''}}" bindtap="switchCategory" data-category="{{node.path}}">
+          <view class="tree-node-main">
+            <text class="tree-node-icon">{{node.icon}}</text>
+            <text class="tree-label">{{node.name}}</text>
+          </view>
+          <text class="tree-count">{{node.count}}</text>
+        </view>
+        <view class="tree-children" wx:if="{{node.hasChildren}}">
+          <template is="categoryTreeItem" data="{{item: node.children, level: level + 1, currentCategory: currentCategory}}" />
+        </view>
       </view>
-      <block wx:if="{{Object.keys(item[name].children).length > 0}}">
-        <template is="categoryTreeItem" data="{{item: item[name].children, level: level + 1}}" />
-      </block>
     </block>
   </template>
+
+
 
   <!-- 文章列表 -->
   <scroll-view 
@@ -118,7 +139,7 @@
         <view class="card-inner">
           <!-- 卡片头部 -->
           <view class="card-header">
-            <view class="card-category {{getCategoryClass(item.category)}}">{{item.category}}</view>
+            <view class="card-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
             <text class="card-order">#{{item.order}}</text>
           </view>
 
@@ -142,7 +163,6 @@
             </view>
             <view class="card-meta">
               <text class="card-words">{{item.wordCount}}字</text>
-
             </view>
           </view>
 

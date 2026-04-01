@@ -30,9 +30,10 @@
         bindtap="onCategoryTap"
       >
         <view class="category-info">
-          <text class="category-name">{{item.name}}</text>
+          <text class="category-name">{{item.label || item.name}}</text>
           <text class="category-count">{{item.count}} 篇</text>
         </view>
+
         <view class="category-arrow">
           <text class="arrow">→</text>
         </view>

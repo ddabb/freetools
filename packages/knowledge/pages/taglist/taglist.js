@@ -13,7 +13,26 @@ Page({
     scrollHeight: 0
   },
 
+  requestData(url) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: url + `?_t=${Date.now()}`,
+        method: 'GET',
+        timeout: 10000,
+        success: (res) => {
+          if (res.statusCode === 200 && res.data) {
+            resolve(res.data);
+          } else {
+            reject(new Error('请求失败'));
+          }
+        },
+        fail: reject
+      });
+    });
+  },
+
   onLoad() {
+
     const systemInfo = wx.getSystemInfoSync();
     const scrollHeight = systemInfo.windowHeight - 180;
     this.setData({ scrollHeight });
@@ -35,12 +54,7 @@ Page({
     const url = CDN_BASE + 'tags.json';
 
     try {
-      const app = getApp();
-      const res = await app.requestWithCache(url, {
-        method: 'GET',
-        timeout: 10000
-      }, 7200);
-
+      const res = await this.requestData(url);
       const tags = res.tags || [];
       this.setData({
         tags,
@@ -51,8 +65,11 @@ Page({
     } catch (err) {
       console.error('加载标签失败:', err);
       this.showError('网络错误，请检查连接');
+    } finally {
+      wx.stopPullDownRefresh();
     }
   },
+
 
   /**
    * 搜索输入
@@ -126,6 +143,6 @@ Page({
   onRefresh() {
     wx.clearStorageSync();
     this.loadTags();
-    wx.stopPullDownRefresh();
   }
 });
+

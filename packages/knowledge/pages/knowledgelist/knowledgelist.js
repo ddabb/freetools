@@ -1,16 +1,22 @@
 // packages/knowledge/pages/knowledgelist/knowledgelist.js
+const knowledgeCategory = require('../../../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
+
 
 Page({
   data: {
     // 搜索和筛选
     searchKeyword: '',
     currentCategory: '',
+    currentTag: '',
     categories: [],
+
     categoryStats: {},
     categoryTree: null,
+    categoryTreeNodes: [],
 
     // 列表数据
+
     list: [],
     totalCount: 0,
 
@@ -40,15 +46,117 @@ Page({
     }
   },
 
-  hasActiveFilters() {
-    return !!(this.data.currentCategory || this.data.searchKeyword);
+  normalizeCategoryValue(category) {
+    return typeof category === 'string' ? category.trim() : '';
   },
 
-  isCategoryMatch(articleCategory, currentCategory) {
-    if (!currentCategory) return true;
-    if (!articleCategory) return false;
-    return articleCategory === currentCategory || articleCategory.startsWith(`${currentCategory}/`);
+  hasActiveFilters() {
+    return !!(this.data.currentCategory || this.data.currentTag || this.data.searchKeyword);
   },
+
+  buildCategoryLeafLookup(categoryTree) {
+    const lookup = {};
+
+    const walk = (node) => {
+      if (!node) return [];
+
+      const path = this.normalizeCategoryValue(node.path || '');
+      const children = node.children || {};
+      const childNodes = Object.values(children);
+      let leafNames = [];
+
+      if (childNodes.length === 0) {
+        const leafName = this.getLeafCategoryName(path || node.name || '');
+        leafNames = leafName ? [leafName] : [];
+      } else {
+        childNodes.forEach(child => {
+          leafNames = leafNames.concat(walk(child));
+        });
+      }
+
+      const uniqueLeafNames = Array.from(new Set(leafNames.filter(Boolean)));
+      if (path) {
+        lookup[path] = uniqueLeafNames;
+      }
+      return uniqueLeafNames;
+    };
+
+    walk(categoryTree || { children: {} });
+    return lookup;
+  },
+
+  buildRenderableCategoryTree(categoryTree) {
+    const walk = (children = {}) => {
+      return Object.values(children).map(node => {
+        const childNodes = walk(node.children || {});
+        return {
+          name: node.name,
+          path: node.path,
+          count: node.count,
+          hasChildren: childNodes.length > 0,
+          icon: childNodes.length > 0 ? '📁' : '·',
+          children: childNodes
+        };
+      });
+    };
+
+    return walk((categoryTree && categoryTree.children) || {});
+  },
+
+
+  getLeafCategoryName(category) {
+
+    return knowledgeCategory.getLeafCategoryName(category);
+  },
+
+  decorateArticle(article) {
+    if (!article) return article;
+
+    const displayCategory = this.getLeafCategoryName(article.category);
+    const categoryMeta = knowledgeCategory.getCategoryMeta(displayCategory);
+
+    return {
+      ...article,
+      displayCategory,
+      categoryClass: categoryMeta.className
+    };
+  },
+
+
+  setPageTitle(category = this.data.currentCategory, tag = this.data.currentTag) {
+    const displayCategory = category ? this.getLeafCategoryName(category) : '';
+    const title = displayCategory ? `${displayCategory}` : (tag ? `标签: ${tag}` : '知识库');
+    wx.setNavigationBarTitle({ title });
+  },
+
+
+  isCategoryMatch(articleCategory, currentCategory) {
+    const normalizedCurrentCategory = this.normalizeCategoryValue(currentCategory);
+    const normalizedArticleCategory = this.normalizeCategoryValue(articleCategory);
+
+    if (!normalizedCurrentCategory) return true;
+    if (!normalizedArticleCategory) return false;
+
+    if (
+      normalizedArticleCategory === normalizedCurrentCategory ||
+      normalizedArticleCategory.indexOf(`${normalizedCurrentCategory}/`) === 0
+    ) {
+      return true;
+    }
+
+    if (!normalizedArticleCategory.includes('/')) {
+      const currentLeafCategory = this.getLeafCategoryName(normalizedCurrentCategory);
+      if (normalizedArticleCategory === currentLeafCategory) {
+        return true;
+      }
+
+      const descendantLeafCategories = (this.categoryLeafLookup && this.categoryLeafLookup[normalizedCurrentCategory]) || [];
+      return descendantLeafCategories.includes(normalizedArticleCategory);
+    }
+
+    return false;
+  },
+
 
   buildCategoryStatsFromTree(categoryTree, stats = {}) {
     const children = (categoryTree && categoryTree.children) || {};
@@ -88,14 +196,14 @@ Page({
     this.setData({
       scrollHeight,
       currentCategory: category || '',
-      searchKeyword: tag ? `#${tag}` : ''
+      currentTag: tag || '',
+      searchKeyword: ''
     });
 
-    const title = category ? `${category}` : (tag ? `标签: ${tag}` : '知识库');
-    wx.setNavigationBarTitle({ title });
-
+    this.setPageTitle(category || '', tag || '');
     this.loadArticles();
   },
+
 
   onShow() {
     // 页面显示时可以刷新
@@ -150,8 +258,9 @@ Page({
     ]).then(([categoryTreeData, articlesData, searchIndexData]) => {
       console.log('元数据加载成功');
 
-      const articles = articlesData.articles || [];
+      const articles = (articlesData.articles || []).map(article => this.decorateArticle(article));
       const taxonomy = articlesData.taxonomy || {};
+
       const categoryTree = categoryTreeData || { children: {} };
       const searchIndex = searchIndexData || [];
 
@@ -161,18 +270,23 @@ Page({
         ...this.buildCategoryStatsFromTree(categoryTree)
       };
 
+      this.categoryLeafLookup = this.buildCategoryLeafLookup(categoryTree);
       const categories = this.buildTopCategories(categoryTree);
+      const categoryTreeNodes = this.buildRenderableCategoryTree(categoryTree);
 
       this.setData({
+
         allArticles: articles,
         taxonomy,
         categoryTree,
+        categoryTreeNodes,
         searchIndex,
         categories,
         categoryStats,
         page: 1,
         list: []
       });
+
 
       if (this.hasActiveFilters()) {
         this.applyFiltersAndSort();
@@ -205,12 +319,15 @@ Page({
         itemCount: pageData.items.length
       });
 
+      const decoratedItems = (pageData.items || []).map(article => this.decorateArticle(article));
+
       let list = this.data.list;
       if (this.data.page === 1) {
-        list = pageData.items;
+        list = decoratedItems;
       } else {
-        list = list.concat(pageData.items);
+        list = list.concat(decoratedItems);
       }
+
 
       this.setData({
         list,
@@ -256,12 +373,13 @@ Page({
    * 应用筛选
    */
   applyFiltersAndSort() {
-    const { allArticles, currentCategory, searchKeyword, searchIndex } = this.data;
+    const { allArticles, currentCategory, currentTag, searchKeyword, searchIndex } = this.data;
     let filteredArticles = Array.isArray(allArticles) ? [...allArticles] : [];
 
     console.log('应用筛选和排序:', {
       originalCount: filteredArticles.length,
       currentCategory,
+      currentTag,
       searchKeyword
     });
 
@@ -271,9 +389,18 @@ Page({
       console.log(`分类筛选: ${currentCategory}, 从 ${beforeCategoryCount} 筛选到 ${filteredArticles.length}`);
     }
 
+    if (currentTag) {
+      const beforeTagCount = filteredArticles.length;
+      const normalizedTag = currentTag.toLowerCase();
+      filteredArticles = filteredArticles.filter(article =>
+        Array.isArray(article.tags) && article.tags.some(tag => (tag || '').toLowerCase() === normalizedTag)
+      );
+      console.log(`标签筛选: ${currentTag}, 从 ${beforeTagCount} 筛选到 ${filteredArticles.length}`);
+    }
+
     if (searchKeyword) {
       const beforeSearchCount = filteredArticles.length;
-      const keyword = searchKeyword.toLowerCase().replace('#', '');
+      const keyword = searchKeyword.toLowerCase().trim();
 
       if (Array.isArray(searchIndex) && searchIndex.length > 0) {
         const matchedFilenames = new Set();
@@ -310,6 +437,7 @@ Page({
     wx.stopPullDownRefresh();
   },
 
+
   /**
    * 搜索输入
    */
@@ -343,33 +471,35 @@ Page({
     this.setData({
       searchKeyword: '',
       currentCategory: '',
+      currentTag: '',
       showCategoryTree: false
     });
-    wx.setNavigationBarTitle({ title: '知识库' });
+    this.setPageTitle('', '');
     this.refreshView();
   },
+
 
   /**
    * 切换分类
    */
   switchCategory(e) {
     const category = e.currentTarget.dataset.category || '';
-    if (this.data.currentCategory === category) {
+    if (this.data.currentCategory === category && !this.data.currentTag) {
       this.setData({ showCategoryTree: false });
       return;
     }
 
     this.setData({
       currentCategory: category,
+      currentTag: '',
       searchKeyword: '',
       showCategoryTree: false
     });
 
-    const title = category ? `${category}` : '知识库';
-    wx.setNavigationBarTitle({ title });
-
+    this.setPageTitle(category, '');
     this.refreshView();
   },
+
 
   /**
    * 下拉刷新
@@ -417,9 +547,14 @@ Page({
    */
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
-    this.setData({ searchKeyword: `#${tag}` });
+    this.setData({
+      currentTag: tag || '',
+      searchKeyword: ''
+    });
+    this.setPageTitle(this.data.currentCategory, tag || '');
     this.refreshView();
   },
+
 
   /**
    * 分类点击
@@ -440,19 +575,9 @@ Page({
    * 获取分类英文类名
    */
   getCategoryClass(category) {
-    const classMap = {
-      '产品使用': 'category-product-usage',
-      '产品设计': 'category-product-design',
-      '产品思考': 'category-product-thinking',
-      '开发实践': 'category-dev-practice',
-      '开发者故事': 'category-dev-story',
-      '项目管理': 'category-project-mgmt',
-      'PMP认证': 'category-pmp',
-      '敏捷管理': 'category-agile',
-      '未分类': 'category-uncategorized'
-    };
-    return classMap[category] || 'category-uncategorized';
+    return knowledgeCategory.getCategoryClass(category);
   },
+
 
   /**
    * 显示错误提示
@@ -469,14 +594,17 @@ Page({
    * 分享给好友
    */
   onShareAppMessage() {
-    const { currentCategory, searchKeyword, totalCount } = this.data;
-    const tag = searchKeyword.replace('#', '');
+    const { currentCategory, currentTag, searchKeyword, totalCount } = this.data;
+    const tag = currentTag || '';
+    const displayCategory = currentCategory ? this.getLeafCategoryName(currentCategory) : '';
     let title = '随身百科-答疑小助手';
 
-    if (currentCategory) {
-      title = `${currentCategory} - 随身百科`;
+    if (displayCategory) {
+      title = `${displayCategory} - 随身百科`;
+    } else if (currentTag) {
+      title = `标签: ${currentTag}`;
     } else if (searchKeyword) {
-      title = `搜索"${tag}"结果`;
+      title = `搜索"${searchKeyword}"结果`;
     } else {
       title = `随身百科 - 共 ${totalCount} 篇知识`;
     }
@@ -487,13 +615,15 @@ Page({
     };
   },
 
+
   /**
    * 分享到朋友圈
    */
   onShareTimeline() {
     const { currentCategory, totalCount } = this.data;
-    const title = currentCategory
-      ? `${currentCategory} - 随身百科`
+    const displayCategory = currentCategory ? this.getLeafCategoryName(currentCategory) : '';
+    const title = displayCategory
+      ? `${displayCategory} - 随身百科`
       : `随身百科 - 共 ${totalCount} 篇知识`;
 
     return {
@@ -501,4 +631,5 @@ Page({
       query: `category=${encodeURIComponent(currentCategory)}`
     };
   }
+
 });

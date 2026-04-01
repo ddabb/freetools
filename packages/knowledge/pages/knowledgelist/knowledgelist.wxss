@@ -11,8 +11,10 @@ page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 20rpx;
-  padding-bottom: 20rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* ========== 顶部搜索栏和排序容器 ========== */
@@ -48,14 +50,14 @@ page {
 }
 
 .icon-search {
-  font-size: 32rpx;
+  font-size: 36rpx;
   margin-right: 12rpx;
   flex-shrink: 0;
 }
 
 .search-input {
   flex: 1;
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #333;
   height: 80rpx;
   line-height: 80rpx;
@@ -65,14 +67,14 @@ page {
 }
 
 .icon-clear {
-  font-size: 28rpx;
+  font-size: 32rpx;
   color: #999;
   padding: 8rpx;
   flex-shrink: 0;
 }
 
 .search-count {
-  font-size: 22rpx;
+  font-size: 26rpx;
   color: rgba(255, 255, 255, 0.8);
   padding: 10rpx 0 14rpx;
   text-align: center;
@@ -80,18 +82,20 @@ page {
 
 /* ========== 分类导航 ========== */
 .category-nav {
-  display: flex;
+  width: 100%;
   white-space: nowrap;
-  padding: 0 16rpx;
-  margin-top: 8rpx;
+  padding: 0;
+  margin: 16rpx 0 24rpx;
   height: auto;
-  overflow: visible;
+  flex-shrink: 0;
 }
 
-.category-nav scroll-view {
-  display: flex;
+.category-nav-inner {
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
+  height: auto;
+  padding-left: 24rpx;
 }
 
 .category-item {
@@ -100,23 +104,25 @@ page {
   align-items: center;
   justify-content: center;
   padding: 16rpx 28rpx;
-  margin-right: 16rpx;
-  background: rgba(255, 255, 255, 0.15);
+  margin-right: 10rpx;
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 28rpx;
-  border: 2rpx solid rgba(255, 255, 255, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   flex-shrink: 0;
+  flex: none;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 .category-item text {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 24rpx;
+  color: #333333;
+  font-size: 28rpx;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .category-item .count {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 4rpx;
 }
@@ -134,6 +140,24 @@ page {
 .category-item.active .count {
   color: rgba(102, 126, 234, 0.6);
 }
+
+.category-tree-trigger {
+  background: rgba(255, 255, 255, 0.22);
+  position: relative;
+  left: 24rpx;
+  margin-right: 24rpx;
+}
+
+.category-tree-trigger.tree-open {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6rpx 18rpx rgba(48, 66, 134, 0.18);
+}
+
+.category-tree-trigger.tree-open text {
+  color: #5a6dd8;
+}
+
 
 /* ========== 排序按钮 ========== */
 .sort-wrap {
@@ -167,7 +191,10 @@ page {
 /* ========== 文章列表滚动区 ========== */
 .article-scroll {
   flex: 1;
-  margin-top: 8rpx;
+  margin-top: 0;
+  /* 确保滚动条显示 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ========== 空状态 ========== */
@@ -211,15 +238,14 @@ page {
 /* ========== 文章卡片列表 ========== */
 .article-list {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  padding: 0 16rpx;
-  gap: 0;
+  flex-direction: column;
+  gap: 24rpx;
+  padding: 0;
 }
 
 .article-card {
-  width: 50%;
-  padding: 12rpx;
+  width: 100%;
+  padding: 0;
   box-sizing: border-box;
   background: transparent;
   position: relative;
@@ -280,10 +306,17 @@ page {
 .card-category.category-dev-practice { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
 .card-category.category-dev-story { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
 .card-category.category-project-mgmt { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.card-category.category-pmp { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+.card-category.category-agile { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+.card-category.category-soft-exam { background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); }
+.card-category.category-legal { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
+.card-category.category-safety { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+.card-category.category-calculation { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
 .card-category.category-uncategorized { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
 
+
 .card-order {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #ccc;
   font-weight: 500;
   flex-shrink: 0;
@@ -294,7 +327,7 @@ page {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: #1a1a1a;
   line-height: 1.4;
@@ -307,7 +340,7 @@ page {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-size: 22rpx;
+  font-size: 26rpx;
   color: #666;
   line-height: 1.5;
   margin-bottom: 16rpx;
@@ -327,7 +360,7 @@ page {
 }
 
 .card-tag {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #667eea;
   background: rgba(102, 126, 234, 0.08);
   padding: 4rpx 10rpx;
@@ -348,7 +381,7 @@ page {
 
 .card-words,
 .card-time {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #999;
 }
 
@@ -373,6 +406,39 @@ page {
   padding: 30rpx;
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* ========== 分类树加载状态 ========== */
+.tree-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  gap: 24rpx;
+}
+
+.tree-loading-icon {
+  font-size: 48rpx;
+  color: rgba(102, 126, 234, 0.6);
+  animation: treeLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes treeLoading {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.tree-loading-text {
+  font-size: 26rpx;
+  color: rgba(102, 126, 234, 0.7);
+  font-weight: 500;
 }
 
 /* ========== 列表结束 ========== */
@@ -412,6 +478,14 @@ page {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.category-tree-modal.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .modal-overlay {
@@ -421,17 +495,25 @@ page {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.category-tree-modal.show .modal-overlay {
+  opacity: 1;
 }
 
 .modal-content {
   position: relative;
-  background: white;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8ff 100%);
   border-radius: 32rpx 32rpx 0 0;
   width: 100%;
   max-height: 80vh;
-  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -12rpx 40rpx rgba(50, 70, 140, 0.2);
   z-index: 1000;
+  overflow: hidden;
 }
+
 
 .modal-header {
   display: flex;
@@ -456,38 +538,152 @@ page {
 }
 
 .tree-scroll {
-  max-height: calc(80vh - 100rpx);
-  padding: 16rpx 0;
+  max-height: calc(80vh - 180rpx);
+  padding: 20rpx 24rpx 28rpx;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 246, 255, 0.96) 100%);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20rpx);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+  /* 确保滚动条显示 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.tree-item {
+.category-tree-modal.show .tree-scroll {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tree-root-outer {
+  position: relative;
+}
+
+.tree-root-children {
+  margin-left: 28rpx;
+  padding-left: 24rpx;
+  border-left: 2rpx solid rgba(102, 126, 234, 0.2);
+}
+
+.tree-branch {
+  position: relative;
+}
+
+.tree-branch.level-0 {
+  margin-top: 16rpx;
+}
+
+.tree-branch.level-0:first-child {
+  margin-top: 0;
+}
+
+.tree-children {
+  margin-left: 28rpx;
+  padding-left: 24rpx;
+  border-left: 2rpx solid rgba(102, 126, 234, 0.16);
+}
+
+.tree-node {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx 32rpx;
-  border-bottom: 1rpx solid #f5f5f5;
-  transition: background-color 0.2s ease;
+  gap: 20rpx;
+  padding: 22rpx 24rpx;
+  margin: 12rpx 0;
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1rpx solid rgba(102, 126, 234, 0.12);
+  box-shadow: 0 8rpx 24rpx rgba(79, 101, 187, 0.08);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  opacity: 1;
 }
 
-.tree-item:active {
-  background-color: #f5f5f5;
+
+.tree-node-root {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.14) 0%, rgba(118, 75, 162, 0.14) 100%);
+  border-color: rgba(102, 126, 234, 0.18);
+  box-shadow: 0 10rpx 26rpx rgba(79, 101, 187, 0.12);
+}
+
+
+.tree-node:active {
+  background-color: rgba(102, 126, 234, 0.08);
+  transform: scale(0.995);
+}
+
+.tree-node.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+  box-shadow: 0 12rpx 28rpx rgba(84, 96, 205, 0.24);
+}
+
+.tree-node.active .tree-label,
+.tree-node.active .tree-node-icon,
+.tree-node.active .tree-count {
+  color: #ffffff;
+}
+
+.tree-node.active .tree-count {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.tree-node-main {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  min-width: 0;
+  flex: 1;
+}
+
+.tree-node-icon {
+  font-size: 28rpx;
+  color: #5c6ed6;
+  width: 32rpx;
+  text-align: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.tree-node:active .tree-node-icon {
+  transform: scale(1.1);
 }
 
 .tree-label {
   font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
+  color: #1a1a1a;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .tree-count {
   font-size: 24rpx;
-  color: #999;
-  background: #f5f5f5;
-  padding: 4rpx 16rpx;
-  border-radius: 16rpx;
+  color: #5f6fa5;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80rpx;
+  padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(245, 247, 255, 0.92) 0%, rgba(232, 238, 255, 0.98) 100%);
+  border-top: 1rpx solid rgba(102, 126, 234, 0.12);
+}
+
+.modal-footer-text {
+  font-size: 24rpx;
+  color: #51628f;
+  letter-spacing: 1rpx;
 }
 
 .category-item .icon {
   margin-left: 8rpx;
   font-size: 24rpx;
 }
+
+
