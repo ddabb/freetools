@@ -39,6 +39,7 @@
   <scroll-view
     class="article-scroll"
     scroll-y
+    scroll-x
     wx:if="{{article && !loading && !error}}"
   >
     <view class="article-wrapper">

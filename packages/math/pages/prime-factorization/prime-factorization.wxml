@@ -1,77 +1,92 @@
 <view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 数字输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">要分解的数字</text>
-        <text class="required-mark">*</text>
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-card">
+      <view class="input-header">
+        <text class="input-icon">🔢</text>
+        <text class="input-title">质因数分解</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{number}}" bindinput="setNumber" class="input-field" placeholder="请输入大于1的整数" min="2" max="999999999"/>
+      <view class="input-wrapper">
+        <input
+          type="number"
+          value="{{number}}"
+          bindinput="onInputChange"
+          class="number-input"
+          placeholder="输入数字"
+          maxlength="12"
+          confirm-type="done"
+        />
       </view>
-      <view class="input-hint">支持2-999,999,999之间的整数</view>
-    </view>
-
-    <!-- 计算按钮 -->
-    <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="calculate" disabled="{{!canCalculate}}">
-        <text class="btn-text">分解质因数</text>
-      </button>
+      <view class="input-hint">支持 2 ~ 999,999,999</view>
     </view>
   </view>
 
   <!-- 结果展示 -->
-  <view class="result-section" wx:if="{{showResult}}">
-    <view class="result-box">
-      <view class="result-item highlight">
-        <text class="result-label">分解结果</text>
-        <view class="factor-tree">
-          <text class="original-number">{{number}}</text>
-          <text class="equals-sign">=</text>
-          <view class="factors-container">
-            <text class="factor-item {{index === 0 ? 'first' : ''}} {{item.isPrime ? 'prime' : ''}}" 
-                  wx:for="{{factors}}" wx:key="index">
-              <text wx:if="{{!item.isPrime}}">{{item.value}}</text>
-              <text wx:else class="prime-number">{{item.value}}</text>
-              <text class="multiply-sign" wx:if="{{index < factors.length - 1}}"> × </text>
-            </text>
-          </view>
+  <view class="result-section" wx:if="{{showResult && number >= 2}}">
+    <!-- 分解结果 -->
+    <view class="result-card">
+      <view class="result-header">
+        <text class="result-icon">✨</text>
+        <text class="result-title">分解结果</text>
+      </view>
+
+      <view class="factor-display">
+        <view class="original-num">{{number}}</view>
+        <text class="equals">=</text>
+        <view class="factor-list">
+          <block wx:for="{{factors}}" wx:key="index">
+            <view class="factor-chip {{item.isPrime ? 'prime' : ''}}">
+              <text class="chip-text">{{item.value}}</text>
+            </view>
+            <text class="multiply" wx:if="{{index < factors.length - 1}}">×</text>
+          </block>
         </view>
       </view>
-      
-      <view class="result-divider" wx:if="{{steps.length > 0}}"></view>
-      
-      <view class="calculation-steps" wx:if="{{steps.length > 0}}">
-        <text class="steps-title">分解过程</text>
-        <scroll-view class="steps-scroll" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
-          <text class="step-text" wx:for="{{steps}}" wx:key="index">{{item}}</text>
+
+      <!-- 质数提示 -->
+      <view class="prime-hint" wx:if="{{isPrime}}">
+        <text class="hint-icon">🎉</text>
+        <text class="hint-text">{{number}} 本身就是质数，无需分解</text>
+      </view>
+
+      <!-- 分解步骤 -->
+      <view class="steps-section" wx:if="{{steps.length > 1}}">
+        <view class="steps-header">分解过程</view>
+        <scroll-view class="steps-scroll" scroll-y>
+          <view class="step-item" wx:for="{{steps}}" wx:key="index">
+            <text class="step-text">{{item}}</text>
+          </view>
         </scroll-view>
       </view>
+    </view>
 
-      <view class="result-divider" wx:if="{{isPrime}}"></view>
-      
-      <view class="prime-notice" wx:if="{{isPrime}}">
-        <text class="notice-text">🎉 {{number}} 本身就是质数，无法再分解</text>
+    <!-- 快捷示例 -->
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-number="{{item.number}}">
+          <text class="example-text">{{item.number}}</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 数学科普 -->
-  <view class="info-section">
-    <view class="info-title">💡 什么是质因数分解？</view>
-    <view class="info-content">
-      <text class="info-text">把一个合数分解成若干个质数相乘的形式，这些质数叫做这个合数的质因数。</text>
-      <text class="info-example">例如：12 = 2 × 2 × 3</text>
+  <!-- 无结果时的示例引导 -->
+  <view class="guide-section" wx:if="{{!showResult || number < 2}}">
+    <view class="guide-card">
+      <view class="guide-header">💡 什么是质因数分解？</view>
+      <view class="guide-content">
+        <text class="guide-text">把一个合数分解成若干个质数相乘的形式</text>
+        <view class="guide-example">例如：12 = 2 × 2 × 3</view>
+      </view>
     </view>
-  </view>
 
-  <!-- 快捷示例 -->
-  <view class="examples-section">
-    <view class="examples-title">快速示例</view>
-    <view class="examples-grid">
-      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-number="{{item.number}}">
-        <text class="example-text">{{item.number}}</text>
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-number="{{item.number}}">
+          <text class="example-text">{{item.number}}</text>
+        </view>
       </view>
     </view>
   </view>

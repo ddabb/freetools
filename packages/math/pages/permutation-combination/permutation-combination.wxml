@@ -1,0 +1,142 @@
+<view class="container">
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-card">
+      <view class="input-header">
+        <text class="input-icon">🔢</text>
+        <text class="input-title">排列组合</text>
+      </view>
+
+      <!-- n 输入 -->
+      <view class="input-row">
+        <view class="input-label">n (总数)</view>
+        <view class="input-wrapper">
+          <input
+            type="number"
+            value="{{n}}"
+            bindinput="onNChange"
+            class="number-input"
+            placeholder="输入总数"
+            maxlength="6"
+            confirm-type="done"
+          />
+        </view>
+      </view>
+
+      <!-- r 输入 -->
+      <view class="input-row">
+        <view class="input-label">r (选择数)</view>
+        <view class="input-wrapper">
+          <input
+            type="number"
+            value="{{r}}"
+            bindinput="onRChange"
+            class="number-input"
+            placeholder="输入选择数"
+            maxlength="6"
+            confirm-type="done"
+          />
+        </view>
+      </view>
+
+      <view class="input-hint">n 和 r 均为正整数，且 r ≤ n</view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-card" wx:if="{{error}}">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult && !error}}">
+    <!-- 排列结果 -->
+    <view class="result-card">
+      <view class="result-header">
+        <text class="result-icon">📝</text>
+        <text class="result-title">排列 A(n,r)</text>
+      </view>
+
+      <view class="formula-card">
+        <text class="formula">A({{n}}, {{r}}) = {{n}}! / ({{n}}-{{r}})!</text>
+      </view>
+
+      <view class="result-display">
+        <text class="result-num">{{permutation}}</text>
+      </view>
+    </view>
+
+    <!-- 组合结果 -->
+    <view class="result-card">
+      <view class="result-header">
+        <text class="result-icon">📦</text>
+        <text class="result-title">组合 C(n,r)</text>
+      </view>
+
+      <view class="formula-card">
+        <text class="formula">C({{n}}, {{r}}) = {{n}}! / ({{r}}! × ({{n}}-{{r}})!)</text>
+      </view>
+
+      <view class="result-display">
+        <text class="result-num">{{combination}}</text>
+      </view>
+    </view>
+
+    <!-- 关系说明 -->
+    <view class="info-card">
+      <view class="info-header">
+        <text class="info-icon">💡</text>
+        <text class="info-title">排列 vs 组合</text>
+      </view>
+      <view class="info-content">
+        <view class="info-item">
+          <text class="info-label">排列 (A)</text>
+          <text class="info-desc">有顺序，{{n}}个取{{r}}个，顺序不同结果不同</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">组合 (C)</text>
+          <text class="info-desc">无顺序，{{n}}个取{{r}}个，只在乎选了什么</text>
+        </view>
+        <view class="info-relation">
+          <text class="relation-text">关系：A(n,r) = C(n,r) × r!</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快捷示例 -->
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
+          <text class="example-n">{{item.n}}</text>
+          <text class="example-sep">取</text>
+          <text class="example-r">{{item.r}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无结果时的引导 -->
+  <view class="guide-section" wx:if="{{!showResult && !error}}">
+    <view class="guide-card">
+      <view class="guide-header">💡 排列与组合</view>
+      <view class="guide-content">
+        <text class="guide-text">从 n 个不同元素中取出 r 个元素，排列考虑顺序，组合不考虑顺序</text>
+        <view class="guide-example">排列：A(3,2) = 3×2 = 6</view>
+        <view class="guide-example">组合：C(3,2) = 3÷2 = 3</view>
+      </view>
+    </view>
+
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
+          <text class="example-n">{{item.n}}</text>
+          <text class="example-sep">取</text>
+          <text class="example-r">{{item.r}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

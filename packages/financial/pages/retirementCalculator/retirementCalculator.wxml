@@ -49,33 +49,52 @@
     </view>
   </view>
 
-  <view class="button-group">
-    <button class="btn-calculate" bindtap="calculate">计算</button>
-    <button class="btn-reset" bindtap="reset">重置</button>
-  </view>
+  <!-- 结果区域始终显示 -->
+  <view class="result-section {{hasValidResult ? '' : 'result-empty'}}">
+    <view class="result-header">
+      <text class="result-title">退休储蓄预测</text>
+      <view wx:if="{{hasValidResult}}" class="btn-reset-mini" bindtap="reset">重置</view>
+    </view>
 
-  <view wx:if="{{showResult}}" class="result-section">
-    <view class="result-title">退休储蓄预测</view>
+    <view wx:if="{{hasValidResult}}" class="result-body">
+      <view class="result-primary">
+        <text class="primary-label">退休时储蓄总额</text>
+        <text class="primary-value">{{totalSavings}}</text>
+        <text class="primary-unit">元</text>
+      </view>
 
-    <view class="result-item">
-      <text class="result-label">退休时预计月储蓄</text>
-      <text class="result-value">{{expectedMonthlySaving}} 元</text>
+      <view class="result-secondary">
+        <view class="secondary-item">
+          <text class="secondary-value">{{retireSavings}}</text>
+          <text class="secondary-unit">万元</text>
+          <text class="secondary-label">约合</text>
+        </view>
+      </view>
+
+      <view class="result-detail">
+        <view class="result-item">
+          <text class="result-label">距离退休</text>
+          <text class="result-value">{{yearsToRetire}} 年</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">退休时每月储蓄</text>
+          <text class="result-value">{{expectedMonthlySaving}} 元</text>
+        </view>
+      </view>
+
+      <view class="tips">
+        <text class="tips-text">* 仅供参考，实际情况请咨询专业理财师</text>
+      </view>
     </view>
-    <view class="result-item">
-      <text class="result-label">预计退休时储蓄总额</text>
-      <text class="result-value">{{retireSavings}} 万元</text>
-    </view>
-    <view class="result-item">
-      <text class="result-label">预计退休时储蓄总额（元）</text>
-      <text class="result-value">{{totalSavings}} 元</text>
-    </view>
-    <view class="tips">
-      <text class="tips-text">* 仅供参考，实际情况请咨询专业理财师</text>
+
+    <view wx:else class="result-placeholder">
+      <text class="placeholder-icon">💡</text>
+      <text class="placeholder-text">请输入完整信息，即可查看退休储蓄预测</text>
     </view>
   </view>
 
   <!-- 分享海报生成 -->
-  <view class="share-section">
+  <view wx:if="{{hasValidResult}}" class="share-section">
     <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
   </view>
 

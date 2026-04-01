@@ -324,6 +324,26 @@ const tools = [
     description: '将合数分解成质数相乘的形式'
   },
   {
+    id: 'divisor-finder',
+    name: '求约数',
+    icon: '📋',
+    color: 'purple',
+    url: '/packages/math/pages/divisor-finder/divisor-finder',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['约数', '因数', '分解', '整除', '因子'],
+    description: '找出正整数所有的约数（因数）'
+  },
+  {
+    id: 'permutation-combination',
+    name: '排列组合',
+    icon: '🔢',
+    color: 'rose',
+    url: '/packages/math/pages/permutation-combination/permutation-combination',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['排列', '组合', '概率', '计算', 'A', 'C'],
+    description: '计算排列 A(n,r) 和组合 C(n,r)'
+  },
+  {
     id: '24point',
     name: '24点速算',
     icon: '🎮',

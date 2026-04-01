@@ -1,0 +1,92 @@
+<view class="container">
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-card">
+      <view class="input-header">
+        <text class="input-icon">🔢</text>
+        <text class="input-title">求约数</text>
+      </view>
+      <view class="input-wrapper">
+        <input
+          type="number"
+          value="{{number}}"
+          bindinput="onInputChange"
+          class="number-input"
+          placeholder="输入正整数"
+          maxlength="10"
+          confirm-type="done"
+        />
+      </view>
+      <view class="input-hint">支持 1 ~ 999,999,999</view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-card" wx:if="{{error}}">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult && !error}}">
+    <!-- 约数列表 -->
+    <view class="result-card">
+      <view class="result-header">
+        <text class="result-icon">📋</text>
+        <text class="result-title">{{number}} 的所有约数</text>
+      </view>
+
+      <view class="count-badge">
+        <text class="count-num">{{divisors.length}}</text>
+        <text class="count-label">个约数</text>
+      </view>
+
+      <view class="divisors-grid">
+        <view class="divisor-chip {{item.isPrime ? 'prime' : ''}}" wx:for="{{divisors}}" wx:key="index">
+          <text class="chip-text">{{item.value}}</text>
+        </view>
+      </view>
+
+      <!-- 特殊说明 -->
+      <view class="special-hint" wx:if="{{isPrime}}">
+        <text class="hint-icon">🎉</text>
+        <text class="hint-text">{{number}} 是质数，只有 1 和它本身两个约数</text>
+      </view>
+
+      <view class="special-hint prime-only" wx:if="{{number == 1}}">
+        <text class="hint-icon">ℹ️</text>
+        <text class="hint-text">1 只有 1 个约数，就是它自己</text>
+      </view>
+    </view>
+
+    <!-- 快捷示例 -->
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-number="{{item.number}}">
+          <text class="example-text">{{item.number}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无结果时的引导 -->
+  <view class="guide-section" wx:if="{{!showResult && !error}}">
+    <view class="guide-card">
+      <view class="guide-header">💡 什么是约数？</view>
+      <view class="guide-content">
+        <text class="guide-text">约数，又称因数。整数 a 除以整数 b(b≠0) 除得的商正好是整数而没有余数，就说 b 是 a 的约数</text>
+        <view class="guide-example">例如：12 的约数有 1, 2, 3, 4, 6, 12</view>
+      </view>
+    </view>
+
+    <view class="examples-card">
+      <view class="examples-header">快速示例</view>
+      <view class="examples-grid">
+        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-number="{{item.number}}">
+          <text class="example-text">{{item.number}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

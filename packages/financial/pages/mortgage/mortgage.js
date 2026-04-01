@@ -173,7 +173,7 @@ Page({
     monthlyPayment: '',
     totalInterest: '',
     totalPayment: '',
-    showResult: false,
+    hasValidResult: false,
     canvaswidth: 376,
     canvasheight: 400
   },
@@ -188,12 +188,14 @@ Page({
     this.setData({
       loanType: parseInt(e.detail.value)
     })
+    this.recalc()
   },
 
   onLoanAmountInput(e) {
     this.setData({
       loanAmount: e.detail.value
     })
+    this.recalc()
   },
 
   onYearsChange(e) {
@@ -203,25 +205,34 @@ Page({
       yearsIndex: index,
       years: yearsArray[index]
     })
+    this.recalc()
   },
 
   onRateChange(e) {
     this.setData({
       rate: parseFloat(e.detail.value)
     })
+    this.recalc()
   },
 
-  calculate() {
+  // 实时计算
+  recalc() {
     const { loanAmount, years, rate, loanType } = this.data
 
-    if (!loanAmount || loanAmount <= 0) {
-      utils.showText('请输入贷款金额');
+    // 验证输入
+    if (!loanAmount || parseFloat(loanAmount) <= 0 || isNaN(parseFloat(rate)) || parseFloat(rate) < 0) {
+      this.setData({
+        monthlyPayment: '',
+        totalInterest: '',
+        totalPayment: '',
+        hasValidResult: false
+      })
       return
     }
 
     const amount = parseFloat(loanAmount) * 10000
     const months = years * 12
-    const monthlyRate = rate / 100 / 12
+    const monthlyRate = parseFloat(rate) / 100 / 12
 
     // 等额本息
     const monthlyPayment = amount * monthlyRate * Math.pow(1 + monthlyRate, months) /
@@ -233,7 +244,7 @@ Page({
       monthlyPayment: monthlyPayment.toFixed(2),
       totalInterest: (totalInterest / 10000).toFixed(2),
       totalPayment: (totalPayment / 10000).toFixed(2),
-      showResult: true
+      hasValidResult: true
     })
   },
 
@@ -241,11 +252,12 @@ Page({
     this.setData({
       loanAmount: '',
       years: 30,
+      yearsIndex: 5,
       rate: 4.2,
       monthlyPayment: '',
       totalInterest: '',
       totalPayment: '',
-      showResult: false
+      hasValidResult: false
     })
   },
 
@@ -464,7 +476,7 @@ Page({
 
     console.log('开始绘制计算结果');
     // 计算结果
-    if (this.data.showResult) {
+    if (this.data.hasValidResult) {
       // 结果标题
       ctx.font = 'bold 14px 微软雅黑';
       ctx.fillStyle = '#333333';

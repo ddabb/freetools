@@ -60,6 +60,8 @@
       "pages": [
         "pages/gcd-lcm/gcd-lcm",
         "pages/prime-factorization/prime-factorization",
+        "pages/divisor-finder/divisor-finder",
+        "pages/permutation-combination/permutation-combination",
         "pages/24point/24point",
         "pages/oddEven/oddEven",
         "pages/prime-checker/prime-checker",

@@ -1,2 +1,8 @@
 node_modules/
+.codebuddy/
+
+# 发布配置（包含 AppSecret，禁止提交）
+.publish-config.json
+*.key
+*.pem
 .codebuddy

@@ -21,7 +21,9 @@ Page({
     // Markdown 渲染后的 HTML（供 rich-text 使用）
     contentHtml: '',
     // 相关推荐
-    relatedArticles: []
+    relatedArticles: [],
+    // 调试模式
+    debugMode: false
   },
 
   onLoad(options) {
@@ -82,10 +84,30 @@ Page({
             breaks: true        // 将换行符转换为 <br>
           }).use(require('markdown-it-table'), {
             multiline: true,    // 支持多行表格
-            rowspan: true       // 支持行合并
+            rowspan: true,      // 支持行合并
+            headerless: false   // 确保生成表头
           });
 
-          return md.render(markdown);
+          // 对生成的 HTML 进行美化
+          let html = md.render(markdown);
+          
+          // 为表格添加 CSS 类
+          html = html.replace(/<table>/g, '<table class="md-table">');
+          html = html.replace(/<thead>/g, '<thead class="md-thead">');
+          html = html.replace(/<tbody>/g, '<tbody class="md-tbody">');
+          html = html.replace(/<tr>/g, '<tr class="md-tr">');
+          html = html.replace(/<th>/g, '<th class="md-th">');
+          html = html.replace(/<td>/g, '<td class="md-td">');
+          
+          // 记录生成的 HTML 内容
+          console.log('markdown-it 生成的 HTML:', {
+            html: html,
+            hasTable: html.includes('<table'),
+            tableCount: (html.match(/<table/g) || []).length,
+            timestamp: new Date().toISOString()
+          });
+          
+          return html;
         } catch (e) {
           console.error('[knowledgedetail] markdown-it 渲染失败:', e);
           return this._simpleMarkdownParser(markdown); // 失败时回退到简单解析器
@@ -161,9 +183,9 @@ Page({
     });
 
     wx.request({
-      url,
+      url: url + `?_t=${Date.now()}`,
       method: 'GET',
-      timeout: 10000,
+      timeout: 30000,
       success: (res) => {
         console.log('文章详情请求成功:', {
           statusCode: res.statusCode,
@@ -186,6 +208,15 @@ Page({
 
           // Markdown 内容渲染为 HTML
           const contentHtml = this.markdownToHtml(article.content || '');
+          
+          // 记录最终的 contentHtml 内容
+          console.log('设置到页面的 contentHtml:', {
+            contentHtml: contentHtml,
+            length: contentHtml.length,
+            hasTable: contentHtml.includes('<table'),
+            tableCount: (contentHtml.match(/<table/g) || []).length,
+            timestamp: new Date().toISOString()
+          });
 
           this.setData({
             article,
@@ -228,9 +259,9 @@ Page({
     const url = CDN_BASE + 'articles.json';
 
     wx.request({
-      url,
+      url: url + `?_t=${Date.now()}`,
       method: 'GET',
-      timeout: 10000,
+      timeout: 30000,
       success: (res) => {
         if (res.statusCode === 200 && res.data) {
           const allArticles = res.data.articles || [];
@@ -330,6 +361,59 @@ Page({
     if (filename) {
       this.loadDetail(filename);
     }
+  },
+
+  /**
+   * 切换调试模式
+   */
+  onToggleDebug() {
+    const { debugMode } = this.data;
+    console.log('切换调试模式:', {
+      currentMode: debugMode,
+      newMode: !debugMode,
+      timestamp: new Date().toISOString()
+    });
+    
+    this.setData({
+      debugMode: !debugMode
+    });
+  },
+
+  /**
+   * 复制调试HTML内容
+   */
+  onCopyDebugHtml() {
+    const { contentHtml } = this.data;
+    
+    if (!contentHtml) {
+      wx.showToast({
+        title: '暂无内容可复制',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.setClipboardData({
+      data: contentHtml,
+      success: () => {
+        wx.showToast({
+          title: 'HTML已复制到剪贴板',
+          icon: 'success',
+          duration: 2000
+        });
+        
+        console.log('复制调试HTML成功:', {
+          length: contentHtml.length,
+          timestamp: new Date().toISOString()
+        });
+      },
+      fail: () => {
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        });
+      }
+    });
   },
 
   /**

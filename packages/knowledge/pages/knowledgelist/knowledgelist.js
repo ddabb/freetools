@@ -57,6 +57,12 @@ Page({
   },
 
   onPullDownRefresh() {
+    console.log('下拉刷新触发:', {
+      timestamp: new Date().toISOString(),
+      currentCategory: this.data.currentCategory,
+      searchKeyword: this.data.searchKeyword,
+      refreshing: this.data.refreshing
+    });
     this.onRefresh();
   },
 
@@ -64,20 +70,40 @@ Page({
    * 加载文章列表
    */
   loadArticles() {
-    if (this.data.loading) return;
+    if (this.data.loading) {
+      console.log('正在加载中，跳过请求');
+      return;
+    }
+
+    console.log('开始加载文章列表:', {
+      timestamp: new Date().toISOString(),
+      refreshing: this.data.refreshing,
+      url: CDN_BASE + 'articles.json'
+    });
 
     this.setData({ loading: true });
 
     const url = CDN_BASE + 'articles.json';
 
     wx.request({
-      url,
+      url: url + `?_t=${Date.now()}`,
       method: 'GET',
-      timeout: 10000,
+      timeout: 30000,
       success: (res) => {
+        console.log('文章列表请求成功:', {
+          statusCode: res.statusCode,
+          dataLength: res.data ? (res.data.articles ? res.data.articles.length : 0) : 0,
+          timestamp: new Date().toISOString()
+        });
+        
         if (res.statusCode === 200 && res.data) {
           const articles = res.data.articles || [];
           const taxonomy = res.data.taxonomy || {};
+          
+          console.log('获取到文章数据:', {
+            articleCount: articles.length,
+            categoryCount: Object.keys(taxonomy.categories || {}).length
+          });
           
           // 保存原始数据
           this.setData({ 
@@ -106,19 +132,28 @@ Page({
             categoryStats
           });
 
+          console.log('开始应用筛选和排序');
           // 应用筛选和排序
           this.applyFiltersAndSort();
           
+          console.log('数据加载完成，停止刷新状态');
           this.setData({ loading: false, refreshing: false });
           wx.stopPullDownRefresh();
         } else {
+          console.warn('文章列表请求返回异常:', {
+            statusCode: res.statusCode,
+            data: res.data
+          });
           this.showError('加载失败，请重试');
           this.setData({ loading: false, refreshing: false });
           wx.stopPullDownRefresh();
         }
       },
       fail: (err) => {
-        console.error('加载文章失败:', err);
+        console.error('加载文章失败:', {
+          error: err,
+          timestamp: new Date().toISOString()
+        });
         this.showError('网络错误，请检查连接');
         this.setData({ loading: false, refreshing: false });
         wx.stopPullDownRefresh();
@@ -132,20 +167,35 @@ Page({
   applyFiltersAndSort() {
     let { allArticles, currentCategory, searchKeyword } = this.data;
     
+    console.log('应用筛选和排序:', {
+      originalCount: allArticles.length,
+      currentCategory: currentCategory,
+      searchKeyword: searchKeyword
+    });
+    
     // 分类筛选
     if (currentCategory) {
+      const beforeCategoryCount = allArticles.length;
       allArticles = allArticles.filter(a => a.category === currentCategory);
+      console.log(`分类筛选: ${currentCategory}, 从 ${beforeCategoryCount} 筛选到 ${allArticles.length}`);
     }
     
     // 搜索筛选（标题、描述、标签）
     if (searchKeyword) {
+      const beforeSearchCount = allArticles.length;
       const keyword = searchKeyword.toLowerCase().replace('#', '');
       allArticles = allArticles.filter(a => 
         a.title.toLowerCase().includes(keyword) ||
         (a.description && a.description.toLowerCase().includes(keyword)) ||
         (a.tags && a.tags.some(t => t.toLowerCase().includes(keyword)))
       );
+      console.log(`搜索筛选: "${searchKeyword}", 从 ${beforeSearchCount} 筛选到 ${allArticles.length}`);
     }
+    
+    console.log('筛选完成，设置列表数据:', {
+      finalCount: allArticles.length,
+      totalCount: allArticles.length
+    });
     
     this.setData({
       list: allArticles,
@@ -217,10 +267,20 @@ Page({
    * 下拉刷新
    */
   onRefresh() {
+    console.log('开始执行下拉刷新:', {
+      timestamp: new Date().toISOString(),
+      currentCategory: this.data.currentCategory,
+      searchKeyword: this.data.searchKeyword
+    });
+    
     // 清空缓存
     wx.clearStorageSync();
+    console.log('缓存已清空');
+    
     // 重新加载数据
     this.setData({ refreshing: true, page: 1 });
+    console.log('设置 refreshing 状态为 true');
+    
     this.loadArticles();
   },
 

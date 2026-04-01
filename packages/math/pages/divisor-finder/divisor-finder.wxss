@@ -1,7 +1,7 @@
-/**packages/math/pages/prime-factorization/prime-factorization.wxss**/
+/**packages/math/pages/divisor-finder/divisor-finder.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .container {
@@ -47,9 +47,9 @@ page {
 }
 
 .input-wrapper:focus-within {
-  border-color: #11998e;
+  border-color: #667eea;
   background: white;
-  box-shadow: 0 0 0 6rpx rgba(17, 153, 142, 0.1);
+  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.1);
 }
 
 .number-input {
@@ -75,7 +75,37 @@ page {
   text-align: center;
 }
 
-/* 结果卡片 */
+/* 错误提示 */
+.error-card {
+  background: rgba(255, 59, 48, 0.1);
+  border: 2rpx solid rgba(255, 59, 48, 0.3);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  animation: shake 0.3s ease;
+}
+
+.error-icon {
+  font-size: 32rpx;
+}
+
+.error-text {
+  font-size: 26rpx;
+  color: #ff3b30;
+  font-weight: 600;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8rpx); }
+  75% { transform: translateX(8rpx); }
+}
+
+/* 结果区域 */
 .result-section {
   display: flex;
   flex-direction: column;
@@ -109,68 +139,66 @@ page {
   color: #333;
 }
 
-/* 因子展示 */
-.factor-display {
+/* 约数数量徽章 */
+.count-badge {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20rpx;
-  padding: 32rpx;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border-radius: 20rpx;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8rpx;
   margin-bottom: 24rpx;
+  padding: 16rpx;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16rpx;
 }
 
-.original-num {
+.count-num {
   font-size: 48rpx;
   font-weight: 800;
-  color: #11998e;
+  color: white;
 }
 
-.equals {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #666;
+.count-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.factor-list {
+/* 约数网格 */
+.divisors-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
   gap: 12rpx;
+  justify-content: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
 }
 
-.factor-chip {
-  padding: 12rpx 20rpx;
-  background: rgba(17, 153, 142, 0.1);
+.divisor-chip {
+  padding: 14rpx 20rpx;
+  background: rgba(102, 126, 234, 0.1);
   border-radius: 12rpx;
-  border: 2rpx solid rgba(17, 153, 142, 0.3);
+  border: 2rpx solid rgba(102, 126, 234, 0.2);
+  min-width: 60rpx;
+  text-align: center;
 }
 
-.factor-chip.prime {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
-}
-
-.factor-chip.prime .chip-text {
-  color: white;
-  font-weight: 700;
+.divisor-chip.prime {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
 }
 
 .chip-text {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #11998e;
-}
-
-.multiply {
   font-size: 28rpx;
-  color: #666;
-  margin: 0 6rpx;
+  font-weight: 600;
+  color: #667eea;
 }
 
-/* 质数提示 */
-.prime-hint {
+.divisor-chip.prime .chip-text {
+  color: white;
+}
+
+/* 特殊提示 */
+.special-hint {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,7 +206,11 @@ page {
   padding: 20rpx;
   background: linear-gradient(135deg, #fef3c7, #fde68a);
   border-radius: 16rpx;
-  margin-bottom: 20rpx;
+  margin-top: 24rpx;
+}
+
+.special-hint.prime-only {
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
 }
 
 .hint-icon {
@@ -186,39 +218,13 @@ page {
 }
 
 .hint-text {
-  font-size: 26rpx;
+  font-size: 24rpx;
   color: #92400e;
   font-weight: 600;
 }
 
-/* 分解步骤 */
-.steps-section {
-  padding-top: 20rpx;
-  border-top: 1rpx solid #eee;
-}
-
-.steps-header {
-  font-size: 26rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16rpx;
-}
-
-.steps-scroll {
-  max-height: 300rpx;
-}
-
-.step-item {
-  padding: 12rpx 0;
-  padding-left: 20rpx;
-  border-left: 3rpx solid #38ef7d;
-  margin-bottom: 8rpx;
-}
-
-.step-text {
-  font-size: 24rpx;
-  color: #555;
-  line-height: 1.5;
+.special-hint.prime-only .hint-text {
+  color: #5b21b6;
 }
 
 /* 示例卡片 */
@@ -252,7 +258,7 @@ page {
 }
 
 .example-btn:active {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   transform: scale(0.96);
 }
 
@@ -263,7 +269,7 @@ page {
 .example-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #11998e;
+  color: #667eea;
 }
 
 /* 引导区域 */
@@ -301,13 +307,13 @@ page {
 
 .guide-example {
   font-size: 28rpx;
-  color: #11998e;
+  color: #667eea;
   font-weight: 600;
   font-family: 'Monaco', monospace;
   padding: 16rpx 20rpx;
-  background: rgba(17, 153, 142, 0.1);
+  background: rgba(102, 126, 234, 0.1);
   border-radius: 10rpx;
-  border-left: 4rpx solid #11998e;
+  border-left: 4rpx solid #667eea;
 }
 
 /* 动画 */
@@ -328,15 +334,16 @@ page {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .factor-display {
-    padding: 24rpx;
+  .divisors-grid {
+    padding: 16rpx;
   }
 
-  .original-num {
-    font-size: 40rpx;
+  .divisor-chip {
+    padding: 12rpx 16rpx;
+    min-width: 50rpx;
   }
 
   .chip-text {
-    font-size: 28rpx;
+    font-size: 24rpx;
   }
 }

@@ -1,7 +1,7 @@
-/**packages/math/pages/prime-factorization/prime-factorization.wxss**/
+/**packages/math/pages/permutation-combination/permutation-combination.wxss**/
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
 .container {
@@ -38,7 +38,26 @@ page {
   color: #333;
 }
 
+/* 输入行 */
+.input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.input-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.input-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
 .input-wrapper {
+  flex: 1;
   background: #f5f7fa;
   border-radius: 16rpx;
   padding: 0 24rpx;
@@ -47,17 +66,17 @@ page {
 }
 
 .input-wrapper:focus-within {
-  border-color: #11998e;
+  border-color: #f5576c;
   background: white;
-  box-shadow: 0 0 0 6rpx rgba(17, 153, 142, 0.1);
+  box-shadow: 0 0 0 6rpx rgba(245, 87, 108, 0.1);
 }
 
 .number-input {
   width: 100%;
-  font-size: 40rpx;
+  font-size: 36rpx;
   font-weight: 600;
   color: #333;
-  padding: 28rpx 0;
+  padding: 24rpx 0;
   border: none;
   outline: none;
   background: transparent;
@@ -71,11 +90,41 @@ page {
 .input-hint {
   font-size: 22rpx;
   color: #999;
-  margin-top: 12rpx;
+  margin-top: 16rpx;
   text-align: center;
 }
 
-/* 结果卡片 */
+/* 错误提示 */
+.error-card {
+  background: rgba(255, 59, 48, 0.1);
+  border: 2rpx solid rgba(255, 59, 48, 0.3);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  animation: shake 0.3s ease;
+}
+
+.error-icon {
+  font-size: 32rpx;
+}
+
+.error-text {
+  font-size: 26rpx;
+  color: #ff3b30;
+  font-weight: 600;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8rpx); }
+  75% { transform: translateX(8rpx); }
+}
+
+/* 结果区域 */
 .result-section {
   display: flex;
   flex-direction: column;
@@ -93,8 +142,8 @@ page {
 .result-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24rpx;
-  padding-bottom: 20rpx;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
   border-bottom: 1rpx solid #eee;
 }
 
@@ -109,116 +158,98 @@ page {
   color: #333;
 }
 
-/* 因子展示 */
-.factor-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20rpx;
-  padding: 32rpx;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-  border-radius: 20rpx;
-  margin-bottom: 24rpx;
-}
-
-.original-num {
-  font-size: 48rpx;
-  font-weight: 800;
-  color: #11998e;
-}
-
-.equals {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #666;
-}
-
-.factor-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.factor-chip {
-  padding: 12rpx 20rpx;
-  background: rgba(17, 153, 142, 0.1);
+/* 公式卡片 */
+.formula-card {
+  background: #f8f9fa;
   border-radius: 12rpx;
-  border: 2rpx solid rgba(17, 153, 142, 0.3);
-}
-
-.factor-chip.prime {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
-}
-
-.factor-chip.prime .chip-text {
-  color: white;
-  font-weight: 700;
-}
-
-.chip-text {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #11998e;
-}
-
-.multiply {
-  font-size: 28rpx;
-  color: #666;
-  margin: 0 6rpx;
-}
-
-/* 质数提示 */
-.prime-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12rpx;
-  padding: 20rpx;
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
   margin-bottom: 20rpx;
 }
 
-.hint-icon {
+.formula {
+  font-size: 26rpx;
+  color: #666;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* 结果数字 */
+.result-display {
+  display: flex;
+  justify-content: center;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border-radius: 16rpx;
+}
+
+.result-num {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 4rpx;
+}
+
+/* 信息卡片 */
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.12);
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.info-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.info-title {
   font-size: 28rpx;
-}
-
-.hint-text {
-  font-size: 26rpx;
-  color: #92400e;
-  font-weight: 600;
-}
-
-/* 分解步骤 */
-.steps-section {
-  padding-top: 20rpx;
-  border-top: 1rpx solid #eee;
-}
-
-.steps-header {
-  font-size: 26rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 16rpx;
 }
 
-.steps-scroll {
-  max-height: 300rpx;
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
 }
 
-.step-item {
-  padding: 12rpx 0;
-  padding-left: 20rpx;
-  border-left: 3rpx solid #38ef7d;
-  margin-bottom: 8rpx;
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
 }
 
-.step-text {
+.info-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #f5576c;
+}
+
+.info-desc {
   font-size: 24rpx;
-  color: #555;
-  line-height: 1.5;
+  color: #666;
+  line-height: 1.4;
+}
+
+.info-relation {
+  margin-top: 8rpx;
+  padding: 16rpx;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 12rpx;
+}
+
+.relation-text {
+  font-size: 24rpx;
+  color: #92400e;
+  font-weight: 600;
 }
 
 /* 示例卡片 */
@@ -249,21 +280,41 @@ page {
   padding: 20rpx;
   text-align: center;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
 }
 
 .example-btn:active {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
+  background: linear-gradient(135deg, #f093fb, #f5576c);
   transform: scale(0.96);
 }
 
-.example-btn:active .example-text {
+.example-n {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #f5576c;
+}
+
+.example-sep {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.example-r {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #f5576c;
+}
+
+.example-btn:active .example-n,
+.example-btn:active .example-r {
   color: white;
 }
 
-.example-text {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #11998e;
+.example-btn:active .example-sep {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* 引导区域 */
@@ -300,14 +351,14 @@ page {
 }
 
 .guide-example {
-  font-size: 28rpx;
-  color: #11998e;
+  font-size: 26rpx;
+  color: #f5576c;
   font-weight: 600;
   font-family: 'Monaco', monospace;
-  padding: 16rpx 20rpx;
-  background: rgba(17, 153, 142, 0.1);
+  padding: 12rpx 16rpx;
+  background: rgba(245, 87, 108, 0.1);
   border-radius: 10rpx;
-  border-left: 4rpx solid #11998e;
+  border-left: 4rpx solid #f5576c;
 }
 
 /* 动画 */
@@ -328,15 +379,17 @@ page {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .factor-display {
-    padding: 24rpx;
+  .input-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8rpx;
   }
 
-  .original-num {
-    font-size: 40rpx;
+  .input-label {
+    width: auto;
   }
 
-  .chip-text {
-    font-size: 28rpx;
+  .result-num {
+    font-size: 44rpx;
   }
 }

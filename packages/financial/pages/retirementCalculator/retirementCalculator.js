@@ -173,7 +173,8 @@ Page({
     totalSavings: '',
     retireSavings: '',
     expectedMonthlySaving: '',
-    showResult: false,
+    yearsToRetire: '',
+    hasValidResult: false,
     canvaswidth: 376,
     canvasheight: 400
   },
@@ -191,6 +192,7 @@ Page({
       this.setData({
         currentAge: value
       })
+      this.recalc()
     }
   },
 
@@ -201,6 +203,7 @@ Page({
       retireAgeIndex: index,
       retireAge: ageArray[index]
     })
+    this.recalc()
   },
 
   onCurrentSalaryInput(e) {
@@ -210,6 +213,7 @@ Page({
       this.setData({
         currentSalary: value
       })
+      this.recalc()
     }
   },
 
@@ -218,6 +222,7 @@ Page({
     this.setData({
       savingTypeIndex: index
     })
+    this.recalc()
   },
 
   onSalaryIncreaseChange(e) {
@@ -225,6 +230,7 @@ Page({
     this.setData({
       salaryIncrease: isNaN(value) ? 0 : value
     })
+    this.recalc()
   },
 
   onMonthlySavingInput(e) {
@@ -234,6 +240,7 @@ Page({
       this.setData({
         monthlySaving: value
       })
+      this.recalc()
     }
   },
 
@@ -242,32 +249,44 @@ Page({
     this.setData({
       expectedReturn: isNaN(value) ? 0 : value
     })
+    this.recalc()
   },
 
-  calculate() {
-    const { currentAge, retireAge, currentSalary, salaryIncrease, monthlySaving, expectedReturn } = this.data
+  // 实时计算
+  recalc() {
+    const { currentAge, retireAge, currentSalary, salaryIncrease, monthlySaving, expectedReturn, savingTypeIndex } = this.data
 
-    if (!currentAge || currentAge <= 0) {
-      wx.showToast({
-        title: '请输入当前年龄',
-        icon: 'none'
+    // 验证必填项
+    if (!currentAge || parseInt(currentAge) <= 0) {
+      this.setData({
+        totalSavings: '',
+        retireSavings: '',
+        expectedMonthlySaving: '',
+        yearsToRetire: '',
+        hasValidResult: false
       })
       return
     }
 
-    if (!monthlySaving || monthlySaving <= 0) {
-      wx.showToast({
-        title: '请输入每月储蓄',
-        icon: 'none'
+    if (!monthlySaving || parseFloat(monthlySaving) <= 0) {
+      this.setData({
+        totalSavings: '',
+        retireSavings: '',
+        expectedMonthlySaving: '',
+        yearsToRetire: '',
+        hasValidResult: false
       })
       return
     }
 
     const currentAgeNum = parseInt(currentAge)
     if (currentAgeNum >= retireAge) {
-      wx.showToast({
-        title: '当前年龄必须小于退休年龄',
-        icon: 'none'
+      this.setData({
+        totalSavings: '',
+        retireSavings: '',
+        expectedMonthlySaving: '',
+        yearsToRetire: '',
+        hasValidResult: false
       })
       return
     }
@@ -277,7 +296,7 @@ Page({
 
     // 计算每月储蓄金额
     let monthlySavingAmount
-    if (this.data.savingTypeIndex === 1 && currentSalary) {
+    if (savingTypeIndex === 1 && currentSalary) {
       // 如果选择了薪资比例且输入了当前薪资
       monthlySavingAmount = parseFloat(currentSalary) * (parseFloat(monthlySaving) / 100)
     } else {
@@ -302,7 +321,8 @@ Page({
       totalSavings: totalSavings.toFixed(2),
       retireSavings: (totalSavings / 10000).toFixed(2),
       expectedMonthlySaving: expectedMonthlySaving.toFixed(2),
-      showResult: true
+      yearsToRetire: yearsToRetire,
+      hasValidResult: true
     })
   },
 
@@ -310,6 +330,7 @@ Page({
     this.setData({
       currentAge: '',
       retireAge: 60,
+      retireAgeIndex: 1,
       currentSalary: '',
       salaryIncrease: 5,
       savingTypeIndex: 0,
@@ -318,7 +339,8 @@ Page({
       totalSavings: '',
       retireSavings: '',
       expectedMonthlySaving: '',
-      showResult: false
+      yearsToRetire: '',
+      hasValidResult: false
     })
   },
 
@@ -460,7 +482,7 @@ Page({
       ctx.fillText(expectedReturn + '%', padding + 130, infoY + 100);
 
       // 计算结果
-      if (this.data.showResult) {
+      if (this.data.hasValidResult) {
         // 结果标题
         ctx.setFontSize(14);
         ctx.setFillStyle('#333333');

@@ -1,112 +1,99 @@
 // packages/math/pages/prime-factorization/prime-factorization.js
+// 实时计算，无按钮
+
 Page({
   data: {
-    number: '', // 要分解的数字
-    factors: [], // 分解后的质因数数组
-    steps: [], // 计算步骤
-    showResult: false, // 是否显示结果
-    isPrime: false, // 是否为质数
-    canCalculate: false, // 是否可以计算
+    number: '',
+    factors: [],
+    steps: [],
+    showResult: false,
+    isPrime: false,
     examples: [
       { number: 60 },
       { number: 100 },
-      { number: 2310 },
-      { number: 97 }, // 质数示例
       { number: 360 },
-      { number: 1024 }
+      { number: 1024 },
+      { number: 97 },
+      { number: 2310 }
     ]
   },
 
-  // 设置数字
-  setNumber(e) {
-    const value = parseInt(e.detail.value) || '';
-    const canCalculate = value && value >= 2 && value <= 999999999;
+  /**
+   * 输入变化 - 实时计算
+   */
+  onInputChange: function(e) {
+    const value = e.detail.value;
+
+    if (!value) {
+      this.setData({
+        number: '',
+        factors: [],
+        steps: [],
+        showResult: false,
+        isPrime: false
+      });
+      return;
+    }
+
+    const num = parseInt(value);
+    if (isNaN(num)) return;
+
+    // 小于2不计算
+    if (num < 2) {
+      this.setData({ number: value, showResult: false });
+      return;
+    }
+
+    // 执行计算
+    this.calculate(num);
+  },
+
+  /**
+   * 执行质因数分解计算
+   */
+  calculate: function(num) {
+    // 检查是否为质数
+    if (this.isPrimeNumber(num)) {
+      this.setData({
+        number: String(num),
+        factors: [{ value: num, isPrime: true }],
+        steps: [`${num} 是质数，无需分解`],
+        showResult: true,
+        isPrime: true
+      });
+      return;
+    }
+
+    // 分解质因数
+    const { factors, steps } = this.primeFactorization(num);
+
     this.setData({
-      number: value,
-      showResult: false,
-      factors: [],
-      steps: [],
-      isPrime: false,
-      canCalculate: canCalculate
+      number: String(num),
+      factors,
+      steps,
+      showResult: true,
+      isPrime: false
     });
   },
 
-  // 计算质因数分解
-  calculate() {
-    const { number } = this.data;
-    
-    if (!number) {
-      wx.showToast({
-        title: '请输入要分解的数字',
-        icon: 'none'
-      });
-      return;
-    }
-
-    if (number < 2) {
-      wx.showToast({
-        title: '请输入大于1的整数',
-        icon: 'none'
-      });
-      return;
-    }
-
-    if (number > 999999999) {
-      wx.showToast({
-        title: '数字太大，请输入小于10亿的数',
-        icon: 'none'
-      });
-      return;
-    }
-
-    try {
-      // 检查是否为质数
-      if (this.isPrimeNumber(number)) {
-        this.setData({
-          showResult: true,
-          factors: [{ value: number, isPrime: true }],
-          steps: [`${number} 是质数，无法分解为更小的质因数`],
-          isPrime: true
-        });
-        wx.vibrateShort();
-        return;
-      }
-
-      // 分解质因数
-      const { factors, steps } = this.primeFactorization(number);
-
-      this.setData({
-        factors,
-        steps,
-        showResult: true,
-        isPrime: false
-      });
-
-      wx.vibrateShort();
-
-    } catch (error) {
-      console.error('计算失败', error);
-      wx.showToast({
-        title: '计算失败，请重试',
-        icon: 'none'
-      });
-    }
-  },
-
-  // 判断是否为质数
-  isPrimeNumber(n) {
+  /**
+   * 判断是否为质数
+   */
+  isPrimeNumber: function(n) {
     if (n < 2) return false;
     if (n === 2) return true;
     if (n % 2 === 0) return false;
-    
+
     for (let i = 3; i <= Math.sqrt(n); i += 2) {
       if (n % i === 0) return false;
     }
     return true;
   },
 
-  // 质因数分解算法
-  primeFactorization(n) {
+  /**
+   * 质因数分解算法
+   */
+  primeFactorization: function(n) {
     const factors = [];
     const steps = [];
     let temp = n;
@@ -126,9 +113,9 @@ Page({
         factors.push({ value: divisor, isPrime: true });
       }
       if (count === 1) {
-        steps.push(`步骤${stepNum}：${n} ÷ ${divisor} = ${temp}，所以 ${divisor} 是一个质因数`);
+        steps.push(`步骤${stepNum}：${n} ÷ ${divisor} = ${temp}`);
       } else {
-        steps.push(`步骤${stepNum}：${n} ÷ ${divisor}^${count} = ${temp}，所以 ${divisor}^${count} 是质因数分解的一部分`);
+        steps.push(`步骤${stepNum}：${n} ÷ ${divisor}^${count} = ${temp}`);
       }
       stepNum++;
     }
@@ -145,10 +132,11 @@ Page({
         for (let i = 0; i < count; i++) {
           factors.push({ value: divisor, isPrime: true });
         }
+        const prevTemp = temp * Math.pow(divisor, count);
         if (count === 1) {
-          steps.push(`步骤${stepNum}：${temp * divisor} ÷ ${divisor} = ${temp}，所以 ${divisor} 是一个质因数`);
+          steps.push(`步骤${stepNum}：${prevTemp} ÷ ${divisor} = ${temp}`);
         } else {
-          steps.push(`步骤${stepNum}：${temp * divisor} ÷ ${divisor}^${count} = ${temp}，所以 ${divisor}^${count} 是质因数分解的一部分`);
+          steps.push(`步骤${stepNum}：${prevTemp} ÷ ${divisor}^${count} = ${temp}`);
         }
         stepNum++;
       }
@@ -158,56 +146,42 @@ Page({
     // 如果最后temp > 1，说明temp本身是质数
     if (temp > 1) {
       factors.push({ value: temp, isPrime: true });
-      steps.push(`步骤${stepNum}：剩余的 ${temp} 是质数，所以也是质因数`);
+      steps.push(`步骤${stepNum}：剩余 ${temp} 是质数`);
     }
 
-    // 生成最终表达式
+    // 生成最终结果
     const factorExpression = factors.map(f => f.value).join(' × ');
-    steps.push(`最终结果：${n} = ${factorExpression}`);
+    steps.push(`${n} = ${factorExpression}`);
 
     return { factors, steps };
   },
 
-  // 使用示例
-  useExample(e) {
+  /**
+   * 使用示例
+   */
+  useExample: function(e) {
     const { number } = e.currentTarget.dataset;
-    this.setData({
-      number,
-      showResult: false,
-      factors: [],
-      steps: [],
-      isPrime: false
-    });
-    
-    // 自动计算
-    setTimeout(() => {
-      this.calculate();
-    }, 100);
+    this.calculate(number);
   },
 
-  // 分享给好友
-  onShareAppMessage() {
+  /**
+   * 分享
+   */
+  onShareAppMessage: function() {
     return {
-      title: '质因数分解器 - 轻松学习数论',
+      title: '质因数分解 - 轻松学习数论',
       path: '/packages/math/pages/prime-factorization/prime-factorization'
-    }
+    };
   },
 
-  // 分享到朋友圈
-  onShareTimeline() {
+  onShareTimeline: function() {
     return {
-      title: '质因数分解器 - 轻松学习数论',
+      title: '质因数分解 - 轻松学习数论',
       query: 'prime-factorization'
-    }
+    };
   },
 
-  // 页面加载时执行
-  onLoad() {
-    // 设置导航栏标题
-    wx.setNavigationBarTitle({
-      title: '质因数分解'
-    });
-  },
-
-
-})
+  onLoad: function() {
+    wx.setNavigationBarTitle({ title: '🔢 质因数分解' });
+  }
+});

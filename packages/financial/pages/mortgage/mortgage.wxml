@@ -31,29 +31,40 @@
     </view>
   </view>
 
-  <view class="button-group">
-    <button class="btn-calculate" bindtap="calculate">计算</button>
-    <button class="btn-reset" bindtap="reset">重置</button>
-  </view>
+  <!-- 结果区域始终显示 -->
+  <view class="result-section {{hasValidResult ? '' : 'result-empty'}}">
+    <view class="result-header">
+      <text class="result-title">计算结果（等额本息）</text>
+      <view wx:if="{{hasValidResult}}" class="btn-reset-mini" bindtap="reset">重置</view>
+    </view>
 
-  <view wx:if="{{showResult}}" class="result-section">
-    <view class="result-title">计算结果（等额本息）</view>
-    <view class="result-item">
-      <text class="result-label">月供金额</text>
-      <text class="result-value">{{monthlyPayment}} 元</text>
+    <view wx:if="{{hasValidResult}}" class="result-body">
+      <view class="result-primary">
+        <text class="primary-label">每月还款</text>
+        <text class="primary-value">{{monthlyPayment}}</text>
+        <text class="primary-unit">元</text>
+      </view>
+
+      <view class="result-detail">
+        <view class="result-item">
+          <text class="result-label">支付利息</text>
+          <text class="result-value">{{totalInterest}} 万元</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">还款总额</text>
+          <text class="result-value">{{totalPayment}} 万元</text>
+        </view>
+      </view>
     </view>
-    <view class="result-item">
-      <text class="result-label">支付利息</text>
-      <text class="result-value">{{totalInterest}} 万元</text>
-    </view>
-    <view class="result-item">
-      <text class="result-label">还款总额</text>
-      <text class="result-value">{{totalPayment}} 万元</text>
+
+    <view wx:else class="result-placeholder">
+      <text class="placeholder-icon">💡</text>
+      <text class="placeholder-text">请输入贷款信息，即可查看计算结果</text>
     </view>
   </view>
 
   <!-- 分享海报生成 -->
-  <view class="share-section">
+  <view wx:if="{{hasValidResult}}" class="share-section">
     <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
   </view>
 
