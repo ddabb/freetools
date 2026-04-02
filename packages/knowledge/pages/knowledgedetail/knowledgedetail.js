@@ -354,7 +354,25 @@ Page({
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
+      url: `/knowledge/pages/knowledgelist/knowledgelist?tag=${encodeURIComponent(tag)}`
+    });
+  },
+
+  /**
+   * 跳转标签列表
+   */
+  onTagListTap() {
+    wx.navigateTo({
+      url: '/packages/knowledge/pages/taglist/taglist'
+    });
+  },
+
+  /**
+   * 跳转分类列表
+   */
+  onCategoryListTap() {
+    wx.navigateTo({
+      url: '/packages/knowledge/pages/categorylist/categorylist'
     });
   },
 

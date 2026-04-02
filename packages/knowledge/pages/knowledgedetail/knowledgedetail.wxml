@@ -16,15 +16,23 @@
 
   <!-- 文章头部 -->
   <view class="article-hero" wx:if="{{article && !loading && !error}}">
-    <!-- 分类标签 -->
-    <view
-      class="hero-category {{article.categoryClass}}"
-      bindtap="onCategoryTap"
-    >
-      <text class="category-icon">{{article.categoryIcon}}</text>
-      <text class="category-name">{{article.displayCategory || article.category}}</text>
+    <!-- 分类标签行 -->
+    <view class="category-row">
+      <!-- 分类列表按钮 -->
+      <view class="category-list-btn" bindtap="onCategoryListTap">
+        <text class="category-list-icon">📂</text>
+        <text class="category-list-text">分类</text>
+      </view>
+      <!-- 分类标签 -->
+      <view
+        class="hero-category {{article.categoryClass}}"
+        bindtap="onCategoryTap"
+      >
+        <text class="category-arrow-left">‹</text>
+        <text class="category-icon">{{article.categoryIcon}}</text>
+        <text class="category-name">{{article.displayCategory || article.category}}</text>
+      </view>
     </view>
-
 
     <!-- 标题和元信息 -->
     <view class="hero-title-meta">
@@ -76,7 +84,10 @@
       <!-- 标签区域 -->
       <view class="tags-area" wx:if="{{article.tags && article.tags.length > 0}}">
         <view class="tags-header">
-          <text class="tags-title">相关标签</text>
+          <view class="tags-title-left" bindtap="onTagListTap">
+            <text class="tags-title-icon">🏷️</text>
+            <text class="tags-title-text">标签列表</text>
+          </view>
           <view class="tags-line"></view>
         </view>
         <view class="tags-container">

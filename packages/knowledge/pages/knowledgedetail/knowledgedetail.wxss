@@ -147,11 +147,16 @@ page {
 .hero-category {
   display: inline-flex;
   align-items: center;
-  gap: 12rpx;
-  padding: 12rpx 24rpx;
-  border-radius: 32rpx;
-  margin-bottom: 28rpx;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  border-radius: 28rpx;
+  margin-bottom: 0;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.hero-category:active {
+  opacity: 0.8;
+  transform: scale(0.95);
 }
 
 .hero-category.category-product-usage { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
@@ -169,8 +174,9 @@ page {
 .hero-category.category-uncategorized { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
 
 
-.category-icon { font-size: 28rpx; color: #333; }
+.category-icon { font-size: 24rpx; color: #333; }
 .category-name { color: #333; font-size: 24rpx; font-weight: 600; user-select: text; }
+.category-arrow-left { font-size: 28rpx; color: #333; opacity: 0.6; }
 
 /* 标题和元信息容器 */
 .hero-title-meta {
@@ -211,6 +217,41 @@ page {
   width: 1rpx;
   height: 20rpx;
   background: #e0e0e0;
+}
+
+/* 分类行 - 包含分类列表按钮和当前分类标签 */
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+/* 分类列表按钮 */
+.category-list-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 12rpx 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+  flex-shrink: 0;
+}
+
+.category-list-btn:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.category-list-icon {
+  font-size: 24rpx;
+}
+
+.category-list-text {
+  font-size: 24rpx;
+  color: white;
+  font-weight: 600;
 }
 
 /* ========== 描述卡片 ========== */
@@ -669,11 +710,27 @@ page {
   gap: 16rpx;
 }
 
-.tags-title {
-  font-size: 28rpx;
+.tags-title-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 20rpx;
+}
+
+.tags-title-left:active {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.tags-title-icon {
+  font-size: 24rpx;
+}
+
+.tags-title-text {
+  font-size: 24rpx;
   font-weight: 600;
-  color: #333;
-  flex-shrink: 0;
+  color: #667eea;
 }
 
 .tags-line {
