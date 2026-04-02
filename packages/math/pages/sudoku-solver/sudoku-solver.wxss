@@ -516,10 +516,10 @@ page {
 }
 
 .btn-lg {
-  min-width: 140rpx;
-  max-width: 180rpx;
-  padding: 18rpx 14rpx;
-  font-size: 26rpx;
+  min-width: 120rpx;
+  max-width: 160rpx;
+  padding: 16rpx 12rpx;
+  font-size: 24rpx;
 }
 
 .btn:active {

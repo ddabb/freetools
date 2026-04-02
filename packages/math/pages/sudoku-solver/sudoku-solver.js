@@ -112,14 +112,6 @@ Page({
     }
   },
 
-  // 获取今天是第几天
-  getDayOfYear(date) {
-    const start = new Date(date.getFullYear(), 0, 0);
-    const diff = date - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
-  },
-
   // 本地备用每日数独
   useLocalDailySudoku() {
     const today = new Date();
@@ -196,8 +188,6 @@ Page({
       this.setData({ pastedText: '' });
     }
   },
-
-
 
   initBoard() {
     const board = [];
@@ -290,8 +280,6 @@ Page({
     }
     return puzzle;
   },
-
-
 
   loadPuzzle(puzzle) {
     const board = [];
@@ -482,7 +470,7 @@ Page({
     });
   },
 
-  // 导出到Excel（纯棋盘 + 边框）
+  // 导出到Excel（优化边框和背景色）
   exportExcel() {
     const { board } = this.data;
     
@@ -496,55 +484,120 @@ Page({
       aoa.push(row);
     }
 
-    // 导出（带边框）
+    // 导出（带优化边框和背景色）
     this._exportSudokuWithBorder(aoa, `sudoku_${Date.now()}.xlsx`);
   },
 
-  // 导出带边框的数独棋盘
+  // 导出题目和答案（两个工作表）
+  exportPuzzleAndSolution() {
+    const { board } = this.data;
+    
+    // 构建题目数据（只包含原始题目数字）
+    const puzzleAoa = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        if (board[r][c].fixed) {
+          row.push(parseInt(board[r][c].value, 10));
+        } else {
+          row.push('');
+        }
+      }
+      puzzleAoa.push(row);
+    }
+    
+    // 构建答案数据（先求解数独，然后显示完整答案）
+    const solutionAoa = this._getSolvedBoard();
+    
+    // 如果求解失败，提示用户
+    if (this._isBoardEmpty(solutionAoa)) {
+      wx.showModal({
+        title: '提示',
+        content: '数独求解失败，无法导出答案。请检查输入是否正确。',
+        confirmText: '确定',
+        showCancel: false,
+        success: () => {
+          // 用户确认后不进行导出
+        }
+      });
+      return;
+    }
+    
+    // 直接导出题目和答案
+    this._exportPuzzleAndSolution(puzzleAoa, solutionAoa, `sudoku_puzzle_solution_${Date.now()}.xlsx`);
+  },
+
+  // 导出带优化边框和背景色的数独棋盘
   _exportSudokuWithBorder(aoa, fileName) {
     try {
       const ws = XLSX.utils.aoa_to_sheet(aoa);
       
-      // 设置列宽
-      ws['!cols'] = Array(9).fill({ wch: 6 });
+      // 设置列宽（稍微加宽）
+      ws['!cols'] = Array(9).fill({ wch: 8 });
       
       // 设置行高（让格子更高）
-      ws['!rows'] = Array(9).fill({ hpt: 36 });
+      ws['!rows'] = Array(9).fill({ hpt: 40 });
 
       // 定义边框样式
-      const borderStyles = {
+      const thinBorder = {
         top: { style: 'thin' },
         bottom: { style: 'thin' },
         left: { style: 'thin' },
         right: { style: 'thin' }
       };
-      const thickBorder = {
-        top: { style: 'medium' },
-        bottom: { style: 'medium' },
-        left: { style: 'medium' },
-        right: { style: 'medium' }
+
+      // 定义背景色样式
+      const originalStyle = {
+        alignment: { horizontal: 'center', vertical: 'center' },
+        font: { bold: true, size: 14, color: { rgb: '000000' } },
+        fill: { fgColor: { rgb: 'E6F3FF' } } // 浅蓝色背景
+      };
+      
+      const solvedStyle = {
+        alignment: { horizontal: 'center', vertical: 'center' },
+        font: { bold: false, size: 14, color: { rgb: '333333' } },
+        fill: { fgColor: { rgb: 'FFFFFF' } } // 白色背景
       };
 
-      // 应用边框（3x3宫格边框加粗）
+      // 应用边框和背景色
       const range = XLSX.utils.decode_range(`A1:I9`);
       for (let R = range.s.r; R <= range.e.r; R++) {
         for (let C = range.s.c; C <= range.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) ws[cellRef] = { v: '' };
           
-          ws[cellRef].s = {
-            alignment: { horizontal: 'center', vertical: 'center' },
-            font: { bold: true, size: 14 },
-            border: borderStyles
+          // 判断是否为原始题目数字（固定格子）
+          const isOriginal = this.data.board[R][C].fixed;
+          
+          // 基础样式
+          const baseStyle = isOriginal ? originalStyle : solvedStyle;
+          
+          // 构建边框样式
+          const borderStyle = {
+            top: { style: 'thin' },
+            bottom: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' }
           };
           
-          // 3x3宫格右边和下边加粗
+          // 3x3宫格边框加粗（每个宫格的右边界和下边界）
           if (C === 2 || C === 5) {
-            ws[cellRef].s.border.right = { style: 'medium' };
+            borderStyle.right = { style: 'medium' };
           }
           if (R === 2 || R === 5) {
-            ws[cellRef].s.border.bottom = { style: 'medium' };
+            borderStyle.bottom = { style: 'medium' };
           }
+          
+          // 整个数独棋盘的外边框加粗
+          if (R === 0) borderStyle.top = { style: 'medium' };
+          if (R === 8) borderStyle.bottom = { style: 'medium' };
+          if (C === 0) borderStyle.left = { style: 'medium' };
+          if (C === 8) borderStyle.right = { style: 'medium' };
+          
+          ws[cellRef].s = {
+            ...baseStyle,
+            border: borderStyle
+          };
         }
       }
 
@@ -580,14 +633,66 @@ Page({
     }
   },
 
-  // 通用Excel导出
-  _exportToExcel(aoa, sheetName, fileName) {
+  // 导出题目和答案到同一个Excel文件
+  _exportPuzzleAndSolution(puzzleAoa, solutionAoa, fileName) {
     try {
-      const ws = XLSX.utils.aoa_to_sheet(aoa);
-      ws['!cols'] = [{ wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }];
-
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      
+      // 创建题目工作表
+      const puzzleWs = XLSX.utils.aoa_to_sheet(puzzleAoa);
+      puzzleWs['!cols'] = Array(9).fill({ wch: 8 });
+      puzzleWs['!rows'] = Array(9).fill({ hpt: 40 });
+      
+      // 创建答案工作表
+      const solutionWs = XLSX.utils.aoa_to_sheet(solutionAoa);
+      solutionWs['!cols'] = Array(9).fill({ wch: 8 });
+      solutionWs['!rows'] = Array(9).fill({ hpt: 40 });
+      
+      // 定义样式
+      const puzzleStyle = {
+        alignment: { horizontal: 'center', vertical: 'center' },
+        font: { bold: true, size: 14, color: { rgb: 'FFFFFF' } },
+        fill: { fgColor: { rgb: '4A90E2' } } // 深蓝色背景
+      };
+      
+      const solutionStyle = {
+        alignment: { horizontal: 'center', vertical: 'center' },
+        font: { bold: true, size: 14, color: { rgb: '000000' } },
+        fill: { fgColor: { rgb: 'E6F3FF' } } // 浅蓝色背景
+      };
+      
+      // 应用题目样式
+      const puzzleRange = XLSX.utils.decode_range(`A1:I9`);
+      for (let R = puzzleRange.s.r; R <= puzzleRange.e.r; R++) {
+        for (let C = puzzleRange.s.c; C <= puzzleRange.e.c; C++) {
+          const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!puzzleWs[cellRef]) puzzleWs[cellRef] = { v: '' };
+          
+          const borderStyle = this._getSudokuBorderStyle(R, C);
+          puzzleWs[cellRef].s = {
+            ...puzzleStyle,
+            border: borderStyle
+          };
+        }
+      }
+      
+      // 应用答案样式
+      const solutionRange = XLSX.utils.decode_range(`A1:I9`);
+      for (let R = solutionRange.s.r; R <= solutionRange.e.r; R++) {
+        for (let C = solutionRange.s.c; C <= solutionRange.e.c; C++) {
+          const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!solutionWs[cellRef]) solutionWs[cellRef] = { v: '' };
+          
+          const borderStyle = this._getSudokuBorderStyle(R, C);
+          solutionWs[cellRef].s = {
+            ...solutionStyle,
+            border: borderStyle
+          };
+        }
+      }
+
+      XLSX.utils.book_append_sheet(wb, puzzleWs, '数独题目');
+      XLSX.utils.book_append_sheet(wb, solutionWs, '数独答案');
 
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
       const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
@@ -615,6 +720,113 @@ Page({
       console.error('[导出Excel] 异常:', err);
       wx.showToast({ title: '导出失败', icon: 'none' });
     }
+  },
+
+  // 获取数独边框样式
+  _getSudokuBorderStyle(R, C) {
+    const borderStyle = {
+      top: { style: 'thin' },
+      bottom: { style: 'thin' },
+      left: { style: 'thin' },
+      right: { style: 'thin' }
+    };
+    
+    // 3x3宫格边框加粗
+    if (C === 2 || C === 5) {
+      borderStyle.right = { style: 'medium' };
+    }
+    if (R === 2 || R === 5) {
+      borderStyle.bottom = { style: 'medium' };
+    }
+    
+    // 整个数独棋盘的外边框加粗
+    if (R === 0) borderStyle.top = { style: 'medium' };
+    if (R === 8) borderStyle.bottom = { style: 'medium' };
+    if (C === 0) borderStyle.left = { style: 'medium' };
+    if (C === 8) borderStyle.right = { style: 'medium' };
+    
+    return borderStyle;
+  },
+
+  // 获取求解后的数独棋盘数据
+  _getSolvedBoard() {
+    const { board } = this.data;
+    
+    // 如果已经求解，直接返回当前棋盘数据
+    if (this.data.hasSolution) {
+      const solutionAoa = [];
+      for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+          row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : '');
+        }
+        solutionAoa.push(row);
+      }
+      return solutionAoa;
+    }
+    
+    // 如果没有求解，进行求解
+    const rawBoard = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : 0);
+      }
+      rawBoard.push(row);
+    }
+    
+    // 检查输入是否有效
+    if (!sudoku.isValidInput(rawBoard)) {
+      utils.showText('数独输入无效，无法求解');
+      return this._getEmptyBoard();
+    }
+    
+    // 尝试求解
+    let solved = sudoku.solveWithConstraintPropagation(rawBoard.map(r => [...r]));
+    if (!solved) {
+      solved = rawBoard.map(r => [...r]);
+      if (!sudoku.solve(solved)) {
+        utils.showText('该数独无解');
+        return this._getEmptyBoard();
+      }
+    }
+    
+    // 构建答案数据
+    const solutionAoa = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push(solved[r][c] || '');
+      }
+      solutionAoa.push(row);
+    }
+    
+    return solutionAoa;
+  },
+
+  // 获取空棋盘数据
+  _getEmptyBoard() {
+    const emptyBoard = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push('');
+      }
+      emptyBoard.push(row);
+    }
+    return emptyBoard;
+  },
+
+  // 检查棋盘是否为空
+  _isBoardEmpty(board) {
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (board[r][c] !== '') {
+          return false;
+        }
+      }
+    }
+    return true;
   },
 
   onShareAppMessage() {

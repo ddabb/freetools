@@ -150,13 +150,17 @@
       <text class="btn-icon">🗑️</text>
       <text class="btn-text">清空</text>
     </button>
-    <button class="btn btn-lg solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
+    <button class="btn btn-sm solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
       <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
       <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
     </button>
     <button class="btn btn-sm copy-btn" bindtap="exportExcel" disabled="{{solving}}">
       <text class="btn-icon">📊</text>
-      <text class="btn-text">导出Excel</text>
+      <text class="btn-text">导出题目</text>
+    </button>
+    <button class="btn btn-sm copy-btn" bindtap="exportPuzzleAndSolution" disabled="{{solving}}">
+      <text class="btn-icon">📄</text>
+      <text class="btn-text">导出全部</text>
     </button>
   </view>
 </view>
