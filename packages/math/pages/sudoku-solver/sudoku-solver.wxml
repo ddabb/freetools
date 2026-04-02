@@ -154,9 +154,9 @@
       <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
       <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
     </button>
-    <button class="btn btn-sm copy-btn" bindtap="copyBoard" disabled="{{solving}}">
-      <text class="btn-icon">📋</text>
-      <text class="btn-text">复制</text>
+    <button class="btn btn-sm copy-btn" bindtap="exportExcel" disabled="{{solving}}">
+      <text class="btn-icon">📊</text>
+      <text class="btn-text">导出Excel</text>
     </button>
   </view>
 </view>

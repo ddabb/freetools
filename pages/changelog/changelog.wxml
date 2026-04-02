@@ -16,10 +16,20 @@
     <!-- 最新版本 -->
     <view class="latest-section">
       <view class="latest-card">
-        <view class="latest-label">当前版本</view>
-        <view class="version-row">
-          <text class="version-tag">v{{changelog.latestVersion}}</text>
-          <text class="version-date">{{changelog.lastUpdate}}</text>
+        <view class="card-header">
+          <view class="latest-info">
+            <view class="latest-label">当前版本</view>
+            <view class="version-row">
+              <text class="version-tag">v{{changelog.latestVersion}}</text>
+              <text class="version-date">{{changelog.lastUpdate}}</text>
+            </view>
+          </view>
+          <view class="export-section">
+            <button class="export-btn" bindtap="onExportExcel" loading="{{exporting}}">
+              <text class="export-icon">📊</text>
+              <text class="export-text">{{exporting ? '导出中...' : '导出Excel'}}</text>
+            </button>
+          </view>
         </view>
       </view>
     </view>

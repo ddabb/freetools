@@ -28,7 +28,7 @@
           </view>
           <button class="add-btn" bindtap="addToNotes">添加到次数</button>
           <view class="export-section">
-            <button class="export-btn" bindtap="exportResult">导出内容</button>
+            <button class="export-btn" bindtap="exportResult">导出Excel</button>
           </view>
         </view>
       </view>
@@ -61,7 +61,7 @@
           </view>
         </view>
         <view class="export-section" wx:if="{{generatedNotes.length > 0}}">
-          <button class="export-btn" bindtap="copyNotesToClipboard">复制到剪贴板</button>
+          <button class="export-btn" bindtap="copyNotesToClipboard">导出Excel</button>
         </view>
       </view>
     </view>
@@ -130,7 +130,7 @@
             </view>
           </view>
           
-          <button class="share-btn" bindtap="shareResult">复制到剪贴板</button>
+          <button class="share-btn" bindtap="shareResult">导出Excel</button>
         </view>
       </view>
     </view>

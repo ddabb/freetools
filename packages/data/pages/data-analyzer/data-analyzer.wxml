@@ -1,86 +1,126 @@
 <view class="container">
-  <view class="section-title">📊 数据统计器</view>
+
   
   <!-- 数据输入区域 -->
   <view class="input-section">
     <view class="section-header">
-      <text class="section-label">数据输入</text>
-      <button class="load-sample-btn" bindtap="loadSample">加载示例</button>
-    </view>
-    <textarea value="{{inputData}}" bindinput="setInputData" class="data-textarea" placeholder="请输入数据，用空格、逗号、分号或换行分隔，例如：12 15 18 20 22 25 28 30 35 40" maxlength="2000" />
-    <view class="input-hint">支持数字、文本和混合数据类型</view>
-  </view>
-  
-  <!-- 数据类型选择 -->
-  <view class="type-section">
-    <view class="section-header">
-      <text class="section-label">数据类型</text>
-    </view>
-    <picker bindchange="setDataType" value="{{dataTypeIndex}}" range="{{dataTypes}}" class="type-picker">
-      <view class="picker-display">
-        {{dataTypes[dataTypeIndex]}}
-        <text class="picker-arrow">▼</text>
+      <text class="section-label">📝 数据输入</text>
+      <view class="header-actions">
+        <button class="icon-btn" bindtap="importExcel" hover-class="active">
+          <text class="icon-text">📂</text>
+          <text class="icon-label">导入</text>
+        </button>
+        <button class="icon-btn" bindtap="loadSample" hover-class="active">
+          <text class="icon-text">📝</text>
+          <text class="icon-label">示例</text>
+        </button>
+        <button class="icon-btn danger" bindtap="clearInput" hover-class="active">
+          <text class="icon-text">🗑️</text>
+          <text class="icon-label">清空</text>
+        </button>
       </view>
-    </picker>
-  </view>
-  
-  <!-- 操作按钮 -->
-  <view class="action-buttons">
-    <button class="action-btn primary-btn" bindtap="analyzeData">
-      <text class="btn-icon">📈</text>
-      <text class="btn-text">分析数据</text>
-    </button>
-    <button class="action-btn secondary-btn" bindtap="exportResult">
-      <text class="btn-icon">📋</text>
-      <text class="btn-text">导出结果</text>
-    </button>
-    <button class="action-btn secondary-btn" bindtap="exportResultWithInput">
-      <text class="btn-icon">📝</text>
-      <text class="btn-text">导出含数据</text>
-    </button>
+    </view>
+    
+    <!-- 数据类型切换 -->
+    <view class="type-tabs">
+      <view 
+        wx:for="{{dataTypes}}" 
+        wx:key="index"
+        class="type-tab {{dataTypeIndex === index ? 'active' : ''}}"
+        bindtap="setDataTypeByIndex"
+        data-index="{{index}}"
+      >
+        <text class="tab-text">{{item}}</text>
+      </view>
+    </view>
+    
+    <textarea 
+      value="{{inputData}}" 
+      bindinput="setInputData" 
+      class="data-textarea" 
+      placeholder="请输入数据，用空格、逗号、分号或换行分隔，例如：12 15 18 20 22 25 28 30 35 40"
+      maxlength="2000" 
+      show-confirm-bar="{{false}}"
+    />
+    <view class="input-hint">支持数字、文本和混合数据类型 | 可导入Excel文件</view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-section">
+      <button class="primary-btn" bindtap="analyzeData">
+        <text class="btn-icon">📈</text>
+        <text class="btn-text">开始分析</text>
+      </button>
+      
+      <view class="export-buttons" wx:if="{{analysisResult}}">
+        <button class="secondary-btn" bindtap="exportExcel">
+          <text class="btn-icon">📊</text>
+          <text class="btn-text">导出Excel</text>
+        </button>
+        <button class="secondary-btn" bindtap="exportCSV">
+          <text class="btn-icon">📋</text>
+          <text class="btn-text">导出CSV</text>
+        </button>
+      </view>
+    </view>
   </view>
   
   <!-- 分析结果 -->
   <view class="result-section" wx:if="{{analysisResult}}">
     <view class="section-header">
-      <text class="section-label">分析结果</text>
+      <text class="section-label">📊 分析结果</text>
+      <button class="copy-btn" bindtap="copyResult">
+        <text class="copy-icon">📋</text>
+        <text class="copy-text">复制</text>
+      </button>
     </view>
-    <view class="result-grid">
-      <view class="result-item">
-        <text class="result-label">样本数量</text>
-        <text class="result-value">{{analysisResult.count}}</text>
+    
+    <!-- 主要统计指标 -->
+    <view class="key-stats">
+      <view class="stat-item">
+        <text class="stat-label">样本数量</text>
+        <text class="stat-value">{{analysisResult.count}}</text>
       </view>
-      <view class="result-item">
-        <text class="result-label">总和</text>
-        <text class="result-value">{{analysisResult.sum}}</text>
+      <view class="stat-item">
+        <text class="stat-label">平均值</text>
+        <text class="stat-value">{{analysisResult.mean}}</text>
       </view>
-      <view class="result-item">
-        <text class="result-label">平均值</text>
-        <text class="result-value">{{analysisResult.mean}}</text>
+      <view class="stat-item">
+        <text class="stat-label">标准差</text>
+        <text class="stat-value">{{analysisResult.stdDev}}</text>
       </view>
-      <view class="result-item">
-        <text class="result-label">中位数</text>
-        <text class="result-value">{{analysisResult.median}}</text>
+    </view>
+    
+    <!-- 详细统计指标 -->
+    <view class="detail-stats">
+      <view class="detail-row">
+        <view class="detail-item">
+          <text class="detail-label">总和</text>
+          <text class="detail-value">{{analysisResult.sum}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">中位数</text>
+          <text class="detail-value">{{analysisResult.median}}</text>
+        </view>
       </view>
-      <view class="result-item">
-        <text class="result-label">方差</text>
-        <text class="result-value">{{analysisResult.variance}}</text>
+      <view class="detail-row">
+        <view class="detail-item">
+          <text class="detail-label">方差</text>
+          <text class="detail-value">{{analysisResult.variance}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">极差</text>
+          <text class="detail-value">{{analysisResult.range}}</text>
+        </view>
       </view>
-      <view class="result-item">
-        <text class="result-label">标准差</text>
-        <text class="result-value">{{analysisResult.stdDev}}</text>
-      </view>
-      <view class="result-item">
-        <text class="result-label">最小值</text>
-        <text class="result-value">{{analysisResult.min}}</text>
-      </view>
-      <view class="result-item">
-        <text class="result-label">最大值</text>
-        <text class="result-value">{{analysisResult.max}}</text>
-      </view>
-      <view class="result-item">
-        <text class="result-label">极差</text>
-        <text class="result-value">{{analysisResult.range}}</text>
+      <view class="detail-row highlight">
+        <view class="detail-item">
+          <text class="detail-label">最小值</text>
+          <text class="detail-value">{{analysisResult.min}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">最大值</text>
+          <text class="detail-value">{{analysisResult.max}}</text>
+        </view>
       </view>
     </view>
   </view>
@@ -88,13 +128,25 @@
   <!-- 使用帮助 -->
   <view class="help-section">
     <view class="section-header">
-      <text class="section-label">使用帮助</text>
+      <text class="section-label">💡 使用帮助</text>
     </view>
     <view class="help-content">
-      <text class="help-text">• 支持输入数字、文本和混合数据类型</text>
-      <text class="help-text">• 数据之间用空格、逗号、分号或换行分隔</text>
-      <text class="help-text">• 分析结果包括基本统计量和分布特征</text>
-      <text class="help-text">• 可以导出分析结果或含数据的完整报告到剪贴板</text>
+      <view class="help-item">
+        <text class="help-icon">📂</text>
+        <text class="help-text">点击"导入"按钮可导入Excel文件</text>
+      </view>
+      <view class="help-item">
+        <text class="help-icon">📝</text>
+        <text class="help-text">输入数据用空格、逗号、分号或换行分隔</text>
+      </view>
+      <view class="help-item">
+        <text class="help-icon">📊</text>
+        <text class="help-text">分析结果包含基本统计量和分布特征</text>
+      </view>
+      <view class="help-item">
+        <text class="help-icon">📋</text>
+        <text class="help-text">支持Excel和CSV两种导出格式</text>
+      </view>
     </view>
   </view>
 </view>

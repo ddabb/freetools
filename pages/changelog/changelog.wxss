@@ -12,7 +12,45 @@ page {
   padding: 30rpx 20rpx 40rpx;
 }
 
+/* 导出按钮 - 最新版本卡片内 */
+.latest-card .export-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25rpx;
+  padding-top: 25rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.2);
+}
 
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border: none;
+  border-radius: 40rpx;
+  padding: 18rpx 36rpx;
+  font-size: 26rpx;
+  color: #fff;
+  box-shadow: 0 4rpx 15rpx rgba(39, 174, 96, 0.3);
+  transition: all 0.3s ease;
+}
+
+.export-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(39, 174, 96, 0.5);
+}
+
+.export-btn::after {
+  border: none;
+}
+
+.export-icon {
+  font-size: 28rpx;
+}
+
+.export-text {
+  font-weight: 600;
+}
 
 /* 状态区域 */
 .status-section {
@@ -68,8 +106,17 @@ page {
 .latest-card {
   background: linear-gradient(135deg, #3498db, #2980b9);
   border-radius: 20rpx;
-  padding: 40rpx;
+  padding: 35rpx;
   box-shadow: 0 8rpx 30rpx rgba(52, 152, 219, 0.3);
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.latest-info {
+  flex: 1;
 }
 
 .latest-label {
@@ -85,7 +132,7 @@ page {
 }
 
 .version-tag {
-  font-size: 52rpx;
+  font-size: 48rpx;
   font-weight: 700;
   color: #fff;
 }

@@ -306,6 +306,44 @@ Page({
     }
   },
 
+  // 获取当前日期
+  getCurrentDate(city) {
+    const now = new Date()
+    let timeOffset = 0
+    
+    switch(city) {
+      case 'beijing':
+        timeOffset = 0
+        break
+      case 'tokyo':
+        timeOffset = 3600000
+        break
+      case 'london':
+        timeOffset = -28800000
+        break
+      case 'newYork':
+        timeOffset = -43200000
+        break
+      default:
+        timeOffset = 0
+    }
+    
+    const cityTime = new Date(now.getTime() + timeOffset)
+    return cityTime.toLocaleDateString('zh-CN', { 
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'short'
+    })
+  },
+
+  // 跳转到时区转换器
+  gotoTimezoneConverter() {
+    wx.navigateTo({
+      url: '/packages/unit/pages/timezone-converter/timezone-converter'
+    })
+  },
+
   // 更新世界时钟
   updateWorldClock() {
     const now = new Date()

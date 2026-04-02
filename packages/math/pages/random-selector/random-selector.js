@@ -1,4 +1,6 @@
 // packages/math/pages/random-selector/random-selector.js
+const XLSX = require('../../../../libs/xlsx.mini.min.js');
+
 Page({
   data: {
     // 选号模式：'double'（六棕一绿）或 'lottery'（五棕两绿）
@@ -855,5 +857,158 @@ Page({
       singleResult: this.data.singleResult,
       selectedNotes: this.data.selectedNotes
     });
+  },
+
+  // ========== 导出 Excel 功能 ==========
+
+  // 通用导出方法
+  _exportToExcel(aoa, sheetName, fileName) {
+    try {
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = aoa[0].map(() => ({ wch: 15 }));
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+      const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+
+      wx.getFileSystemManager().writeFile({
+        filePath: fullPath,
+        data: wbout,
+        encoding: 'base64',
+        success: () => {
+          wx.openDocument({
+            filePath: fullPath,
+            fileType: 'xlsx',
+            showMenu: true,
+            success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
+            fail: () => wx.showModal({
+              title: '导出成功',
+              content: `文件已保存为 ${fileName}`,
+              showCancel: false
+            })
+          });
+        },
+        fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
+      });
+    } catch (err) {
+      console.error('[导出Excel] 异常:', err);
+      wx.showToast({ title: '导出失败', icon: 'none' });
+    }
+  },
+
+  // 导出当前生成的号码
+  exportResult() {
+    const { brownBalls, greenBalls, mode } = this.data;
+    if (brownBalls.length === 0) {
+      wx.showToast({ title: '请先生成号码', icon: 'none' });
+      return;
+    }
+
+    const modeName = mode === 'double' ? '双色球' : '大乐透';
+    const brownStr = brownBalls.map(n => String(n).padStart(2, '0')).join(',');
+    const greenStr = greenBalls.map(n => String(n).padStart(2, '0')).join(',');
+
+    const aoa = [
+      ['彩票号码导出'],
+      ['生成时间', new Date().toLocaleString()],
+      ['彩种', modeName],
+      ['红球/棕球', brownStr],
+      ['蓝球/绿球', greenStr],
+      [],
+      ['说明：此号码由模拟器随机生成，仅供参考']
+    ];
+
+    const fileName = `lottery_${Date.now()}.xlsx`;
+    this._exportToExcel(aoa, '彩票号码', fileName);
+  },
+
+  // 导出发票到Excel
+  copyNotesToClipboard() {
+    const { generatedNotes, mode } = this.data;
+    if (generatedNotes.length === 0) {
+      wx.showToast({ title: '暂无数据', icon: 'none' });
+      return;
+    }
+
+    const modeName = mode === 'double' ? '双色球' : '大乐透';
+    const aoa = [
+      ['序号', '红球/棕球', '蓝球/绿球', '是否选中']
+    ];
+
+    generatedNotes.forEach((note, index) => {
+      const brownStr = note.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
+      const greenStr = note.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
+      aoa.push([
+        index + 1,
+        brownStr,
+        greenStr,
+        note.selected ? '是' : '否'
+      ]);
+    });
+
+    // 添加统计行
+    const selectedCount = generatedNotes.filter(n => n.selected).length;
+    aoa.push([]);
+    aoa.push(['统计', '', '', '']);
+    aoa.push(['总注数', generatedNotes.length]);
+    aoa.push(['已选中', selectedCount]);
+    aoa.push(['总金额', `¥${selectedCount * 2}`]);
+
+    const fileName = `lottery_notes_${Date.now()}.xlsx`;
+    this._exportToExcel(aoa, '号码列表', fileName);
+  },
+
+  // 导出模拟结果
+  shareResult() {
+    const { drawResult, matchResults, singleResult, mode } = this.data;
+    if (!drawResult.brownBalls.length) {
+      wx.showToast({ title: '暂无结果', icon: 'none' });
+      return;
+    }
+
+    const modeName = mode === 'double' ? '双色球' : '大乐透';
+    const drawBrown = drawResult.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
+    const drawGreen = drawResult.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
+
+    const aoa = [
+      ['模拟开奖结果'],
+      ['模拟时间', new Date().toLocaleString()],
+      ['彩种', modeName],
+      ['开奖红球/棕球', drawBrown],
+      ['开奖蓝球/绿球', drawGreen],
+      [],
+      ['单期模拟汇总'],
+      ['总注数', matchResults.length],
+      ['总成本', `¥${singleResult.totalCost}`],
+      ['总收益', `¥${singleResult.totalRevenue}`],
+      ['净利润', `¥${singleResult.netProfit}`],
+      [],
+      ['各注详情']
+    ];
+
+    // 表头
+    const brownLabel = mode === 'double' ? '红球' : '棕球';
+    const greenLabel = mode === 'double' ? '蓝球' : '绿球';
+    aoa[aoa.length - 1] = ['序号', brownLabel, greenLabel, `中${brownLabel}`, `中${greenLabel}`, '奖项', '奖金'];
+
+    // 数据行
+    matchResults.forEach((item, index) => {
+      const brownStr = item.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
+      const greenStr = item.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
+      aoa.push([
+        index + 1,
+        brownStr,
+        greenStr,
+        item.matchedBrown,
+        item.matchedGreen,
+        item.matchLevel,
+        item.revenue > 0 ? `¥${item.revenue}` : '-'
+      ]);
+    });
+
+    const fileName = `lottery_result_${Date.now()}.xlsx`;
+    this._exportToExcel(aoa, '模拟结果', fileName);
   }
 });

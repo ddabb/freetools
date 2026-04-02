@@ -1,6 +1,7 @@
 // packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
+const XLSX = require('../../../../libs/xlsx.mini.min.js');
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
@@ -479,6 +480,141 @@ Page({
       success: () => utils.showSuccess('已复制'),
       fail: () => utils.showText('复制失败')
     });
+  },
+
+  // 导出到Excel（纯棋盘 + 边框）
+  exportExcel() {
+    const { board } = this.data;
+    
+    // 构建9x9棋盘数据
+    const aoa = [];
+    for (let r = 0; r < 9; r++) {
+      const row = [];
+      for (let c = 0; c < 9; c++) {
+        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : '');
+      }
+      aoa.push(row);
+    }
+
+    // 导出（带边框）
+    this._exportSudokuWithBorder(aoa, `sudoku_${Date.now()}.xlsx`);
+  },
+
+  // 导出带边框的数独棋盘
+  _exportSudokuWithBorder(aoa, fileName) {
+    try {
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      
+      // 设置列宽
+      ws['!cols'] = Array(9).fill({ wch: 6 });
+      
+      // 设置行高（让格子更高）
+      ws['!rows'] = Array(9).fill({ hpt: 36 });
+
+      // 定义边框样式
+      const borderStyles = {
+        top: { style: 'thin' },
+        bottom: { style: 'thin' },
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+      };
+      const thickBorder = {
+        top: { style: 'medium' },
+        bottom: { style: 'medium' },
+        left: { style: 'medium' },
+        right: { style: 'medium' }
+      };
+
+      // 应用边框（3x3宫格边框加粗）
+      const range = XLSX.utils.decode_range(`A1:I9`);
+      for (let R = range.s.r; R <= range.e.r; R++) {
+        for (let C = range.s.c; C <= range.e.c; C++) {
+          const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!ws[cellRef]) ws[cellRef] = { v: '' };
+          
+          ws[cellRef].s = {
+            alignment: { horizontal: 'center', vertical: 'center' },
+            font: { bold: true, size: 14 },
+            border: borderStyles
+          };
+          
+          // 3x3宫格右边和下边加粗
+          if (C === 2 || C === 5) {
+            ws[cellRef].s.border.right = { style: 'medium' };
+          }
+          if (R === 2 || R === 5) {
+            ws[cellRef].s.border.bottom = { style: 'medium' };
+          }
+        }
+      }
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, '数独');
+      XLSX.utils.sheet_add_aoa(ws, aoa, { origin: 'A1' });
+
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+      const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+
+      wx.getFileSystemManager().writeFile({
+        filePath: fullPath,
+        data: wbout,
+        encoding: 'base64',
+        success: () => {
+          wx.openDocument({
+            filePath: fullPath,
+            fileType: 'xlsx',
+            showMenu: true,
+            success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
+            fail: () => wx.showModal({
+              title: '导出成功',
+              content: `文件已保存为 ${fileName}`,
+              showCancel: false
+            })
+          });
+        },
+        fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
+      });
+    } catch (err) {
+      console.error('[导出Excel] 异常:', err);
+      wx.showToast({ title: '导出失败', icon: 'none' });
+    }
+  },
+
+  // 通用Excel导出
+  _exportToExcel(aoa, sheetName, fileName) {
+    try {
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = [{ wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+      const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+
+      wx.getFileSystemManager().writeFile({
+        filePath: fullPath,
+        data: wbout,
+        encoding: 'base64',
+        success: () => {
+          wx.openDocument({
+            filePath: fullPath,
+            fileType: 'xlsx',
+            showMenu: true,
+            success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
+            fail: () => wx.showModal({
+              title: '导出成功',
+              content: `文件已保存为 ${fileName}`,
+              showCancel: false
+            })
+          });
+        },
+        fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
+      });
+    } catch (err) {
+      console.error('[导出Excel] 异常:', err);
+      wx.showToast({ title: '导出失败', icon: 'none' });
+    }
   },
 
   onShareAppMessage() {
