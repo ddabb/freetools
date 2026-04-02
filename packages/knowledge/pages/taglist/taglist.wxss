@@ -112,6 +112,76 @@ page {
   min-height: 200rpx;
 }
 
+/* ========== 页面加载动画 ========== */
+.page-loading {
+  position: absolute;
+  top: 400rpx;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  animation: pageLoadingFadeIn 0.5s ease-out forwards;
+  border-radius: 0 0 24rpx 24rpx;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.spinner-circle {
+  width: 120rpx;
+  height: 120rpx;
+  border: 8rpx solid rgba(255, 255, 255, 0.3);
+  border-top: 8rpx solid white;
+  border-radius: 50%;
+  animation: spinnerRotate 1.5s linear infinite;
+}
+
+.spinner-text {
+  font-size: 32rpx;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes pageLoadingFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spinnerRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
 /* ========== 加载状态 ========== */
 .loading-state {
   display: flex;

@@ -38,7 +38,7 @@
           data-category=""
         >
           <text>全部</text>
-          <text class="count" wx:if="{{categoryStats['']}}">{{categoryStats['']}}</text>
+          <text class="count">{{categoryStats[''] || 0}}</text>
         </view>
         <view 
           class="category-item {{currentCategory === item.name ? 'active' : ''}}"
@@ -48,7 +48,7 @@
           data-category="{{item.name}}"
         >
           <text>{{item.label}}</text>
-          <text class="count">{{item.count}}</text>
+          <text class="count">{{item.count || 0}}</text>
         </view>
       </view>
 
@@ -104,6 +104,14 @@
   </template>
 
 
+
+  <!-- 页面加载动画 -->
+  <view class="page-loading" wx:if="{{loading && list.length === 0}}">
+    <view class="loading-spinner">
+      <view class="spinner-circle"></view>
+      <view class="spinner-text">正在加载知识库...</view>
+    </view>
+  </view>
 
   <!-- 文章列表 -->
   <scroll-view 

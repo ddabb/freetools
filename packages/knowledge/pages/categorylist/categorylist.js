@@ -59,7 +59,28 @@ Page({
       title: '分类列表'
     });
 
+    // 设置分享按钮
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+
     this.loadCategories();
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '知识库分类列表',
+      path: '/packages/knowledge/pages/categorylist/categorylist'
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '知识库分类列表'
+    };
   },
 
   async loadCategories() {

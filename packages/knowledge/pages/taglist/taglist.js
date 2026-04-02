@@ -41,7 +41,28 @@ Page({
       title: '标签列表'
     });
 
+    // 设置分享按钮
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+
     this.loadTags();
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    return {
+      title: '知识库标签列表',
+      path: '/packages/knowledge/pages/taglist/taglist'
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '知识库标签列表'
+    };
   },
 
   async loadTags() {

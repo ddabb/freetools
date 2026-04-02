@@ -7,11 +7,19 @@
     <text class="page-subtitle">按分类浏览知识内容</text>
   </view>
 
+  <!-- 页面加载动画 -->
+  <view class="page-loading" wx:if="{{loading && categories.length === 0}}">
+    <view class="loading-spinner">
+      <view class="spinner-circle"></view>
+      <view class="spinner-text">正在加载分类列表...</view>
+    </view>
+  </view>
+
   <!-- 分类列表（可滚动） -->
   <scroll-view class="category-scroll" scroll-y style="height: {{scrollHeight}}px;">
     <view class="category-list">
       <!-- 加载状态 -->
-      <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-state" wx:if="{{loading && categories.length > 0}}">
         <text>加载中...</text>
       </view>
 
