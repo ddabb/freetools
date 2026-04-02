@@ -32,6 +32,7 @@
         "pages/zodiac/zodiac",
         "pages/constellation/constellation",
         "pages/relative-calculator/relative-calculator",
+        "pages/relative-export/relative-export",
         "pages/idcard/idcard",
         "pages/leapyear/leapyear",
         "pages/copywriting/copywriting",
