@@ -1,0 +1,140 @@
+<view class="container">
+  <header>
+    <h1>中秋博饼</h1>
+  </header>
+  
+  <view class="game-area">
+    <view class="dice-section">
+      <h2 class="section-title">骰子区</h2>
+      <view class="dice-container" id="diceContainer">
+        <view class="dice-wrapper" wx:for="{{6}}" wx:key="index">
+          <view class="dice dice-{{diceValues[index]}}" data-index="{{index}}" style="transform: rotateX({{diceRotations[index].x}}deg) rotateY({{diceRotations[index].y}}deg) rotateZ({{diceRotations[index].z}}deg);" bindtap="rollDice">
+            <view class="dice-face dice-face-front">
+              <view class="dice-dot dot-1"></view>
+            </view>
+            <view class="dice-face dice-face-back">
+              <view class="dice-dot dot-2"></view>
+              <view class="dice-dot dot-2"></view>
+            </view>
+            <view class="dice-face dice-face-right">
+              <view class="dice-dot dot-3"></view>
+              <view class="dice-dot dot-3"></view>
+              <view class="dice-dot dot-3"></view>
+            </view>
+            <view class="dice-face dice-face-left">
+              <view class="dice-dot dot-4"></view>
+              <view class="dice-dot dot-4"></view>
+              <view class="dice-dot dot-4"></view>
+              <view class="dice-dot dot-4"></view>
+            </view>
+            <view class="dice-face dice-face-top">
+              <view class="dice-dot dot-5"></view>
+              <view class="dice-dot dot-5"></view>
+              <view class="dice-dot dot-5"></view>
+              <view class="dice-dot dot-5"></view>
+              <view class="dice-dot dot-5"></view>
+            </view>
+            <view class="dice-face dice-face-bottom">
+              <view class="dice-dot dot-6"></view>
+              <view class="dice-dot dot-6"></view>
+              <view class="dice-dot dot-6"></view>
+              <view class="dice-dot dot-6"></view>
+              <view class="dice-dot dot-6"></view>
+              <view class="dice-dot dot-6"></view>
+            </view>
+          </view>
+          <view class="dice-shadow"></view>
+          <!-- <view class="dice-value">{{diceValues[index]}}</view> -->
+        </view>
+      </view>
+      <view class="button-container">
+        <button class="roll-btn" bindtap="rollDice" disabled="{{isRolling}}">{{rollBtnText}}</button>
+      </view>
+      <view class="counter">
+        <view>本轮积分: <text>{{currentScore}}</text></view>
+        <view>投掷次数: <text>{{rollCount}}</text></view>
+      </view>
+      <view class="button-container" style="margin-top: 15px;">
+        <button class="rule-btn" bindtap="showRules">博饼规则</button>
+      </view>
+    </view>
+  </view>
+  
+  <view class="button-container" style="margin-top: 20px;">
+    <button class="result-btn" bindtap="showResult">查看结果</button>
+    <button class="history-btn" bindtap="showHistory">历史记录</button>
+  </view>
+</view>
+
+<!-- 博饼规则弹窗 -->
+<view class="modal" wx:if="{{showRulesModal}}">
+  <view class="modal-content">
+    <view class="modal-header">
+      <h3>博饼规则</h3>
+      <view class="modal-close" bindtap="closeRules">&times;</view>
+    </view>
+    <view class="modal-body">
+      <p class="modal-intro">博饼是闽南地区，尤其是厦门一带中秋传统习俗。掷6个骰子，根据点数组合决定奖项。点击"掷骰子"试试手气！</p>
+      <view class="awards-list">
+        <view class="award-item" wx:for="{{awards}}" wx:key="name">
+          <view>
+            <view class="award-name">{{item.name}}</view>
+            <view class="award-condition">{{item.condition}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 当前结果弹窗 -->
+<view class="modal" wx:if="{{showResultModal}}">
+  <view class="modal-content">
+    <view class="modal-header">
+      <h3>当前结果</h3>
+      <view class="modal-close" bindtap="closeResult">&times;</view>
+    </view>
+    <view class="modal-body">
+      <view class="result-section">
+        <view class="result-title">{{resultText}}</view>
+        <view class="dice-values">骰子点数: {{diceValues.join(', ')}}</view>
+        <view class="dice-emojis">{{getDiceEmojiString(diceValues)}}</view>
+        <view class="score-info">本轮积分: {{currentScore}}</view>
+        <view class="roll-count">投掷次数: {{rollCount}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 历史记录弹窗 -->
+<view class="modal" wx:if="{{showHistoryModal}}">
+  <view class="modal-content">
+    <view class="modal-header">
+      <h3>历史记录</h3>
+      <view class="modal-close" bindtap="closeHistory">&times;</view>
+    </view>
+    <view class="modal-body">
+      <view class="history-section">
+        <view class="history-header">
+          <view>共 {{history.length}} 条记录</view>
+          <button class="clear-history-btn" bindtap="clearHistory" wx:if="{{history.length > 0}}">清空历史</button>
+        </view>
+        <view class="history-list">
+          <view class="history-item" wx:for="{{history}}" wx:key="index">
+            <view class="history-time">{{item.time}}</view>
+            <view class="history-award">
+              <text class="strong">{{item.award ? item.award.name : '无奖'}}</text>: {{item.award ? item.award.desc : ''}}
+            </view>
+            <view class="history-dice">
+              {{item.diceValues.join(',')}} 
+              <text class="dice-emoji">{{getDiceEmojiString(item.diceValues)}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="no-history" wx:if="{{history.length === 0}}">
+          <text>暂无历史记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

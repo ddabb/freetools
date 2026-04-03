@@ -342,6 +342,16 @@ const tools = [
     keywords: ['电池', '健康', '电量', '检测'],
     description: '查看设备电池健康状态'
   },
+  {
+    id: 'bobing',
+    name: '中秋博饼',
+    icon: '🎲',
+    color: 'red',
+    url: '/packages/bobing/pages/bobing/bobing/bobing',
+    categories: ['生活工具'],
+    keywords: ['博饼', '骰子', '中秋', '福建', '闽南', '传统', '习俗'],
+    description: '闽南传统博饼文化体验，掷6个骰子感受中秋习俗'
+  },
 
   {
     id: 'health-calculator',

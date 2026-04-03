@@ -124,6 +124,13 @@
       ]
     },
     {
+      "root": "packages/bobing",
+      "name": "bobing",
+      "pages": [
+        "pages/bobing/bobing/bobing"
+      ]
+    },
+    {
       "root": "packages/food",
       "name": "food",
       "pages": [
