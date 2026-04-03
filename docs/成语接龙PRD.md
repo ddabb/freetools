@@ -69,13 +69,81 @@ freetools 现有工具以**工具型**为主（计算器、转换器、查询器
 
 ```
 data/idiom-solitaire/
-  ├── idioms.json           # 主数据库
-  ├── idioms-meta.json      # 释义/拼音/出处
-  ├── first-char-index.json # 按首字索引（用于快速查询）
-  └── stats.json            # 数据统计（总成语数等）
+  ├── build.js                      # 构建脚本（已有）
+  ├── idiom.json                    # 完整成语数据（12,970 条，2.6MB）
+  ├── idiom-first-index.json        # 按首字拼音分组索引（197KB）
+  ├── idiom-last-index.json         # 按尾字拼音分组索引（200KB）
+  ├── stats.json                    # 数据统计
+  └── letter/                      # 按首字母分片（按需加载）
+      ├── a.json ~ z.json           # 23 个文件，最大 147KB（y）
 ```
 
-### 3.2 idioms.json 结构
+### 3.2 idiom.json 结构（已实现）
+
+```json
+[
+  {
+    "word": "一马当先",
+    "pinyin": "yī mǎ dāng xiān",
+    "firstChar": "y",
+    "lastChar": "xian",
+    "explanation": "原指作战时策马冲锋在前。形容领先、带头。",
+    "derivation": "《隋书·史祥传》：\"公卿将士以为攘止，攘止之举，自当先之。\"",
+    "example": "",
+    "abbr": "ymdx"
+  }
+]
+```
+
+- `firstChar`：首字无声调拼音的第一个字母（a-z），用于按字母快速过滤
+- `lastChar`：末字无声调拼音，用于接龙匹配
+- `abbr`：首字母缩写，可作为常用度代理因子
+
+### 3.3 索引文件结构
+
+**idiom-first-index.json**（首字索引）：
+```json
+{
+  "y": ["一马当先", "一脉相承", "一路平安", ...],
+  "a": ["阿谀奉承", "阿其所好", ...],
+  ...
+}
+```
+
+**idiom-last-index.json**（尾字索引，用于接龙）：
+```json
+{
+  "xian": ["一马当先", "大显身手", ...],
+  "cheng": ["阿谀奉承", ...],
+  ...
+}
+```
+
+### 3.4 数据统计（已生成）
+
+| 指标 | 数值 |
+|------|------|
+| 总成语数 | 12,970 |
+| 四字成语 | 12,179（94%） |
+| 五字成语 | 189 |
+| 六字及以上 | 550 |
+| 首字母分组 | 23 个 |
+| 尾字母分组 | 380 个 |
+
+### 3.5 CDN 地址
+
+```
+https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire/
+```
+
+### 3.6 加载策略
+
+| 场景 | 加载文件 | 预估大小 |
+|------|---------|---------|
+| 启动/查询 | `idiom-first-index.json` | ~200KB |
+| 接龙匹配 | `idiom-last-index.json` | ~200KB |
+| 查看详情 | `letter/{char}.json`（按需） | 每文件 ~10-150KB |
+| DFS 接龙链 | 仅需 `idiom-last-index.json` | ~200KB |
 
 ```json
 [
@@ -101,9 +169,10 @@ data/idiom-solitaire/
 
 ### 3.4 数据来源
 
-- 复用 `idiom-solitaire` git 包（private repo，由 ddabb 维护）
-- 初始数据量目标：≥ 15,000 条成语
-- 后续可通过 git commit 自动同步 CDN（jsDelivr 的 @main 标签）
+- 原始数据：开源成语库 `by-syk/chinese-idiom-db`（12,976 条，含拼音/释义/出处/例句）
+- 处理工具：`pinyin-pro`（freetools 已有依赖）生成 `firstChar`/`lastChar` 索引
+- 构建脚本：`build.js`（已实现，支持增量更新）
+- 数据更新：修改 `idiom-source.txt` 后运行 `node build.js` 即可重新生成所有文件
 
 ---
 
@@ -275,6 +344,7 @@ async function loadIdiomData() {
 
 ## 九、备注
 
-- `idiom-solitaire` git 包由 ddabb 维护（private），数据通过 jsDelivr CDN 同步，无需数据库
-- 如后续增加成语数量，只需往 git 包 commit，CDN 自动刷新
+- 数据包已生成（`data/idiom-solitaire/`），无需数据库，纯 CDN 静态分发
+- `build.js` 是数据构建脚本，新增成语时修改 `idiom-source.txt` 后重新运行即可
+- 对战/DFS 接龙链只依赖索引文件（各 ~200KB），无需加载完整数据
 - 微信小程序 AI 人机对战不调用任何云 API，纯本地逻辑
