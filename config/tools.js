@@ -18,7 +18,7 @@ const tools = [
     name: '随身百科',
     icon: '📖',
     color: 'blue',
-    url: '/packages/knowledge/pages/knowledgelist/knowledgelist',
+    url: '/pages/knowledge/knowledgelist/knowledgelist',
     categories: ['学习工具', '生活工具'],
     keywords: ['百科', '知识', '查询', '学习', 'PMP', '软考'],
     description: '随身百科全书，精准分类随时查',

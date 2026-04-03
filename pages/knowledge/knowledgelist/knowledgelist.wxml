@@ -1,0 +1,195 @@
+<!-- pages/knowledge/knowledgelist/knowledgelist.wxml -->
+<view class="container">
+  <!-- 顶部搜索栏和排序 -->
+  <view class="search-sort-container">
+    <!-- 搜索框 -->
+    <view class="search-bar">
+      <view class="search-input-wrap">
+        <text class="icon-search">🔍</text>
+        <input class="search-input" 
+          placeholder="搜索标题、描述或标签..."
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <text class="icon-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+      </view>
+      <view class="search-count" wx:if="{{searchKeyword && list.length > 0}}">
+        找到 {{list.length}} 条结果
+      </view>
+    </view>
+
+
+  </view>
+
+  <!-- 分类导航 -->
+  <view class="category-container">
+    <scroll-view class="category-nav" scroll-x="true" scroll-with-animation="true">
+      <view class="category-nav-inner">
+        <view 
+          class="category-item category-tree-trigger {{showCategoryTree ? 'tree-open' : ''}}"
+          bindtap="toggleCategoryTree">
+          <text>分类树</text>
+          <text class="icon">🌲</text>
+        </view>
+        <view 
+          class="category-item {{currentCategory === '' ? 'active' : ''}}"
+          bindtap="switchCategory"
+          data-category=""
+        >
+          <text>全部</text>
+          <text class="count">{{categoryStats[''] || 0}}</text>
+        </view>
+        <view 
+          class="category-item {{currentCategory === item.name ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="name"
+          bindtap="switchCategory"
+          data-category="{{item.name}}"
+        >
+          <text>{{item.label}}</text>
+          <text class="count">{{item.count || 0}}</text>
+        </view>
+      </view>
+
+    </scroll-view>
+    
+    <!-- 分类树弹窗 -->
+    <view class="category-tree-modal {{showCategoryTree ? 'show' : ''}}" wx:if="{{showCategoryTree}}">
+      <view class="modal-overlay" bindtap="toggleCategoryTree"></view>
+      <view class="modal-content">
+        <view class="modal-header">
+          <text class="modal-title">分类导航</text>
+          <text class="modal-close" bindtap="toggleCategoryTree">✕</text>
+        </view>
+        <scroll-view class="tree-scroll" scroll-y style="max-height: 65vh;">
+          <view class="tree-root-outer">
+            <view class="tree-node tree-node-root {{currentCategory === '' ? 'active' : ''}}" bindtap="switchCategory" data-category="">
+              <view class="tree-node-main">
+                <text class="tree-node-icon">🏠</text>
+                <text class="tree-label">全部</text>
+              </view>
+              <text class="tree-count">{{categoryStats['全部']}}</text>
+            </view>
+            <view class="tree-root-children">
+              <template is="categoryTreeItem" data="{{item: categoryTreeNodes, level: 0, currentCategory: currentCategory}}" />
+            </view>
+
+          </view>
+        </scroll-view>
+
+        <view class="modal-footer">
+          <text class="modal-footer-text">轻触分类即可筛选对应知识</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 分类树模板 -->
+  <template name="categoryTreeItem">
+    <block wx:for="{{item}}" wx:for-item="node" wx:key="path">
+      <view class="tree-branch level-{{level}}">
+        <view class="tree-node {{currentCategory === node.path ? 'active' : ''}}" bindtap="switchCategory" data-category="{{node.path}}">
+          <view class="tree-node-main">
+            <text class="tree-node-icon">{{node.icon}}</text>
+            <text class="tree-label">{{node.name}}</text>
+          </view>
+          <text class="tree-count">{{node.count}}</text>
+        </view>
+        <view class="tree-children" wx:if="{{node.hasChildren}}">
+          <template is="categoryTreeItem" data="{{item: node.children, level: level + 1, currentCategory: currentCategory}}" />
+        </view>
+      </view>
+    </block>
+  </template>
+
+
+
+  <!-- 页面加载动画 -->
+  <view class="page-loading" wx:if="{{loading && list.length === 0}}">
+    <view class="loading-spinner">
+      <view class="spinner-circle"></view>
+      <view class="spinner-text">正在加载知识库...</view>
+    </view>
+  </view>
+
+  <!-- 文章列表 -->
+  <scroll-view 
+    class="article-scroll"
+    scroll-y 
+    style="height: {{scrollHeight}}px;"
+    refresher-enabled
+    bindrefresherrefresh="onRefresh"
+    refresher-triggered="{{refreshing}}"
+    lower-threshold="100"
+    bindscrolltolower="loadMore"
+  >
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && list.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">没有找到相关文章</text>
+      <text class="empty-hint" wx:if="{{searchKeyword}}">换个关键词试试吧~</text>
+      <text class="empty-hint" wx:else>该分类下暂无文章</text>
+      <button class="empty-btn" wx:if="{{searchKeyword || currentCategory}}" bindtap="clearFilters">
+        清除筛选
+      </button>
+    </view>
+
+    <!-- 文章卡片列表 -->
+    <view class="article-list" wx:if="{{list.length > 0}}">
+      <view 
+        class="article-card"
+        wx:for="{{list}}"
+        wx:key="filename"
+        bindtap="onArticleTap"
+        data-filename="{{item.filename}}"
+      >
+        <view class="card-inner">
+          <!-- 卡片头部 -->
+          <view class="card-header">
+            <view class="card-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
+            <text class="card-order">#{{item.order}}</text>
+          </view>
+
+          <!-- 卡片标题 -->
+          <text class="card-title">{{item.title}}</text>
+
+          <!-- 卡片描述 -->
+          <text class="card-desc">{{item.description}}</text>
+
+          <!-- 卡片底部 -->
+          <view class="card-footer">
+            <view class="card-tags">
+              <text 
+                class="card-tag" 
+                wx:for="{{item.tags}}" 
+                wx:for-item="tag" 
+                wx:key="*this"
+                data-tag="{{tag}}"
+                catchtap="onTagTap"
+              >#{{tag}}</text>
+            </view>
+            <view class="card-meta">
+              <text class="card-words">{{item.wordCount}}字</text>
+            </view>
+          </view>
+
+          <!-- 装饰元素 -->
+          <view class="card-decoration {{index % 3 === 0 ? 'deco-1' : (index % 3 === 1 ? 'deco-2' : 'deco-3')}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-more" wx:if="{{loading && list.length > 0}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 结束提示 -->
+    <view class="list-end" wx:if="{{isOver && list.length > 0}}">
+      <view class="end-line"></view>
+      <text class="end-text">— 已加载全部 —</text>
+      <view class="end-line"></view>
+    </view>
+  </scroll-view>
+</view>

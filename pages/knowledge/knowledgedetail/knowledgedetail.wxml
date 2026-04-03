@@ -1,0 +1,140 @@
+<!-- pages/knowledge/knowledgedetail/knowledgedetail.wxml -->
+
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">正在加载...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error && !loading}}">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{errorMsg}}</text>
+    <button class="retry-btn" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <!-- 文章头部 -->
+  <view class="article-hero" wx:if="{{article && !loading && !error}}">
+    <!-- 分类标签行 -->
+    <view class="category-row">
+      <!-- 分类列表按钮 -->
+      <view class="category-list-btn" bindtap="onCategoryListTap">
+        <text class="category-list-icon">📂</text>
+        <text class="category-list-text">分类</text>
+      </view>
+      <!-- 分类标签 -->
+      <view
+        class="hero-category {{article.categoryClass}}"
+        bindtap="onCategoryTap"
+      >
+        <text class="category-arrow-left">‹</text>
+        <text class="category-icon">{{article.categoryIcon}}</text>
+        <text class="category-name">{{article.displayCategory || article.category}}</text>
+      </view>
+    </view>
+
+    <!-- 标题和元信息 -->
+    <view class="hero-title-meta">
+      <text class="hero-title">{{article.title}}</text>
+      <view class="meta-item">
+        <text class="meta-icon">📝</text>
+        <text class="meta-value">{{article.wordCount}} 字</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文章内容 -->
+  <scroll-view
+    class="article-scroll"
+    scroll-y
+    scroll-x
+    wx:if="{{article && !loading && !error}}"
+  >
+    <view class="article-wrapper">
+
+      <!-- 文章描述 -->
+      <view class="article-desc-card">
+        <text class="desc-icon">💡</text>
+        <text class="desc-text">{{article.description}}</text>
+      </view>
+
+      <!-- 文章正文 -->
+      <view class="article-body">
+        <!-- 内容标题装饰 -->
+        <view class="content-header">
+          <view class="content-line"></view>
+          <text class="content-label">正文内容</text>
+          <view class="content-line"></view>
+        </view>
+
+        <!-- Markdown 渲染（使用 rich-text + 自定义 Markdown 解析器） -->
+        <rich-text
+          class="content-rich"
+          nodes="{{contentHtml}}"
+          wx:if="{{contentHtml}}"
+        ></rich-text>
+
+        <!-- 空内容提示 -->
+        <view class="content-empty" wx:else>
+          <text>暂无正文内容</text>
+        </view>
+      </view>
+
+      <!-- 标签区域 -->
+      <view class="tags-area" wx:if="{{article.tags && article.tags.length > 0}}">
+        <view class="tags-header">
+          <view class="tags-title-left" bindtap="onTagListTap">
+            <text class="tags-title-icon">🏷️</text>
+            <text class="tags-title-text">标签列表</text>
+          </view>
+          <view class="tags-line"></view>
+        </view>
+        <view class="tags-container">
+          <view
+            class="tag-item"
+            wx:for="{{article.tags}}"
+            wx:key="*this"
+            bindtap="onTagTap"
+            data-tag="{{item}}"
+          >
+            <text class="tag-hash">#</text>
+            <text class="tag-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 相关推荐 -->
+      <view class="related-section" wx:if="{{relatedArticles.length > 0}}">
+        <view class="related-header">
+          <text class="related-title">📖 相关推荐</text>
+          <text class="related-count">{{relatedArticles.length}} 篇</text>
+        </view>
+        <scroll-view class="related-scroll" scroll-x>
+          <view
+            class="related-card"
+            wx:for="{{relatedArticles}}"
+            wx:key="filename"
+            bindtap="onRelatedTap"
+            data-filename="{{item.filename}}"
+          >
+            <view class="related-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
+
+            <text class="related-card-title">{{item.title}}</text>
+            <text class="related-card-desc">{{item.description}}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 底部操作区 -->
+      <view class="action-bar">
+        <button class="action-btn copy-btn" bindtap="onCopyContent">
+          <text>📋 复制</text>
+        </button>
+        <button class="action-btn share-btn" open-type="share">
+          <text>🔗 分享</text>
+        </button>
+      </view>
+    </view>
+  </scroll-view>
+</view>

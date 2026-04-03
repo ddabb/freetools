@@ -1,8 +1,12 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/about/about",
-    "pages/changelog/changelog"
+    "pages/knowledge/knowledgelist/knowledgelist",
+    "pages/knowledge/knowledgedetail/knowledgedetail",
+    "pages/knowledge/categorylist/categorylist",
+    "pages/knowledge/taglist/taglist",
+    "pages/changelog/changelog",
+    "pages/about/about"
   ],
   "usingComponents": {
     "tool-card": "/components/tool-card/tool-card",
@@ -128,16 +132,6 @@
       ]
     },
     {
-      "root": "packages/knowledge",
-      "name": "knowledge",
-      "pages": [
-        "pages/knowledgelist/knowledgelist",
-        "pages/knowledgedetail/knowledgedetail",
-        "pages/categorylist/categorylist",
-        "pages/taglist/taglist"
-      ]
-    },
-    {
       "root": "packages/unit",
       "name": "unit",
       "pages": [
@@ -178,6 +172,12 @@
         "text": "首页",
         "iconPath": "images/tabbar/home-normal.png",
         "selectedIconPath": "images/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/knowledge/knowledgelist/knowledgelist",
+        "text": "随身百科",
+        "iconPath": "images/tabbar/wiki-normal.png",
+        "selectedIconPath": "images/tabbar/wiki-active.png"
       },
       {
         "pagePath": "pages/changelog/changelog",
