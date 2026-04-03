@@ -1,4 +1,4 @@
-// pages/knowledge/categorylist/categorylist.js
+// packages/knowledge/pages/categorylist/categorylist.js
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
@@ -72,7 +72,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '知识库分类列表',
-      path: '/pages/knowledge/categorylist/categorylist'
+      path: '/packages/knowledge/pages/categorylist/categorylist'
     };
   },
 
@@ -115,7 +115,7 @@ Page({
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgelist/knowledgelist?category=${category}`
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${category}`
     });
   },
 

@@ -1,4 +1,4 @@
-<!-- pages/knowledge/knowledgedetail/knowledgedetail.wxml -->
+<!-- packages/knowledge/pages/knowledgedetail/knowledgedetail.wxml -->
 
 <view class="container">
   <!-- 加载状态 -->

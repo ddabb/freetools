@@ -36,7 +36,6 @@
         "pages/zodiac/zodiac",
         "pages/constellation/constellation",
         "pages/relative-calculator/relative-calculator",
-        "pages/relative-export/relative-export",
         "pages/idcard/idcard",
         "pages/leapyear/leapyear",
         "pages/copywriting/copywriting",
@@ -175,7 +174,7 @@
       },
       {
         "pagePath": "pages/knowledge/knowledgelist/knowledgelist",
-        "text": "随身百科",
+        "text": "寻识",
         "iconPath": "images/tabbar/wiki-normal.png",
         "selectedIconPath": "images/tabbar/wiki-active.png"
       },

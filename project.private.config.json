@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "日志",
-          "pathName": "pages/changelog/changelog",
+          "name": "知识列表",
+          "pathName": "pages/knowledge/knowledgelist/knowledgelist",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "日志",
+          "pathName": "pages/changelog/changelog",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "时间工具",
@@ -39,13 +46,6 @@
         {
           "name": "数据统计器",
           "pathName": "packages/data/pages/data-analyzer/data-analyzer",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "知识列表",
-          "pathName": "packages/knowledge/pages/knowledgelist/knowledgelist",
           "query": "",
           "launchMode": "default",
           "scene": null

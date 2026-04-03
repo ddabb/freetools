@@ -1,7 +1,7 @@
-// pages/knowledge/knowledgedetail/knowledgedetail.js
+// packages/knowledge/pages/knowledgedetail/knowledgedetail.js
 
-const utils = require('../../utils/index');
-const knowledgeCategory = require('../../utils/knowledgeCategory');
+const utils = require('../../../utils/index');
+const knowledgeCategory = require('../../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 
@@ -354,7 +354,7 @@ Page({
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgelist/knowledgelist?tag=${encodeURIComponent(tag)}`
+      url: `/knowledge/pages/knowledgelist/knowledgelist?tag=${encodeURIComponent(tag)}`
     });
   },
 
@@ -363,7 +363,7 @@ Page({
    */
   onTagListTap() {
     wx.navigateTo({
-      url: '/pages/knowledge/taglist/taglist'
+      url: '/packages/knowledge/pages/taglist/taglist'
     });
   },
 
@@ -372,7 +372,7 @@ Page({
    */
   onCategoryListTap() {
     wx.navigateTo({
-      url: '/pages/knowledge/categorylist/categorylist'
+      url: '/packages/knowledge/pages/categorylist/categorylist'
     });
   },
 
@@ -384,7 +384,7 @@ Page({
     if (!article || !article.category) return;
     
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgelist/knowledgelist?category=${article.category}`
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${article.category}`
     });
   },
 
@@ -394,7 +394,7 @@ Page({
   onRelatedTap(e) {
     const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgedetail/knowledgedetail?filename=${filename}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 
@@ -503,7 +503,7 @@ Page({
 
     return {
       title: `${article.title} - 随身百科`,
-      path: `/pages/knowledge/knowledgedetail/knowledgedetail?filename=${filename}`
+      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     };
   },
 

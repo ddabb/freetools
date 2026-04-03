@@ -1,4 +1,4 @@
-// pages/knowledge/taglist/taglist.js
+// packages/knowledge/pages/taglist/taglist.js
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
@@ -54,7 +54,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '知识库标签列表',
-      path: '/pages/knowledge/taglist/taglist'
+      path: '/packages/knowledge/pages/taglist/taglist'
     };
   },
 
@@ -137,7 +137,7 @@ Page({
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgelist/knowledgelist?tag=${tag}`
+      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
     });
   },
 

@@ -1,4 +1,4 @@
-<!-- pages/knowledge/categorylist/categorylist.wxml -->
+<!-- packages/knowledge/pages/categorylist/categorylist.wxml -->
 
 <view class="container">
   <!-- 页面标题 -->

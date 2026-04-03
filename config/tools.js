@@ -13,18 +13,7 @@ const { getToolsByCategory, getAllCategories, getCategoryInfo, groupToolsByCateg
 const tools = [
   // ===== 学习工具（按排序顺序）=====
   // 置顶工具
-  {
-    id: 'knowledge-query',
-    name: '随身百科',
-    icon: '📖',
-    color: 'blue',
-    url: '/pages/knowledge/knowledgelist/knowledgelist',
-    categories: ['学习工具', '生活工具'],
-    keywords: ['百科', '知识', '查询', '学习', 'PMP', '软考'],
-    description: '随身百科全书，精准分类随时查',
-    publish: true,
-    pinned: true
-  },
+
   // 基础换算
   {
     id: 'length-converter',

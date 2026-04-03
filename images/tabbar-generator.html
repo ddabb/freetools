@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>TabBar 图标生成器 - 随身工具宝</title>
+  <title>TabBar 图标生成器 - 随身工具宝（4 tab）</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; background: #f5f5f5; }
@@ -33,7 +33,7 @@
 <body>
   <div class="container">
     <h1>🎨 TabBar 图标生成器</h1>
-    <p class="subtitle">随身工具宝 - 首页 / 日志 / 关于</p>
+    <p class="subtitle">随身工具宝 - 首页 / 随身百科 / 日志 / 关于</p>
     
     <div class="icon-grid">
       <!-- 首页 - 未选中 -->
@@ -58,6 +58,28 @@
       
       <div class="icon-item"></div>
       
+      <!-- 随身百科 - 未选中 -->
+      <div class="icon-item">
+        <canvas id="wiki-normal" width="128" height="128"></canvas>
+        <div class="name">随身百科 (未选中)</div>
+        <div class="hint">128×128, #7f8c8d</div>
+        <div class="btn-row">
+          <button onclick="download('wiki-normal', 128)">下载</button>
+        </div>
+      </div>
+      
+      <!-- 随身百科 - 选中 -->
+      <div class="icon-item">
+        <canvas id="wiki-active" width="128" height="128"></canvas>
+        <div class="name">随身百科 (选中)</div>
+        <div class="hint">128×128, #2980b9</div>
+        <div class="btn-row">
+          <button onclick="download('wiki-active', 128)">下载</button>
+        </div>
+      </div>
+
+      <div class="icon-item"></div>
+
       <!-- 日志 - 未选中 -->
       <div class="icon-item">
         <canvas id="log-normal" width="128" height="128"></canvas>
@@ -109,6 +131,10 @@
           <div class="label">首页</div>
         </div>
         <div class="tab-item">
+          <canvas id="preview-wiki" width="48" height="48"></canvas>
+          <div class="label">随身百科</div>
+        </div>
+        <div class="tab-item">
           <canvas id="preview-log" width="48" height="48"></canvas>
           <div class="label">日志</div>
         </div>
@@ -125,6 +151,30 @@
   </div>
 
   <script>
+    // 随身百科图标 SVG（翻开的书）
+    function getWikiSVG(color) {
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+          <!-- 左半页 -->
+          <path d="M64 26 C64 26 42 20 18 24 L18 106 C42 102 64 108 64 108 Z" fill="${color}" opacity="0.85"/>
+          <!-- 右半页 -->
+          <path d="M64 26 C64 26 86 20 110 24 L110 106 C86 102 64 108 64 108 Z" fill="${color}" opacity="0.65"/>
+          <!-- 书脊 -->
+          <rect x="61" y="24" width="6" height="84" rx="3" fill="${color}"/>
+          <!-- 左页横线 -->
+          <rect x="26" y="42" width="28" height="5" rx="2.5" fill="white" opacity="0.5"/>
+          <rect x="26" y="54" width="32" height="5" rx="2.5" fill="white" opacity="0.5"/>
+          <rect x="26" y="66" width="24" height="5" rx="2.5" fill="white" opacity="0.5"/>
+          <rect x="26" y="78" width="28" height="5" rx="2.5" fill="white" opacity="0.5"/>
+          <!-- 右页横线 -->
+          <rect x="74" y="42" width="28" height="5" rx="2.5" fill="white" opacity="0.35"/>
+          <rect x="74" y="54" width="22" height="5" rx="2.5" fill="white" opacity="0.35"/>
+          <rect x="74" y="66" width="26" height="5" rx="2.5" fill="white" opacity="0.35"/>
+          <rect x="74" y="78" width="20" height="5" rx="2.5" fill="white" opacity="0.35"/>
+        </svg>
+      `;
+    }
+
     // 首页图标 SVG
     function getHomeSVG(color) {
       return `
@@ -186,7 +236,9 @@
       let svgString;
       const color = type.includes('active') ? '#2980b9' : '#7f8c8d';
       
-      if (type.startsWith('home')) {
+      if (type.startsWith('wiki')) {
+        svgString = getWikiSVG(color);
+      } else if (type.startsWith('home')) {
         svgString = getHomeSVG(color);
       } else if (type.startsWith('log')) {
         svgString = getLogSVG(color);
@@ -217,7 +269,7 @@
     
     // 下载全部
     function downloadAll() {
-      const items = ['home-normal', 'home-active', 'log-normal', 'log-active', 'about-normal', 'about-active'];
+      const items = ['home-normal', 'home-active', 'wiki-normal', 'wiki-active', 'log-normal', 'log-active', 'about-normal', 'about-active'];
       items.forEach((item, i) => {
         setTimeout(() => download(item, 128), i * 200);
       });
@@ -228,6 +280,8 @@
       // 大预览
       drawSVG('home-normal', getHomeSVG('#7f8c8d'), 128);
       drawSVG('home-active', getHomeSVG('#2980b9'), 128);
+      drawSVG('wiki-normal', getWikiSVG('#7f8c8d'), 128);
+      drawSVG('wiki-active', getWikiSVG('#2980b9'), 128);
       drawSVG('log-normal', getLogSVG('#7f8c8d'), 128);
       drawSVG('log-active', getLogSVG('#2980b9'), 128);
       drawSVG('about-normal', getAboutSVG('#7f8c8d'), 128);
@@ -235,6 +289,7 @@
       
       // TabBar 预览
       drawSVG('preview-home', getHomeSVG('#2980b9'), 48);
+      drawSVG('preview-wiki', getWikiSVG('#7f8c8d'), 48);
       drawSVG('preview-log', getLogSVG('#7f8c8d'), 48);
       drawSVG('preview-about', getAboutSVG('#7f8c8d'), 48);
     };

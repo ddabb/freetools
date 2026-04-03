@@ -1,4 +1,4 @@
-/* pages/knowledge/knowledgelist/knowledgelist.wxss */
+/* packages/knowledge/pages/knowledgelist/knowledgelist.wxss */
 
 /* ========== 基础样式 ========== */
 page {

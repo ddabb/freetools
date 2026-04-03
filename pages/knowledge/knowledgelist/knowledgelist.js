@@ -1,5 +1,5 @@
-// pages/knowledge/knowledgelist/knowledgelist.js
-const knowledgeCategory = require('../../utils/knowledgeCategory');
+// packages/knowledge/pages/knowledgelist/knowledgelist.js
+const knowledgeCategory = require('../../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 
@@ -538,7 +538,7 @@ Page({
   onArticleTap(e) {
     const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/knowledge/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
+      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
     });
   },
 
@@ -611,7 +611,7 @@ Page({
 
     return {
       title,
-      path: `/pages/knowledge/knowledgelist/knowledgelist?category=${encodeURIComponent(currentCategory)}&tag=${encodeURIComponent(tag)}`
+      path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${encodeURIComponent(currentCategory)}&tag=${encodeURIComponent(tag)}`
     };
   },
 

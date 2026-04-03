@@ -1,4 +1,4 @@
-<!-- pages/knowledge/knowledgelist/knowledgelist.wxml -->
+<!-- packages/knowledge/pages/knowledgelist/knowledgelist.wxml -->
 <view class="container">
   <!-- 顶部搜索栏和排序 -->
   <view class="search-sort-container">
