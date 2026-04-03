@@ -1,7 +1,7 @@
 // packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
-const XLSX = require('../../../../libs/xlsx.mini.min.js');
+const XLSX = require('../../../../libs/xlsx.full.min.js');
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
@@ -531,71 +531,48 @@ Page({
   _exportSudokuWithBorder(aoa, fileName) {
     try {
       const ws = XLSX.utils.aoa_to_sheet(aoa);
-      
-      // 设置列宽（稍微加宽）
+
       ws['!cols'] = Array(9).fill({ wch: 8 });
-      
-      // 设置行高（让格子更高）
       ws['!rows'] = Array(9).fill({ hpt: 40 });
 
-      // 定义边框样式
-      const thinBorder = {
-        top: { style: 'thin' },
-        bottom: { style: 'thin' },
-        left: { style: 'thin' },
-        right: { style: 'thin' }
-      };
-
-      // 定义背景色样式
-      const originalStyle = {
-        alignment: { horizontal: 'center', vertical: 'center' },
-        font: { bold: true, size: 14, color: { rgb: '000000' } },
-        fill: { fgColor: { rgb: 'E6F3FF' } } // 浅蓝色背景
-      };
-      
-      const solvedStyle = {
-        alignment: { horizontal: 'center', vertical: 'center' },
-        font: { bold: false, size: 14, color: { rgb: '333333' } },
-        fill: { fgColor: { rgb: 'FFFFFF' } } // 白色背景
-      };
-
-      // 应用边框和背景色
-      const range = XLSX.utils.decode_range(`A1:I9`);
+      // 构建完整样式对象（xlsx.full 要求：ARGB颜色 + patternType: 'solid' + 边框颜色）
+      const range = XLSX.utils.decode_range('A1:I9');
       for (let R = range.s.r; R <= range.e.r; R++) {
         for (let C = range.s.c; C <= range.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) ws[cellRef] = { v: '' };
-          
-          // 判断是否为原始题目数字（固定格子）
+
           const isOriginal = this.data.board[R][C].fixed;
-          
-          // 基础样式
-          const baseStyle = isOriginal ? originalStyle : solvedStyle;
-          
-          // 构建边框样式
+
+          // 边框样式（所有边都是黑色）
           const borderStyle = {
-            top: { style: 'thin' },
-            bottom: { style: 'thin' },
-            left: { style: 'thin' },
-            right: { style: 'thin' }
+            top:    { style: 'thin', color: { rgb: 'FF000000' } },
+            bottom: { style: 'thin', color: { rgb: 'FF000000' } },
+            left:   { style: 'thin', color: { rgb: 'FF000000' } },
+            right:  { style: 'thin', color: { rgb: 'FF000000' } }
           };
-          
-          // 3x3宫格边框加粗（每个宫格的右边界和下边界）
-          if (C === 2 || C === 5) {
-            borderStyle.right = { style: 'medium' };
-          }
-          if (R === 2 || R === 5) {
-            borderStyle.bottom = { style: 'medium' };
-          }
-          
-          // 整个数独棋盘的外边框加粗
-          if (R === 0) borderStyle.top = { style: 'medium' };
-          if (R === 8) borderStyle.bottom = { style: 'medium' };
-          if (C === 0) borderStyle.left = { style: 'medium' };
-          if (C === 8) borderStyle.right = { style: 'medium' };
-          
+
+          // 3x3宫格右/下边界加粗
+          if (C === 2 || C === 5) borderStyle.right  = { style: 'medium', color: { rgb: 'FF000000' } };
+          if (R === 2 || R === 5) borderStyle.bottom = { style: 'medium', color: { rgb: 'FF000000' } };
+          // 整个棋盘外边框加粗
+          if (R === 0) borderStyle.top    = { style: 'medium', color: { rgb: 'FF000000' } };
+          if (R === 8) borderStyle.bottom = { style: 'medium', color: { rgb: 'FF000000' } };
+          if (C === 0) borderStyle.left   = { style: 'medium', color: { rgb: 'FF000000' } };
+          if (C === 8) borderStyle.right  = { style: 'medium', color: { rgb: 'FF000000' } };
+
           ws[cellRef].s = {
-            ...baseStyle,
+            alignment:  { horizontal: 'center', vertical: 'center' },
+            font: {
+              name: 'Arial',
+              sz:   isOriginal ? 14 : 13,
+              bold: isOriginal,
+              color: { rgb: 'FF333333' }
+            },
+            fill: {
+              patternType: 'solid',
+              fgColor:     { rgb: isOriginal ? 'FFDCE8F5' : 'FFFFFFFF' }  // 固定格浅蓝 / 用户格白色
+            },
             border: borderStyle
           };
         }
@@ -603,7 +580,6 @@ Page({
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, '数独');
-      XLSX.utils.sheet_add_aoa(ws, aoa, { origin: 'A1' });
 
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
       const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
@@ -618,11 +594,7 @@ Page({
             fileType: 'xlsx',
             showMenu: true,
             success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
-            fail: () => wx.showModal({
-              title: '导出成功',
-              content: `文件已保存为 ${fileName}`,
-              showCancel: false
-            })
+            fail: () => wx.showModal({ title: '导出成功', content: `文件已保存为 ${fileName}`, showCancel: false })
           });
         },
         fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
@@ -633,7 +605,7 @@ Page({
     }
   },
 
-  // 导出题目和答案到同一个Excel文件
+  // 导出题目和答案到同一个Excel文件（样式与单sheet导出一致）
   _exportPuzzleAndSolution(puzzleAoa, solutionAoa, fileName) {
     try {
       const wb = XLSX.utils.book_new();
@@ -648,44 +620,53 @@ Page({
       solutionWs['!cols'] = Array(9).fill({ wch: 8 });
       solutionWs['!rows'] = Array(9).fill({ hpt: 40 });
       
-      // 定义样式
-      const puzzleStyle = {
-        alignment: { horizontal: 'center', vertical: 'center' },
-        font: { bold: true, size: 14, color: { rgb: 'FFFFFF' } },
-        fill: { fgColor: { rgb: '4A90E2' } } // 深蓝色背景
-      };
-      
-      const solutionStyle = {
-        alignment: { horizontal: 'center', vertical: 'center' },
-        font: { bold: true, size: 14, color: { rgb: '000000' } },
-        fill: { fgColor: { rgb: 'E6F3FF' } } // 浅蓝色背景
-      };
-      
-      // 应用题目样式
-      const puzzleRange = XLSX.utils.decode_range(`A1:I9`);
+      // 应用题目样式（与单sheet导出风格一致：固定格浅蓝/空格白色）
+      const puzzleRange = XLSX.utils.decode_range('A1:I9');
       for (let R = puzzleRange.s.r; R <= puzzleRange.e.r; R++) {
         for (let C = puzzleRange.s.c; C <= puzzleRange.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!puzzleWs[cellRef]) puzzleWs[cellRef] = { v: '' };
           
+          const isOriginal = puzzleAoa[R][C] !== '';  // 题目有数字=原始格
           const borderStyle = this._getSudokuBorderStyle(R, C);
           puzzleWs[cellRef].s = {
-            ...puzzleStyle,
+            alignment: { horizontal: 'center', vertical: 'center' },
+            font: {
+              name: 'Arial',
+              sz:   isOriginal ? 14 : 13,
+              bold: isOriginal,
+              color: { rgb: isOriginal ? 'FFFFFFFF' : 'FF333333' }
+            },
+            fill: {
+              patternType: 'solid',
+              fgColor:     { rgb: isOriginal ? 'FFDCE8F5' : 'FFFFFFFF' }
+            },
             border: borderStyle
           };
         }
       }
       
-      // 应用答案样式
-      const solutionRange = XLSX.utils.decode_range(`A1:I9`);
+      // 应用答案样式（固定格样式与题目一致；用户填入格白色）
+      const solutionRange = XLSX.utils.decode_range('A1:I9');
       for (let R = solutionRange.s.r; R <= solutionRange.e.r; R++) {
         for (let C = solutionRange.s.c; C <= solutionRange.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!solutionWs[cellRef]) solutionWs[cellRef] = { v: '' };
           
+          const isOriginal = puzzleAoa[R][C] !== '';  // 沿用题目中的原始格信息
           const borderStyle = this._getSudokuBorderStyle(R, C);
           solutionWs[cellRef].s = {
-            ...solutionStyle,
+            alignment: { horizontal: 'center', vertical: 'center' },
+            font: {
+              name: 'Arial',
+              sz:   isOriginal ? 14 : 13,
+              bold: isOriginal,
+              color: { rgb: isOriginal ? 'FFFFFFFF' : 'FF333333' }
+            },
+            fill: {
+              patternType: 'solid',
+              fgColor:     { rgb: isOriginal ? 'FFDCE8F5' : 'FFFFFFFF' }
+            },
             border: borderStyle
           };
         }
@@ -722,29 +703,25 @@ Page({
     }
   },
 
-  // 获取数独边框样式
+  // 获取数独边框样式（含颜色，xlsx.full 必需）
   _getSudokuBorderStyle(R, C) {
     const borderStyle = {
-      top: { style: 'thin' },
-      bottom: { style: 'thin' },
-      left: { style: 'thin' },
-      right: { style: 'thin' }
+      top:    { style: 'thin', color: { rgb: 'FF000000' } },
+      bottom: { style: 'thin', color: { rgb: 'FF000000' } },
+      left:   { style: 'thin', color: { rgb: 'FF000000' } },
+      right:  { style: 'thin', color: { rgb: 'FF000000' } }
     };
-    
+
     // 3x3宫格边框加粗
-    if (C === 2 || C === 5) {
-      borderStyle.right = { style: 'medium' };
-    }
-    if (R === 2 || R === 5) {
-      borderStyle.bottom = { style: 'medium' };
-    }
-    
+    if (C === 2 || C === 5) borderStyle.right  = { style: 'medium', color: { rgb: 'FF000000' } };
+    if (R === 2 || R === 5) borderStyle.bottom = { style: 'medium', color: { rgb: 'FF000000' } };
+
     // 整个数独棋盘的外边框加粗
-    if (R === 0) borderStyle.top = { style: 'medium' };
-    if (R === 8) borderStyle.bottom = { style: 'medium' };
-    if (C === 0) borderStyle.left = { style: 'medium' };
-    if (C === 8) borderStyle.right = { style: 'medium' };
-    
+    if (R === 0) borderStyle.top    = { style: 'medium', color: { rgb: 'FF000000' } };
+    if (R === 8) borderStyle.bottom = { style: 'medium', color: { rgb: 'FF000000' } };
+    if (C === 0) borderStyle.left   = { style: 'medium', color: { rgb: 'FF000000' } };
+    if (C === 8) borderStyle.right  = { style: 'medium', color: { rgb: 'FF000000' } };
+
     return borderStyle;
   },
 

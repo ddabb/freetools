@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "知识列表",
-          "pathName": "pages/knowledgelist/knowledgelist",
+          "name": "取数模拟器",
+          "pathName": "packages/math/pages/random-selector/random-selector",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "知识列表",
+          "pathName": "pages/knowledgelist/knowledgelist",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "日志",

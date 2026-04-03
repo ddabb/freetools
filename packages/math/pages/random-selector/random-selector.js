@@ -1,5 +1,5 @@
 // packages/math/pages/random-selector/random-selector.js
-const XLSX = require('../../../../libs/xlsx.mini.min.js');
+const XLSX = require('../../../../libs/xlsx.full.min.js');
 
 Page({
   data: {
@@ -861,41 +861,125 @@ Page({
 
   // ========== 导出 Excel 功能 ==========
 
-  // 通用导出方法
-  _exportToExcel(aoa, sheetName, fileName) {
-    try {
-      const ws = XLSX.utils.aoa_to_sheet(aoa);
-      ws['!cols'] = aoa[0].map(() => ({ wch: 15 }));
+  // 边框辅助
+  _border(style) {
+    const b = { style: 'thin', color: { rgb: 'FFAAAAAA' } };
+    return { ...style, border: { top: b, bottom: b, left: b, right: b } };
+  },
 
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  _makeHeaderStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 12, bold: true, color: { rgb: 'FFFFFFFF' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FF2C5F8C' } }
+    });
+  },
 
-      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
-      const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+  _makeTitleStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 16, bold: true, color: { rgb: 'FFFFFFFF' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FF1A3A6B' } }
+    });
+  },
 
-      wx.getFileSystemManager().writeFile({
-        filePath: fullPath,
-        data: wbout,
-        encoding: 'base64',
-        success: () => {
-          wx.openDocument({
-            filePath: fullPath,
-            fileType: 'xlsx',
-            showMenu: true,
-            success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
-            fail: () => wx.showModal({
-              title: '导出成功',
-              content: `文件已保存为 ${fileName}`,
-              showCancel: false
-            })
-          });
-        },
-        fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
-      });
-    } catch (err) {
-      console.error('[导出Excel] 异常:', err);
-      wx.showToast({ title: '导出失败', icon: 'none' });
+  _makeLabelStyle() {
+    return this._border({
+      alignment: { horizontal: 'left', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, bold: true, color: { rgb: 'FF333333' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFD9E8F5' } }
+    });
+  },
+
+  _makeValueStyle() {
+    return this._border({
+      alignment: { horizontal: 'left', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, color: { rgb: 'FF333333' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFFFFFFF' } }
+    });
+  },
+
+  _makeBrownBallStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 12, bold: true, color: { rgb: 'FFFFFFFF' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFD32F2F' } }
+    });
+  },
+
+  _makeGreenBallStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 12, bold: true, color: { rgb: 'FFFFFFFF' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FF388E3C' } }
+    });
+  },
+
+  _makeOddRowStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, color: { rgb: 'FF333333' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFF5F8FF' } }
+    });
+  },
+
+  _makeEvenRowStyle() {
+    return this._border({
+      alignment: { horizontal: 'center', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, color: { rgb: 'FF333333' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFFFFFFF' } }
+    });
+  },
+
+  _makeStatLabelStyle() {
+    return this._border({
+      alignment: { horizontal: 'left', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, bold: true, color: { rgb: 'FFFFFFFF' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FF2C5F8C' } }
+    });
+  },
+
+  _makeStatValueStyle(isProfit) {
+    return this._border({
+      alignment: { horizontal: 'left', vertical: 'center' },
+      font: { name: 'Arial', sz: 11, bold: true, color: { rgb: isProfit ? 'FF1B5E20' : 'FFB71C1C' } },
+      fill: { patternType: 'solid', fgColor: { rgb: 'FFE8F5E9' } }
+    });
+  },
+
+  _applyStyleToWs(ws, aoa, styleFn, dataStartRow) {
+    const range = XLSX.utils.decode_range(`A1:${XLSX.utils.encode_cell({ r: aoa.length - 1, c: aoa[0].length - 1 })}`);
+    for (let R = range.s.r; R <= range.e.r; R++) {
+      for (let C = range.s.c; C <= range.e.c; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!ws[ref]) ws[ref] = { v: '' };
+        ws[ref].s = styleFn(R, C, ws[ref].v);
+      }
     }
+  },
+
+  _doExport(wb, fileName) {
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+    const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+    wx.getFileSystemManager().writeFile({
+      filePath: fullPath,
+      data: wbout,
+      encoding: 'base64',
+      success: () => {
+        wx.openDocument({
+          filePath: fullPath,
+          fileType: 'xlsx',
+          showMenu: true,
+          success: () => wx.showToast({ title: '已打开Excel', icon: 'success' }),
+          fail: () => wx.showModal({
+            title: '导出成功',
+            content: `文件已保存为 ${fileName}`,
+            showCancel: false
+          })
+        });
+      },
+      fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
+    });
   },
 
   // 导出当前生成的号码
@@ -907,24 +991,83 @@ Page({
     }
 
     const modeName = mode === 'double' ? '双色球' : '大乐透';
-    const brownStr = brownBalls.map(n => String(n).padStart(2, '0')).join(',');
-    const greenStr = greenBalls.map(n => String(n).padStart(2, '0')).join(',');
+    const brownLabel = mode === 'double' ? '红球' : '棕球';
+    const greenLabel = mode === 'double' ? '蓝球' : '绿球';
+    const maxBalls = Math.max(brownBalls.length, greenBalls.length);
 
-    const aoa = [
-      ['彩票号码导出'],
-      ['生成时间', new Date().toLocaleString()],
-      ['彩种', modeName],
-      ['红球/棕球', brownStr],
-      ['蓝球/绿球', greenStr],
-      [],
-      ['说明：此号码由模拟器随机生成，仅供参考']
+    // 构建球号展示区域 aoa，每列一个球
+    // 行0=标签(棕/红球、绿/蓝球)，行1=球号
+    const ballRows = [
+      [brownLabel, greenLabel],
+      brownBalls.map(n => String(n).padStart(2, '0')),
+      greenBalls.map(n => String(n).padStart(2, '0'))
     ];
 
-    const fileName = `lottery_${Date.now()}.xlsx`;
-    this._exportToExcel(aoa, '彩票号码', fileName);
+    // 信息行 aoa（左侧2列标签+值，右侧3列留空）
+    const infoAoa = [
+      ['生成时间', new Date().toLocaleString('zh-CN')],
+      ['彩种', modeName],
+      ['备注', '此号码由模拟器随机生成，仅供参考']
+    ];
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ['取数模拟器 - 彩票号码导出'],
+      [],
+      [brownLabel, greenLabel, '', '', brownLabel, greenLabel],
+      brownBalls.map(n => String(n).padStart(2, '0')),
+      greenBalls.map(n => String(n).padStart(2, '0')),
+      [],
+      ['生成时间', new Date().toLocaleString('zh-CN'), '', '', '彩种', modeName],
+      ['备注', '此号码由模拟器随机生成，仅供参考']
+    ]);
+
+    const ballColCount = maxBalls;
+    ws['!cols'] = [
+      { wch: 16 }, { wch: 12 }, { wch: 3 },
+      ...Array(ballColCount).fill({ wch: 8 }),
+      { wch: 3 },
+      { wch: 16 }, { wch: 12 }
+    ];
+
+    // 样式：标题行（合并 A1:G1）
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }];
+    for (let C = 0; C < 7; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 0, c: C });
+      ws[ref] = ws[ref] || { v: '' };
+      ws[ref].s = this._makeTitleStyle();
+    }
+
+    // 球号区样式（行2-4，跳过 A 列标签）
+    for (let R = 2; R <= 4; R++) {
+      const ballCount = R === 3 ? brownBalls.length : greenBalls.length;
+      for (let C = 1; C <= ballCount; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        ws[ref] = ws[ref] || { v: '' };
+        ws[ref].s = R === 3 ? this._makeBrownBallStyle() : this._makeGreenBallStyle();
+      }
+      // A 列标签也用球号色
+      const labelRef = XLSX.utils.encode_cell({ r: R, c: 0 });
+      ws[labelRef].s = R === 3 ? this._makeBrownBallStyle() : this._makeGreenBallStyle();
+    }
+
+    // 信息行（行6-7）
+    for (let R = 6; R <= 7; R++) {
+      const cells = R === 6
+        ? [['A', '生成时间'], ['B', new Date().toLocaleString('zh-CN')], ['F', '彩种'], ['G', modeName]]
+        : [['A', '备注'], ['B', '此号码由模拟器随机生成，仅供参考']];
+      cells.forEach(([col, val]) => {
+        const colIdx = col.charCodeAt(0) - 65;
+        const ref = XLSX.utils.encode_cell({ r: R, c: colIdx });
+        ws[ref] = { v: val, s: colIdx === 0 || colIdx === 5 ? this._makeLabelStyle() : this._makeValueStyle() };
+      });
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, '彩票号码');
+    this._doExport(wb, `lottery_${Date.now()}.xlsx`);
   },
 
-  // 导出发票到Excel
+  // 导出已生成的号码列表
   copyNotesToClipboard() {
     const { generatedNotes, mode } = this.data;
     if (generatedNotes.length === 0) {
@@ -933,31 +1076,106 @@ Page({
     }
 
     const modeName = mode === 'double' ? '双色球' : '大乐透';
-    const aoa = [
-      ['序号', '红球/棕球', '蓝球/绿球', '是否选中']
-    ];
+    const brownLabel = mode === 'double' ? '红球' : '棕球';
+    const greenLabel = mode === 'double' ? '蓝球' : '绿球';
+    const brownCount = mode === 'double' ? 6 : 5;
+    const greenCount = mode === 'double' ? 1 : 2;
+
+    // 表头：序号 + 棕球×N + 绿球×N
+    const headerCells = ['序号'];
+    for (let i = 0; i < brownCount; i++) headerCells.push(brownLabel);
+    for (let i = 0; i < greenCount; i++) headerCells.push(greenLabel);
+
+    const aoa = [headerCells];
 
     generatedNotes.forEach((note, index) => {
-      const brownStr = note.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
-      const greenStr = note.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
-      aoa.push([
-        index + 1,
-        brownStr,
-        greenStr,
-        note.selected ? '是' : '否'
-      ]);
+      const row = [String(index + 1)];
+      // 棕球
+      for (let i = 0; i < brownCount; i++) {
+        row.push(note.brownBalls[i] != null ? String(note.brownBalls[i]).padStart(2, '0') : '');
+      }
+      // 绿球
+      for (let i = 0; i < greenCount; i++) {
+        row.push(note.greenBalls[i] != null ? String(note.greenBalls[i]).padStart(2, '0') : '');
+      }
+      aoa.push(row);
     });
 
-    // 添加统计行
+    // 统计区
     const selectedCount = generatedNotes.filter(n => n.selected).length;
     aoa.push([]);
-    aoa.push(['统计', '', '', '']);
-    aoa.push(['总注数', generatedNotes.length]);
-    aoa.push(['已选中', selectedCount]);
-    aoa.push(['总金额', `¥${selectedCount * 2}`]);
+    aoa.push(['统计']);
+    aoa.push([`总注数  ${generatedNotes.length}`]);
+    aoa.push([`已选注  ${selectedCount}`]);
+    aoa.push([`总金额  ¥${selectedCount * 2}`]);
 
-    const fileName = `lottery_notes_${Date.now()}.xlsx`;
-    this._exportToExcel(aoa, '号码列表', fileName);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+    // 列宽：序号6，其余按球号列宽
+    const cols = [{ wch: 6 }];
+    for (let i = 0; i < brownCount; i++) cols.push({ wch: 6 });
+    for (let i = 0; i < greenCount; i++) cols.push({ wch: 6 });
+    ws['!cols'] = cols;
+
+    const totalCols = 1 + brownCount + greenCount;
+    const lastDataRow = generatedNotes.length - 1; // 0-indexed
+    const statsStartRow = lastDataRow + 2; // 空行后
+
+    // 标题行
+    const titleRef = `A1:${XLSX.utils.encode_cell({ r: 0, c: totalCols - 1 })}`;
+    for (let C = 0; C < totalCols; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 0, c: C });
+      ws[ref].s = this._makeTitleStyle();
+    }
+    // 合并标题行
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: totalCols - 1 } }];
+
+    // 表头行
+    for (let C = 0; C < totalCols; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 1, c: C });
+      if (!ws[ref]) ws[ref] = { v: '' };
+      ws[ref].s = this._makeHeaderStyle();
+    }
+
+    // 数据行
+    for (let R = 2; R <= 1 + lastDataRow + 1; R++) {
+      const isOdd = (R - 2) % 2 === 0;
+      const rowStyle = isOdd ? this._makeOddRowStyle() : this._makeEvenRowStyle();
+      for (let C = 0; C < totalCols; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!ws[ref]) ws[ref] = { v: '' };
+        if (C === 0) {
+          ws[ref].s = rowStyle;
+        } else if (C <= brownCount) {
+          // 棕球列
+          const ballVal = parseInt(ws[ref].v, 10);
+          ws[ref].s = !isNaN(ballVal) ? this._makeBrownBallStyle() : rowStyle;
+        } else {
+          // 绿球列
+          const ballVal = parseInt(ws[ref].v, 10);
+          ws[ref].s = !isNaN(ballVal) ? this._makeGreenBallStyle() : rowStyle;
+        }
+      }
+    }
+
+    // 统计行
+    for (let R = statsStartRow; R < aoa.length; R++) {
+      const isLabelRow = R === statsStartRow;
+      const isProfitRow = R === statsStartRow + 4;
+      const baseStyle = isLabelRow ? this._makeStatLabelStyle()
+        : isProfitRow ? this._makeStatValueStyle(true) : this._makeStatValueStyle(false);
+      for (let C = 0; C < totalCols; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!ws[ref]) ws[ref] = { v: '' };
+        ws[ref].s = baseStyle;
+      }
+      // 合并统计行
+      ws['!merges'].push({ s: { r: R, c: 0 }, e: { r: R, c: totalCols - 1 } });
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, `${modeName}号码列表`);
+    this._doExport(wb, `lottery_notes_${Date.now()}.xlsx`);
   },
 
   // 导出模拟结果
@@ -969,38 +1187,44 @@ Page({
     }
 
     const modeName = mode === 'double' ? '双色球' : '大乐透';
-    const drawBrown = drawResult.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
-    const drawGreen = drawResult.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
-
-    const aoa = [
-      ['模拟开奖结果'],
-      ['模拟时间', new Date().toLocaleString()],
-      ['彩种', modeName],
-      ['开奖红球/棕球', drawBrown],
-      ['开奖蓝球/绿球', drawGreen],
-      [],
-      ['单期模拟汇总'],
-      ['总注数', matchResults.length],
-      ['总成本', `¥${singleResult.totalCost}`],
-      ['总收益', `¥${singleResult.totalRevenue}`],
-      ['净利润', `¥${singleResult.netProfit}`],
-      [],
-      ['各注详情']
-    ];
-
-    // 表头
     const brownLabel = mode === 'double' ? '红球' : '棕球';
     const greenLabel = mode === 'double' ? '蓝球' : '绿球';
-    aoa[aoa.length - 1] = ['序号', brownLabel, greenLabel, `中${brownLabel}`, `中${greenLabel}`, '奖项', '奖金'];
+    const brownCount = mode === 'double' ? 6 : 5;
+    const greenCount = mode === 'double' ? 1 : 2;
 
-    // 数据行
+    // 开奖结果区
+    const resultHeader = ['开奖结果', '', '', '', ''];
+    const resultBrown = [brownLabel + '：', ...drawResult.brownBalls.map(n => String(n).padStart(2, '0'))];
+    const resultGreen = [greenLabel + '：', ...drawResult.greenBalls.map(n => String(n).padStart(2, '0'))];
+    const resultTime = ['开奖时间', new Date().toLocaleString('zh-CN')];
+
+    // 汇总区
+    const summary = [
+      ['汇总'],
+      [`总注数：${matchResults.length}`],
+      [`总成本：¥${singleResult.totalCost}`],
+      [`总收益：¥${singleResult.totalRevenue}`],
+      [`净利润：¥${singleResult.netProfit}`]
+    ];
+
+    // 详情表头
+    const detailHeader = ['序号', brownLabel, greenLabel, `中${brownLabel}`, `中${greenLabel}`, '奖项', '奖金'];
+    const detailAoa = [detailHeader];
+
+    // 奖项颜色映射
+    const awardColors = {
+      '一等奖': 'FFFFB300', '二等奖': 'FFC0C0C0', '三等奖': 'FFFF7043',
+      '四等奖': 'FF81C784', '五等奖': 'FF64B5F6', '六等奖': 'FFBA68C8',
+      '七等奖': 'FF90A4AE', '未中奖': 'FFE0E0E0'
+    };
+
     matchResults.forEach((item, index) => {
-      const brownStr = item.brownBalls.map(n => String(n).padStart(2, '0')).join(',');
-      const greenStr = item.greenBalls.map(n => String(n).padStart(2, '0')).join(',');
-      aoa.push([
+      const brownStr = item.brownBalls.map(n => String(n).padStart(2, '0'));
+      const greenStr = item.greenBalls.map(n => String(n).padStart(2, '0'));
+      detailAoa.push([
         index + 1,
-        brownStr,
-        greenStr,
+        ...brownStr,
+        ...greenStr,
         item.matchedBrown,
         item.matchedGreen,
         item.matchLevel,
@@ -1008,7 +1232,106 @@ Page({
       ]);
     });
 
-    const fileName = `lottery_result_${Date.now()}.xlsx`;
-    this._exportToExcel(aoa, '模拟结果', fileName);
+    const wb = XLSX.utils.book_new();
+
+    // Sheet1：开奖+汇总
+    const sumWs = XLSX.utils.aoa_to_sheet([
+      [`取数模拟器 - ${modeName}模拟结果`],
+      [],
+      resultHeader,
+      resultBrown,
+      resultGreen,
+      resultTime,
+      [],
+      ['模拟汇总'],
+      [`总注数  ${matchResults.length}`],
+      [`总成本  ¥${singleResult.totalCost}`],
+      [`总收益  ¥${singleResult.totalRevenue}`],
+      [`净利润  ¥${singleResult.netProfit}`]
+    ]);
+    sumWs['!cols'] = [{ wch: 18 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 8 }];
+    sumWs['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }];
+
+    // 标题
+    for (let C = 0; C < 7; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 0, c: C });
+      sumWs[ref] = sumWs[ref] || { v: '' };
+      sumWs[ref].s = this._makeTitleStyle();
+    }
+
+    // 球号区样式（跳过A列标签）
+    for (let R = 2; R <= 4; R++) {
+      const ballCount = R === 3 ? brownCount : greenCount;
+      for (let C = 1; C <= ballCount; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!sumWs[ref]) sumWs[ref] = { v: '' };
+        sumWs[ref].s = R === 3 ? this._makeBrownBallStyle() : this._makeGreenBallStyle();
+      }
+      // A列标签样式
+      const labelRef = XLSX.utils.encode_cell({ r: R, c: 0 });
+      sumWs[labelRef].s = R === 3 ? this._makeBrownBallStyle() : this._makeGreenBallStyle();
+    }
+
+    // 汇总区
+    const sumRowStart = 8;
+    sumWs[`A${sumRowStart}`].s = this._makeStatLabelStyle();
+    for (let R = sumRowStart + 1; R <= sumRowStart + 4; R++) {
+      const ref = `A${R}`;
+      if (!sumWs[ref]) sumWs[ref] = { v: '' };
+      sumWs[ref].s = this._makeStatValueStyle(R === sumRowStart + 4);
+    }
+    for (let R = sumRowStart; R <= sumRowStart + 4; R++) {
+      sumWs['!merges'].push({ s: { r: R, c: 0 }, e: { r: R, c: 6 } });
+    }
+
+    XLSX.utils.book_append_sheet(wb, sumWs, '模拟汇总');
+
+    // Sheet2：各注详情
+    const detailWs = XLSX.utils.aoa_to_sheet(detailAoa);
+    const detailColCount = detailHeader.length;
+    detailWs['!cols'] = [
+      { wch: 6 },
+      ...Array(brownCount).fill({ wch: 6 }),
+      ...Array(greenCount).fill({ wch: 6 }),
+      { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 12 }
+    ];
+
+    // 详情标题行
+    detailWs['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: detailColCount - 1 } }];
+
+    // 详情表头
+    for (let C = 0; C < detailColCount; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 0, c: C });
+      if (!detailWs[ref]) detailWs[ref] = { v: '' };
+      detailWs[ref].s = this._makeTitleStyle();
+    }
+    for (let C = 0; C < detailColCount; C++) {
+      const ref = XLSX.utils.encode_cell({ r: 1, c: C });
+      if (!detailWs[ref]) detailWs[ref] = { v: '' };
+      detailWs[ref].s = this._makeHeaderStyle();
+    }
+
+    // 详情数据行
+    const prizeLevelIdx = 5; // 奖项在数组中的列索引（0=序号,1-6=棕球,7-8=绿球,9=中棕,10=中绿,11=奖项,12=奖金）
+    for (let R = 2; R < detailAoa.length; R++) {
+      const isOdd = (R - 2) % 2 === 0;
+      const rowBase = isOdd ? this._makeOddRowStyle() : this._makeEvenRowStyle();
+      for (let C = 0; C < detailColCount; C++) {
+        const ref = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!detailWs[ref]) detailWs[ref] = { v: '' };
+        if (C >= 1 && C <= brownCount) {
+          const ballVal = parseInt(detailWs[ref].v, 10);
+          detailWs[ref].s = !isNaN(ballVal) ? this._makeBrownBallStyle() : rowBase;
+        } else if (C > brownCount && C <= brownCount + greenCount) {
+          const ballVal = parseInt(detailWs[ref].v, 10);
+          detailWs[ref].s = !isNaN(ballVal) ? this._makeGreenBallStyle() : rowBase;
+        } else {
+          detailWs[ref].s = rowBase;
+        }
+      }
+    }
+
+    XLSX.utils.book_append_sheet(wb, detailWs, '各注详情');
+    this._doExport(wb, `lottery_result_${Date.now()}.xlsx`);
   }
 });

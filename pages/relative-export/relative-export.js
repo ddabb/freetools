@@ -1,7 +1,7 @@
 // pages/relative-export/relative-export.js
 // 亲戚关系表导出页面
 
-const XLSX = require('../../libs/xlsx.mini.min.js');
+const XLSX = require('../../libs/xlsx.full.min.js');
 
 Page({
   data: {

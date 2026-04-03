@@ -1,7 +1,7 @@
 // pages/changelog/changelog.js
 // 版本日志页面
 
-const XLSX = require('../../libs/xlsx.mini.min.js');
+const XLSX = require('../../libs/xlsx.full.min.js');
 
 Page({
   data: {
@@ -15,7 +15,7 @@ Page({
     this.loadChangelog();
   },
 
-  // 导出为 Excel (使用 xlsx.mini.min.js，小程序专用优化版)
+  // 导出为 Excel (使用 xlsx.full.min.js，小程序专用优化版)
   onExportExcel() {
     if (this.data.exporting) return;
 
