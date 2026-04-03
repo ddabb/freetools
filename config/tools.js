@@ -273,6 +273,16 @@ const tools = [
     description: '将文字转换为图片，支持添加出处和二维码'
   },
   {
+    id: 'idiom-solitaire',
+    name: '成语接龙',
+    icon: '🐉',
+    color: 'blue',
+    url: '/packages/life/pages/idiom-solitaire/idiom-solitaire',
+    categories: ['生活工具'],
+    keywords: ['成语', '接龙', '文字游戏', '猜成语'],
+    description: '成语查询、人机对战、DFS最长接龙链'
+  },
+  {
     id: 'qrcode',
     name: '生成二维码',
     icon: '📱',
@@ -612,6 +622,7 @@ const commonTools = [
   tools.find(t => t.id === 'time-tool'),     // 时间工具
   tools.find(t => t.id === 'datediff'),       // 日期差计算
   tools.find(t => t.id === 'qrcode'),        // 生成二维码
+  tools.find(t => t.id === 'idiom-solitaire'), // 成语接龙
   tools.find(t => t.id === 'copywriting'),   // 文案工具
   tools.find(t => t.id === 'mortgage'),      // 房贷计算
   tools.find(t => t.id === 'password-generator'), // 密码生成
