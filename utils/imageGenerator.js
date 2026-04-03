@@ -369,7 +369,7 @@ function drawFrom(ctx, from, options = {}) {
     logDraw('绘制来源信息前设置字体', { fontSize: 16, fontType: 'elegant', isBold: false, actualFont: ctx.font });
     ctx.fillStyle = '#8a9aaf';
     ctx.textAlign = align;
-    const text = '—— ' + from;
+    const text = '@ ' + from;
     if (align === 'center') {
       ctx.fillText(text, x, y);
     } else {
