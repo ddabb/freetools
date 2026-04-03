@@ -1,7 +1,7 @@
 // pages/changelog/changelog.js
 // 版本日志页面
 
-const XLSX = require('../../libs/xlsx.full.min.js');
+const XLSX = require('../../libs/xlsx.mini.min.js');
 
 Page({
   data: {
@@ -15,7 +15,7 @@ Page({
     this.loadChangelog();
   },
 
-  // 导出为 Excel (使用 xlsx.full.min.js，小程序专用优化版)
+  // 导出为 Excel
   onExportExcel() {
     if (this.data.exporting) return;
 
@@ -25,60 +25,76 @@ Page({
       return;
     }
 
-    this.setData({ exporting: true });
+    wx.showModal({
+      title: '确认导出',
+      content: '确定要导出更新日志为 Excel 文件吗？',
+      success: (res) => {
+        if (!res.confirm) return;
+        this.setData({ exporting: true });
 
-    try {
-      // 构建二维数组（表头 + 数据行）
-      const aoa = [
-        ['版本', '日期', '类型', '标题', '更新内容']  // 表头
-      ];
-
+        try {
+          const aoa = [['版本', '日期', '类型', '标题', '更新内容']];
       changelog.changelog.forEach(item => {
         const changes = item.changes ? item.changes.join('；') : '';
         const typeText = item.type === 'feature' ? '新功能' : item.type === 'fix' ? '修复' : '其他';
-        aoa.push([
-          item.version || '',
-          item.date || '',
-          typeText,
-          item.title || '',
-          changes
-        ]);
+        aoa.push([item.version || '', item.date || '', typeText, item.title || '', changes]);
       });
 
-      // 1. 将数据转为工作表
       const ws = XLSX.utils.aoa_to_sheet(aoa);
+      const ncol = aoa[0].length;
+      const nrow = aoa.length;
 
-      // 2. 设置列宽（自动适应）
+      const b = { style: 'thin', color: { rgb: 'FFAAAAAA' } };
+      const border = { top: b, bottom: b, left: b, right: b };
+      const mk = (bg, fc, bold, align) => ({ fill: { fgColor: { rgb: bg } }, font: { color: { rgb: fc }, bold }, border, alignment: { horizontal: align || 'center', vertical: 'center' } });
+
+      // 表头
+      const hStyle = mk('FF1F4E79', 'FFFFFFFF', true);
+      for (let c = 0; c < ncol; c++) {
+        const ref = XLSX.utils.encode_cell({ r: 0, c });
+        ws[ref].s = hStyle;
+      }
+
+      // 类型样式
+      const typeStyles = {
+        '新功能': mk('FF388E3C', 'FFFFFFFF', true),
+        '修复': mk('FFF57C00', 'FFFFFFFF', true),
+        '其他': mk('FF757575', 'FFFFFFFF', true)
+      };
+      const oddStyle = mk('FFDAEEF3', 'FF333333', false, 'left');
+      const evenStyle = mk('FFFFFFFF', 'FF333333', false, 'left');
+
+      for (let r = 1; r < nrow; r++) {
+        const rowStyle = r % 2 === 1 ? oddStyle : evenStyle;
+        const typeText = aoa[r][2];
+        const tStyle = typeStyles[typeText] || rowStyle;
+        for (let c = 0; c < ncol; c++) {
+          const ref = XLSX.utils.encode_cell({ r, c });
+          ws[ref].s = c === 2 ? tStyle : rowStyle;
+        }
+      }
+
+      // 列宽
       ws['!cols'] = [
-        { wch: 12 },  // 版本
-        { wch: 14 },  // 日期
-        { wch: 8 },   // 类型
-        { wch: 30 },  // 标题
-        { wch: 50 }   // 更新内容
+        { wch: 12 }, { wch: 14 }, { wch: 10 }, { wch: 32 }, { wch: 60 }
       ];
+      // 行高
+      ws['!rows'] = Array.from({ length: nrow }, () => ({ hpt: 18 }));
 
-      // 3. 创建工作簿
       const wb = XLSX.utils.book_new();
-
-      // 4. 添加工作表
       XLSX.utils.book_append_sheet(wb, ws, '更新日志');
-
-      // 5. 生成 base64 格式的 Excel 文件
       const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
 
-      // 6. 保存文件
       const now = new Date();
       const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
       const fileName = `changelog_${dateStr}.xlsx`;
       const fullPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
 
-      const fs = wx.getFileSystemManager();
-      fs.writeFile({
+      wx.getFileSystemManager().writeFile({
         filePath: fullPath,
         data: wbout,
         encoding: 'base64',
         success: () => {
-          // 7. 打开文件（自动识别为 Excel）
           wx.openDocument({
             filePath: fullPath,
             fileType: 'xlsx',
@@ -87,8 +103,7 @@ Page({
               this.setData({ exporting: false });
               wx.showToast({ title: '已打开Excel', icon: 'success' });
             },
-            fail: (err) => {
-              console.error('[changelog] 打开文件失败', err);
+            fail: () => {
               this.setData({ exporting: false });
               wx.showModal({
                 title: '导出成功',
@@ -98,8 +113,7 @@ Page({
             }
           });
         },
-        fail: (err) => {
-          console.error('[changelog] 写入文件失败', err);
+        fail: () => {
           this.setData({ exporting: false });
           wx.showToast({ title: '导出失败', icon: 'none' });
         }
@@ -109,6 +123,8 @@ Page({
       this.setData({ exporting: false });
       wx.showToast({ title: '导出失败', icon: 'none' });
     }
+      }   // 确认弹窗 success 结束
+    });
   },
 
   // 从 jsDelivr CDN 加载 changelog

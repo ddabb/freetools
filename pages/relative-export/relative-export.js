@@ -79,11 +79,16 @@ Page({
       return;
     }
 
-    this.setData({ exporting: true });
+    wx.showModal({
+      title: '确认导出',
+      content: '确定要导出亲戚关系对照表为 Excel 文件吗？',
+      success: (res) => {
+        if (!res.confirm) return;
+        this.setData({ exporting: true });
 
-    try {
-      // 构建 aoa：第一行是表头
-      const aoa = [['角色', ...cols]];
+        try {
+          // 构建 aoa：第一行是表头
+          const aoa = [['角色', ...cols]];
 
       rows.forEach(row => {
         aoa.push(row);
@@ -143,6 +148,8 @@ Page({
       this.setData({ exporting: false });
       wx.showToast({ title: '导出失败', icon: 'none' });
     }
+      }   // 确认弹窗 success 结束
+    });
   },
 
   onShareAppMessage() {

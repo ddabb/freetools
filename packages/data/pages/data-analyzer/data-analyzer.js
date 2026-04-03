@@ -205,12 +205,18 @@ Page({
       return;
     }
 
-    const { analysisResult, inputData, importedNumbers } = this.data;
-    
-    // 准备数据
-    const aoa = [
-      ['数据统计分析报告'],
-      ['生成时间', new Date().toLocaleString()],
+    wx.showModal({
+      title: '确认导出',
+      content: '确定要导出统计分析结果为 Excel 文件吗？',
+      success: (res) => {
+        if (!res.confirm) return;
+
+        const { analysisResult, inputData, importedNumbers } = this.data;
+
+        // 准备数据
+        const aoa = [
+          ['数据统计分析报告'],
+          ['生成时间', new Date().toLocaleString()],
       [],
       ['原始数据'],
       inputData || '无',
@@ -245,6 +251,8 @@ Page({
     }
 
     this._exportToExcel(aoa, '统计分析', `data_analysis_${Date.now()}.xlsx`);
+      }   // 确认弹窗 success 结束
+    });
   },
 
   // ========== CSV 导出 ==========
