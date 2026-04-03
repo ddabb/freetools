@@ -1,7 +1,7 @@
 // packages/knowledge/pages/knowledgedetail/knowledgedetail.js
 
-const utils = require('../../../utils/index');
-const knowledgeCategory = require('../../../utils/knowledgeCategory');
+const utils = require('../../utils/index');
+const knowledgeCategory = require('../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 
@@ -353,8 +353,14 @@ Page({
    */
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/knowledge/pages/knowledgelist/knowledgelist?tag=${encodeURIComponent(tag)}`
+    wx.switchTab({
+      url: '/pages/knowledgelist/knowledgelist',
+      success: () => {
+        const app = getApp();
+        app.globalData = app.globalData || {};
+        app.globalData.pendingTag = tag;
+        app.globalData.pendingCategory = '';
+      }
     });
   },
 
@@ -363,7 +369,7 @@ Page({
    */
   onTagListTap() {
     wx.navigateTo({
-      url: '/packages/knowledge/pages/taglist/taglist'
+      url: '/pages/taglist/taglist'
     });
   },
 
@@ -372,7 +378,7 @@ Page({
    */
   onCategoryListTap() {
     wx.navigateTo({
-      url: '/packages/knowledge/pages/categorylist/categorylist'
+      url: '/pages/categorylist/categorylist'
     });
   },
 
@@ -382,9 +388,14 @@ Page({
   onCategoryTap() {
     const { article } = this.data;
     if (!article || !article.category) return;
-    
-    wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${article.category}`
+    wx.switchTab({
+      url: '/pages/knowledgelist/knowledgelist',
+      success: () => {
+        const app = getApp();
+        app.globalData = app.globalData || {};
+        app.globalData.pendingCategory = article.category;
+        app.globalData.pendingTag = '';
+      }
     });
   },
 
@@ -394,7 +405,7 @@ Page({
   onRelatedTap(e) {
     const { filename } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
+      url: `/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 
@@ -503,7 +514,7 @@ Page({
 
     return {
       title: `${article.title} - 随身百科`,
-      path: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${filename}`
+      path: `/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     };
   },
 

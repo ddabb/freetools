@@ -1,17 +1,35 @@
-// packages/knowledge/pages/taglist/taglist.js
+// packages/knowledge/pages/categorylist/categorylist.js
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 Page({
   data: {
-    tags: [],
-    filteredTags: [],
-    searchKeyword: '',
+    categories: [],
     loading: true,
     error: false,
     errorMsg: '',
     scrollHeight: 0
   },
+
+  getLeafCategoryName(category) {
+    if (!category) return '未分类';
+
+    const parts = String(category).split('/').filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : category;
+  },
+
+  flattenCategories(node, list = []) {
+    Object.values((node && node.children) || {}).forEach(category => {
+      list.push({
+        name: category.path,
+        label: category.name || this.getLeafCategoryName(category.path),
+        count: category.count
+      });
+      this.flattenCategories(category, list);
+    });
+    return list;
+  },
+
 
   requestData(url) {
     return new Promise((resolve, reject) => {
@@ -38,7 +56,7 @@ Page({
     this.setData({ scrollHeight });
 
     wx.setNavigationBarTitle({
-      title: '标签列表'
+      title: '分类列表'
     });
 
     // 设置分享按钮
@@ -47,44 +65,46 @@ Page({
       menus: ['shareAppMessage', 'shareTimeline']
     });
 
-    this.loadTags();
+    this.loadCategories();
   },
 
   // 分享给好友
   onShareAppMessage() {
     return {
-      title: '知识库标签列表',
-      path: '/packages/knowledge/pages/taglist/taglist'
+      title: '知识库分类列表',
+      path: '/pages/categorylist/categorylist'
     };
   },
 
   // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: '知识库标签列表'
+      title: '知识库分类列表'
     };
   },
 
-  async loadTags() {
+  async loadCategories() {
     this.setData({
       loading: true,
       error: false,
       errorMsg: ''
     });
 
-    const url = CDN_BASE + 'tags.json';
+    const url = CDN_BASE + 'category-tree.json';
 
     try {
       const res = await this.requestData(url);
-      const tags = res.tags || [];
+      const categoryList = this.flattenCategories(res)
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'zh-CN'));
+
+
       this.setData({
-        tags,
-        filteredTags: tags,
+        categories: categoryList,
         loading: false,
         error: false
       });
     } catch (err) {
-      console.error('加载标签失败:', err);
+      console.error('加载分类失败:', err);
       this.showError('网络错误，请检查连接');
     } finally {
       wx.stopPullDownRefresh();
@@ -92,52 +112,17 @@ Page({
   },
 
 
-  /**
-   * 搜索输入
-   */
-  onSearchInput(e) {
-    const keyword = e.detail.value;
-    this.setData({ searchKeyword: keyword });
-    this.filterTags(keyword);
-  },
-
-  /**
-   * 搜索确认
-   */
-  onSearchConfirm(e) {
-    const keyword = e.detail.value;
-    this.setData({ searchKeyword: keyword });
-    this.filterTags(keyword);
-  },
-
-  /**
-   * 清除搜索
-   */
-  clearSearch() {
-    this.setData({ searchKeyword: '' });
-    this.filterTags('');
-  },
-
-  /**
-   * 过滤标签
-   */
-  filterTags(keyword) {
-    const { tags } = this.data;
-    if (!keyword) {
-      this.setData({ filteredTags: tags });
-      return;
-    }
-
-    const filtered = tags.filter(tag => 
-      tag.name.toLowerCase().includes(keyword.toLowerCase())
-    );
-    this.setData({ filteredTags: filtered });
-  },
-
-  onTagTap(e) {
-    const { tag } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgelist/knowledgelist?tag=${tag}`
+  onCategoryTap(e) {
+    const { category } = e.currentTarget.dataset;
+    wx.switchTab({
+      url: '/pages/knowledgelist/knowledgelist',
+      success: () => {
+        // switchTab 不支持传参，跳转后通过全局变量告知 knowledgelist 筛选
+        const app = getApp();
+        app.globalData = app.globalData || {};
+        app.globalData.pendingCategory = category;
+        app.globalData.pendingTag = '';
+      }
     });
   },
 
@@ -163,7 +148,7 @@ Page({
 
   onRefresh() {
     wx.clearStorageSync();
-    this.loadTags();
+    this.loadCategories();
   }
 });
 

@@ -24,7 +24,7 @@
       "list": [
         {
           "name": "知识列表",
-          "pathName": "pages/knowledge/knowledgelist/knowledgelist",
+          "pathName": "pages/knowledgelist/knowledgelist",
           "query": "",
           "scene": null,
           "launchMode": "default"

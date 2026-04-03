@@ -1,10 +1,10 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/knowledge/knowledgelist/knowledgelist",
-    "pages/knowledge/knowledgedetail/knowledgedetail",
-    "pages/knowledge/categorylist/categorylist",
-    "pages/knowledge/taglist/taglist",
+    "pages/knowledgelist/knowledgelist",
+    "pages/knowledgedetail/knowledgedetail",
+    "pages/categorylist/categorylist",
+    "pages/taglist/taglist",
     "pages/changelog/changelog",
     "pages/about/about"
   ],
@@ -173,7 +173,7 @@
         "selectedIconPath": "images/tabbar/home-active.png"
       },
       {
-        "pagePath": "pages/knowledge/knowledgelist/knowledgelist",
+        "pagePath": "pages/knowledgelist/knowledgelist",
         "text": "寻识",
         "iconPath": "images/tabbar/wiki-normal.png",
         "selectedIconPath": "images/tabbar/wiki-active.png"

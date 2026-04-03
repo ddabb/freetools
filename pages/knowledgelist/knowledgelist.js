@@ -1,5 +1,5 @@
 // packages/knowledge/pages/knowledgelist/knowledgelist.js
-const knowledgeCategory = require('../../../utils/knowledgeCategory');
+const knowledgeCategory = require('../../utils/knowledgeCategory');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
 
@@ -206,7 +206,28 @@ Page({
 
 
   onShow() {
-    // 页面显示时可以刷新
+    // 接收来自 categorylist / taglist 通过 globalData 传来的筛选参数
+    const app = getApp();
+    const gd = (app && app.globalData) || {};
+    if (gd.pendingCategory !== undefined || gd.pendingTag !== undefined) {
+      const category = gd.pendingCategory || '';
+      const tag = gd.pendingTag || '';
+      // 清除，避免重复触发
+      app.globalData.pendingCategory = undefined;
+      app.globalData.pendingTag = undefined;
+
+      if (category !== this.data.currentCategory || tag !== this.data.currentTag) {
+        this.setData({
+          currentCategory: category,
+          currentTag: tag,
+          searchKeyword: '',
+          page: 1,
+          list: []
+        });
+        this.setPageTitle(category, tag);
+        this.loadArticles();
+      }
+    }
   },
 
   onPullDownRefresh() {
@@ -537,8 +558,9 @@ Page({
    */
   onArticleTap(e) {
     const { filename } = e.currentTarget.dataset;
+    console.log('点击文章，文件名：', filename);
     wx.navigateTo({
-      url: `/packages/knowledge/pages/knowledgedetail/knowledgedetail?filename=${encodeURIComponent(filename)}`
+      url: `/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });
   },
 
@@ -611,7 +633,7 @@ Page({
 
     return {
       title,
-      path: `/packages/knowledge/pages/knowledgelist/knowledgelist?category=${encodeURIComponent(currentCategory)}&tag=${encodeURIComponent(tag)}`
+      path: `/pages/knowledgelist/knowledgelist?category=${currentCategory}&tag=${tag}`
     };
   },
 
