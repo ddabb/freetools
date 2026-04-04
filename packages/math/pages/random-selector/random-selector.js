@@ -1153,7 +1153,7 @@ Page({
         }
 
         // 数据行
-        for (let R = 2; R <= 1 + lastDataRow + 1; R++) {
+        for (let R = 1; R <= 1 + lastDataRow + 1; R++) {
           const isOdd = (R - 2) % 2 === 0;
           const rowStyle = isOdd ? this._makeOddRowStyle() : this._makeEvenRowStyle();
           for (let C = 0; C < totalCols; C++) {

@@ -1,0 +1,122 @@
+<!-- idiom-query.wxml - 成语查询页面 -->
+<view class="container">
+
+  <!-- 加载中 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <text class="loading-text">加载数据中...</text>
+  </view>
+
+  <!-- 固定区域：搜索栏、历史记录、结果头部 -->
+  <view class="sticky-header">
+    <view class="sticky-content">
+      <!-- 搜索框区域 -->
+      <view class="search-bar">
+        <view class="search-row">
+          <view class="search-input-wrap">
+            <input
+              class="search-input"
+              placeholder="输入四字成语，查看可接龙的成语"
+              placeholder-class="search-placeholder"
+              value="{{queryInput}}"
+              bindinput="onQueryInput"
+              bindconfirm="onQueryConfirm"
+              confirm-type="search"
+            />
+            <view class="search-clear" wx:if="{{queryInput}}" bindtap="onClearQuery">✕</view>
+          </view>
+          <view class="search-btn" bindtap="onQuerySearch">查询</view>
+        </view>
+      </view>
+
+      <!-- 历史记录 -->
+      <view class="history-section" wx:if="{{queryHistory.length > 0}}">
+        <view class="history-bar">
+          <text class="history-label">最近：</text>
+          <scroll-view class="history-scroll" scroll-x enhanced show-scrollbar="false">
+            <view class="history-chips">
+              <view
+                class="chip"
+                wx:for="{{queryHistory}}"
+                wx:key="index"
+                data-word="{{item}}"
+                bindtap="onHistoryTap"
+              >{{item}}</view>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+
+      <!-- 结果头部 -->
+      <view class="result-header" wx:if="{{queryResults.length > 0}}">
+        <text class="result-count">{{queryTip}}</text>
+        <view class="copy-btn" bindtap="onCopyResult">📋 复制</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 可滚动内容区域 -->
+  <view class="scrollable-content {{hasContent ? 'has-content' : ''}}">
+    <!-- 提示语（无结果时） -->
+    <view class="empty-tip" wx:if="{{queryResults.length === 0}}">
+      <text class="empty-icon">🀄</text>
+      <text class="empty-text">{{queryTip}}</text>
+    </view>
+
+    <!-- 结果列表 -->
+    <scroll-view
+      class="result-list"
+      wx:if="{{queryResults.length > 0}}"
+      scroll-y
+      enhanced
+      show-scrollbar="false"
+    >
+      <view
+        class="result-item"
+        wx:for="{{queryResults}}"
+        wx:key="index"
+        data-word="{{item.next}}"
+        bindtap="onQueryItemTap"
+      >
+        <view class="result-row">
+          <view class="result-main">
+            <text class="result-word">{{item.word}}</text>
+            <text class="result-arrow-icon">→</text>
+            <text class="result-next">{{item.next}}</text>
+          </view>
+          <view class="result-tail">
+            <text class="result-hint">可接：</text>
+            <text
+              class="result-char"
+              data-next="{{item.next}}"
+              catchtap="onContinueChain"
+              hover-class="result-char-active"
+            >{{item.lastChar}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 详情弹窗 -->
+  <view class="detail-modal {{showDetail ? 'show' : ''}}" catchtap="onDetailClose">
+    <view class="detail-box" catchtap="">
+      <view class="detail-close" bindtap="onDetailClose">✕</view>
+      <view wx:if="{{detailItem}}">
+        <view class="detail-word">{{detailItem.word}}</view>
+        <view class="detail-pinyin">{{detailItem.pinyin}}</view>
+        <view class="detail-section" wx:if="{{detailItem.explanation}}">
+          <view class="detail-section-header">
+            <text class="detail-section-title">释义</text>
+            <view class="detail-copy-btn" bindtap="onCopyExplanation">📋 复制</view>
+          </view>
+          <text class="detail-section-content">{{detailItem.explanation}}</text>
+        </view>
+        <view class="detail-section" wx:if="{{detailItem.derivation}}">
+          <text class="detail-section-title">出处</text>
+          <text class="detail-section-content">{{detailItem.derivation}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

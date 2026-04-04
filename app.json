@@ -42,7 +42,9 @@
         "pages/text-to-image/text-to-image",
         "pages/article-cover/article-cover",
         "pages/qrcode/qrcode",
-        "pages/idiom-solitaire/idiom-solitaire"
+        "pages/idiom-query/idiom-query",
+        "pages/idiom-battle/idiom-battle",
+        "pages/idiom-chain/idiom-chain"
       ]
     },
     {

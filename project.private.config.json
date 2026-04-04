@@ -24,7 +24,7 @@
       "list": [
         {
           "name": "成语接龙",
-          "pathName": "packages/life/pages/idiom-solitaire/idiom-solitaire",
+          "pathName": "packages/life/pages/idiom-query/idiom-query",
           "query": "",
           "scene": null,
           "launchMode": "default"

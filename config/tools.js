@@ -273,14 +273,34 @@ const tools = [
     description: '将文字转换为图片，支持添加出处和二维码'
   },
   {
-    id: 'idiom-solitaire',
-    name: '成语接龙',
-    icon: '🐉',
+    id: 'idiom-query',
+    name: '成语查询',
+    icon: '🔍',
     color: 'blue',
-    url: '/packages/life/pages/idiom-solitaire/idiom-solitaire',
+    url: '/packages/life/pages/idiom-query/idiom-query',
     categories: ['生活工具'],
-    keywords: ['成语', '接龙', '文字游戏', '猜成语'],
-    description: '成语查询、人机对战、DFS最长接龙链'
+    keywords: ['成语', '查询', '接龙', '文字游戏'],
+    description: '查询成语可接龙的下联，点击查看释义'
+  },
+  {
+    id: 'idiom-battle',
+    name: '成语对战',
+    icon: '⚔️',
+    color: 'red',
+    url: '/packages/life/pages/idiom-battle/idiom-battle',
+    categories: ['生活工具'],
+    keywords: ['成语', '对战', 'AI', '接龙', '游戏'],
+    description: '与AI进行成语接龙对战，支持先手选择'
+  },
+  {
+    id: 'idiom-chain',
+    name: '成语龙链',
+    icon: '🔗',
+    color: 'green',
+    url: '/packages/life/pages/idiom-chain/idiom-chain',
+    categories: ['生活工具'],
+    keywords: ['成语', '历史', '记录', '接龙链'],
+    description: '查看历史接龙记录，点击继续接龙'
   },
   {
     id: 'qrcode',
@@ -611,7 +631,9 @@ const commonTools = [
   tools.find(t => t.id === 'time-tool'),     // 时间工具
   tools.find(t => t.id === 'datediff'),       // 日期差计算
   tools.find(t => t.id === 'qrcode'),        // 生成二维码
-  tools.find(t => t.id === 'idiom-solitaire'), // 成语接龙
+  tools.find(t => t.id === 'idiom-query'),   // 成语查询
+  tools.find(t => t.id === 'idiom-battle'),  // 成语对战
+  tools.find(t => t.id === 'idiom-chain'),   // 成语龙链
   tools.find(t => t.id === 'copywriting'),   // 文案工具
   tools.find(t => t.id === 'mortgage'),      // 房贷计算
   tools.find(t => t.id === 'password-generator'), // 密码生成

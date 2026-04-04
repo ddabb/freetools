@@ -1,0 +1,196 @@
+<!-- idiom-battle.wxml - 成语对战页面 -->
+<view class="container">
+
+  <!-- 加载中 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载数据中...</text>
+  </view>
+
+  <!-- ====== 空闲状态：选先手 ====== -->
+  <block wx:if="{{battleState==='idle'}}">
+    <view class="welcome-section">
+      <view class="welcome-header">
+        <view class="battle-icon">⚔️</view>
+        <text class="welcome-title">成语对战</text>
+        <text class="welcome-subtitle">挑战AI，比拼成语储备</text>
+      </view>
+
+      <view class="rule-card">
+        <view class="rule-header">
+          <text class="rule-icon">📖</text>
+          <text class="rule-title">对战规则</text>
+        </view>
+        <view class="rule-content">
+          <view class="rule-item">
+            <view class="rule-dot"></view>
+            <text class="rule-text">首字与上一成语的末字相同（同音字也可）</text>
+          </view>
+          <view class="rule-item">
+            <view class="rule-dot"></view>
+            <text class="rule-text">每局60秒，超时判负</text>
+          </view>
+          <view class="rule-item">
+            <view class="rule-dot"></view>
+            <text class="rule-text">无法接龙的一方判负</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="first-choose-section">
+        <text class="choose-title">选择先手</text>
+        <view class="first-choose">
+          <view class="first-btn {{battleFirst==='user'?'active':''}}" data-first="user" bindtap="onChooseFirst">
+            <view class="btn-icon">🙋</view>
+            <text class="btn-text">我先出</text>
+            <text class="btn-desc">主动出击</text>
+          </view>
+          <view class="first-btn {{battleFirst==='ai'?'active':''}}" data-first="ai" bindtap="onChooseFirst">
+            <view class="btn-icon">🤖</view>
+            <text class="btn-text">AI先出</text>
+            <text class="btn-desc">后发制人</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="start-section">
+        <view class="start-btn {{battleFirst?'ready':''}}" bindtap="onStartBattle">
+          <text class="start-text">{{battleFirst?'开始对战':'请选择先手'}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ====== 对战中 ====== -->
+  <block wx:if="{{battleState==='playing'}}">
+    <!-- 对战头部 -->
+    <view class="battle-header">
+      <view class="header-left">
+        <text class="round-badge">第{{battleRound}}回合</text>
+      </view>
+      <view class="header-center">
+        <view class="turn-indicator {{battleTurn==='user'?'user-turn':'ai-turn'}}">
+          <text class="turn-text">{{battleTurn==='user'?'🙋 你的回合':'🤖 AI思考中'}}</text>
+        </view>
+      </view>
+      <view class="header-right">
+        <view class="timer {{battleTimer<=30?'timer-danger':''}}">
+          <text class="timer-icon">⏱️</text>
+          <text class="timer-num">{{_formatTime(battleTimer)}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 对战提示 -->
+    <view class="battle-hint" wx:if="{{battleHint}}">
+      <text class="hint-icon">💡</text>
+      <text class="hint-text">{{battleHint}}</text>
+    </view>
+
+    <!-- 接龙历史 -->
+    <scroll-view class="chain-container" scroll-y enhanced scroll-with-animation>
+      <view class="chain-list">
+        <view class="chain-item {{item.side==='user'?'user-chain':'ai-chain'}}" 
+              wx:for="{{battleChain}}" wx:key="index">
+          <view class="chain-bubble">
+            <view class="bubble-header">
+              <text class="side-label">{{item.side==='user'?'我':(item.side==='system'?'起':'AI')}}</text>
+              <text class="chain-index">#{{index+1}}</text>
+            </view>
+            <view class="bubble-content">
+              <text class="idiom-text">{{item.word}}</text>
+              <view class="tail-char">
+                <text class="tail-label">尾字</text>
+                <text class="char-text">{{item.lastChar}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 输入区域 -->
+    <view class="input-section" hidden="{{battleTurn!=='user'}}">
+      <view class="input-container">
+        <input class="idiom-input" 
+               placeholder="输入成语接龙..." 
+               value="{{battleInput}}" 
+               bindinput="onBattleInput" 
+               bindconfirm="onBattleConfirm" 
+               confirm-type="send" 
+               focus="{{battleTurn==='user'}}" />
+        <view class="send-btn" bindtap="onBattleConfirm">
+          <text class="send-text">发送</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- AI思考状态 -->
+    <view class="ai-thinking" hidden="{{battleTurn==='user'}}">
+      <view class="thinking-content">
+        <view class="thinking-animation">
+          <view class="thinking-dot"></view>
+          <view class="thinking-dot"></view>
+          <view class="thinking-dot"></view>
+        </view>
+        <text class="thinking-text">AI正在思考中...</text>
+      </view>
+    </view>
+
+    <!-- 底部操作 -->
+    <view class="battle-footer">
+      <view class="surrender-btn" bindtap="onSurrender">
+        <text class="surrender-icon">🏳️</text>
+        <text class="surrender-text">认输</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ====== 对战结束 ====== -->
+  <block wx:if="{{battleState==='ended'}}">
+    <view class="result-section">
+      <view class="result-card">
+        <view class="result-header">
+          <text class="result-emoji">{{battleResult==='win'?'🏆':'😅'}}</text>
+          <text class="result-title">{{battleResult==='win'?'恭喜获胜！':(battleResult==='timeout'?'超时判负':'再接再厉')}}</text>
+          <text class="result-subtitle">{{battleResult==='win'?'你的成语功底很扎实':(battleResult==='timeout'?'时间到了，下次要更快哦':'AI的成语储备很丰富')}}</text>
+        </view>
+
+        <view class="stats-section">
+          <text class="stats-title">对战统计</text>
+          <view class="stats-grid">
+            <view class="stat-item">
+              <text class="stat-value win">{{userStats.wins}}</text>
+              <text class="stat-label">总胜场</text>
+            </view>
+            <view class="stat-item">
+              <text class="stat-value lose">{{userStats.losses}}</text>
+              <text class="stat-label">总负场</text>
+            </view>
+            <view class="stat-item">
+              <text class="stat-value streak">{{userStats.bestStreak}}</text>
+              <text class="stat-label">最佳连胜</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="chain-result-section">
+          <view class="chain-header">
+            <text class="chain-title">本局接龙（{{battleChain.length}}个成语）</text>
+          </view>
+          <scroll-view class="chain-result" scroll-y>
+            <text class="chain-text">{{battleChainText}}</text>
+          </scroll-view>
+        </view>
+
+        <view class="action-section">
+          <view class="restart-btn" bindtap="onRestartBattle">
+            <text class="restart-icon">🔄</text>
+            <text class="restart-text">再来一局</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+</view>

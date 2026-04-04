@@ -1,0 +1,41 @@
+<!-- idiom-chain.wxml - 成语龙链页面 -->
+<view class="container">
+  <view class="section-header">
+    <view class="section-copy">
+      <text class="section-title">接龙历史</text>
+      <text class="section-subtitle">点击记录继续接龙，长按可删除单条</text>
+    </view>
+    <view wx:if="{{chains.length}}" class="clear-btn" bindtap="onClearHistory">清空历史</view>
+  </view>
+
+  <view wx:if="{{!chains.length}}" class="empty-card">
+    <text class="empty-icon">🔗</text>
+    <text class="empty-title">还没有接龙记录</text>
+    <text class="empty-desc">去对战或查询页面生成接龙链，历史会自动保存在这里。</text>
+  </view>
+
+  <view wx:else class="record-list">
+    <text class="list-tip">支持长按删除单条历史</text>
+
+    <view
+      class="record-card"
+      wx:for="{{chains}}"
+      wx:key="index"
+      data-index="{{index}}"
+      bindtap="onRecordTap"
+      bindlongpress="onRecordLongPress"
+    >
+      <view class="record-top">
+        <text class="record-word">{{item.startWord}}</text>
+        <view class="record-count-badge">已接 {{item.count}} 个</view>
+      </view>
+
+      <text class="record-preview">{{item.previewText}}</text>
+
+      <view class="record-footer">
+        <text class="record-time">{{item.formattedTime}}</text>
+        <text class="record-action">继续接龙 →</text>
+      </view>
+    </view>
+  </view>
+</view>

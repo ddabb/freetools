@@ -37,6 +37,8 @@
       <view class="button-row action-row">
         <view class="action-btn delete-btn" bindtap="deleteRelation">删除</view>
         <view class="action-btn" bindtap="clearAll">清空</view>
+        <view class="action-btn settings-btn" bindtap="openSettings">说明</view>
+        <view class="action-btn export-btn" bindtap="exportResult">导出</view>
       </view>
       
       <!-- 第二行：子女 -->
