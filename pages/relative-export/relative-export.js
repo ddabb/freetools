@@ -69,6 +69,17 @@ Page({
     });
   },
 
+  // 显示使用说明
+  onShowGuide() {
+    wx.showModal({
+      title: '📖 使用说明',
+      content: '本表包含中国常见的亲戚称呼对照。\n\n📋 横向阅读：查看某种角色对各类亲戚的称呼，例如"父亲"行展示了爸爸对姑姑、舅舅等的称呼。\n\n📋 纵向阅读：查看某种亲戚关系对应的各种称呼，例如"姑妈"列展示了姑妈的不同叫法。\n\n💾 点击「导出Excel」可将表格保存到本地，方便离线查看。',
+      confirmText: '知道了',
+      confirmColor: '#8b5cf6',
+      showCancel: false
+    });
+  },
+
   // 导出为 Excel
   onExportExcel() {
     if (this.data.exporting) return;

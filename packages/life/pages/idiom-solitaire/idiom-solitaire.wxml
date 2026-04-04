@@ -22,11 +22,36 @@
   <!-- ====== 主内容 ====== -->
   <block wx:if="{{!loading && !loadError}}">
 
-    <!-- ----- Tab 栏 ----- -->
+    <!-- 头部 Banner -->
+    <view class="page-header">
+      <view class="header-left">
+        <text class="header-icon">🀄</text>
+        <view>
+          <text class="header-title">成语接龙</text>
+          <text class="header-sub">汉字接龙 · 益智游戏</text>
+        </view>
+      </view>
+      <view class="header-stats">
+        <view class="mini-stat">
+          <text class="mini-stat-num win">{{userStats.wins}}</text>
+          <text class="mini-stat-label">胜</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-stat-num lose">{{userStats.losses}}</text>
+          <text class="mini-stat-label">负</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-stat-num streak">{{userStats.streak}}</text>
+          <text class="mini-stat-label">连胜</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab 栏 -->
     <view class="tab-bar">
       <view class="tab-item {{activeTab===0?'active':''}}" data-idx="0" bindtap="onTabChange">
         <text class="tab-icon">🔍</text>
-        <text class="tab-text">查询</text>
+        <text class="tab-text">查接龙</text>
       </view>
       <view class="tab-item {{activeTab===1?'active':''}}" data-idx="1" bindtap="onTabChange">
         <text class="tab-icon">⚔️</text>
@@ -55,21 +80,25 @@
       </view>
 
       <!-- 提示语 -->
-      <view class="tip-text" wx:if="{{queryResults.length===0}}">{{queryTip}}</view>
+      <view class="empty-tip" wx:if="{{queryResults.length===0}}">
+        <text class="empty-icon">🀄</text>
+        <text class="empty-text">{{queryTip}}</text>
+      </view>
 
       <!-- 结果列表 -->
-      <view class="result-list" wx:if="{{queryResults.length>0}}">
+      <view wx:if="{{queryResults.length>0}}">
         <view class="result-header">
           <text class="result-count">{{queryTip}}</text>
-          <view class="copy-btn" bindtap="onCopyResult">复制全部</view>
+          <view class="copy-btn" bindtap="onCopyResult">📋 复制</view>
         </view>
         <view class="result-item" wx:for="{{queryResults}}" wx:key="index" data-word="{{item.next}}" bindtap="onQueryItemTap">
           <view class="result-main">
             <text class="result-next">{{item.next}}</text>
-            <text class="result-arrow">→</text>
-            <text class="result-char">「{{item.lastChar}}」</text>
           </view>
-          <text class="result-abbr">{{item.abbr}}</text>
+          <view class="result-tail">
+            <text class="result-char">{{item.lastChar}}</text>
+            <text class="result-arrow">›</text>
+          </view>
         </view>
       </view>
     </view>
@@ -77,33 +106,21 @@
     <!-- ====== 对战 Tab ====== -->
     <view class="tab-content" wx:if="{{activeTab===1}}">
 
-      <!-- 战绩展示 -->
-      <view class="stats-bar">
-        <view class="stat-item">
-          <text class="stat-num win">{{userStats.wins}}</text>
-          <text class="stat-label">胜</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-num lose">{{userStats.losses}}</text>
-          <text class="stat-label">负</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-num streak">{{userStats.streak}}</text>
-          <text class="stat-label">当前连胜</text>
-        </view>
-        <view class="stat-item">
-          <text class="stat-num best">{{userStats.bestStreak}}</text>
-          <text class="stat-label">最佳连胜</text>
-        </view>
-      </view>
-
       <!-- 空闲状态：选先手 -->
       <block wx:if="{{battleState==='idle'}}">
         <view class="battle-welcome">
           <text class="battle-welcome-icon">⚔️</text>
-          <text class="battle-welcome-title">成语接龙对战</text>
-          <text class="battle-welcome-sub">选择你先手或后手，开始挑战</text>
+          <text class="battle-welcome-title">挑战 AI 对战</text>
+          <text class="battle-welcome-sub">选择先手后手，开始成语接龙</text>
         </view>
+
+        <view class="rule-card">
+          <text class="rule-title">📖 规则</text>
+          <text class="rule-line">• 汉字接龙：下一个成语首字与上一个末字相同</text>
+          <text class="rule-line">• 每局 60 秒，超时判负</text>
+          <text class="rule-line">• 无法接龙的一方判负</text>
+        </view>
+
         <view class="first-choose">
           <view class="first-btn {{battleFirst==='user'?'active':''}}" data-first="user" bindtap="onChooseFirst">
             <text class="first-icon">🙋</text>
@@ -114,98 +131,134 @@
             <text class="first-text">AI 先出</text>
           </view>
         </view>
-        <view class="start-btn" bindtap="onStartBattle">开始对战</view>
-      </block>
 
-      <!-- 准备状态 -->
-      <block wx:if="{{battleState==='ready'}}">
-        <view class="ready-hint">你选择了「{{battleFirst==='user'?'我先出':'AI 先出'}}」</view>
         <view class="start-btn" bindtap="onStartBattle">开始对战</view>
       </block>
 
       <!-- 对战中 -->
       <block wx:if="{{battleState==='playing'}}">
-        <!-- 顶栏：回合 / 计时 -->
+        <!-- 顶栏：回合 / 计时 / 提示 -->
         <view class="battle-top">
-          <text class="battle-round">第 {{battleRound}} 回合</text>
+          <view class="battle-round-badge">第 {{battleRound}} 回合</view>
+          <view class="battle-turn-badge {{battleTurn==='user'?'turn-user':'turn-ai'}}">
+            <text>{{battleTurn==='user'?'🙋 你的回合':'🤖 AI 思考中'}}</text>
+          </view>
           <view class="battle-timer {{battleTimer<=10?'timer-danger':''}}">
             <text class="timer-num">{{battleTimer}}</text>
-            <text class="timer-label">秒</text>
+            <text class="timer-label">s</text>
           </view>
         </view>
 
+        <!-- 提示 -->
+        <view class="battle-hint">{{battleHint}}</view>
+
         <!-- 接龙历史 -->
-        <scroll-view class="battle-chain" scroll-y>
-          <view class="chain-item {{item.side==='ai'?'ai-item':''}}" wx:for="{{battleChain}}" wx:key="index">
-            <text class="chain-side {{item.side==='ai'?'ai-side':(item.side==='system'?'ai-side':'user-side')}}">{{item.side==='ai'?'AI':(item.side==='system'?'系统':'我')}}</text>
-            <text class="chain-word {{item.side==='ai'?'ai-word':'user-word'}}">{{item.word}}</text>
-            <view class="chain-arrow-row" wx:if="{{index < battleChain.length - 1}}">
-              <text class="chain-arrow">↓ {{battleChain[index+1].word ? battleChain[index+1].word.slice(0,1) : ''}}</text>
+        <scroll-view class="battle-chain-scroll" scroll-y scroll-into-view="chain-bottom">
+          <view class="battle-chain">
+            <view class="chain-row {{item.side==='user'?'chain-row-user':'chain-row-ai'}}"
+                  wx:for="{{battleChain}}" wx:key="index"
+                  id="{{index===battleChain.length-1?'chain-bottom':''}}">
+              <view class="chain-bubble {{item.side==='user'?'bubble-user':(item.side==='system'?'bubble-system':'bubble-ai')}}">
+                <text class="chain-side-label">{{item.side==='user'?'我':(item.side==='system'?'起':'AI')}}</text>
+                <text class="chain-word">{{item.word}}</text>
+                <text class="chain-tail-char">{{item.lastChar}}</text>
+              </view>
             </view>
           </view>
         </scroll-view>
 
-        <!-- 当前提示 -->
-        <view class="battle-hint">{{battleHint}}</view>
-
         <!-- 输入区 -->
         <view class="battle-input-area" wx:if="{{battleTurn==='user'}}">
-          <input class="battle-input" placeholder="输入成语后按发送" value="{{battleInput}}" bindinput="onBattleInput" bindconfirm="onBattleConfirm" confirm-type="send" />
+          <input class="battle-input" placeholder="输入成语并发送" value="{{battleInput}}" bindinput="onBattleInput" bindconfirm="onBattleConfirm" confirm-type="send" focus="{{battleTurn==='user'}}" />
           <view class="battle-send-btn" bindtap="onBattleConfirm">发送</view>
         </view>
-        <view class="battle-ai-thinking" wx:if="{{battleTurn==='ai'}}">
-          <text>🤖 AI 正在思考…</text>
+        <view class="battle-ai-thinking" wx:else>
+          <view class="thinking-dots">
+            <view class="dot dot1"></view>
+            <view class="dot dot2"></view>
+            <view class="dot dot3"></view>
+          </view>
+          <text class="thinking-text">AI 正在思考…</text>
         </view>
 
         <!-- 认输按钮 -->
-        <view class="surrender-btn" bindtap="onSurrender">认输</view>
+        <view class="surrender-btn" bindtap="onSurrender">🏳️ 认输</view>
       </block>
 
       <!-- 对战结束 -->
       <block wx:if="{{battleState==='ended'}}">
-        <view class="result-overlay">
+        <view class="result-card">
           <text class="result-emoji">{{battleResult==='win'?'🏆':'😅'}}</text>
-          <text class="result-title">{{battleResult==='win'?'你赢了！':'你输了'}}</text>
-          <text class="result-sub">{{battleResult==='timeout'?'超时判负':''}}</text>
-          <text class="result-chain-label">本次接龙链：</text>
-          <view class="result-chain">
-            <text wx:for="{{battleChain}}" wx:key="index">{{item.word}}{{index < battleChain.length-1 ? ' → ' : ''}}</text>
+          <text class="result-title">{{battleResult==='win'?'你赢了！':(battleResult==='timeout'?'超时判负':'你输了')}}</text>
+          <view class="result-stats-row">
+            <view class="result-stat-item">
+              <text class="result-stat-num win">{{userStats.wins}}</text>
+              <text class="result-stat-label">总胜</text>
+            </view>
+            <view class="result-stat-item">
+              <text class="result-stat-num lose">{{userStats.losses}}</text>
+              <text class="result-stat-label">总负</text>
+            </view>
+            <view class="result-stat-item">
+              <text class="result-stat-num streak">{{userStats.bestStreak}}</text>
+              <text class="result-stat-label">最佳连胜</text>
+            </view>
           </view>
-          <view class="restart-btn" bindtap="onRestartBattle">再来一局</view>
+          <text class="result-chain-label">本局接龙（{{battleChain.length}} 个）：</text>
+          <view class="result-chain-scroll">
+            <text class="result-chain-text">{{battleChainText}}</text>
+          </view>
+          <view class="result-btns">
+            <view class="restart-btn" bindtap="onRestartBattle">再来一局</view>
+          </view>
         </view>
       </block>
     </view>
 
     <!-- ====== 接龙链 Tab ====== -->
     <view class="tab-content" wx:if="{{activeTab===2}}">
-      <!-- 输入行 -->
-      <view class="chain-input-row">
-        <input class="chain-input" placeholder="输入起始成语" value="{{chainInput}}" bindinput="onChainInput" bindconfirm="onChainConfirm" />
-        <text class="chain-len-label">最长</text>
-        <input class="chain-len-input" type="number" value="{{chainMaxLen}}" bindinput="onChainLenInput" />
-        <text class="chain-len-label">个</text>
-        <view class="chain-gen-btn" bindtap="onGenerateChain">生成</view>
+      <!-- 输入区 -->
+      <view class="chain-input-card">
+        <text class="chain-input-label">起始成语</text>
+        <view class="chain-input-row">
+          <input class="chain-input" placeholder="例如：一马当先" value="{{chainInput}}" bindinput="onChainInput" bindconfirm="onChainConfirm" />
+          <view class="chain-gen-btn" bindtap="onGenerateChain">生成</view>
+        </view>
+        <view class="chain-len-row">
+          <text class="chain-len-label">最多接</text>
+          <input class="chain-len-input" type="number" value="{{chainMaxLen}}" bindinput="onChainLenInput" />
+          <text class="chain-len-label">个成语</text>
+        </view>
       </view>
 
       <!-- 提示 -->
-      <view class="tip-text">{{chainTip}}</view>
-
-      <!-- 结果列表 -->
-      <view class="chain-result" wx:if="{{chainResult.length>0}}">
-        <view class="chain-result-count">共 {{chainCount}} 个成语</view>
-        <view class="chain-result-item {{index===0?'first-item':''}}" wx:for="{{chainResult}}" wx:key="index">
-          <text class="chain-result-index">{{index+1}}</text>
-          <text class="chain-result-word">{{item}}</text>
-          <text class="chain-result-arrow" wx:if="{{index < chainResult.length-1}}">→</text>
-        </view>
-        <view class="chain-actions">
-          <view class="chain-save-btn" bindtap="onSaveChainImage">📷 保存图片</view>
-          <view class="chain-retry-btn" bindtap="onGenerateChain">🔄 重新生成</view>
-        </view>
+      <view class="empty-tip" wx:if="{{chainResult.length===0 && !chainRunning}}">
+        <text class="empty-icon">🔗</text>
+        <text class="empty-text">{{chainTip}}</text>
+      </view>
+      <view class="empty-tip" wx:if="{{chainRunning}}">
+        <text class="empty-icon">⏳</text>
+        <text class="empty-text">正在搜索接龙链…</text>
       </view>
 
-      <!-- 加载中 -->
-      <view class="tip-text" wx:if="{{chainRunning}}">正在 DFS 搜索最长链，请稍候…</view>
+      <!-- 结果 -->
+      <view class="chain-result-card" wx:if="{{chainResult.length>0}}">
+        <view class="chain-result-header">
+          <text class="chain-result-title">共 {{chainCount}} 个成语</text>
+          <view class="chain-copy-btn" bindtap="onCopyChain">📋 复制</view>
+        </view>
+        <view class="chain-flow">
+          <view class="chain-flow-item {{index===0?'flow-first':''}}" wx:for="{{chainResult}}" wx:key="index">
+            <view class="flow-badge">{{index+1}}</view>
+            <text class="flow-word">{{item}}</text>
+            <text class="flow-arrow" wx:if="{{index < chainResult.length-1}}">→</text>
+          </view>
+        </view>
+        <view class="chain-actions">
+          <view class="chain-retry-btn" bindtap="onGenerateChain">🔄 重新生成</view>
+          <view class="chain-clear-btn" bindtap="onChainClear">✕ 清空</view>
+        </view>
+      </view>
     </view>
 
   </block>
@@ -213,7 +266,7 @@
   <!-- ====== 详情弹窗 ====== -->
   <view class="detail-modal {{showDetail?'show':''}}" catchtap="onDetailClose">
     <view class="detail-box" catchtap="">
-      <view class="detail-close" bindtap="onDetailClose">×</view>
+      <view class="detail-close" bindtap="onDetailClose">✕</view>
       <view wx:if="{{detailItem}}">
         <view class="detail-word">{{detailItem.word}}</view>
         <view class="detail-pinyin">{{detailItem.pinyin}}</view>
@@ -229,6 +282,4 @@
     </view>
   </view>
 
-  <!-- 隐藏的 canvas 用于生成图片 -->
-  <canvas canvas-id="chainCanvas" style="position:absolute;left:-999px;width:350px;height:600px;"></canvas>
 </view>

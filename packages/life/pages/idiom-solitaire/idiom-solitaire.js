@@ -1,61 +1,57 @@
 // 成语接龙 - 主页面
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire';
-const CACHE_KEY_INDEX = 'idiom_index_v1';       // first+last 索引缓存 key
-const CACHE_KEY_TS    = 'idiom_index_ts';
+const CACHE_KEY_INDEX = 'idiom_index_v2';
+const CACHE_KEY_TS    = 'idiom_index_ts_v2';
 const CACHE_EXPIRE    = 30 * 24 * 60 * 60 * 1000; // 30 天
-const USER_STATS_KEY  = 'idiom_battle_stats';      // 对战战绩 key
+const USER_STATS_KEY  = 'idiom_battle_stats';
 
 Page({
   data: {
-    // 当前 Tab
     activeTab: 0,   // 0=查询  1=对战  2=接龙链
 
-    // ===== 通用加载状态 =====
     loading: true,
     loadError: '',
 
     // ===== 查询 Tab =====
     queryInput: '',
-    queryResults: [],      // [{word, pinyin, lastChar, explanation}]
+    queryResults: [],
     queryCount: 0,
-    queryTip: '请输入任意成语，查看可接龙的下联',
-    queryHistory: [],      // 最近查询记录
+    queryTip: '输入任意成语，查看可接龙的下联',
+    queryHistory: [],
 
     // ===== 对战 Tab =====
-    battleState: 'idle',   // idle | ready | playing | ended
-    battleFirst: 'user',   // 谁先手
+    battleState: 'idle',   // idle | playing | ended
+    battleFirst: 'user',
     battleRound: 0,
-    battleTimer: 30,
-    battleTurn: 'user',    // 当前回合：user | ai
-    battleChain: [],        // [{word, pinyin, side:'user'|'ai', lastChar}]
+    battleTimer: 60,
+    battleTurn: 'user',
+    battleChain: [],
     battleInput: '',
     battleHint: '',
     battleResult: '',      // win | lose | timeout
+    battleChainText: '',   // 结束后展示的接龙链文字
     userStats: { wins: 0, losses: 0, streak: 0, bestStreak: 0 },
 
     // ===== 接龙链 Tab =====
     chainInput: '',
     chainMaxLen: 10,
-    chainResult: [],        // [{word, pinyin, lastChar}]
+    chainResult: [],
     chainRunning: false,
     chainCount: 0,
-    chainTip: '输入起始成语，自动生成最长接龙链',
+    chainTip: '输入起始成语，自动生成接龙链',
 
     // ===== 详情弹窗 =====
     showDetail: false,
     detailItem: null,
   },
 
-  // =====================
-  //  页面生命周期
-  // =====================
   onLoad() {
-    this._firstIndex = null;   // 首字索引 {a: [word, ...], b: [...]}
-    this._lastIndex  = null;   // 尾字索引 {xian: [word, ...], ...}
-    this._allWords   = null;   // 所有成语 Set，用于合法性校验
-    this._lastPinyin = null;   // 当前成语尾字拼音
-    this._timer      = null;
-    this._battleUsed = new Set();
+    this._firstFullIndex = null;  // 首字完整拼音索引 {wei:[], xian:[], ...}
+    this._lastIndex      = null;  // 尾字完整拼音索引 {wei:[], xian:[], ...}
+    this._allWords       = null;  // 所有成语 Set
+    this._lastPinyin     = null;  // 当前回合需接的拼音
+    this._timer          = null;
+    this._battleUsed     = new Set();
 
     this._loadUserStats();
     this._loadData();
@@ -66,27 +62,25 @@ Page({
   },
 
   // =====================
-  //  数据加载（CDN + 缓存）
+  //  数据加载
   // =====================
   _loadData() {
-    const now = Date.now();
+    const now    = Date.now();
     const cached = wx.getStorageSync(CACHE_KEY_INDEX);
-    const ts    = wx.getStorageSync(CACHE_KEY_TS);
+    const ts     = wx.getStorageSync(CACHE_KEY_TS);
 
     if (cached && ts && (now - ts < CACHE_EXPIRE)) {
-      console.log('[idiom] 使用缓存数据');
       this._applyIndexData(cached);
       return;
     }
 
-    console.log('[idiom] 从CDN加载');
     wx.showLoading({ title: '加载数据…', mask: true });
 
     Promise.all([
-      this._fetch(`${CDN_BASE}/idiom-first-index.json`),
+      this._fetch(`${CDN_BASE}/idiom-first-full-index.json`),
       this._fetch(`${CDN_BASE}/idiom-last-index.json`),
-    ]).then(([firstData, lastData]) => {
-      const indexData = { firstIndex: firstData, lastIndex: lastData };
+    ]).then(([firstFullData, lastData]) => {
+      const indexData = { firstFullIndex: firstFullData, lastIndex: lastData };
       wx.setStorageSync(CACHE_KEY_INDEX, indexData);
       wx.setStorageSync(CACHE_KEY_TS, now);
       wx.hideLoading();
@@ -110,16 +104,15 @@ Page({
   },
 
   _applyIndexData(data) {
-    this._firstIndex = data.firstIndex;   // {a:[], b:[], ...}
-    this._lastIndex  = data.lastIndex;    // {xian:[], ...}
-    this._buildAllWords(data.firstIndex);
+    this._firstFullIndex = data.firstFullIndex;
+    this._lastIndex      = data.lastIndex;
+    this._buildAllWords(data.firstFullIndex);
     this.setData({ loading: false });
   },
 
-  // 构建所有成语集合，用于合法性校验
-  _buildAllWords(firstIndex) {
+  _buildAllWords(firstFullIndex) {
     const words = new Set();
-    for (const arr of Object.values(firstIndex)) {
+    for (const arr of Object.values(firstFullIndex)) {
       for (const w of arr) words.add(w);
     }
     this._allWords = words;
@@ -151,50 +144,47 @@ Page({
   },
 
   _doQuery(word) {
-    if (!this._lastIndex) {
+    if (!this._lastIndex || !this._firstFullIndex) {
       wx.showToast({ title: '数据加载中…', icon: 'loading' });
       return;
     }
 
-    // 规范化：去空格
     word = word.replace(/\s+/g, '');
 
-    // 查尾字拼音
-    const lastPy = this._getLastPinyin(word);
+    // 获取尾字拼音
+    const lastPy = this._getWordLastPinyin(word);
     if (!lastPy) {
-      this.setData({ queryResults: [], queryCount: 0, queryTip: '未找到该成语，请检查输入' });
+      this.setData({ queryResults: [], queryCount: 0, queryTip: `"${word}" 不在词库中，请检查输入` });
       return;
     }
 
-    const candidates = this._lastIndex[lastPy] || [];
+    // 用 firstFullIndex 查以该拼音开头的成语
+    const candidates = this._firstFullIndex[lastPy] || [];
     if (candidates.length === 0) {
-      this.setData({ queryResults: [], queryCount: 0, queryTip: `以"${this._lastChar(word)}"结尾的成语暂无接龙数据` });
+      this.setData({ queryResults: [], queryCount: 0, queryTip: `以"${this._lastChar(word)}"字开头的成语暂无接龙数据` });
       return;
     }
 
-    // 按 abbr 排序（较常用的排前），取前 100 条
     const results = candidates.slice(0, 100).map(w => ({
       word,
       next: w,
       lastChar: this._lastChar(w),
-      abbr: this._abbr(w),
     }));
 
-    // 记录历史
     const history = [word, ...this.data.queryHistory.filter(h => h !== word)].slice(0, 5);
     this.setData({
       queryResults: results,
       queryCount: candidates.length,
-      queryTip: `共 ${candidates.length} 条，点击查看详情`,
+      queryTip: `共 ${candidates.length} 条接龙`,
       queryHistory: history,
     });
   },
 
-  // 查询详情：需要加载 letter 文件获取拼音/释义
   onQueryItemTap(e) {
     const word = e.currentTarget.dataset.word;
     if (!word) return;
-    const fc = this._firstChar(word);
+    const fc = this._getFirstLetter(word);
+    if (!fc) return;
     const url = `${CDN_BASE}/letter/${fc}.json`;
     wx.showLoading({ title: '加载中…', mask: true });
     this._fetch(url).then(arr => {
@@ -213,48 +203,42 @@ Page({
     this.setData({ showDetail: false, detailItem: null });
   },
 
-  // 复制结果
-  // 历史记录点击
   onHistoryTap(e) {
     const word = e.currentTarget.dataset.word;
     if (word) this._doQuery(word);
   },
 
-  // 接龙链长度输入
-  onChainLenInput(e) {
-    const v = parseInt(e.detail.value, 10);
-    if (v > 0 && v <= 50) this.setData({ chainMaxLen: v });
-  },
   onCopyResult() {
     if (!this.data.queryResults.length) return;
-    const text = this.data.queryResults.map(r => `${r.word} → ${r.next}`).join('\n');
+    const text = this.data.queryResults.map(r => r.next).join(' → ');
     wx.setClipboardData({ data: text, success: () => wx.showToast({ title: '已复制', icon: 'success' }) });
   },
 
   // =====================
   //  对战 Tab
   // =====================
-  // 选择先手
   onChooseFirst(e) {
     const first = e.currentTarget.dataset.first;
-    this.setData({ battleFirst: first, battleState: 'ready' });
+    this.setData({ battleFirst: first });
   },
 
-  // 开始对战
   onStartBattle() {
+    if (!this._firstFullIndex || !this._lastIndex) {
+      wx.showToast({ title: '数据加载中', icon: 'loading' });
+      return;
+    }
     this._clearTimer();
     this._battleUsed = new Set();
 
-    // 选一个龙头成语
-    const allWords = Object.values(this._firstIndex).flat();
+    // 随机选一个四字成语作为龙头
+    const allWords = Object.values(this._firstFullIndex).flat().filter(w => w.length === 4);
     const startWord = allWords[Math.floor(Math.random() * allWords.length)];
     const first = this.data.battleFirst;
 
-    this._lastPinyin = this._getLastPinyin(startWord);
+    this._lastPinyin = this._getWordLastPinyin(startWord);
     this._battleUsed.add(startWord);
 
-    // 首成语标记为 AI（AI 选出来的），后续根据 first 决定谁接龙
-    const chain = [{ word: startWord, side: 'system', pinyin: '', lastChar: this._lastChar(startWord) }];
+    const chain = [{ word: startWord, side: 'system', lastChar: this._lastChar(startWord) }];
 
     this.setData({
       battleState: 'playing',
@@ -262,39 +246,46 @@ Page({
       battleTurn: first,
       battleChain: chain,
       battleInput: '',
-      battleHint: `请以"${this._lastChar(startWord)}"字开头接龙`,
+      battleHint: `请接：以"${this._lastChar(startWord)}"字开头`,
       battleResult: '',
     });
 
     if (first === 'ai') {
-      // AI 先手：选一个合法的接龙
-      setTimeout(() => this._aiMove(), 600);
+      setTimeout(() => this._aiMove(), 800);
     } else {
       this._startTimer();
     }
   },
 
-  // 用户输入成语并提交
   onBattleInput(e) {
     this.setData({ battleInput: e.detail.value });
   },
 
   onBattleConfirm() {
+    if (this.data.battleTurn !== 'user') return;
     const word = this.data.battleInput.trim().replace(/\s+/g, '');
     if (!word) return;
 
-    // 合法性校验
-    if (!this._allWords.has(word)) {
-      wx.showToast({ title: '这不是常用成语', icon: 'none' });
+    // 1. 是否在词库中（宽松：不在词库也允许，只要是4字）
+    if (word.length < 2) {
+      wx.showToast({ title: '请输入成语', icon: 'none' });
       return;
     }
+
+    // 2. 是否用过
     if (this._battleUsed.has(word)) {
       wx.showToast({ title: '该成语已用过', icon: 'none' });
       return;
     }
-    const firstChar = this._firstChar(word);
-    if (firstChar !== this._lastPinyin) {
-      wx.showToast({ title: `应以"${this._lastPinyin}"字开头`, icon: 'none' });
+
+    // 3. 首字是否匹配（汉字接龙：首字汉字必须与上一个成语末字相同）
+    const needChar = this._getPinyinLastChar(this._lastPinyin);
+    const firstChar = word[0];
+    // 支持两种规则：同字 或 同音
+    const firstPy = this._getWordFirstPinyin(word);
+    const isMatch = (firstChar === needChar) || (firstPy && firstPy === this._lastPinyin);
+    if (!isMatch) {
+      wx.showToast({ title: `首字应为"${needChar}"`, icon: 'none' });
       return;
     }
 
@@ -303,7 +294,7 @@ Page({
     const newItem = { word, side: 'user', lastChar };
     const chain = [...this.data.battleChain, newItem];
     this._battleUsed.add(word);
-    this._lastPinyin = this._getLastPinyin(word);
+    this._lastPinyin = this._getWordLastPinyin(word) || this._getCharPinyin(lastChar);
 
     this.setData({
       battleChain: chain,
@@ -312,57 +303,52 @@ Page({
       battleTurn: 'ai',
     });
 
-    // 检查 AI 是否有合法接龙
     const candidates = this._getCandidates(this._lastPinyin);
     if (!candidates.length) {
       this._endBattle('win');
       return;
     }
 
-    setTimeout(() => this._aiMove(), 600);
+    setTimeout(() => this._aiMove(), 800);
   },
 
-  // AI 走一步
   _aiMove() {
     const candidates = this._getCandidates(this._lastPinyin);
     if (!candidates.length) {
       this._endBattle('lose');
       return;
     }
-    // 优先选 abbr 靠前的（常用成语），加一点随机性
-    const word = candidates[Math.floor(Math.random() * Math.min(5, candidates.length))];
+    const word = candidates[Math.floor(Math.random() * Math.min(8, candidates.length))];
     const lastChar = this._lastChar(word);
     const newItem = { word, side: 'ai', lastChar };
     const chain = [...this.data.battleChain, newItem];
     this._battleUsed.add(word);
-    this._lastPinyin = this._getLastPinyin(word);
+    this._lastPinyin = this._getWordLastPinyin(word);
 
     this.setData({
       battleChain: chain,
       battleRound: this.data.battleRound + 1,
       battleTurn: 'user',
-      battleHint: `请以"${lastChar}"字开头接龙`,
+      battleHint: `请接：以"${lastChar}"字开头`,
     });
     this._startTimer();
   },
 
-  // 获取可接龙的候选成语
   _getCandidates(lastPinyin) {
-    const list = this._lastIndex[lastPinyin] || [];
+    if (!lastPinyin || !this._firstFullIndex) return [];
+    const list = this._firstFullIndex[lastPinyin] || [];
     return list.filter(w => !this._battleUsed.has(w));
   },
 
-  // 认输
   onSurrender() {
     this._clearTimer();
     this._endBattle('lose');
   },
 
-  // 结束对战
   _endBattle(result) {
     this._clearTimer();
     const { userStats } = this.data;
-    let newStats = { ...userStats };
+    const newStats = { ...userStats };
 
     if (result === 'win') {
       newStats.wins++;
@@ -374,22 +360,17 @@ Page({
     }
 
     this._saveUserStats(newStats);
-    this.setData({
-      battleState: 'ended',
-      battleResult: result,
-      userStats: newStats,
-    });
+    const battleChainText = this.data.battleChain.map(i => i.word).join(' → ');
+    this.setData({ battleState: 'ended', battleResult: result, userStats: newStats, battleChainText });
   },
 
-  // 重开
   onRestartBattle() {
-    this.setData({ battleState: 'idle' });
+    this.setData({ battleState: 'idle', battleChain: [], battleInput: '', battleHint: '' });
   },
 
-  // 计时器
   _startTimer() {
     this._clearTimer();
-    this.setData({ battleTimer: 30 });
+    this.setData({ battleTimer: 60 });
     this._timer = setInterval(() => {
       const t = this.data.battleTimer - 1;
       if (t <= 0) {
@@ -408,7 +389,6 @@ Page({
     }
   },
 
-  // 战绩存取
   _loadUserStats() {
     const s = wx.getStorageSync(USER_STATS_KEY);
     if (s) this.setData({ userStats: s });
@@ -430,60 +410,66 @@ Page({
     if (v) this._doChain(v);
   },
 
+  onChainLenInput(e) {
+    const v = parseInt(e.detail.value, 10);
+    if (v > 0 && v <= 50) this.setData({ chainMaxLen: v });
+  },
+
   onGenerateChain() {
     const v = this.data.chainInput.trim();
     if (v) this._doChain(v);
   },
 
   onChainClear() {
-    this.setData({ chainResult: [], chainCount: 0, chainInput: '' });
+    this.setData({ chainResult: [], chainCount: 0, chainInput: '', chainTip: '输入起始成语，自动生成接龙链' });
   },
 
   _doChain(startWord) {
-    if (!this._lastIndex) {
+    if (!this._firstFullIndex || !this._lastIndex) {
       wx.showToast({ title: '数据加载中…', icon: 'loading' });
       return;
     }
 
     const word = startWord.replace(/\s+/g, '');
     if (!this._allWords.has(word)) {
-      wx.showToast({ title: '这不是常用成语', icon: 'none' });
+      wx.showToast({ title: '词库中未收录此成语', icon: 'none' });
       return;
     }
 
-    this.setData({ chainRunning: true, chainResult: [], chainCount: 0, chainTip: '正在生成接龙链…' });
+    this.setData({ chainRunning: true, chainResult: [], chainCount: 0, chainTip: '正在搜索接龙链…' });
 
-    // 在 worker 中跑 DFS（避免阻塞 UI）
-    // 微信小程序的 Worker 有 200KB 脚本体积限制，这里直接在主线程跑（接龙链规模可控）
     setTimeout(() => {
       const maxLen = this.data.chainMaxLen;
       const result = this._dfsChain(word, maxLen);
-      this.setData({ chainRunning: false, chainResult: result, chainCount: result.length, chainTip: `生成了 ${result.length} 个成语` });
+      this.setData({
+        chainRunning: false,
+        chainResult: result,
+        chainCount: result.length,
+        chainTip: `生成了 ${result.length} 个成语的接龙链`,
+      });
     }, 50);
   },
 
   _dfsChain(startWord, maxLen) {
     const used = new Set([startWord]);
     const path = [startWord];
-    // best 是数组引用，不能重新赋值
     const best = [startWord];
-    const lastPy = this._getLastPinyin(startWord);
+    const lastPy = this._getWordLastPinyin(startWord);
 
     const dfs = (lastPinyin, depth) => {
       if (depth >= maxLen) {
         if (path.length > best.length) { best.length = 0; best.push(...path); }
         return;
       }
-      const candidates = (this._lastIndex[lastPinyin] || []).filter(w => !used.has(w));
+      const candidates = (this._firstFullIndex[lastPinyin] || []).filter(w => !used.has(w));
       if (candidates.length === 0) {
         if (path.length > best.length) { best.length = 0; best.push(...path); }
         return;
       }
-      // 取前 20 个候选，避免搜索爆炸
-      for (const w of candidates.slice(0, 20)) {
+      for (const w of candidates.slice(0, 15)) {
         used.add(w);
         path.push(w);
-        dfs(this._getLastPinyin(w), depth + 1);
+        dfs(this._getWordLastPinyin(w), depth + 1);
         path.pop();
         used.delete(w);
       }
@@ -493,48 +479,18 @@ Page({
     return [...best];
   },
 
-  // 保存接龙链图片（用 canvas 画）
-  onSaveChainImage() {
+  onCopyChain() {
     if (!this.data.chainResult.length) return;
-    const chain = this.data.chainResult;
-    const W = 350, H = 60 + chain.length * 50;
-    const ctx = wx.createCanvasContext('chainCanvas');
-
-    ctx.setFillStyle('#f8f9fa');
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.setFont('20px sans-serif');
-    ctx.setFillStyle('#2c3e50');
-    ctx.setTextAlign('center');
-    ctx.fillText('成语接龙', W / 2, 36);
-
-    chain.forEach((w, i) => {
-      const y = 70 + i * 50;
-      const isFirst = i === 0;
-      ctx.setFillStyle(isFirst ? '#3498db' : '#27ae60');
-      ctx.fillRect(15, y - 20, W - 30, 36, 8);
-      ctx.setFillStyle('#fff');
-      ctx.fillText(w, W / 2, y + 5);
-      if (i < chain.length - 1) {
-        ctx.setFillStyle('#bdc3c7');
-        ctx.fillText('↓', W / 2, y + 28);
-      }
-    });
-
-    ctx.draw(false, () => {
-      wx.canvasToTempFilePath({
-        canvasId: 'chainCanvas',
-        success: res => wx.saveImageToPhotosAlbum({ filePath: res.tempFilePath }),
-        fail: err => wx.showToast({ title: '保存失败', icon: 'none' }),
-      });
-    });
+    const text = this.data.chainResult.join(' → ');
+    wx.setClipboardData({ data: text, success: () => wx.showToast({ title: '已复制', icon: 'success' }) });
   },
 
   // =====================
   //  工具函数
   // =====================
-  // 获取成语尾字拼音（无声调）
-  _getLastPinyin(word) {
+
+  // 获取成语的尾字完整拼音（从 lastIndex 反查）
+  _getWordLastPinyin(word) {
     if (!this._lastIndex) return null;
     for (const [py, arr] of Object.entries(this._lastIndex)) {
       if (arr.includes(word)) return py;
@@ -542,27 +498,42 @@ Page({
     return null;
   },
 
-  // 获取成语末字（汉字）
+  // 获取成语的首字完整拼音（从 firstFullIndex 反查）
+  _getWordFirstPinyin(word) {
+    if (!this._firstFullIndex) return null;
+    for (const [py, arr] of Object.entries(this._firstFullIndex)) {
+      if (arr.includes(word)) return py;
+    }
+    return null;
+  },
+
+  // 获取拼音对应的汉字（通过 lastIndex 找以此拼音结尾的某个成语的末字）
+  _getPinyinLastChar(py) {
+    if (!py || !this._lastIndex) return py;
+    const arr = this._lastIndex[py];
+    if (arr && arr.length > 0) return arr[0].slice(-1);
+    return py;
+  },
+
+  // 获取单字的拼音（从 firstFullIndex 找含该首字的成语，取其拼音 key）
+  _getCharPinyin(ch) {
+    if (!this._firstFullIndex) return null;
+    for (const [py, arr] of Object.entries(this._firstFullIndex)) {
+      if (arr.some(w => w[0] === ch)) return py;
+    }
+    return null;
+  },
+
   _lastChar(word) {
     return word.slice(-1);
   },
 
-  // 获取成语首字拼音的第一个字母
-  _firstChar(word) {
-    if (!this._firstIndex) return '';
-    for (const [fc, arr] of Object.entries(this._firstIndex)) {
-      if (arr.includes(word)) return fc;
+  // 获取首字母（用于加载 letter 文件）
+  _getFirstLetter(word) {
+    if (!this._firstFullIndex) return null;
+    for (const [py, arr] of Object.entries(this._firstFullIndex)) {
+      if (arr.includes(word)) return py[0];
     }
-    return '';
-  },
-
-  // 成语首字母缩写
-  _abbr(word) {
-    let r = '';
-    for (const c of word) {
-      if (c >= '\u4e00' && c <= '\u9fa5') r += c;
-      if (r.length === 4) break;
-    }
-    return r;
+    return null;
   },
 });

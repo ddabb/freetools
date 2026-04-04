@@ -421,3 +421,58 @@ page {
 .changelog-btn-hover {
   opacity: 0.8;
 }
+
+/* 联系我们样式 */
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.contact-item:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.98);
+}
+
+.contact-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.contact-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.contact-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.contact-value {
+  font-size: 28rpx;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.contact-arrow {
+  font-size: 36rpx;
+  color: #999;
+  font-weight: bold;
+}
+
+.contact-tip {
+  font-size: 24rpx;
+  color: #856404;
+  background: rgba(255, 193, 7, 0.15);
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  margin-top: 8rpx;
+  line-height: 1.5;
+}

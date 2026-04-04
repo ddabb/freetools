@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "取数模拟器",
-          "pathName": "packages/math/pages/random-selector/random-selector",
+          "name": "成语接龙",
+          "pathName": "packages/life/pages/idiom-solitaire/idiom-solitaire",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "取数模拟器",
+          "pathName": "packages/math/pages/random-selector/random-selector",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "知识列表",

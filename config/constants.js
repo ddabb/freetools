@@ -35,7 +35,7 @@ const toolFrequency = {
 
   'timestamp-converter': 36,  // 时间戳转换器
   'color-converter': 34,     // 颜色转换器
-  'avatar-generator': 45,     // 汉字头像
+
   'emoji-to-png': 42,        // Emoji转图片
   'text-to-png': 40,          // 文本转图片
   'copywriting': 80,            // 文案工具

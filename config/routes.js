@@ -47,7 +47,7 @@ const toolRoutes = {
   'word-counter': '/packages/text/pages/word-counter/word-counter',
   'markdown-preview': '/packages/text/pages/markdown-preview/markdown-preview',
   'text-diff': '/packages/text/pages/text-diff/text-diff',
-  'avatar-generator': '/packages/text/pages/avatar-generator/avatar-generator',
+
   'emoji-to-png': '/packages/text/pages/emoji-to-png/emoji-to-png',
   'text-to-png': '/packages/text/pages/text-to-png/text-to-png',
   'regex-tester': '/packages/text/pages/regex-tester/regex-tester',

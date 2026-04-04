@@ -516,16 +516,7 @@ const tools = [
     frequency: 40
   },
   // 数学工具分类结束
-  {
-    id: 'avatar-generator',
-    name: '汉字头像',
-    icon: '🎨',
-    color: 'purple',
-    url: '/packages/text/pages/avatar-generator/avatar-generator',
-    categories: ['生活工具', '学习工具'],
-    keywords: ['汉字', '头像', '生成'],
-    description: '输入汉字生成专属头像'
-  },
+
   {
     id: 'emoji-to-png',
     name: 'Emoji转图片',
@@ -614,9 +605,7 @@ allTools.forEach(tool => {
 
 // 常用工具（首页显示）
 const commonTools = [
-  // 置顶工具
-  tools.find(t => t.id === 'knowledge-query'),  // 随身百科（置顶）
-  
+
   // 普通常用工具 - 按用户排序
   tools.find(t => t.id === 'calendar'),      // 万年历
   tools.find(t => t.id === 'time-tool'),     // 时间工具

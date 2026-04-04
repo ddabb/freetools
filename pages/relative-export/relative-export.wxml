@@ -36,6 +36,10 @@
         </view>
       </view>
       <view class="export-section">
+        <button class="guide-btn" bindtap="onShowGuide">
+          <text class="guide-icon">📖</text>
+          <text class="guide-text">说明</text>
+        </button>
         <button class="export-btn {{exporting ? 'loading' : ''}}" bindtap="onExportExcel" loading="{{exporting}}" disabled="{{exporting}}">
           <text class="export-icon">📊</text>
           <text class="export-text">{{exporting ? '导出中...' : '导出Excel'}}</text>

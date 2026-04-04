@@ -106,6 +106,32 @@
       </view>
     </view>
 
+    <!-- 联系我们卡片 -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">📞 联系我们</text>
+      </view>
+      <view class="project-content">
+        <view class="contact-item" bindtap="onCopyWechat">
+          <text class="contact-icon">📱</text>
+          <view class="contact-info">
+            <text class="contact-label">微信公众号</text>
+            <text class="contact-value">随身工具宝</text>
+          </view>
+          <text class="contact-arrow">›</text>
+        </view>
+        <view class="contact-item" bindtap="onCopyEmail">
+          <text class="contact-icon">✉️</text>
+          <view class="contact-info">
+            <text class="contact-label">联系邮箱</text>
+            <text class="contact-value">1011888891@qq.com</text>
+          </view>
+          <text class="contact-arrow">›</text>
+        </view>
+        <text class="contact-tip">💡 问题反馈、建议、商务合作欢迎来信</text>
+      </view>
+    </view>
+
     <!-- ICP备案信息卡片 -->
     <view class="project-card">
       <view class="project-header">

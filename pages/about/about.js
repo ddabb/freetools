@@ -58,6 +58,34 @@ Page({
     }
   },
 
+  // 复制微信公众号名称
+  onCopyWechat() {
+    wx.setClipboardData({
+      data: '随身工具宝',
+      success: () => {
+        wx.showToast({
+          title: '已复制公众号名称',
+          icon: 'success',
+          duration: 2000
+        });
+      }
+    });
+  },
+
+  // 复制邮箱地址
+  onCopyEmail() {
+    wx.setClipboardData({
+      data: '1011888891@qq.com',
+      success: () => {
+        wx.showToast({
+          title: '已复制邮箱',
+          icon: 'success',
+          duration: 2000
+        });
+      }
+    });
+  },
+
   // 添加到我的小程序（收藏功能）
   addToFavorite() {
     if (wx.addShortcut) {
