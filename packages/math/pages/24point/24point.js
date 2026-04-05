@@ -2,8 +2,8 @@
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
-const QUESTION_KEY = '24point_questions';
-const QUESTION_TIMESTAMP_KEY = '24point_questions_timestamp';
+const QUESTION_KEY = 'cdn_24point_questions';
+const QUESTION_TIMESTAMP_KEY = 'cdn_24point_questions_ts';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存
 
 // 本地备用题目

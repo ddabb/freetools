@@ -5,8 +5,8 @@ const XLSX = require('../../../../libs/xlsx.full.min.js');
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
-const DAILY_KEY = 'daily_sudoku';
-const DAILY_TS_KEY = 'daily_sudoku_ts';
+const DAILY_KEY = 'cdn_daily_sudoku';
+const DAILY_TS_KEY = 'cdn_daily_sudoku_ts';
 
 Page({
   data: {

@@ -6,13 +6,13 @@
 // CDN 配置
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire';
 
-// 缓存配置
-const CACHE_KEY_INDEX = 'idiom_index_data';
-const CACHE_KEY_TS = 'idiom_index_ts';
+// 缓存配置（CDN 数据，需加 cdn_ 前缀以支持 app.js 自动清理）
+const CACHE_KEY_INDEX = 'cdn_idiom_index_data';
+const CACHE_KEY_TS = 'cdn_idiom_index_ts';
 const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 
 // 日志配置
-const LOG_KEY = 'idiom_data_logs';
+const LOG_KEY = 'cdn_idiom_data_logs';
 const MAX_LOG_SIZE = 100;
 
 // 添加日志
