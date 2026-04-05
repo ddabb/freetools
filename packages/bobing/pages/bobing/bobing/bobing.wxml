@@ -67,11 +67,11 @@
 </view>
 
 <!-- 博饼规则弹窗 -->
-<view class="modal" wx:if="{{showRulesModal}}">
-  <view class="modal-content">
+<view class="modal" wx:if="{{showRulesModal}}" catchtap="closeRules">
+  <view class="modal-content" catchtap="">
     <view class="modal-header">
       <h3>博饼规则</h3>
-      <view class="modal-close" bindtap="closeRules">&times;</view>
+      <view class="modal-close" catchtap="closeRules">×</view>
     </view>
     <view class="modal-body">
       <p class="modal-intro">博饼是闽南地区，尤其是厦门一带中秋传统习俗。掷6个骰子，根据点数组合决定奖项。点击"掷骰子"试试手气！</p>
@@ -88,11 +88,11 @@
 </view>
 
 <!-- 当前结果弹窗 -->
-<view class="modal" wx:if="{{showResultModal}}">
-  <view class="modal-content">
+<view class="modal" wx:if="{{showResultModal}}" catchtap="closeResult">
+  <view class="modal-content" catchtap="">
     <view class="modal-header">
       <h3>当前结果</h3>
-      <view class="modal-close" bindtap="closeResult">&times;</view>
+      <view class="modal-close" catchtap="closeResult">×</view>
     </view>
     <view class="modal-body">
       <view class="result-section">
@@ -107,11 +107,11 @@
 </view>
 
 <!-- 历史记录弹窗 -->
-<view class="modal" wx:if="{{showHistoryModal}}">
-  <view class="modal-content">
+<view class="modal" wx:if="{{showHistoryModal}}" catchtap="closeHistory">
+  <view class="modal-content" catchtap="">
     <view class="modal-header">
       <h3>历史记录</h3>
-      <view class="modal-close" bindtap="closeHistory">&times;</view>
+      <view class="modal-close" catchtap="closeHistory">×</view>
     </view>
     <view class="modal-body">
       <view class="history-section">

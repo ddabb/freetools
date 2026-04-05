@@ -453,10 +453,18 @@ h1 {
   cursor: pointer;
   color: #7f8c8d;
   transition: color 0.2s ease;
+  padding: 8px 12px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .modal-close:hover {
   color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
 }
 
 .modal-body {

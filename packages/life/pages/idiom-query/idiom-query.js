@@ -17,6 +17,7 @@ Page({
   },
 
   onLoad() {
+    this._letterCache = {};  // 页面级内存缓存：{ [firstLetter]: Array }
     this._loadData();
   },
 
@@ -52,17 +53,17 @@ Page({
 
     word = word.replace(/\s+/g, '');
 
-    // 先检查是否四字成语
-    if (word.length !== 4) {
+    // 先检查是否在成语库中
+    if (!dataService.hasWord(word)) {
       wx.showToast({ 
-        title: '请输入四字成语', 
+        title: `"${word}" 不在成语词库中`, 
         icon: 'none',
         duration: 2000
       });
       this.setData({
         queryResults: [],
         queryCount: 0,
-        queryTip: '请输入四字成语，查看可接龙的下联',
+        queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
         hasContent: false,
       });
       return;
@@ -87,7 +88,7 @@ Page({
       this.setData({
         queryResults: [],
         queryCount: 0,
-        queryTip: '请输入四字成语，查看可接龙的下联',
+        queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
         hasContent: false,
       });
       return;
@@ -122,21 +123,29 @@ Page({
     const fc = dataService.getFirstLetter(word);
     if (!fc) return;
 
-    wx.showLoading({ title: '加载中…', mask: true });
-
-    const url = `${dataService.CDN_BASE}/letter/${fc}.json`;
-    this._fetch(url).then(arr => {
-      wx.hideLoading();
-      const item = (arr || []).find(i => i.w === word);
+    // 1. 命中页面级内存缓存 → 直接展示，无任何 loading
+    if (this._letterCache[fc]) {
+      const item = this._letterCache[fc].find(i => i.w === word);
       if (item) {
         this.setData({
           showDetail: true,
-          detailItem: {
-            word,
-            pinyin: item.p,
-            explanation: item.e,
-            derivation: item.d,
-          }
+          detailItem: { word, pinyin: item.p, explanation: item.e, derivation: item.d },
+        });
+        return;
+      }
+    }
+
+    // 2. 未命中内存缓存 → 走 dataService（内部优先 Storage 缓存，其次 CDN）
+    wx.showLoading({ title: '加载中…', mask: true });
+
+    dataService.fetchLetterData(fc).then(arr => {
+      wx.hideLoading();
+      this._letterCache[fc] = arr || [];  // 写入内存缓存
+      const item = this._letterCache[fc].find(i => i.w === word);
+      if (item) {
+        this.setData({
+          showDetail: true,
+          detailItem: { word, pinyin: item.p, explanation: item.e, derivation: item.d },
         });
       }
     }).catch(() => {
@@ -208,20 +217,6 @@ Page({
       queryResults: [],
       queryCount: 0,
       queryTip: '输入任意成语，查看可接龙的下联',
-    });
-  },
-
-  // =====================
-  //  工具函数
-  // =====================
-  _fetch(url) {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url,
-        timeout: 15000,
-        success: res => res.statusCode === 200 && res.data ? resolve(res.data) : reject(new Error('bad status')),
-        fail: reject,
-      });
     });
   },
 

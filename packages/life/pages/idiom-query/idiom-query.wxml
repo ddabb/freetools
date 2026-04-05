@@ -15,7 +15,7 @@
           <view class="search-input-wrap">
             <input
               class="search-input"
-              placeholder="输入四字成语，查看可接龙的成语"
+              placeholder="输入成语，查看可接龙的成语"
               placeholder-class="search-placeholder"
               value="{{queryInput}}"
               bindinput="onQueryInput"

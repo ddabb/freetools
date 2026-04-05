@@ -215,7 +215,7 @@ function loadData() {
 }
 
 /**
- * 根据首字母加载成语详情数据
+ * 根据首字母加载成语详情数据（带 Storage 缓存，7 天有效）
  * @param {string} firstLetter - 首字母 (a-z)
  * @returns {Promise<Array>} 成语详情数组
  */
@@ -223,15 +223,44 @@ function fetchLetterData(firstLetter) {
   if (!firstLetter) {
     return Promise.reject(new Error('firstLetter is required'));
   }
-  return request(`${CDN_BASE}/letter/${firstLetter}.json`);
+
+  const cacheKey = `cdn_idiom_letter_${firstLetter}`;
+  const tsKey = `cdn_idiom_letter_${firstLetter}_ts`;
+  const now = Date.now();
+
+  // 优先读 Storage 缓存
+  try {
+    const cached = wx.getStorageSync(cacheKey);
+    const ts = wx.getStorageSync(tsKey);
+    if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+      return Promise.resolve(cached);
+    }
+  } catch (e) { /* 读缓存失败不影响正常流程 */ }
+
+  // 缓存失效，走网络
+  return request(`${CDN_BASE}/letter/${firstLetter}.json`).then(data => {
+    try {
+      wx.setStorageSync(cacheKey, data);
+      wx.setStorageSync(tsKey, now);
+    } catch (e) { /* 写缓存失败不影响正常流程 */ }
+    return data;
+  });
 }
 
 /**
- * 清除本地缓存
+ * 清除本地缓存（索引 + 所有 letter 详情）
  */
 function clearCache() {
   wx.removeStorageSync(CACHE_KEY_INDEX);
   wx.removeStorageSync(CACHE_KEY_TS);
+
+  // 清除 letter 详情缓存（a-z）
+  const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  letters.forEach(l => {
+    wx.removeStorageSync(`cdn_idiom_letter_${l}`);
+    wx.removeStorageSync(`cdn_idiom_letter_${l}_ts`);
+  });
+
   firstFullIndex = null;
   lastIndex = null;
   wordToFirstPy = null;
@@ -350,8 +379,8 @@ function querySolitaire(word) {
     return { candidates: [], error: '数据加载中' };
   }
 
-  if (!word || word.length !== 4) {
-    return { candidates: [], error: '请输入四字成语' };
+  if (!word) {
+    return { candidates: [], error: '请输入成语' };
   }
 
   if (!allWords.has(word)) {

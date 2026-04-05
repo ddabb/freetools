@@ -269,7 +269,7 @@ const tools = [
     color: 'purple',
     url: '/packages/life/pages/text-to-image/text-to-image',
     categories: ['生活工具'],
-    keywords: ['文字', '图片', '生成', '二维码'],
+    keywords: ['文字', '图片', '生成', '水印', '出处'],
     description: '将文字转换为图片，支持添加出处和二维码'
   },
   {
@@ -623,22 +623,45 @@ allTools.forEach(tool => {
   }
 });
 
-// 常用工具（首页显示）
+// 常用工具（首页显示）- 按分类 + 优先级排序
 const commonTools = [
 
-  // 普通常用工具 - 按用户排序
-  tools.find(t => t.id === 'calendar'),      // 万年历
-  tools.find(t => t.id === 'time-tool'),     // 时间工具
-  tools.find(t => t.id === 'datediff'),       // 日期差计算
-  tools.find(t => t.id === 'qrcode'),        // 生成二维码
-  tools.find(t => t.id === 'idiom-query'),   // 成语查询
-  tools.find(t => t.id === 'idiom-battle'),  // 成语对战
-  tools.find(t => t.id === 'idiom-chain'),   // 成语龙链
-  tools.find(t => t.id === 'copywriting'),   // 文案工具
-  tools.find(t => t.id === 'mortgage'),      // 房贷计算
+  // ===== 成语工具（置顶）=====
+  tools.find(t => t.id === 'idiom-query'),        // 成语查询
+  tools.find(t => t.id === 'idiom-battle'),       // 成语对战
+  tools.find(t => t.id === 'idiom-chain'),        // 成语龙链
+
+  // ===== 生活工具（按固定顺序）=====
+  tools.find(t => t.id === 'calendar'),           // 万年历
+  tools.find(t => t.id === 'time-tool'),          // 时间工具
+  tools.find(t => t.id === 'datediff'),          // 日期差计算
+  tools.find(t => t.id === 'zodiac'),             // 生肖查询
+  tools.find(t => t.id === 'constellation'),      // 星座查询
+  tools.find(t => t.id === 'relative-calculator'), // 亲戚计算器
+  tools.find(t => t.id === 'text-to-image'),     // 文案生图
+  tools.find(t => t.id === 'qrcode'),             // 生成二维码
+  tools.find(t => t.id === 'copywriting'),        // 文案工具
+  tools.find(t => t.id === 'article-cover'),      // 公众号配图
+  tools.find(t => t.id === 'leapyear'),           // 闰年判断
+  tools.find(t => t.id === 'what-to-eat'),        // 今天吃什么
+  tools.find(t => t.id === 'life-countdown'),     // 人生A4纸
+  tools.find(t => t.id === 'battery-health'),     // 电池健康
+  tools.find(t => t.id === 'bobing'),             // 中秋博饼
+
+  // ===== 财务工具 =====
+  tools.find(t => t.id === 'mortgage'),           // 房贷计算
+  tools.find(t => t.id === 'retirementCalculator'), // 退休金计算
+  tools.find(t => t.id === 'price-comparison'),   // 价格对比
+
+  // ===== 安全工具 =====
   tools.find(t => t.id === 'password-generator'), // 密码生成
-  tools.find(t => t.id === 'idcard'),        // 身份证验证
-  tools.find(t => t.id === 'price-comparison')  // 价格对比
+  tools.find(t => t.id === 'idcard'),             // 身份证验证
+
+  // ===== 其他常用 =====
+  tools.find(t => t.id === 'random-selector'),    // 取数模拟器
+  tools.find(t => t.id === 'health-calculator'),  // 健康计算
+  tools.find(t => t.id === 'emoji-to-png'),      // Emoji转图片
+  tools.find(t => t.id === 'text-to-png'),        // 文本转图片
 ];
 
 // 确保在导出前 allTools 已经定义
