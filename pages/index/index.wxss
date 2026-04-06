@@ -412,7 +412,17 @@
   transition: all 0.3s ease;
 }
 
-.category-card-direct:active {
+/* hover-class 样式替代 -hover */
+.recent-item-hover {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.clear-history-hover {
+  background: rgba(255, 200, 160, 0.25);
+}
+
+.category-card-direct-hover {
   background: rgba(255, 255, 255, 0.75);
   transform: scale(0.98);
 }
@@ -446,9 +456,7 @@
   transition: all 0.3s ease;
 }
 
-.clear-history:active {
-  background: rgba(255, 200, 160, 0.25);
-}
+
 
 .recent-list {
   white-space: nowrap;
@@ -468,10 +476,7 @@
   box-shadow: 0 2rpx 8rpx rgba(255, 100, 60, 0.10);
 }
 
-.recent-item:active {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.75);
-}
+
 
 .recent-icon {
   font-size: 50rpx;

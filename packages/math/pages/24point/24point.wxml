@@ -9,11 +9,11 @@
   <!-- 模式切换选项卡 -->
   <view class="mode-section">
     <view class="mode-tabs">
-      <view class="mode-tab {{gameMode === 'custom' ? 'active' : ''}}" bindtap="switchGameMode" data-mode="custom">
+      <view class="mode-tab {{gameMode === 'custom' ? 'active' : ''}}" hover-class="mode-tab-hover" bindtap="switchGameMode" data-mode="custom">
         <text class="mode-icon">🔢</text>
         <text class="mode-text">自定义模式</text>
       </view>
-      <view class="mode-tab {{gameMode === 'preset' ? 'active' : ''}}" bindtap="switchGameMode" data-mode="preset">
+      <view class="mode-tab {{gameMode === 'preset' ? 'active' : ''}}" hover-class="mode-tab-hover" bindtap="switchGameMode" data-mode="preset">
         <text class="mode-icon">🎲</text>
         <text class="mode-text">预设模式</text>
       </view>
@@ -34,7 +34,7 @@
   <view class="mode-control-section">
     <!-- 预设模式控制 -->
     <view wx:if="{{gameMode === 'preset'}}">
-      <button class="new-game-btn mode-specific-btn" bindtap="generateNewGame">
+      <button class="new-game-btn mode-specific-btn" hover-class="mode-specific-btn-hover" bindtap="generateNewGame">
         <text class="btn-icon">🎲</text>
         <text class="btn-text">新游戏</text>
       </button>
@@ -44,22 +44,22 @@
     <view wx:elif="{{gameMode === 'custom'}}">
       <view class="custom-input-section">
         <view class="custom-inputs">
-          <input type="number" placeholder="数字1" value="{{customNumbers[0]}}" bindinput="onCustomInput1" class="custom-input" />
-          <input type="number" placeholder="数字2" value="{{customNumbers[1]}}" bindinput="onCustomInput2" class="custom-input" />
-          <input type="number" placeholder="数字3" value="{{customNumbers[2]}}" bindinput="onCustomInput3" class="custom-input" />
-          <input type="number" placeholder="数字4" value="{{customNumbers[3]}}" bindinput="onCustomInput4" class="custom-input" />
-          <button class="random-generate-btn" bindtap="generateRandomCustomNumbers">
+          <input type="number" placeholder="数字1" value="{{customNumbers[0]}}" bindinput="onCustomInput1" class="custom-input"  placeholder-class="input-placeholder"/>
+          <input type="number" placeholder="数字2" value="{{customNumbers[1]}}" bindinput="onCustomInput2" class="custom-input"  placeholder-class="input-placeholder"/>
+          <input type="number" placeholder="数字3" value="{{customNumbers[2]}}" bindinput="onCustomInput3" class="custom-input"  placeholder-class="input-placeholder"/>
+          <input type="number" placeholder="数字4" value="{{customNumbers[3]}}" bindinput="onCustomInput4" class="custom-input"  placeholder-class="input-placeholder"/>
+          <button class="random-generate-btn" hover-class="random-generate-btn-hover" bindtap="generateRandomCustomNumbers">
             <text class="btn-icon">🎲</text>
             <text class="btn-text">随机生成</text>
           </button>
         </view>
         
         <view class="custom-actions">
-          <button class="custom-btn check-solvability-btn" bindtap="checkSolvability" disabled="{{!customNumbersValid}}">
+          <button class="custom-btn check-solvability-btn" hover-class="custom-btn-hover" bindtap="checkSolvability" disabled="{{!customNumbersValid}}">
             <text class="btn-icon">🔍</text>
             <text class="btn-text">检查是否有解</text>
           </button>
-          <button class="custom-btn use-custom-btn" bindtap="useCustomNumbers" disabled="{{!customNumbersValid}}">
+          <button class="custom-btn use-custom-btn" hover-class="custom-btn-hover" bindtap="useCustomNumbers" disabled="{{!customNumbersValid}}">
             <text class="btn-icon">🎮</text>
             <text class="btn-text">使用这些数字游戏</text>
           </button>
@@ -85,11 +85,11 @@
   <!-- 全局控制按钮（仅预设模式显示） -->
   <view class="global-control-section" wx:if="{{gameMode === 'preset'}}">
     <view class="global-control-buttons">
-      <button class="global-control-btn hint-btn" bindtap="showHint" disabled="{{showingHint}}">
+      <button class="global-control-btn hint-btn" hover-class="control-btn-hover" bindtap="showHint" disabled="{{showingHint}}">
         <text class="btn-icon">💡</text>
         <text class="btn-text">提示</text>
       </button>
-      <button class="global-control-btn solution-btn" bindtap="showSolution" disabled="{{solutionFound}}">
+      <button class="global-control-btn solution-btn" hover-class="control-btn-hover" bindtap="showSolution" disabled="{{solutionFound}}">
         <text class="btn-icon">🔍</text>
         <text class="btn-text">答案</text>
       </button>
@@ -99,12 +99,12 @@
   <!-- 用户输入区域 -->
   <view class="input-section">
     <view class="expression-input-container">
-      <input type="text" value="{{expression}}" bindinput="setExpression" class="expression-input" placeholder="输入算式，如：(1+2+3)×4 或 (1+2+3)*4" />
+      <input type="text" value="{{expression}}" bindinput="setExpression" class="expression-input" placeholder="输入算式，如：(1+2+3)×4 或 (1+2+3)*4"  placeholder-class="input-placeholder"/>
       <button class="clear-btn" bindtap="clearExpression" wx:if="{{expression}}">×</button>
     </view>
     
     <view class="action-buttons">
-      <button class="check-btn" bindtap="checkAnswer" disabled="{{!expression}}">
+      <button class="check-btn" bindtap="checkAnswer" disabled="{{!expression}}" hover-class="check-btn-active">
         <text class="btn-text">检验答案</text>
       </button>
     </view>

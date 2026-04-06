@@ -3,27 +3,27 @@
   <view class="stats-overview">
     <view class="overview-title">📊 文本统计概览</view>
     <view class="stats-grid">
-      <view class="stat-card primary">
+      <view class="stat-card primary" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.characters}}</text>
         <text class="stat-label">总字符</text>
       </view>
-      <view class="stat-card success">
+      <view class="stat-card success" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.charactersNoSpace}}</text>
         <text class="stat-label">字符(无空格)</text>
       </view>
-      <view class="stat-card warning">
+      <view class="stat-card warning" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.words}}</text>
         <text class="stat-label">词语数</text>
       </view>
-      <view class="stat-card info">
+      <view class="stat-card info" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.sentences}}</text>
         <text class="stat-label">句子数</text>
       </view>
-      <view class="stat-card purple">
+      <view class="stat-card purple" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.paragraphs}}</text>
         <text class="stat-label">段落数</text>
       </view>
-      <view class="stat-card rose">
+      <view class="stat-card rose" hover-class="stat-card-hover">
         <text class="stat-number">{{stats.lines}}</text>
         <text class="stat-label">行数</text>
       </view>
@@ -76,9 +76,9 @@
       <view class="textarea-footer">
         <text class="char-count">已输入 {{inputText.length}}/50000 字符</text>
         <view class="textarea-controls">
-          <button class="control-btn" bindtap="clearText">清空</button>
-          <button class="control-btn primary" bindtap="pasteText">粘贴</button>
-          <button class="control-btn success" bindtap="copyText">复制</button>
+          <button class="control-btn" hover-class="control-btn-hover" bindtap="clearText">清空</button>
+          <button class="control-btn primary" hover-class="control-btn-hover" bindtap="pasteText">粘贴</button>
+          <button class="control-btn success" hover-class="control-btn-hover" bindtap="copyText">复制</button>
         </view>
       </view>
     </view>
@@ -89,7 +89,7 @@
     <view class="section-title">🎯 写作目标</view>
     <view class="goal-item">
       <text class="goal-label">目标字数:</text>
-      <input type="number" value="{{targetWords}}" bindinput="setTargetWords" class="goal-input" placeholder="设置目标字数" />
+      <input type="number" value="{{targetWords}}" bindinput="setTargetWords" class="goal-input" placeholder="设置目标字数"  placeholder-class="input-placeholder"/>
     </view>
     <view class="progress-container" wx:if="{{targetWords > 0}}">
       <view class="progress-info">
@@ -129,19 +129,19 @@
   <view class="quick-actions">
     <view class="section-title">⚡ 快捷操作</view>
     <view class="action-grid">
-      <view class="action-item" bindtap="loadSampleText">
+      <view class="action-item" hover-class="action-item-hover" bindtap="loadSampleText">
         <text class="action-icon">📝</text>
         <text class="action-text">示例文本</text>
       </view>
-      <view class="action-item" bindtap="shareStats">
+      <view class="action-item" hover-class="action-item-hover" bindtap="shareStats">
         <text class="action-icon">📤</text>
         <text class="action-text">分享统计</text>
       </view>
-      <view class="action-item" bindtap="exportReport">
+      <view class="action-item" hover-class="action-item-hover" bindtap="exportReport">
         <text class="action-icon">📋</text>
         <text class="action-text">导出报告</text>
       </view>
-      <view class="action-item" bindtap="toggleCase">
+      <view class="action-item" hover-class="action-item-hover" bindtap="toggleCase">
         <text class="action-icon">🔤</text>
         <text class="action-text">大小写转换</text>
       </view>

@@ -6,7 +6,6 @@ Page({
     flags: [], // 标志位
     showResults: false, // 是否显示结果
     matches: [], // 匹配结果
-    matchCount: 0, // 匹配数量
     errorMessage: '', // 错误消息
     highlightedParts: [], // 高亮显示部分
     showCommonRegexModal: false, // 是否显示常用正则表达式弹窗
@@ -148,8 +147,7 @@ Page({
 
       this.setData({
         matches,
-        matchCount: matches.length,
-        highlightedParts,
+            highlightedParts,
         showResults: true,
         errorMessage: ''
       });
@@ -219,7 +217,6 @@ Page({
     this.setData({
       showResults: false,
       matches: [],
-      matchCount: 0,
       highlightedParts: []
     });
   },

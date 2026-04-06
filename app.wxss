@@ -147,4 +147,10 @@ page {
   font-size: 24rpx;
   color: #f59a23;
   line-height: 1.6;
-} 
+}
+
+/* 全局 placeholder 样式 - 提升对比度以满足无障碍要求 */
+/* 在 input 组件上使用 placeholder-class="input-placeholder" 引用 */
+.input-placeholder {
+  color: #999999;
+}

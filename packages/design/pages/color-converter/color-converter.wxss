@@ -76,7 +76,7 @@ page {
   margin: 0;
 }
 
-.copy-btn:active {
+.copy-btn-hover {
   opacity: 0.9;
   transform: scale(0.96);
 }
@@ -227,7 +227,7 @@ page {
   border: none;
 }
 
-.action-btn:active {
+.action-btn-hover {
   opacity: 0.9;
   transform: scale(0.98);
 }
@@ -259,7 +259,7 @@ page {
   transition: all 0.15s ease;
 }
 
-.format-item:active {
+.format-item-hover {
   background: #f0f0f0;
   transform: scale(0.99);
 }
@@ -362,7 +362,7 @@ page {
   transition: transform 0.15s ease;
 }
 
-.scheme-color:active {
+.scheme-color-hover {
   transform: scale(0.94);
 }
 
@@ -380,7 +380,7 @@ page {
   transition: transform 0.15s ease;
 }
 
-.preset-color:active {
+.preset-color-hover {
   transform: scale(0.88);
 }
 
@@ -389,6 +389,12 @@ page {
   font-size: 22rpx;
   color: #ff4757;
   font-weight: 600;
+  padding: 16rpx 24rpx;
+  min-width: 80rpx;
+  min-height: 60rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .recent-grid {
@@ -404,7 +410,7 @@ page {
   transition: transform 0.15s ease;
 }
 
-.recent-color:active {
+.recent-color-hover {
   transform: scale(0.88);
 }
 
@@ -469,6 +475,6 @@ wx-slider {
   transition: left 0.1s ease;
 }
 
-.custom-slider-thumb:active {
+.custom-slider-thumb-hover {
   transform: translate(-50%, -50%) scale(1.2);
 }

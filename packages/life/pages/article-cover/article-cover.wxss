@@ -192,6 +192,6 @@
   border: none;
 }
 
-.btn-primary:active {
+.btn-primary-hover {
   opacity: 0.9;
 }

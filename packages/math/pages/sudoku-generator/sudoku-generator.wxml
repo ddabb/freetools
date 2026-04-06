@@ -92,7 +92,7 @@
       <view class="number-grid">
         <!-- 第一行：1-6 -->
         <view 
-          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" hover-class="number-item-hover" 
           wx:for="{{[1,2,3,4,5,6]}}" 
           wx:key="*this"
           bindtap="onNumberInput"
@@ -102,7 +102,7 @@
         </view>
         <!-- 第二行：7-9, 候选, 清除, 重置 -->
         <view 
-          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" 
+          class="number-item {{selectedCell.row === -1 ? 'disabled' : ''}}" hover-class="number-item-hover" 
           wx:for="{{[7,8,9]}}" 
           wx:key="*this"
           bindtap="onNumberInput"
@@ -112,16 +112,16 @@
         </view>
         <!-- 候选解按钮 -->
         <view 
-          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
+          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}" hover-class="number-item-hover"
           bindtap="toggleCandidates"
         >
           {{showCandidates ? '💡' : '🔴'}}
         </view>
-        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
+        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" hover-class="number-item-hover" bindtap="onClearCell">
           清除
         </view>
         <!-- 重置按钮 -->
-        <view class="number-item reset-item" bindtap="resetBoard">
+        <view class="number-item reset-item" hover-class="number-item-hover" bindtap="resetBoard">
           重置
         </view>
       </view>

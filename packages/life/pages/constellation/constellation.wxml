@@ -3,7 +3,7 @@
   <view class="input-group">
     <view class="input-hint">选择日期(公历):</view>
     <picker mode="multiSelector" range="{{pickerRange}}" value="{{pickerValue}}" bindchange="onDateChange" bindcolumnchange="onPickerColumnChange">
-      <view class="date-picker-display">
+      <view class="date-picker-display" hover-class="date-picker-display-hover">
         <text class="date-text">{{month}}月{{day}}日</text>
         <text class="date-arrow">▼</text>
       </view>
@@ -13,7 +13,7 @@
 
 <!-- 结果区域 -->
 <view class="result-section">
-  <view class="constellation-circle">
+  <view class="constellation-circle" hover-class="constellation-circle-hover">
     <view class="constellation-icon">
       <text class="icon">{{constellationIcon}}</text>
     </view>
@@ -21,10 +21,10 @@
     <view class="constellation-date">{{constellationDate}}</view>
   </view>
   <view class="link-row">
-    <view class="link-btn" bindtap="goToCalendar">
+    <view class="link-btn" hover-class="link-btn-hover" bindtap="goToCalendar">
       <text>万年历</text>
     </view>
-    <view class="link-btn" bindtap="goToZodiac">
+    <view class="link-btn" hover-class="link-btn-hover" bindtap="goToZodiac">
       <text>生肖</text>
     </view>
   </view>
@@ -55,7 +55,7 @@
 <view class="detail-section" wx:if="{{constellationData}}">
   <view class="detail-title">{{constellationName}} 特性分析</view>
   
-  <view class="detail-card">
+  <view class="detail-card" hover-class="detail-card-hover">
     <view class="detail-header">
       <text class="detail-icon">🎯</text>
       <text class="detail-label">性格特点</text>
@@ -63,7 +63,7 @@
     <view class="detail-content">{{constellationData.personality}}</view>
   </view>
 
-  <view class="detail-card">
+  <view class="detail-card" hover-class="detail-card-hover">
     <view class="detail-header">
       <text class="detail-icon">💕</text>
       <text class="detail-label">爱情运势</text>
@@ -71,7 +71,7 @@
     <view class="detail-content">{{constellationData.love}}</view>
   </view>
 
-  <view class="detail-card">
+  <view class="detail-card" hover-class="detail-card-hover">
     <view class="detail-header">
       <text class="detail-icon">💼</text>
       <text class="detail-label">事业运势</text>
@@ -79,7 +79,7 @@
     <view class="detail-content">{{constellationData.career}}</view>
   </view>
 
-  <view class="detail-card">
+  <view class="detail-card" hover-class="detail-card-hover">
     <view class="detail-header">
       <text class="detail-icon">🍀</text>
       <text class="detail-label">幸运数字</text>

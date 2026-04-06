@@ -86,7 +86,7 @@ page {
   white-space: nowrap;
 }
 
-.mini-btn:active {
+.mini-btn-hover {
   opacity: 0.8;
 }
 

@@ -8,7 +8,7 @@
         <text class="required-mark">*</text>
       </view>
       <view class="input-with-unit">
-        <input type="number" value="{{num1}}" bindinput="setNum1" class="input-field" placeholder="请输入正整数" min="1" max="999999"/>
+        <input type="number" value="{{num1}}" bindinput="setNum1" class="input-field" placeholder="请输入正整数" min="1" max="999999" placeholder-class="input-placeholder"/>
       </view>
     </view>
 
@@ -19,13 +19,13 @@
         <text class="required-mark">*</text>
       </view>
       <view class="input-with-unit">
-        <input type="number" value="{{num2}}" bindinput="setNum2" class="input-field" placeholder="请输入正整数" min="1" max="999999"/>
+        <input type="number" value="{{num2}}" bindinput="setNum2" class="input-field" placeholder="请输入正整数" min="1" max="999999" placeholder-class="input-placeholder"/>
       </view>
     </view>
 
     <!-- 计算按钮 -->
     <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="calculate" disabled="{{!canCalculate}}">
+      <button class="calculate-btn full-width-btn" bindtap="calculate" disabled="{{!canCalculate}}" hover-class="calculate-btn-active">
         <text class="btn-text">开始计算</text>
       </button>
     </view>
@@ -60,7 +60,7 @@
   <view class="examples-section">
     <view class="examples-title">快速示例</view>
     <view class="examples-grid">
-      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-num1="{{item.num1}}" data-num2="{{item.num2}}">
+      <view class="example-item" hover-class="example-item-hover" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-num1="{{item.num1}}" data-num2="{{item.num2}}">
         <text class="example-text">{{item.num1}} 和 {{item.num2}}</text>
       </view>
     </view>

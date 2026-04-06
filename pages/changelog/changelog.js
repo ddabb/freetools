@@ -2,6 +2,13 @@
 // 版本日志页面
 
 const XLSX = require('../../libs/xlsx.mini.min.js');
+const cacheManager = require('../../utils/cacheManager');
+const CDN_URL = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json';
+
+// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
+const CACHE_KEY_CHANGELOG = 'cdn_changelog';
+const CACHE_KEY_CHANGELOG_TS = 'cdn_changelog_ts';
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 
 Page({
   data: {
@@ -127,43 +134,40 @@ Page({
     });
   },
 
-  // 从 jsDelivr CDN 加载 changelog
+  /**
+   * 带缓存的请求（内存 → Storage → CDN，支持 304 + LRU）
+   */
+  fetchWithCache(cacheKey, tsKey, url) {
+    return cacheManager.fetchWithCache({
+      cacheKey,
+      tsKey,
+      url,
+      ttl: CACHE_EXPIRE
+    });
+  },
+
+  // 从 jsDelivr CDN 加载 changelog（带缓存）
   loadChangelog() {
     console.log('[changelog] 开始加载版本日志');
     this.setData({
       loading: true,
       error: ''
     });
-    wx.request({
-      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json'+ `?_t=${Date.now()}`,
-      method: 'GET',
-      timeout: 10000,
-      success: (res) => {
-        console.log('[changelog] 请求成功', {
-          statusCode: res.statusCode,
-          hasData: !!res.data
+
+    this.fetchWithCache(CACHE_KEY_CHANGELOG, CACHE_KEY_CHANGELOG_TS, CDN_URL)
+      .then(data => {
+        this.setData({
+          loading: false,
+          changelog: data
         });
-        if (res.statusCode === 200 && res.data) {
-          this.setData({
-            loading: false,
-            changelog: res.data
-          });
-        } else {
-          console.error('[changelog] 数据格式错误', res);
-          this.setData({
-            loading: false,
-            error: '数据格式错误，点击重试'
-          });
-        }
-      },
-      fail: (err) => {
-        console.error('[changelog] 网络请求失败', err);
+      })
+      .catch(err => {
+        console.error('[changelog] 加载失败', err);
         this.setData({
           loading: false,
           error: '网络请求失败，点击重试'
         });
-      }
-    });
+      });
   },
 
   // 点击重试

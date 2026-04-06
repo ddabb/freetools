@@ -13,10 +13,10 @@
           <picker bindchange="setTheme" value="{{themeIndex}}" range="{{themes}}" class="theme-picker">
             <view class="picker-btn">{{themes[themeIndex]}} ▼</view>
           </picker>
-          <button class="mini-btn" bindtap="insertTemplate">📋模板</button>
-          <button class="mini-btn" bindtap="boldText">B</button>
-          <button class="mini-btn" bindtap="italicText">I</button>
-          <button class="mini-btn" bindtap="codeText">{ }</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="insertTemplate">📋模板</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="boldText">B</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="italicText">I</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="codeText">{ }</button>
         </view>
         
         <textarea 
@@ -42,8 +42,8 @@
         
         <!-- 预览操作栏 -->
         <view class="preview-toolbar">
-          <button class="mini-btn" bindtap="refreshPreview">🔄 刷新</button>
-          <button class="mini-btn" bindtap="copyHtml">📋 复制HTML</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="refreshPreview">🔄 刷新</button>
+          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="copyHtml">📋 复制HTML</button>
         </view>
         
         <scroll-view scroll-y="true" class="preview-scroll">

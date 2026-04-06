@@ -145,7 +145,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.calculate-btn:not(.disabled):active {
+.calculate-btn-active {
   transform: translateY(-2rpx) scale(1.02);
   box-shadow: 0 20rpx 50rpx rgba(255, 107, 107, 0.5);
 }
@@ -432,7 +432,7 @@ page {
   cursor: pointer;
 }
 
-.banner-arrow:active {
+.banner-arrow-hover {
   background: rgba(255, 255, 255, 1);
   transform: scale(1.1);
 }
@@ -475,7 +475,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.reset-btn:active {
+.reset-btn-hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.5);
 }
@@ -500,7 +500,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.share-btn:active {
+.share-btn-hover {
   transform: translateY(-2rpx) scale(1.02);
   box-shadow: 0 20rpx 50rpx rgba(102, 126, 234, 0.5);
 }

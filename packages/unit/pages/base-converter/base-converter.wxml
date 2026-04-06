@@ -8,7 +8,7 @@
         <text class="required-mark">*</text>
       </view>
       <view class="unit-list">
-        <view wx:for="{{bases}}" wx:key="{{index}}" class="unit-item">
+        <view wx:for="{{bases}}" wx:key="{{index}}" class="unit-item" hover-class="unit-item-hover">
           <view class="unit-label">{{item}}</view>
           <input 
             type="text" 
@@ -19,7 +19,7 @@
             class="unit-input {{item === 'Base64' ? 'disabled' : ''}}" 
             placeholder="输入值"
             selectable="{{item === 'Base64'}}"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
     </view>
@@ -40,7 +40,7 @@
   <view class="examples-section">
     <view class="examples-title">快速示例</view>
     <view class="examples-grid">
-      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-value="{{item.value}}" data-source="{{item.source}}">
+      <view class="example-item" hover-class="example-item-hover" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-value="{{item.value}}" data-source="{{item.source}}">
         <text class="example-text">{{item.value}} ({{item.source}})</text>
       </view>
     </view>

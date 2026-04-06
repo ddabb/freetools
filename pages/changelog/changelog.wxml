@@ -25,7 +25,7 @@
             </view>
           </view>
           <view class="export-section">
-            <button class="export-btn" bindtap="onExportExcel" loading="{{exporting}}">
+            <button class="export-btn" hover-class="export-btn-hover" bindtap="onExportExcel" loading="{{exporting}}">
               <text class="export-icon">📊</text>
               <text class="export-text">{{exporting ? '导出中...' : '导出Excel'}}</text>
             </button>

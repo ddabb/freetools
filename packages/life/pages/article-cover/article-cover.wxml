@@ -44,7 +44,7 @@
         bindinput="onAuthorInput"
         maxlength="20"
         value="{{author}}"
-      ></input>
+       placeholder-class="input-placeholder"></input>
     </view>
   </view>
 
@@ -71,7 +71,7 @@
 
   <!-- 生成按钮 -->
   <view class="action-section">
-    <button class="btn-primary" bindtap="generateCover">💾 保存到相册</button>
+    <button class="btn-primary" hover-class="btn-primary-hover" bindtap="generateCover">💾 保存到相册</button>
   </view>
 
   <!-- 隐藏的画布 -->

@@ -40,7 +40,7 @@
     <!-- 分享海报生成 -->
     <view class="share-section">
       <canvas canvas-id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: fixed; left: -9999rpx; top: -9999rpx;" />
-      <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
+      <button class="btn-share" hover-class="btn-share-hover" bindtap="MakePosters" >生成分享海报</button>
     </view>
   </view>
 </view>

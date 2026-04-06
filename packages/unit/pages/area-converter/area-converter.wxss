@@ -113,6 +113,7 @@
   border: 2rpx solid #e9ecef;
   max-height: 400rpx;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .concept-item {

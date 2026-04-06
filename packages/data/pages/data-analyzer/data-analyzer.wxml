@@ -6,15 +6,15 @@
     <view class="section-header">
       <text class="section-label">📝 数据输入</text>
       <view class="header-actions">
-        <button class="icon-btn" bindtap="importExcel" hover-class="active">
+        <button class="icon-btn" hover-class="icon-btn-hover" bindtap="importExcel" >
           <text class="icon-text">📂</text>
           <text class="icon-label">导入</text>
         </button>
-        <button class="icon-btn" bindtap="loadSample" hover-class="active">
+        <button class="icon-btn" hover-class="icon-btn-hover" bindtap="loadSample" >
           <text class="icon-text">📝</text>
           <text class="icon-label">示例</text>
         </button>
-        <button class="icon-btn danger" bindtap="clearInput" hover-class="active">
+        <button class="icon-btn danger" hover-class="icon-btn-hover" bindtap="clearInput" >
           <text class="icon-text">🗑️</text>
           <text class="icon-label">清空</text>
         </button>
@@ -46,17 +46,17 @@
     
     <!-- 操作按钮 -->
     <view class="action-section">
-      <button class="primary-btn" bindtap="analyzeData">
+      <button class="primary-btn" hover-class="primary-btn-hover" bindtap="analyzeData">
         <text class="btn-icon">📈</text>
         <text class="btn-text">开始分析</text>
       </button>
       
       <view class="export-buttons" wx:if="{{analysisResult}}">
-        <button class="secondary-btn" bindtap="exportExcel">
+        <button class="secondary-btn" hover-class="secondary-btn-hover" bindtap="exportExcel">
           <text class="btn-icon">📊</text>
           <text class="btn-text">导出Excel</text>
         </button>
-        <button class="secondary-btn" bindtap="exportCSV">
+        <button class="secondary-btn" hover-class="secondary-btn-hover" bindtap="exportCSV">
           <text class="btn-icon">📋</text>
           <text class="btn-text">导出CSV</text>
         </button>

@@ -64,7 +64,7 @@ page {
   line-height: 1;
 }
 
-.tab:active {
+.tab-hover {
   transform: scale(0.95);
 }
 
@@ -182,7 +182,7 @@ page {
   box-shadow: 0 6rpx 15rpx rgba(250, 112, 154, 0.4);
 }
 
-.btn:active {
+.btn-hover {
   transform: scale(0.95);
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 }
@@ -318,7 +318,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.clock-card:active {
+.clock-card-hover {
   transform: translateY(-2rpx);
   box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.15);
 }
@@ -373,7 +373,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.action-card:active {
+.action-card-hover {
   transform: scale(0.98);
   box-shadow: 0 4rpx 15rpx rgba(102, 126, 234, 0.6);
 }

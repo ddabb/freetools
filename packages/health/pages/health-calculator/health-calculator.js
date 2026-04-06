@@ -168,7 +168,6 @@ Page({
     age: '', // 年龄
     genders: ['男', '女'], // 性别选项
     genderIndex: -1, // 性别选择索引：-1-未选择, 0-男, 1-女
-    gender: '', // 性别：male-男, female-女
     ageGroup: '', // 年龄段：child, adult, elderly
     showResult: false, // 是否显示结果
     bmi: 0, // BMI指数
@@ -198,7 +197,6 @@ Page({
     const index = parseInt(e.detail.value);
     this.setData({
       genderIndex: index,
-      gender: index === 0 ? 'male' : (index === 1 ? 'female' : '')
     });
   },
 

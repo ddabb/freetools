@@ -23,7 +23,7 @@
   <!-- 随机按钮 -->
   <view class="random-container">
     <button 
-      class="random-button bounce-on-hover" 
+      class="random-button bounce-on-hover" hover-class="bounce-on-hover" 
       bindtap="startRandom"
       disabled="{{isSpinning}}"
       hover-class="pulse-on-click"

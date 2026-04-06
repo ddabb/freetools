@@ -3,7 +3,7 @@
   <!-- 日期选择器 -->
   <view class="section">
     <picker mode="date" value="{{currentDate}}" start="1900-01-01" end="2100-12-31" bindchange="onDateChange" class="date-picker">
-      <view class="date-display">
+      <view class="date-display" hover-class="date-display-hover">
         <text class="date-text">{{year}}年{{month}}月{{day}}日</text>
         <text class="date-arrow">▼</text>
       </view>
@@ -12,10 +12,10 @@
   <!-- 月历表格 -->
   <view class="section calendar-section">
     <view class="month-nav">
-      <button class="nav-btn" data-direction="-1" bindtap="handleYearSwitch">⏮</button>
-      <button class="nav-btn" data-direction="-1" bindtap="handleMonthSwitch">◀</button>
-      <button class="nav-btn" data-direction="1" bindtap="handleMonthSwitch">▶</button>
-      <button class="nav-btn" data-direction="1" bindtap="handleYearSwitch">⏭</button>
+      <button class="nav-btn" hover-class="nav-btn-hover" data-direction="-1" bindtap="handleYearSwitch">⏮</button>
+      <button class="nav-btn" hover-class="nav-btn-hover" data-direction="-1" bindtap="handleMonthSwitch">◀</button>
+      <button class="nav-btn" hover-class="nav-btn-hover" data-direction="1" bindtap="handleMonthSwitch">▶</button>
+      <button class="nav-btn" hover-class="nav-btn-hover" data-direction="1" bindtap="handleYearSwitch">⏭</button>
     </view>
     <!-- 星期标题 -->
     <view class="calendar-header">
@@ -24,7 +24,7 @@
     <!-- 日历网格 -->
     <view class="calendar-grid">
       <view class="calendar-week" wx:for="{{calendarDays}}" wx:key="{{index}}">
-        <view wx:for="{{item}}" wx:for-item="dayItem" wx:key="{{index}}" class="calendar-day {{!dayItem.isCurrentMonth ? 'other-month' : ''}} {{dayItem.isToday ? 'today' : ''}} {{dayItem.isSelected ? 'selected' : ''}} {{dayItem.holiday ? 'holiday' : ''}}" bindtap="onDayClick" data-day="{{dayItem.day}}" data-is-current-month="{{dayItem.isCurrentMonth}}">
+        <view wx:for="{{item}}" wx:for-item="dayItem" wx:key="{{index}}" class="calendar-day {{!dayItem.isCurrentMonth ? 'other-month' : ''}} {{dayItem.isToday ? 'today' : ''}} {{dayItem.isSelected ? 'selected' : ''}} {{dayItem.holiday ? 'holiday' : ''}}" hover-class="calendar-day-hover" bindtap="onDayClick" data-day="{{dayItem.day}}" data-is-current-month="{{dayItem.isCurrentMonth}}">
           <text class="day-number">{{dayItem.day}}</text>
           <text class="lunar-day">{{dayItem.lunarDay}}</text>
           <text wx:if="{{dayItem.holiday}}" class="holiday-name">{{dayItem.holiday.name}}</text>
@@ -34,33 +34,33 @@
   </view>
   <!-- 信息卡片 -->
   <view class="section info-section">
-    <view class="info-card-row">
-      <view class="info-card">
+    <view class="info-card-row" hover-class="info-card-hover">
+      <view class="info-card" hover-class="info-card-hover">
         <text class="info-label">星期</text>
         <text class="info-value">{{weekDay}}</text>
       </view>
-      <view class="info-card">
+      <view class="info-card" hover-class="info-card-hover">
         <text class="info-label">农历</text>
         <text class="info-value">{{lunar}}</text>
       </view>
-      <view class="info-card" bindtap="goToZodiac">
+      <view class="info-card" hover-class="info-card-hover" bindtap="goToZodiac">
         <text class="info-label">生肖</text>
         <text class="info-value">{{zodiac}}</text>
         <text class="info-link">查看详情</text>
       </view>
-      <view class="info-card">
+      <view class="info-card" hover-class="info-card-hover">
         <text class="info-label">干支</text>
         <text class="info-value">{{lunarYearGanZhi}}</text>
       </view>
-      <view class="info-card" bindtap="goToConstellation">
+      <view class="info-card" hover-class="info-card-hover" bindtap="goToConstellation">
         <text class="info-label">星座</text>
         <text class="info-value">{{xingZuo}}</text>
         <text class="info-link">查看详情</text>
       </view>
     </view>
     <view class="buttons-section">
-      <button class="action-btn primary" bindtap="today">回到今天</button>
-      <button class="action-btn btn-share" bindtap="MakePosters">生成分享海报</button>
+      <button class="action-btn primary" hover-class="action-btn-hover" bindtap="today">回到今天</button>
+      <button class="action-btn btn-share" hover-class="action-btn-hover" bindtap="MakePosters">生成分享海报</button>
     </view>
   </view>
 </view>

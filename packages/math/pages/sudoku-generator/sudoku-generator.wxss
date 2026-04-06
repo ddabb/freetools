@@ -393,7 +393,7 @@ page {
   transition: all 0.2s;
 }
 
-.number-item:active {
+.number-item-hover {
   background: #e9ecef;
 }
 
@@ -402,7 +402,7 @@ page {
   color: white;
 }
 
-.clear-item:active {
+.clear-item-hover {
   background: #c0392b;
 }
 
@@ -421,7 +421,7 @@ page {
   font-weight: 600;
 }
 
-.panel-btn:active {
+.panel-btn-hover {
   background: #7f8c8d;
 }
 
@@ -466,7 +466,7 @@ page {
   transition: all 0.2s;
 }
 
-.number-input-section .number-item:active {
+.number-input-section .number-item-hover {
   background: #e9ecef;
 }
 
@@ -480,7 +480,7 @@ page {
   background: #2980b9;
 }
 
-.number-input-section .candidate-btn:active {
+.number-input-section .candidate-btn-hover {
   background: #1f618d;
 }
 
@@ -489,7 +489,7 @@ page {
   color: white;
 }
 
-.number-input-section .clear-item:active {
+.number-input-section .clear-item-hover {
   background: #c0392b;
 }
 
@@ -499,7 +499,7 @@ page {
   color: white;
 }
 
-.number-input-section .reset-item:active {
+.number-input-section .reset-item-hover {
   background: #7f8c8d;
 }
 

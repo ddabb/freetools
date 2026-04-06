@@ -116,6 +116,7 @@ page {
 .result-section .result-card {
   overflow-y: auto;
   max-height: 60vh;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 滚动条样式 */
@@ -281,13 +282,13 @@ page {
   transition: all 0.2s ease;
 }
 
-.example-btn:active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+.example-btn-hover {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
   transform: scale(0.96);
 }
 
-.example-btn:active .example-text {
-  color: white;
+.example-btn-hover .example-text {
+  color: white !important;
 }
 
 .example-text {

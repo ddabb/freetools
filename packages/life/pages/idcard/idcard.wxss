@@ -189,35 +189,6 @@
 }
 
 /* 快捷输入区域 */
-.quick-input-section {
-  margin-top: 30rpx;
-}
-
-.section-label {
-  font-size: 26rpx;
-  color: #888;
-  margin-bottom: 15rpx;
-  display: block;
-}
-
-.quick-buttons {
-  display: flex;
-  gap: 20rpx;
-}
-
-.quick-btn {
-  flex: 1;
-  height: 60rpx;
-  background: #f8f9fa;
-  border: 1rpx solid #dee2e6;
-  border-radius: 12rpx;
-  font-size: 24rpx;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
 
 .quick-btn.active {
   background: #667eea;
@@ -328,14 +299,6 @@
 /* 结果卡片 */
 .result-card {
   overflow: hidden;
-}
-
-.success-card {
-  border-left: 8rpx solid #28a745;
-}
-
-.error-card {
-  border-left: 8rpx solid #dc3545;
 }
 
 .result-header {
@@ -514,10 +477,6 @@
 }
 
 /* 悬停效果 */
-.btn-hover {
-  transform: scale(0.98);
-  opacity: 0.9;
-}
 
 .btn-primary-hover {
   transform: translateY(-4rpx);

@@ -15,7 +15,7 @@
             <text class="picker-icon">📅</text>
           </view>
         </picker>
-        <input type="time" value="{{baseTime}}" bindinput="onBaseTimeChange" class="time-input" />
+        <input type="time" value="{{baseTime}}" bindinput="onBaseTimeChange" class="time-input"  placeholder-class="input-placeholder"/>
       </view>
     </view>
     
@@ -35,7 +35,7 @@
             data-index="{{index}}"
             class="timezone-input" 
             placeholder="输入时间"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
     </view>

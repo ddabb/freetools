@@ -9,7 +9,7 @@
         <text class="required-mark">*</text>
       </view>
       <picker mode="date" value="{{startDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="startDateChange" class="form-picker">
-        <view class="picker-display {{!startDate ? 'placeholder' : ''}}">
+        <view class="picker-display {{!startDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
           {{startDate || '点击选择开始日期'}}
         </view>
       </picker>
@@ -22,7 +22,7 @@
         <text class="required-mark">*</text>
       </view>
       <picker mode="date" value="{{endDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="endDateChange" class="form-picker">
-        <view class="picker-display {{!endDate ? 'placeholder' : ''}}">
+        <view class="picker-display {{!endDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
           {{endDate || '点击选择结束日期'}}
         </view>
       </picker>
@@ -30,7 +30,7 @@
 
     <!-- 计算按钮 -->
     <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="calculateDateDiff">
+      <button class="calculate-btn full-width-btn" hover-class="full-width-btn-hover" bindtap="calculateDateDiff">
         <text class="btn-text">计算日期差</text>
       </button>
     </view>

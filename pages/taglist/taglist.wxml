@@ -42,7 +42,7 @@
       <!-- 标签网格 -->
       <view class="tag-container" wx:if="{{!loading && !error && filteredTags.length > 0}}">
         <view 
-          class="tag-item" 
+          class="tag-item" hover-class="tag-item-hover" 
           wx:for="{{filteredTags}}" 
           wx:key="name"
           data-tag="{{item.name}}"

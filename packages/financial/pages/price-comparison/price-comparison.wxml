@@ -8,18 +8,18 @@
 
       <view class="form-item">
         <text class="label">商品名称</text>
-        <input class="input" placeholder="输入商品名称" value="{{item.name}}" bindinput="onNameInput" data-index="{{index}}" />
+        <input class="input" placeholder="输入商品名称" value="{{item.name}}" bindinput="onNameInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
       </view>
 
       <view class="form-item">
         <text class="label">总价</text>
-        <input class="input" type="digit" placeholder="输入总价" value="{{item.price}}" bindinput="onPriceInput" data-index="{{index}}" />
+        <input class="input" type="digit" placeholder="输入总价" value="{{item.price}}" bindinput="onPriceInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
         <text class="unit">元</text>
       </view>
 
       <view class="form-item">
         <text class="label">数量/重量</text>
-        <input class="input" type="digit" placeholder="输入数量或重量" value="{{item.spec}}" bindinput="onSpecInput" data-index="{{index}}" />
+        <input class="input" type="digit" placeholder="输入数量或重量" value="{{item.spec}}" bindinput="onSpecInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
         <text class="unit">kg/个</text>
       </view>
 

@@ -9,7 +9,7 @@
         <text class="required-mark">*</text>
       </view>
       <view class="unit-list">
-        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item">
+        <view wx:for="{{units}}" wx:key="{{index}}" class="unit-item" hover-class="unit-item-hover">
           <view class="unit-label">{{item}}</view>
           <input 
             type="digit" 
@@ -18,7 +18,7 @@
             data-unit="{{item}}"
             class="unit-input" 
             placeholder="输入值"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
     </view>

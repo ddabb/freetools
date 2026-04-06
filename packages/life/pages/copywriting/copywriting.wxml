@@ -10,11 +10,11 @@
         placeholder="搜索文案关键词..."
         value="{{searchKeyword}}"
         bindinput="onSearchInput"
-      />
+       placeholder-class="input-placeholder"/>
       <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="clearSearch">
         <text>✕</text>
       </view>
-      <view class="refresh-btn" bindtap="refreshData">
+      <view class="refresh-btn" hover-class="refresh-btn-hover" bindtap="refreshData">
         <text class="refresh-icon">🔄</text>
       </view>
       <navigator url="/packages/life/pages/text-to-image/text-to-image" class="image-btn">
@@ -63,7 +63,7 @@
       bindscroll="onScroll"
     >
       <view 
-        class="copywriting-item"
+        class="copywriting-item" hover-class="copywriting-item-hover"
         wx:for="{{filteredCopywritings}}"
         wx:key="index"
         bindtap="copyCopywriting"
@@ -72,7 +72,7 @@
         <view class="copywriting-content-wrapper">
           <text class="copywriting-content">{{item.text}}</text>
         </view>
-        <view class="copywriting-item-bottom">
+        <view class="copywriting-item-bottom" hover-class="copywriting-item-hover">
           <text class="copywriting-from">—— {{item.from || '佚名'}}</text>
           <view class="copy-actions">
             <view class="copy-action" bindtap="copyCopywriting" data-index="{{index}}">

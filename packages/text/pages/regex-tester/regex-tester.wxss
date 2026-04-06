@@ -102,16 +102,6 @@ page {
 }
 
 /* 选项卡片 */
-.options-card {
-  flex: 0 0 auto;
-}
-
-.flags-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10rpx;
-  flex: 1;
-}
 
 .flags-list {
   display: flex;
@@ -151,7 +141,7 @@ page {
   white-space: nowrap;
 }
 
-.common-btn:active {
+.common-btn-hover {
   transform: scale(0.98);
   opacity: 0.9;
 }
@@ -215,7 +205,7 @@ page {
   border: 2rpx solid #e8e8e8;
 }
 
-.action-btn:active {
+.action-btn-hover {
   transform: translateY(2rpx);
 }
 
@@ -463,34 +453,6 @@ page {
 }
 
 /* 帮助卡片 */
-.help-card {
-  flex: 0 0 auto;
-  margin-top: 16rpx;
-}
-
-.help-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  padding: 24rpx 28rpx;
-}
-
-.help-icon {
-  font-size: 32rpx;
-}
-
-.help-title {
-  flex: 1;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #1a1a1a;
-}
-
-.help-arrow {
-  font-size: 32rpx;
-  color: #999;
-  transition: transform 0.3s ease;
-}
 
 .help-arrow.expanded {
   transform: rotate(90deg);
@@ -607,7 +569,7 @@ page {
   transition: all 0.2s ease;
 }
 
-.regex-item:active {
+.regex-item-hover {
   background: #f0f0f0;
   transform: scale(0.98);
 }

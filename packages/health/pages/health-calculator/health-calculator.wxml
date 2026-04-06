@@ -7,8 +7,8 @@
         <text class="label-text">年龄</text>
         <text class="required-mark">*</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{age}}" bindinput="setAge" class="input-field" placeholder="请输入年龄" min="1" max="120"/>
+      <view class="input-with-unit" hover-class="input-with-unit-hover">
+        <input type="number" value="{{age}}" bindinput="setAge" class="input-field" placeholder="请输入年龄" min="1" max="120" placeholder-class="input-placeholder"/>
         <text class="unit-text">岁</text>
       </view>
     </view>
@@ -20,7 +20,7 @@
         <text class="required-mark">*</text>
       </view>
       <picker bindchange="setGender" value="{{genderIndex}}" range="{{genders}}" class="gender-picker form-picker">
-        <view class="picker-display {{genderIndex === -1 ? 'placeholder' : ''}}">
+        <view class="picker-display {{genderIndex === -1 ? 'placeholder' : ''}}" hover-class="picker-display-hover">
           {{genders[genderIndex] || '请选择性别'}}
         </view>
       </picker>
@@ -32,8 +32,8 @@
         <text class="label-text">身高</text>
         <text class="required-mark">*</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{height}}" bindinput="setHeight" class="input-field" placeholder="请输入身高"/>
+      <view class="input-with-unit" hover-class="input-with-unit-hover">
+        <input type="number" value="{{height}}" bindinput="setHeight" class="input-field" placeholder="请输入身高" placeholder-class="input-placeholder"/>
         <text class="unit-text">cm</text>
       </view>
     </view>
@@ -44,15 +44,15 @@
         <text class="label-text">体重</text>
         <text class="required-mark">*</text>
       </view>
-      <view class="input-with-unit">
-        <input type="number" value="{{weight}}" bindinput="setWeight" class="input-field" placeholder="请输入体重"/>
+      <view class="input-with-unit" hover-class="input-with-unit-hover">
+        <input type="number" value="{{weight}}" bindinput="setWeight" class="input-field" placeholder="请输入体重" placeholder-class="input-placeholder"/>
         <text class="unit-text">kg</text>
       </view>
     </view>
 
     <!-- 计算按钮 -->
     <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" bindtap="calculate">
+      <button class="calculate-btn full-width-btn" hover-class="full-width-btn-hover" bindtap="calculate">
         <text class="btn-text">计算健康指数</text>
       </button>
     </view>
@@ -87,6 +87,6 @@
   <!-- 分享海报生成 -->
   <view class="share-section">
     <canvas canvas-id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: fixed; left: -9999rpx; top: -9999rpx;" />
-    <button class="btn-share" bindtap="MakePosters">生成分享海报</button>
+    <button class="btn-share" hover-class="btn-share-hover" bindtap="MakePosters">生成分享海报</button>
   </view>
 </view>

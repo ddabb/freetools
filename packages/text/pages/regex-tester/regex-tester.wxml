@@ -5,10 +5,10 @@
     <view class="card-header">
       <text class="card-title">正则表达式</text>
       <view class="quick-buttons">
-       <button class="common-btn" bindtap="showCommonRegexModal" style="width: auto; padding: 0 10rpx;">常用</button>
+       <button class="common-btn" hover-class="common-btn-hover" bindtap="showCommonRegexModal" style="width: auto; padding: 0 10rpx;">常用</button>
        
-        <button class="common-btn" bindtap="showOptionsModal" style="width: auto; padding: 0 10rpx;">选项</button>
-        <button class="common-btn" bindtap="showSyntaxModal" style="width: auto; padding: 0 10rpx;">语法</button>
+        <button class="common-btn" hover-class="common-btn-hover" bindtap="showOptionsModal" style="width: auto; padding: 0 10rpx;">选项</button>
+        <button class="common-btn" hover-class="common-btn-hover" bindtap="showSyntaxModal" style="width: auto; padding: 0 10rpx;">语法</button>
       </view>
     </view>
     <view class="card-body">
@@ -31,11 +31,11 @@
 
   <!-- 操作按钮 -->
   <view class="action-bar">
-    <button class="action-btn primary" bindtap="testRegex">
+    <button class="action-btn primary" hover-class="action-btn-hover" bindtap="testRegex">
       <text class="btn-icon">⚡</text>
       <text>测试匹配</text>
     </button>
-    <button class="action-btn secondary" bindtap="clearResults">
+    <button class="action-btn secondary" hover-class="action-btn-hover" bindtap="clearResults">
       <text class="btn-icon">🗑</text>
       <text>清空</text>
     </button>
@@ -129,7 +129,7 @@
       </view>
       <scroll-view class="modal-body" scroll-y>
         <view class="regex-list">
-          <view class="regex-item" wx:for="{{commonRegex}}" wx:key="name" bindtap="selectCommonRegex" data-regex="{{item.pattern}}" data-flags="{{item.flags}}">
+          <view class="regex-item" hover-class="regex-item-hover" wx:for="{{commonRegex}}" wx:key="name" bindtap="selectCommonRegex" data-regex="{{item.pattern}}" data-flags="{{item.flags}}">
             <text class="regex-name">{{item.name}}</text>
             <text class="regex-pattern">{{item.pattern}}</text>
           </view>

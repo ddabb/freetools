@@ -24,7 +24,7 @@
             />
             <view class="search-clear" wx:if="{{queryInput}}" bindtap="onClearQuery">✕</view>
           </view>
-          <view class="search-btn" bindtap="onQuerySearch">查询</view>
+          <view class="search-btn" hover-class="search-btn-hover" bindtap="onQuerySearch">查询</view>
         </view>
       </view>
 
@@ -89,7 +89,6 @@
               class="result-char"
               data-next="{{item.next}}"
               catchtap="onContinueChain"
-              hover-class="result-char-active"
             >{{item.lastChar}}</text>
           </view>
         </view>
@@ -107,7 +106,7 @@
         <view class="detail-section" wx:if="{{detailItem.explanation}}">
           <view class="detail-section-header">
             <text class="detail-section-title">释义</text>
-            <view class="detail-copy-btn" bindtap="onCopyExplanation">📋 复制</view>
+            <view class="detail-copy-btn" hover-class="detail-copy-btn-hover" bindtap="onCopyExplanation">📋 复制</view>
           </view>
           <text class="detail-section-content">{{detailItem.explanation}}</text>
         </view>

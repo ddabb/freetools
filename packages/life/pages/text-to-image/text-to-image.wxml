@@ -22,7 +22,7 @@
           bindinput="onFromInput" 
           value="{{from}}" 
           maxlength="15"
-        ></input>
+         placeholder-class="input-placeholder"></input>
         <text class="count">{{from ? from.length : 0}}/15</text>
       </view>
       <!-- 二维码选择 -->

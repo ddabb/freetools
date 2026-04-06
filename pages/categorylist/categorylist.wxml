@@ -31,7 +31,7 @@
 
       <!-- 分类项 -->
       <view 
-        class="category-item" 
+        class="category-item" hover-class="category-item-hover" 
         wx:for="{{categories}}" 
         wx:key="name"
         data-category="{{item.name}}"

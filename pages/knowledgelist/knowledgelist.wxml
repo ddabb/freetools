@@ -64,8 +64,8 @@
         </view>
         <scroll-view class="tree-scroll" scroll-y style="max-height: 65vh;">
           <view class="tree-root-outer">
-            <view class="tree-node tree-node-root {{currentCategory === '' ? 'active' : ''}}" bindtap="switchCategory" data-category="">
-              <view class="tree-node-main">
+            <view class="tree-node tree-node-root {{currentCategory === '' ? 'active' : ''}}" hover-class="tree-node-hover" bindtap="switchCategory" data-category="">
+              <view class="tree-node-main" hover-class="tree-node-hover">
                 <text class="tree-node-icon">🏠</text>
                 <text class="tree-label">全部</text>
               </view>
@@ -89,8 +89,8 @@
   <template name="categoryTreeItem">
     <block wx:for="{{item}}" wx:for-item="node" wx:key="path">
       <view class="tree-branch level-{{level}}">
-        <view class="tree-node {{currentCategory === node.path ? 'active' : ''}}" bindtap="switchCategory" data-category="{{node.path}}">
-          <view class="tree-node-main">
+        <view class="tree-node {{currentCategory === node.path ? 'active' : ''}}" hover-class="tree-node-hover" bindtap="switchCategory" data-category="{{node.path}}">
+          <view class="tree-node-main" hover-class="tree-node-hover">
             <text class="tree-node-icon">{{node.icon}}</text>
             <text class="tree-label">{{node.name}}</text>
           </view>

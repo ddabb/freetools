@@ -2,7 +2,7 @@
 <view class="query-section">
   <view class="input-group">
     <view class="input-label">年份：</view>
-    <input type="number" class="year-input" id="yearInput" value="{{year}}" bindinput="onYearInput" bindblur="onQuery" placeholder="请输入年份" />
+    <input type="number" class="year-input" id="yearInput" value="{{year}}" bindinput="onYearInput" bindblur="onQuery" placeholder="请输入年份"  placeholder-class="input-placeholder"/>
   </view>
 </view>
 
@@ -16,10 +16,10 @@
   </view>
   <view class="birth-year">{{birthYearInfo}}</view>
   <view class="link-row">
-    <view class="link-btn" bindtap="goToCalendar">
+    <view class="link-btn" hover-class="link-btn-hover" bindtap="goToCalendar">
       <text>万年历</text>
     </view>
-    <view class="link-btn" bindtap="goToConstellation">
+    <view class="link-btn" hover-class="link-btn-hover" bindtap="goToConstellation">
       <text>星座</text>
     </view>
   </view>
@@ -33,12 +33,12 @@
     <scroll-view scroll-x="true" class="zodiac-scroll-view">
       <view class="zodiac-scroll-content">
         <view wx:for="{{zodiacScrollItems}}" wx:key="index" class="zodiac-scroll-item {{item.name == zodiacName ? 'active' : ''}}" data-index="{{index}}" bindtap="onZodiacScrollItemClick">
-          <view class="zodiac-item-icon">
+          <view class="zodiac-item-icon" hover-class="zodiac-item-hover">
             <text class="icon">{{item.icon}}</text>
           </view>
-          <view class="zodiac-item-details">
-            <view class="zodiac-item-name">{{item.name}}</view>
-            <view class="zodiac-item-year">{{item.year}}年</view>
+          <view class="zodiac-item-details" hover-class="zodiac-item-hover">
+            <view class="zodiac-item-name" hover-class="zodiac-item-hover">{{item.name}}</view>
+            <view class="zodiac-item-year" hover-class="zodiac-item-hover">{{item.year}}年</view>
           </view>
         </view>
       </view>
@@ -50,15 +50,15 @@
 <view class="zodiac-list">
   <view class="list-title">其他生肖年龄</view>
   
-  <view wx:for="{{zodiacItems}}" wx:key="index" class="zodiac-item {{item.year == year ? 'active' : ''}}" data-year="{{item.year}}" bindtap="onZodiacItemClick">
-    <view class="zodiac-item-icon">
+  <view wx:for="{{zodiacItems}}" wx:key="index" class="zodiac-item {{item.year == year ? 'active' : ''}}" hover-class="zodiac-item-hover" data-year="{{item.year}}" bindtap="onZodiacItemClick">
+    <view class="zodiac-item-icon" hover-class="zodiac-item-hover">
       <text class="icon">{{item.icon}}</text>
     </view>
-    <view class="zodiac-item-details">
-      <view class="zodiac-item-name">{{item.name}}</view>
-      <view class="zodiac-item-year">出生于{{item.year}}</view>
+    <view class="zodiac-item-details" hover-class="zodiac-item-hover">
+      <view class="zodiac-item-name" hover-class="zodiac-item-hover">{{item.name}}</view>
+      <view class="zodiac-item-year" hover-class="zodiac-item-hover">出生于{{item.year}}</view>
     </view>
-    <view class="zodiac-item-age">{{item.age}}岁</view>
+    <view class="zodiac-item-age" hover-class="zodiac-item-hover">{{item.age}}岁</view>
   </view>
 </view>
 

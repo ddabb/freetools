@@ -14,15 +14,15 @@
         <switch checked="{{ignoreWhitespace}}" bindchange="toggleIgnoreWhitespace" class="whitespace-switch" />
       </view>
       <view class="action-buttons">
-        <button class="action-btn primary" bindtap="compareTexts">
+        <button class="action-btn primary" hover-class="action-btn-hover" bindtap="compareTexts">
           <text class="btn-icon">🔍</text>
           <text class="btn-text">开始对比</text>
         </button>
-        <button class="action-btn" bindtap="swapTexts">
+        <button class="action-btn" hover-class="action-btn-hover" bindtap="swapTexts">
           <text class="btn-icon">⇄</text>
           <text class="btn-text">交换文本</text>
         </button>
-        <button class="action-btn" bindtap="clearAll">
+        <button class="action-btn" hover-class="action-btn-hover" bindtap="clearAll">
           <text class="btn-icon">🗑️</text>
           <text class="btn-text">清空</text>
         </button>
@@ -38,8 +38,8 @@
         <view class="panel-header">
           <text class="panel-title">📄 原始文本 (A)</text>
           <view class="panel-controls">
-            <button class="mini-btn" bindtap="pasteTextA">粘贴</button>
-            <button class="mini-btn" bindtap="copyTextA">复制</button>
+            <button class="mini-btn" hover-class="mini-btn-hover" bindtap="pasteTextA">粘贴</button>
+            <button class="mini-btn" hover-class="mini-btn-hover" bindtap="copyTextA">复制</button>
             <text class="char-count">A: {{textA.length}}</text>
           </view>
         </view>
@@ -58,8 +58,8 @@
         <view class="panel-header">
           <text class="panel-title">📝 对比文本 (B)</text>
           <view class="panel-controls">
-            <button class="mini-btn" bindtap="pasteTextB">粘贴</button>
-            <button class="mini-btn" bindtap="copyTextB">复制</button>
+            <button class="mini-btn" hover-class="mini-btn-hover" bindtap="pasteTextB">粘贴</button>
+            <button class="mini-btn" hover-class="mini-btn-hover" bindtap="copyTextB">复制</button>
             <text class="char-count">B: {{textB.length}}</text>
           </view>
         </view>
@@ -155,19 +155,19 @@
   <view class="quick-actions" wx:if="{{comparisonResult}}">
     <view class="section-title">⚡ 快捷操作</view>
     <view class="quick-buttons">
-      <button class="quick-btn" bindtap="loadSampleDiff">
+      <button class="quick-btn" hover-class="quick-btn-hover" bindtap="loadSampleDiff">
         <text class="btn-icon">📋</text>
         <text class="btn-text">示例对比</text>
       </button>
-      <button class="quick-btn" bindtap="exportDiff">
+      <button class="quick-btn" hover-class="quick-btn-hover" bindtap="exportDiff">
         <text class="btn-icon">💾</text>
         <text class="btn-text">导出结果</text>
       </button>
-      <button class="quick-btn" bindtap="shareDiff">
+      <button class="quick-btn" hover-class="quick-btn-hover" bindtap="shareDiff">
         <text class="btn-icon">📤</text>
         <text class="btn-text">分享对比</text>
       </button>
-      <button class="quick-btn" bindtap="highlightMode">
+      <button class="quick-btn" hover-class="quick-btn-hover" bindtap="highlightMode">
         <text class="btn-icon">🎨</text>
         <text class="btn-text">切换高亮</text>
       </button>

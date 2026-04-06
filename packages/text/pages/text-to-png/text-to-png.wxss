@@ -178,7 +178,7 @@
   font-weight: bold;
 }
 
-.section-header:active .expand-icon {
+.section-header-hover .expand-icon {
   transform: rotate(90deg);
 }
 
@@ -412,6 +412,8 @@
   border-radius: 8rpx;
   font-size: 24rpx;
   line-height: 1.6;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   margin-bottom: 8rpx;
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -506,7 +508,7 @@
   left: 100%;
 }
 
-.btn:active {
+.btn-hover {
   transform: scale(0.98);
   box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
 }

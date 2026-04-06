@@ -32,7 +32,7 @@
                 placeholder="请输入18位身份证号码"
                 maxlength="18"
                 focus="{{inputFocus}}"
-              />
+               placeholder-class="input-placeholder"/>
               <view class="input-status {{idcard.length > 0 ? (idcard.length === 18 ? 'valid' : 'typing') : ''}}">
                 <text class="status-dot"></text>
               </view>
@@ -65,7 +65,7 @@
             class="secondary-btn" 
             bindtap="clearInput"
             wx:if="{{idcard}}"
-            hover-class="btn-secondary-hover"
+            hover-class="btn-secondary-hover" 
           >
             <text class="btn-icon">🗑️</text>
             <text class="btn-text">清空</text>
@@ -129,7 +129,7 @@
         </view>
         
         <view class="result-actions">
-          <button class="action-btn copy-btn" bindtap="copyResult" hover-class="btn-action-hover">
+          <button class="action-btn copy-btn" hover-class="btn-action-hover" bindtap="copyResult">
             <text class="btn-icon">📋</text>
             <text>复制信息</text>
           </button>
@@ -153,7 +153,7 @@
         </view>
         
         <view class="result-actions">
-          <button class="action-btn retry-btn" bindtap="retryValidation" hover-class="btn-action-hover">
+          <button class="action-btn retry-btn" hover-class="btn-action-hover" bindtap="retryValidation">
             <text class="btn-icon">🔄</text>
             <text>重新验证</text>
           </button>

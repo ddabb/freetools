@@ -286,7 +286,7 @@ page {
   gap: 8rpx;
 }
 
-.example-btn:active {
+.example-btn-hover {
   background: linear-gradient(135deg, #f093fb, #f5576c);
   transform: scale(0.96);
 }
@@ -308,12 +308,12 @@ page {
   color: #f5576c;
 }
 
-.example-btn:active .example-n,
-.example-btn:active .example-r {
+.example-btn-hover .example-n,
+.example-btn-hover .example-r {
   color: white;
 }
 
-.example-btn:active .example-sep {
+.example-btn-hover .example-sep {
   color: rgba(255, 255, 255, 0.7);
 }
 

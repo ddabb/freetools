@@ -20,14 +20,14 @@
       
       <view class="input-box age-input">
         <text class="section-title-small">预期寿命（岁）</text>
-        <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input" placeholder="75"/>
+        <input type="number" value="{{expectedLifeYears}}" bindinput="setExpectedLifeYears" class="input" placeholder="75" placeholder-class="input-placeholder"/>
       </view>
     </view>
   </view>
 
   <!-- 计算按钮 -->
   <view class="section">
-    <button class="calculate-btn {{!birthDate ? 'disabled' : ''}}" bindtap="calculate" disabled="{{!birthDate}}">
+    <button class="calculate-btn {{!birthDate ? 'disabled' : ''}}" bindtap="calculate" disabled="{{!birthDate}}" hover-class="calculate-btn-active">
       绘制A4纸
     </button>
   </view>
@@ -95,14 +95,14 @@
     <!-- 人生思考引导 -->
     <view class="reflection-section">
       <view class="reflection-header">
-        <view class="banner-arrow left" bindtap="prevQuestion">
+        <view class="banner-arrow left" hover-class="banner-arrow-hover" bindtap="prevQuestion">
           <text>‹</text>
         </view>
         <text class="reflection-title">🤔 人生思考</text>
         <view class="banner-indicator">
           <view wx:for="{{questions}}" wx:key="index" class="indicator-dot {{currentIndex === index ? 'active' : ''}}"></view>
         </view>
-        <view class="banner-arrow right" bindtap="nextQuestion">
+        <view class="banner-arrow right" hover-class="banner-arrow-hover" bindtap="nextQuestion">
           <text>›</text>
         </view>
       </view>
@@ -116,7 +116,7 @@
 
     <!-- 重置按钮 -->
     <view class="reset-section">
-      <button class="reset-btn" bindtap="reset">重新计算</button>
+      <button class="reset-btn" hover-class="reset-btn-hover" bindtap="reset">重新计算</button>
     </view>
   </view>
 
@@ -127,7 +127,7 @@
 
   <!-- 分享按钮 -->
   <view class="share-section" wx:if="{{showResult}}">
-    <button class="share-btn" bindtap="MakePosters">
+    <button class="share-btn" hover-class="share-btn-hover" bindtap="MakePosters">
       分享人生A4纸
     </button>
   </view>

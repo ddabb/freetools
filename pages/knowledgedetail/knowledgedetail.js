@@ -2,7 +2,18 @@
 
 const utils = require('../../utils/index');
 const knowledgeCategory = require('../../utils/knowledgeCategory');
+const cacheManager = require('../../utils/cacheManager');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
+
+// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
+const CACHE_KEY_DETAIL = 'cdn_know_detail_';
+const CACHE_KEY_DETAIL_TS = 'cdn_know_detail_ts_';
+const CACHE_KEY_ARTICLES = 'cdn_know_articles';
+const CACHE_KEY_ARTICLES_TS = 'cdn_know_articles_ts';
+
+// 内存缓存（进程级）
+let articlesCache = null;
 
 
 // 使用 markdown-it 渲染 Markdown（项目已安装该库）
@@ -56,7 +67,10 @@ Page({
    * 下拉刷新
    */
   onRefresh() {
-    wx.clearStorageSync();
+    // 只清知识库相关缓存（定点清除，不影响其他模块）
+    cacheManager.clearCdnCache('know_');
+    cacheManager.clearCdnCache('cdn_know_');
+    articlesCache = null;
     const { filename } = this.data;
     if (filename) {
       this.loadDetail(filename);
@@ -191,128 +205,99 @@ Page({
 
 
   /**
-   * 加载文章详情
+   * 加载文章详情（带 Storage 缓存，7 天有效）
    */
   loadDetail(filename) {
     this.setData({ loading: true, error: false });
 
+    const cacheKey = CACHE_KEY_DETAIL + filename;
+    const tsKey = CACHE_KEY_DETAIL_TS + filename;
     const url = CDN_BASE + 'detail/' + filename;
-    console.log('开始加载文章详情:', {
-      filename,
+
+    cacheManager.fetchWithCache({
+      cacheKey,
+      tsKey,
       url,
-      timestamp: new Date().toISOString()
-    });
-
-    wx.request({
-      url: url + `?_t=${Date.now()}`,
-      method: 'GET',
-      timeout: 30000,
-      success: (res) => {
-        console.log('文章详情请求成功:', {
-          statusCode: res.statusCode,
-          header: res.header,
-          timestamp: new Date().toISOString()
-        });
-        
-        if (res.statusCode === 200 && res.data) {
-          const article = this.decorateArticle(res.data);
-          console.log('获取到文章数据:', {
-            id: article.id,
-            title: article.title,
-            category: article.category,
-            wordCount: article.wordCount
-          });
-          
-          wx.setNavigationBarTitle({
-            title: article.title || '文章详情'
-          });
-
-          // Markdown 内容渲染为 HTML
-          const contentHtml = this.markdownToHtml(article.content || '');
-          
-          // 记录最终的 contentHtml 内容
-          console.log('设置到页面的 contentHtml:', {
-            contentHtml: contentHtml,
-            length: contentHtml.length,
-            hasTable: contentHtml.includes('<table'),
-            tableCount: (contentHtml.match(/<table/g) || []).length,
-            timestamp: new Date().toISOString()
-          });
-
-          this.setData({
-            article,
-            contentHtml,
-            loading: false
-          });
-
-          // 加载相关推荐
-          this.loadRelatedArticles(article);
-        } else {
-          console.warn('文章详情请求返回异常:', {
-            statusCode: res.statusCode,
-            message: '文章不存在或已被删除'
-          });
-          this.setError('文章不存在或已被删除');
-        }
-      },
-      fail: (err) => {
-        console.error('加载文章详情失败:', {
-          error: err,
-          url: url,
-          filename: filename,
-          timestamp: new Date().toISOString()
-        });
-        this.setError('网络错误，请检查网络连接');
-      },
-      complete: (res) => {
-        console.log('文章详情请求完成:', {
-          status: res.statusCode,
-          timestamp: new Date().toISOString()
-        });
+      ttl: CACHE_EXPIRE
+    }).then(data => {
+      if (data) {
+        this._renderArticle(data);
+      } else {
+        this.setError('文章不存在或已被删除');
       }
+    }).catch(err => {
+      console.error('[knowledgedetail] 加载失败:', err);
+      this.setError('网络错误，请检查网络连接');
     });
+  },
+
+  /**
+   * 渲染文章（详情 + 相关推荐）
+   */
+  _renderArticle(data) {
+    const article = this.decorateArticle(data);
+
+    wx.setNavigationBarTitle({
+      title: article.title || '文章详情'
+    });
+
+    // Markdown 内容渲染为 HTML
+    const contentHtml = this.markdownToHtml(article.content || '');
+
+    this.setData({
+      article,
+      contentHtml,
+      loading: false
+    });
+
+    // 加载相关推荐
+    this.loadRelatedArticles(article);
   },
 
 
   /**
-   * 加载相关推荐
+   * 加载相关推荐（带 Storage 缓存，7 天有效）
    */
   loadRelatedArticles(article) {
-    const url = CDN_BASE + 'articles.json';
-
     if (!article || !article.filename) {
       this.setData({ relatedArticles: [] });
       return;
     }
 
-    wx.request({
-      url: url + `?_t=${Date.now()}`,
-      method: 'GET',
-      timeout: 30000,
-      success: (res) => {
-        if (res.statusCode === 200 && res.data) {
-          const allArticles = res.data.articles || [];
-          
-          const related = allArticles
-            .filter(a => a.filename && a.filename !== article.filename)
-            .filter(a => 
-              a.category === article.category ||
-              (a.tags && article.tags && a.tags.some(t => article.tags.includes(t)))
-            )
-            .map(a => this.decorateArticle(a))
-            .slice(0, 5);
-
-          this.setData({ relatedArticles: related });
-
-        } else {
-          this.setData({ relatedArticles: [] });
-        }
-      },
-      fail: (err) => {
-        console.error('加载相关推荐失败:', err);
+    // 统一通过 cacheManager.fetchWithCache 处理内存+Storage+CDN 三级链路，支持 304 + LRU
+    cacheManager.fetchWithCache({
+      cacheKey: CACHE_KEY_ARTICLES,
+      tsKey: CACHE_KEY_ARTICLES_TS,
+      url: CDN_BASE + 'articles.json',
+      ttl: CACHE_EXPIRE,
+      memRef: articlesCache
+    }).then(allArticles => {
+      if (Array.isArray(allArticles)) {
+        articlesCache = allArticles;
+        this._filterRelated(allArticles, article);
+      } else {
         this.setData({ relatedArticles: [] });
       }
+    }).catch(err => {
+      console.error('[knowledgedetail] 加载推荐失败:', err);
+      this.setData({ relatedArticles: [] });
     });
+  },
+
+  /**
+   * 从文章列表中筛选相关推荐
+   */
+  _filterRelated(allArticles, article) {
+    const related = allArticles
+      .filter(a => a.filename && a.filename !== article.filename)
+      .filter(a =>
+        a.category === article.category ||
+        (a.tags && article.tags && a.tags.some(t => article.tags.includes(t)))
+      )
+      .map(a => this.decorateArticle(a))
+      .slice(0, 5);
+
+    this.setData({ relatedArticles: related });
   },
 
 

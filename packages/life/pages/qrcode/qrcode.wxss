@@ -324,7 +324,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.template-chip:active {
+.template-chip-hover {
   background: #e0e0e0;
   transform: scale(0.96);
 }

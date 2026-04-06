@@ -221,7 +221,7 @@ page {
   border-radius: 0 0 16rpx 16rpx;
 }
 
-.category-item:active {
+.category-item-hover {
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
   transform: scale(0.99);
 }
@@ -261,7 +261,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.category-item:active .category-arrow {
+.category-item-hover .category-arrow {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
@@ -271,7 +271,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.category-item:active .arrow {
+.category-item-hover .arrow {
   color: white;
   transform: translateX(4rpx);
 }

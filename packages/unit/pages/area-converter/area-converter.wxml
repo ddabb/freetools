@@ -18,7 +18,7 @@
             data-unit="{{item}}"
             class="unit-input" 
             placeholder="输入值"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
     </view>

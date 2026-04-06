@@ -251,12 +251,12 @@ page {
   transition: all 0.2s ease;
 }
 
-.example-btn:active {
+.example-btn-hover {
   background: linear-gradient(135deg, #11998e, #38ef7d);
   transform: scale(0.96);
 }
 
-.example-btn:active .example-text {
+.example-btn-hover .example-text {
   color: white;
 }
 

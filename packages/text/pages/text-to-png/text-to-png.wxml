@@ -74,15 +74,15 @@
         <!-- 操作按钮 -->
         <div class="actions">
           <div class="action-group">
-            <navigator url="/packages/text/pages/copywriting/copywriting" class="btn btn-secondary">
+            <navigator url="/packages/text/pages/copywriting/copywriting" class="btn btn-secondary" hover-class="btn-hover">
               <span class="btn-icon">📝</span>
               <span class="btn-text">文案素材</span>
             </navigator>
-            <button class="btn btn-secondary" bindtap="resetForm">
+            <button class="btn btn-secondary" hover-class="btn-hover" bindtap="resetForm">
               <span class="btn-icon">↺</span>
               <span class="btn-text">重置</span>
             </button>
-            <button class="btn btn-primary" bindtap="exportAsPNG" disabled="{{!canExport}}">
+            <button class="btn btn-primary" hover-class="btn-hover" bindtap="exportAsPNG" disabled="{{!canExport}}">
               <span class="btn-icon">⤓</span>
               <span class="btn-text">导出PNG</span>
             </button>

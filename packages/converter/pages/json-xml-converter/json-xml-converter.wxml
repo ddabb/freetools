@@ -30,13 +30,13 @@
         </view>
         <view class="option-item">
           <text class="option-label">根元素名：</text>
-          <input type="text" value="{{rootElementName}}" bindinput="setRootElementName" class="option-input" placeholder="data" />
+          <input type="text" value="{{rootElementName}}" bindinput="setRootElementName" class="option-input" placeholder="data"  placeholder-class="input-placeholder"/>
         </view>
       </view>
 
       <!-- 转换按钮 -->
       <view class="form-item btn-item">
-        <button class="convert-btn full-width-btn" bindtap="convertJsonToXml">
+        <button class="convert-btn full-width-btn" bindtap="convertJsonToXml" hover-class="convert-btn-active">
           <text class="btn-text">转换为XML</text>
         </button>
       </view>
@@ -83,7 +83,7 @@
 
       <!-- 转换按钮 -->
       <view class="form-item btn-item">
-        <button class="convert-btn full-width-btn" bindtap="convertXmlToJson">
+        <button class="convert-btn full-width-btn" bindtap="convertXmlToJson" hover-class="convert-btn-active">
           <text class="btn-text">转换为JSON</text>
         </button>
       </view>

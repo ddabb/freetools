@@ -43,7 +43,7 @@
           <text class="share-title">📢 分享给好友</text>
           <text class="share-description">觉得好用吗？分享给身边的朋友吧！</text>
           <text class="share-description">让更多人一起享受便捷的工具服务！</text>
-          <button class="share-btn" open-type="share" hover-class="share-btn-hover">
+          <button class="share-btn" hover-class="share-btn-hover" open-type="share">
             <text class="share-icon">📤</text>
             <text class="share-text">分享给好友</text>
           </button>
@@ -53,7 +53,7 @@
           <text class="favorite-title">⭐ 收藏小程序</text>
           <text class="favorite-description">收藏后可在微信首页下拉快速找到</text>
           <text class="favorite-description">方便下次使用，无需搜索！</text>
-          <button class="favorite-btn" bindtap="addToFavorite" hover-class="favorite-btn-hover">
+          <button class="favorite-btn" hover-class="favorite-btn-hover" bindtap="addToFavorite">
             <text class="favorite-icon">⭐</text>
             <text class="favorite-text">添加到我的小程序</text>
           </button>
@@ -87,7 +87,7 @@
           <text class="hint-text">CDN缓存 key 统一使用 cdn_ 前缀</text>
         </view>
         
-        <button class="cache-btn" bindtap="clearCache" hover-class="cache-btn-hover">
+        <button class="cache-btn" hover-class="cache-btn-hover" bindtap="clearCache">
           <text class="cache-icon">🗑️</text>
           <text class="cache-text">清除 CDN 缓存</text>
         </button>
@@ -112,7 +112,7 @@
         <text class="project-title">📞 联系我们</text>
       </view>
       <view class="project-content">
-        <view class="contact-item" bindtap="onCopyWechat">
+        <view class="contact-item" hover-class="contact-item-hover" bindtap="onCopyWechat">
           <text class="contact-icon">📱</text>
           <view class="contact-info">
             <text class="contact-label">微信公众号</text>
@@ -120,7 +120,7 @@
           </view>
           <text class="contact-arrow">›</text>
         </view>
-        <view class="contact-item" bindtap="onCopyEmail">
+        <view class="contact-item" hover-class="contact-item-hover" bindtap="onCopyEmail">
           <text class="contact-icon">✉️</text>
           <view class="contact-info">
             <text class="contact-label">联系邮箱</text>

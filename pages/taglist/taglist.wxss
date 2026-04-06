@@ -76,7 +76,7 @@ page {
   flex-shrink: 0;
 }
 
-.search-clear:active {
+.search-clear-hover {
   background: #e0e0e0;
   color: #666;
 }
@@ -281,7 +281,7 @@ page {
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
 }
 
-.tag-item:active {
+.tag-item-hover {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-color: transparent;
   transform: scale(0.97);
@@ -296,7 +296,7 @@ page {
   transition: color 0.3s ease;
 }
 
-.tag-item:active .tag-name {
+.tag-item-hover .tag-name {
   color: white;
 }
 
@@ -312,7 +312,7 @@ page {
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
-.tag-item:active .tag-count {
+.tag-item-hover .tag-count {
   background: rgba(255, 255, 255, 0.25);
   color: white;
   box-shadow: none;

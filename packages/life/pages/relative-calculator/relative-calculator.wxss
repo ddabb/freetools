@@ -100,11 +100,6 @@
   box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
 }
 
-.retry-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
-}
-
 /* 计算器外壳 */
 .calculator-shell {
   background: linear-gradient(145deg, #2c3e50, #34495e);
@@ -133,6 +128,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .input-text {
@@ -225,16 +221,11 @@
   font-weight: 600;
   color: white;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.relation-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* 特殊按钮样式 */
@@ -267,16 +258,11 @@
   font-weight: bold;
   color: white;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.action-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .action-btn:hover {
@@ -324,11 +310,24 @@
   box-shadow: 0 6px 12px rgba(237, 137, 54, 0.4);
 }
 
-/* 按钮按下效果 */
-.relation-btn:active,
-.mutual-check:active,
-.clear-all-btn:active {
+/* 按钮按下效果 - 使用 hover-class 替代 -hover */
+.relation-btn-hover,
+.mutual-check-hover,
+.clear-all-btn-hover {
   transform: translateY(1px);
+  opacity: 0.8;
+}
+
+.action-btn-hover {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  opacity: 0.8;
+}
+
+.retry-btn-hover {
+  transform: translateY(2px);
+  box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+  opacity: 0.8;
 }
 
 /* 提示文字样式 */

@@ -171,7 +171,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.sort-wrap:active {
+.sort-wrap-hover {
   background: rgba(255, 255, 255, 0.35);
 }
 
@@ -265,7 +265,7 @@ page {
   overflow: hidden;
 }
 
-.article-card .card-inner:active {
+.article-card .card-inner-hover {
   transform: scale(0.97);
   box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.2);
 }
@@ -676,7 +676,7 @@ page {
 }
 
 
-.tree-node:active {
+.tree-node-hover {
   background-color: rgba(102, 126, 234, 0.08);
   transform: scale(0.995);
 }
@@ -714,7 +714,7 @@ page {
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.tree-node:active .tree-node-icon {
+.tree-node-hover .tree-node-icon {
   transform: scale(1.1);
 }
 

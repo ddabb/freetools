@@ -11,7 +11,7 @@
           bindinput="onTitleInput" 
           value="{{title}}" 
           maxlength="30"
-        ></input>
+         placeholder-class="input-placeholder"></input>
         <text class="count">{{title ? title.length : 0}}/30</text>
       </view>
       <view class="form-group">
@@ -33,7 +33,7 @@
           bindinput="onFooterInput" 
           value="{{footer}}" 
           maxlength="20"
-        ></input>
+         placeholder-class="input-placeholder"></input>
         <text class="count">{{footer ? footer.length : 0}}/20</text>
       </view>
       

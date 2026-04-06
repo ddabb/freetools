@@ -19,7 +19,7 @@
             placeholder="输入总数"
             maxlength="6"
             confirm-type="done"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
 
@@ -35,7 +35,7 @@
             placeholder="输入选择数"
             maxlength="6"
             confirm-type="done"
-          />
+           placeholder-class="input-placeholder"/>
         </view>
       </view>
 
@@ -108,7 +108,7 @@
     <view class="examples-card">
       <view class="examples-header">快速示例</view>
       <view class="examples-grid">
-        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
+        <view class="example-btn" hover-class="example-btn-hover" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
           <text class="example-n">{{item.n}}</text>
           <text class="example-sep">取</text>
           <text class="example-r">{{item.r}}</text>
@@ -131,7 +131,7 @@
     <view class="examples-card">
       <view class="examples-header">快速示例</view>
       <view class="examples-grid">
-        <view class="example-btn" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
+        <view class="example-btn" hover-class="example-btn-hover" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-n="{{item.n}}" data-r="{{item.r}}">
           <text class="example-n">{{item.n}}</text>
           <text class="example-sep">取</text>
           <text class="example-r">{{item.r}}</text>

@@ -12,7 +12,6 @@ Page({
     ],
     rollCount: 0,
     currentScore: 0,
-    currentAward: null,
     history: [],
     isRolling: false,
     rollBtnText: '掷骰子',
@@ -271,7 +270,6 @@ Page({
     this.setData({
       rollCount,
       currentScore: score,
-      currentAward,
       resultText,
       history
     });

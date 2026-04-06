@@ -42,7 +42,7 @@ page {
   border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
-.date-picker-display:active {
+.date-picker-display-hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
@@ -73,7 +73,7 @@ page {
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
-.query-btn:active {
+.query-btn-hover {
   transform: scale(0.98);
   background: linear-gradient(135deg, #d97706, #b45309);
 }
@@ -116,7 +116,7 @@ page {
   padding: 10px;
 }
 
-.constellation-circle:active {
+.constellation-circle-hover {
   transform: scale(0.98);
 }
 
@@ -163,7 +163,7 @@ page {
   box-shadow: 0 2px 8px rgba(255, 154, 158, 0.2);
 }
 
-.link-btn:active {
+.link-btn-hover {
   background: rgba(255, 255, 255, 1);
   transform: scale(0.96);
   box-shadow: 0 4px 12px rgba(255, 154, 158, 0.3);
@@ -198,7 +198,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.detail-card:active {
+.detail-card-hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 154, 158, 0.15);
 }

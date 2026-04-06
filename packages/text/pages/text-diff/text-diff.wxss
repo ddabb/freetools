@@ -89,13 +89,13 @@ page {
   transition: all 0.3s ease;
 }
 
-.action-btn:active {
+.action-btn-hover {
   transform: scale(0.95);
   background: linear-gradient(135deg, #4ecdc4, #44a08d);
 }
 
-.action-btn:active .btn-icon,
-.action-btn:active .btn-text {
+.action-btn-hover .btn-icon,
+.action-btn-hover .btn-text {
   color: white;
 }
 
@@ -169,7 +169,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.mini-btn:active {
+.mini-btn-hover {
   transform: scale(0.9);
   background: #44a08d;
 }
@@ -419,13 +419,13 @@ side-by-side-view {
   box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.1);
 }
 
-.quick-btn:active {
+.quick-btn-hover {
   transform: scale(0.95);
   background: linear-gradient(135deg, #4ecdc4, #44a08d);
 }
 
-.quick-btn:active .btn-icon,
-.quick-btn:active .btn-text {
+.quick-btn-hover .btn-icon,
+.quick-btn-hover .btn-text {
   color: white;
 }
 

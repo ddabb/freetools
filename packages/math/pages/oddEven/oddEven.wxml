@@ -32,7 +32,7 @@
                 placeholder="例如：123"
                 maxlength="20"
                 confirm-type="done"
-              />
+               placeholder-class="input-placeholder"/>
             </view>
           </view>
         </view>

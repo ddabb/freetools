@@ -5,7 +5,7 @@
   <section class="input-section">
     <div class="input-group">
       <label for="emoji-input">输入Emoji</label>
-      <input type="text" id="emoji-input" class="emoji-input" placeholder="输入一个emoji，如😀" maxlength="2" value="{{inputEmoji}}" bindinput="onEmojiInput" />
+      <input type="text" id="emoji-input" class="emoji-input" placeholder="输入一个emoji，如😀" maxlength="2" value="{{inputEmoji}}" bindinput="onEmojiInput"  placeholder-class="input-placeholder"/>
       <p class="hint">注意：只能输入一个emoji</p>
     </div>
   </section>  

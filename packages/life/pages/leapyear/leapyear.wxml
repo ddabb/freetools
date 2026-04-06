@@ -31,7 +31,7 @@
                 class="modern-input"
                 placeholder="例如：2024"
                 focus="{{inputFocus}}"
-              />
+               placeholder-class="input-placeholder"/>
               <view class="input-status {{year ? 'valid' : ''}}">
                 <text class="status-dot"></text>
               </view>

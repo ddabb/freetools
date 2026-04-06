@@ -68,7 +68,6 @@ Page({
       "记住：每个数字必须使用且只能使用一次"
     ],
     // 预设题目库（初始用本地数据）
-    questionBank: localQuestionBank
   },
 
   // 设置表达式
@@ -494,15 +493,15 @@ Page({
     console.log('generateNewGame called');
     try {
       // 检查题目库是否已加载
-      if (!this.data.questionBank || this.data.questionBank.length === 0) {
+      if (!this._questionBank || this._questionBank.length === 0) {
         console.warn('questionBank not loaded yet, waiting...');
         setTimeout(() => this.generateNewGame(), 500);
         return;
       }
       
       // 随机选择一个预设题目
-      const randomIndex = Math.floor(Math.random() * this.data.questionBank.length);
-      const selectedQuestion = this.data.questionBank[randomIndex];
+      const randomIndex = Math.floor(Math.random() * this._questionBank.length);
+      const selectedQuestion = this._questionBank[randomIndex];
       
       // 打乱数字顺序
       const shuffledNumbers = [...selectedQuestion.numbers].sort(() => Math.random() - 0.5);
@@ -749,7 +748,7 @@ Page({
     // 检查缓存是否有效
     if (cached && timestamp && (now - timestamp < CACHE_EXPIRE)) {
       console.log('[24point] 使用缓存题目');
-      this.setData({ questionBank: cached });
+      this._questionBank = cached;
       return;
     }
 
@@ -760,7 +759,7 @@ Page({
       timeout: 10000,
       success: (res) => {
         if (res.statusCode === 200 && res.data && res.data.questions) {
-          this.setData({ questionBank: res.data.questions });
+          this._questionBank = res.data.questions;
           // 保存到缓存
           wx.setStorageSync(QUESTION_KEY, res.data.questions);
           wx.setStorageSync(QUESTION_TIMESTAMP_KEY, now);

@@ -70,7 +70,7 @@ page {
   color: #adb5bd;
 }
 
-.picker-display:active {
+.picker-display-hover {
   border-color: #667eea;
   background: #fff;
 }
@@ -96,7 +96,7 @@ page {
   justify-content: center;
 }
 
-.full-width-btn:active {
+.full-width-btn-hover {
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
 }

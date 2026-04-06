@@ -2,7 +2,7 @@
   <view class="form-section">
     <view class="form-item">
       <text class="label">当前年龄</text>
-      <input class="input" type="number" placeholder="请输入当前年龄" value="{{currentAge}}" bindinput="onCurrentAgeInput" />
+      <input class="input" type="number" placeholder="请输入当前年龄" value="{{currentAge}}" bindinput="onCurrentAgeInput"  placeholder-class="input-placeholder"/>
       <text class="unit">岁</text>
     </view>
 
@@ -17,13 +17,13 @@
 
     <view class="form-item">
       <text class="label">当前月薪</text>
-      <input class="input" type="digit" placeholder="请输入当前月薪" value="{{currentSalary}}" bindinput="onCurrentSalaryInput" />
+      <input class="input" type="digit" placeholder="请输入当前月薪" value="{{currentSalary}}" bindinput="onCurrentSalaryInput"  placeholder-class="input-placeholder"/>
       <text class="unit">元</text>
     </view>
 
     <view class="form-item">
       <text class="label">薪资增长率</text>
-      <input class="input" type="digit" placeholder="薪资增长率" value="{{salaryIncrease}}" bindinput="onSalaryIncreaseChange" />
+      <input class="input" type="digit" placeholder="薪资增长率" value="{{salaryIncrease}}" bindinput="onSalaryIncreaseChange"  placeholder-class="input-placeholder"/>
       <text class="unit">%</text>
     </view>
 
@@ -38,13 +38,13 @@
 
     <view class="form-item">
       <text class="label">每月储蓄</text>
-      <input class="input" type="digit" placeholder="{{savingTypeIndex === 0 ? '请输入每月储蓄金额' : '请输入每月储蓄比例'}}" value="{{monthlySaving}}" bindinput="onMonthlySavingInput" />
+      <input class="input" type="digit" placeholder="{{savingTypeIndex === 0 ? '请输入每月储蓄金额' : '请输入每月储蓄比例'}}" value="{{monthlySaving}}" bindinput="onMonthlySavingInput"  placeholder-class="input-placeholder"/>
       <text class="unit">{{savingTypeIndex === 0 ? '元' : '%'}}</text>
     </view>
 
     <view class="form-item">
       <text class="label">预期年化收益率</text>
-      <input class="input" type="digit" placeholder="预期收益率" value="{{expectedReturn}}" bindinput="onExpectedReturnChange" />
+      <input class="input" type="digit" placeholder="预期收益率" value="{{expectedReturn}}" bindinput="onExpectedReturnChange"  placeholder-class="input-placeholder"/>
       <text class="unit">%</text>
     </view>
   </view>

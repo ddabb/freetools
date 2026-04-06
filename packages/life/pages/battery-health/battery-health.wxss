@@ -131,7 +131,8 @@ page {
   padding: 0;
 }
 
-.btn-share:active {
+.btn-share-hover {
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(231, 76, 60, 0.4);
+  opacity: 0.85;
 }

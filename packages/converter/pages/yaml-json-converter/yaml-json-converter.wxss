@@ -164,7 +164,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.convert-btn:not(.disabled):active {
+.convert-btn-active {
   transform: translateY(-2rpx) scale(1.02);
   box-shadow: 0 20rpx 50rpx rgba(168, 237, 234, 0.5);
 }
@@ -359,12 +359,12 @@ page {
   border: 2rpx solid transparent;
 }
 
-.example-item:active {
+.example-item-hover {
   background: linear-gradient(135deg, #a8edea, #fed6e3);
   transform: scale(0.98);
 }
 
-.example-item:active .example-text {
+.example-item-hover .example-text {
   color: #d63384;
 }
 

@@ -39,7 +39,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.stat-card:active {
+.stat-card-hover {
   transform: scale(0.95);
 }
 
@@ -166,7 +166,7 @@ detailed-stats {
   transition: all 0.3s ease;
 }
 
-.control-btn:active {
+.control-btn-hover {
   transform: scale(0.9);
 }
 
@@ -315,13 +315,13 @@ detailed-stats {
   border: 2rpx solid transparent;
 }
 
-.action-item:active {
+.action-item-hover {
   background: linear-gradient(135deg, #55a3ff, #003d82);
   transform: scale(0.95);
 }
 
-.action-item:active .action-icon,
-.action-item:active .action-text {
+.action-item-hover .action-icon,
+.action-item-hover .action-text {
   color: white;
 }
 

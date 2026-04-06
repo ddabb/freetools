@@ -164,7 +164,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.convert-btn:not(.disabled):active {
+.convert-btn-active {
   transform: translateY(-2rpx) scale(1.02);
   box-shadow: 0 20rpx 50rpx rgba(17, 153, 142, 0.5);
 }

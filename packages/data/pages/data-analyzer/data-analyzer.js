@@ -7,7 +7,6 @@ Page({
     analysisResult: null,
     dataTypeIndex: 0,
     dataTypes: ['数字', '文本', '混合'],
-    importedNumbers: []  // 保存导入的数字，用于导出
   },
 
   onLoad() {
@@ -35,7 +34,6 @@ Page({
     this.setData({ 
       inputData: '',
       analysisResult: null,
-      importedNumbers: []
     });
   },
 
@@ -91,8 +89,7 @@ Page({
               const dataStr = numbers.join(', ');
               this.setData({ 
                 inputData: dataStr,
-                importedNumbers: numbers
-              });
+                      });
               
               wx.hideLoading();
               wx.showToast({ title: `已导入 ${numbers.length} 个数字`, icon: 'success' });
@@ -136,7 +133,6 @@ Page({
       const stats = this.calculateStats(numbers);
       this.setData({ 
         analysisResult: stats,
-        importedNumbers: numbers
       });
       wx.showToast({ title: '分析完成', icon: 'success' });
     } catch (error) {
@@ -211,7 +207,8 @@ Page({
       success: (res) => {
         if (!res.confirm) return;
 
-        const { analysisResult, inputData, importedNumbers } = this.data;
+        const { analysisResult, inputData } = this.data;
+        const importedNumbers = this._importedNumbers || [];
 
         // 准备数据
         const aoa = [
@@ -262,7 +259,8 @@ Page({
       return;
     }
 
-    const { analysisResult, inputData, importedNumbers } = this.data;
+    const { analysisResult, inputData } = this.data;
+        const importedNumbers = this._importedNumbers || [];
     
     // CSV 内容
     let csv = '\uFEFF'; // BOM for UTF-8

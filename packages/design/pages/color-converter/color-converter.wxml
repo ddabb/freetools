@@ -3,7 +3,7 @@
   <view class="color-preview-section" style="background-color: {{currentColor}};">
     <view class="color-info-bar">
       <text class="color-code">{{currentColor}}</text>
-      <button class="copy-btn" bindtap="copyColorCode">复制</button>
+      <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyColorCode">复制</button>
     </view>
   </view>
 
@@ -94,13 +94,13 @@
     </view>
     <view class="hex-input-wrapper">
       <text class="hex-prefix">#</text>
-      <input class="hex-input" type="text" value="{{hexInput}}" bindinput="onHexInput" placeholder="667EEA" maxlength="6"/>
+      <input class="hex-input" type="text" value="{{hexInput}}" bindinput="onHexInput" placeholder="667EEA" maxlength="6" placeholder-class="input-placeholder"/>
     </view>
   </view>
 
   <!-- 快捷操作 -->
   <view class="quick-actions card">
-    <button class="action-btn random-btn" bindtap="generateRandomColor">
+    <button class="action-btn random-btn" hover-class="action-btn-hover" bindtap="generateRandomColor">
       <text class="btn-icon">🎲</text>
       <text class="btn-text">随机颜色</text>
     </button>
@@ -113,7 +113,7 @@
       <text class="clear-btn" bindtap="clearRecent">清空</text>
     </view>
     <view class="recent-grid">
-      <view class="recent-color" wx:for="{{recentColors}}" wx:key="*this" 
+      <view class="recent-color" hover-class="recent-color-hover" wx:for="{{recentColors}}" wx:key="*this" 
             style="background-color: {{item}};" bindtap="selectColor" data-color="{{item}}">
       </view>
     </view>
@@ -125,7 +125,7 @@
       <text class="section-title">🎨 预设颜色</text>
     </view>
     <view class="preset-grid">
-      <view class="preset-color" wx:for="{{presetColors}}" wx:key="*this" 
+      <view class="preset-color" hover-class="preset-color-hover" wx:for="{{presetColors}}" wx:key="*this" 
             style="background-color: {{item}};" bindtap="selectColor" data-color="{{item}}">
       </view>
     </view>
@@ -138,7 +138,7 @@
     </view>
     
     <view class="format-list">
-      <view class="format-item" bindtap="copyFormat" data-format="hex">
+      <view class="format-item" hover-class="format-item-hover" bindtap="copyFormat" data-format="hex">
         <view class="format-info">
           <text class="format-name">HEX</text>
           <text class="format-value">{{formats.hex}}</text>
@@ -146,7 +146,7 @@
         <text class="copy-icon">📋</text>
       </view>
       
-      <view class="format-item" bindtap="copyFormat" data-format="rgb">
+      <view class="format-item" hover-class="format-item-hover" bindtap="copyFormat" data-format="rgb">
         <view class="format-info">
           <text class="format-name">RGB</text>
           <text class="format-value">{{formats.rgb}}</text>
@@ -154,7 +154,7 @@
         <text class="copy-icon">📋</text>
       </view>
       
-      <view class="format-item" bindtap="copyFormat" data-format="rgba">
+      <view class="format-item" hover-class="format-item-hover" bindtap="copyFormat" data-format="rgba">
         <view class="format-info">
           <text class="format-name">RGBA</text>
           <text class="format-value">{{formats.rgba}}</text>
@@ -162,7 +162,7 @@
         <text class="copy-icon">📋</text>
       </view>
       
-      <view class="format-item" bindtap="copyFormat" data-format="hsl">
+      <view class="format-item" hover-class="format-item-hover" bindtap="copyFormat" data-format="hsl">
         <view class="format-info">
           <text class="format-name">HSL</text>
           <text class="format-value">{{formats.hsl}}</text>
@@ -170,7 +170,7 @@
         <text class="copy-icon">📋</text>
       </view>
       
-      <view class="format-item" bindtap="copyFormat" data-format="cmyk">
+      <view class="format-item" hover-class="format-item-hover" bindtap="copyFormat" data-format="cmyk">
         <view class="format-info">
           <text class="format-name">CMYK</text>
           <text class="format-value">{{formats.cmyk}}</text>
@@ -216,7 +216,7 @@
       <view class="scheme-item" wx:for="{{colorSchemes}}" wx:key="name">
         <text class="scheme-name">{{item.name}}</text>
         <view class="scheme-colors">
-          <view class="scheme-color" wx:for="{{item.colors}}" wx:for-item="color" wx:for-index="idx" wx:key="idx" 
+          <view class="scheme-color" hover-class="scheme-color-hover" wx:for="{{item.colors}}" wx:for-item="color" wx:for-index="idx" wx:key="idx" 
                 style="background-color: {{color}};" bindtap="selectColor" data-color="{{color}}">
           </view>
         </view>

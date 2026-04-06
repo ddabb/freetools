@@ -6,12 +6,8 @@ Page({
     board: [],
     difficulty: 'medium',
     showingAnswer: false,
-    answerBoard: [],
-    puzzleBoard: [], // 保存原始谜题数据
-    userBoard: [], // 保存用户填写的内容
     generating: false,
-    showCandidates: true,
-    hasCandidates: false,
+    showCandidates: false,
     difficulties: [
       { key: 'easy', name: '入门', hint: '⭐ 简单' },
       { key: 'medium', name: '初级', hint: '⭐⭐ 中等' },
@@ -81,14 +77,17 @@ Page({
           userBoard.push(row);
         }
 
+        this._answerBoard = answerStr;
+        this._puzzleBoard = puzzleStr;
+        this._userBoard = userBoard;
+        this._answerBoard = answerStr;
+        this._puzzleBoard = puzzleStr;
+        this._userBoard = userBoard;
         this.setData({
           board: board,
-          answerBoard: answerStr,
-          puzzleBoard: puzzleStr, // 保存谜题数据
-          userBoard: userBoard, // 初始化用户填写的内容
           showingAnswer: false,
           generating: false,
-          hasCandidates: this.data.showCandidates
+
         });
 
         // 生成后立即刷新候选数显示状态
@@ -130,7 +129,7 @@ Page({
           row.push(parseInt(cell.value, 10));
         } else {
           // 使用原始谜题数据
-          const v = this.data.puzzleBoard[r][c];
+          const v = this._puzzleBoard[r][c];
           row.push(v ? parseInt(v, 10) : 0);
         }
       }
@@ -165,7 +164,7 @@ Page({
       }
     }
     
-    this.setData({ board: board, hasCandidates: hasCandidates });
+    this.setData({ board: board });
   },
 
   toggleAnswer() {
@@ -252,9 +251,7 @@ Page({
     
     this.setData({
       board: board,
-      userBoard: emptyUserBoard,
       showingAnswer: false,
-      hasCandidates: showCandidates,
       selectedCell: { row: -1, col: -1 }
     });
   },
@@ -294,7 +291,7 @@ Page({
     if (row === -1 || col === -1) return;
     
     const board = this.data.board;
-    const userBoard = this.data.userBoard;
+    const userBoard = this._userBoard;
     
     board[row][col].value = String(num);
     // 保存用户填写的内容
@@ -311,7 +308,6 @@ Page({
     
     this.setData({ 
       board: board, 
-      userBoard: userBoard
       // 保持选中状态，不重置 selectedCell
     });
     this.recalculateCandidates();
@@ -325,9 +321,9 @@ Page({
     if (row === -1 || col === -1) return;
     
     const board = this.data.board;
-    const userBoard = this.data.userBoard;
-    const answerBoard = this.data.answerBoard;
-    const puzzleBoard = this.data.puzzleBoard;
+    const userBoard = this._userBoard;
+    const answerBoard = this._answerBoard;
+    const puzzleBoard = this._puzzleBoard;
     
     board[row][col].value = '';
     // 清除用户填写的内容
@@ -347,7 +343,6 @@ Page({
     
     this.setData({ 
       board: board, 
-      userBoard: userBoard,
       selectedCell: { row: -1, col: -1 }
     });
     this.recalculateCandidates();
@@ -386,7 +381,7 @@ Page({
         }
       }
     }
-    this.setData({ board: board, hasCandidates: hasCandidates });
+    this.setData({ board: board });
   },
 
   onShareAppMessage() {

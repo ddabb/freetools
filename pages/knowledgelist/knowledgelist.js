@@ -1,6 +1,22 @@
 // packages/knowledge/pages/knowledgelist/knowledgelist.js
 const knowledgeCategory = require('../../utils/knowledgeCategory');
+const cacheManager = require('../../utils/cacheManager');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
+
+// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
+const CACHE_KEY_META = 'cdn_know_meta';        // category-tree + taxonomy
+const CACHE_KEY_META_TS = 'cdn_know_meta_ts';
+const CACHE_KEY_ARTICLES = 'cdn_know_articles';
+const CACHE_KEY_ARTICLES_TS = 'cdn_know_articles_ts';
+const CACHE_KEY_SEARCH = 'cdn_know_search';
+const CACHE_KEY_SEARCH_TS = 'cdn_know_search_ts';
+const CACHE_KEY_PAGE = 'cdn_know_page_';       // 前缀 + 页码
+
+// 内存缓存
+let metaCache = null;
+let articlesCache = null;
+let searchCache = null;
 
 
 Page({
@@ -265,19 +281,31 @@ Page({
   },
 
   /**
-   * 加载元数据（分类树、标签等）
+   * 加载元数据（分类树、标签等，带缓存）
    */
   loadMetadata() {
-    const categoryTreeUrl = CDN_BASE + 'category-tree.json';
-    const articlesUrl = CDN_BASE + 'articles.json';
-    const searchIndexUrl = CDN_BASE + 'search-index.json';
+    const now = Date.now();
 
-    Promise.all([
-      this.requestData(categoryTreeUrl),
-      this.requestData(articlesUrl),
-      this.requestData(searchIndexUrl)
-    ]).then(([categoryTreeData, articlesData, searchIndexData]) => {
+    // 构造元数据缓存 key（categoryTree + taxonomy 打包）
+    const metaUrl = CDN_BASE + 'articles.json';
+
+    // 1. 先尝试元数据缓存（categoryTree + taxonomy）
+    const loadMeta = () => {
+      const categoryTreeUrl = CDN_BASE + 'category-tree.json';
+      return Promise.all([
+        this.fetchWithCache(null, CACHE_KEY_META, CACHE_KEY_META_TS, categoryTreeUrl),
+        this.fetchWithCache(null, CACHE_KEY_ARTICLES, CACHE_KEY_ARTICLES_TS, metaUrl),
+        this.fetchWithCache(null, CACHE_KEY_SEARCH, CACHE_KEY_SEARCH_TS, CDN_BASE + 'search-index.json')
+      ]);
+    };
+
+    loadMeta().then(([categoryTreeData, articlesData, searchIndexData]) => {
       console.log('元数据加载成功');
+
+      // 更新内存缓存引用
+      metaCache = categoryTreeData;
+      articlesCache = articlesData;
+      searchCache = searchIndexData;
 
       const articles = (articlesData.articles || []).map(article => this.decorateArticle(article));
       const taxonomy = articlesData.taxonomy || {};
@@ -323,7 +351,7 @@ Page({
   },
 
   /**
-   * 加载分页数据
+   * 加载分页数据（带缓存）
    */
   loadPageData() {
     if (this.hasActiveFilters()) {
@@ -331,9 +359,7 @@ Page({
       return;
     }
 
-    const pageUrl = CDN_BASE + `page/page-${this.data.page}.json`;
-
-    this.requestData(pageUrl).then(pageData => {
+    this.fetchPageWithCache(this.data.page).then(pageData => {
       console.log('分页数据加载成功:', {
         page: pageData.page,
         totalPages: pageData.totalPages,
@@ -368,25 +394,84 @@ Page({
   },
 
   /**
-   * 通用请求方法
+   * 带缓存的请求（内存 → Storage → CDN）
    */
-  requestData(url) {
+  fetchWithCache(memRef, cacheKey, tsKey, url) {
+    const now = Date.now();
+
+    // 1. 内存缓存
+    if (memRef) return Promise.resolve(memRef);
+
+    // 2. Storage 缓存
+    try {
+      const cached = wx.getStorageSync(cacheKey);
+      const ts = wx.getStorageSync(tsKey);
+      if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+        return Promise.resolve(cached);
+      }
+    } catch (e) { /* 读缓存失败 */ }
+
+    // 3. CDN（支持 304，命中时自动延长 TTL；写入时触发 LRU 淘汰）
+    return this.requestWith304(url, cacheKey, tsKey).then(data => {
+      cacheManager.smartSet(cacheKey, data, tsKey);
+      return data;
+    });
+  },
+
+  /**
+   * 发送请求，尝试 304 优化
+   */
+  requestWith304(url, cacheKey, tsKey) {
     return new Promise((resolve, reject) => {
+      const headers = {};
+      try {
+        const oldTs = wx.getStorageSync(tsKey);
+        if (oldTs) {
+          headers['If-Modified-Since'] = new Date(oldTs).toUTCString();
+        }
+      } catch (e) { /* ignore */ }
+
       wx.request({
-        url: url + `?_t=${Date.now()}`,
+        url,
         method: 'GET',
         timeout: 30000,
+        header: headers,
         success: (res) => {
-          if (res.statusCode === 200 && res.data) {
+          if (res.statusCode === 304) {
+            // 内容未变，延长 TTL，返回旧缓存
+            try { wx.setStorageSync(tsKey, Date.now()); } catch (e) { /* ignore */ }
+            resolve(cacheKey ? wx.getStorageSync(cacheKey) : null);
+          } else if (res.statusCode === 200 && res.data) {
             resolve(res.data);
           } else {
-            reject(new Error('请求失败'));
+            reject(new Error('请求失败: ' + res.statusCode));
           }
         },
-        fail: (err) => {
-          reject(err);
-        }
+        fail: reject
       });
+    });
+  },
+
+  /**
+   * 分页数据缓存（key 动态，按页码）
+   */
+  fetchPageWithCache(page) {
+    const cacheKey = CACHE_KEY_PAGE + page;
+    const tsKey = cacheKey + '_ts';
+    const url = CDN_BASE + `page/page-${page}.json`;
+    const now = Date.now();
+
+    try {
+      const cached = wx.getStorageSync(cacheKey);
+      const ts = wx.getStorageSync(tsKey);
+      if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+        return Promise.resolve(cached);
+      }
+    } catch (e) { /* 读缓存失败 */ }
+
+    return this.requestWith304(url, cacheKey, tsKey).then(data => {
+      cacheManager.smartSet(cacheKey, data, tsKey);
+      return data;
     });
   },
 
@@ -523,7 +608,7 @@ Page({
 
 
   /**
-   * 下拉刷新
+   * 下拉刷新（只清知识库相关缓存）
    */
   onRefresh() {
     console.log('开始执行下拉刷新:', {
@@ -532,12 +617,27 @@ Page({
       searchKeyword: this.data.searchKeyword
     });
 
-    wx.clearStorageSync();
-    console.log('缓存已清空');
+    // 只清知识库相关缓存键
+    const keys = [
+      CACHE_KEY_META, CACHE_KEY_META_TS,
+      CACHE_KEY_ARTICLES, CACHE_KEY_ARTICLES_TS,
+      CACHE_KEY_SEARCH, CACHE_KEY_SEARCH_TS,
+    ];
+    for (const k of keys) {
+      wx.removeStorageSync(k);
+      wx.removeStorageSync(k + '_ts');
+    }
+    // 分页缓存（只清前3页保守）
+    for (let p = 1; p <= 10; p++) {
+      wx.removeStorageSync(CACHE_KEY_PAGE + p);
+      wx.removeStorageSync(CACHE_KEY_PAGE + p + '_ts');
+    }
+    // 重置内存缓存
+    metaCache = null;
+    articlesCache = null;
+    searchCache = null;
 
     this.setData({ refreshing: true, page: 1, list: [] });
-    console.log('设置 refreshing 状态为 true');
-
     this.loadArticles();
   },
 

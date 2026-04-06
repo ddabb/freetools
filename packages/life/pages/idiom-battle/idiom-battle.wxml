@@ -54,7 +54,7 @@
       </view>
 
       <view class="start-section">
-        <view class="start-btn {{battleFirst?'ready':''}}" bindtap="onStartBattle">
+        <view class="start-btn {{battleFirst?'ready':''}}" hover-class="ready-hover" bindtap="onStartBattle">
           <text class="start-text">{{battleFirst?'开始对战':'请选择先手'}}</text>
         </view>
       </view>
@@ -118,8 +118,8 @@
                bindinput="onBattleInput" 
                bindconfirm="onBattleConfirm" 
                confirm-type="send" 
-               focus="{{battleTurn==='user'}}" />
-        <view class="send-btn" bindtap="onBattleConfirm">
+               focus="{{battleTurn==='user'}}"  placeholder-class="input-placeholder"/>
+        <view class="send-btn" hover-class="send-btn-hover" bindtap="onBattleConfirm">
           <text class="send-text">发送</text>
         </view>
       </view>
@@ -139,7 +139,7 @@
 
     <!-- 底部操作 -->
     <view class="battle-footer">
-      <view class="surrender-btn" bindtap="onSurrender">
+      <view class="surrender-btn" hover-class="surrender-btn-hover" bindtap="onSurrender">
         <text class="surrender-icon">🏳️</text>
         <text class="surrender-text">认输</text>
       </view>
@@ -184,7 +184,7 @@
         </view>
 
         <view class="action-section">
-          <view class="restart-btn" bindtap="onRestartBattle">
+          <view class="restart-btn" hover-class="restart-btn-hover" bindtap="onRestartBattle">
             <text class="restart-icon">🔄</text>
             <text class="restart-text">再来一局</text>
           </view>

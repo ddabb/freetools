@@ -152,7 +152,7 @@
   flex-shrink: 0;
 }
 
-.search-btn:active {
+.search-btn-hover {
   transform: scale(0.96);
   opacity: 0.9;
 }
@@ -417,7 +417,7 @@
   border: 1rpx solid #e0e0e0;
 }
 
-.detail-copy-btn:active {
+.detail-copy-btn-hover {
   background: #e0e0e0;
 }
 

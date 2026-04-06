@@ -94,7 +94,7 @@ page {
   font-size: 16rpx;
 }
 
-.copy-btn:active {
+.copy-btn-hover {
   background: #0984e3;
   transform: scale(0.95);
 }
@@ -221,7 +221,7 @@ page {
   text-align: center;
 }
 
-.quick-btn:active {
+.quick-btn-hover {
   transform: scale(0.95);
   box-shadow: 0 5rpx 15rpx rgba(116, 185, 255, 0.3);
 }
@@ -344,13 +344,13 @@ page {
   box-sizing: border-box;
 }
 
-.quick-item:active {
+.quick-item-hover {
   background: linear-gradient(135deg, #74b9ff, #0984e3);
   transform: scale(0.95);
 }
 
-.quick-item:active .quick-name,
-.quick-item:active .quick-value {
+.quick-item-hover .quick-name,
+.quick-item-hover .quick-value {
   color: white;
 }
 

@@ -19,11 +19,7 @@ Page({
     showCandidates: false,
     selectedCell: { row: -1, col: -1 },
     mode: 'daily', // daily | paste
-    dailyInfo: {
-      name: '',
-      difficulty: '',
-      level: ''
-    }
+
   },
 
   onLoad() {
@@ -102,12 +98,7 @@ Page({
     if (data && data.puzzle) {
       this.loadPuzzle(data.puzzle);
       this.setData({
-        dailyInfo: {
-          name: data.name,
-          difficulty: data.difficulty,
-          level: data.level
-        },
-        mode: 'daily'
+          mode: 'daily'
       });
     }
   },

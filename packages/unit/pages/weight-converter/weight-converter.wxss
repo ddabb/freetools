@@ -71,7 +71,7 @@ page {
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
-.unit-item:active {
+.unit-item-hover {
   border-color: #667eea;
   background: #fff;
   box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.2);
@@ -134,6 +134,7 @@ page {
   border: 2rpx solid #e9ecef;
   max-height: 400rpx;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 滚动条样式 */

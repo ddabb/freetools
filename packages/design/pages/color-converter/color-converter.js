@@ -47,6 +47,10 @@ Page({
     maxRecentColors: 12
   },
 
+  // 节流时间戳
+  _lastSliderUpdate: 0,
+  _sliderUpdateTimer: null,
+
   // 页面加载
   onLoad(options) {
     wx.setNavigationBarTitle({ title: '🎨 颜色生成' });
@@ -125,8 +129,12 @@ Page({
 
 
 
-  // 滑块拖动过程中实时变化
+  // 滑块拖动过程中实时变化（节流：100ms）
   onRgbSliderChanging(e) {
+    const now = Date.now();
+    if (now - this._lastSliderUpdate < 100) return;
+    this._lastSliderUpdate = now;
+    
     const channel = e.currentTarget.dataset.channel;
     const value = parseInt(e.detail.value);
     
@@ -165,8 +173,12 @@ Page({
     this.updateColorFromRgb(newRgb, hex, true);
   },
 
-  // RGB输入变化
+  // RGB输入变化（节流：100ms）
   onRgbInput(e) {
+    const now = Date.now();
+    if (now - this._lastSliderUpdate < 100) return;
+    this._lastSliderUpdate = now;
+
     const channel = e.currentTarget.dataset.channel;
     let value = parseInt(e.detail.value) || 0;
     
@@ -179,8 +191,12 @@ Page({
     this.setColor(hex, false);
   },
 
-  // HEX输入变化
+  // HEX输入变化（节流：100ms）
   onHexInput(e) {
+    const now = Date.now();
+    if (now - this._lastSliderUpdate < 100) return;
+    this._lastSliderUpdate = now;
+
     let hex = e.detail.value.trim().toUpperCase();
     
     // 移除#号

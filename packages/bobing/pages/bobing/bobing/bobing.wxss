@@ -29,14 +29,6 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.subtitle {
-  color: #666;
-  font-size: 1.2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
 .game-area {
   display: flex;
   flex-wrap: wrap;
@@ -46,15 +38,6 @@ h1 {
 }
 
 .dice-section {
-  flex: 1;
-  min-width: 300px;
-  background: #f8f9fa;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-.info-section {
   flex: 1;
   min-width: 300px;
   background: #f8f9fa;
@@ -361,7 +344,7 @@ h1 {
   box-shadow: 0 8px 20px rgba(231, 76, 60, 0.6);
 }
 
-.roll-btn:active {
+.roll-btn-hover {
   transform: translateY(1px);
 }
 
@@ -404,7 +387,7 @@ h1 {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.result-btn:active, .history-btn:active {
+.result-btn-hover, .history-btn-hover {
   transform: translateY(1px);
 }
 
@@ -663,6 +646,7 @@ h1 {
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -726,7 +710,7 @@ h1 {
   box-shadow: 0 5px 15px rgba(52, 152, 219, 0.6);
 }
 
-.rule-btn:active {
+.rule-btn-hover {
   transform: translateY(1px);
 }
 

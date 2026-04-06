@@ -6,11 +6,11 @@
       <text class="current-time-value">{{currentTime}}</text>
       <view class="current-timestamp-row">
         <text class="current-timestamp">时间戳: {{currentTimestamp}}</text>
-        <button class="copy-btn small" bindtap="copyCurrentTimestamp">复制</button>
+        <button class="copy-btn small" hover-class="copy-btn-hover" bindtap="copyCurrentTimestamp">复制</button>
       </view>
       <view class="current-timestamp-row">
         <text class="current-timestamp-sec">秒级: {{currentTimestampSec}}</text>
-        <button class="copy-btn small" bindtap="copyCurrentTimestampSec">复制</button>
+        <button class="copy-btn small" hover-class="copy-btn-hover" bindtap="copyCurrentTimestampSec">复制</button>
       </view>
     </view>
   </view>
@@ -21,11 +21,11 @@
     <view class="converter-block">
       <view class="block-title">🔢 时间戳 → 日期</view>
       <view class="input-group">
-        <input type="number" value="{{timestampInput}}" bindinput="setTimestampInput" class="input-field" placeholder="输入时间戳（秒或毫秒）" />
+        <input type="number" value="{{timestampInput}}" bindinput="setTimestampInput" class="input-field" placeholder="输入时间戳（秒或毫秒）"  placeholder-class="input-placeholder"/>
         <view class="quick-buttons">
-          <button class="quick-btn" bindtap="useCurrentTimestamp">当前</button>
-          <button class="quick-btn" bindtap="useYesterdayTimestamp">昨天</button>
-          <button class="quick-btn" bindtap="useTomorrowTimestamp">明天</button>
+          <button class="quick-btn" hover-class="quick-btn-hover" bindtap="useCurrentTimestamp">当前</button>
+          <button class="quick-btn" hover-class="quick-btn-hover" bindtap="useYesterdayTimestamp">昨天</button>
+          <button class="quick-btn" hover-class="quick-btn-hover" bindtap="useTomorrowTimestamp">明天</button>
         </view>
       </view>
       
@@ -41,21 +41,21 @@
           <text class="result-label">本地时间:</text>
           <view class="result-value-container">
             <text class="result-value highlight">{{timestampResult.localTime}}</text>
-            <button class="copy-btn" bindtap="copyTimestampResult" data-type="localTime">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyTimestampResult" data-type="localTime">复制</button>
           </view>
         </view>
         <view class="result-item">
           <text class="result-label">UTC时间:</text>
           <view class="result-value-container">
             <text class="result-value">{{timestampResult.utcTime}}</text>
-            <button class="copy-btn" bindtap="copyTimestampResult" data-type="utcTime">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyTimestampResult" data-type="utcTime">复制</button>
           </view>
         </view>
         <view class="result-item">
           <text class="result-label">ISO格式:</text>
           <view class="result-value-container">
             <text class="result-value code">{{timestampResult.isoFormat}}</text>
-            <button class="copy-btn" bindtap="copyTimestampResult" data-type="isoFormat">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyTimestampResult" data-type="isoFormat">复制</button>
           </view>
         </view>
       </view>
@@ -78,21 +78,21 @@
           <text class="result-label">时间戳(秒):</text>
           <view class="result-value-container">
             <text class="result-value highlight">{{dateResult.timestampSec}}</text>
-            <button class="copy-btn" bindtap="copyDateResult" data-type="timestampSec">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyDateResult" data-type="timestampSec">复制</button>
           </view>
         </view>
         <view class="result-item">
           <text class="result-label">时间戳(毫秒):</text>
           <view class="result-value-container">
             <text class="result-value">{{dateResult.timestampMs}}</text>
-            <button class="copy-btn" bindtap="copyDateResult" data-type="timestampMs">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyDateResult" data-type="timestampMs">复制</button>
           </view>
         </view>
         <view class="result-item">
           <text class="result-label">有效期至:</text>
           <view class="result-value-container">
             <text class="result-value">{{dateResult.expireTime}}</text>
-            <button class="copy-btn" bindtap="copyDateResult" data-type="expireTime">复制</button>
+            <button class="copy-btn" hover-class="copy-btn-hover" bindtap="copyDateResult" data-type="expireTime">复制</button>
           </view>
         </view>
       </view>
@@ -103,10 +103,10 @@
   <view class="quick-section">
     <view class="section-title">⚡ 常用时间戳</view>
     <view class="quick-grid">
-      <view class="quick-item" wx:for="{{commonTimestamps}}" wx:key="name" bindtap="useCommonTimestamp" data-timestamp="{{item.value}}" data-name="{{item.name}}">
+      <view class="quick-item" hover-class="quick-item-hover" wx:for="{{commonTimestamps}}" wx:key="name" bindtap="useCommonTimestamp" data-timestamp="{{item.value}}" data-name="{{item.name}}">
         <text class="quick-name">{{item.name}}</text>
         <text class="quick-value">{{item.displayValue}}</text>
-        <button class="copy-btn small" bindtap="copyCommonTimestamp" data-timestamp="{{item.value}}">复制</button>
+        <button class="copy-btn small" hover-class="copy-btn-hover" bindtap="copyCommonTimestamp" data-timestamp="{{item.value}}">复制</button>
       </view>
     </view>
   </view>
@@ -116,8 +116,8 @@
     <view class="section-title">⏰ 时间差计算</view>
     <view class="time-diff-card">
       <view class="input-group">
-        <input type="number" value="{{timeDiffInput}}" bindinput="setTimeDiffInput" class="input-field" placeholder="输入时间戳（秒）" />
-        <button class="quick-btn full-width" bindtap="calculateTimeDiff">计算时间差</button>
+        <input type="number" value="{{timeDiffInput}}" bindinput="setTimeDiffInput" class="input-field" placeholder="输入时间戳（秒）"  placeholder-class="input-placeholder"/>
+        <button class="quick-btn full-width" hover-class="quick-btn-hover" bindtap="calculateTimeDiff">计算时间差</button>
       </view>
       <view class="result-display" wx:if="{{timeDiffResult}}">
         <view class="result-item">

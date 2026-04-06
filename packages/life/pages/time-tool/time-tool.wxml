@@ -3,13 +3,13 @@
   <!-- 标签页切换 -->
   <view class="tabs">
     <view
-      class="tab {{activeTab === index ? 'active' : ''}}"
+      class="tab {{activeTab === index ? 'active' : ''}}" hover-class="tab-hover"
       wx:for="{{tabs}}"
       wx:key="index"
       bindtap="onTabChange"
       data-index="{{index}}"
     >
-      <view class="tab-content-wrapper">
+      <view class="tab-content-wrapper" hover-class="tab-hover">
         <text class="tab-emoji">{{index === 0 ? '⏱️' : index === 1 ? '⏰' : '🌍'}}</text>
         <text class="tab-text">{{item}}</text>
       </view>
@@ -17,7 +17,7 @@
   </view>
 
   <!-- 秒表 -->
-  <view class="tab-content" wx:if="{{activeTab === 0}}">
+  <view class="tab-content" hover-class="tab-hover" wx:if="{{activeTab === 0}}">
     <view class="stopwatch-content">
       <view class="display-container">
         <view class="stopwatch-display">{{stopwatch.display}}</view>
@@ -26,13 +26,13 @@
       <view class="button-container">
         <view class="button-group">
           <button
-            class="btn {{stopwatch.isRunning ? 'stop' : 'start'}}"
+            class="btn {{stopwatch.isRunning ? 'stop' : 'start'}}" hover-class="btn-hover"
             bindtap="toggleStopwatch"
           >
             {{stopwatch.isRunning ? '暂停' : '开始'}}
           </button>
-          <button class="btn lap" bindtap="lapStopwatch">计次</button>
-          <button class="btn reset" bindtap="resetStopwatch">重置</button>
+          <button class="btn lap" hover-class="btn-hover" bindtap="lapStopwatch">计次</button>
+          <button class="btn reset" hover-class="btn-hover" bindtap="resetStopwatch">重置</button>
         </view>
       </view>
 
@@ -49,7 +49,7 @@
   </view>
 
   <!-- 计时器 -->
-  <view class="tab-content" wx:if="{{activeTab === 1}}">
+  <view class="tab-content" hover-class="tab-hover" wx:if="{{activeTab === 1}}">
     <view class="timer-content">
       <view class="display-container">
         <view class="timer-display">{{timer.display}}</view>
@@ -67,7 +67,7 @@
               data-type="hours"
               class="time-input"
               maxlength="2"
-            />
+             placeholder-class="input-placeholder"/>
           </view>
           <text class="time-separator">:</text>
           <view class="time-input-group">
@@ -79,7 +79,7 @@
               data-type="minutes"
               class="time-input"
               maxlength="2"
-            />
+             placeholder-class="input-placeholder"/>
           </view>
           <text class="time-separator">:</text>
           <view class="time-input-group">
@@ -91,7 +91,7 @@
               data-type="seconds"
               class="time-input"
               maxlength="2"
-            />
+             placeholder-class="input-placeholder"/>
           </view>
         </view>
       </view>
@@ -99,24 +99,24 @@
       <view class="button-container">
         <view class="button-group">
           <button
-            class="btn {{timer.isRunning ? (timer.isPaused ? 'start' : 'stop') : 'start'}}"
+            class="btn {{timer.isRunning ? (timer.isPaused ? 'start' : 'stop') : 'start'}}" hover-class="btn-hover"
             bindtap="toggleTimer"
           >
             {{timer.isRunning ? (timer.isPaused ? '继续' : '暂停') : '开始'}}
           </button>
-          <button class="btn reset" bindtap="resetTimer">重置</button>
+          <button class="btn reset" hover-class="btn-hover" bindtap="resetTimer">重置</button>
         </view>
       </view>
     </view>
   </view>
 
   <!-- 世界时钟 -->
-  <view class="tab-content" wx:if="{{activeTab === 2}}">
+  <view class="tab-content" hover-class="tab-hover" wx:if="{{activeTab === 2}}">
     <view class="world-clock-content">
       <text class="section-title">世界时间</text>
       <view class="world-clock">
         <view class="clock-grid">
-          <view class="clock-card">
+          <view class="clock-card" hover-class="clock-card-hover">
             <view class="clock-header">
               <text class="clock-icon">🇨🇳</text>
               <text class="clock-label">北京时间</text>
@@ -124,7 +124,7 @@
             <text class="clock-time">{{worldClock.beijing}}</text>
             <text class="clock-date">{{getCurrentDate('beijing')}}</text>
           </view>
-          <view class="clock-card">
+          <view class="clock-card" hover-class="clock-card-hover">
             <view class="clock-header">
               <text class="clock-icon">🇯🇵</text>
               <text class="clock-label">东京时间</text>
@@ -132,7 +132,7 @@
             <text class="clock-time">{{worldClock.tokyo}}</text>
             <text class="clock-date">{{getCurrentDate('tokyo')}}</text>
           </view>
-          <view class="clock-card">
+          <view class="clock-card" hover-class="clock-card-hover">
             <view class="clock-header">
               <text class="clock-icon">🇬🇧</text>
               <text class="clock-label">伦敦时间</text>
@@ -140,7 +140,7 @@
             <text class="clock-time">{{worldClock.london}}</text>
             <text class="clock-date">{{getCurrentDate('london')}}</text>
           </view>
-          <view class="clock-card">
+          <view class="clock-card" hover-class="clock-card-hover">
             <view class="clock-header">
               <text class="clock-icon">🇺🇸</text>
               <text class="clock-label">纽约时间</text>
@@ -153,7 +153,7 @@
       
       <!-- 跳转链接 -->
       <view class="action-section">
-        <view class="action-card" bindtap="gotoTimezoneConverter">
+        <view class="action-card" hover-class="action-card-hover" bindtap="gotoTimezoneConverter">
           <view class="action-icon">🌍</view>
           <view class="action-content">
             <text class="action-title">时区转换器</text>

@@ -1,6 +1,12 @@
 // packages/knowledge/pages/taglist/taglist.js
 
+const cacheManager = require('../../utils/cacheManager');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
+
+// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
+const CACHE_KEY_TAGS = 'cdn_know_tags';
+const CACHE_KEY_TAGS_TS = 'cdn_know_tags_ts';
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 
 Page({
   data: {
@@ -13,21 +19,15 @@ Page({
     scrollHeight: 0
   },
 
-  requestData(url) {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: url + `?_t=${Date.now()}`,
-        method: 'GET',
-        timeout: 10000,
-        success: (res) => {
-          if (res.statusCode === 200 && res.data) {
-            resolve(res.data);
-          } else {
-            reject(new Error('请求失败'));
-          }
-        },
-        fail: reject
-      });
+  /**
+   * 带缓存的请求（内存 → Storage → CDN，支持 304 + LRU）
+   */
+  fetchWithCache(cacheKey, tsKey, url) {
+    return cacheManager.fetchWithCache({
+      cacheKey,
+      tsKey,
+      url,
+      ttl: CACHE_EXPIRE
     });
   },
 
@@ -72,10 +72,12 @@ Page({
       errorMsg: ''
     });
 
-    const url = CDN_BASE + 'tags.json';
-
     try {
-      const res = await this.requestData(url);
+      const res = await this.fetchWithCache(
+        CACHE_KEY_TAGS,
+        CACHE_KEY_TAGS_TS,
+        CDN_BASE + 'tags.json'
+      );
       const tags = res.tags || [];
       this.setData({
         tags,
@@ -168,7 +170,8 @@ Page({
   },
 
   onRefresh() {
-    wx.clearStorageSync();
+    // 只清知识库相关缓存
+    cacheManager.clearCdnCache('know_');
     this.loadTags();
   }
 });

@@ -18,7 +18,7 @@
     <text class="list-tip">支持长按删除单条历史</text>
 
     <view
-      class="record-card"
+      class="record-card" hover-class="record-card-hover"
       wx:for="{{chains}}"
       wx:key="index"
       data-index="{{index}}"

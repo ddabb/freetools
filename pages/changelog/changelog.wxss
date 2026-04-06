@@ -35,7 +35,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.export-btn:active {
+.export-btn-hover {
   transform: scale(0.95);
   box-shadow: 0 2rpx 8rpx rgba(39, 174, 96, 0.5);
 }

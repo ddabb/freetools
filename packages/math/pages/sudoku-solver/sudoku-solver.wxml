@@ -38,8 +38,8 @@
         maxlength="100"
       ></textarea>
       <view class="paste-actions">
-        <button class="btn-sm" bindtap="importPasted">📥 导入</button>
-        <button class="btn-sm btn-outline" bindtap="clearPasted">清空</button>
+        <button class="btn-sm" hover-class="btn-hover" bindtap="importPasted">📥 导入</button>
+        <button class="btn-sm btn-outline" hover-class="btn-hover" bindtap="clearPasted">清空</button>
       </view>
     </view>
   </view>
@@ -127,13 +127,13 @@
         </view>
         <!-- 候选数开关 -->
         <view 
-          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}"
+          class="number-item candidate-btn {{showCandidates ? 'active' : ''}}" hover-class="btn-hover"
           bindtap="toggleCandidates"
         >
           {{showCandidates ? '💡' : '🔴'}}
         </view>
         <!-- 清除按钮 -->
-        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" bindtap="onClearCell">
+        <view class="number-item clear-item {{selectedCell.row === -1 ? 'disabled' : ''}}" hover-class="clear-item-hover" bindtap="onClearCell">
           清除
         </view>
         <!-- 重置按钮 -->
@@ -146,19 +146,19 @@
 
   <!-- 操作按钮 -->
   <view class="buttons-section">
-    <button class="btn btn-sm clear-btn" bindtap="clearBoard" disabled="{{solving}}">
+    <button class="btn btn-sm clear-btn" hover-class="btn-hover" bindtap="clearBoard" disabled="{{solving}}">
       <text class="btn-icon">🗑️</text>
       <text class="btn-text">清空</text>
     </button>
-    <button class="btn btn-sm solve-btn" bindtap="solveSudoku" disabled="{{solving}}">
+    <button class="btn btn-sm solve-btn" hover-class="btn-hover" bindtap="solveSudoku" disabled="{{solving}}">
       <text class="btn-icon">{{solving ? '⏳' : '🔍'}}</text>
       <text class="btn-text">{{solving ? '求解中...' : '求解'}}</text>
     </button>
-    <button class="btn btn-sm copy-btn" bindtap="exportExcel" disabled="{{solving}}">
+    <button class="btn btn-sm copy-btn" hover-class="btn-hover" bindtap="exportExcel" disabled="{{solving}}">
       <text class="btn-icon">📊</text>
       <text class="btn-text">导出题目</text>
     </button>
-    <button class="btn btn-sm copy-btn" bindtap="exportPuzzleAndSolution" disabled="{{solving}}">
+    <button class="btn btn-sm copy-btn" hover-class="btn-hover" bindtap="exportPuzzleAndSolution" disabled="{{solving}}">
       <text class="btn-icon">📄</text>
       <text class="btn-text">导出全部</text>
     </button>

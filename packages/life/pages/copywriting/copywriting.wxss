@@ -103,7 +103,7 @@
   background-color: #219a52;
 }
 
-.refresh-btn:active {
+.refresh-btn-hover {
   transform: scale(0.95);
 }
 
@@ -269,7 +269,7 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-.copywriting-item:active {
+.copywriting-item-hover {
   transform: translateY(-1rpx);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }

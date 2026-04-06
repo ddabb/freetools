@@ -121,13 +121,13 @@ page {
   max-width: 120rpx;
 }
 
-.control-btn:active {
+.control-btn-hover {
   background: #ff9a56;
   transform: scale(0.95);
 }
 
-.control-btn:active .btn-icon,
-.control-btn:active .btn-text {
+.control-btn-hover .btn-icon,
+.control-btn-hover .btn-text {
   color: white;
 }
 
@@ -225,7 +225,7 @@ page {
   transition: all 0.2s ease;
 }
 
-.check-btn:not(:disabled):active {
+.check-btn-active {
   transform: translateY(1rpx);
   box-shadow: 0 2rpx 5rpx rgba(255, 107, 53, 0.3);
 }
@@ -581,7 +581,7 @@ page {
   height: 90rpx;
 }
 
-.random-generate-btn:active {
+.random-generate-btn-hover {
   transform: translateY(-2rpx) scale(1.05);
   box-shadow: 0 12rpx 30rpx rgba(69, 183, 209, 0.4);
 }
@@ -618,13 +618,13 @@ page {
   min-height: 80rpx;
 }
 
-.custom-btn:active {
+.custom-btn-hover {
   background: #ff9a56;
   transform: scale(0.95);
 }
 
-.custom-btn:active .btn-icon,
-.custom-btn:active .btn-text {
+.custom-btn-hover .btn-icon,
+.custom-btn-hover .btn-text {
   color: white;
 }
 
@@ -734,7 +734,7 @@ page {
   box-shadow: 0 2rpx 8rpx rgba(255, 107, 53, 0.2);
 }
 
-.mode-tab:active {
+.mode-tab-hover {
   opacity: 0.9;
 }
 
@@ -846,7 +846,7 @@ page {
   height: 80rpx;
 }
 
-.custom-input-section .random-generate-btn:active {
+.custom-input-section .random-generate-btn-hover {
   transform: translateY(-2rpx) scale(1.05);
   box-shadow: 0 12rpx 30rpx rgba(69, 183, 209, 0.4);
 }
@@ -882,13 +882,13 @@ page {
   min-height: 70rpx;
 }
 
-.custom-input-section .custom-btn:active {
+.custom-input-section .custom-btn-hover {
   background: #ff9a56;
   transform: scale(0.95);
 }
 
-.custom-input-section .custom-btn:active .btn-icon,
-.custom-input-section .custom-btn:active .btn-text {
+.custom-input-section .custom-btn-hover .btn-icon,
+.custom-input-section .custom-btn-hover .btn-text {
   color: white;
 }
 
@@ -935,7 +935,7 @@ page {
   color: white;
 }
 
-.mode-specific-btn:active {
+.mode-specific-btn-hover {
   transform: translateY(1rpx);
   box-shadow: 0 2rpx 5rpx rgba(255, 107, 53, 0.3);
 }
@@ -969,12 +969,12 @@ page {
   min-height: 70rpx;
 }
 
-.global-control-btn:active {
+.global-control-btn-hover {
   background: rgba(255, 154, 86, 0.1);
 }
 
-.global-control-btn:active .btn-icon,
-.global-control-btn:active .btn-text {
+.global-control-btn-hover .btn-icon,
+.global-control-btn-hover .btn-text {
   color: #ff6b35;
 }
 

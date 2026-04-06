@@ -103,7 +103,7 @@ page {
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
-.unit-item:active {
+.unit-item-hover {
   border-color: #667eea;
   background: #fff;
   box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.2);
@@ -155,7 +155,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.form-picker:active {
+.form-picker-hover {
   border-color: #667eea;
   background: white;
 }
@@ -189,7 +189,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.calculate-btn:not(.disabled):active {
+.calculate-btn-active {
   transform: translateY(-2rpx) scale(1.02);
   box-shadow: 0 20rpx 50rpx rgba(102, 126, 234, 0.5);
 }
@@ -214,7 +214,7 @@ page {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.swap-btn:active {
+.swap-btn-hover {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   transform: translateY(-2rpx) scale(1.02);
@@ -429,7 +429,7 @@ page {
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
-.example-item:active {
+.example-item-hover {
   border-color: #667eea;
   background: #fff;
   box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.2);

@@ -36,7 +36,7 @@
 
       <!-- 转换按钮 -->
       <view class="form-item btn-item">
-        <button class="convert-btn full-width-btn" bindtap="convertYamlToJson">
+        <button class="convert-btn full-width-btn" bindtap="convertYamlToJson" hover-class="convert-btn-active">
           <text class="btn-text">转换为JSON</text>
         </button>
       </view>
@@ -128,7 +128,7 @@
   <view class="examples-section">
     <view class="examples-title">快速示例</view>
     <view class="examples-grid">
-      <view class="example-item" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-example="{{item}}">
+      <view class="example-item" hover-class="example-item-hover" wx:for="{{examples}}" wx:key="index" bindtap="useExample" data-example="{{item}}">
         <text class="example-text">{{item.title}}</text>
       </view>
     </view>

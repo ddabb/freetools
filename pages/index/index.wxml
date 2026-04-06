@@ -119,15 +119,16 @@
   <view class="recent-section" wx:if="{{recentTools.length > 0}}">
     <view class="section-header">
       <view class="section-title">最近使用</view>
-      <text class="clear-history" bindtap="clearRecentTools">清空</text>
+      <text class="clear-history" bindtap="clearRecentTools" >清空</text>
     </view>
     <scroll-view class="recent-list" scroll-x="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
       <view 
         wx:for="{{recentTools}}" 
         wx:key="id" 
-        class="recent-item"
+        class="recent-item" hover-class="recent-item-hover"
         bindtap="navigateToTool" 
         data-url="{{item.url}}"
+        hover-class="recent-item-hover"
       >
         <view class="recent-icon">{{item.icon}}</view>
         <text class="recent-name">{{item.name}}</text>

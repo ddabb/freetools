@@ -60,13 +60,13 @@
 }
 
 /* 分类卡片点击动画 */
-.category-card:active {
+.category-card-hover {
   transform: translateX(10rpx);
   transition: transform 0.1s ease;
 }
 
 /* 分类卡片箭头动画 */
-.category-card:active .category-arrow {
+.category-card-hover .category-arrow {
   transform: translateX(10rpx);
   color: #3498db;
 }
@@ -76,7 +76,7 @@
 }
 
 /* 分类卡片边框动画 */
-.category-card:active::after {
+.category-card-hover::after {
   height: 10rpx;
   background: linear-gradient(90deg, #3498db, #2980b9);
   transition: height 0.1s ease, background 0.1s ease;

@@ -62,12 +62,12 @@ page {
   transition: transform 0.3s ease;
 }
 
-.date-display:active {
+.date-display-hover {
   transform: translateY(-2rpx);
   box-shadow: 0 12rpx 30rpx rgba(255, 154, 158, 0.3);
 }
 
-.date-display:active .date-arrow {
+.date-display-hover .date-arrow {
   transform: rotate(180deg);
 }
 
@@ -108,7 +108,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.info-card:active {
+.info-card-hover {
   transform: translateY(-2rpx);
   box-shadow: 0 12rpx 30rpx rgba(255, 154, 158, 0.3);
 }
@@ -215,17 +215,17 @@ page {
   background: rgba(255, 255, 255, 0.7);
 }
 
-.calendar-day:active {
+.calendar-day-hover {
   transform: scale(0.95);
   background: rgba(255, 154, 158, 0.1);
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.2);
 }
 
-.calendar-day.today:active {
+.calendar-day.today-hover {
   background: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
 }
 
-.calendar-day.holiday:active {
+.calendar-day.holiday-hover {
   background: rgba(255, 154, 158, 0.2);
 }
 
@@ -356,7 +356,7 @@ page {
   color: white;
 }
 
-.action-btn:active {
+.action-btn-hover {
   transform: scale(0.98);
   box-shadow: 0 4rpx 12rpx rgba(255, 154, 158, 0.4);
 }
@@ -378,7 +378,7 @@ page {
   padding: 0;
 }
 
-.btn-share:active {
+.btn-share-hover {
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(244, 114, 182, 0.4);
 }
@@ -421,7 +421,7 @@ page {
   transition: all 0.3s ease;
 }
 
-.nav-btn:active {
+.nav-btn-hover {
   transform: scale(0.95);
   background: linear-gradient(145deg, #fecfef 0%, #ffd9e2 100%);
   box-shadow: 0 2rpx 6rpx rgba(255, 154, 158, 0.3);

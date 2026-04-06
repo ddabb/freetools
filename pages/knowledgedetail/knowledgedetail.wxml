@@ -19,13 +19,13 @@
     <!-- 分类标签行 -->
     <view class="category-row">
       <!-- 分类列表按钮 -->
-      <view class="category-list-btn" bindtap="onCategoryListTap">
+      <view class="category-list-btn" hover-class="category-list-btn-hover" bindtap="onCategoryListTap">
         <text class="category-list-icon">📂</text>
         <text class="category-list-text">分类</text>
       </view>
       <!-- 分类标签 -->
       <view
-        class="hero-category {{article.categoryClass}}"
+        class="hero-category {{article.categoryClass}}" hover-class="hero-category-hover"
         bindtap="onCategoryTap"
       >
         <text class="category-arrow-left">‹</text>
@@ -84,7 +84,7 @@
       <!-- 标签区域 -->
       <view class="tags-area" wx:if="{{article.tags && article.tags.length > 0}}">
         <view class="tags-header">
-          <view class="tags-title-left" bindtap="onTagListTap">
+          <view class="tags-title-left" hover-class="tags-title-left-hover" bindtap="onTagListTap">
             <text class="tags-title-icon">🏷️</text>
             <text class="tags-title-text">标签列表</text>
           </view>
@@ -92,7 +92,7 @@
         </view>
         <view class="tags-container">
           <view
-            class="tag-item"
+            class="tag-item" hover-class="tag-item-hover"
             wx:for="{{article.tags}}"
             wx:key="*this"
             bindtap="onTagTap"
@@ -112,7 +112,7 @@
         </view>
         <scroll-view class="related-scroll" scroll-x>
           <view
-            class="related-card"
+            class="related-card" hover-class="related-card-hover"
             wx:for="{{relatedArticles}}"
             wx:key="filename"
             bindtap="onRelatedTap"

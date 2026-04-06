@@ -12,7 +12,6 @@ Page({
     // 生成的注数
     generatedNotes: [],
     // 选中的注数
-    selectedNotes: [],
     // 模拟结果
     drawResult: {
       brownBalls: [],
@@ -31,16 +30,12 @@ Page({
       netProfit: 0
     },
     // 一键生成相关
-    generateSettings: {
-      count: 1
-    },
+
     generateOptions: [1, 5, 10, 50, 100, 200],
-    generateIndex: 0, // 默认选择1注
     selectedGenerateCount: 1,
     // 定投相关
     investmentSettings: {
       periods: 100,
-      selectedNotes: []
     },
     investmentResult: {
       totalPeriods: 0,
@@ -55,7 +50,6 @@ Page({
     isInvesting: false,
     // 期数选择器相关
     periodOptions: [1, 5, 10, 20, 50, 100],
-    periodIndex: 1, // 默认选择5期
     selectedPeriod: 5,
     // 定投区域显示控制
     showInvestmentSection: false,
@@ -69,10 +63,7 @@ Page({
       investment: true
     },
     // 奖池信息
-    prizePool: {
-      amount: 800000000, // 默认8亿
-      lastUpdated: null
-    }
+
   },
 
   // 切换选号模式
@@ -85,8 +76,7 @@ Page({
       brownBalls: [],
       greenBalls: [],
       generatedNotes: [],
-      selectedNotes: [],
-      showDrawResult: false,
+        showDrawResult: false,
       showMatchResult: false,
       showInvestmentResult: false
     });
@@ -173,14 +163,12 @@ Page({
         brownBalls: generatedNotes[0].brownBalls,
         greenBalls: generatedNotes[0].greenBalls,
         generatedNotes: updatedGeneratedNotes,
-        selectedNotes: updatedSelectedNotes
-      });
+        });
     } else {
       // 生成多注时，只添加到生成注数，不更新当前显示的号码
       this.setData({
         generatedNotes: updatedGeneratedNotes,
-        selectedNotes: updatedSelectedNotes
-      });
+        });
     }
   },
 
@@ -209,7 +197,6 @@ Page({
     
     this.setData({
       generatedNotes: updatedGeneratedNotes,
-      selectedNotes: updatedSelectedNotes
     });
   },
 
@@ -230,7 +217,6 @@ Page({
     
     this.setData({
       generatedNotes,
-      selectedNotes
     });
   },
 
@@ -238,7 +224,6 @@ Page({
   clearNotes() {
     this.setData({
       generatedNotes: [],
-      selectedNotes: []
     });
   },
 
@@ -307,7 +292,8 @@ Page({
 
   // 计算匹配结果
   calculateMatch() {
-    const { selectedNotes, drawResult, mode } = this.data;
+    const selectedNotes = this._selectedNotes || [];
+    const { drawResult, mode } = this.data;
     const prizeStandards = this.getPrizeStandards();
     
     // 计算每注的匹配情况和收益
@@ -487,9 +473,7 @@ Page({
     const index = e.detail.value;
     const count = this.data.generateOptions[index];
     this.setData({
-      generateIndex: index,
       selectedGenerateCount: count,
-      'generateSettings.count': count
     });
   },
 
@@ -499,9 +483,7 @@ Page({
     const periods = this.data.periodOptions[index];
     console.log('[setInvestmentPeriods] 更新定投期数:', { periods, index });
     this.setData({
-      periodIndex: index,
       selectedPeriod: periods,
-      'investmentSettings.periods': periods
     });
   },
 
@@ -510,9 +492,7 @@ Page({
     const count = e.currentTarget.dataset.count;
     const index = this.data.generateOptions.indexOf(count);
     this.setData({
-      generateIndex: index,
       selectedGenerateCount: count,
-      'generateSettings.count': count
     });
   },
 
@@ -522,9 +502,7 @@ Page({
     const index = this.data.periodOptions.indexOf(periods);
     console.log('[setInvestmentPeriodsDirectly] 更新定投期数:', { periods, index });
     this.setData({
-      periodIndex: index,
       selectedPeriod: periods,
-      'investmentSettings.periods': periods
     });
   },
 
@@ -773,7 +751,7 @@ Page({
       const prizePoolAmount = 860000000; // 模拟8.6亿奖池
       
       this.setData({
-        prizePool: {
+        _prizePool: {
           amount: prizePoolAmount,
           lastUpdated: new Date().toLocaleString()
         }
@@ -798,7 +776,8 @@ Page({
   
   // 获取奖金标准（根据奖池金额）
   getPrizeStandards() {
-    const { prizePool, mode } = this.data;
+    const prizePool = this._prizePool || this.data.prizePool;
+    const { mode } = this.data;
     const isHighPool = prizePool.amount >= 800000000;
     
     if (mode === 'double') {

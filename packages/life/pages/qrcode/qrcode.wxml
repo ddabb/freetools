@@ -168,7 +168,7 @@
         class="primary-btn {{canGenerate ? 'ready' : ''}}"
         bindtap="generate"
         disabled="{{!canGenerate}}"
-        hover-class="btn-primary-hover"
+        hover-class="btn-primary-hover" 
       >
         <text class="btn-icon">✨</text>
         <text class="btn-text">生成二维码</text>
@@ -178,7 +178,7 @@
         <button 
           class="secondary-btn" 
           bindtap="pasteFromClipboard"
-          hover-class="btn-secondary-hover"
+          hover-class="btn-secondary-hover" 
         >
           <text class="btn-icon">📋</text>
           粘贴
@@ -187,7 +187,7 @@
           class="secondary-btn" 
           bindtap="clear"
           wx:if="{{text}}"
-          hover-class="btn-secondary-hover"
+          hover-class="btn-secondary-hover" 
         >
           <text class="btn-icon">🗑️</text>
           清空
@@ -228,7 +228,7 @@
 
       <!-- 操作按钮 -->
       <view class="result-actions">
-        <button class="action-btn save-btn" bindtap="saveImage" hover-class="btn-action-hover">
+        <button class="action-btn save-btn" bindtap="saveImage" hover-class="btn-action-hover" >
           <text class="btn-icon">💾</text>
           <text>保存到相册</text>
         </button>

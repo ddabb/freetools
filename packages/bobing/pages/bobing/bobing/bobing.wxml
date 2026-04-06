@@ -48,20 +48,20 @@
         </view>
       </view>
       <view class="button-container">
-        <button class="roll-btn" bindtap="rollDice" disabled="{{isRolling}}">{{rollBtnText}}</button>
+        <button class="roll-btn" hover-class="roll-btn-hover" bindtap="rollDice" disabled="{{isRolling}}">{{rollBtnText}}</button>
       </view>
       <view class="counter">
         <view>本轮积分: <text>{{currentScore}}</text></view>
         <view>投掷次数: <text>{{rollCount}}</text></view>
       </view>
       <view class="button-container" style="margin-top: 15px;">
-        <button class="rule-btn" bindtap="showRules">博饼规则</button>
+        <button class="rule-btn" hover-class="rule-btn-hover" bindtap="showRules">博饼规则</button>
       </view>
     </view>
   </view>
   
   <view class="button-container" style="margin-top: 20px;">
-    <button class="result-btn" bindtap="showResult">查看结果</button>
+    <button class="result-btn" hover-class="result-btn-hover" bindtap="showResult">查看结果</button>
     <button class="history-btn" bindtap="showHistory">历史记录</button>
   </view>
 </view>

@@ -11,7 +11,7 @@
 
     <view class="form-item">
       <text class="label">贷款金额</text>
-      <input class="input" type="digit" placeholder="请输入贷款金额" value="{{loanAmount}}" bindinput="onLoanAmountInput" />
+      <input class="input" type="digit" placeholder="请输入贷款金额" value="{{loanAmount}}" bindinput="onLoanAmountInput"  placeholder-class="input-placeholder"/>
       <text class="unit">万元</text>
     </view>
 
@@ -26,7 +26,7 @@
 
     <view class="form-item">
       <text class="label">年利率</text>
-      <input class="input" type="digit" placeholder="请输入年利率" value="{{rate}}" bindinput="onRateChange" />
+      <input class="input" type="digit" placeholder="请输入年利率" value="{{rate}}" bindinput="onRateChange"  placeholder-class="input-placeholder"/>
       <text class="unit">%</text>
     </view>
   </view>
