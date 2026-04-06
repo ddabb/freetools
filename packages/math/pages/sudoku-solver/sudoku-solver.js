@@ -426,14 +426,11 @@ Page({
         utils.showText('输入无效');
         return;
       }
-      let solved = sudoku.solveWithConstraintPropagation(rawBoard.map(r => [...r]));
-      if (!solved) {
-        solved = rawBoard.map(r => [...r]);
-        if (!sudoku.solve(solved)) {
-          this.setData({ solving: false, hasSolution: false, solutionMessage: '该数独无解' });
-          utils.showText('无解');
-          return;
-        }
+      const solved = rawBoard.map(r => [...r]);
+      if (!sudoku.solve(solved)) {
+        this.setData({ solving: false, hasSolution: false, solutionMessage: '该数独无解' });
+        utils.showText('无解');
+        return;
       }
       const board = this.data.board;
       for (let r = 0; r < 9; r++) {
@@ -759,13 +756,10 @@ Page({
     }
     
     // 尝试求解
-    let solved = sudoku.solveWithConstraintPropagation(rawBoard.map(r => [...r]));
-    if (!solved) {
-      solved = rawBoard.map(r => [...r]);
-      if (!sudoku.solve(solved)) {
-        utils.showText('该数独无解');
-        return this._getEmptyBoard();
-      }
+    const solved = rawBoard.map(r => [...r]);
+    if (!sudoku.solve(solved)) {
+      utils.showText('该数独无解');
+      return this._getEmptyBoard();
     }
     
     // 构建答案数据
