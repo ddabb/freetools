@@ -122,15 +122,34 @@ class RelativeCalculator {
       // 处理数组类型的关系值
       let selectedRelation;
       if (Array.isArray(nextRelation)) {
-        // 性别已知时，优先选对应项；否则随机
-        if (gender === 'female' && nextRelation.includes('老公')) {
+        let candidates = [...nextRelation];
+
+        // 已知性别的同辈冲突排除：
+        // 男性(哥哥/弟弟)已知时：排除 弟弟的哥哥、哥哥的弟弟、妹妹的哥哥、弟弟的姐姐 中的"自己"
+        // 女性(姐姐/妹妹)已知时：排除 弟弟的姐姐、哥哥的妹妹、妹妹的姐姐、姐姐的妹妹 中的"自己"
+        if (gender !== 'unknown') {
+          if (['哥哥', '弟弟'].includes(currentRelation) && gender === 'male') {
+            // 男性同辈不可能选"自己"
+            candidates = candidates.filter(v => v !== '自己');
+          } else if (['姐姐', '妹妹'].includes(currentRelation) && gender === 'female') {
+            // 女性同辈不可能选"自己"
+            candidates = candidates.filter(v => v !== '自己');
+          }
+          // 父辈查子女：不可能选"自己"（我不能是我爸的儿子/女儿）
+          if (['爸爸', '妈妈'].includes(currentRelation)) {
+            candidates = candidates.filter(v => v !== '自己');
+          }
+        }
+
+        // 已知性别的跨辈老公/老婆优先：
+        if (gender === 'female' && candidates.includes('老公')) {
           selectedRelation = '老公';
-        } else if (gender === 'male' && nextRelation.includes('老婆')) {
+        } else if (gender === 'male' && candidates.includes('老婆')) {
           selectedRelation = '老婆';
         } else {
-          // 随机选择一个
-          const randomIndex = Math.floor(Math.random() * nextRelation.length);
-          selectedRelation = nextRelation[randomIndex];
+          // 从候选中随机选（可能已过滤过，也可能只剩自己）
+          const randomIndex = Math.floor(Math.random() * candidates.length);
+          selectedRelation = candidates[randomIndex];
         }
       } else {
         selectedRelation = nextRelation;
