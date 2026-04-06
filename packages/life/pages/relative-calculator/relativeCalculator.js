@@ -75,21 +75,31 @@ class RelativeCalculator {
       return '请选择亲戚关系';
     }
 
+    // 从链的第一个词判断起始人性别
+    // "老公" → 女；"老婆" → 男；其他 → 性别未知（随机选）
+    let gender = 'unknown';
+    if (chain[0] === '老公') {
+      gender = 'female';
+    } else if (chain[0] === '老婆') {
+      gender = 'male';
+    }
+
     // 处理复杂树形结构关系
-    return this.calculateTreeStructure(chain);
+    return this.calculateTreeStructure(chain, gender);
   }
 
   // 基于图论的关系计算算法
-  calculateTreeStructure(chain) {
+  calculateTreeStructure(chain, gender) {
     if (chain.length === 0) return '';
     if (chain.length === 1) return chain[0];
 
     // 使用图遍历算法处理复杂关系
-    return this.graphTraversal(chain);
+    return this.graphTraversal(chain, gender);
   }
 
-  // 图遍历算法（恢复简化版：精简关系，随机选择）
-  graphTraversal(chain) {
+  // 图遍历算法
+  // gender: 'female' | 'male' | 'unknown'，用于解析含老公/老婆的多值数组
+  graphTraversal(chain, gender) {
     // 从"自己"开始
     let currentRelation = '自己';
 
@@ -109,20 +119,24 @@ class RelativeCalculator {
       // 获取下一个关系
       const nextRelation = this.relationGraph[currentRelation][relation];
 
-      // 处理数组类型的关系值（随机选择，不避免"自己"）
+      // 处理数组类型的关系值
       let selectedRelation;
       if (Array.isArray(nextRelation)) {
-        // 如果有多个选择，随机选择一个（包括"自己"）
-        const randomIndex = Math.floor(Math.random() * nextRelation.length);
-        selectedRelation = nextRelation[randomIndex];
+        // 性别已知时，优先选对应项；否则随机
+        if (gender === 'female' && nextRelation.includes('老公')) {
+          selectedRelation = '老公';
+        } else if (gender === 'male' && nextRelation.includes('老婆')) {
+          selectedRelation = '老婆';
+        } else {
+          // 随机选择一个
+          const randomIndex = Math.floor(Math.random() * nextRelation.length);
+          selectedRelation = nextRelation[randomIndex];
+        }
       } else {
         selectedRelation = nextRelation;
       }
 
-      // 如果选择的结果是"自己"，直接更新当前关系为"自己"，继续计算
-      // 例如：儿子的爸爸 → 自己（正确简化）
-
-      // 更新当前关系
+      // 更新当前关系，继续下一步
       currentRelation = selectedRelation;
 
       // 异常处理：如果计算出的新关系在图中不存在
