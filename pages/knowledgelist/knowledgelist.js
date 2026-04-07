@@ -27,7 +27,7 @@ Page({
     currentTag: '',
     categories: [],
 
-    categoryStats: {},
+
     categoryTreeNodes: [],
 
     // 列表数据
@@ -95,7 +95,14 @@ Page({
 
   buildRenderableCategoryTree(categoryTree) {
     const walk = (children = {}) => {
-      return Object.values(children).map(node => {
+      const nodes = Object.values(children).sort((a, b) => {
+        const countDiff = (b.count || 0) - (a.count || 0);
+        if (countDiff !== 0) return countDiff;
+        return (a.name || '').localeCompare(b.name || '', 'zh-Hans-CN');
+
+      });
+
+      return nodes.map(node => {
         const childNodes = walk(node.children || {});
         return {
           name: node.name,
@@ -110,6 +117,8 @@ Page({
 
     return walk((categoryTree && categoryTree.children) || {});
   },
+
+
 
 
   getLeafCategoryName(category) {
@@ -185,7 +194,15 @@ Page({
       .sort((a, b) => b.count - a.count);
   },
 
+  getDefaultCategory(categories = this.data.categories) {
+    if (!Array.isArray(categories) || categories.length === 0) {
+      return '';
+    }
+    return this.normalizeCategoryValue(categories[0].name);
+  },
+
   refreshView() {
+
     this.page = 1;
     this.setData({ list: [] });
     if (this.hasActiveFilters()) {
@@ -309,15 +326,15 @@ Page({
       const categoryTree = categoryTreeData || { children: {} };
       const searchIndex = searchIndexData || [];
 
-      const categoryStats = {
-        '': articles.length,
-        '全部': articles.length,
-        ...this.buildCategoryStatsFromTree(categoryTree)
-      };
+      const categoryStats = this.buildCategoryStatsFromTree(categoryTree);
 
       this.categoryLeafLookup = this.buildCategoryLeafLookup(categoryTree);
       const categories = this.buildTopCategories(categoryTree);
       const categoryTreeNodes = this.buildRenderableCategoryTree(categoryTree);
+      const shouldAutoSelectDefaultCategory = !this.data.currentCategory && !this.data.currentTag && !this.data.searchKeyword;
+      const selectedCategory = shouldAutoSelectDefaultCategory
+        ? this.getDefaultCategory(categories)
+        : this.data.currentCategory;
 
       // 大数据量变量存为实例属性，不通过 setData 传递
       this.allArticles = articles;
@@ -328,17 +345,18 @@ Page({
       this.setData({
         categoryTreeNodes,
         categories,
-        categoryStats,
+        currentCategory: selectedCategory,
         list: []
       });
       this.page = 1;
+      this.setPageTitle(selectedCategory, this.data.currentTag);
 
-
-      if (this.hasActiveFilters()) {
+      if (selectedCategory || this.data.currentTag || this.data.searchKeyword) {
         this.applyFiltersAndSort();
       } else {
         this.loadPageData();
       }
+
     }).catch(err => {
       console.error('加载元数据失败:', err);
       this.showError('加载失败，请重试');
@@ -573,15 +591,17 @@ Page({
    * 清除所有筛选
    */
   clearFilters() {
+    const defaultCategory = this.getDefaultCategory();
     this.setData({
       searchKeyword: '',
-      currentCategory: '',
+      currentCategory: defaultCategory,
       currentTag: '',
       showCategoryTree: false
     });
-    this.setPageTitle('', '');
+    this.setPageTitle(defaultCategory, '');
     this.refreshView();
   },
+
 
 
   /**

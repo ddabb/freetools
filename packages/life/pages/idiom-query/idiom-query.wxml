@@ -6,7 +6,7 @@
     <text class="loading-text">加载数据中...</text>
   </view>
 
-  <!-- 固定区域：搜索栏、历史记录、结果头部 -->
+  <!-- 固定顶部区域：搜索栏、历史记录 -->
   <view class="sticky-header">
     <view class="sticky-content">
       <!-- 搜索框区域 -->
@@ -15,7 +15,7 @@
           <view class="search-input-wrap">
             <input
               class="search-input"
-              placeholder="输入成语，查看可接龙的成语"
+              placeholder="{{queryPlaceholder}}"
               placeholder-class="search-placeholder"
               value="{{queryInput}}"
               bindinput="onQueryInput"
@@ -24,7 +24,21 @@
             />
             <view class="search-clear" wx:if="{{queryInput}}" bindtap="onClearQuery">✕</view>
           </view>
-          <view class="search-btn" hover-class="search-btn-hover" bindtap="onQuerySearch">查询</view>
+        </view>
+        <view class="mode-switch">
+          <view
+            class="mode-item {{queryMode === 'forward' ? 'active' : ''}}"
+            data-mode="forward"
+            bindtap="onQueryModeChange"
+          >顺查</view>
+          <view
+            class="mode-item {{queryMode === 'reverse' ? 'active' : ''}}"
+            data-mode="reverse"
+            bindtap="onQueryModeChange"
+          >逆查</view>
+        </view>
+        <view class="search-helper">
+          <text class="search-helper-text">顺查看后续可接成语，逆查看前面可接成语；点词条看释义，点右侧按钮继续查询</text>
         </view>
       </view>
 
@@ -45,51 +59,51 @@
           </scroll-view>
         </view>
       </view>
+    </view>
+  </view>
 
-      <!-- 结果头部 -->
+  <!-- 底部滑出结果区域 -->
+  <view class="content-stage">
+    <view class="scrollable-content {{hasContent ? 'has-content' : ''}}">
       <view class="result-header" wx:if="{{queryResults.length > 0}}">
         <text class="result-count">{{queryTip}}</text>
         <view class="copy-btn" bindtap="onCopyResult">📋 复制</view>
       </view>
-    </view>
-  </view>
 
-  <!-- 可滚动内容区域 -->
-  <view class="scrollable-content {{hasContent ? 'has-content' : ''}}">
-    <!-- 提示语（无结果时） -->
-    <view class="empty-tip" wx:if="{{queryResults.length === 0}}">
-      <text class="empty-icon">🀄</text>
-      <text class="empty-text">{{queryTip}}</text>
-    </view>
+      <!-- 提示语（无结果时） -->
+      <view class="empty-tip" wx:if="{{queryResults.length === 0}}">
+        <text class="empty-icon">🀄</text>
+        <text class="empty-text">{{queryTip}}</text>
+      </view>
 
-    <!-- 结果列表 -->
-    <scroll-view
-      class="result-list"
-      wx:if="{{queryResults.length > 0}}"
-      scroll-y
-      enhanced
-      show-scrollbar="false"
-    >
+      <!-- 结果列表 -->
+      <scroll-view
+        class="result-list"
+        wx:if="{{queryResults.length > 0}}"
+        scroll-y
+        enhanced
+        show-scrollbar="false"
+      >
+
       <view
         class="result-item"
         wx:for="{{queryResults}}"
         wx:key="index"
-        data-word="{{item.next}}"
+        data-word="{{item.detailWord}}"
         bindtap="onQueryItemTap"
       >
         <view class="result-row">
           <view class="result-main">
-            <text class="result-word">{{item.word}}</text>
+            <text class="result-word">{{item.leftWord}}</text>
             <text class="result-arrow-icon">→</text>
-            <text class="result-next">{{item.next}}</text>
+            <text class="result-next">{{item.rightWord}}</text>
           </view>
           <view class="result-tail">
-            <text class="result-hint">可接：</text>
             <text
-              class="result-char"
-              data-next="{{item.next}}"
+              class="result-action"
+              data-word="{{item.continueWord}}"
               catchtap="onContinueChain"
-            >{{item.lastChar}}</text>
+            >{{item.actionText}}</text>
           </view>
         </view>
       </view>
@@ -118,4 +132,5 @@
     </view>
   </view>
 
+</view>
 </view>

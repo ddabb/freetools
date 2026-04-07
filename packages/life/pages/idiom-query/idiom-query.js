@@ -3,7 +3,9 @@ const dataService = require('../../../../utils/idiom-data-service.js');
 
 Page({
   data: {
+    queryMode: 'forward',
     queryInput: '',
+    queryPlaceholder: '输入任意成语，查看可接龙的下联',
     queryResults: [],
     queryTip: '输入任意成语，查看可接龙的下联',
     queryHistory: [],
@@ -15,7 +17,40 @@ Page({
     detailItem: null,
   },
 
+  getModeLabel(mode = this.data.queryMode) {
+    return mode === 'reverse' ? '逆查' : '顺查';
+  },
+
+  getModePlaceholder(mode = this.data.queryMode) {
+    return mode === 'reverse'
+      ? '输入任意成语，查看可接在前面的成语'
+      : '输入任意成语，查看可接龙的下联';
+  },
+
+  buildQueryResults(word, candidates, mode = this.data.queryMode) {
+    return candidates.slice(0, 100).map(matchWord => {
+      if (mode === 'reverse') {
+        return {
+          leftWord: matchWord,
+          rightWord: word,
+          detailWord: matchWord,
+          continueWord: matchWord,
+          actionText: '继续逆查'
+        };
+      }
+
+      return {
+        leftWord: word,
+        rightWord: matchWord,
+        detailWord: matchWord,
+        continueWord: matchWord,
+        actionText: '继续顺查'
+      };
+    });
+  },
+
   onLoad() {
+
     this._letterCache = {};  // 页面级内存缓存：{ [firstLetter]: Array }
     this._loadData();
   },
@@ -36,21 +71,46 @@ Page({
     if (val) this._doQuery(val);
   },
 
-  onQuerySearch() {
-    const val = this.data.queryInput.trim();
-    if (val) this._doQuery(val);
+  onQueryModeChange(e) {
+
+    const mode = e.currentTarget.dataset.mode;
+    if (!mode || mode === this.data.queryMode) return;
+
+    const queryInput = this.data.queryInput.trim();
+    const queryPlaceholder = this.getModePlaceholder(mode);
+
+    this.setData({
+      queryMode: mode,
+      queryPlaceholder,
+      queryTip: queryInput ? this.data.queryTip : queryPlaceholder,
+      hasContent: queryInput ? this.data.hasContent : false,
+    });
+
+    if (queryInput && dataService.isReady()) {
+      this._doQuery(queryInput, mode);
+      return;
+    }
+
+    this.setData({
+      queryResults: [],
+      queryTip: queryPlaceholder,
+      hasContent: false,
+    });
   },
 
   // =====================
   //  查询逻辑
   // =====================
-  _doQuery(word) {
+
+  _doQuery(word, mode = this.data.queryMode) {
     if (!dataService.isReady()) {
       wx.showToast({ title: '数据加载中，请稍候', icon: 'none' });
       return;
     }
 
     word = word.replace(/\s+/g, '');
+    const queryPlaceholder = this.getModePlaceholder(mode);
+    const modeLabel = this.getModeLabel(mode);
 
     // 先检查是否在成语库中
     if (!dataService.hasWord(word)) {
@@ -60,54 +120,56 @@ Page({
         duration: 2000
       });
       this.setData({
+        queryMode: mode,
         queryResults: [],
-        queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
+        queryPlaceholder,
+        queryTip: queryPlaceholder,
         hasContent: false,
       });
       this.queryCount = 0;
       return;
     }
 
-    const result = dataService.querySolitaire(word);
+    const result = dataService.querySolitaire(word, mode);
 
     if (result.error) {
       let errorMessage = result.error;
-      
-      // 如果成语不在词库中，给出更友好的提示
+
       if (result.error === '该成语不在词库中') {
         errorMessage = `"${word}" 不在成语词库中`;
       }
-      
-      wx.showToast({ 
-        title: errorMessage, 
+
+      wx.showToast({
+        title: errorMessage,
         icon: 'none',
         duration: 2000
       });
-      
+
       this.setData({
+        queryMode: mode,
         queryResults: [],
-        queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
+        queryPlaceholder,
+        queryTip: queryPlaceholder,
         hasContent: false,
       });
       this.queryCount = 0;
       return;
     }
 
-    const results = result.candidates.slice(0, 100).map(w => ({
-      word,
-      next: w,
-      lastChar: w.slice(-1),
-    }));
+    const results = this.buildQueryResults(word, result.candidates, mode);
 
     // 更新历史记录
     const history = [word, ...this.data.queryHistory.filter(h => h !== word)].slice(0, 5);
     wx.setStorageSync('idiom_query_history', history);
 
     this.setData({
+      queryMode: mode,
+      queryInput: word,
+      queryPlaceholder,
       queryResults: results,
-      queryTip: `共 ${result.candidates.length} 条接龙`,
+      queryTip: result.candidates.length > 0 ? `共 ${result.candidates.length} 条${modeLabel}结果` : `暂无${modeLabel}结果`,
       queryHistory: history,
-      hasContent: results.length > 0, // 控制滚动区域显示
+      hasContent: true,
     });
     this.queryCount = result.candidates.length;
   },
@@ -154,10 +216,11 @@ Page({
   },
 
   // =====================
-  //  点击尾字 → 继续接龙搜索
+  //  点击结果 → 继续顺查或逆查
   // =====================
+
   onContinueChain(e) {
-    const word = e.currentTarget.dataset.next;
+    const word = e.currentTarget.dataset.word;
     if (!word) return;
     this.setData({ queryInput: word });
     this._doQuery(word);
@@ -200,7 +263,7 @@ Page({
   // =====================
   onCopyResult() {
     if (!this.data.queryResults.length) return;
-    const text = this.data.queryResults.map(r => r.next).join(' → ');
+    const text = this.data.queryResults.map(item => `${item.leftWord} → ${item.rightWord}`).join('\n');
     wx.setClipboardData({
       data: text,
       success: () => wx.showToast({ title: '已复制', icon: 'success' }),
@@ -211,10 +274,13 @@ Page({
   //  清空查询
   // =====================
   onClearQuery() {
+    const queryPlaceholder = this.getModePlaceholder();
     this.setData({
       queryInput: '',
       queryResults: [],
-      queryTip: '输入任意成语，查看可接龙的下联',
+      queryPlaceholder,
+      queryTip: queryPlaceholder,
+      hasContent: false,
     });
     this.queryCount = 0;
   },

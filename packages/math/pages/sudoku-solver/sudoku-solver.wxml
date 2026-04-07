@@ -23,8 +23,33 @@
     </view>
   </view>
 
+  <!-- 每日数独日期选择 -->
+  <view class="daily-section" wx:if="{{mode === 'daily'}}">
+    <view class="section-header">
+      <text class="section-title">📅 选择每日数独</text>
+      <view class="daily-badge" wx:if="{{dailyLevel || dailyDifficulty}}">{{dailyLevel}} {{dailyDifficulty}}</view>
+    </view>
+    <view class="daily-picker-row">
+      <view class="daily-info">
+        <text class="daily-info-label">当前日期</text>
+        <text class="daily-info-value">{{dailyDisplayDate}}</text>
+        <text class="daily-info-subtitle">{{dailyTitle || '按日期切换对应的每日数独题目'}}</text>
+      </view>
+      <picker
+        mode="date"
+        value="{{selectedDate}}"
+        start="{{minDailyDate}}"
+        end="{{maxDailyDate}}"
+        bindchange="onDailyDateChange"
+      >
+        <view class="daily-picker-btn">选日期</view>
+      </picker>
+    </view>
+  </view>
+
   <!-- 粘贴模式 -->
   <view class="import-section" wx:if="{{mode === 'paste'}}">
+
     <view class="section-header">
       <text class="section-title">📋 快速导入</text>
     </view>
@@ -97,8 +122,9 @@
   </view>
 
   <!-- 数字输入和候选数控制区 -->
-  <view class="control-section" style="width: 724rpx; display: block; box-sizing: border-box" style="width: 724rpx; display: block; box-sizing: border-box">
+  <view class="control-section" style="width: 724rpx; display: block; box-sizing: border-box">
     <view class="number-input-section">
+
       <view class="panel-title">
         <text>输入数字</text>
         <text class="selected-info" wx:if="{{selectedCell.row >= 0}}">选中: 第{{selectedCell.row + 1}}行 第{{selectedCell.col + 1}}列</text>

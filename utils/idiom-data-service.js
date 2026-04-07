@@ -275,11 +275,9 @@ function clearCache() {
  * @returns {string|null} 首字母 (a-z) 或 null
  */
 function getFirstLetter(word) {
-  if (!word || !firstFullIndex) return null;
-  for (const [py, arr] of Object.entries(firstFullIndex)) {
-    if (arr.includes(word)) return py[0];
-  }
-  return null;
+  if (!word || !wordToFirstPy) return null;
+  const firstPy = wordToFirstPy.get(word);
+  return firstPy ? firstPy[0] : null;
 }
 
 /**
@@ -372,9 +370,10 @@ function getRandomWord() {
 /**
  * 查询成语接龙候选
  * @param {string} word - 查询的成语
+ * @param {string} mode - 查询模式：forward(顺查) / reverse(逆查)
  * @returns {Object} { candidates: [], error: string|null }
  */
-function querySolitaire(word) {
+function querySolitaire(word, mode = 'forward') {
   if (!isInitialized) {
     return { candidates: [], error: '数据加载中' };
   }
@@ -385,6 +384,16 @@ function querySolitaire(word) {
 
   if (!allWords.has(word)) {
     return { candidates: [], error: '该成语不在词库中' };
+  }
+
+  if (mode === 'reverse') {
+    const firstPy = wordToFirstPy.get(word);
+    if (!firstPy) {
+      return { candidates: [], error: '无法获取首字拼音' };
+    }
+
+    const candidates = lastIndex[firstPy] || [];
+    return { candidates, error: null };
   }
 
   const lastPy = wordToLastPy.get(word);

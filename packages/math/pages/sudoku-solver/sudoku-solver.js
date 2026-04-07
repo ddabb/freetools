@@ -5,8 +5,53 @@ const XLSX = require('../../../../libs/xlsx.full.min.js');
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
-const DAILY_KEY = 'cdn_daily_sudoku';
-const DAILY_TS_KEY = 'cdn_daily_sudoku_ts';
+const DAILY_CACHE_PREFIX = 'cdn_daily_sudoku_';
+const DAILY_TS_PREFIX = 'cdn_daily_sudoku_ts_';
+const MIN_DAILY_DATE = '2025-01-01';
+const MAX_DAILY_DATE = '2030-12-31';
+
+function pad2(value) {
+  return String(value).padStart(2, '0');
+}
+
+function formatDateValue(date = new Date()) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+}
+
+function normalizeDateValue(input) {
+  if (input instanceof Date) {
+    return formatDateValue(input);
+  }
+
+  if (typeof input === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
+      return input;
+    }
+    if (/^\d{8}$/.test(input)) {
+      return `${input.slice(0, 4)}-${input.slice(4, 6)}-${input.slice(6, 8)}`;
+    }
+  }
+
+  return formatDateValue(new Date());
+}
+
+function formatDateKey(dateValue) {
+  return normalizeDateValue(dateValue).replace(/-/g, '');
+}
+
+function buildDailyDisplay(dateValue) {
+  const normalized = normalizeDateValue(dateValue);
+  const [year, month, day] = normalized.split('-');
+  return `${year}年${Number(month)}月${Number(day)}日`;
+}
+
+function getDailyCacheKey(dateValue) {
+  return `${DAILY_CACHE_PREFIX}${formatDateKey(dateValue)}`;
+}
+
+function getDailyCacheTsKey(dateValue) {
+  return `${DAILY_TS_PREFIX}${formatDateKey(dateValue)}`;
+}
 
 Page({
   data: {
@@ -19,101 +64,100 @@ Page({
     showCandidates: false,
     selectedCell: { row: -1, col: -1 },
     mode: 'daily', // daily | paste
-
+    selectedDate: formatDateValue(new Date()),
+    todayDate: formatDateValue(new Date()),
+    minDailyDate: MIN_DAILY_DATE,
+    maxDailyDate: MAX_DAILY_DATE,
+    dailyTitle: '',
+    dailyLevel: '',
+    dailyDifficulty: '',
+    dailyDisplayDate: buildDailyDisplay(new Date()),
   },
 
   onLoad() {
     this.initBoard();
     wx.setNavigationBarTitle({ title: '数独求解器' });
-    // 只加载每日数独，不加载预设数据
-    this.loadDailySudoku();
+    this.loadDailySudoku(this.data.selectedDate);
   },
 
-  // 加载每日数独（带缓存功能）
-  loadDailySudoku() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const dateStr = `${year}${month}${day}`;
-    
-    const now = Date.now();
-    const cached = wx.getStorageSync(DAILY_KEY);
-    const timestamp = wx.getStorageSync(DAILY_TS_KEY);
+  // 加载指定日期的每日数独（带缓存功能）
+  loadDailySudoku(targetDate = this.data.selectedDate) {
+    const dateValue = normalizeDateValue(targetDate);
+    const dateKey = formatDateKey(dateValue);
+    const cacheKey = getDailyCacheKey(dateValue);
+    const cacheTsKey = getDailyCacheTsKey(dateValue);
+    const cached = wx.getStorageSync(cacheKey);
 
-    // 检查缓存是否有效（每天只缓存当天）
-    if (cached && timestamp) {
-      const cacheDate = new Date(timestamp).toDateString();
-      const todayStr = today.toDateString();
-      console.log(`[daily-sudoku] 缓存日期: ${cacheDate}, 今日日期: ${todayStr}`);
-      if (cacheDate === todayStr) {
-        console.log('[daily-sudoku] 使用今日缓存');
-        console.log('[daily-sudoku] 题目名称:', cached.name);
-        console.log('[daily-sudoku] 难度:', cached.level, cached.difficulty);
-        this.setTodaySudoku(cached);
-        return;
-      } else {
-        console.log('[daily-sudoku] 缓存过期，重新从CDN加载');
-      }
-    } else {
-      console.log('[daily-sudoku] 无缓存或缓存无效，从CDN加载');
+    this.setData({
+      selectedDate: dateValue,
+      dailyDisplayDate: buildDailyDisplay(dateValue)
+    });
+
+    if (cached && cached.puzzle) {
+      console.log('[daily-sudoku] 使用日期缓存:', dateValue);
+      this.setTodaySudoku(cached, dateValue);
+      return;
     }
 
-    console.log(`[daily-sudoku] 从CDN加载: ${CDN_BASE}/sudoku/${dateStr}.json`);
-    console.log(`[daily-sudoku] 当前日期: ${year}-${month}-${day}`);
-    
+    wx.showLoading({ title: '加载数独中...' });
+    console.log(`[daily-sudoku] 从CDN加载: ${CDN_BASE}/sudoku/${dateKey}.json`);
+    console.log(`[daily-sudoku] 目标日期: ${dateValue}`);
+
     wx.request({
-      url: `${CDN_BASE}/sudoku/${dateStr}.json`,
+      url: `${CDN_BASE}/sudoku/${dateKey}.json`,
       method: 'GET',
       timeout: 10000,
       success: (res) => {
+        wx.hideLoading();
         console.log(`[daily-sudoku] CDN响应状态码: ${res.statusCode}`);
-        if (res.statusCode === 200 && res.data) {
+        if (res.statusCode === 200 && res.data && res.data.puzzle) {
           console.log('[daily-sudoku] CDN数据加载成功，保存到缓存');
           console.log('[daily-sudoku] 题目名称:', res.data.name);
           console.log('[daily-sudoku] 难度:', res.data.level, res.data.difficulty);
-          console.log('[daily-sudoku] 题目数据:', JSON.stringify(res.data.puzzle));
-          // 保存到缓存
-          wx.setStorageSync(DAILY_KEY, res.data);
-          wx.setStorageSync(DAILY_TS_KEY, now);
-          this.setTodaySudoku(res.data);
+          wx.setStorageSync(cacheKey, res.data);
+          wx.setStorageSync(cacheTsKey, Date.now());
+          this.setTodaySudoku(res.data, dateValue);
         } else if (res.statusCode === 404) {
-          console.warn('[daily-sudoku] CDN没有对应日期的数据，随机生成题目');
-          this.generateRandomSudoku();
+          console.warn('[daily-sudoku] CDN没有对应日期的数据，生成备用题目');
+          this.generateRandomSudoku(dateValue);
         } else {
-          console.warn('[daily-sudoku] CDN数据格式错误，使用随机题目');
-          this.generateRandomSudoku();
+          console.warn('[daily-sudoku] CDN数据格式错误，使用备用题目');
+          this.generateRandomSudoku(dateValue);
         }
       },
       fail: (err) => {
+        wx.hideLoading();
         console.warn('[daily-sudoku] CDN加载失败', err);
-        console.log('[daily-sudoku] 使用随机题目');
-        this.generateRandomSudoku();
+        console.log('[daily-sudoku] 使用备用题目');
+        this.generateRandomSudoku(dateValue);
       }
     });
   },
 
-  // 设置今日数独
-  setTodaySudoku(data) {
+  // 设置每日数独
+  setTodaySudoku(data, selectedDate = this.data.selectedDate) {
     if (data && data.puzzle) {
+      const dateValue = normalizeDateValue(selectedDate);
       this.loadPuzzle(data.puzzle);
       this.setData({
-          mode: 'daily'
+        mode: 'daily',
+        selectedDate: dateValue,
+        dailyDisplayDate: buildDailyDisplay(dateValue),
+        dailyTitle: data.name || `${buildDailyDisplay(dateValue)}数独`,
+        dailyLevel: data.level || '',
+        dailyDifficulty: data.difficulty || ''
       });
     }
   },
 
   // 本地备用每日数独
-  useLocalDailySudoku() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    
-    // 本地备用数据（新格式）
+  useLocalDailySudoku(targetDate = this.data.selectedDate) {
+    const dateValue = normalizeDateValue(targetDate);
+    const [year, month, day] = dateValue.split('-');
+
     const localData = {
-      date: `${year}-${month}-${day}`,
-      name: `${year}年${month}月${day}日数独`,
+      date: dateValue,
+      name: `${year}年${Number(month)}月${Number(day)}日数独`,
       level: '★☆☆☆☆',
       difficulty: '简单',
       puzzle: [
@@ -130,55 +174,60 @@ Page({
       emptyCells: 35
     };
 
-    this.setTodaySudoku(localData);
+    this.setTodaySudoku(localData, dateValue);
   },
 
   // 随机生成数独题目
-  generateRandomSudoku() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    
-    console.log('[daily-sudoku] 开始随机生成数独题目');
-    
+  generateRandomSudoku(targetDate = this.data.selectedDate) {
+    const dateValue = normalizeDateValue(targetDate);
+    const [year, month, day] = dateValue.split('-');
+
+    console.log('[daily-sudoku] 开始生成备用数独题目:', dateValue);
+
     try {
-      // 使用数独生成器生成题目
-      const generatedPuzzle = sudoku.generate({ emptyCells: 40 }); // 生成40个空格的题目
-      
+      const fullBoard = sudoku.generateFullBoard();
+      const generatedPuzzle = sudoku.createPuzzle(fullBoard, 40);
+
       const randomData = {
-        date: `${year}-${month}-${day}`,
-        name: `${year}年${month}月${day}日随机数独`,
+        date: dateValue,
+        name: `${year}年${Number(month)}月${Number(day)}日备用数独`,
         level: '★★☆☆☆',
         difficulty: '中等',
         puzzle: generatedPuzzle,
         emptyCells: 40
       };
-      
-      console.log('[daily-sudoku] 随机题目生成成功');
-      console.log('[daily-sudoku] 题目名称:', randomData.name);
-      console.log('[daily-sudoku] 难度:', randomData.level, randomData.difficulty);
-      console.log('[daily-sudoku] 题目数据:', JSON.stringify(randomData.puzzle));
-      
-      this.setTodaySudoku(randomData);
+
+      console.log('[daily-sudoku] 备用题目生成成功');
+      this.setTodaySudoku(randomData, dateValue);
+      utils.showText('该日期暂无预置题目，已为你生成备用数独');
     } catch (error) {
-      console.error('[daily-sudoku] 随机题目生成失败:', error);
+      console.error('[daily-sudoku] 备用题目生成失败:', error);
       console.log('[daily-sudoku] 使用本地备用数独');
-      this.useLocalDailySudoku();
+      this.useLocalDailySudoku(dateValue);
+      utils.showText('该日期加载失败，已切换为本地备用数独');
     }
+  },
+
+  onDailyDateChange(e) {
+    const selectedDate = normalizeDateValue(e.detail.value);
+    if (selectedDate === this.data.selectedDate) {
+      return;
+    }
+    this.loadDailySudoku(selectedDate);
   },
 
   // 切换模式
   switchMode(e) {
     const mode = e.currentTarget.dataset.mode;
     this.setData({ mode });
-    
+
     if (mode === 'daily') {
-      this.loadDailySudoku();
+      this.loadDailySudoku(this.data.selectedDate);
     } else if (mode === 'paste') {
       this.setData({ pastedText: '' });
     }
   },
+
 
   initBoard() {
     const board = [];
@@ -203,10 +252,15 @@ Page({
   },
 
   toggleCandidates(e) {
-    const showCandidates = e.detail.value;
+    const showCandidates = e && e.detail && typeof e.detail.value === 'boolean'
+      ? e.detail.value
+      : !this.data.showCandidates;
     this.setData({ showCandidates: showCandidates });
-    if (showCandidates) this.calculateCandidates();
+    if (showCandidates) {
+      this.calculateCandidates();
+    }
   },
+
 
   onPasteInput(e) {
     this.setData({ pastedText: e.detail.value });
