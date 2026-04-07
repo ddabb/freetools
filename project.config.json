@@ -54,7 +54,8 @@
     "swc": true,
     "disableSWC": false,
     "disableUseStrict": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "autoAudits": true
   },
   "condition": {},
   "editorSetting": {

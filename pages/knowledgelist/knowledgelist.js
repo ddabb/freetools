@@ -28,7 +28,6 @@ Page({
     categories: [],
 
     categoryStats: {},
-    categoryTree: null,
     categoryTreeNodes: [],
 
     // 列表数据
@@ -46,11 +45,6 @@ Page({
     // UI
     scrollHeight: 0,
     showCategoryTree: false,
-
-    // 原始数据
-    allArticles: [],
-    taxonomy: null,
-    searchIndex: null
   },
 
   safeDecode(value) {
@@ -273,7 +267,7 @@ Page({
 
     this.setData({ loading: true });
 
-    if (this.data.refreshing || !this.data.taxonomy) {
+    if (this.data.refreshing || !this.taxonomy) {
       this.loadMetadata();
     } else {
       this.loadPageData();
@@ -323,13 +317,14 @@ Page({
       const categories = this.buildTopCategories(categoryTree);
       const categoryTreeNodes = this.buildRenderableCategoryTree(categoryTree);
 
-      this.setData({
+      // 大数据量变量存为实例属性，不通过 setData 传递
+      this.allArticles = articles;
+      this.taxonomy = taxonomy;
+      this.categoryTree = categoryTree;
+      this.searchIndex = searchIndex;
 
-        allArticles: articles,
-        taxonomy,
-        categoryTree,
+      this.setData({
         categoryTreeNodes,
-        searchIndex,
         categories,
         categoryStats,
         page: 1,
@@ -479,7 +474,9 @@ Page({
    * 应用筛选
    */
   applyFiltersAndSort() {
-    const { allArticles, currentCategory, currentTag, searchKeyword, searchIndex } = this.data;
+    const allArticles = this.allArticles || [];
+    const searchIndex = this.searchIndex;
+    const { currentCategory, currentTag, searchKeyword } = this.data;
     let filteredArticles = Array.isArray(allArticles) ? [...allArticles] : [];
 
     console.log('应用筛选和排序:', {

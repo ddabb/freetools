@@ -749,13 +749,11 @@ Page({
       await new Promise(resolve => setTimeout(resolve, 500));
       
       const prizePoolAmount = 860000000; // 模拟8.6亿奖池
-      
-      this.setData({
-        _prizePool: {
-          amount: prizePoolAmount,
-          lastUpdated: new Date().toLocaleString()
-        }
-      });
+
+      this._prizePool = {
+        amount: prizePoolAmount,
+        lastUpdated: new Date().toLocaleString()
+      };
       
       wx.hideLoading();
       wx.showToast({
@@ -776,7 +774,7 @@ Page({
   
   // 获取奖金标准（根据奖池金额）
   getPrizeStandards() {
-    const prizePool = this._prizePool || this.data.prizePool;
+    const prizePool = this._prizePool;
     const { mode } = this.data;
     const isHighPool = prizePool.amount >= 800000000;
     

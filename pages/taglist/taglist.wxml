@@ -40,10 +40,10 @@
       </view>
 
       <!-- 标签网格 -->
-      <view class="tag-container" wx:if="{{!loading && !error && filteredTags.length > 0}}">
-        <view 
-          class="tag-item" hover-class="tag-item-hover" 
-          wx:for="{{filteredTags}}" 
+      <view class="tag-container" wx:if="{{!loading && !error && displayTags.length > 0}}">
+        <view
+          class="tag-item" hover-class="tag-item-hover"
+          wx:for="{{displayTags}}"
           wx:key="name"
           data-tag="{{item.name}}"
           bindtap="onTagTap"
@@ -53,8 +53,13 @@
         </view>
       </view>
 
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{hasMore && !loading && !error}}" bindtap="loadMore">
+        <text class="load-more-text">加载更多标签</text>
+      </view>
+
       <!-- 搜索结果为空 -->
-      <view class="empty-state" wx:if="{{!loading && !error && searchKeyword && filteredTags.length === 0}}">
+      <view class="empty-state" wx:if="{{!loading && !error && searchKeyword && displayTags.length === 0}}">
         <text class="empty-icon">🔍</text>
         <text class="empty-text">没有找到相关标签</text>
         <text class="empty-subtext">请尝试其他关键词</text>

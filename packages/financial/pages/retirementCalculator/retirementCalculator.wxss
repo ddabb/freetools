@@ -160,7 +160,7 @@
 
 .secondary-label {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
   margin-left: 8rpx;
 }
 
@@ -221,7 +221,7 @@
 
 .placeholder-text {
   font-size: 28rpx;
-  color: #999;
+  color: #666;
   text-align: center;
 }
 

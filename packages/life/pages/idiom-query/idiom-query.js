@@ -5,7 +5,6 @@ Page({
   data: {
     queryInput: '',
     queryResults: [],
-    queryCount: 0,
     queryTip: '输入任意成语，查看可接龙的下联',
     queryHistory: [],
     loading: true,
@@ -55,17 +54,17 @@ Page({
 
     // 先检查是否在成语库中
     if (!dataService.hasWord(word)) {
-      wx.showToast({ 
-        title: `"${word}" 不在成语词库中`, 
+      wx.showToast({
+        title: `"${word}" 不在成语词库中`,
         icon: 'none',
         duration: 2000
       });
       this.setData({
         queryResults: [],
-        queryCount: 0,
         queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
         hasContent: false,
       });
+      this.queryCount = 0;
       return;
     }
 
@@ -87,10 +86,10 @@ Page({
       
       this.setData({
         queryResults: [],
-        queryCount: 0,
         queryTip: '请输入成语词库中存在的成语，查看可接龙的下联',
         hasContent: false,
       });
+      this.queryCount = 0;
       return;
     }
 
@@ -106,11 +105,11 @@ Page({
 
     this.setData({
       queryResults: results,
-      queryCount: result.candidates.length,
       queryTip: `共 ${result.candidates.length} 条接龙`,
       queryHistory: history,
       hasContent: results.length > 0, // 控制滚动区域显示
     });
+    this.queryCount = result.candidates.length;
   },
 
   // =====================
@@ -215,17 +214,18 @@ Page({
     this.setData({
       queryInput: '',
       queryResults: [],
-      queryCount: 0,
       queryTip: '输入任意成语，查看可接龙的下联',
     });
+    this.queryCount = 0;
   },
 
   // =====================
   //  分享功能
   // =====================
   onShareAppMessage() {
-    const { queryInput, queryCount } = this.data;
-    const title = queryInput 
+    const { queryInput } = this.data;
+    const queryCount = this.queryCount || 0;
+    const title = queryInput
       ? `「${queryInput}」有${queryCount}个接龙成语，来看看吧！`
       : '成语查询 - 输入成语查看可接龙的下联';
     return {
@@ -235,9 +235,10 @@ Page({
   },
 
   onShareTimeline() {
-    const { queryInput, queryCount } = this.data;
+    const { queryInput } = this.data;
+    const queryCount = this.queryCount || 0;
     return {
-      title: queryInput 
+      title: queryInput
         ? `「${queryInput}」有${queryCount}个接龙成语`
         : '成语查询 - 发现更多成语接龙',
       query: queryInput ? `word=${queryInput}` : '',

@@ -32,7 +32,7 @@
 
 .btn-remove {
   font-size: 26rpx;
-  color: #e74c3c;
+  color: #c0392b;
   padding: 8rpx 16rpx;
   background: #fee;
   border-radius: 20rpx;
@@ -72,7 +72,7 @@
   width: 120rpx;
   text-align: right;
   font-size: 28rpx;
-  color: #999;
+  color: #666;
 }
 
 .unit-price {
@@ -101,7 +101,7 @@
 .unit-price .unit {
   width: auto;
   font-size: 26rpx;
-  color: #999;
+  color: #666;
 }
 
 .button-group {
@@ -127,7 +127,7 @@
 
 .btn-add {
   background: #e8f4f8;
-  color: #3498db;
+  color: #2176ae;
 }
 
 .btn-calculate {

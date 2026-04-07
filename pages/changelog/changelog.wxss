@@ -80,7 +80,7 @@ page {
 
 .loading-text {
   font-size: 28rpx;
-  color: #999;
+  color: #666;
 }
 
 .error-icon {
@@ -231,7 +231,7 @@ page {
 
 .timeline-date {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
 }
 
 .timeline-type {
@@ -243,11 +243,11 @@ page {
 }
 
 .timeline-type.feature {
-  background: #27ae60;
+  background: #1e8449;
 }
 
 .timeline-type.fix {
-  background: #e74c3c;
+  background: #c0392b;
 }
 
 .timeline-title {

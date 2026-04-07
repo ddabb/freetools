@@ -262,6 +262,21 @@ page {
   text-align: center;
 }
 
+/* ========== 加载更多 ========== */
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 30rpx 0 50rpx;
+}
+
+.load-more-text {
+  font-size: 28rpx;
+  color: #3498db;
+  padding: 16rpx 40rpx;
+  background: #e8f4f8;
+  border-radius: 40rpx;
+}
+
 /* ========== 标签网格 ========== */
 .tag-container {
   display: flex;

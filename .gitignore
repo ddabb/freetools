@@ -7,3 +7,10 @@ node_modules/
 *.pem
 .codebuddy
 .workbuddy/
+
+# 官方审计报告结果（由 run-audit.js 生成，不上传）
+test-reports/audits-report.html
+test-reports/audit-pages.json
+
+# 开发者工具 CLI 缓存
+test-reports/.devtools-cli/

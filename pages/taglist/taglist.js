@@ -12,6 +12,9 @@ Page({
   data: {
     tags: [],
     filteredTags: [],
+    displayLimit: 60,
+    displayTags: [],
+    hasMore: false,
     searchKeyword: '',
     loading: true,
     error: false,
@@ -82,6 +85,9 @@ Page({
       this.setData({
         tags,
         filteredTags: tags,
+        displayLimit: 60,
+        displayTags: tags.slice(0, 60),
+        hasMore: tags.length > 60,
         loading: false,
         error: false
       });
@@ -126,14 +132,26 @@ Page({
   filterTags(keyword) {
     const { tags } = this.data;
     if (!keyword) {
-      this.setData({ filteredTags: tags });
+      const displayTags = tags.slice(0, 60);
+      this.setData({
+        filteredTags: tags,
+        displayTags,
+        displayLimit: 60,
+        hasMore: tags.length > 60
+      });
       return;
     }
 
-    const filtered = tags.filter(tag => 
+    const filtered = tags.filter(tag =>
       tag.name.toLowerCase().includes(keyword.toLowerCase())
     );
-    this.setData({ filteredTags: filtered });
+    const displayTags = filtered.slice(0, 60);
+    this.setData({
+      filteredTags: filtered,
+      displayTags,
+      displayLimit: 60,
+      hasMore: filtered.length > 60
+    });
   },
 
   onTagTap(e) {
@@ -146,6 +164,20 @@ Page({
         app.globalData.pendingTag = tag;
         app.globalData.pendingCategory = '';
       }
+    });
+  },
+
+  /**
+   * 加载更多标签
+   */
+  loadMore() {
+    const { displayLimit, filteredTags } = this.data;
+    if (displayLimit >= filteredTags.length) return;
+    const newLimit = displayLimit + 60;
+    this.setData({
+      displayLimit: newLimit,
+      displayTags: filteredTags.slice(0, newLimit),
+      hasMore: newLimit < filteredTags.length
     });
   },
 

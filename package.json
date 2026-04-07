@@ -8,6 +8,10 @@
     "weapp-qrcode-canvas-2d": "^1.0.4",
     "wxml2canvas-2d": "^1.3.8"
   },
+  "scripts": {
+    "audit": "node test-reports/run-audit.js",
+    "audit:main-only": "node test-reports/run-audit.js --main-only"
+  },
   "devDependencies": {
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
