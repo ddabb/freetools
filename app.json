@@ -130,7 +130,7 @@
       "root": "packages/bobing",
       "name": "bobing",
       "pages": [
-        "pages/bobing/bobing/bobing"
+        "pages/bobing/bobing"
       ]
     },
     {

@@ -13,6 +13,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "miniprogram-api-typings": "^5.1.2",
+    "miniprogram-automator": "^0.12.1",
     "prettier": "^3.8.1"
   }
 }
