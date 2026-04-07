@@ -11,8 +11,6 @@ const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 Page({
   data: {
     tags: [],
-    filteredTags: [],
-    displayLimit: 60,
     displayTags: [],
     hasMore: false,
     searchKeyword: '',
@@ -82,10 +80,10 @@ Page({
         CDN_BASE + 'tags.json'
       );
       const tags = res.tags || [];
+      this.filteredTags = tags;
+      this.displayLimit = 60;
       this.setData({
         tags,
-        filteredTags: tags,
-        displayLimit: 60,
         displayTags: tags.slice(0, 60),
         hasMore: tags.length > 60,
         loading: false,
@@ -133,10 +131,10 @@ Page({
     const { tags } = this.data;
     if (!keyword) {
       const displayTags = tags.slice(0, 60);
+      this.filteredTags = tags;
+      this.displayLimit = 60;
       this.setData({
-        filteredTags: tags,
         displayTags,
-        displayLimit: 60,
         hasMore: tags.length > 60
       });
       return;
@@ -145,11 +143,11 @@ Page({
     const filtered = tags.filter(tag =>
       tag.name.toLowerCase().includes(keyword.toLowerCase())
     );
+    this.filteredTags = filtered;
+    this.displayLimit = 60;
     const displayTags = filtered.slice(0, 60);
     this.setData({
-      filteredTags: filtered,
       displayTags,
-      displayLimit: 60,
       hasMore: filtered.length > 60
     });
   },
@@ -171,11 +169,12 @@ Page({
    * 加载更多标签
    */
   loadMore() {
-    const { displayLimit, filteredTags } = this.data;
+    const displayLimit = this.displayLimit || 0;
+    const filteredTags = this.filteredTags || [];
     if (displayLimit >= filteredTags.length) return;
     const newLimit = displayLimit + 60;
+    this.displayLimit = newLimit;
     this.setData({
-      displayLimit: newLimit,
       displayTags: filteredTags.slice(0, newLimit),
       hasMore: newLimit < filteredTags.length
     });

@@ -17,6 +17,7 @@
       <textarea
         class="textarea"
         placeholder="请输入标题（建议10字以内效果最佳）"
+        placeholder-class="textarea-placeholder"
         bindinput="onTitleInput"
         maxlength="30"
         value="{{title}}"
@@ -29,6 +30,7 @@
       <textarea
         class="textarea small"
         placeholder="请输入副标题"
+        placeholder-class="textarea-placeholder"
         bindinput="onSubtitleInput"
         maxlength="50"
         value="{{subtitle}}"

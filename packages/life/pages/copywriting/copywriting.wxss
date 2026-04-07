@@ -37,6 +37,7 @@
   margin-left: 10rpx;
   border-radius: 15rpx;
   background-color: #3498db;
+  color: #fff;
   transition: all 0.3s ease;
   text-decoration: none;
 }
@@ -59,7 +60,7 @@
 
 .search-icon {
   font-size: 36rpx;
-  color: #999;
+  color: #666;
   margin-right: 15rpx;
 }
 
@@ -94,6 +95,7 @@
   margin-left: 10rpx;
   border-radius: 15rpx;
   background-color: #27ae60;
+  color: #fff;
   transition: all 0.3s ease;
 }
 
@@ -207,7 +209,7 @@
 .empty-state {
   text-align: center;
   padding: 120rpx 0;
-  color: #999;
+  color: #666;
 }
 
 .empty-icon {

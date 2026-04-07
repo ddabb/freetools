@@ -173,7 +173,7 @@
 
 .history-label {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
   margin-right: 20rpx;
   flex-shrink: 0;
 }
@@ -193,7 +193,7 @@
   background: #f0f2ff;
   border-radius: 24rpx;
   font-size: 24rpx;
-  color: #667eea;
+  color: #4f5fc2;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -249,7 +249,7 @@
   background: #f0f2ff;
   border-radius: 20rpx;
   font-size: 24rpx;
-  color: #667eea;
+  color: #4f5fc2;
 }
 
 .result-item {
@@ -279,13 +279,13 @@
 
 .result-word {
   font-size: 28rpx;
-  color: #999;
+  color: #666;
 }
 
 .result-arrow-icon {
   margin: 0 16rpx;
   font-size: 28rpx;
-  color: #ccc;
+  color: #999;
 }
 
 .result-next {
@@ -301,7 +301,7 @@
 
 .result-hint {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
   margin-right: 8rpx;
 }
 
@@ -370,8 +370,8 @@
   line-height: 60rpx;
   text-align: center;
   font-size: 32rpx;
-  color: #999;
-  background: #f5f5f5;
+  color: #666;
+  background: #eee;
   border-radius: 50%;
 }
 

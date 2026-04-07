@@ -8,6 +8,7 @@
         <textarea
           class="textarea"
           placeholder="请输入要生成图片的文字内容（建议20字以内效果更佳）"
+          placeholder-class="textarea-placeholder"
           bindinput="onTextInput"
           maxlength="100"
           value="{{text}}"

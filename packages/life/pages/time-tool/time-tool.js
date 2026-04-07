@@ -26,10 +26,7 @@ Page({
       tokyo: '',
       london: '',
       newYork: ''
-    },
-    timerInterval: null,
-    stopwatchInterval: null,
-    clockInterval: null
+    }
   },
 
   onLoad() {
@@ -50,12 +47,12 @@ Page({
       } catch (error) {
         console.error('更新世界时钟出错:', error);
         clearInterval(clockTimerId);
-        if (self.data.clockInterval === clockTimerId) {
-          self.setData({ clockInterval: null });
+        if (this.clockInterval === clockTimerId) {
+          this.clockInterval = null;
         }
       }
     }, 1000)
-    this.setData({ clockInterval: clockTimerId })
+    this.clockInterval = clockTimerId
   },
 
   onHide() {
@@ -67,20 +64,18 @@ Page({
   },
 
   clearIntervals() {
-    if (this.data.stopwatchInterval) {
-      clearInterval(this.data.stopwatchInterval)
+    if (this.stopwatchInterval) {
+      clearInterval(this.stopwatchInterval)
     }
-    if (this.data.timerInterval) {
-      clearInterval(this.data.timerInterval)
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval)
     }
-    if (this.data.clockInterval) {
-      clearInterval(this.data.clockInterval)
+    if (this.clockInterval) {
+      clearInterval(this.clockInterval)
     }
-    this.setData({
-      stopwatchInterval: null,
-      timerInterval: null,
-      clockInterval: null
-    })
+    this.stopwatchInterval = null
+    this.timerInterval = null
+    this.clockInterval = null
   },
 
   onTabChange(e) {
@@ -106,11 +101,11 @@ Page({
     const { isRunning, milliseconds } = this.data.stopwatch
     if (isRunning) {
       // 停止
-      clearInterval(this.data.stopwatchInterval)
+      clearInterval(this.stopwatchInterval)
       this.setData({
-        'stopwatch.isRunning': false,
-        stopwatchInterval: null
+        'stopwatch.isRunning': false
       })
+      this.stopwatchInterval = null
     } else {
       // 开始
       const startTime = Date.now() - milliseconds
@@ -130,15 +125,15 @@ Page({
         } catch (error) {
           console.error('秒表更新出错:', error);
           clearInterval(interval);
-          if (self.data.stopwatchInterval === interval) {
-            self.setData({ stopwatchInterval: null });
+          if (self.stopwatchInterval === interval) {
+            self.stopwatchInterval = null;
           }
         }
       }, 10)
       this.setData({
-        'stopwatch.isRunning': true,
-        stopwatchInterval: interval
+        'stopwatch.isRunning': true
       })
+      this.stopwatchInterval = interval
     }
   },
 
@@ -154,15 +149,15 @@ Page({
   },
 
   resetStopwatch() {
-    clearInterval(this.data.stopwatchInterval)
+    clearInterval(this.stopwatchInterval)
+    this.stopwatchInterval = null
     this.setData({
       'stopwatch': {
         display: '00:00:00.00',
         milliseconds: 0,
         isRunning: false,
         laps: []
-      },
-      stopwatchInterval: null
+      }
     })
   },
 
@@ -201,12 +196,12 @@ Page({
 
     if (isRunning && !isPaused) {
       // 暂停
-      clearInterval(this.data.timerInterval)
+      clearInterval(this.timerInterval)
       this.setData({
         'timer.isRunning': false,
-        'timer.isPaused': true,
-        timerInterval: null
+        'timer.isPaused': true
       })
+      this.timerInterval = null
     } else if (isPaused) {
       // 继续
       this.startTimerCountdown()
@@ -245,11 +240,11 @@ Page({
 
         if (remaining <= 0) {
           clearInterval(interval)
+          self.timerInterval = null
           self.setData({
             'timer.remaining': 0,
             'timer.isRunning': false,
-            'timer.display': '00:00',
-            timerInterval: null
+            'timer.display': '00:00'
           })
           wx.showToast({
             title: '计时结束',
@@ -267,25 +262,25 @@ Page({
       } catch (error) {
         console.error('计时器更新出错:', error);
         clearInterval(interval);
-        if (self.data.timerInterval === interval) {
-          self.setData({ timerInterval: null });
+        if (self.timerInterval === interval) {
+          self.timerInterval = null;
         }
       }
     }, 100)
 
-    this.setData({ timerInterval: interval })
+    this.timerInterval = interval
   },
 
   resetTimer() {
-    clearInterval(this.data.timerInterval)
+    clearInterval(this.timerInterval)
+    this.timerInterval = null
     const { hours, minutes, seconds } = this.data.timer
     const totalMs = (hours * 3600 + minutes * 60 + seconds) * 1000
     this.setData({
       'timer.remaining': totalMs,
       'timer.isRunning': false,
       'timer.isPaused': false,
-      'timer.display': this.formatTimer(totalMs),
-      timerInterval: null
+      'timer.display': this.formatTimer(totalMs)
     })
   },
 

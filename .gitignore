@@ -14,3 +14,4 @@ test-reports/audit-pages.json
 
 # 开发者工具 CLI 缓存
 test-reports/.devtools-cli/
+test-reports/

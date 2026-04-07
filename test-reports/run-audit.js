@@ -24,7 +24,10 @@ const fs = require('fs')
 const PROJECT_PATH = path.resolve(__dirname, '..')
 const REPORT_DIR = path.resolve(__dirname)
 const REPORT_PATH = path.join(REPORT_DIR, 'audits-report.html')
-const PAGE_DWELL_MS = 3000
+const PAGE_DWELL_MS = 3000       // 页面停留时间
+const NAVIGATE_TIMEOUT_MS = 20000 // navigateTo 超时
+const RESET_INTERVAL = 4          // 每 N 个普通页面 reLaunch 重置
+const MAX_CONSECUTIVE_FAILS = 10  // 连续失败熔断阈值
 const MAIN_ONLY = process.argv.includes('--main-only')
 const LIMIT_ARG = process.argv.findIndex(a => a === '--limit')
 const PAGE_LIMIT = LIMIT_ARG !== -1 && process.argv[LIMIT_ARG + 1] ? parseInt(process.argv[LIMIT_ARG + 1], 10) : 0
@@ -62,13 +65,25 @@ function getPageInfo() {
 async function resetToHome(miniProgram) {
   try {
     await miniProgram.reLaunch('/pages/index/index')
-    await sleep(500)
+    await sleep(800)
   } catch (_) {
-    // reLaunch 失败时尝试 switchTab
     try {
       await miniProgram.switchTab('/pages/index/index')
-      await sleep(500)
+      await sleep(800)
     } catch (_2) { /* 无法回退，继续尝试 */ }
+  }
+}
+
+// navigateBack（带超时保护）
+async function safeNavigateBack(miniProgram) {
+  try {
+    await Promise.race([
+      miniProgram.navigateBack(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('navigateBack timeout')), 5000))
+    ])
+    await sleep(300)
+  } catch (_) {
+    // navigateBack 失败不影响主流程
   }
 }
 
@@ -87,6 +102,7 @@ async function runAudit() {
   }
   console.log('   共 ' + pages.length + ' 个页面待访问' + (MAIN_ONLY ? '（仅主包）' : '（含分包）'))
   console.log('   tabbar 页面 ' + tabBarPages.size + ' 个，将使用 switchTab')
+  console.log('   每 ' + RESET_INTERVAL + ' 个普通页面重置页面栈')
   console.log('   报告输出: ' + REPORT_PATH + '\n')
 
   // 启动并连接
@@ -102,7 +118,7 @@ async function runAudit() {
   } catch (err) {
     console.error('❌ 启动失败:', err.message)
     console.error('   1. 开发者工具已打开 freetools 项目')
-    console.error('   2. 已在【设置 → 安全】开启「服务端口」')
+    console.error('   2. 在【设置 → 安全】开启「服务端口」')
     console.error('   3. 已登录微信账号')
     process.exit(1)
   }
@@ -112,6 +128,7 @@ async function runAudit() {
   let successCount = 0
   let failCount = 0
   let consecutiveFails = 0
+  let normalSinceReset = 0  // 距上次重置以来的普通页面计数
 
   for (let i = 0; i < pages.length; i++) {
     const pagePath = pages[i]
@@ -126,32 +143,53 @@ async function runAudit() {
         await sleep(PAGE_DWELL_MS)
         console.log('✓ (tabbar)')
       } else {
-        // 普通页面用 navigateTo
-        const currentPage = await miniProgram.navigateTo(pagePath)
+        // 普通页面用 navigateTo，带超时保护
+        await Promise.race([
+          miniProgram.navigateTo(pagePath),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('navigate timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
+          )
+        ])
         await sleep(PAGE_DWELL_MS)
         console.log('✓')
+        normalSinceReset++
       }
 
       results.push({ path: pagePath, status: 'ok', isTabBar })
       successCount++
       consecutiveFails = 0
 
-      // 每 8 个普通页面，reLaunch 回首页重置页面栈
-      const normalPagesVisited = results.filter(r => r.status === 'ok' && !r.isTabBar).length
-      if (normalPagesVisited > 0 && normalPagesVisited % 8 === 0) {
+      // 每 N 个普通页面，reLaunch 回首页彻底重置
+      if (normalSinceReset >= RESET_INTERVAL) {
         process.stdout.write('   🔄 重置页面栈... ')
         await resetToHome(miniProgram)
+        normalSinceReset = 0
         console.log('✓')
       }
     } catch (err) {
       const errMsg = err.message || String(err)
 
-      // 遇到 webview 层级限制，回退页面栈后重试
-      if (errMsg.includes('webview count limit')) {
+      // 连续失败每 3 次，尝试 reLaunch 重连
+      if (consecutiveFails > 0 && consecutiveFails % 3 === 0) {
+        process.stdout.write('🔄 尝试 reLaunch 重连... ')
+        await resetToHome(miniProgram)
+        normalSinceReset = 0
+        console.log('✓')
+      }
+
+      // 遇到 webview 层级限制或 timeout，回退页面栈后重试
+      if (errMsg.includes('webview count limit') || errMsg.includes('timeout')) {
         process.stdout.write('🔄 重置页面栈后重试... ')
         await resetToHome(miniProgram)
+        normalSinceReset = 0
+        await sleep(1000)
         try {
-          await miniProgram.navigateTo(pagePath)
+          await Promise.race([
+            miniProgram.navigateTo(pagePath),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('retry timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
+            )
+          ])
           await sleep(PAGE_DWELL_MS)
           console.log('✓')
           results.push({ path: pagePath, status: 'ok', isTabBar, retried: true })
@@ -172,8 +210,8 @@ async function runAudit() {
       }
 
       // 连续失败熔断
-      if (consecutiveFails >= 5) {
-        console.log('\n⚠️  连续 5 个页面失败，可能连接断开，终止')
+      if (consecutiveFails >= MAX_CONSECUTIVE_FAILS) {
+        console.log('\n⚠️  连续 ' + MAX_CONSECUTIVE_FAILS + ' 个页面失败，可能连接断开，终止')
         break
       }
     }

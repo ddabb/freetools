@@ -592,8 +592,8 @@ const PageDefinition = {
 
   // 页面数据更新时执行
   onReady() {
-    console.log('页面准备就绪，确保数据正确绑定');
-    this.initArrays();
+    console.log('页面准备就绪');
+    // 不再重复调用 initArrays，onInit 中已经调用过
   },
 
   // 页面加载时执行

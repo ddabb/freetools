@@ -123,6 +123,14 @@
   box-sizing: border-box;
 }
 
+.textarea-placeholder {
+  color: #9ca3af;
+}
+
+.input-placeholder {
+  color: #9ca3af;
+}
+
 .input {
   width: 100%;
   height: 88rpx;
@@ -139,7 +147,7 @@
   display: block;
   text-align: right;
   font-size: 24rpx;
-  color: #9ca3af;
+  color: #6b7280;
   margin-top: 12rpx;
 }
 
@@ -190,7 +198,7 @@
 
 .qr-label {
   font-size: 24rpx;
-  color: #6b7280;
+  color: #4b5563;
   text-align: center;
   font-weight: 500;
 }
@@ -210,6 +218,7 @@
 .make-qr-icon {
   font-size: 40rpx;
   margin-bottom: 12rpx;
+  color: #fff;
 }
 
 .make-qr-text {

@@ -33,10 +33,8 @@ Page({
     // 列表数据
 
     list: [],
-    totalCount: 0,
 
     // 分页
-    page: 1,
     pageSize: 20,
     isOver: false,
     loading: false,
@@ -188,7 +186,8 @@ Page({
   },
 
   refreshView() {
-    this.setData({ page: 1, list: [] });
+    this.page = 1;
+    this.setData({ list: [] });
     if (this.hasActiveFilters()) {
       this.applyFiltersAndSort();
     } else {
@@ -202,6 +201,9 @@ Page({
 
     const systemInfo = wx.getSystemInfoSync();
     const scrollHeight = systemInfo.windowHeight - 180;
+
+    this.page = 1;
+    this.totalCount = 0;
 
     this.setData({
       scrollHeight,
@@ -231,9 +233,9 @@ Page({
           currentCategory: category,
           currentTag: tag,
           searchKeyword: '',
-          page: 1,
           list: []
         });
+        this.page = 1;
         this.setPageTitle(category, tag);
         this.loadArticles();
       }
@@ -262,7 +264,7 @@ Page({
     console.log('开始加载文章列表:', {
       timestamp: new Date().toISOString(),
       refreshing: this.data.refreshing,
-      page: this.data.page
+      page: this.page
     });
 
     this.setData({ loading: true });
@@ -327,9 +329,9 @@ Page({
         categoryTreeNodes,
         categories,
         categoryStats,
-        page: 1,
         list: []
       });
+      this.page = 1;
 
 
       if (this.hasActiveFilters()) {
@@ -364,7 +366,7 @@ Page({
       const decoratedItems = (pageData.items || []).map(article => this.decorateArticle(article));
 
       let list = this.data.list;
-      if (this.data.page === 1) {
+      if (this.page === 1) {
         list = decoratedItems;
       } else {
         list = list.concat(decoratedItems);
@@ -373,11 +375,11 @@ Page({
 
       this.setData({
         list,
-        totalCount: pageData.totalItems,
-        isOver: this.data.page >= pageData.totalPages,
+        isOver: this.page >= pageData.totalPages,
         loading: false,
         refreshing: false
       });
+      this.totalCount = pageData.totalItems;
 
       wx.stopPullDownRefresh();
     }).catch(err => {
@@ -531,11 +533,11 @@ Page({
 
     this.setData({
       list: filteredArticles,
-      totalCount: filteredArticles.length,
       isOver: true,
       loading: false,
       refreshing: false
     });
+    this.totalCount = filteredArticles.length;
 
     wx.stopPullDownRefresh();
   },
@@ -634,7 +636,8 @@ Page({
     articlesCache = null;
     searchCache = null;
 
-    this.setData({ refreshing: true, page: 1, list: [] });
+    this.page = 1;
+    this.setData({ refreshing: true, list: [] });
     this.loadArticles();
   },
 
@@ -646,7 +649,7 @@ Page({
       return;
     }
 
-    this.setData({ page: this.data.page + 1 });
+    this.page++;
     this.loadArticles();
   },
 
@@ -713,7 +716,8 @@ Page({
    * 分享给好友
    */
   onShareAppMessage() {
-    const { currentCategory, currentTag, searchKeyword, totalCount } = this.data;
+    const { currentCategory, currentTag, searchKeyword } = this.data;
+    const totalCount = this.totalCount || 0;
     const tag = currentTag || '';
     const displayCategory = currentCategory ? this.getLeafCategoryName(currentCategory) : '';
     let title = '随身百科-答疑小助手';
@@ -739,7 +743,8 @@ Page({
    * 分享到朋友圈
    */
   onShareTimeline() {
-    const { currentCategory, totalCount } = this.data;
+    const { currentCategory } = this.data;
+    const totalCount = this.totalCount || 0;
     const displayCategory = currentCategory ? this.getLeafCategoryName(currentCategory) : '';
     const title = displayCategory
       ? `${displayCategory} - 随身百科`
