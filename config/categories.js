@@ -4,6 +4,7 @@
 const categories = [
   { name: '学习工具', color: 'purple', icon: '📚', description: '单位换算、计算器等学习工具', pinned: true },
   { name: '生活工具', color: 'orange', icon: '🏠', description: '日历、天气、计时等生活工具' },
+  { name: '休闲工具', color: 'amber', icon: '🎯', description: '毒鸡汤、答案之书等休闲趣味' },
   { name: '数学工具', color: 'indigo', icon: '🔢', description: '最大公约数、质因数分解、24点等数学工具' },
   { name: '转换工具', color: 'cyan', icon: '🔄', description: '进制转换、格式转换等数据处理工具' },
   { name: '财务工具', color: 'blue', icon: '💰', description: '房贷、汇率、个税等财务计算' },

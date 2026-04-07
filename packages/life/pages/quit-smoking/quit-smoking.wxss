@@ -1,0 +1,800 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f0f7f4 0%, #e8f5f0 50%, #f5faf8 100%);
+  padding: 24rpx;
+}
+
+/* 顶部标语 */
+.hero-section {
+  margin-bottom: 24rpx;
+}
+
+.hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 16rpx;
+}
+
+.badge-icon {
+  font-size: 36rpx;
+}
+
+.badge-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #2d5a45;
+}
+
+.hero-quote {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  border-left: 4rpx solid #4caf50;
+}
+
+.quote-text {
+  font-size: 24rpx;
+  color: #555;
+  line-height: 1.6;
+  display: block;
+}
+
+.quote-hint {
+  font-size: 20rpx;
+  color: #aaa;
+  margin-top: 8rpx;
+  display: block;
+}
+
+/* 未设置戒烟目标 */
+.start-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx;
+  gap: 16rpx;
+}
+
+.start-icon {
+  font-size: 100rpx;
+  margin-bottom: 16rpx;
+}
+
+.start-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2d5a45;
+}
+
+.start-desc {
+  font-size: 26rpx;
+  color: #888;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #4caf50, #2d7d46);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: bold;
+  border-radius: 50rpx;
+  padding: 20rpx 60rpx;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(76, 175, 80, 0.4);
+}
+
+.start-btn::after {
+  border: none;
+}
+
+/* 戒烟计时卡片 */
+.quit-timer-card {
+  background: linear-gradient(135deg, #2d7d46, #4caf50);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(45, 125, 70, 0.3);
+}
+
+.timer-main {
+  text-align: center;
+  margin-bottom: 28rpx;
+}
+
+.timer-days {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8rpx;
+  margin-bottom: 8rpx;
+}
+
+.days-num {
+  font-size: 88rpx;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
+}
+
+.days-unit {
+  font-size: 36rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.timer-label {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  margin-bottom: 4rpx;
+}
+
+.timer-date {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.timer-actions {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16rpx;
+  padding: 20rpx 0;
+}
+
+.timer-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  flex: 1;
+  padding: 8rpx 0;
+  transition: all 0.2s;
+}
+
+.timer-action:active {
+  transform: scale(0.95);
+}
+
+.timer-action.checked .action-icon {
+  font-size: 40rpx;
+}
+
+.action-icon {
+  font-size: 32rpx;
+}
+
+.action-num {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.action-label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 呼吸练习区 */
+.breath-section {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.breath-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.breath-instruction {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.instruction-text {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+}
+
+.instruction-hint {
+  font-size: 22rpx;
+  color: #aaa;
+  display: block;
+  margin-top: 4rpx;
+}
+
+.phase-text {
+  font-size: 32rpx;
+  color: #4caf50;
+  font-weight: bold;
+  display: block;
+}
+
+.phase-hint {
+  font-size: 22rpx;
+  color: #aaa;
+  display: block;
+  margin-top: 4rpx;
+}
+
+/* 呼吸球 */
+.breath-ball-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240rpx;
+  margin: 20rpx 0;
+}
+
+.breath-ball {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #b2dfdb, #80cbc4, #4db6ac);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(77, 182, 172, 0.4);
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.ball-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ball-emoji {
+  font-size: 60rpx;
+  transition: all 0.3s;
+}
+
+.ball-idle {
+  transform: scale(1);
+  opacity: 0.7;
+}
+
+.ball-inhale {
+  transform: scale(1.35);
+  background: radial-gradient(circle at 40% 35%, #c8e6c9, #81c784, #4caf50);
+  box-shadow: 0 12rpx 40rpx rgba(76, 175, 80, 0.5);
+}
+
+.ball-hold {
+  transform: scale(1.35);
+  background: radial-gradient(circle at 40% 35%, #fff9c4, #fff176, #ffee58);
+  box-shadow: 0 12rpx 40rpx rgba(255, 238, 88, 0.5);
+}
+
+.ball-exhale {
+  transform: scale(0.85);
+  background: radial-gradient(circle at 40% 35%, #b2dfdb, #80cbc4, #4db6ac);
+  box-shadow: 0 4rpx 20rpx rgba(77, 182, 172, 0.3);
+  opacity: 0.6;
+}
+
+/* 烟雾粒子 */
+.smoke-particle {
+  position: absolute;
+  width: 24rpx;
+  height: 24rpx;
+  background: radial-gradient(circle, rgba(200, 230, 201, 0.8), rgba(200, 230, 201, 0));
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+@keyframes smoke-rise {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-120rpx) translateX(var(--drift, 10rpx)) scale(2);
+    opacity: 0;
+  }
+}
+
+/* 呼吸进度条 */
+.breath-progress {
+  margin-bottom: 20rpx;
+}
+
+.progress-bar {
+  height: 12rpx;
+  background: #e8f5e9;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin-bottom: 8rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6rpx;
+  transition: width 0.1s linear;
+}
+
+.progress-inhale {
+  background: linear-gradient(90deg, #81c784, #4caf50);
+}
+
+.progress-hold {
+  background: linear-gradient(90deg, #ffee58, #fdd835);
+}
+
+.progress-exhale {
+  background: linear-gradient(90deg, #b2dfdb, #80cbc4);
+}
+
+.progress-label {
+  font-size: 22rpx;
+  color: #888;
+  text-align: center;
+}
+
+/* 呼吸按钮 */
+.breath-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.breath-btn {
+  min-width: 260rpx;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.breath-btn::after {
+  border: none;
+}
+
+.breath-start {
+  background: linear-gradient(135deg, #4caf50, #2d7d46);
+  color: #fff;
+  box-shadow: 0 6rpx 20rpx rgba(76, 175, 80, 0.4);
+}
+
+.breath-stop {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* 成就统计 */
+.stats-section {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.stats-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #f5faf8, #e8f5f0);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  border: 1px solid #e0f2e9;
+}
+
+.stat-emoji {
+  font-size: 32rpx;
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #2d7d46;
+  line-height: 1.1;
+}
+
+.stat-unit {
+  font-size: 22rpx;
+  color: #4caf50;
+}
+
+.stat-label {
+  font-size: 20rpx;
+  color: #888;
+  margin-top: 2rpx;
+}
+
+/* 成就徽章 */
+.achievement-section {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.achievement-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.achievement-hint {
+  font-size: 22rpx;
+  color: #aaa;
+  font-weight: normal;
+}
+
+.achievement-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.badge-empty {
+  font-size: 24rpx;
+  color: #bbb;
+  padding: 16rpx 0;
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  background: #f5faf8;
+  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
+  border: 1px solid #e0f2e9;
+  transition: transform 0.2s;
+}
+
+.badge-item:active {
+  transform: scale(0.95);
+}
+
+.badge-icon {
+  font-size: 40rpx;
+}
+
+.badge-name {
+  font-size: 20rpx;
+  color: #2d7d46;
+  font-weight: 500;
+}
+
+/* 模态框 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  width: 100%;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: #bbb;
+  line-height: 1;
+  padding: 0 8rpx;
+}
+
+.modal-body {
+  padding: 28rpx 32rpx;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 32rpx;
+  border-top: 1px solid #f0f0f0;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-btn::after {
+  border: none;
+}
+
+.modal-btn.cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.modal-btn.confirm {
+  background: linear-gradient(135deg, #4caf50, #2d7d46);
+  color: #fff;
+}
+
+/* 日期选择 */
+.picker-hint {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.date-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.date-arrow {
+  font-size: 24rpx;
+  color: #aaa;
+}
+
+.date-tips {
+  font-size: 22rpx;
+  color: #aaa;
+  margin-top: 12rpx;
+}
+
+/* 设置 */
+.settings-body {
+  padding: 28rpx 32rpx;
+}
+
+.setting-item {
+  margin-bottom: 24rpx;
+}
+
+.setting-label {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.setting-input {
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.setting-hint {
+  font-size: 20rpx;
+  color: #bbb;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.setting-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 24rpx 0;
+}
+
+.reset-btn {
+  background: #fff;
+  color: #e53935;
+  border: 1px solid #e53935;
+  border-radius: 40rpx;
+  height: 80rpx;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reset-btn::after {
+  border: none;
+}
+
+/* 成就列表 */
+.achievement-modal-body {
+  max-height: 60vh;
+  padding: 0 32rpx 32rpx;
+}
+
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.achievement-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #f8f8f8;
+  transition: all 0.2s;
+}
+
+.achievement-row.earned {
+  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  border: 1px solid #c8e6c9;
+}
+
+.achievement-icon {
+  font-size: 40rpx;
+  flex-shrink: 0;
+  width: 60rpx;
+  text-align: center;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: bold;
+  display: block;
+}
+
+.achievement-desc {
+  font-size: 22rpx;
+  color: #888;
+  display: block;
+  margin-top: 2rpx;
+}
+
+.achievement-days {
+  font-size: 24rpx;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.achievement-days.locked-text {
+  color: #ccc;
+  font-weight: normal;
+}
+
+.achievement-row.locked .achievement-icon {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.achievement-row.locked .achievement-name,
+.achievement-row.locked .achievement-desc {
+  color: #bbb;
+}
+
+/* 新成就弹窗 */
+.achievement-toast {
+  position: fixed;
+  top: 120rpx;
+  left: 32rpx;
+  right: 32rpx;
+  background: linear-gradient(135deg, #fff9c4, #fff59d);
+  border: 2rpx solid #fdd835;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  z-index: 2000;
+  box-shadow: 0 8rpx 32rpx rgba(253, 216, 53, 0.4);
+  animation: toast-in 0.4s ease;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.toast-icon {
+  font-size: 56rpx;
+  flex-shrink: 0;
+}
+
+.toast-text {
+  flex: 1;
+}
+
+.toast-title {
+  font-size: 22rpx;
+  color: #f57f17;
+  font-weight: bold;
+  display: block;
+}
+
+.toast-name {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: bold;
+  display: block;
+}
+
+.toast-desc {
+  font-size: 22rpx;
+  color: #666;
+  display: block;
+  margin-top: 2rpx;
+}
+
+@keyframes toast-in {
+  0% {
+    transform: translateY(-20rpx);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,78 @@
+<!-- packages/life/pages/poison-soup/poison-soup.wxml -->
+<view class="container">
+  <!-- 顶部区域 -->
+  <view class="header">
+    <text class="header-title">每日毒鸡汤 🍵</text>
+    <text class="header-subtitle">{{todayDate}}</text>
+  </view>
+
+  <!-- 鸡汤卡片 -->
+  <view class="soup-card {{isAnimating ? 'shake' : ''}}" bindtap="changeSoup">
+    <view class="soup-icon-wrapper">
+      <text class="soup-icon">🍵</text>
+    </view>
+    <text class="soup-text">{{currentSoup}}</text>
+    <view class="soup-footer">
+      <view class="soup-hint">
+        <text>👆 点击换一碗</text>
+      </view>
+      <view class="daily-badge">
+        <text>今日第 {{dailyCount + 1}} 碗</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计区域 -->
+  <view class="stats-section">
+    <view class="stat-item">
+      <text class="stat-value">{{dailyCount}}</text>
+      <text class="stat-label">今日已干</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{totalCount}}</text>
+      <text class="stat-label">累计干汤</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{soupList.length || '--'}}</text>
+      <text class="stat-label">鸡汤总数</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <view class="action-btn primary" bindtap="changeSoup">
+      <text class="action-icon">🔄</text>
+      <text class="action-text">换一碗</text>
+    </view>
+    <view class="action-btn" bindtap="copyText">
+      <text class="action-icon">📋</text>
+      <text class="action-text">复制</text>
+    </view>
+    <view class="action-btn" bindtap="generateImage">
+      <text class="action-icon">🖼️</text>
+      <text class="action-text">生图</text>
+    </view>
+    <view class="action-btn" bindtap="showShare">
+      <text class="action-icon">📤</text>
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+
+  <!-- 分享弹窗 -->
+  <view class="share-modal" wx:if="{{showShareModal}}" bindtap="hideShare">
+    <view class="share-content" catchtap="">
+      <view class="share-title">分享给好友</view>
+      <view class="share-item" bindtap="shareToGroup">
+        <text class="share-icon">👥</text>
+        <text class="share-text">发送给朋友</text>
+      </view>
+      <view class="share-item" bindtap="generateImage">
+        <text class="share-icon">🖼️</text>
+        <text class="share-text">生成分享图片</text>
+      </view>
+      <view class="share-cancel" bindtap="hideShare">取消</view>
+    </view>
+  </view>
+</view>

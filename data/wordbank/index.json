@@ -118,5 +118,17 @@
     "name": "激光",
     "icon": "🔦",
     "description": "关于激光的表达"
+  },
+  "poison-soup": {
+    "id": "poison-soup",
+    "name": "毒鸡汤",
+    "icon": "🍵",
+    "description": "每日毒鸡汤，扎心负能量"
+  },
+  "answer-book": {
+    "id": "answer-book",
+    "name": "答案之书",
+    "icon": "🔮",
+    "description": "Magic 8 Ball 答案之书"
   }
 }

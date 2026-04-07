@@ -21,9 +21,8 @@ const foodData = {
     { name: '哈密瓜', emoji: '🍈', calories: 34 },
     { name: '蓝莓', emoji: '🫐', calories: 57 },
     { name: '石榴', emoji: '🍯', calories: 83 },
-    { name: '荔枝', emoji: '🧁', calories: 66 },
-    { name: '龙眼', emoji: '🍬', calories: 60 },
-    { name: '榴莲', emoji: '🍈', calories: 147 }
+    { name: '龙眼', emoji: '🐉', calories: 60 },
+    { name: '榴莲', emoji: '💀', calories: 147 }
   ],
   // 蔬菜类
   vegetables: [
@@ -111,82 +110,108 @@ const foodData = {
   ],
   // 其他小吃
   snacks: [
-    { name: '寿司', emoji: '🍣', calories: 143 },
-    { name: '墨西哥卷饼', emoji: '🌮', calories: 250 },
-    { name: '爆米花', emoji: '🍿', calories: 387 },
-    { name: '饭团', emoji: '🍙', calories: 170 },
-    { name: '奶酪', emoji: '🧀', calories: 350 },
     { name: '花生', emoji: '🥜', calories: 567 },
     { name: '核桃', emoji: '🌰', calories: 654 },
     { name: '薯片', emoji: '🥔', calories: 536 },
     { name: '棉花糖', emoji: '🍭', calories: 317 },
-    { name: '巧克力棒', emoji: '🍫', calories: 500 },
-    { name: '冰淇淋蛋筒', emoji: '🍦', calories: 250 },
-    { name: '饼干', emoji: '🍪', calories: 470 }
+    { name: '肉干', emoji: '🥓', calories: 410 },
+    { name: '鸡爪', emoji: '🦴', calories: 250 }
   ]
 };
 
 // 饮食建议模板
-const dietSuggestions = [
-  '建议搭配适量的蛋白质和蔬菜，保持营养均衡',
-  '多吃蔬菜水果，少吃高热量食物',
-  '合理控制主食摄入量，增加膳食纤维',
-  '多喝水，少喝含糖饮料',
-  '注意饮食多样化，保证各种营养素的摄入',
-  '适量运动，保持健康体重',
-  '早餐要吃好，午餐要吃饱，晚餐要吃少',
-  '避免暴饮暴食，细嚼慢咽'
-];
+const dietSuggestions = {
+  breakfast: [
+    '早餐要吃好，搭配蛋白质让你上午精神满满',
+    '早餐饮品推荐：牛奶或豆浆，补钙又营养',
+    '早餐热量控制在400-600大卡为宜'
+  ],
+  lunch: [
+    '午餐要吃饱，主食+蛋白质+蔬菜缺一不可',
+    '午后来点水果，补充维生素又解馋',
+    '午餐热量建议控制在600-800大卡'
+  ],
+  dinner: [
+    '晚餐要吃少，轻食更健康',
+    '晚餐避免高脂肪食物，推荐蔬菜+蛋白质组合',
+    '晚餐热量建议控制在400-600大卡'
+  ],
+  snack: [
+    '加餐选择坚果或水果，热量低又饱腹',
+    '下午茶来杯茶或咖啡，提神又享受',
+    '加餐热量控制在100-200大卡为宜'
+  ]
+};
 
-// 获取随机食物
-function getRandomFood(category) {
-  const foods = foodData[category];
-  if (!foods || foods.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * foods.length);
-  return foods[randomIndex];
+// 餐型对应的推荐食物池
+const mealPreferences = {
+  breakfast: { staple: 'staples', protein: 'drinks', vegetable: 'fruits', exclude: ['drinks'] },
+  lunch: { staple: 'staples', protein: 'proteins', vegetable: 'vegetables', exclude: [] },
+  dinner: { staple: 'vegetables', protein: 'proteins', vegetable: 'vegetables', exclude: ['desserts', 'snacks', 'drinks'] },
+  snack: { staple: 'desserts', protein: 'drinks', vegetable: 'fruits', exclude: [] }
+};
+
+// 获取随机食物（排除指定类别）
+function getRandomFood(category, excludeCategories = []) {
+  let pool = [];
+  for (const cat of category) {
+    if (!excludeCategories.includes(cat) && foodData[cat]) {
+      pool = pool.concat(foodData[cat]);
+    }
+  }
+  if (pool.length === 0) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // 生成随机餐食搭配
-function generateRandomMeal() {
+function generateRandomMeal(mealType) {
+  const prefs = mealPreferences[mealType] || mealPreferences.lunch;
+  const suggestions = dietSuggestions[mealType] || dietSuggestions.lunch;
+
   const meal = {
-    staple: getRandomFood('staples'),
-    protein: getRandomFood('proteins'),
-    vegetable: getRandomFood('vegetables'),
-    fruit: getRandomFood('fruits'),
-    drink: getRandomFood('drinks')
+    staple: getRandomFood([prefs.staple], prefs.exclude),
+    protein: getRandomFood([prefs.protein], prefs.exclude),
+    vegetable: getRandomFood([prefs.vegetable], prefs.exclude),
+    fruit: getRandomFood(['fruits'], prefs.exclude),
+    drink: getRandomFood(['drinks'], prefs.exclude)
   };
-  
+
   // 计算总热量
   let totalCalories = 0;
-  Object.values(meal).forEach(item => {
-    if (item) {
-      // 估算份量：主食150g，蛋白质100g，蔬菜200g，水果100g，饮料200ml
-      if (item === meal.staple) totalCalories += item.calories * 1.5;
-      else if (item === meal.protein) totalCalories += item.calories * 1;
-      else if (item === meal.vegetable) totalCalories += item.calories * 2;
-      else if (item === meal.fruit) totalCalories += item.calories * 1;
-      else if (item === meal.drink) totalCalories += item.calories * 2;
-    }
-  });
-  
-  // 获取随机饮食建议
-  const suggestion = dietSuggestions[Math.floor(Math.random() * dietSuggestions.length)];
-  
+  if (meal.staple) totalCalories += meal.staple.calories * 1.5;
+  if (meal.protein) totalCalories += meal.protein.calories * 1;
+  if (meal.vegetable) totalCalories += meal.vegetable.calories * 2;
+  if (meal.fruit) totalCalories += meal.fruit.calories * 1;
+  if (meal.drink) totalCalories += meal.drink.calories * 2;
+
   return {
     meal,
     totalCalories: Math.round(totalCalories),
-    suggestion
+    suggestion: suggestions[Math.floor(Math.random() * suggestions.length)]
   };
+}
+
+// 获取所有食物池（用于转盘动画）
+function getAllFoods() {
+  const allFoods = [];
+  const categories = ['fruits', 'vegetables', 'staples', 'proteins', 'drinks', 'desserts', 'snacks'];
+  categories.forEach(cat => {
+    if (foodData[cat]) {
+      allFoods.push(...foodData[cat]);
+    }
+  });
+  return allFoods;
 }
 
 Page({
   data: {
     isSpinning: false,
     result: null,
-    animationDuration: 1500,
+    animationDuration: 2000,
     showResult: false,
     mealTypes: ['早餐', '午餐', '晚餐', '加餐'],
     selectedMealType: '午餐',
+    selectedMealTypeKey: 'lunch',
     showFoodModal: false,
     foodCategories: ['fruits', 'vegetables', 'staples', 'proteins', 'drinks', 'desserts', 'snacks'],
     categoryMap: {
@@ -198,109 +223,171 @@ Page({
       desserts: { name: '甜点类', emoji: '🍰' },
       snacks: { name: '其他小吃', emoji: '🍿' }
     },
+    // 分类排除状态
+    excludedCategories: [],
+    categoryEnabled: {
+      fruits: true,
+      vegetables: true,
+      staples: true,
+      proteins: true,
+      drinks: true,
+      desserts: true,
+      snacks: true
+    },
+    // 转盘动画相关
+    spinFoods: [],
+    spinIndex: 0,
+    spinInterval: null,
+    spinTimer: null,
     foodData: foodData,
     canvaswidth: 220,
     canvasheight: 400
   },
-  
+
   onLoad() {
-    // 页面加载时初始化
+    this.initSpinFoods();
   },
-  
+
+  // 初始化转盘食物池
+  initSpinFoods() {
+    const allFoods = getAllFoods();
+    // 随机打乱顺序，取20个作为转盘显示池
+    const shuffled = allFoods.sort(() => Math.random() - 0.5).slice(0, 20);
+    this.setData({ spinFoods: shuffled });
+  },
+
   // 选择餐型
   selectMealType(e) {
+    const type = e.currentTarget.dataset.type;
+    const typeMap = {
+      '早餐': 'breakfast',
+      '午餐': 'lunch',
+      '晚餐': 'dinner',
+      '加餐': 'snack'
+    };
     this.setData({
-      selectedMealType: e.currentTarget.dataset.type
+      selectedMealType: type,
+      selectedMealTypeKey: typeMap[type]
     });
   },
-  
-  // 开始随机选择
+
+  // 切换分类是否启用
+  toggleCategory(e) {
+    const cat = e.currentTarget.dataset.cat;
+    const enabled = !this.data.categoryEnabled[cat];
+    const newEnabled = { ...this.data.categoryEnabled, [cat]: enabled };
+
+    // 如果禁用某分类且它在排除列表中，先移出
+    let excluded = [...this.data.excludedCategories];
+    if (!enabled && !excluded.includes(cat)) {
+      excluded.push(cat);
+    } else if (enabled) {
+      excluded = excluded.filter(c => c !== cat);
+    }
+
+    this.setData({
+      categoryEnabled: newEnabled,
+      excludedCategories: excluded
+    });
+  },
+
+  // 开始随机选择（转盘动画）
   startRandom() {
     if (this.data.isSpinning) return;
-    
-    console.log('开始随机选择，当前餐型：', this.data.selectedMealType);
+
+    // 收集已启用的食物
+    const enabledCategories = this.data.foodCategories.filter(cat => this.data.categoryEnabled[cat]);
+    const allEnabledFoods = [];
+    enabledCategories.forEach(cat => {
+      if (foodData[cat]) {
+        allEnabledFoods.push(...foodData[cat]);
+      }
+    });
+
+    if (allEnabledFoods.length === 0) {
+      utils.showText('请至少启用一个食物类别');
+      return;
+    }
+
+    // 随机打乱食物池
+    const shuffled = allEnabledFoods.sort(() => Math.random() - 0.5);
     this.setData({
+      spinFoods: shuffled.slice(0, Math.min(20, shuffled.length)),
       isSpinning: true,
       showResult: false
     });
-    
-    // 模拟转盘动画
-    setTimeout(() => {
-      console.log('随机计时结束，生成结果...');
-      const result = generateRandomMeal();
-      console.log('生成的结果：', result);
-      
-      if (!result) {
-        console.error('生成结果失败，结果为null');
-        this.setData({
-          isSpinning: false,
-          showResult: false
-        });
-        utils.showText('生成失败，请重试');
-        return;
+
+    // 转盘滚动动画
+    let spinCount = 0;
+    const totalSpins = 30; // 总滚动次数
+    let currentInterval = 50; // 初始间隔 ms
+
+    const spinInterval = setInterval(() => {
+      spinCount++;
+      // 逐渐减速
+      if (spinCount > totalSpins * 0.6) {
+        clearInterval(spinInterval);
+        // 最后一跳：直接跳到结果
+        setTimeout(() => {
+          const result = generateRandomMeal(this.data.selectedMealTypeKey);
+          this.setData({
+            result: result,
+            isSpinning: false,
+            showResult: true
+          });
+        }, 300);
+      } else {
+        // 更新显示的食物索引
+        const newIndex = (this.data.spinIndex + 1) % this.data.spinFoods.length;
+        this.setData({ spinIndex: newIndex });
       }
-      
-      this.setData({
-        result: result,
-        isSpinning: false,
-        showResult: true
-      });
-      console.log('结果已设置，showResult:', true, 'result:', result);
-    }, this.data.animationDuration);
+    }, currentInterval);
+
+    this.setData({ spinInterval });
   },
-  
+
   // 重新随机
   reRandom() {
     this.startRandom();
   },
-  
+
   // 分享给好友
   onShareAppMessage() {
     const result = this.data.result;
     let title = '今天吃什么 - 解决选择困难症';
-    let path = '/packages/food/pages/what-to-eat/what-to-eat';
-    
+    const path = '/packages/food/pages/what-to-eat/what-to-eat';
+
     if (result) {
       const stapleName = result.meal.staple ? result.meal.staple.name : '';
       const proteinName = result.meal.protein ? result.meal.protein.name : '';
       title = `推荐${this.data.selectedMealType}：${stapleName} + ${proteinName}`;
     }
-    
-    return {
-      title: title,
-      path: path
-    };
+
+    return { title, path };
   },
-  
+
   // 分享到朋友圈
   onShareTimeline() {
     const result = this.data.result;
     let title = '今天吃什么 - 随机饮食推荐';
-    
+
     if (result) {
       const stapleEmoji = result.meal.staple ? result.meal.staple.emoji : '';
       const stapleName = result.meal.staple ? result.meal.staple.name : '';
-      title = `${this.data.selectedMealType}推荐：${stapleEmoji} ${stapleName}，总热量${result.totalCalories}大卡`;
+      title = `${this.data.selectedMealType}推荐：${stapleEmoji} ${stapleName}，约${result.totalCalories}大卡`;
     }
-    
-    return {
-      title: title,
-      query: 'what-to-eat'
-    };
+
+    return { title, query: 'what-to-eat' };
   },
-  
+
   // 显示全部食物清单
   showAllFoods() {
-    this.setData({
-      showFoodModal: true
-    });
+    this.setData({ showFoodModal: true });
   },
-  
+
   // 关闭食物清单模态框
   closeFoodModal() {
-    this.setData({
-      showFoodModal: false
-    });
+    this.setData({ showFoodModal: false });
   },
 
   // 保存Canvas为图片
@@ -311,7 +398,6 @@ Page({
         .fields({ node: true, size: true })
         .exec((res) => {
           if (!res[0] || !res[0].node) {
-            console.error('获取Canvas元素失败');
             utils.showText('获取画布失败，请重试');
             return;
           }
@@ -320,7 +406,6 @@ Page({
           const ctx = canvas.getContext('2d');
           const dpr = wx.getSystemInfoSync().pixelRatio;
 
-          // 设置高清canvas尺寸
           canvas.width = this.data.canvaswidth * dpr;
           canvas.height = this.data.canvasheight * dpr;
           ctx.scale(dpr, dpr);
@@ -335,8 +420,6 @@ Page({
 
   // 绘制分享图片
   MergeImage(ctx, canvas) {
-    // 直接使用默认值，不依赖系统信息
-    console.log('使用默认系统信息');
     const systemInfo = {
       pixelRatio: 2,
       screenWidth: 375,
@@ -345,13 +428,9 @@ Page({
       version: '7.0.0',
       SDKVersion: '2.0.0'
     };
-    
-    console.log('系统信息:', systemInfo);
+
     const width = this.data.canvaswidth;
     const height = this.data.canvasheight;
-    
-    console.log('画布尺寸:', { width, height });
-
     const padding = 20;
     const titleY = padding + 20;
     const subtitleY = titleY + 20;
@@ -360,11 +439,11 @@ Page({
     const qrX = (width - qrSize) / 2;
     const qrY = height - qrSize - padding;
 
-    // 背景色 - 食物主题的温暖色调
+    // 背景色
     ctx.fillStyle = '#ffe6cc';
     ctx.fillRect(0, 0, width, height);
 
-    // 添加装饰性食物元素背景
+    // 装饰元素
     ctx.fillStyle = 'rgba(255, 152, 0, 0.1)';
     ctx.beginPath();
     ctx.arc(width - 40, 40, 25, 0, Math.PI * 2);
@@ -389,13 +468,11 @@ Page({
     ctx.fillStyle = '#333';
     ctx.fillText(`餐型：${this.data.selectedMealType}`, padding, mealInfoY);
 
-    // 如果有结果，绘制食物详情
     if (this.data.result) {
       const meal = this.data.result.meal;
       const calories = this.data.result.totalCalories;
       const suggestion = this.data.result.suggestion;
 
-      // 绘制食物项目
       let yPos = mealInfoY + 30;
       const drawFoodItem = (label, food) => {
         if (food) {
@@ -403,7 +480,6 @@ Page({
           ctx.fillStyle = '#666';
           ctx.fillText(`${label}：`, padding, yPos);
 
-          // 绘制emoji
           ctx.font = '20px Arial, sans-serif';
           ctx.fillStyle = '#000';
           ctx.fillText(food.emoji, padding + 60, yPos);
@@ -422,19 +498,16 @@ Page({
       drawFoodItem('水果', meal.fruit);
       drawFoodItem('饮品', meal.drink);
 
-      // 热量信息
       yPos += 10;
       ctx.font = '16px Arial, sans-serif';
       ctx.fillStyle = '#e74c3c';
       ctx.fillText(`总热量：${calories} 大卡`, padding, yPos);
 
-      // 饮食建议
       yPos += 20;
       ctx.font = '14px Arial, sans-serif';
       ctx.fillStyle = '#27ae60';
       ctx.fillText('饮食建议：', padding, yPos);
 
-      // 多行文本处理
       const lineHeight = 20;
       const maxCharsPerLine = 15;
       let startIndex = 0;
@@ -442,7 +515,6 @@ Page({
 
       while (startIndex < suggestion.length) {
         let endIndex = Math.min(startIndex + maxCharsPerLine, suggestion.length);
-        // 尝试在词语边界处换行
         if (endIndex < suggestion.length && suggestion[endIndex] !== ' ') {
           const lastSpaceIndex = suggestion.lastIndexOf(' ', endIndex);
           if (lastSpaceIndex > startIndex) {
@@ -455,52 +527,37 @@ Page({
         lineY += lineHeight;
       }
     } else {
-      // 没有结果时的提示
       ctx.font = '14px Arial, sans-serif';
       ctx.fillStyle = '#999';
       ctx.fillText('快来生成你的饮食推荐吧！', padding, mealInfoY + 30);
     }
 
-    // 绘制二维码
-    console.log('开始绘制二维码');
     const img = canvas.createImage();
     img.src = '/images/mini.png';
     img.onload = () => {
       ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-      console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
 
-      // 绘制完成后执行保存
-      console.log('开始执行保存操作');
-      // 生成临时文件路径并保存到相册
       wx.canvasToTempFilePath({
         canvas: canvas,
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
+        x: 0, y: 0, width: width, height: height,
         quality: 1,
         destWidth: width * systemInfo.pixelRatio,
         destHeight: height * systemInfo.pixelRatio,
         success: (res) => {
-          console.log('canvasToTempFilePath成功:', res);
           const tempFilePath = res.tempFilePath;
           wx.saveImageToPhotosAlbum({
             filePath: tempFilePath,
             success: () => {
-              console.log('保存相册成功');
               utils.showSuccess('海报已保存到相册');
             },
             fail: (err) => {
-              console.log('保存到相册失败', err);
-              if (err.errMsg.includes('auth denied')) {
+              if (err.errMsg && err.errMsg.includes('auth denied')) {
                 wx.showModal({
                   title: '提示',
                   content: '需要您授权保存到相册',
                   showCancel: true,
                   success: (modalRes) => {
-                    if (modalRes.confirm) {
-                      wx.openSetting();
-                    }
+                    if (modalRes.confirm) wx.openSetting();
                   }
                 });
               } else {
@@ -523,9 +580,9 @@ Page({
       utils.showText('请先生成饮食推荐');
       return;
     }
-    
+
     utils.showLoading('生成中，请稍候');
-    
+
     setTimeout(() => {
       this.savecodetofile();
     }, 1000);

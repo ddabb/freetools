@@ -1,0 +1,297 @@
+<view class="container">
+  <!-- 顶部标语 -->
+  <view class="hero-section">
+    <view class="hero-badge">
+      <text class="badge-icon">🚭</text>
+      <text class="badge-text">电子戒烟助手</text>
+    </view>
+    <view class="hero-quote" bindtap="nextQuote">
+      <text class="quote-text">"{{currentQuote}}"</text>
+      <text class="quote-hint">点击换一条</text>
+    </view>
+  </view>
+
+  <!-- 未设置戒烟目标 -->
+  <block wx:if="{{!isQuitSet}}">
+    <view class="start-section">
+      <view class="start-icon">🌿</view>
+      <view class="start-title">开启无烟生活</view>
+      <view class="start-desc">设定戒烟日期，开始记录你的戒烟旅程</view>
+      <button class="start-btn" bindtap="showDatePicker">🎯 设定戒烟目标</button>
+    </view>
+  </block>
+
+  <!-- 已设置戒烟目标 -->
+  <block wx:else>
+    <!-- 戒烟计时卡片 -->
+    <view class="quit-timer-card">
+      <view class="timer-main">
+        <view class="timer-days">
+          <text class="days-num">{{quitDays}}</text>
+          <text class="days-unit">天</text>
+        </view>
+        <view class="timer-label">戒🚫烟时长</view>
+        <view class="timer-date">开始于 {{quitDate}}</view>
+      </view>
+      <view class="timer-actions">
+        <view class="timer-action" bindtap="showAchievements">
+          <text class="action-icon">🏅</text>
+          <text class="action-num">{{achievements.length}}</text>
+          <text class="action-label">成就</text>
+        </view>
+        <view class="timer-action {{todayChecked ? 'checked' : ''}}" bindtap="startBreathing">
+          <text class="action-icon">{{todayChecked ? '✅' : '🌬️'}}</text>
+          <text class="action-num">{{todayChecked ? '已完成' : '呼吸'}}</text>
+          <text class="action-label">今日练习</text>
+        </view>
+        <view class="timer-action" bindtap="showSettings">
+          <text class="action-icon">⚙️</text>
+          <text class="action-num">设置</text>
+          <text class="action-label">调整参数</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 呼吸练习区 -->
+    <view class="breath-section">
+      <view class="breath-title">🌬️ 呼吸练习</view>
+      <view class="breath-instruction">
+        <block wx:if="{{!isBreathing}}">
+          <text class="instruction-text">点击开始，用深呼吸对抗烟瘾</text>
+          <text class="instruction-hint">4-7-8 呼吸法 · 每次3组</text>
+        </block>
+        <block wx:else>
+          <text class="phase-text">
+            <text wx:if="{{breathPhase === 'inhale'}}">吸气... 4秒</text>
+            <text wx:elif="{{breathPhase === 'hold'}}">屏息... 7秒</text>
+            <text wx:elif="{{breathPhase === 'exhale'}}">呼气... 8秒</text>
+          </text>
+          <text class="phase-hint">第 {{breathCircles + 1}} / {{maxCircles}} 组</text>
+        </block>
+      </view>
+
+      <!-- 呼吸球 -->
+      <view class="breath-ball-container">
+        <view class="breath-ball
+          {{breathPhase === 'inhale' ? 'ball-inhale' : ''}}
+          {{breathPhase === 'hold' ? 'ball-hold' : ''}}
+          {{breathPhase === 'exhale' ? 'ball-exhale' : ''}}
+          {{!isBreathing ? 'ball-idle' : ''}}"
+        >
+          <view class="ball-inner">
+            <text class="ball-emoji">
+              {{breathPhase === 'idle' ? '🌬️' : breathPhase === 'inhale' ? '💨' : breathPhase === 'hold' ? '⏸️' : '🌫️'}}
+            </text>
+          </view>
+        </view>
+
+        <!-- 烟雾粒子 -->
+        <block wx:if="{{isBreathing}}">
+          <view
+            class="smoke-particle"
+            wx:for="{{smokeParticles}}"
+            wx:key="id"
+            style="
+              left: {{item.x}}%;
+              opacity: {{breathPhase === 'inhale' ? 0.6 : breathPhase === 'hold' ? 0.8 : 0.3}};
+              transform: scale({{breathPhase === 'inhale' ? 1.5 : breathPhase === 'hold' ? 1.2 : 0.8}});
+            "
+          ></view>
+        </block>
+      </view>
+
+      <!-- 呼吸进度条 -->
+      <view class="breath-progress" wx:if="{{isBreathing}}">
+        <view class="progress-bar">
+          <view
+            class="progress-fill progress-{{breathPhase}}"
+            style="width: {{breathProgress}}%"
+          ></view>
+        </view>
+        <view class="progress-label">
+          <text wx:if="{{breathPhase === 'inhale'}}">吸气中...</text>
+          <text wx:elif="{{breathPhase === 'hold'}}">保持...</text>
+          <text wx:elif="{{breathPhase === 'exhale'}}">呼气中...</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="breath-buttons">
+        <button
+          wx:if="{{!isBreathing}}"
+          class="breath-btn breath-start"
+          bindtap="startBreathing"
+        >🌬️ 开始练习</button>
+        <button
+          wx:else
+          class="breath-btn breath-stop"
+          bindtap="stopBreathing"
+        >⏹ 停止</button>
+      </view>
+    </view>
+
+    <!-- 成就统计 -->
+    <view class="stats-section">
+      <view class="stats-title">📊 戒烟成果</view>
+      <view class="stats-grid">
+        <view class="stat-card">
+          <text class="stat-emoji">💰</text>
+          <text class="stat-num">{{savedMoney}}</text>
+          <text class="stat-unit">元</text>
+          <text class="stat-label">节省金额</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-emoji">🚬</text>
+          <text class="stat-num">{{cigarsAvoided}}</text>
+          <text class="stat-unit">支</text>
+          <text class="stat-label">拒绝烟支</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-emoji">🫁</text>
+          <text class="stat-num">{{avoidedTar}}</text>
+          <text class="stat-unit">g</text>
+          <text class="stat-label">避免焦油</text>
+        </view>
+        <view class="stat-card">
+          <text class="stat-emoji">⏱️</text>
+          <text class="stat-num">{{lifeRestored}}</text>
+          <text class="stat-unit">h</text>
+          <text class="stat-label">延长寿命</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 成就徽章 -->
+    <view class="achievement-section" bindtap="showAchievements">
+      <view class="achievement-title">
+        <text>🏅 成就里程碑</text>
+        <text class="achievement-hint">点击查看全部</text>
+      </view>
+      <view class="achievement-badges">
+        <block wx:if="{{achievements.length === 0}}">
+          <view class="badge-empty">戒烟1天解锁第一个成就 🌱</view>
+        </block>
+        <block wx:else>
+          <view
+            class="badge-item"
+            wx:for="{{earnedAchievements}}"
+            wx:key="id"
+          >
+            <text class="badge-icon">{{item.icon}}</text>
+            <text class="badge-name">{{item.name}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </block>
+
+  <!-- 日期选择弹窗 -->
+  <view class="modal" wx:if="{{showDatePicker}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">📅 设置戒烟日期</text>
+        <text class="modal-close" bindtap="closeDatePicker">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="picker-hint">选择你开始戒烟的日期</view>
+        <picker mode="date" value="{{pickerDate}}" bindchange="onDateChange">
+          <view class="date-display">
+            <text class="date-text">{{pickerDate || '请选择日期'}}</text>
+            <text class="date-arrow">▼</text>
+          </view>
+        </picker>
+        <view class="date-tips">
+          <text>💡 建议从今天开始，记录更真实</text>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="closeDatePicker">取消</button>
+        <button class="modal-btn confirm" bindtap="confirmQuitDate">确认开始</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置弹窗 -->
+  <view class="modal" wx:if="{{showSettings}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">⚙️ 个性化设置</text>
+        <text class="modal-close" bindtap="closeSettings">×</text>
+      </view>
+      <view class="modal-body settings-body">
+        <view class="setting-item">
+          <text class="setting-label">每包烟价格（元）</text>
+          <input
+            class="setting-input"
+            type="number"
+            value="{{pricePerPack}}"
+            bindinput="updatePrice"
+            placeholder="如：25"
+          />
+        </view>
+        <view class="setting-item">
+          <text class="setting-label">每天吸烟量（支）</text>
+          <input
+            class="setting-input"
+            type="number"
+            value="{{cigsPerDay}}"
+            bindinput="updateCigsPerDay"
+            placeholder="如：20"
+          />
+        </view>
+        <view class="setting-item">
+          <text class="setting-label">每包烟支数</text>
+          <input
+            class="setting-input"
+            type="number"
+            value="{{packCigs}}"
+            placeholder="如：20"
+            disabled
+          />
+          <text class="setting-hint">（固定20支）</text>
+        </view>
+        <view class="setting-divider"></view>
+        <button class="reset-btn" bindtap="resetQuit">🗑️ 重置戒烟目标</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成就弹窗 -->
+  <view class="modal" wx:if="{{showAchievements}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">🏅 成就一览</text>
+        <text class="modal-close" bindtap="closeAchievements">×</text>
+      </view>
+      <scroll-view class="modal-body achievement-modal-body" scroll-y>
+        <view class="achievement-list">
+          <view
+            class="achievement-row {{item.earned ? 'earned' : 'locked'}}"
+            wx:for="{{achievementList}}"
+            wx:key="id"
+          >
+            <text class="achievement-icon">{{item.earned ? item.icon : '🔒'}}</text>
+            <view class="achievement-info">
+              <text class="achievement-name">{{item.earned ? item.name : '???'}}</text>
+              <text class="achievement-desc">{{item.earned ? item.desc : '继续坚持解锁'}}</text>
+            </view>
+            <text class="achievement-days" wx:if="{{item.earned}}">✓</text>
+            <text class="achievement-days locked-text" wx:else>{{item.days}}天</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 新成就弹窗 -->
+  <view class="achievement-toast" wx:if="{{newAchievement}}">
+    <view class="toast-content">
+      <text class="toast-icon">{{newAchievement.icon}}</text>
+      <view class="toast-text">
+        <text class="toast-title">🎉 新成就解锁！</text>
+        <text class="toast-name">{{newAchievement.name}}</text>
+        <text class="toast-desc">{{newAchievement.desc}}</text>
+      </view>
+    </view>
+  </view>
+</view>

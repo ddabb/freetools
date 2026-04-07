@@ -1,35 +1,49 @@
 // packages/text/pages/text-diff/text-diff.js
 Page({
   data: {
-    // 文本内容
     textA: '',
     textB: '',
-    
-    // 对比设置
     diffModeIndex: 0,
     diffModes: ['并排对比', '合并视图'],
     ignoreWhitespace: false,
-    
-    // 对比结果
     comparisonResult: null,
-    
-    // 高亮模式
-    highlightMode: 'background' // background, foreground, border
+    highlightMode: 'background',
+    isComparing: false
   },
 
-  // 页面加载时执行
   onLoad() {
     wx.setNavigationBarTitle({ title: '文本对比' });
   },
 
-  // 设置文本A
+  // 输入文本A时自动对比
   setTextA(e) {
     this.setData({ textA: e.detail.value });
+    this.autoCompare();
   },
 
-  // 设置文本B
+  // 输入文本B时自动对比
   setTextB(e) {
     this.setData({ textB: e.detail.value });
+    this.autoCompare();
+  },
+
+  // 自动对比（有防抖）
+  autoCompare() {
+    const { textA, textB } = this.data;
+
+    if (!textA.trim() && !textB.trim()) {
+      this.setData({ comparisonResult: null });
+      return;
+    }
+
+    // 简单防抖
+    if (this.compareTimer) {
+      clearTimeout(this.compareTimer);
+    }
+
+    this.compareTimer = setTimeout(() => {
+      this.compareTexts();
+    }, 500);
   },
 
   // 设置对比模式
@@ -40,74 +54,70 @@ Page({
   // 切换忽略空格
   toggleIgnoreWhitespace(e) {
     this.setData({ ignoreWhitespace: e.detail.value });
+    this.autoCompare();
   },
 
-  // 开始对比
+  // 手动开始对比
   compareTexts() {
-    const { textA, textB, ignoreWhitespace } = this.data;
-    
+    const { textA, textB, ignoreWhitespace, isComparing } = this.data;
+
+    if (isComparing) return;
+
     if (!textA.trim() && !textB.trim()) {
-      wx.showToast({ title: '请输入要对比的文本', icon: 'none' });
+      this.setData({ comparisonResult: null });
       return;
     }
 
-    wx.showLoading({ title: '正在对比...' });
+    this.setData({ isComparing: true });
 
     // 使用setTimeout避免阻塞UI
     setTimeout(() => {
       try {
         const result = this.performDiff(textA, textB, ignoreWhitespace);
-        this.setData({ comparisonResult: result });
-        wx.hideLoading();
-        wx.showToast({ title: '对比完成', icon: 'success' });
+        this.setData({
+          comparisonResult: result,
+          isComparing: false
+        });
       } catch (error) {
-        wx.hideLoading();
-        wx.showToast({ title: '对比失败', icon: 'none' });
         console.error('文本对比失败:', error);
+        this.setData({ isComparing: false });
       }
-    }, 100);
+    }, 50);
   },
 
   // 执行文本对比算法
   performDiff(textA, textB, ignoreWhitespace) {
-    // 预处理文本
     const processedA = ignoreWhitespace ? this.removeWhitespace(textA) : textA;
     const processedB = ignoreWhitespace ? this.removeWhitespace(textB) : textB;
-    
-    // 分割成行
+
     const linesA = processedA.split('\n');
     const linesB = processedB.split('\n');
-    
-    // 简化的差异算法 (基于最长公共子序列)
+
     const diff = this.computeLineDiff(linesA, linesB);
-    
-    // 统计信息
     const stats = this.computeStats(diff);
-    
+
     return {
       lines: diff,
       additions: stats.additions,
       deletions: stats.deletions,
       modifications: stats.modifications,
       unchanged: stats.unchanged,
-      similarity: stats.similarity
+      similarity: stats.similarity,
+      lineCount: Math.max(linesA.length, linesB.length)
     };
   },
 
-  // 移除空白字符
   removeWhitespace(text) {
     return text.replace(/\s+/g, ' ').trim();
   },
 
-  // 计算行级别差异
   computeLineDiff(linesA, linesB) {
     const result = [];
     let i = 0, j = 0;
-    
+
     while (i < linesA.length || j < linesB.length) {
       if (i < linesA.length && j < linesB.length) {
         if (linesA[i] === linesB[j]) {
-          // 相同行
           result.push({
             lineNumber: i + 1,
             contentA: this.restoreOriginalLine(linesA[i], i, 'A'),
@@ -117,11 +127,9 @@ Page({
           i++;
           j++;
         } else {
-          // 查找最佳匹配
           const nextMatch = this.findNextMatch(linesA, linesB, i, j);
-          
+
           if (nextMatch.i - i > nextMatch.j - j) {
-            // 删除操作
             for (let k = i; k < nextMatch.i; k++) {
               result.push({
                 lineNumber: k + 1,
@@ -132,10 +140,9 @@ Page({
             }
             i = nextMatch.i;
           } else if (nextMatch.j - j > nextMatch.i - i) {
-            // 新增操作
             for (let k = j; k < nextMatch.j; k++) {
               result.push({
-                lineNumber: j + k - j + 1,
+                lineNumber: k + 1,
                 contentA: '',
                 contentB: this.restoreOriginalLine(linesB[k], k, 'B'),
                 type: 'addition'
@@ -143,7 +150,6 @@ Page({
             }
             j = nextMatch.j;
           } else {
-            // 修改操作
             result.push({
               lineNumber: i + 1,
               contentA: this.restoreOriginalLine(linesA[i], i, 'A'),
@@ -155,7 +161,6 @@ Page({
           }
         }
       } else if (i < linesA.length) {
-        // 剩余删除
         result.push({
           lineNumber: i + 1,
           contentA: this.restoreOriginalLine(linesA[i], i, 'A'),
@@ -164,7 +169,6 @@ Page({
         });
         i++;
       } else {
-        // 剩余新增
         result.push({
           lineNumber: j + 1,
           contentA: '',
@@ -174,17 +178,15 @@ Page({
         j++;
       }
     }
-    
+
     return result;
   },
 
-  // 查找下一个匹配点
   findNextMatch(linesA, linesB, startI, startJ) {
     const maxLookAhead = 10;
-    const maxLookB = 10;
-    
+
     for (let lookA = 1; lookA <= Math.min(maxLookAhead, linesA.length - startI); lookA++) {
-      for (let lookB = 1; lookB <= Math.min(maxLookB, linesB.length - startJ); lookB++) {
+      for (let lookB = 1; lookB <= Math.min(maxLookAhead, linesB.length - startJ); lookB++) {
         if (startI + lookA < linesA.length && startJ + lookB < linesB.length) {
           if (linesA[startI + lookA] === linesB[startJ + lookB]) {
             return { i: startI + lookA, j: startJ + lookB };
@@ -192,11 +194,10 @@ Page({
         }
       }
     }
-    
+
     return { i: startI + 1, j: startJ + 1 };
   },
 
-  // 恢复原始行内容（包含空格）
   restoreOriginalLine(processedLine, index, source) {
     if (source === 'A' && this.data.textA) {
       const originalLines = this.data.textA.split('\n');
@@ -208,10 +209,9 @@ Page({
     return processedLine;
   },
 
-  // 计算统计信息
   computeStats(diff) {
     let additions = 0, deletions = 0, modifications = 0, unchanged = 0;
-    
+
     diff.forEach(line => {
       switch (line.type) {
         case 'addition': additions++; break;
@@ -220,24 +220,23 @@ Page({
         case 'unchanged': unchanged++; break;
       }
     });
-    
+
     const totalLines = additions + deletions + modifications + unchanged;
     const similarLines = unchanged + modifications * 0.5;
     const similarity = totalLines > 0 ? Math.round((similarLines / totalLines) * 100) : 100;
-    
+
     return { additions, deletions, modifications, unchanged, similarity };
   },
 
-  // 交换文本
   swapTexts() {
     this.setData({
       textA: this.data.textB,
       textB: this.data.textA
     });
     wx.vibrateShort();
+    setTimeout(() => this.autoCompare(), 100);
   },
 
-  // 清空所有文本
   clearAll() {
     wx.showModal({
       title: '确认清空',
@@ -255,7 +254,6 @@ Page({
     });
   },
 
-  // 粘贴文本A
   pasteTextA() {
     wx.getClipboardData({
       success: (res) => {
@@ -269,7 +267,6 @@ Page({
     });
   },
 
-  // 复制文本A
   copyTextA() {
     if (!this.data.textA) {
       wx.showToast({ title: '没有可复制的文本', icon: 'none' });
@@ -280,7 +277,6 @@ Page({
     }});
   },
 
-  // 粘贴文本B
   pasteTextB() {
     wx.getClipboardData({
       success: (res) => {
@@ -294,7 +290,6 @@ Page({
     });
   },
 
-  // 复制文本B
   copyTextB() {
     if (!this.data.textB) {
       wx.showToast({ title: '没有可复制的文本', icon: 'none' });
@@ -305,7 +300,6 @@ Page({
     }});
   },
 
-  // 加载示例对比
   loadSampleDiff() {
     const sampleA = `function calculateSum(arr) {
   let sum = 0;
@@ -333,7 +327,6 @@ console.log('The sum is:', result);`;
     wx.showToast({ title: '已加载示例代码', icon: 'success' });
   },
 
-  // 导出对比结果
   exportDiff() {
     if (!this.data.comparisonResult) {
       wx.showToast({ title: '请先进行对比', icon: 'none' });
@@ -362,7 +355,6 @@ console.log('The sum is:', result);`;
     });
   },
 
-  // 分享对比结果
   shareDiff() {
     if (!this.data.comparisonResult) {
       wx.showToast({ title: '请先进行对比', icon: 'none' });
@@ -370,7 +362,13 @@ console.log('The sum is:', result);`;
     }
 
     const stats = this.data.comparisonResult;
-    const shareText = `📊 文本对比完成\n相似度: ${stats.similarity}%\n新增: ${stats.additions} 行\n删除: ${stats.deletions} 行\n修改: ${stats.modifications} 行\n\n来自「免费工具箱」文本对比`;
+    const shareText = `📊 文本对比完成
+相似度: ${stats.similarity}%
+新增: ${stats.additions} 行
+删除: ${stats.deletions} 行
+修改: ${stats.modifications} 行
+
+来自「免费工具箱」文本对比`;
 
     wx.setClipboardData({
       data: shareText,
@@ -380,17 +378,15 @@ console.log('The sum is:', result);`;
     });
   },
 
-  // 切换高亮模式
   highlightMode() {
     const modes = ['background', 'foreground', 'border'];
     const currentIndex = modes.indexOf(this.data.highlightMode);
     const nextIndex = (currentIndex + 1) % modes.length;
-    
+
     this.setData({ highlightMode: modes[nextIndex] });
-    wx.showToast({ title: `切换到${modes[nextIndex]}模式`, icon: 'success' });
+    wx.showToast({ title: `已切换高亮模式`, icon: 'success' });
   },
 
-  // 分享给好友
   onShareAppMessage() {
     return {
       title: '文本对比 - 专业的差异分析神器',
@@ -398,7 +394,6 @@ console.log('The sum is:', result);`;
     }
   },
 
-  // 分享到朋友圈
   onShareTimeline() {
     return {
       title: '文本对比 - 专业的差异分析神器',

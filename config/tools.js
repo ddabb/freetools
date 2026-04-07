@@ -373,14 +373,54 @@ const tools = [
     description: '查看设备电池健康状态'
   },
   {
+    id: 'quit-smoking',
+    name: '电子戒烟',
+    icon: '🚭',
+    color: 'green',
+    url: '/packages/life/pages/quit-smoking/quit-smoking',
+    categories: ['生活工具'],
+    keywords: ['戒烟', '禁烟', '呼吸', '健康', '烟瘾'],
+    description: '呼吸练习对抗烟瘾，记录戒烟成就和进度'
+  },
+  {
+    id: 'electronic-woodfish',
+    name: '电子木鱼',
+    icon: '🎵',
+    color: 'brown',
+    url: '/packages/life/pages/electronic-woodfish/electronic-woodfish',
+    categories: ['生活工具'],
+    keywords: ['木鱼', '功德', '佛系', '敲击', '冥想'],
+    description: '敲木鱼积功德，心平气和'
+  },
+  {
     id: 'bobing',
     name: '中秋博饼',
     icon: '🎲',
     color: 'red',
-    url: '/packages/bobing/pages/bobing/bobing/bobing',
+    url: '/packages/bobing/pages/bobing/bobing',
     categories: ['生活工具'],
     keywords: ['博饼', '骰子', '中秋', '福建', '闽南', '传统', '习俗'],
     description: '闽南传统博饼文化体验，掷6个骰子感受中秋习俗'
+  },
+  {
+    id: 'poison-soup',
+    name: '每日毒鸡汤',
+    icon: '🍵',
+    color: 'amber',
+    url: '/packages/life/pages/poison-soup/poison-soup',
+    categories: ['休闲工具'],
+    keywords: ['毒鸡汤', '负能量', '扎心', '文案', '鸡汤'],
+    description: '每日一碗毒鸡汤，专治各种不服'
+  },
+  {
+    id: 'answer-book',
+    name: '答案之书',
+    icon: '🔮',
+    color: 'indigo',
+    url: '/packages/life/pages/answer-book/answer-book',
+    categories: ['休闲工具'],
+    keywords: ['答案', 'Magic8Ball', '指点', '迷津', '占卜'],
+    description: 'Magic 8 Ball 答案之书，为你指点迷津'
   },
 
   {
@@ -646,7 +686,11 @@ const commonTools = [
   tools.find(t => t.id === 'what-to-eat'),        // 今天吃什么
   tools.find(t => t.id === 'life-countdown'),     // 人生A4纸
   tools.find(t => t.id === 'battery-health'),     // 电池健康
+  tools.find(t => t.id === 'quit-smoking'),       // 电子戒烟
+  tools.find(t => t.id === 'electronic-woodfish'), // 电子木鱼
   tools.find(t => t.id === 'bobing'),             // 中秋博饼
+  tools.find(t => t.id === 'poison-soup'),        // 每日毒鸡汤
+  tools.find(t => t.id === 'answer-book'),        // 答案之书
 
   // ===== 财务工具 =====
   tools.find(t => t.id === 'mortgage'),           // 房贷计算

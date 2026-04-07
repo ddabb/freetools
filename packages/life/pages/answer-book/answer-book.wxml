@@ -1,0 +1,92 @@
+<!-- packages/life/pages/answer-book/answer-book.wxml -->
+<view class="container">
+  <!-- 顶部区域 -->
+  <view class="header">
+    <text class="header-title">答案之书 🔮</text>
+    <text class="header-subtitle">心中默念问题，点击水晶球</text>
+  </view>
+
+  <!-- 水晶球区域 -->
+  <view class="magic-ball-container" bindtap="shakeAndAsk">
+    <view class="magic-ball {{isShaking ? 'shake' : ''}} {{hasResult ? 'glow' : ''}}">
+      <view class="ball-shine"></view>
+      <view class="ball-inner">
+        <text class="ball-icon">{{hasResult ? '✨' : '🔮'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答案展示区域 -->
+  <view class="answer-section {{showResult ? 'show' : ''}}">
+    <view class="answer-card {{answerType}}">
+      <view class="answer-type-badge">
+        <text class="type-icon">{{answerType === 'positive' ? '💪' : answerType === 'negative' ? '🤔' : answerType === 'mystical' ? '🌟' : '💭'}}</text>
+        <text class="type-text">{{answerType === 'positive' ? '肯定' : answerType === 'negative' ? '否定' : answerType === 'mystical' ? '玄学' : '中立'}}</text>
+      </view>
+      <text class="answer-text">{{answer}}</text>
+      <view class="answer-actions" wx:if="{{hasResult}}">
+        <view class="action-item" bindtap="copyAnswer">
+          <text>📋</text>
+          <text>复制</text>
+        </view>
+        <view class="action-item" bindtap="shakeAndAsk">
+          <text>🔄</text>
+          <text>再问</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问题输入 -->
+  <view class="question-section">
+    <input
+      class="question-input"
+      type="text"
+      placeholder="输入你的问题..."
+      value="{{question}}"
+      bindinput="onQuestionInput"
+      confirm-type="done"
+      bindconfirm="shakeAndAsk"
+    />
+    <view class="question-hint">
+      <text>输入后点击水晶球获取答案</text>
+    </view>
+  </view>
+
+  <!-- 历史记录按钮 -->
+  <view class="history-toggle" bindtap="toggleHistory">
+    <text class="history-icon">📜</text>
+    <text class="history-text">历史记录 ({{historyList.length}})</text>
+    <text class="toggle-icon {{showHistory ? 'up' : ''}}">▼</text>
+  </view>
+
+  <!-- 历史记录面板 -->
+  <view class="history-panel" wx:if="{{showHistory}}">
+    <view class="history-header">
+      <text class="history-title">我的问答</text>
+      <text class="history-clear" bindtap="clearHistory" wx:if="{{historyList.length > 0}}">清空</text>
+    </view>
+
+    <view class="history-empty" wx:if="{{historyList.length === 0}}">
+      <text>暂无历史记录</text>
+    </view>
+
+    <scroll-view class="history-list" scroll-y wx:else>
+      <view class="history-item {{item.answerType}}" wx:for="{{historyList}}" wx:key="index">
+        <view class="history-q">
+          <text class="q-icon">❓</text>
+          <text class="q-text">{{item.question}}</text>
+        </view>
+        <view class="history-a">
+          <text class="a-type {{item.answerType}}">{{item.answerType === 'positive' ? '💪' : item.answerType === 'negative' ? '🤔' : item.answerType === 'mystical' ? '🌟' : '💭'}}</text>
+          <text class="a-text">{{item.answer}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text bindtap="refreshData">下拉刷新数据</text>
+  </view>
+</view>
