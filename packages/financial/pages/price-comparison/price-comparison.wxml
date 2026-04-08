@@ -1,39 +1,151 @@
 <view class="price-comparison-container">
+  <!-- 商品列表 -->
   <view class="items-list">
-    <view class="item-card" wx:for="{{items}}" wx:key="index">
+    <view class="item-card {{index === bestDealIndex && showResult ? 'best-deal' : ''}} {{item.error ? 'has-error' : ''}}" 
+          wx:for="{{items}}" 
+          wx:key="index">
       <view class="card-header">
-        <text class="item-number">商品{{index + 1}}</text>
-        <text wx:if="{{items.length > 1}}" class="btn-remove" bindtap="removeItem" data-index="{{index}}">删除</text>
+        <view class="item-title">
+          <text class="item-number">{{index + 1}}</text>
+          <input class="name-input" 
+                 placeholder="商品名称（可选）" 
+                 value="{{item.name}}" 
+                 bindinput="onNameInput" 
+                 data-index="{{index}}"
+                 placeholder-class="input-placeholder"/>
+        </view>
+        <text wx:if="{{items.length > 1}}" 
+              class="btn-remove" 
+              bindtap="removeItem" 
+              data-index="{{index}}">删除</text>
       </view>
 
-      <view class="form-item">
-        <text class="label">商品名称</text>
-        <input class="input" placeholder="输入商品名称" value="{{item.name}}" bindinput="onNameInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
+      <view class="form-row">
+        <view class="form-col price-col">
+          <text class="label">价格 ¥</text>
+          <input class="input" 
+                 type="digit" 
+                 placeholder="0.00" 
+                 value="{{item.price}}" 
+                 bindinput="onPriceInput" 
+                 data-index="{{index}}"
+                 placeholder-class="input-placeholder"/>
+        </view>
+        
+        <view class="form-col qty-col">
+          <text class="label">数量</text>
+          <input class="input" 
+                 type="digit" 
+                 placeholder="0" 
+                 value="{{item.quantity}}" 
+                 bindinput="onQuantityInput" 
+                 data-index="{{index}}"
+                 placeholder-class="input-placeholder"/>
+        </view>
+        
+        <view class="form-col unit-col">
+          <text class="label">单位</text>
+          <picker mode="multiSelector" 
+                  range="{{unitOptions}}" 
+                  range-key="label"
+                  value="{{[0, 0]}}"
+                  bindchange="onUnitChange" 
+                  data-index="{{index}}">
+            <view class="unit-picker">
+              <text class="unit-text">{{unitOptions[0].units[0].label}}</text>
+              <text class="unit-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
       </view>
 
-      <view class="form-item">
-        <text class="label">总价</text>
-        <input class="input" type="digit" placeholder="输入总价" value="{{item.price}}" bindinput="onPriceInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
-        <text class="unit">元</text>
+      <!-- 错误提示 -->
+      <view wx:if="{{item.error}}" class="error-tip">
+        <text class="error-icon">⚠️</text>
+        <text class="error-text">{{item.error}}</text>
       </view>
 
-      <view class="form-item">
-        <text class="label">数量/重量</text>
-        <input class="input" type="digit" placeholder="输入数量或重量" value="{{item.spec}}" bindinput="onSpecInput" data-index="{{index}}"  placeholder-class="input-placeholder"/>
-        <text class="unit">kg/个</text>
-      </view>
-
-      <view wx:if="{{item.unitPrice}}" class="unit-price">
-        <text class="label">单价</text>
-        <text class="value">{{item.unitPrice}}</text>
-        <text class="unit">元/kg或元/个</text>
+      <!-- 计算结果 -->
+      <view wx:if="{{showResult && item.unitPrice}}" class="result-section">
+        <view class="unit-price-display">
+          <text class="result-label">折算单价</text>
+          <text class="result-value">¥{{item.unitPrice}}</text>
+          <text class="result-unit">/{{getBaseUnit(item.unit)}}</text>
+        </view>
+        <view wx:if="{{index === bestDealIndex}}" class="best-badge">
+          <text class="best-icon">🏆</text>
+          <text class="best-text">最划算</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="button-group">
-    <button wx:if="{{items.length < 5}}" class="btn-add" bindtap="addItem">添加商品</button>
-    <button class="btn-calculate" bindtap="calculate">计算单价</button>
-    <button class="btn-reset" bindtap="reset">重置</button>
+  <!-- 添加商品按钮 -->
+  <view wx:if="{{items.length < 8}}" class="add-section">
+    <view class="btn-add" bindtap="addItem">
+      <text class="add-icon">+</text>
+      <text class="add-text">添加商品</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn-calculate" bindtap="calculate">
+      <text class="btn-icon">🧮</text>
+      <text>计算对比</text>
+    </button>
+    <button class="btn-share {{showResult ? '' : 'disabled'}}" bindtap="shareResult">
+      <text class="btn-icon">📋</text>
+      <text>复制结果</text>
+    </button>
+    <button class="btn-reset" bindtap="reset">
+      <text class="btn-icon">🔄</text>
+      <text>重置</text>
+    </button>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section">
+    <view class="history-toggle" bindtap="toggleHistory">
+      <text class="history-icon">📜</text>
+      <text class="history-text">历史记录 ({{history.length}})</text>
+      <text class="toggle-icon {{showHistory ? 'up' : ''}}">▼</text>
+    </view>
+    
+    <view wx:if="{{showHistory}}" class="history-panel">
+      <view wx:if="{{history.length === 0}}" class="history-empty">
+        <text>暂无历史记录</text>
+      </view>
+      <scroll-view wx:else scroll-y class="history-list">
+        <view class="history-item" 
+              wx:for="{{history}}" 
+              wx:key="id"
+              bindtap="loadFromHistory"
+              data-index="{{index}}">
+          <view class="history-time">{{item.time}}</view>
+          <view class="history-goods">
+            <text wx:for="{{item.items}}" wx:for-item="goods" wx:key="index" class="goods-tag">
+              {{goods.name}}
+            </text>
+          </view>
+          <view wx:if="{{item.bestIndex >= 0}}" class="history-best">
+            <text>🏆 {{item.items[item.bestIndex].name}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view wx:if="{{history.length > 0}}" class="history-footer">
+        <text class="clear-history" bindtap="clearHistory">清空历史</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 使用提示 -->
+  <view class="tips-section">
+    <view class="tips-title">💡 使用提示</view>
+    <view class="tips-list">
+      <text class="tip-item">• 支持重量(g/kg/斤/两)、体积(ml/L)、数量(个/件/包)等单位</text>
+      <text class="tip-item">• 系统会自动统一换算后比较单价</text>
+      <text class="tip-item">• 例如：500g 和 1kg 可以直接对比</text>
+    </view>
   </view>
 </view>

@@ -2,16 +2,39 @@
 <view class="container">
   <!-- 顶部区域 -->
   <view class="header">
-    <text class="header-title">答案之书 🔮</text>
-    <text class="header-subtitle">心中默念问题，点击水晶球</text>
+    <view class="header-main">
+      <text class="header-title">答案之书</text>
+      <text class="header-icon">🔮</text>
+    </view>
+    <text class="header-subtitle">心中默念问题，摇一摇手机或点击水晶球</text>
+  </view>
+
+  <!-- 设置区域 -->
+  <view class="settings-bar">
+    <view class="setting-item" bindtap="toggleShake">
+      <text class="setting-icon">{{shakeEnabled ? '📳' : '📴'}}</text>
+      <text class="setting-text">摇一摇 {{shakeEnabled ? '开启' : '关闭'}}</text>
+    </view>
+    <view class="setting-item" bindtap="toggleHistory">
+      <text class="setting-icon">📜</text>
+      <text class="setting-text">历史 {{historyList.length}}</text>
+    </view>
   </view>
 
   <!-- 水晶球区域 -->
   <view class="magic-ball-container" bindtap="shakeAndAsk">
-    <view class="magic-ball {{isShaking ? 'shake' : ''}} {{hasResult ? 'glow' : ''}}">
+    <view class="magic-ball {{animationClass}} {{hasResult ? 'has-result' : ''}}">
       <view class="ball-shine"></view>
       <view class="ball-inner">
         <text class="ball-icon">{{hasResult ? '✨' : '🔮'}}</text>
+        <text wx:if="{{!hasResult}}" class="ball-hint">点击或摇一摇</text>
+      </view>
+      <!-- 粒子效果 -->
+      <view class="particles">
+        <view class="particle p1"></view>
+        <view class="particle p2"></view>
+        <view class="particle p3"></view>
+        <view class="particle p4"></view>
       </view>
     </view>
   </view>
@@ -21,17 +44,21 @@
     <view class="answer-card {{answerType}}">
       <view class="answer-type-badge">
         <text class="type-icon">{{answerType === 'positive' ? '💪' : answerType === 'negative' ? '🤔' : answerType === 'mystical' ? '🌟' : '💭'}}</text>
-        <text class="type-text">{{answerType === 'positive' ? '肯定' : answerType === 'negative' ? '否定' : answerType === 'mystical' ? '玄学' : '中立'}}</text>
+        <text class="type-text">{{answerType === 'positive' ? '肯定' : answerType === 'negative' ? '否定' : answerType === 'mystical' ? '神秘' : '中立'}}</text>
       </view>
       <text class="answer-text">{{answer}}</text>
       <view class="answer-actions" wx:if="{{hasResult}}">
-        <view class="action-item" bindtap="copyAnswer">
-          <text>📋</text>
-          <text>复制</text>
+        <view class="action-btn" bindtap="copyAnswer">
+          <text class="btn-icon">📋</text>
+          <text class="btn-text">复制</text>
         </view>
-        <view class="action-item" bindtap="shakeAndAsk">
-          <text>🔄</text>
-          <text>再问</text>
+        <view class="action-btn primary" bindtap="shakeAndAsk">
+          <text class="btn-icon">🔄</text>
+          <text class="btn-text">再问</text>
+        </view>
+        <view class="action-btn" bindtap="shareAnswer">
+          <text class="btn-icon">📤</text>
+          <text class="btn-text">分享</text>
         </view>
       </view>
     </view>
@@ -39,54 +66,91 @@
 
   <!-- 问题输入 -->
   <view class="question-section">
-    <input
-      class="question-input"
-      type="text"
-      placeholder="输入你的问题..."
-      value="{{question}}"
-      bindinput="onQuestionInput"
-      confirm-type="done"
-      bindconfirm="shakeAndAsk"
-    />
+    <view class="input-wrapper">
+      <text class="input-icon">❓</text>
+      <input
+        class="question-input"
+        type="text"
+        placeholder="输入你的问题..."
+        value="{{question}}"
+        bindinput="onQuestionInput"
+        confirm-type="done"
+        bindconfirm="shakeAndAsk"
+        maxlength="100"
+      />
+      <text wx:if="{{question.length > 0}}" class="clear-btn" bindtap="preventBubble">✕</text>
+    </view>
     <view class="question-hint">
-      <text>输入后点击水晶球获取答案</text>
+      <text>💡 输入问题后摇一摇手机或点击水晶球</text>
     </view>
   </view>
 
-  <!-- 历史记录按钮 -->
-  <view class="history-toggle" bindtap="toggleHistory">
-    <text class="history-icon">📜</text>
-    <text class="history-text">历史记录 ({{historyList.length}})</text>
-    <text class="toggle-icon {{showHistory ? 'up' : ''}}">▼</text>
-  </view>
-
   <!-- 历史记录面板 -->
-  <view class="history-panel" wx:if="{{showHistory}}">
+  <view class="history-panel {{showHistory ? 'show' : ''}}" wx:if="{{showHistory}}">
     <view class="history-header">
-      <text class="history-title">我的问答</text>
+      <view class="history-title">
+        <text class="title-icon">📜</text>
+        <text>历史记录</text>
+      </view>
       <text class="history-clear" bindtap="clearHistory" wx:if="{{historyList.length > 0}}">清空</text>
     </view>
 
     <view class="history-empty" wx:if="{{historyList.length === 0}}">
+      <text class="empty-icon">📝</text>
       <text>暂无历史记录</text>
     </view>
 
     <scroll-view class="history-list" scroll-y wx:else>
-      <view class="history-item {{item.answerType}}" wx:for="{{historyList}}" wx:key="index">
-        <view class="history-q">
-          <text class="q-icon">❓</text>
-          <text class="q-text">{{item.question}}</text>
+      <view class="history-item {{item.answerType}}" 
+            wx:for="{{historyList}}" 
+            wx:key="id"
+            bindtap="askAgain"
+            data-index="{{index}}">
+        <view class="history-main">
+          <view class="history-q">
+            <text class="q-icon">Q</text>
+            <text class="q-text">{{item.question}}</text>
+          </view>
+          <view class="history-a">
+            <text class="a-type {{item.answerType}}">
+              {{item.answerType === 'positive' ? '💪' : item.answerType === 'negative' ? '🤔' : item.answerType === 'mystical' ? '🌟' : '💭'}}
+            </text>
+            <text class="a-text">{{item.answer}}</text>
+          </view>
         </view>
-        <view class="history-a">
-          <text class="a-type {{item.answerType}}">{{item.answerType === 'positive' ? '💪' : item.answerType === 'negative' ? '🤔' : item.answerType === 'mystical' ? '🌟' : '💭'}}</text>
-          <text class="a-text">{{item.answer}}</text>
+        <view class="history-meta">
+          <text class="history-time">{{item.time}}</text>
+          <text class="replay-hint">点击再问</text>
         </view>
       </view>
     </scroll-view>
   </view>
 
+  <!-- 答案类型说明 -->
+  <view class="type-legend">
+    <view class="legend-title">答案类型</view>
+    <view class="legend-items">
+      <view class="legend-item">
+        <text class="legend-icon" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">💪</text>
+        <text class="legend-text">肯定</text>
+      </view>
+      <view class="legend-item">
+        <text class="legend-icon" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">🤔</text>
+        <text class="legend-text">否定</text>
+      </view>
+      <view class="legend-item">
+        <text class="legend-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">🌟</text>
+        <text class="legend-text">神秘</text>
+      </view>
+      <view class="legend-item">
+        <text class="legend-icon" style="background: rgba(107, 114, 128, 0.2); color: #6b7280;">💭</text>
+        <text class="legend-text">中立</text>
+      </view>
+    </view>
+  </view>
+
   <!-- 底部提示 -->
   <view class="footer-tip">
-    <text bindtap="refreshData">下拉刷新数据</text>
+    <text>仅供娱乐，人生决策请理性思考</text>
   </view>
 </view>

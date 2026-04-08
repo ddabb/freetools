@@ -69,27 +69,47 @@
       <view class="meal-card" wx:if="{{result.meal.staple}}">
         <text class="card-emoji">{{result.meal.staple.emoji}}</text>
         <text class="card-name">{{result.meal.staple.name}}</text>
-        <text class="card-tag">主食</text>
+        <text class="card-portion">{{result.meal.staple.portionText}}</text>
+        <view class="card-info">
+          <text class="card-tag">主食</text>
+          <text class="card-cal">{{result.meal.staple.actualCalories}}大卡</text>
+        </view>
       </view>
       <view class="meal-card" wx:if="{{result.meal.protein}}">
         <text class="card-emoji">{{result.meal.protein.emoji}}</text>
         <text class="card-name">{{result.meal.protein.name}}</text>
-        <text class="card-tag">蛋白质</text>
+        <text class="card-portion">{{result.meal.protein.portionText}}</text>
+        <view class="card-info">
+          <text class="card-tag">蛋白质</text>
+          <text class="card-cal">{{result.meal.protein.actualCalories}}大卡</text>
+        </view>
       </view>
       <view class="meal-card" wx:if="{{result.meal.vegetable}}">
         <text class="card-emoji">{{result.meal.vegetable.emoji}}</text>
         <text class="card-name">{{result.meal.vegetable.name}}</text>
-        <text class="card-tag">蔬菜</text>
+        <text class="card-portion">{{result.meal.vegetable.portionText}}</text>
+        <view class="card-info">
+          <text class="card-tag">蔬菜</text>
+          <text class="card-cal">{{result.meal.vegetable.actualCalories}}大卡</text>
+        </view>
       </view>
       <view class="meal-card" wx:if="{{result.meal.fruit}}">
         <text class="card-emoji">{{result.meal.fruit.emoji}}</text>
         <text class="card-name">{{result.meal.fruit.name}}</text>
-        <text class="card-tag">水果</text>
+        <text class="card-portion">{{result.meal.fruit.portionText}}</text>
+        <view class="card-info">
+          <text class="card-tag">水果</text>
+          <text class="card-cal">{{result.meal.fruit.actualCalories}}大卡</text>
+        </view>
       </view>
       <view class="meal-card" wx:if="{{result.meal.drink}}">
         <text class="card-emoji">{{result.meal.drink.emoji}}</text>
         <text class="card-name">{{result.meal.drink.name}}</text>
-        <text class="card-tag">饮品</text>
+        <text class="card-portion">{{result.meal.drink.portionText}}</text>
+        <view class="card-info">
+          <text class="card-tag">饮品</text>
+          <text class="card-cal">{{result.meal.drink.actualCalories}}大卡</text>
+        </view>
       </view>
     </view>
 
@@ -139,7 +159,8 @@
                 <view class="food-item">
                   <text class="food-emoji">{{foodItem.emoji}}</text>
                   <text class="food-name">{{foodItem.name}}</text>
-                  <text class="food-calories">{{foodItem.calories}}大卡</text>
+                  <text class="food-portion">{{foodItem.portionDesc}}</text>
+                  <text class="food-calories">约{{(foodItem.portion/100*foodItem.calories).toFixed(0)}}大卡</text>
                 </view>
               </block>
             </view>

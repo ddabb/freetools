@@ -1,62 +1,302 @@
 <!--packages/unit/pages/timezone-converter/timezone-converter.wxml-->
 <view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 时间输入区域 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">基准时间</text>
-        <text class="required-mark">*</text>
+  <!-- 标签切换 -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'converter' ? 'active' : ''}}" bindtap="switchTab" data-tab="converter">
+      <text class="tab-icon">🌍</text>
+      <text class="tab-text">时区转换</text>
+    </view>
+    <view class="tab-item {{activeTab === 'meeting' ? 'active' : ''}}" bindtap="switchTab" data-tab="meeting">
+      <text class="tab-icon">📅</text>
+      <text class="tab-text">会议协调</text>
+    </view>
+  </view>
+
+  <!-- 时区转换页面 -->
+  <view wx:if="{{activeTab === 'converter'}}" class="converter-page">
+    <!-- 基准时间设置 -->
+    <view class="base-time-card">
+      <view class="card-title">
+        <text class="title-icon">📍</text>
+        <text>基准时间</text>
       </view>
+      
+      <view class="base-city" bindtap="showCityPicker" data-mode="base">
+        <view class="city-info">
+          <text class="city-name">{{baseCity.city}}</text>
+          <text class="city-detail">{{baseCity.country}} {{baseCity.offset >= 0 ? '+' : ''}}{{baseCity.offset}}h</text>
+        </view>
+        <text class="change-btn">切换</text>
+      </view>
+
       <view class="time-inputs">
         <picker mode="date" value="{{baseDate}}" bindchange="onBaseDateChange" class="date-picker">
-          <view class="picker-display">
-            <text class="picker-text">{{baseDate || '选择日期'}}</text>
-            <text class="picker-icon">📅</text>
+          <view class="picker-box">
+            <text class="picker-label">日期</text>
+            <text class="picker-value">{{baseDate}}</text>
           </view>
         </picker>
-        <input type="time" value="{{baseTime}}" bindinput="onBaseTimeChange" class="time-input"  placeholder-class="input-placeholder"/>
+        <picker mode="time" value="{{baseTime}}" bindchange="onBaseTimeChange" class="time-picker">
+          <view class="picker-box">
+            <text class="picker-label">时间</text>
+            <text class="picker-value">{{baseTime}}</text>
+          </view>
+        </picker>
       </view>
     </view>
-    
-    <!-- 时区列表 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">时区转换</text>
-        <text class="required-mark">*</text>
+
+    <!-- 快速时间选择 -->
+    <view class="quick-time-section">
+      <text class="section-label">快速设置</text>
+      <view class="quick-times">
+        <view class="quick-item" bindtap="setQuickTime" data-time="09:00" hover-class="quick-item-hover">09:00</view>
+        <view class="quick-item" bindtap="setQuickTime" data-time="14:00" hover-class="quick-item-hover">14:00</view>
+        <view class="quick-item" bindtap="setQuickTime" data-time="20:00" hover-class="quick-item-hover">20:00</view>
+        <view class="quick-item" bindtap="setQuickTime" data-time="22:00" hover-class="quick-item-hover">22:00</view>
       </view>
-      <view class="timezone-list">
-        <view wx:for="{{timezones}}" wx:key="{{index}}" class="timezone-item">
-          <view class="timezone-label">{{item}}</view>
-          <input 
-            type="text" 
-            value="{{timezoneValues[index]}}" 
-            bindinput="onTimezoneValueChange" 
-            data-index="{{index}}"
-            class="timezone-input" 
-            placeholder="输入时间"
-           placeholder-class="input-placeholder"/>
+    </view>
+
+    <!-- 转换结果 -->
+    <view class="results-card">
+      <view class="card-header">
+        <view class="card-title">
+          <text class="title-icon">🌐</text>
+          <text>转换结果</text>
+        </view>
+        <view class="add-btn" bindtap="showCityPicker" data-mode="add">
+          <text class="add-icon">+</text>
+          <text>添加城市</text>
+        </view>
+      </view>
+
+      <view wx:if="{{convertedTimes.length === 0}}" class="empty-tip">
+        <text>点击"添加城市"开始转换</text>
+      </view>
+
+      <view class="city-list">
+        <view class="city-item {{item.isNight ? 'night' : ''}} {{item.isWorkTime ? 'worktime' : ''}}" 
+              wx:for="{{convertedTimes}}" 
+              wx:key="city">
+          <view class="city-main">
+            <view class="city-flag">{{item.isNight ? '🌙' : item.isWorkTime ? '☀️' : '🌆'}}</view>
+            <view class="city-details">
+              <view class="city-name-row">
+                <text class="name">{{item.city}}</text>
+                <text class="country">{{item.country}}</text>
+              </view>
+              <view class="offset-info">
+                <text class="offset-badge">{{item.offsetText}}h</text>
+                <text class="time-status {{item.isWorkTime ? 'work' : item.isNight ? 'night' : 'normal'}}">
+                  {{item.isWorkTime ? '工作时间' : item.isNight ? '夜间' : '非工作时间'}}
+                </text>
+              </view>
+            </view>
+          </view>
+          <view class="city-time">
+            <text class="time-value">{{item.localTime}}</text>
+            <text class="date-value">{{item.localDate}}</text>
+          </view>
+          <view class="city-actions">
+            <text class="action-btn {{item.isFavorite ? 'favorited' : ''}}" 
+                  bindtap="toggleFavorite" 
+                  data-city="{{item.city}}">
+              {{item.isFavorite ? '★' : '☆'}}
+            </text>
+            <text class="action-btn" bindtap="removeSelectedCity" data-city="{{item.city}}">✕</text>
+          </view>
         </view>
       </view>
     </view>
-    
-    <!-- 时区信息 -->
-    <view class="info-section">
-      <view class="info-title">时区信息</view>
-      <view class="info-content">
-        <view class="info-item">
-          <text class="info-term">UTC</text>
-          <text class="info-desc">协调世界时，是世界标准时间</text>
-        </view>
-        <view class="info-item">
-          <text class="info-term">GMT</text>
-          <text class="info-desc">格林威治标准时间，与UTC基本一致</text>
-        </view>
-        <view class="info-item">
-          <text class="info-term">夏令时</text>
-          <text class="info-desc">部分国家在夏季使用的时间调整，通常提前1小时</text>
+
+    <!-- 收藏城市 -->
+    <view wx:if="{{favoriteCities.length > 0}}" class="favorites-card">
+      <view class="card-title">
+        <text class="title-icon">⭐</text>
+        <text>收藏城市</text>
+      </view>
+      <view class="favorite-tags">
+        <view class="favorite-tag {{selectedCities.includes(item) ? 'selected' : ''}}" 
+              wx:for="{{favoriteCities}}" 
+              wx:key="*this"
+              bindtap="setAsBase"
+              data-city="{{item}}">
+          {{item}}
         </view>
       </view>
+    </view>
+
+    <!-- 分享按钮 -->
+    <view wx:if="{{convertedTimes.length > 0}}" class="share-section">
+      <button class="btn-share" bindtap="shareResult">
+        <text>📋 复制结果</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 会议协调页面 -->
+  <view wx:if="{{activeTab === 'meeting'}}" class="meeting-page">
+    <!-- 基准设置 -->
+    <view class="base-time-card">
+      <view class="card-title">
+        <text class="title-icon">📍</text>
+        <text>基准时间</text>
+      </view>
+      
+      <view class="base-city" bindtap="showCityPicker" data-mode="base">
+        <view class="city-info">
+          <text class="city-name">{{baseCity.city}}</text>
+          <text class="city-detail">{{baseCity.country}}</text>
+        </view>
+        <text class="change-btn">切换</text>
+      </view>
+
+      <view class="time-inputs">
+        <picker mode="date" value="{{baseDate}}" bindchange="onBaseDateChange" class="date-picker">
+          <view class="picker-box">
+            <text class="picker-label">日期</text>
+            <text class="picker-value">{{baseDate}}</text>
+          </view>
+        </picker>
+        <picker mode="time" value="{{baseTime}}" bindchange="onBaseTimeChange" class="time-picker">
+          <view class="picker-box">
+            <text class="picker-label">时间</text>
+            <text class="picker-value">{{baseTime}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 会议时长 -->
+    <view class="duration-section">
+      <text class="section-label">会议时长</text>
+      <view class="duration-options">
+        <view class="duration-item {{meetingDuration === 30 ? 'active' : ''}}" bindtap="onDurationChange" data-value="30" hover-class="duration-item-hover">30分钟</view>
+        <view class="duration-item {{meetingDuration === 60 ? 'active' : ''}}" bindtap="onDurationChange" data-value="60" hover-class="duration-item-hover">1小时</view>
+        <view class="duration-item {{meetingDuration === 90 ? 'active' : ''}}" bindtap="onDurationChange" data-value="90" hover-class="duration-item-hover">1.5小时</view>
+        <view class="duration-item {{meetingDuration === 120 ? 'active' : ''}}" bindtap="onDurationChange" data-value="120" hover-class="duration-item-hover">2小时</view>
+      </view>
+    </view>
+
+    <!-- 参与城市 -->
+    <view class="meeting-cities-card">
+      <view class="card-header">
+        <view class="card-title">
+          <text class="title-icon">👥</text>
+          <text>参与城市</text>
+        </view>
+        <view class="add-btn" bindtap="addMeetingCity">
+          <text class="add-icon">+</text>
+          <text>添加</text>
+        </view>
+      </view>
+
+      <view wx:if="{{meetingCities.length === 0}}" class="empty-tip">
+        <text>添加参与会议的城市</text>
+      </view>
+
+      <view class="meeting-city-list">
+        <view class="meeting-city-item" wx:for="{{meetingCities}}" wx:key="*this">
+          <text class="city-name">{{item}}</text>
+          <text class="remove-btn" bindtap="removeMeetingCity" data-city="{{item}}">✕</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 会议时间分析 -->
+    <view wx:if="{{meetingResults.length > 0}}" class="analysis-card">
+      <view class="card-title">
+        <text class="title-icon">📊</text>
+        <text>时间分析</text>
+      </view>
+      
+      <view class="analysis-list">
+        <view class="analysis-item {{item.isWorkTime ? 'good' : item.isNight ? 'bad' : 'warning'}}" 
+              wx:for="{{meetingResults}}" 
+              wx:key="city">
+          <view class="analysis-city">
+            <text class="city-flag">{{item.isWorkTime ? '✅' : item.isNight ? '❌' : '⚠️'}}</text>
+            <text class="city-name">{{item.city}}</text>
+            <text class="country">{{item.country}}</text>
+          </view>
+          <view class="analysis-time">
+            <text class="local-time">{{item.localTime}}</text>
+            <text class="time-tag {{item.isWorkTime ? 'work' : item.isNight ? 'night' : 'overtime'}}">
+              {{item.isWorkTime ? '工作时间' : item.isNight ? '深夜' : '加班时间'}}
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 建议 -->
+      <view class="suggestion-box">
+        <view class="suggestion-title">💡 建议</view>
+        <view wx:if="{{meetingResults.every(r => r.isWorkTime)}}" class="suggestion-good">
+          所有城市都在工作时间，非常适合开会！
+        </view>
+        <view wx:elif="{{meetingResults.some(r => r.isNight)}}" class="suggestion-bad">
+          有城市处于深夜，建议调整会议时间
+        </view>
+        <view wx:else class="suggestion-warning">
+          部分城市处于非工作时间，请注意协调
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 城市选择器弹窗 -->
+  <view wx:if="{{showCityPicker}}" class="city-picker-modal" bindtap="closeCityPicker">
+    <view class="picker-content" catchtap="preventClose">
+      <view class="picker-header">
+        <text class="picker-title">选择城市</text>
+        <text class="picker-close" bindtap="closeCityPicker">✕</text>
+      </view>
+      
+      <view class="search-box">
+        <text class="search-icon">🔍</text>
+        <input class="search-input" 
+               placeholder="搜索城市或国家" 
+               value="{{searchKeyword}}"
+               bindinput="onSearchInput"/>
+      </view>
+
+      <scroll-view scroll-y class="city-scroll">
+        <!-- 收藏城市优先显示 -->
+        <view wx:if="{{favoriteCities.length > 0 && !searchKeyword}}" class="city-group">
+          <view class="group-title">⭐ 收藏城市</view>
+          <view class="city-options">
+            <view class="city-option" 
+                  wx:for="{{favoriteCities}}" 
+                  wx:key="*this"
+                  bindtap="selectCity"
+                  data-city="{{item}}">
+              <text class="option-name">{{item}}</text>
+              <text class="option-check {{pickerMode === 'add' && selectedCities.includes(item) ? 'checked' : pickerMode === 'meeting' && meetingCities.includes(item) ? 'checked' : ''}}">
+                {{pickerMode === 'add' && selectedCities.includes(item) ? '✓' : pickerMode === 'meeting' && meetingCities.includes(item) ? '✓' : ''}}
+              </text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 所有城市 -->
+        <view class="city-group">
+          <view class="group-title">{{searchKeyword ? '搜索结果' : '所有城市'}}</view>
+          <view class="city-options">
+            <view class="city-option" 
+                  wx:for="{{filteredCities}}" 
+                  wx:key="city"
+                  bindtap="selectCity"
+                  data-city="{{item.city}}">
+              <view class="option-info">
+                <text class="option-name">{{item.city}}</text>
+                <text class="option-detail">{{item.country}} {{item.abbr}} {{item.offset >= 0 ? '+' : ''}}{{item.offset}}h</text>
+              </view>
+              <text class="option-check {{pickerMode === 'add' && selectedCities.includes(item.city) ? 'checked' : pickerMode === 'meeting' && meetingCities.includes(item.city) ? 'checked' : ''}}">
+                {{pickerMode === 'add' && selectedCities.includes(item.city) ? '✓' : pickerMode === 'meeting' && meetingCities.includes(item.city) ? '✓' : ''}}
+              </text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
     </view>
   </view>
 </view>

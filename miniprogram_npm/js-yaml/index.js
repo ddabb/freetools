@@ -4,7 +4,7 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1775608041301, function(require, module, exports) {
+__DEFINE__(1775635945516, function(require, module, exports) {
 
 
 
@@ -53,8 +53,8 @@ module.exports.safeLoad            = renamed('safeLoad', 'load');
 module.exports.safeLoadAll         = renamed('safeLoadAll', 'loadAll');
 module.exports.safeDump            = renamed('safeDump', 'dump');
 
-}, function(modId) {var map = {"./lib/loader":1775608041302,"./lib/dumper":1775608041325,"./lib/type":1775608041311,"./lib/schema":1775608041310,"./lib/schema/failsafe":1775608041309,"./lib/schema/json":1775608041308,"./lib/schema/core":1775608041307,"./lib/schema/default":1775608041306,"./lib/exception":1775608041304,"./lib/type/binary":1775608041321,"./lib/type/float":1775608041318,"./lib/type/map":1775608041314,"./lib/type/null":1775608041315,"./lib/type/pairs":1775608041323,"./lib/type/set":1775608041324,"./lib/type/timestamp":1775608041319,"./lib/type/bool":1775608041316,"./lib/type/int":1775608041317,"./lib/type/merge":1775608041320,"./lib/type/omap":1775608041322,"./lib/type/seq":1775608041313,"./lib/type/str":1775608041312}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041302, function(require, module, exports) {
+}, function(modId) {var map = {"./lib/loader":1775635945517,"./lib/dumper":1775635945540,"./lib/type":1775635945526,"./lib/schema":1775635945525,"./lib/schema/failsafe":1775635945524,"./lib/schema/json":1775635945523,"./lib/schema/core":1775635945522,"./lib/schema/default":1775635945521,"./lib/exception":1775635945519,"./lib/type/binary":1775635945536,"./lib/type/float":1775635945533,"./lib/type/map":1775635945529,"./lib/type/null":1775635945530,"./lib/type/pairs":1775635945538,"./lib/type/set":1775635945539,"./lib/type/timestamp":1775635945534,"./lib/type/bool":1775635945531,"./lib/type/int":1775635945532,"./lib/type/merge":1775635945535,"./lib/type/omap":1775635945537,"./lib/type/seq":1775635945528,"./lib/type/str":1775635945527}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945517, function(require, module, exports) {
 
 
 /*eslint-disable max-len,no-use-before-define*/
@@ -1789,8 +1789,8 @@ function load(input, options) {
 module.exports.loadAll = loadAll;
 module.exports.load    = load;
 
-}, function(modId) { var map = {"./common":1775608041303,"./exception":1775608041304,"./snippet":1775608041305,"./schema/default":1775608041306}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041303, function(require, module, exports) {
+}, function(modId) { var map = {"./common":1775635945518,"./exception":1775635945519,"./snippet":1775635945520,"./schema/default":1775635945521}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945518, function(require, module, exports) {
 
 
 
@@ -1852,7 +1852,7 @@ module.exports.isNegativeZero = isNegativeZero;
 module.exports.extend         = extend;
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041304, function(require, module, exports) {
+__DEFINE__(1775635945519, function(require, module, exports) {
 // YAML error class. http://stackoverflow.com/questions/8458984
 //
 
@@ -1910,7 +1910,7 @@ YAMLException.prototype.toString = function toString(compact) {
 module.exports = YAMLException;
 
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041305, function(require, module, exports) {
+__DEFINE__(1775635945520, function(require, module, exports) {
 
 
 
@@ -2013,8 +2013,8 @@ function makeSnippet(mark, options) {
 
 module.exports = makeSnippet;
 
-}, function(modId) { var map = {"./common":1775608041303}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041306, function(require, module, exports) {
+}, function(modId) { var map = {"./common":1775635945518}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945521, function(require, module, exports) {
 // JS-YAML's default schema for `safeLoad` function.
 // It is not described in the YAML specification.
 //
@@ -2038,8 +2038,8 @@ module.exports = require('./core').extend({
   ]
 });
 
-}, function(modId) { var map = {"./core":1775608041307,"../type/timestamp":1775608041319,"../type/merge":1775608041320,"../type/binary":1775608041321,"../type/omap":1775608041322,"../type/pairs":1775608041323,"../type/set":1775608041324}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041307, function(require, module, exports) {
+}, function(modId) { var map = {"./core":1775635945522,"../type/timestamp":1775635945534,"../type/merge":1775635945535,"../type/binary":1775635945536,"../type/omap":1775635945537,"../type/pairs":1775635945538,"../type/set":1775635945539}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945522, function(require, module, exports) {
 // Standard YAML's Core schema.
 // http://www.yaml.org/spec/1.2/spec.html#id2804923
 //
@@ -2052,8 +2052,8 @@ __DEFINE__(1775608041307, function(require, module, exports) {
 
 module.exports = require('./json');
 
-}, function(modId) { var map = {"./json":1775608041308}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041308, function(require, module, exports) {
+}, function(modId) { var map = {"./json":1775635945523}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945523, function(require, module, exports) {
 // Standard YAML's JSON schema.
 // http://www.yaml.org/spec/1.2/spec.html#id2803231
 //
@@ -2074,8 +2074,8 @@ module.exports = require('./failsafe').extend({
   ]
 });
 
-}, function(modId) { var map = {"./failsafe":1775608041309,"../type/null":1775608041315,"../type/bool":1775608041316,"../type/int":1775608041317,"../type/float":1775608041318}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041309, function(require, module, exports) {
+}, function(modId) { var map = {"./failsafe":1775635945524,"../type/null":1775635945530,"../type/bool":1775635945531,"../type/int":1775635945532,"../type/float":1775635945533}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945524, function(require, module, exports) {
 // Standard YAML's Failsafe schema.
 // http://www.yaml.org/spec/1.2/spec.html#id2802346
 
@@ -2094,8 +2094,8 @@ module.exports = new Schema({
   ]
 });
 
-}, function(modId) { var map = {"../schema":1775608041310,"../type/str":1775608041312,"../type/seq":1775608041313,"../type/map":1775608041314}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041310, function(require, module, exports) {
+}, function(modId) { var map = {"../schema":1775635945525,"../type/str":1775635945527,"../type/seq":1775635945528,"../type/map":1775635945529}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945525, function(require, module, exports) {
 
 
 /*eslint-disable max-len*/
@@ -2218,8 +2218,8 @@ Schema.prototype.extend = function extend(definition) {
 
 module.exports = Schema;
 
-}, function(modId) { var map = {"./exception":1775608041304,"./type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041311, function(require, module, exports) {
+}, function(modId) { var map = {"./exception":1775635945519,"./type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945526, function(require, module, exports) {
 
 
 var YAMLException = require('./exception');
@@ -2287,8 +2287,8 @@ function Type(tag, options) {
 
 module.exports = Type;
 
-}, function(modId) { var map = {"./exception":1775608041304}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041312, function(require, module, exports) {
+}, function(modId) { var map = {"./exception":1775635945519}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945527, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2298,8 +2298,8 @@ module.exports = new Type('tag:yaml.org,2002:str', {
   construct: function (data) { return data !== null ? data : ''; }
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041313, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945528, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2309,8 +2309,8 @@ module.exports = new Type('tag:yaml.org,2002:seq', {
   construct: function (data) { return data !== null ? data : []; }
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041314, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945529, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2320,8 +2320,8 @@ module.exports = new Type('tag:yaml.org,2002:map', {
   construct: function (data) { return data !== null ? data : {}; }
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041315, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945530, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2358,8 +2358,8 @@ module.exports = new Type('tag:yaml.org,2002:null', {
   defaultStyle: 'lowercase'
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041316, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945531, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2396,8 +2396,8 @@ module.exports = new Type('tag:yaml.org,2002:bool', {
   defaultStyle: 'lowercase'
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041317, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945532, function(require, module, exports) {
 
 
 var common = require('../common');
@@ -2555,8 +2555,8 @@ module.exports = new Type('tag:yaml.org,2002:int', {
   }
 });
 
-}, function(modId) { var map = {"../common":1775608041303,"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041318, function(require, module, exports) {
+}, function(modId) { var map = {"../common":1775635945518,"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945533, function(require, module, exports) {
 
 
 var common = require('../common');
@@ -2655,8 +2655,8 @@ module.exports = new Type('tag:yaml.org,2002:float', {
   defaultStyle: 'lowercase'
 });
 
-}, function(modId) { var map = {"../common":1775608041303,"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041319, function(require, module, exports) {
+}, function(modId) { var map = {"../common":1775635945518,"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945534, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2746,8 +2746,8 @@ module.exports = new Type('tag:yaml.org,2002:timestamp', {
   represent: representYamlTimestamp
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041320, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945535, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2761,8 +2761,8 @@ module.exports = new Type('tag:yaml.org,2002:merge', {
   resolve: resolveYamlMerge
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041321, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945536, function(require, module, exports) {
 
 
 /*eslint-disable no-bitwise*/
@@ -2889,8 +2889,8 @@ module.exports = new Type('tag:yaml.org,2002:binary', {
   represent: representYamlBinary
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041322, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945537, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2936,8 +2936,8 @@ module.exports = new Type('tag:yaml.org,2002:omap', {
   construct: constructYamlOmap
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041323, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945538, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -2992,8 +2992,8 @@ module.exports = new Type('tag:yaml.org,2002:pairs', {
   construct: constructYamlPairs
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041324, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945539, function(require, module, exports) {
 
 
 var Type = require('../type');
@@ -3024,8 +3024,8 @@ module.exports = new Type('tag:yaml.org,2002:set', {
   construct: constructYamlSet
 });
 
-}, function(modId) { var map = {"../type":1775608041311}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1775608041325, function(require, module, exports) {
+}, function(modId) { var map = {"../type":1775635945526}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1775635945540, function(require, module, exports) {
 
 
 /*eslint-disable no-use-before-define*/
@@ -3992,8 +3992,8 @@ function dump(input, options) {
 
 module.exports.dump = dump;
 
-}, function(modId) { var map = {"./common":1775608041303,"./exception":1775608041304,"./schema/default":1775608041306}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1775608041301);
+}, function(modId) { var map = {"./common":1775635945518,"./exception":1775635945519,"./schema/default":1775635945521}; return __REQUIRE__(map[modId], modId); })
+return __REQUIRE__(1775635945516);
 })()
 //miniprogram-npm-outsideDeps=[]
 //# sourceMappingURL=index.js.map

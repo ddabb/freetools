@@ -1,121 +1,129 @@
-// 食物数据（包含热量信息，单位：大卡/100g）
+/**
+ * 食物数据优化说明：
+ * - calories: 热量 (大卡/100g)
+ * - portion: 合理一份的重量 (g/ml/个)
+ * - portionUnit: 份量单位
+ * - portionDesc: 份量描述（如"1个中等"）
+ */
+
+// 食物数据（包含热量信息和合理份量）
 const utils = require('../../../../utils/index');
 
 const foodData = {
   // 水果类
   fruits: [
-    { name: '苹果', emoji: '🍎', calories: 52 },
-    { name: '香蕉', emoji: '🍌', calories: 89 },
-    { name: '葡萄', emoji: '🍇', calories: 69 },
-    { name: '草莓', emoji: '🍓', calories: 32 },
-    { name: '桃子', emoji: '🍑', calories: 39 },
-    { name: '西瓜', emoji: '🍉', calories: 30 },
-    { name: '柠檬', emoji: '🍋', calories: 29 },
-    { name: '梨子', emoji: '🍐', calories: 57 },
-    { name: '芒果', emoji: '🥭', calories: 60 },
-    { name: '菠萝', emoji: '🍍', calories: 50 },
-    { name: '椰子', emoji: '🥥', calories: 354 },
-    { name: '猕猴桃', emoji: '🥝', calories: 61 },
-    { name: '橙子', emoji: '🍊', calories: 47 },
-    { name: '樱桃', emoji: '🍒', calories: 50 },
-    { name: '哈密瓜', emoji: '🍈', calories: 34 },
-    { name: '蓝莓', emoji: '🫐', calories: 57 },
-    { name: '石榴', emoji: '🍯', calories: 83 },
-    { name: '龙眼', emoji: '🐉', calories: 60 },
-    { name: '榴莲', emoji: '💀', calories: 147 }
+    { name: '苹果', emoji: '🍎', calories: 52, portion: 200, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '香蕉', emoji: '🍌', calories: 89, portion: 120, portionUnit: 'g', portionDesc: '1根' },
+    { name: '葡萄', emoji: '🍇', calories: 69, portion: 150, portionUnit: 'g', portionDesc: '约20颗' },
+    { name: '草莓', emoji: '🍓', calories: 32, portion: 150, portionUnit: 'g', portionDesc: '约10颗' },
+    { name: '桃子', emoji: '🍑', calories: 39, portion: 200, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '西瓜', emoji: '🍉', calories: 30, portion: 300, portionUnit: 'g', portionDesc: '约2块' },
+    { name: '柠檬', emoji: '🍋', calories: 29, portion: 50, portionUnit: 'g', portionDesc: '半个' },
+    { name: '梨子', emoji: '🍐', calories: 57, portion: 200, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '芒果', emoji: '🥭', calories: 60, portion: 150, portionUnit: 'g', portionDesc: '半个' },
+    { name: '菠萝', emoji: '🍍', calories: 50, portion: 150, portionUnit: 'g', portionDesc: '约2片' },
+    { name: '椰子', emoji: '🥥', calories: 354, portion: 100, portionUnit: 'g', portionDesc: '适量' },
+    { name: '猕猴桃', emoji: '🥝', calories: 61, portion: 100, portionUnit: 'g', portionDesc: '1个' },
+    { name: '橙子', emoji: '🍊', calories: 47, portion: 200, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '樱桃', emoji: '🍒', calories: 50, portion: 100, portionUnit: 'g', portionDesc: '约15颗' },
+    { name: '哈密瓜', emoji: '🍈', calories: 34, portion: 250, portionUnit: 'g', portionDesc: '约2块' },
+    { name: '蓝莓', emoji: '🫐', calories: 57, portion: 100, portionUnit: 'g', portionDesc: '约小半盒' },
+    { name: '石榴', emoji: '🍯', calories: 83, portion: 100, portionUnit: 'g', portionDesc: '半个' },
+    { name: '龙眼', emoji: '🐉', calories: 60, portion: 80, portionUnit: 'g', portionDesc: '约10颗' },
+    { name: '榴莲', emoji: '💀', calories: 147, portion: 80, portionUnit: 'g', portionDesc: '约2瓣' }
   ],
-  // 蔬菜类
+  // 蔬菜类（注意：日常做菜配菜，用量较少）
   vegetables: [
-    { name: '西兰花', emoji: '🥦', calories: 34 },
-    { name: '胡萝卜', emoji: '🥕', calories: 41 },
-    { name: '玉米', emoji: '🌽', calories: 86 },
-    { name: '茄子', emoji: '🍆', calories: 25 },
-    { name: '黄瓜', emoji: '🥒', calories: 15 },
-    { name: '蘑菇', emoji: '🍄', calories: 22 },
-    { name: '番茄', emoji: '🍅', calories: 18 },
-    { name: '菠菜', emoji: '🥬', calories: 23 },
-    { name: '土豆', emoji: '🥔', calories: 77 },
-    { name: '南瓜', emoji: '🎃', calories: 26 },
-    { name: '红薯', emoji: '🍠', calories: 86 },
-    { name: '洋葱', emoji: '🧅', calories: 40 },
-    { name: '大蒜', emoji: '🧄', calories: 149 },
-    { name: '青椒', emoji: '🫑', calories: 20 },
-    { name: '生菜', emoji: '🥗', calories: 15 },
-    { name: '卷心菜', emoji: '🥬', calories: 25 },
-    { name: '芦笋', emoji: '🌿', calories: 20 },
-    { name: '芹菜', emoji: '🥒', calories: 16 }
+    { name: '西兰花', emoji: '🥦', calories: 34, portion: 100, portionUnit: 'g', portionDesc: '约小半棵' },
+    { name: '胡萝卜', emoji: '🥕', calories: 41, portion: 80, portionUnit: 'g', portionDesc: '约半根' },
+    { name: '玉米', emoji: '🌽', calories: 86, portion: 150, portionUnit: 'g', portionDesc: '1根中等' },
+    { name: '茄子', emoji: '🍆', calories: 25, portion: 100, portionUnit: 'g', portionDesc: '半个' },
+    { name: '黄瓜', emoji: '🥒', calories: 15, portion: 150, portionUnit: 'g', portionDesc: '半根/凉拌1根' },
+    { name: '蘑菇', emoji: '🍄', calories: 22, portion: 80, portionUnit: 'g', portionDesc: '约5朵' },
+    { name: '番茄', emoji: '🍅', calories: 18, portion: 150, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '菠菜', emoji: '🥬', calories: 23, portion: 100, portionUnit: 'g', portionDesc: '约1把' },
+    { name: '土豆', emoji: '🥔', calories: 77, portion: 150, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '南瓜', emoji: '🎃', calories: 26, portion: 200, portionUnit: 'g', portionDesc: '约3块' },
+    { name: '红薯', emoji: '🍠', calories: 86, portion: 150, portionUnit: 'g', portionDesc: '半个中等' },
+    { name: '洋葱', emoji: '🧅', calories: 40, portion: 50, portionUnit: 'g', portionDesc: '半个' },
+    { name: '大蒜', emoji: '🧄', calories: 149, portion: 10, portionUnit: 'g', portionDesc: '2-3瓣/调味料' },
+    { name: '青椒', emoji: '🫑', calories: 20, portion: 80, portionUnit: 'g', portionDesc: '1个' },
+    { name: '生菜', emoji: '🥗', calories: 15, portion: 100, portionUnit: 'g', portionDesc: '约5片' },
+    { name: '卷心菜', emoji: '🥬', calories: 25, portion: 150, portionUnit: 'g', portionDesc: '约3片' },
+    { name: '芦笋', emoji: '🌿', calories: 20, portion: 100, portionUnit: 'g', portionDesc: '约5根' },
+    { name: '芹菜', emoji: '🥒', calories: 16, portion: 100, portionUnit: 'g', portionDesc: '约2根' }
   ],
   // 主食类
   staples: [
-    { name: '面包', emoji: '🍞', calories: 265 },
-    { name: '米饭', emoji: '🍚', calories: 130 },
-    { name: '面条', emoji: '🍜', calories: 138 },
-    { name: '饺子', emoji: '🥟', calories: 250 },
-    { name: '披萨', emoji: '🍕', calories: 266 },
-    { name: '汉堡', emoji: '🍔', calories: 250 },
-    { name: '薯条', emoji: '🍟', calories: 312 },
-    { name: '馒头', emoji: '🥠', calories: 221 },
-    { name: '粥', emoji: '🍲', calories: 65 },
-    { name: '包子', emoji: '🥟', calories: 230 },
-    { name: '煎饼', emoji: '🌯', calories: 290 },
-    { name: '热狗', emoji: '🌭', calories: 290 },
-    { name: '三明治', emoji: '🥪', calories: 250 },
-    { name: '意面', emoji: '🍝', calories: 158 },
-    { name: '寿司', emoji: '🍣', calories: 143 },
-    { name: '饭团', emoji: '🍙', calories: 170 },
-    { name: '墨西哥卷', emoji: '🌮', calories: 250 }
+    { name: '面包', emoji: '🍞', calories: 265, portion: 100, portionUnit: 'g', portionDesc: '2片' },
+    { name: '米饭', emoji: '🍚', calories: 130, portion: 200, portionUnit: 'g', portionDesc: '1小碗' },
+    { name: '面条', emoji: '🍜', calories: 138, portion: 250, portionUnit: 'g', portionDesc: '1小碗' },
+    { name: '饺子', emoji: '🥟', calories: 250, portion: 150, portionUnit: 'g', portionDesc: '约6个' },
+    { name: '披萨', emoji: '🍕', calories: 266, portion: 150, portionUnit: 'g', portionDesc: '2小块' },
+    { name: '汉堡', emoji: '🍔', calories: 250, portion: 180, portionUnit: 'g', portionDesc: '1个' },
+    { name: '薯条', emoji: '🍟', calories: 312, portion: 100, portionUnit: 'g', portionDesc: '中份' },
+    { name: '馒头', emoji: '🥠', calories: 221, portion: 100, portionUnit: 'g', portionDesc: '1个' },
+    { name: '粥', emoji: '🍲', calories: 65, portion: 300, portionUnit: 'ml', portionDesc: '1碗' },
+    { name: '包子', emoji: '🥟', calories: 230, portion: 120, portionUnit: 'g', portionDesc: '1个中等' },
+    { name: '煎饼', emoji: '🌯', calories: 290, portion: 150, portionUnit: 'g', portionDesc: '1个' },
+    { name: '热狗', emoji: '🌭', calories: 290, portion: 120, portionUnit: 'g', portionDesc: '1根' },
+    { name: '三明治', emoji: '🥪', calories: 250, portion: 150, portionUnit: 'g', portionDesc: '1个' },
+    { name: '意面', emoji: '🍝', calories: 158, portion: 200, portionUnit: 'g', portionDesc: '1小盘' },
+    { name: '寿司', emoji: '🍣', calories: 143, portion: 150, portionUnit: 'g', portionDesc: '约4个' },
+    { name: '饭团', emoji: '🍙', calories: 170, portion: 100, portionUnit: 'g', portionDesc: '1个' },
+    { name: '墨西哥卷', emoji: '🌮', calories: 250, portion: 150, portionUnit: 'g', portionDesc: '1个' }
   ],
   // 肉类与蛋白质
   proteins: [
-    { name: '鸡腿', emoji: '🍗', calories: 167 },
-    { name: '培根', emoji: '🥓', calories: 418 },
-    { name: '火腿', emoji: '🍖', calories: 340 },
-    { name: '鸡蛋', emoji: '🍳', calories: 155 },
-    { name: '鱼', emoji: '🐟', calories: 208 },
-    { name: '虾', emoji: '🦐', calories: 99 },
-    { name: '牛排', emoji: '🥩', calories: 250 },
-    { name: '蟹', emoji: '🦀', calories: 113 },
-    { name: '章鱼', emoji: '🐙', calories: 82 },
-    { name: '贝类', emoji: '🦪', calories: 72 },
-    { name: '奶酪', emoji: '🧀', calories: 350 }
+    { name: '鸡腿', emoji: '🍗', calories: 167, portion: 120, portionUnit: 'g', portionDesc: '1个' },
+    { name: '培根', emoji: '🥓', calories: 418, portion: 50, portionUnit: 'g', portionDesc: '约2片' },
+    { name: '火腿', emoji: '🍖', calories: 340, portion: 60, portionUnit: 'g', portionDesc: '约3片' },
+    { name: '鸡蛋', emoji: '🍳', calories: 155, portion: 60, portionUnit: 'g', portionDesc: '1个(约50g)' },
+    { name: '鱼', emoji: '🐟', calories: 208, portion: 120, portionUnit: 'g', portionDesc: '约一块' },
+    { name: '虾', emoji: '🦐', calories: 99, portion: 80, portionUnit: 'g', portionDesc: '约5-6只' },
+    { name: '牛排', emoji: '🥩', calories: 250, portion: 150, portionUnit: 'g', portionDesc: '1块' },
+    { name: '蟹', emoji: '🦀', calories: 113, portion: 100, portionUnit: 'g', portionDesc: '约2只' },
+    { name: '章鱼', emoji: '🐙', calories: 82, portion: 80, portionUnit: 'g', portionDesc: '适量' },
+    { name: '贝类', emoji: '🦪', calories: 72, portion: 80, portionUnit: 'g', portionDesc: '约5个' },
+    { name: '奶酪', emoji: '🧀', calories: 350, portion: 30, portionUnit: 'g', portionDesc: '约2片' }
   ],
   // 饮品类
   drinks: [
-    { name: '咖啡', emoji: '☕', calories: 2 },
-    { name: '茶', emoji: '🍵', calories: 1 },
-    { name: '牛奶', emoji: '🥛', calories: 42 },
-    { name: '啤酒', emoji: '🍺', calories: 43 },
-    { name: '红酒', emoji: '🍷', calories: 85 },
-    { name: '果汁', emoji: '🧃', calories: 50 },
-    { name: '汽水', emoji: '🥤', calories: 40 },
-    { name: '奶茶', emoji: '🧋', calories: 150 },
-    { name: '冰沙', emoji: '🍹', calories: 100 },
-    { name: '酸奶', emoji: '🍶', calories: 59 }
+    { name: '咖啡', emoji: '☕', calories: 2, portion: 240, portionUnit: 'ml', portionDesc: '1杯(无糖)' },
+    { name: '茶', emoji: '🍵', calories: 1, portion: 300, portionUnit: 'ml', portionDesc: '1杯' },
+    { name: '牛奶', emoji: '🥛', calories: 42, portion: 250, portionUnit: 'ml', portionDesc: '1盒/杯' },
+    { name: '啤酒', emoji: '🍺', calories: 43, portion: 330, portionUnit: 'ml', portionDesc: '1罐' },
+    { name: '红酒', emoji: '🍷', calories: 85, portion: 150, portionUnit: 'ml', portionDesc: '约1杯' },
+    { name: '果汁', emoji: '🧃', calories: 50, portion: 250, portionUnit: 'ml', portionDesc: '1盒' },
+    { name: '汽水', emoji: '🥤', calories: 40, portion: 330, portionUnit: 'ml', portionDesc: '1罐' },
+    { name: '奶茶', emoji: '🧋', calories: 150, portion: 500, portionUnit: 'ml', portionDesc: '1杯(中杯)' },
+    { name: '冰沙', emoji: '🍹', calories: 100, portion: 350, portionUnit: 'ml', portionDesc: '1杯' },
+    { name: '酸奶', emoji: '🍶', calories: 59, portion: 200, portionUnit: 'ml', portionDesc: '1杯' }
   ],
   // 甜点类
   desserts: [
-    { name: '蛋糕', emoji: '🎂', calories: 340 },
-    { name: '冰淇淋', emoji: '🍦', calories: 207 },
-    { name: '甜甜圈', emoji: '🍩', calories: 300 },
-    { name: '巧克力', emoji: '🍫', calories: 546 },
-    { name: '饼干', emoji: '🍪', calories: 470 },
-    { name: '布丁', emoji: '🍮', calories: 130 },
-    { name: 'cupcake', emoji: '🧁', calories: 350 },
-    { name: '华夫饼', emoji: '🧇', calories: 290 },
-    { name: '可颂', emoji: '🥐', calories: 410 },
-    { name: '雪糕', emoji: '🍨', calories: 200 },
-    { name: '刨冰', emoji: '🍧', calories: 100 },
-    { name: '糖果', emoji: '🍬', calories: 400 },
-    { name: '爆米花', emoji: '🍿', calories: 387 }
+    { name: '蛋糕', emoji: '🎂', calories: 340, portion: 100, portionUnit: 'g', portionDesc: '1小块' },
+    { name: '冰淇淋', emoji: '🍦', calories: 207, portion: 80, portionUnit: 'g', portionDesc: '1球' },
+    { name: '甜甜圈', emoji: '🍩', calories: 300, portion: 80, portionUnit: 'g', portionDesc: '1个' },
+    { name: '巧克力', emoji: '🍫', calories: 546, portion: 30, portionUnit: 'g', portionDesc: '约2小块' },
+    { name: '饼干', emoji: '🍪', calories: 470, portion: 50, portionUnit: 'g', portionDesc: '约5块' },
+    { name: '布丁', emoji: '🍮', calories: 130, portion: 100, portionUnit: 'g', portionDesc: '1个' },
+    { name: 'Cupcake', emoji: '🧁', calories: 350, portion: 80, portionUnit: 'g', portionDesc: '1个' },
+    { name: '华夫饼', emoji: '🧇', calories: 290, portion: 100, portionUnit: 'g', portionDesc: '1块' },
+    { name: '可颂', emoji: '🥐', calories: 410, portion: 80, portionUnit: 'g', portionDesc: '1个' },
+    { name: '雪糕', emoji: '🍨', calories: 200, portion: 80, portionUnit: 'g', portionDesc: '1支' },
+    { name: '刨冰', emoji: '🍧', calories: 100, portion: 250, portionUnit: 'ml', portionDesc: '1份' },
+    { name: '糖果', emoji: '🍬', calories: 400, portion: 30, portionUnit: 'g', portionDesc: '约5颗' },
+    { name: '爆米花', emoji: '🍿', calories: 387, portion: 50, portionUnit: 'g', portionDesc: '约1小桶' }
   ],
   // 其他小吃
   snacks: [
-    { name: '花生', emoji: '🥜', calories: 567 },
-    { name: '核桃', emoji: '🌰', calories: 654 },
-    { name: '薯片', emoji: '🥔', calories: 536 },
-    { name: '棉花糖', emoji: '🍭', calories: 317 },
-    { name: '肉干', emoji: '🥓', calories: 410 },
-    { name: '鸡爪', emoji: '🦴', calories: 250 }
+    { name: '花生', emoji: '🥜', calories: 567, portion: 30, portionUnit: 'g', portionDesc: '约1小把' },
+    { name: '核桃', emoji: '🌰', calories: 654, portion: 25, portionUnit: 'g', portionDesc: '约3个' },
+    { name: '薯片', emoji: '🥔', calories: 536, portion: 50, portionUnit: 'g', portionDesc: '约1小包' },
+    { name: '棉花糖', emoji: '🍭', calories: 317, portion: 30, portionUnit: 'g', portionDesc: '约5颗' },
+    { name: '肉干', emoji: '🥓', calories: 410, portion: 40, portionUnit: 'g', portionDesc: '约3-4片' },
+    { name: '鸡爪', emoji: '🦴', calories: 250, portion: 60, portionUnit: 'g', portionDesc: '约2只' }
   ]
 };
 
@@ -163,6 +171,18 @@ function getRandomFood(category, excludeCategories = []) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// 计算单个食物的实际热量（基于合理份量）
+function calcFoodCalories(food) {
+  if (!food) return { calories: 0, portionText: '' };
+  // 热量 = (份量 / 100) * 每100g热量
+  const actualCalories = (food.portion / 100) * food.calories;
+  const portionText = food.portionDesc || `约${food.portion}${food.portionUnit}`;
+  return {
+    calories: Math.round(actualCalories),
+    portionText
+  };
+}
+
 // 生成随机餐食搭配
 function generateRandomMeal(mealType) {
   const prefs = mealPreferences[mealType] || mealPreferences.lunch;
@@ -176,16 +196,27 @@ function generateRandomMeal(mealType) {
     drink: getRandomFood(['drinks'], prefs.exclude)
   };
 
+  // 使用实际份量计算热量
+  const stapleCalc = calcFoodCalories(meal.staple);
+  const proteinCalc = calcFoodCalories(meal.protein);
+  const vegetableCalc = calcFoodCalories(meal.vegetable);
+  const fruitCalc = calcFoodCalories(meal.fruit);
+  const drinkCalc = calcFoodCalories(meal.drink);
+
   // 计算总热量
-  let totalCalories = 0;
-  if (meal.staple) totalCalories += meal.staple.calories * 1.5;
-  if (meal.protein) totalCalories += meal.protein.calories * 1;
-  if (meal.vegetable) totalCalories += meal.vegetable.calories * 2;
-  if (meal.fruit) totalCalories += meal.fruit.calories * 1;
-  if (meal.drink) totalCalories += meal.drink.calories * 2;
+  const totalCalories = stapleCalc.calories + proteinCalc.calories + vegetableCalc.calories + fruitCalc.calories + drinkCalc.calories;
+
+  // 附加每项的份量信息
+  const mealWithPortion = {
+    staple: meal.staple ? { ...meal.staple, actualCalories: stapleCalc.calories, portionText: stapleCalc.portionText } : null,
+    protein: meal.protein ? { ...meal.protein, actualCalories: proteinCalc.calories, portionText: proteinCalc.portionText } : null,
+    vegetable: meal.vegetable ? { ...meal.vegetable, actualCalories: vegetableCalc.calories, portionText: vegetableCalc.portionText } : null,
+    fruit: meal.fruit ? { ...meal.fruit, actualCalories: fruitCalc.calories, portionText: fruitCalc.portionText } : null,
+    drink: meal.drink ? { ...meal.drink, actualCalories: drinkCalc.calories, portionText: drinkCalc.portionText } : null
+  };
 
   return {
-    meal,
+    meal: mealWithPortion,
     totalCalories: Math.round(totalCalories),
     suggestion: suggestions[Math.floor(Math.random() * suggestions.length)]
   };

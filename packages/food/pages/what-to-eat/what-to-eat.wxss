@@ -249,6 +249,25 @@
   border-radius: 10rpx;
 }
 
+.card-portion {
+  font-size: 18rpx;
+  color: #999;
+  text-align: center;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  margin-top: 4rpx;
+}
+
+.card-cal {
+  font-size: 16rpx;
+  color: #ff6b35;
+  font-weight: bold;
+}
+
 /* 热量统计 */
 .calories-container {
   background: linear-gradient(135deg, #fff5eb, #fff0e6);
@@ -444,5 +463,10 @@
 
 .food-calories {
   font-size: 16rpx;
-  color: #999;
+  color: #ff6b35;
+}
+
+.food-portion {
+  font-size: 14rpx;
+  color: #bbb;
 }

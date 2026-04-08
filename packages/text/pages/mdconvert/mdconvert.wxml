@@ -1,19 +1,205 @@
-<!--mdconvert.wxml-->
-<view class="container">
-  <view class="header">
-    <text class="title">MD转换</text>
+<!-- packages/text/pages/mdconvert/mdconvert.wxml -->
+<view class="page-container">
+  <!-- 顶部装饰 -->
+  <view class="header-bg">
+    <view class="header-content">
+      <view class="icon-wrapper">
+        <text class="main-icon">📝</text>
+      </view>
+      <text class="main-title">Markdown 转 HTML</text>
+      <text class="subtitle">专业的 Markdown 文档转换工具</text>
+    </view>
   </view>
-  <view class="content">
-    <view class="input-section">
-      <text class="label">请输入Markdown文本：</text>
-      <textarea placeholder="请输入Markdown文本" bindinput="mdInputChange" class="textarea"/>
+
+  <view class="content-wrapper">
+    <!-- 模板选择 -->
+    <view class="templates-card card-shadow fade-in-up">
+      <view class="card-header">
+        <view class="card-icon">📋</view>
+        <text class="card-title">快速模板</text>
+      </view>
+      <view class="card-body">
+        <view class="template-list">
+          <view 
+            class="template-item" 
+            wx:for="{{templates}}" 
+            wx:key="name"
+            bindtap="useTemplate" 
+            data-index="{{index}}"
+          >
+            <text class="template-icon">{{item.icon}}</text>
+            <text class="template-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
     </view>
-    <view class="button-section">
-      <button bindtap="convertToHtml" class="button">转换为HTML</button>
+
+    <!-- 输入区域 -->
+    <view class="input-card card-shadow fade-in-up" style="animation-delay: 0.1s">
+      <view class="card-header">
+        <view class="card-icon">✏️</view>
+        <text class="card-title">Markdown 输入</text>
+        <view class="header-actions">
+          <button class="icon-btn small" bindtap="clearContent" wx:if="{{mdText}}">
+            <text>🗑️</text>
+          </button>
+          <button class="icon-btn small" bindtap="copyMarkdown" wx:if="{{mdText}}">
+            <text>📋</text>
+          </button>
+        </view>
+      </view>
+      <view class="card-body">
+        <textarea 
+          class="md-textarea" 
+          placeholder="在此输入 Markdown 文本...
+
+支持：
+# 标题、**粗体**、*斜体*、
+- 列表、[链接](url)、
+> 引用、`code`、```代码块```
+| 表格 | 支持 |"
+          bindinput="mdInputChange"
+          value="{{mdText}}"
+          maxlength="-1"
+          show-confirm-bar="{{false}}"
+        />
+        <view class="textarea-footer">
+          <text class="char-count">{{mdText.length}} 字符</text>
+        </view>
+      </view>
     </view>
-    <view wx:if="{{htmlResult !== ''}}" class="result-section">
-      <text class="result-label">转换结果：</text>
-      <text class="result-text">{{htmlResult}}</text>
+
+    <!-- 操作按钮 -->
+    <view class="action-bar fade-in-up" style="animation-delay: 0.2s">
+      <button class="primary-btn" bindtap="convertToHtml" hover-class="btn-hover">
+        <text class="btn-icon">🔄</text>
+        <text>转换为 HTML</text>
+      </button>
+      <button class="secondary-btn {{mdText ? '' : 'disabled'}}" bindtap="togglePreview" disabled="{{!mdText}}">
+        <text class="btn-icon">👁️</text>
+        <text>{{isPreviewMode ? '关闭预览' : '实时预览'}}</text>
+      </button>
+    </view>
+
+    <!-- 结果区域 -->
+    <view class="result-card card-shadow fade-in-up" wx:if="{{htmlResult}}" style="animation-delay: 0.3s">
+      <view class="card-header">
+        <view class="card-icon">🌐</view>
+        <text class="card-title">HTML 结果</text>
+        <button class="icon-btn" bindtap="copyHtml">
+          <text>📋</text>
+        </button>
+      </view>
+      <view class="card-body">
+        <!-- 预览模式 -->
+        <view class="preview-section" wx:if="{{isPreviewMode}}">
+          <view class="preview-label">👁️ 渲染预览</view>
+          <rich-text class="html-preview" nodes="{{htmlResult}}"></rich-text>
+        </view>
+        <!-- 代码模式 -->
+        <view class="code-section">
+          <view class="code-label">📄 HTML 代码</view>
+          <scroll-view class="code-scroll" scroll-x scroll-y>
+            <text class="code-text" selectable>{{htmlResult}}</text>
+          </scroll-view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 历史记录 -->
+    <view class="history-card card-shadow fade-in-up" style="animation-delay: 0.4s">
+      <view class="card-header" bindtap="toggleHistory">
+        <view class="card-icon">📚</view>
+        <text class="card-title">历史记录</text>
+        <view class="header-actions">
+          <text class="history-count" wx:if="{{history.length}}">{{history.length}} 条</text>
+          <text class="arrow {{showHistory ? 'expanded' : ''}}">▼</text>
+        </view>
+      </view>
+      <view class="card-body" wx:if="{{showHistory}}">
+        <view class="history-list" wx:if="{{history.length}}">
+          <view 
+            class="history-item" 
+            wx:for="{{history}}" 
+            wx:key="id"
+          >
+            <view class="history-content" bindtap="loadFromHistory" data-index="{{index}}">
+              <text class="history-text">{{item.mdText}}</text>
+              <text class="history-time">{{item.timestamp}}</text>
+            </view>
+            <button class="delete-btn" bindtap="deleteHistory" data-index="{{index}}" hover-class="delete-btn-hover">
+              <text>🗑️</text>
+            </button>
+          </view>
+        </view>
+        <view class="empty-history" wx:else>
+          <text class="empty-icon">📭</text>
+          <text class="empty-text">暂无历史记录</text>
+        </view>
+        <button class="clear-history-btn" bindtap="clearHistory" wx:if="{{history.length}}">
+          <text>🗑️ 清空历史记录</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 功能说明 -->
+    <view class="tips-card card-shadow fade-in-up" style="animation-delay: 0.5s">
+      <view class="tips-header">
+        <view class="tips-icon">💡</view>
+        <text class="tips-title">支持语法</text>
+      </view>
+      <view class="tips-content">
+        <view class="syntax-grid">
+          <view class="syntax-item">
+            <text class="syntax-code"># 标题</text>
+            <text class="syntax-desc">H1-H6 标题</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">**粗体**</text>
+            <text class="syntax-desc">加粗文字</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">*斜体*</text>
+            <text class="syntax-desc">斜体文字</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">- 列表</text>
+            <text class="syntax-desc">无序列表</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">1. 列表</text>
+            <text class="syntax-desc">有序列表</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">[链接](url)</text>
+            <text class="syntax-desc">超链接</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">> 引用</text>
+            <text class="syntax-desc">引用块</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">`代码`</text>
+            <text class="syntax-desc">行内代码</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">```代码块</text>
+            <text class="syntax-desc">代码块</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">| 表格 |</text>
+            <text class="syntax-desc">表格</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">- [ ] 任务</text>
+            <text class="syntax-desc">任务列表</text>
+          </view>
+          <view class="syntax-item">
+            <text class="syntax-code">---</text>
+            <text class="syntax-desc">分隔线</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 </view>
