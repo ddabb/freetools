@@ -25,6 +25,7 @@ page {
   padding-bottom: 0;
   box-sizing: border-box;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .article-wrapper {
@@ -511,7 +512,8 @@ page {
 }
 
 /* ========== rich-text 中表格的样式 ========== */
-.content-rich table {
+.content-rich table,
+.content-rich .md-table {
   width: 100%;
   border-collapse: collapse;
   margin: 32rpx 0;
@@ -524,31 +526,37 @@ page {
   transition: all 0.3s ease;
 }
 
-.content-rich table:hover {
+.content-rich table:hover,
+.content-rich .md-table:hover {
   box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.25);
   transform: translateY(-2rpx);
 }
 
-.content-rich thead {
+.content-rich thead,
+.content-rich .md-thead {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.content-rich th {
+.content-rich th,
+.content-rich .md-th {
   padding: 24rpx 20rpx;
   text-align: left;
   font-weight: 700;
   color: white;
   border-right: 1rpx solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.4);
   position: relative;
   font-size: 26rpx;
   letter-spacing: 1rpx;
 }
 
-.content-rich th:last-child {
+.content-rich th:last-child,
+.content-rich .md-th:last-child {
   border-right: none;
 }
 
-.content-rich th::before {
+.content-rich th::before,
+.content-rich .md-th::before {
   content: '';
   position: absolute;
   bottom: 0;
@@ -558,26 +566,23 @@ page {
   background: rgba(255, 255, 255, 0.6);
 }
 
-.content-rich td {
+.content-rich td,
+.content-rich .md-td {
   padding: 22rpx 20rpx;
   border: 1rpx solid #f0f0f0;
-  border-top: none;
-  border-left: none;
   position: relative;
   font-size: 26rpx;
   line-height: 1.5;
   color: #333;
 }
 
-.content-rich td:last-child {
-  border-right: none;
-}
-
-.content-rich tr:nth-child(even) {
+.content-rich tr:nth-child(even),
+.content-rich .md-tr:nth-child(even) {
   background: rgba(102, 126, 234, 0.04);
 }
 
-.content-rich tr:hover {
+.content-rich tr:hover,
+.content-rich .md-tr:hover {
   background: rgba(102, 126, 234, 0.08);
   transition: background 0.3s ease;
 }

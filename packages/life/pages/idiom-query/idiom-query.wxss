@@ -338,7 +338,7 @@
 .result-arrow-icon {
   margin: 0 16rpx;
   font-size: 28rpx;
-  color: #999;
+  color: #555;
 }
 
 .result-next {

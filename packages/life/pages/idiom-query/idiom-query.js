@@ -50,9 +50,9 @@ Page({
   },
 
   onLoad() {
-
     this._letterCache = {};  // 页面级内存缓存：{ [firstLetter]: Array }
-    this._loadData();
+    // 推迟 Storage 读取，避免 onLoad 耗时过长触发 execute-long-time 警告
+    setTimeout(() => this._loadData(), 0);
   },
 
   onPullDownRefresh() {

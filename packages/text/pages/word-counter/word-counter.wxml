@@ -1,161 +1,145 @@
 <view class="container">
-  <!-- 实时统计卡片 -->
-  <view class="stats-overview">
-    <view class="overview-title">📊 文本统计概览</view>
+
+  <!-- 文本输入区域（前置） -->
+  <view class="input-card">
+    <view class="card-header">
+      <text class="card-title">✏️ 输入文本</text>
+      <text class="char-hint">{{inputText.length > 0 ? inputText.length + ' 字符' : '最多 50000'}}</text>
+    </view>
+    <textarea
+      value="{{inputText}}"
+      bindinput="onTextInput"
+      class="main-textarea"
+      placeholder="在此输入或粘贴要统计的文本..."
+      maxlength="50000"
+      show-confirm-bar="false"
+      auto-height
+    />
+    <view class="textarea-footer">
+      <view class="textarea-controls">
+        <button class="ctrl-btn" hover-class="ctrl-btn-hover" bindtap="clearText">清空</button>
+        <button class="ctrl-btn accent" hover-class="ctrl-btn-hover" bindtap="pasteText">粘贴</button>
+        <button class="ctrl-btn success" hover-class="ctrl-btn-hover" bindtap="loadSampleText">示例</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 写作目标 -->
+  <view class="goal-card" wx:if="{{targetWords > 0}}">
+    <view class="goal-row">
+      <text class="goal-label">🎯 目标 {{targetWords}} 字</text>
+      <text class="goal-progress-text {{progressPercentage >= 100 ? 'done' : ''}}">{{stats.words}}/{{targetWords}}（{{Math.round(progressPercentage)}}%）</text>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill {{progressPercentage >= 100 ? 'done' : ''}}" style="width: {{progressPercentage > 100 ? 100 : progressPercentage}}%"></view>
+    </view>
+  </view>
+
+  <!-- 统计概览 -->
+  <view class="stats-card">
+    <view class="card-header">
+      <text class="card-title">📊 统计概览</text>
+      <view class="goal-set-row">
+        <text class="goal-set-label">目标字数</text>
+        <input type="number" value="{{targetWords}}" bindinput="setTargetWords" class="goal-input" placeholder="0" placeholder-class="input-placeholder"/>
+      </view>
+    </view>
     <view class="stats-grid">
-      <view class="stat-card primary" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.characters}}</text>
-        <text class="stat-label">总字符</text>
+      <view class="stat-item primary">
+        <text class="stat-num">{{inputText.length > 0 ? stats.characters : '—'}}</text>
+        <text class="stat-lbl">总字符</text>
       </view>
-      <view class="stat-card success" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.charactersNoSpace}}</text>
-        <text class="stat-label">字符(无空格)</text>
+      <view class="stat-item info">
+        <text class="stat-num">{{inputText.length > 0 ? stats.charactersNoSpace : '—'}}</text>
+        <text class="stat-lbl">字符(去空格)</text>
       </view>
-      <view class="stat-card warning" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.words}}</text>
-        <text class="stat-label">词语数</text>
+      <view class="stat-item green">
+        <text class="stat-num">{{inputText.length > 0 ? stats.chineseChars : '—'}}</text>
+        <text class="stat-lbl">中文字</text>
       </view>
-      <view class="stat-card info" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.sentences}}</text>
-        <text class="stat-label">句子数</text>
+      <view class="stat-item warning">
+        <text class="stat-num">{{inputText.length > 0 ? stats.words : '—'}}</text>
+        <text class="stat-lbl">词语数</text>
       </view>
-      <view class="stat-card purple" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.paragraphs}}</text>
-        <text class="stat-label">段落数</text>
+      <view class="stat-item purple">
+        <text class="stat-num">{{inputText.length > 0 ? stats.sentences : '—'}}</text>
+        <text class="stat-lbl">句子数</text>
       </view>
-      <view class="stat-card rose" hover-class="stat-card-hover">
-        <text class="stat-number">{{stats.lines}}</text>
-        <text class="stat-label">行数</text>
+      <view class="stat-item rose">
+        <text class="stat-num">{{inputText.length > 0 ? stats.paragraphs : '—'}}</text>
+        <text class="stat-lbl">段落数</text>
       </view>
     </view>
   </view>
 
-  <!-- 详细统计区域 -->
-  <view class="detailed-stats">
-    <view class="section-title">📈 详细统计</view>
+  <!-- 详细统计 + 分析（有内容才展示） -->
+  <view class="detail-card" wx:if="{{inputText.length > 0}}">
+    <view class="card-header">
+      <text class="card-title">🔍 详细分析</text>
+    </view>
     <view class="detail-grid">
-      <view class="detail-item">
-        <text class="detail-label">中文字符</text>
-        <text class="detail-value highlight">{{stats.chineseChars}}</text>
+      <view class="detail-row">
+        <text class="detail-k">英文字母</text>
+        <text class="detail-v">{{stats.englishLetters}}</text>
       </view>
-      <view class="detail-item">
-        <text class="detail-label">英文字母</text>
-        <text class="detail-value">{{stats.englishLetters}}</text>
+      <view class="detail-row">
+        <text class="detail-k">数字</text>
+        <text class="detail-v">{{stats.digits}}</text>
       </view>
-      <view class="detail-item">
-        <text class="detail-label">数字字符</text>
-        <text class="detail-value">{{stats.digits}}</text>
+      <view class="detail-row">
+        <text class="detail-k">标点符号</text>
+        <text class="detail-v">{{stats.punctuation}}</text>
       </view>
-      <view class="detail-item">
-        <text class="detail-label">标点符号</text>
-        <text class="detail-value">{{stats.punctuation}}</text>
+      <view class="detail-row">
+        <text class="detail-k">空格</text>
+        <text class="detail-v">{{stats.spaces}}</text>
       </view>
-      <view class="detail-item">
-        <text class="detail-label">空格字符</text>
-        <text class="detail-value">{{stats.spaces}}</text>
+      <view class="detail-row">
+        <text class="detail-k">行数</text>
+        <text class="detail-v">{{stats.lines}}</text>
       </view>
-      <view class="detail-item">
-        <text class="detail-label">特殊符号</text>
-        <text class="detail-value">{{stats.specialChars}}</text>
+      <view class="detail-row">
+        <text class="detail-k">特殊符号</text>
+        <text class="detail-v">{{stats.specialChars}}</text>
       </view>
-    </view>
-  </view>
-
-  <!-- 文本输入区域 -->
-  <view class="text-input-section">
-    <view class="section-title">✏️ 文本输入</view>
-    <view class="input-container">
-      <textarea 
-        value="{{inputText}}" 
-        bindinput="onTextInput" 
-        class="main-textarea" 
-        placeholder="在此输入或粘贴要统计的文本..." 
-        maxlength="50000"
-        show-confirm-bar="false"
-      />
-      <view class="textarea-footer">
-        <text class="char-count">已输入 {{inputText.length}}/50000 字符</text>
-        <view class="textarea-controls">
-          <button class="control-btn" hover-class="control-btn-hover" bindtap="clearText">清空</button>
-          <button class="control-btn primary" hover-class="control-btn-hover" bindtap="pasteText">粘贴</button>
-          <button class="control-btn success" hover-class="control-btn-hover" bindtap="copyText">复制</button>
-        </view>
+      <view class="detail-row">
+        <text class="detail-k">阅读时长</text>
+        <text class="detail-v">{{readingTime}} 分钟</text>
       </view>
-    </view>
-  </view>
-
-  <!-- 写作目标设置 -->
-  <view class="writing-goals">
-    <view class="section-title">🎯 写作目标</view>
-    <view class="goal-item">
-      <text class="goal-label">目标字数:</text>
-      <input type="number" value="{{targetWords}}" bindinput="setTargetWords" class="goal-input" placeholder="设置目标字数"  placeholder-class="input-placeholder"/>
-    </view>
-    <view class="progress-container" wx:if="{{targetWords > 0}}">
-      <view class="progress-info">
-        <span class="progress-text">进度: {{Math.round(progressPercentage)}}%</span>
-        <span class="progress-numbers">{{stats.words}}/{{targetWords}}</span>
-      </view>
-      <view class="progress-bar">
-        <view class="progress-fill" style="width: {{progressPercentage + '%'}}"></view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 文本分析区域 -->
-  <view class="text-analysis" wx:if="{{inputText.length > 0}}">
-    <view class="section-title">🔍 文本分析</view>
-    <view class="analysis-content">
-      <view class="analysis-item">
-        <text class="analysis-label">阅读时长:</text>
-        <text class="analysis-value">{{readingTime}} 分钟</text>
-      </view>
-      <view class="analysis-item">
-        <text class="analysis-label">打字速度:</text>
-        <text class="analysis-value">{{typingSpeed}} 字/分钟</text>
-      </view>
-      <view class="analysis-item">
-        <text class="analysis-label">平均句长:</text>
-        <text class="analysis-value">{{averageSentenceLength}} 字/句</text>
-      </view>
-      <view class="analysis-item">
-        <text class="analysis-label">词汇密度:</text>
-        <text class="analysis-value">{{vocabularyDensity}}%</text>
+      <view class="detail-row">
+        <text class="detail-k">平均句长</text>
+        <text class="detail-v">{{averageSentenceLength}} 字/句</text>
       </view>
     </view>
   </view>
 
   <!-- 快捷操作 -->
-  <view class="quick-actions">
-    <view class="section-title">⚡ 快捷操作</view>
+  <view class="actions-card">
     <view class="action-grid">
-      <view class="action-item" hover-class="action-item-hover" bindtap="loadSampleText">
-        <text class="action-icon">📝</text>
-        <text class="action-text">示例文本</text>
-      </view>
-      <view class="action-item" hover-class="action-item-hover" bindtap="shareStats">
-        <text class="action-icon">📤</text>
-        <text class="action-text">分享统计</text>
+      <view class="action-item" hover-class="action-item-hover" bindtap="copyText">
+        <text class="action-icon">📋</text>
+        <text class="action-text">复制文本</text>
       </view>
       <view class="action-item" hover-class="action-item-hover" bindtap="exportReport">
-        <text class="action-icon">📋</text>
+        <text class="action-icon">📤</text>
         <text class="action-text">导出报告</text>
       </view>
       <view class="action-item" hover-class="action-item-hover" bindtap="toggleCase">
         <text class="action-icon">🔤</text>
         <text class="action-text">大小写转换</text>
       </view>
+      <view class="action-item" hover-class="action-item-hover" bindtap="shareStats">
+        <text class="action-icon">↗️</text>
+        <text class="action-text">分享统计</text>
+      </view>
     </view>
   </view>
 
-  <!-- 使用帮助 -->
-  <view class="help-section">
-    <view class="help-title">💡 统计说明</view>
-    <view class="help-content">
-      <text class="help-text">• 词语统计基于中英文分词算法，准确率约90%</text>
-      <text class="help-text">• 句子以句号、问号、感叹号为分隔符</text>
-      <text class="help-text">• 段落以换行符分隔，连续换行为一个段落</text>
-      <text class="help-text">• 阅读时长按平均250字/分钟计算</text>
-    </view>
+  <!-- 说明 -->
+  <view class="tip-section">
+    <text class="tip-text">• 词语统计基于中英文分词，准确率约90%</text>
+    <text class="tip-text">• 句子以句号/问号/感叹号为分隔符</text>
+    <text class="tip-text">• 阅读时长按 250 字/分钟估算</text>
   </view>
+
 </view>

@@ -1,35 +1,76 @@
-// packages/text/pages/markdown-preview/markdown-preview.js
 const utils = require('../../../../utils/index');
+
+// 使用 markdown-it 渲染 Markdown
+let markdownIt = null;
+let markdownItTable = null;
+try {
+  markdownIt = require('markdown-it');
+  markdownItTable = require('markdown-it-table');
+} catch (e) {
+  console.warn('[markdown-preview] markdown-it 未正确引入，请确保构建时打包了 markdown-it');
+}
+
+const SYNTAX_ITEMS = [
+  { md: '# 标题1', desc: '一级标题' },
+  { md: '## 标题2', desc: '二级标题' },
+  { md: '### 标题3', desc: '三级标题' },
+  { md: '**粗体**', desc: '粗体文本' },
+  { md: '*斜体*', desc: '斜体文本' },
+  { md: '~~删除~~', desc: '删除线' },
+  { md: '`代码`', desc: '行内代码' },
+  { md: '- 列表', desc: '无序列表' },
+  { md: '1. 有序', desc: '有序列表' },
+  { md: '> 引用', desc: '引用块' },
+  { md: '---', desc: '分隔线' },
+  { md: '[链接](url)', desc: '超链接' },
+];
+
+const THEMES = ['默认', 'GitHub', '暗黑', '护眼'];
+const THEME_CLASSES = ['', 'github-theme', 'dark-theme', 'eye-care-theme'];
 
 Page({
   data: {
+    activeTab: 'edit',
     markdownText: '',
     renderedHtml: '',
     themeIndex: 0,
-    themes: ['默认', 'GitHub', '暗黑', '护眼'],
-    isFullscreen: false,
-    editorExpanded: true,
-    previewExpanded: true,
+    themes: THEMES,
+    themeClass: '',
     showHelp: false,
-    isLoading: false
+    syntaxItems: SYNTAX_ITEMS,
+    loading: false,
+    error: false,
+    errorMsg: '',
   },
 
   onLoad() {
-    wx.setNavigationBarTitle({ title: 'Markdown预览器' });
+    wx.setNavigationBarTitle({ title: 'Markdown 预览器' });
     this.loadDefaultContent();
   },
 
-  // 折叠/展开编辑器
-  toggleEditorExpanded() {
-    this.setData({ editorExpanded: !this.data.editorExpanded });
+  switchTab(e) {
+    const tab = e.currentTarget.dataset.tab;
+    if (tab === 'preview') {
+      this.renderMarkdown(this.data.markdownText);
+    }
+    this.setData({ activeTab: tab });
   },
 
-  // 折叠/展开预览
-  togglePreviewExpanded() {
-    this.setData({ previewExpanded: !this.data.previewExpanded });
+  switchToPreview() {
+    this.renderMarkdown(this.data.markdownText);
+    this.setData({ activeTab: 'preview' });
   },
 
-  // 切换帮助显示
+  switchToEdit() {
+    this.setData({ activeTab: 'edit' });
+  },
+
+  setTheme(e) {
+    const idx = Number(e.detail.value);
+    this.setData({ themeIndex: idx, themeClass: THEME_CLASSES[idx] });
+    this.renderMarkdown(this.data.markdownText);
+  },
+
   toggleHelp() {
     this.setData({ showHelp: !this.data.showHelp });
   },
@@ -37,122 +78,124 @@ Page({
   setMarkdownText(e) {
     const text = e.detail.value;
     this.setData({ markdownText: text });
-    this.renderMarkdown(text);
+    if (this.data.activeTab === 'preview') {
+      this.renderMarkdown(text);
+    }
   },
 
-  setTheme(e) {
-    this.setData({ themeIndex: e.detail.value });
-    this.renderMarkdown(this.data.markdownText);
+  insertBold() { this._appendText('**粗体文本**'); },
+  insertItalic() { this._appendText('*斜体文本*'); },
+  insertCode() { this._appendText('`代码`'); },
+  insertH1() { this._appendText('\n# 一级标题\n'); },
+  insertH2() { this._appendText('\n## 二级标题\n'); },
+  insertList() { this._appendText('\n- 列表项\n- 列表项\n'); },
+  insertQuote() { this._appendText('\n> 引用内容\n'); },
+
+  _appendText(snippet) {
+    const current = this.data.markdownText;
+    this.setData({ markdownText: current + snippet });
+  },
+
+  clearEditor() {
+    wx.showModal({
+      title: '确认清空',
+      content: '清空后无法恢复，确认吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ markdownText: '', renderedHtml: '' });
+        }
+      }
+    });
   },
 
   renderMarkdown(markdown) {
-    if (!markdown.trim()) {
-      this.setData({ renderedHtml: '' });
+    if (!markdown || !markdown.trim()) {
+      this.setData({ renderedHtml: '', error: false });
       return;
     }
-
-    try {
-      let html = markdown;
-      html = this.parseHeaders(html);
-      html = this.parseBold(html);
-      html = this.parseItalic(html);
-      html = this.parseCode(html);
-      html = this.parseLinks(html);
-      html = this.parseLists(html);
-      html = this.parseBlockquotes(html);
-      html = this.parseHorizontalRules(html);
-      
-      const nodes = this.simpleHtmlToNodes(html);
-      this.setData({ renderedHtml: nodes });
-    } catch (error) {
-      this.setData({ renderedHtml: '<div style="color: red;">渲染出错</div>' });
-    }
+    const html = this.markdownToHtml(markdown);
+    this.setData({ renderedHtml: html, error: false });
   },
 
-  parseHeaders(text) {
-    return text
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>');
-  },
+  markdownToHtml(markdown) {
+    if (!markdown) return '';
 
-  parseBold(text) {
-    return text.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
-  },
+    if (markdownIt) {
+      try {
+        const md = markdownIt({
+          html: true,
+          linkify: true,
+          typographer: true,
+          breaks: true
+        });
 
-  parseItalic(text) {
-    return text.replace(/\*(.*?)\*/gim, '<em>$1</em>');
-  },
+        // 只有当 markdownItTable 不为 null 时才使用表格插件
+        if (markdownItTable) {
+          md.use(markdownItTable, { multiline: true, rowspan: true, headerless: false });
+        }
 
-  parseCode(text) {
-    text = text.replace(/`([^`]+)`/gim, '<code>$1</code>');
-    text = text.replace(/```([\\s\\S]*?)```/gim, '<pre><code>$1</code></pre>');
-    return text;
-  },
+        let html = md.render(markdown);
 
-  parseLinks(text) {
-    return text.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>');
-  },
+        html = html.replace(/<table>/g, '<table class="md-table">');
+        html = html.replace(/<thead>/g, '<thead class="md-thead">');
+        html = html.replace(/<tbody>/g, '<tbody class="md-tbody">');
+        html = html.replace(/<tr>/g, '<tr class="md-tr">');
+        html = html.replace(/<th>/g, '<th class="md-th">');
+        html = html.replace(/<td>/g, '<td class="md-td">');
 
-  parseLists(text) {
-    return text.replace(/^- (.*$)/gim, '<li>$1</li>')
-               .replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
-  },
-
-  parseBlockquotes(text) {
-    return text.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
-  },
-
-  parseHorizontalRules(text) {
-    return text.replace(/^---$/gim, '<hr>');
-  },
-
-  simpleHtmlToNodes(html) {
-    const lines = html.split('\n').filter(line => line.trim());
-    const nodes = [];
-    
-    lines.forEach(line => {
-      if (line.includes('<h1>')) {
-        nodes.push({ name: 'div', attrs: { style: 'font-size: 24px; font-weight: bold; margin: 15px 0;' }, children: [{ type: 'text', text: line.replace(/<[^>]*>/g, '') }] });
-      } else if (line.includes('<h2>')) {
-        nodes.push({ name: 'div', attrs: { style: 'font-size: 20px; font-weight: bold; margin: 12px 0;' }, children: [{ type: 'text', text: line.replace(/<[^>]*>/g, '') }] });
-      } else if (line.includes('<strong>')) {
-        nodes.push({ name: 'div', attrs: { style: 'font-weight: bold; margin: 8px 0;' }, children: [{ type: 'text', text: line.replace(/<[^>]*>/g, '') }] });
-      } else if (line.includes('<code>')) {
-        nodes.push({ name: 'div', attrs: { style: 'background: #f4f4f4; padding: 8px; border-radius: 3px; font-family: monospace;' }, children: [{ type: 'text', text: line.replace(/<[^>]*>/g, '') }] });
-      } else if (line.includes('<li>')) {
-        nodes.push({ name: 'div', attrs: { style: 'margin: 5px 0; padding-left: 20px;' }, children: [{ type: 'text', text: '• ' + line.replace(/<[^>]*>/g, '') }] });
-      } else if (line.trim()) {
-        nodes.push({ name: 'div', attrs: { style: 'margin: 8px 0;' }, children: [{ type: 'text', text: line.replace(/<[^>]*>/g, '') }] });
+        return html;
+      } catch (e) {
+        console.error('[markdown-preview] markdown-it 渲染失败:', e);
+        return this._simpleMarkdownParser(markdown);
       }
-    });
-    
-    return nodes;
+    }
+
+    return this._simpleMarkdownParser(markdown);
   },
 
-  loadDefaultContent() {
-    const defaultMarkdown = `# Markdown预览器\n\n## 功能特点\n\n- **实时预览**: 输入即预览\n- **语法支持**: 标题、粗体、斜体、代码等\n- **多主题**: 多种视觉主题选择\n\n## 示例\n\n这是 **粗体** 和 *斜体* 文本。\n\n### 代码示例\n\`\`\`javascript\nconsole.log("Hello World");\n\`\`\`\n\n开始使用吧！`;
-    
-    this.setData({ markdownText: defaultMarkdown });
-    this.renderMarkdown(defaultMarkdown);
+  _simpleMarkdownParser(text) {
+    if (!text) return '';
+
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/^---$/gm, '<view style="border-top:1px dashed #e0e0e0;margin:24rpx 0;"></view>')
+      .replace(/^###### (.+)$/gm, '<view class="md-h6"></view>')
+      .replace(/^##### (.+)$/gm, '<view class="md-h5"></view>')
+      .replace(/^#### (.+)$/gm, '<view class="md-h4"></view>')
+      .replace(/^### (.+)$/gm, '<view class="md-h3"></view>')
+      .replace(/^## (.+)$/gm, '<view class="md-h2"></view>')
+      .replace(/^# (.+)$/gm, '<view class="md-h1"></view>')
+      .replace(/^&gt; (.+)$/gm, '<view class="md-blockquote"></view>')
+      .replace(/^[-*] (.+)$/gm, '<view class="md-li">•</view>')
+      .replace(/^\d+\. (.+)$/gm, '<view class="md-li"></view>')
+      .replace(/^\|(.+)\|$/gm, (match, content) => {
+        const cells = content.split('|').map(c => c.trim());
+        if (cells.some(c => /^-+$/.test(c))) return '';
+        const tds = cells.map(c => '<view class="md-td">' + c + '</view>').join('');
+        return '<view class="md-tr">' + tds + '</view>';
+      })
+      .replace(/`([^`]+)`/g, '<view class="md-code"></view>')
+      .replace(/\*\*(.+?)\*\*/g, '<view class="md-bold"></view>')
+      .replace(/\*(.+?)\*/g, '<view class="md-em"></view>')
+      .replace(/\n{2,}/g, '</view><view class="md-p">')
+      .replace(/\n/g, '<view class="md-br"></view>');
+
+    html = '<view class="md-article">' + html + '</view>';
+    return html;
   },
 
-  insertTemplate() {
-    utils.showText('模板功能开发中');
-  },
-
-  toggleFullscreen() {
-    utils.showText('全屏功能开发中');
-  },
-
-  exportHtml() {
-    utils.showText('导出功能开发中');
+  copyMarkdown() {
+    const text = this.data.markdownText;
+    if (!text) { utils.showText('暂无内容'); return; }
+    wx.setClipboardData({ data: text, success: () => utils.showSuccess('Markdown 已复制') });
   },
 
   copyHtml() {
-    wx.setClipboardData({ data: this.data.markdownText, success: () => {
-      utils.showSuccess('已复制');
-    }});
+    const html = this.data.renderedHtml;
+    if (!html) { utils.showText('暂无内容可复制'); return; }
+    wx.setClipboardData({ data: html, success: () => utils.showSuccess('HTML 已复制') });
   },
 
   refreshPreview() {
@@ -162,38 +205,24 @@ Page({
 
   loadSample() {
     this.loadDefaultContent();
-    utils.showSuccess('已加载示例');
   },
 
-  sharePreview() {
-    utils.showText('分享功能开发中');
+  loadDefaultContent() {
+    const md = '# Markdown 预览器\n\n## 功能特点\n\n- **实时预览**：切换到预览 Tab 即可看到渲染效果\n- **多主题**：支持默认、GitHub、暗黑、护眼四种主题\n- **工具按钮**：快速插入常用语法\n\n## 语法示例\n\n这里有 **粗体**、*斜体* 和 ~~删除线~~。\n> 引用块：写下你想引用的内容\n`javascript\nconsole.log(\'Hello, Markdown!\');\n`\n\n---\n\n1. 有序列表第一项\n2. 有序列表第二项\n\n开始编写你的 Markdown 文档吧！';
+    this.setData({ markdownText: md });
+    this.renderMarkdown(md);
   },
-
-  printPreview() {
-    utils.showText('打印功能开发中');
-  },
-
-  settings() {
-    utils.showText('设置功能开发中');
-  },
-
-  boldText() { utils.showText('编辑器开发中'); },
-  italicText() { utils.showText('编辑器开发中'); },
-  linkText() { utils.showText('编辑器开发中'); },
-  codeText() { utils.showText('编辑器开发中'); },
 
   onShareAppMessage() {
     return {
-      title: 'Markdown预览器',
+      title: 'Markdown 预览器 - 手机端也能用',
       path: '/packages/text/pages/markdown-preview/markdown-preview'
-    }
+    };
   },
 
-  // 分享到朋友圈
   onShareTimeline() {
     return {
-      title: 'Markdown预览器 - 在线编辑和预览',
-      query: 'markdown-preview'
-    }
+      title: 'Markdown 预览器 - 手机端在线编辑预览'
+    };
   }
-})
+});

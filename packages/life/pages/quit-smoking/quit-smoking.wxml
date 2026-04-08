@@ -72,12 +72,8 @@
 
       <!-- 呼吸球 -->
       <view class="breath-ball-container">
-        <view class="breath-ball
-          {{breathPhase === 'inhale' ? 'ball-inhale' : ''}}
-          {{breathPhase === 'hold' ? 'ball-hold' : ''}}
-          {{breathPhase === 'exhale' ? 'ball-exhale' : ''}}
-          {{!isBreathing ? 'ball-idle' : ''}}"
-        >
+        <view class="breath-ball {{breathPhase === 'inhale' ? 'ball-inhale' : ''}} {{breathPhase === 'hold' ? 'ball-hold' : ''}} {{breathPhase === 'exhale' ? 'ball-exhale' : ''}} {{!isBreathing ? 'ball-idle' : ''}}">
+
           <view class="ball-inner">
             <text class="ball-emoji">
               {{breathPhase === 'idle' ? '🌬️' : breathPhase === 'inhale' ? '💨' : breathPhase === 'hold' ? '⏸️' : '🌫️'}}
@@ -87,16 +83,7 @@
 
         <!-- 烟雾粒子 -->
         <block wx:if="{{isBreathing}}">
-          <view
-            class="smoke-particle"
-            wx:for="{{smokeParticles}}"
-            wx:key="id"
-            style="
-              left: {{item.x}}%;
-              opacity: {{breathPhase === 'inhale' ? 0.6 : breathPhase === 'hold' ? 0.8 : 0.3}};
-              transform: scale({{breathPhase === 'inhale' ? 1.5 : breathPhase === 'hold' ? 1.2 : 0.8}});
-            "
-          ></view>
+          <view class="smoke-particle" wx:for="{{smokeParticles}}" wx:key="id" style="left: {{item.x}}%; opacity: {{breathPhase === 'inhale' ? 0.6 : breathPhase === 'hold' ? 0.8 : 0.3}}; transform: scale({{breathPhase === 'inhale' ? 1.5 : breathPhase === 'hold' ? 1.2 : 0.8}});"></view>
         </block>
       </view>
 

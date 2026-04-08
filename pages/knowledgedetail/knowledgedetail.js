@@ -18,8 +18,10 @@ let articlesCache = null;
 
 // 使用 markdown-it 渲染 Markdown（项目已安装该库）
 let markdownIt = null;
+let markdownItTable = null;
 try {
   markdownIt = require('markdown-it');
+  markdownItTable = require('markdown-it-table');
 } catch (e) {
   console.warn('[knowledgedetail] markdown-it 未正确引入，请确保构建时打包了 markdown-it');
 }
@@ -88,46 +90,45 @@ Page({
     // 使用 markdown-it（如果可用）
     if (markdownIt) {
       try {
-        const md = markdownIt();
-        return md.render(markdown);
-      } catch (e) {
-        console.error('[knowledgedetail] markdown-it 渲染失败:', e);
-        try {
-          const md = markdownIt({
-            html: true,         // 启用 HTML 标签解析
-            linkify: true,      // 自动将 URL 转换为链接
-            typographer: true,  // 启用排版优化
-            breaks: true        // 将换行符转换为 <br>
-          }).use(require('markdown-it-table'), {
+        const md = markdownIt({
+          html: true,         // 启用 HTML 标签解析
+          linkify: true,      // 自动将 URL 转换为链接
+          typographer: true,  // 启用排版优化
+          breaks: true        // 将换行符转换为 <br>
+        });
+        
+        // 只有当 markdownItTable 不为 null 时才使用表格插件
+        if (markdownItTable) {
+          md.use(markdownItTable, {
             multiline: true,    // 支持多行表格
             rowspan: true,      // 支持行合并
             headerless: false   // 确保生成表头
           });
-
-          // 对生成的 HTML 进行美化
-          let html = md.render(markdown);
-          
-          // 为表格添加 CSS 类
-          html = html.replace(/<table>/g, '<table class="md-table">');
-          html = html.replace(/<thead>/g, '<thead class="md-thead">');
-          html = html.replace(/<tbody>/g, '<tbody class="md-tbody">');
-          html = html.replace(/<tr>/g, '<tr class="md-tr">');
-          html = html.replace(/<th>/g, '<th class="md-th">');
-          html = html.replace(/<td>/g, '<td class="md-td">');
-          
-          // 记录生成的 HTML 内容
-          console.log('markdown-it 生成的 HTML:', {
-            html: html,
-            hasTable: html.includes('<table'),
-            tableCount: (html.match(/<table/g) || []).length,
-            timestamp: new Date().toISOString()
-          });
-          
-          return html;
-        } catch (e) {
-          console.error('[knowledgedetail] markdown-it 渲染失败:', e);
-          return this._simpleMarkdownParser(markdown); // 失败时回退到简单解析器
         }
+
+        // 对生成的 HTML 进行美化
+        let html = md.render(markdown);
+        
+        // 为表格添加 CSS 类
+        html = html.replace(/<table>/g, '<table class="md-table">');
+        html = html.replace(/<thead>/g, '<thead class="md-thead">');
+        html = html.replace(/<tbody>/g, '<tbody class="md-tbody">');
+        html = html.replace(/<tr>/g, '<tr class="md-tr">');
+        html = html.replace(/<th>/g, '<th class="md-th">');
+        html = html.replace(/<td>/g, '<td class="md-td">');
+        
+        // 记录生成的 HTML 内容
+        console.log('markdown-it 生成的 HTML:', {
+          html: html,
+          hasTable: html.includes('<table'),
+          tableCount: (html.match(/<table/g) || []).length,
+          timestamp: new Date().toISOString()
+        });
+        
+        return html;
+      } catch (e) {
+        console.error('[knowledgedetail] markdown-it 渲染失败:', e);
+        return this._simpleMarkdownParser(markdown); // 失败时回退到简单解析器
       }
     }
     

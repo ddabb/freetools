@@ -124,11 +124,11 @@
 }
 
 .textarea-placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .input-placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .input {

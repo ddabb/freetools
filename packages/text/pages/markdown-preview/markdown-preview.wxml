@@ -1,127 +1,99 @@
 <view class="container">
-  <view class="main-layout">
-    <!-- 左侧：编辑器区域 -->
-    <view class="left-panel">
-      <section class="input-section">
-        <div class="section-header" bindtap="toggleEditorExpanded">
-          <label>✏️ Markdown编辑器</label>
-          <span class="expand-icon">{{editorExpanded ? '▼' : '▶'}}</span>
-        </div>
-        
-        <!-- 工具栏 -->
-        <view class="toolbar-row">
-          <picker bindchange="setTheme" value="{{themeIndex}}" range="{{themes}}" class="theme-picker">
-            <view class="picker-btn">{{themes[themeIndex]}} ▼</view>
-          </picker>
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="insertTemplate">📋模板</button>
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="boldText">B</button>
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="italicText">I</button>
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="codeText">{ }</button>
-        </view>
-        
-        <textarea 
-          value="{{markdownText}}" 
-          bindinput="setMarkdownText" 
-          class="markdown-editor" 
-          placeholder="输入Markdown文本...&#10;&#10;支持语法:&#10;# 标题 | **粗体** | *斜体*&#10;- 列表 | [链接](url) | `代码`" 
-          maxlength="50000"
-          show-confirm-bar="false"
-        />
-        
-        <view class="char-count">字数: {{markdownText.length}}</view>
-      </section>
-    </view>
-    
-    <!-- 右侧：预览区域 -->
-    <view class="right-panel">
-      <section class="preview-section">
-        <div class="section-header" bindtap="togglePreviewExpanded">
-          <label>👀 实时预览</label>
-          <span class="expand-icon">{{previewExpanded ? '▼' : '▶'}}</span>
-        </div>
-        
-        <!-- 预览操作栏 -->
-        <view class="preview-toolbar">
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="refreshPreview">🔄 刷新</button>
-          <button class="mini-btn" hover-class="mini-btn-hover" bindtap="copyHtml">📋 复制HTML</button>
-        </view>
-        
-        <scroll-view scroll-y="true" class="preview-scroll">
-          <view class="markdown-preview {{theme}}-theme" wx:if="{{renderedHtml}}">
-            <rich-text nodes="{{renderedHtml}}"></rich-text>
-          </view>
-          <view class="empty-preview" wx:else>
-            <text class="empty-text">在左侧编辑器中输入Markdown文本</text>
-          </view>
-        </scroll-view>
-      </section>
+
+  <!-- Tab 切换栏 -->
+  <view class="tab-bar">
+    <view
+      class="tab-item {{activeTab === 'edit' ? 'active' : ''}}"
+      data-tab="edit"
+      bindtap="switchTab"
+    >✏️ 编辑</view>
+    <view
+      class="tab-item {{activeTab === 'preview' ? 'active' : ''}}"
+      data-tab="preview"
+      bindtap="switchTab"
+    >👁 预览</view>
+    <view class="tab-extra">
+      <picker bindchange="setTheme" value="{{themeIndex}}" range="{{themes}}" class="theme-picker">
+        <view class="picker-btn">🎨 {{themes[themeIndex]}}</view>
+      </picker>
     </view>
   </view>
-  
-  <!-- 底部操作区 -->
-  <view class="bottom-actions">
-    <view class="action-buttons">
-      <button class="btn btn-secondary" bindtap="loadSample">
-        <span class="btn-icon">📖</span>
-        <span class="btn-text">示例</span>
-      </button>
-      <button class="btn btn-secondary" bindtap="toggleFullscreen">
-        <span class="btn-icon">📺</span>
-        <span class="btn-text">全屏</span>
-      </button>
-      <button class="btn btn-primary" bindtap="exportHtml">
-        <span class="btn-icon">💾</span>
-        <span class="btn-text">导出HTML</span>
-      </button>
+
+  <!-- 编辑器面板 -->
+  <view class="panel {{activeTab === 'edit' ? 'show' : 'hide'}}">
+    <!-- 工具栏 -->
+    <view class="toolbar">
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertBold">
+        <text class="tool-text tool-bold">B</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertItalic">
+        <text class="tool-text tool-italic">I</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertCode">
+        <text class="tool-text">{ }</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertH1">
+        <text class="tool-text">H1</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertH2">
+        <text class="tool-text">H2</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertList">
+        <text class="tool-text">≡</text>
+      </view>
+      <view class="tool-btn" hover-class="tool-btn-hover" bindtap="insertQuote">
+        <text class="tool-text">"</text>
+      </view>
+      <view class="tool-btn-text" hover-class="tool-btn-hover" bindtap="loadSample">示例</view>
+      <view class="tool-btn-text" hover-class="tool-btn-hover" bindtap="clearEditor">清空</view>
+    </view>
+
+    <!-- 编辑区 -->
+    <textarea
+      value="{{markdownText}}"
+      bindinput="setMarkdownText"
+      class="markdown-editor"
+      placeholder="在此输入 Markdown 文本..."
+      maxlength="50000"
+      show-confirm-bar="false"
+    />
+    <view class="editor-footer">
+      <text class="char-count">{{markdownText.length}} / 50000</text>
+      <view class="footer-btns">
+        <view class="footer-btn" hover-class="footer-btn-hover" bindtap="copyMarkdown">📋 复制MD</view>
+        <view class="footer-btn primary" hover-class="footer-btn-hover" bindtap="switchToPreview">👁 预览 →</view>
+      </view>
     </view>
   </view>
-  
-  <!-- 语法帮助（可折叠） -->
-  <view class="help-section" wx:if="{{showHelp}}">
-    <view class="help-title">💡 Markdown语法速查</view>
+
+  <!-- 预览面板 -->
+  <view class="panel {{activeTab === 'preview' ? 'show' : 'hide'}}">
+    <scroll-view scroll-y class="preview-scroll">
+      <view class="markdown-body {{themeClass}}" wx:if="{{renderedHtml}}">
+        <rich-text nodes="{{renderedHtml}}"></rich-text>
+      </view>
+      <view class="empty-preview" wx:else>
+        <text class="empty-icon">📄</text>
+        <text class="empty-tip">请先在编辑器中输入 Markdown 文本</text>
+      </view>
+    </scroll-view>
+    <view class="preview-footer">
+      <view class="footer-btn" hover-class="footer-btn-hover" bindtap="copyHtml">📋 复制HTML</view>
+      <view class="footer-btn primary" hover-class="footer-btn-hover" bindtap="switchToEdit">← 继续编辑</view>
+    </view>
+  </view>
+
+  <!-- 语法速查（底部折叠） -->
+  <view class="help-toggle" bindtap="toggleHelp">
+    <text class="help-toggle-text">💡 Markdown 语法速查 {{showHelp ? '▲' : '▼'}}</text>
+  </view>
+  <view class="help-panel" wx:if="{{showHelp}}">
     <view class="syntax-grid">
-      <view class="syntax-item">
-        <text class="syntax-markdown"># 标题1</text>
-        <text class="syntax-result">大标题</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">## 标题2</text>
-        <text class="syntax-result">小标题</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">**粗体**</text>
-        <text class="syntax-result">粗体文本</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">*斜体*</text>
-        <text class="syntax-result">斜体文本</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">- 列表</text>
-        <text class="syntax-result">无序列表</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">1. 有序</text>
-        <text class="syntax-result">有序列表</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">[链接](url)</text>
-        <text class="syntax-result">超链接</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">`代码`</text>
-        <text class="syntax-result">行内代码</text>
-      </view>
-      <view class="syntax-item">
-        <text class="syntax-markdown">> 引用</text>
-        <text class="syntax-result">引用块</text>
+      <view class="syntax-item" wx:for="{{syntaxItems}}" wx:key="index">
+        <text class="syntax-md">{{item.md}}</text>
+        <text class="syntax-desc">{{item.desc}}</text>
       </view>
     </view>
   </view>
-  
-  <!-- 加载提示 -->
-  <view class="loading" wx:if="{{isLoading}}">
-    <view class="spinner"></view>
-    <text>正在渲染预览...</text>
-  </view>
+
 </view>

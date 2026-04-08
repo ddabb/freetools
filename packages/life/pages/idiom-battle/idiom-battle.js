@@ -19,13 +19,16 @@ Page({
   },
 
   onLoad() {
-    this._loadData();
     this._timer = null;
     this._battleUsed = new Set();
     this._battleConfirming = false;
     this._lastPinyin = null;
     this._lastCharNeed = null;
-    this._loadUserStats();
+    // 推迟 Storage 读取，避免 onLoad 耗时过长触发 execute-long-time 警告
+    setTimeout(() => {
+      this._loadData();
+      this._loadUserStats();
+    }, 0);
   },
 
   onPullDownRefresh() {
