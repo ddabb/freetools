@@ -11,6 +11,7 @@
   padding: 24rpx;
   margin-bottom: 20rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
 .form-item {
@@ -27,7 +28,7 @@
 }
 
 .required-mark {
-  color: #ff4d4f;
+  color: #dc2626;
   margin-left: 8rpx;
 }
 
@@ -58,7 +59,7 @@
 
 .picker-text:empty:before {
   content: '选择日期';
-  color: #999;
+  color: #666;
 }
 
 .picker-icon {

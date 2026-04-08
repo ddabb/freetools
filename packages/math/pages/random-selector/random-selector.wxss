@@ -49,7 +49,7 @@
   text-align: center;
   font-size: 17rpx;
   font-weight: 600;
-  color: #6c757d;
+  color: #495057;
   transition: all 0.3s ease;
   position: relative;
   border-radius: 16rpx;
@@ -161,7 +161,7 @@
   background-color: transparent;
   cursor: pointer;
   transition: transform 0.3s ease;
-  color: #6c757d;
+  color: #495057;
   font-size: 12rpx;
 }
 
@@ -538,7 +538,7 @@
 
 .empty-note {
   text-align: center;
-  color: #6c757d;
+  color: #555;
   padding: 40rpx 0;
   font-size: 15rpx;
   background-color: #f8f9fa;
@@ -717,7 +717,7 @@
 
 .revenue-label {
   font-size: 13rpx;
-  color: #6c757d;
+  color: #495057;
 }
 
 .revenue-value {

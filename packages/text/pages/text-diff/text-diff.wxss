@@ -30,7 +30,7 @@
 
 .setting-label {
   font-size: 22rpx;
-  color: #999;
+  color: #666;
   margin-bottom: 10rpx;
 }
 
@@ -117,7 +117,7 @@
   text-align: right;
   padding: 8rpx 20rpx;
   font-size: 22rpx;
-  color: #999;
+  color: #666;
   background: #fafafa;
 }
 
@@ -356,7 +356,7 @@
 .line-num {
   width: 60rpx;
   font-size: 22rpx;
-  color: #999;
+  color: #666;
   text-align: center;
   flex-shrink: 0;
 }
@@ -473,7 +473,7 @@
 .empty-hint {
   display: block;
   font-size: 26rpx;
-  color: #999;
+  color: #666;
 }
 
 /* 加载状态 */

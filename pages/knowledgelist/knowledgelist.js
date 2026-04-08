@@ -549,9 +549,15 @@ Page({
       console.log(`搜索筛选: "${searchKeyword}", 从 ${beforeSearchCount} 筛选到 ${filteredArticles.length}`);
     }
 
+    // 保存全部筛选结果到实例属性，只渲染前 pageSize 条
+    this._filteredAll = filteredArticles;
+    this._filteredPage = 0;
+    const pageSize = this.data.pageSize || 20;
+    const initialList = filteredArticles.slice(0, pageSize);
+
     this.setData({
-      list: filteredArticles,
-      isOver: true,
+      list: initialList,
+      isOver: filteredArticles.length <= pageSize,
       loading: false,
       refreshing: false
     });
@@ -665,9 +671,27 @@ Page({
    * 加载更多
    */
   loadMore() {
-    if (this.hasActiveFilters() || this.data.loading || this.data.isOver) {
+    if (this.data.loading || this.data.isOver) {
       return;
     }
+
+    // 筛选模式下：从实例属性追加数据
+    if (this._filteredAll && this._filteredAll.length > this.data.list.length) {
+      this._filteredPage = (this._filteredPage || 0) + 1;
+      const pageSize = this.data.pageSize || 20;
+      const start = this._filteredPage * pageSize;
+      const more = this._filteredAll.slice(start, start + pageSize);
+
+      this.setData({
+        list: this.data.list.concat(more),
+        isOver: start + pageSize >= this._filteredAll.length,
+        loading: false
+      });
+      return;
+    }
+
+    // 非筛选模式：分页加载
+    if (this.hasActiveFilters()) return;
 
     this.page++;
     this.loadArticles();

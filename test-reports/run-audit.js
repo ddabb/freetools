@@ -19,15 +19,29 @@ const path = require('path')
 const fs = require('fs')
 
 // ============================================================
+// Patch: Node.js >= 18 在 Windows 上 spawn .bat 需要 shell: true
+// 必须在 require('miniprogram-automator') 之前执行
+// ============================================================
+if (process.platform === 'win32') {
+  const cp = require('child_process')
+  const _spawn = cp.spawn.bind(cp)
+  cp.spawn = function (cmd, args, opts) {
+    if (typeof cmd === 'string' && /\.bat$/i.test(cmd)) {
+      opts = Object.assign({ windowsHide: true }, opts, { shell: true })
+    }
+    return _spawn(cmd, args, opts)
+  }
+}
+
+// ============================================================
 // 配置
 // ============================================================
 const PROJECT_PATH = path.resolve(__dirname, '..')
 const REPORT_DIR = path.resolve(__dirname)
 const REPORT_PATH = path.join(REPORT_DIR, 'audits-report.html')
-const PAGE_DWELL_MS = 3000       // 页面停留时间
-const NAVIGATE_TIMEOUT_MS = 20000 // navigateTo 超时
-const RESET_INTERVAL = 4          // 每 N 个普通页面 reLaunch 重置
-const MAX_CONSECUTIVE_FAILS = 10  // 连续失败熔断阈值
+const PAGE_DWELL_MS = 3000       // 页面停留时间（等待审计数据采集）
+const NAVIGATE_TIMEOUT_MS = 15000 // 单次导航超时
+const MAX_CONSECUTIVE_FAILS = 15  // 连续失败熔断阈值
 const MAIN_ONLY = process.argv.includes('--main-only')
 const LIMIT_ARG = process.argv.findIndex(a => a === '--limit')
 const PAGE_LIMIT = LIMIT_ARG !== -1 && process.argv[LIMIT_ARG + 1] ? parseInt(process.argv[LIMIT_ARG + 1], 10) : 0
@@ -41,7 +55,6 @@ const CLI_PATH = process.env.DEVTOOLS_CLI || 'F:\\微信web开发者工具\\cli.
 function getPageInfo() {
   const appJson = JSON.parse(fs.readFileSync(path.join(PROJECT_PATH, 'app.json'), 'utf-8'))
 
-  // 读取 tabbar 页面列表
   const tabBarPages = new Set()
   if (appJson.tabBar && appJson.tabBar.list) {
     for (const item of appJson.tabBar.list) {
@@ -49,7 +62,6 @@ function getPageInfo() {
     }
   }
 
-  // 收集所有页面
   const pages = []
   for (const p of appJson.pages || []) pages.push('/' + p)
   if (!MAIN_ONLY) {
@@ -61,30 +73,14 @@ function getPageInfo() {
   return { pages, tabBarPages }
 }
 
-// 回退到首页（清除页面栈）
-async function resetToHome(miniProgram) {
-  try {
-    await miniProgram.reLaunch('/pages/index/index')
-    await sleep(800)
-  } catch (_) {
-    try {
-      await miniProgram.switchTab('/pages/index/index')
-      await sleep(800)
-    } catch (_2) { /* 无法回退，继续尝试 */ }
-  }
-}
-
-// navigateBack（带超时保护）
-async function safeNavigateBack(miniProgram) {
-  try {
-    await Promise.race([
-      miniProgram.navigateBack(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('navigateBack timeout')), 5000))
-    ])
-    await sleep(300)
-  } catch (_) {
-    // navigateBack 失败不影响主流程
-  }
+// 导航到指定页面，统一用 reLaunch（最稳定，无页面栈问题）
+async function navigateToPage(miniProgram, pagePath) {
+  await Promise.race([
+    miniProgram.reLaunch(pagePath),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
+    )
+  ])
 }
 
 // ============================================================
@@ -101,8 +97,7 @@ async function runAudit() {
     pages.length = PAGE_LIMIT
   }
   console.log('   共 ' + pages.length + ' 个页面待访问' + (MAIN_ONLY ? '（仅主包）' : '（含分包）'))
-  console.log('   tabbar 页面 ' + tabBarPages.size + ' 个，将使用 switchTab')
-  console.log('   每 ' + RESET_INTERVAL + ' 个普通页面重置页面栈')
+  console.log('   tabbar 页面 ' + tabBarPages.size + ' 个')
   console.log('   报告输出: ' + REPORT_PATH + '\n')
 
   // 启动并连接
@@ -128,94 +123,43 @@ async function runAudit() {
   let successCount = 0
   let failCount = 0
   let consecutiveFails = 0
-  let normalSinceReset = 0  // 距上次重置以来的普通页面计数
+  const startTime = Date.now()
 
   for (let i = 0; i < pages.length; i++) {
     const pagePath = pages[i]
     const isTabBar = tabBarPages.has(pagePath)
     const label = '[' + (i + 1) + '/' + pages.length + ']'
+    const elapsed = Math.round((Date.now() - startTime) / 1000)
+    const eta = Math.round(((Date.now() - startTime) / (i + 1)) * (pages.length - i - 1) / 1000)
 
     try {
-      process.stdout.write(label + ' 访问 ' + pagePath + ' ... ')
+      process.stdout.write(label + ' ' + pagePath + ' ... ')
 
-      if (isTabBar) {
-        await miniProgram.switchTab(pagePath)
-        await sleep(PAGE_DWELL_MS)
-        console.log('✓ (tabbar)')
-      } else {
-        // 普通页面用 navigateTo，带超时保护
-        await Promise.race([
-          miniProgram.navigateTo(pagePath),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('navigate timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
-          )
-        ])
-        await sleep(PAGE_DWELL_MS)
-        console.log('✓')
-        normalSinceReset++
-      }
+      // 所有页面统一用 reLaunch（包括 tabBar 页面），避免 switchTab 超时
+      await navigateToPage(miniProgram, pagePath)
 
+      await sleep(PAGE_DWELL_MS)
+      const mins = Math.floor(eta / 60)
+      const secs = eta % 60
+      console.log('✓ (' + elapsed + 's, ETA ' + mins + ':' + String(secs).padStart(2, '0') + ')')
       results.push({ path: pagePath, status: 'ok', isTabBar })
       successCount++
       consecutiveFails = 0
-
-      // 每 N 个普通页面，reLaunch 回首页彻底重置
-      if (normalSinceReset >= RESET_INTERVAL) {
-        process.stdout.write('   🔄 重置页面栈... ')
-        await resetToHome(miniProgram)
-        normalSinceReset = 0
-        console.log('✓')
-      }
     } catch (err) {
       const errMsg = err.message || String(err)
+      console.log('✗ ' + errMsg)
+      results.push({ path: pagePath, status: 'error', error: errMsg, isTabBar })
+      failCount++
+      consecutiveFails++
 
-      // 连续失败每 3 次，尝试 reLaunch 重连
-      if (consecutiveFails > 0 && consecutiveFails % 3 === 0) {
-        process.stdout.write('🔄 尝试 reLaunch 重连... ')
-        await resetToHome(miniProgram)
-        normalSinceReset = 0
-        console.log('✓')
-      }
-
-      // 遇到 webview 层级限制或 timeout，回退页面栈后重试
-      if (errMsg.includes('webview count limit') || errMsg.includes('timeout')) {
-        process.stdout.write('🔄 重置页面栈后重试... ')
-        await resetToHome(miniProgram)
-        normalSinceReset = 0
-        await sleep(1000)
-        try {
-          await Promise.race([
-            miniProgram.navigateTo(pagePath),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('retry timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
-            )
-          ])
-          await sleep(PAGE_DWELL_MS)
-          console.log('✓')
-          results.push({ path: pagePath, status: 'ok', isTabBar, retried: true })
-          successCount++
-          consecutiveFails = 0
-          continue
-        } catch (retryErr) {
-          console.log('✗ ' + retryErr.message)
-          results.push({ path: pagePath, status: 'error', error: retryErr.message, isTabBar, retried: true })
-          failCount++
-          consecutiveFails++
-        }
-      } else {
-        console.log('✗ ' + errMsg)
-        results.push({ path: pagePath, status: 'error', error: errMsg, isTabBar })
-        failCount++
-        consecutiveFails++
-      }
-
-      // 连续失败熔断
       if (consecutiveFails >= MAX_CONSECUTIVE_FAILS) {
         console.log('\n⚠️  连续 ' + MAX_CONSECUTIVE_FAILS + ' 个页面失败，可能连接断开，终止')
         break
       }
     }
   }
+
+  const totalTime = Math.round((Date.now() - startTime) / 1000)
 
   // 触发官方 Audits 体验评分
   console.log('\n⏳ 触发官方体验评分（Audits）...')
@@ -234,6 +178,8 @@ async function runAudit() {
   console.log('\n📊 页面访问汇总：')
   console.log('   ✅ 成功: ' + successCount)
   console.log('   ❌ 失败: ' + failCount)
+  console.log('   ⏱️  总耗时: ' + Math.floor(totalTime / 60) + 'm ' + (totalTime % 60) + 's')
+
   if (failCount > 0) {
     console.log('\n   失败页面：')
     results.filter(r => r.status === 'error').forEach(r => console.log('     - ' + r.path + ': ' + r.error))
@@ -242,7 +188,15 @@ async function runAudit() {
   const resultJsonPath = path.join(REPORT_DIR, 'audit-pages.json')
   fs.writeFileSync(
     resultJsonPath,
-    JSON.stringify({ timestamp: new Date().toISOString(), pages: results, auditData }, null, 2),
+    JSON.stringify({
+      timestamp: new Date().toISOString(),
+      score: auditData ? auditData.score : null,
+      success: successCount,
+      fail: failCount,
+      totalTime,
+      pages: results,
+      auditData
+    }, null, 2),
     'utf-8'
   )
   console.log('\n   页面结果: ' + resultJsonPath)

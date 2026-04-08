@@ -242,7 +242,7 @@ page {
 
 .empty-tip {
   font-size: 28rpx;
-  color: #9ca3af;
+  color: #6b7280;
   text-align: center;
 }
 

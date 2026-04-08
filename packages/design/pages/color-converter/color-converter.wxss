@@ -192,7 +192,7 @@ page {
 .hex-prefix {
   font-size: 28rpx;
   font-weight: 700;
-  color: #667eea;
+  color: #4338ca;
   margin-right: 8rpx;
 }
 
@@ -387,7 +387,7 @@ page {
 /* 最近使用区域 */
 .clear-btn {
   font-size: 22rpx;
-  color: #ff4757;
+  color: #dc2626;
   font-weight: 600;
   padding: 16rpx 24rpx;
   min-width: 80rpx;

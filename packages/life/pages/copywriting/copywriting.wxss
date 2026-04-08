@@ -82,7 +82,7 @@
 
 .clear-btn text {
   font-size: 36rpx;
-  color: #999;
+  color: #666;
 }
 
 /* 刷新按钮 */
@@ -361,7 +361,7 @@
   margin-bottom: 20rpx;
   text-align: center;
   font-size: 20rpx;
-  color: #999;
+  color: #666;
   flex-shrink: 0;
   padding: 15rpx;
   background-color: white;

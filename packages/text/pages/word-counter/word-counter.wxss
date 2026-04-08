@@ -38,7 +38,7 @@ page {
 
 .char-hint {
   font-size: 24rpx;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 /* =====================

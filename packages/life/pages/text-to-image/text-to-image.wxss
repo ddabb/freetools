@@ -43,7 +43,7 @@
 
 .preview-tip {
   font-size: 22rpx;
-  color: #999;
+  color: #666;
 }
 
 .preview-container {

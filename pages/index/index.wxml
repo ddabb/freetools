@@ -65,8 +65,7 @@
               icon="{{item.icon}}"
               description="{{item.description}}"
               url="{{item.url}}"
-              frequency="{{toolFrequency[item.id] || 50}}"
-              category="{{getToolCategory(item.id)}}"
+              category="{{item._categoryClass}}"
               bind:tap="navigateToTool"
             />
           </view>
@@ -78,35 +77,33 @@
         <!-- 默认显示的工具列表 -->
         <view wx:else>
           <text class="section-title">{{activeCategory === '常用工具' ? '常用工具' : activeCategory}}</text>
-          
+
           <!-- 常用工具 -->
           <view wx:if="{{activeCategory === '常用工具'}}">
-            <tool-card 
-              wx:for="{{commonTools}}" 
+            <tool-card
+              wx:for="{{commonTools}}"
               wx:key="id"
               id="{{item.id}}"
               name="{{item.name}}"
               icon="{{item.icon}}"
               description="{{item.description}}"
               url="{{item.url}}"
-              frequency="{{toolFrequency[item.id] || 50}}"
-              category="{{getToolCategory(item.id)}}"
+              category="{{item._categoryClass}}"
               bind:tap="navigateToTool"
             />
           </view>
-          
+
           <!-- 分类工具 -->
           <view wx:else>
-            <tool-card 
-              wx:for="{{currentCategoryTools}}" 
+            <tool-card
+              wx:for="{{currentCategoryTools}}"
               wx:key="id"
               id="{{item.id}}"
               name="{{item.name}}"
               icon="{{item.icon}}"
               description="{{item.description}}"
               url="{{item.url}}"
-              frequency="{{toolFrequency[item.id] || 50}}"
-              category="{{getToolCategory(item.id)}}"
+              category="{{item._categoryClass}}"
               bind:tap="navigateToTool"
             />
           </view>
