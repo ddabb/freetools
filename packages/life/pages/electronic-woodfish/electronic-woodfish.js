@@ -22,7 +22,6 @@ Page({
 
     // 设置
     showSettings: false,
-    soundEnabled: true,
   },
 
   // 佛系文案库
@@ -59,26 +58,10 @@ Page({
     { id: 'hundredk', name: '佛光普照', desc: '累计敲击100000次', icon: '✨', count: 100000 },
   ],
 
-  // 音频上下文
-  audioCtx: null,
-
   onLoad() {
     this.loadData();
     this.showRandomPhrase();
     this.checkTodayMerit();
-  },
-
-  onReady() {
-    // 预加载音频
-    this.audioCtx = wx.createInnerAudioContext();
-    this.audioCtx.src = 'https://mmbiz.qpic.cn/mmbiz_png/jOTWgOic56ibQniaibZCG9icVibibicw5ibM7ic7O6rS8Wwib7h7icYbT1s9iaTicq8D9wiaQibwY7f4qibPZdicf5mnia4zGvib8hO8OQQ/0?wx_fmt=png'; // 占位，真实音效需要上传
-    this.audioCtx.autoplay = false;
-  },
-
-  onUnload() {
-    if (this.audioCtx) {
-      this.audioCtx.destroy();
-    }
   },
 
   // 加载数据
@@ -90,7 +73,6 @@ Page({
       meritCount: fishData.meritCount || 0,
       todayMerit: fishData.lastDate === today ? (fishData.todayMerit || 0) : 0,
       achievements: fishData.achievements || [],
-      soundEnabled: fishData.soundEnabled !== false,
       earnedAchievements: []
     });
 
@@ -165,21 +147,13 @@ Page({
       this.showRandomPhrase();
     }, 300);
 
-    // 播放音效
-    if (this.data.soundEnabled) {
-      this.playSound();
-    }
+    // 震动反馈
+    wx.vibrateShort({ type: 'light' });
 
     // 结束动画
     setTimeout(() => {
       this.setData({ isStriking: false, showRipple: false });
     }, 400);
-  },
-
-  // 播放音效（模拟音效，使用系统提示音）
-  playSound() {
-    // 微信小程序无法直接播放自定义音频，使用vibrate替代
-    wx.vibrateShort({ type: 'light' });
   },
 
   // 检查成就
@@ -234,13 +208,6 @@ Page({
   // 关闭设置
   closeSettings() {
     this.setData({ showSettings: false });
-  },
-
-  // 切换音效
-  toggleSound() {
-    const newVal = !this.data.soundEnabled;
-    this.setData({ soundEnabled: newVal });
-    this.saveData({ soundEnabled: newVal });
   },
 
   // 重置数据

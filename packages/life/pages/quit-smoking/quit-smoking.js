@@ -231,12 +231,12 @@ Page({
       this.setData({ breathProgress: Math.round(progress * 100) });
 
       if (elapsed < duration) {
-        requestAnimationFrame(tick);
+        setTimeout(tick, 16); // 约60fps
       } else {
         callback && callback();
       }
     };
-    requestAnimationFrame(tick);
+    tick();
   },
 
   // 结束呼吸练习

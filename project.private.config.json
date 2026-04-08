@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "成语接龙",
-          "pathName": "packages/life/pages/idiom-query/idiom-query",
+          "name": "电子木鱼",
+          "pathName": "packages/life/pages/electronic-woodfish/electronic-woodfish",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "成语接龙",
+          "pathName": "packages/life/pages/idiom-query/idiom-query",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "取数模拟器",

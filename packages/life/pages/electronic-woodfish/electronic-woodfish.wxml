@@ -123,14 +123,6 @@
       </view>
       <view class="modal-body settings-body">
         <view class="setting-item">
-          <view class="setting-row">
-            <text class="setting-label">音效震动</text>
-            <switch
-              checked="{{soundEnabled}}"
-              bindchange="toggleSound"
-              color="#c9a96e"
-            />
-          </view>
           <text class="setting-hint">敲击时产生轻微震动反馈</text>
         </view>
         <view class="setting-divider"></view>
