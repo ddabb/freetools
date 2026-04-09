@@ -310,7 +310,7 @@
 }
 
 .clear-btn {
-  background-color: #f72585;
+  background-color: #db2777;
   color: #ffffff;
   font-size: 13rpx;
   font-weight: 600;
@@ -928,7 +928,7 @@
 
 /* 清空按钮样式优化 */
 .clear-btn {
-  background-color: #f72585;
+  background-color: #db2777;
   color: #ffffff;
   font-size: 13rpx;
   font-weight: 600;

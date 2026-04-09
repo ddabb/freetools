@@ -33,16 +33,15 @@ Page({
         return {
           leftWord: matchWord,
           rightWord: word,
-          detailWord: matchWord,
+          queryWord: word,
           continueWord: matchWord,
           actionText: '继续逆查'
         };
       }
-
       return {
         leftWord: word,
         rightWord: matchWord,
-        detailWord: matchWord,
+        queryWord: word,
         continueWord: matchWord,
         actionText: '继续顺查'
       };
@@ -175,9 +174,9 @@ Page({
   },
 
   // =====================
-  //  结果项点击 → 显示详情
+  //  结果项点击 → 显示详情（通用，支持任意成语）
   // =====================
-  onQueryItemTap(e) {
+  onWordTap(e) {
     const word = e.currentTarget.dataset.word;
     if (!word) return;
 

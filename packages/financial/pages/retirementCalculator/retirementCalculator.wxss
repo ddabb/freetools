@@ -8,7 +8,9 @@
   border-radius: 24rpx;
   padding: 30rpx;
   margin-bottom: 30rpx;
-  box-shadow: 0 8rpx 32rpx rgba(52, 152, 219, 0.1);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  border: 1rpx solid #e5e7eb;
+  color: #374151;
 }
 
 .form-item {

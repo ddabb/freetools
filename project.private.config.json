@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "电子木鱼",
-          "pathName": "packages/life/pages/electronic-woodfish/electronic-woodfish",
+          "name": "今天吃什么",
+          "pathName": "packages/food/pages/what-to-eat/what-to-eat",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "电子木鱼",
+          "pathName": "packages/life/pages/electronic-woodfish/electronic-woodfish",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "成语接龙",

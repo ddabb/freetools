@@ -355,5 +355,22 @@ Page({
   // 防止冒泡
   preventBubble() {
     // 空函数，用于阻止事件冒泡
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const typeInfo = ANSWERS[this.data.answerType];
+    return {
+      title: `🔮 答案之书：${this.data.answer}`,
+      path: '/packages/life/pages/answer-book/answer-book'
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const typeInfo = ANSWERS[this.data.answerType];
+    return {
+      title: `🔮 答案之书：${this.data.answer}`
+    };
   }
 });

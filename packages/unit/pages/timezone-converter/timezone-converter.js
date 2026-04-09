@@ -72,6 +72,21 @@ Page({
   },
 
   onLoad() {
+    // 初始化tab active class
+    this.setData({
+      tabConverterClass: 'tab-item active',
+      tabMeetingClass: 'tab-item',
+      converterPageClass: 'converter-page',
+      meetingPageClass: 'meeting-page hidden',
+      pickerModalClass: 'city-picker-modal hidden',
+      cityGroupFavTitle: '⭐ 收藏城市',
+      cityGroupAllTitle: '所有城市',
+      showConverterPage: true,
+      showMeetingPage: false,
+      suggestionClass: 'suggestion-warning',
+      suggestionText: '部分城市处于非工作时间，请注意协调',
+      durationOptions: this.buildDurationOptions()
+    });
     this.initTime();
     this.loadFavorites();
     this.loadSelectedCities();
@@ -94,10 +109,17 @@ Page({
     // 默认基准城市为北京
     const beijing = TIMEZONE_DATA.find(c => c.city === '北京');
     
+    // 为所有城市添加offsetText属性
+    const citiesWithOffsetText = TIMEZONE_DATA.map(city => ({
+      ...city,
+      offsetText: city.offset >= 0 ? `+${city.offset}` : `${city.offset}`
+    }));
+    
     this.setData({
       baseDate: dateStr,
       baseTime: timeStr,
-      baseCity: beijing
+      baseCity: { ...beijing, offsetText: beijing.offset >= 0 ? `+${beijing.offset}` : `${beijing.offset}` },
+      allCities: citiesWithOffsetText
     }, () => {
       this.calculateConversions();
     });
@@ -142,10 +164,38 @@ Page({
     wx.setStorageSync('timezoneSelected', this.data.selectedCities);
   },
 
-  // 切换标签
+  // 计算收藏标签的选中态
+  buildFavoriteTagsWithState() {
+    const selectedCities = this.data.selectedCities;
+    return this.data.favoriteCities.map(name => ({
+      name,
+      tagClass: selectedCities.includes(name) ? 'favorite-tag selected' : 'favorite-tag'
+    }));
+  },
+
+  // 计算会议时长选项的 active 态
+  buildDurationOptions() {
+    const cur = this.data.meetingDuration;
+    return [
+      { value: 30,  label: '30分钟', itemClass: cur === 30  ? 'duration-item active' : 'duration-item' },
+      { value: 60,  label: '1小时',  itemClass: cur === 60  ? 'duration-item active' : 'duration-item' },
+      { value: 90,  label: '1.5小时',itemClass: cur === 90  ? 'duration-item active' : 'duration-item' },
+      { value: 120, label: '2小时',  itemClass: cur === 120 ? 'duration-item active' : 'duration-item' }
+    ];
+  },
+
+  // 切换标签（JS预计算active class）
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab;
-    this.setData({ activeTab: tab });
+    this.setData({
+      activeTab: tab,
+      tabConverterClass: tab === 'converter' ? 'tab-item active' : 'tab-item',
+      tabMeetingClass: tab === 'meeting' ? 'tab-item active' : 'tab-item',
+      converterPageClass: tab === 'converter' ? 'converter-page' : 'converter-page hidden',
+      meetingPageClass: tab === 'meeting' ? 'meeting-page' : 'meeting-page hidden',
+      showConverterPage: tab === 'converter',
+      showMeetingPage: tab === 'meeting'
+    });
     if (tab === 'meeting') {
       this.calculateMeetingTimes();
     }
@@ -171,7 +221,7 @@ Page({
     });
   },
 
-  // 计算各城市时间
+  // 计算各城市时间（JS预计算所有展示值）
   calculateConversions() {
     if (!this.data.baseDate || !this.data.baseTime || !this.data.baseCity) return;
 
@@ -184,50 +234,88 @@ Page({
 
       const offsetDiff = city.offset - baseOffset;
       const localTime = new Date(baseDateTime.getTime() + offsetDiff * 60 * 60 * 1000);
-      
+      const hour = localTime.getHours();
+      const isNight = hour < 6 || hour >= 22;
+      const isWorkTime = hour >= 9 && hour < 18;
+      const isFavorite = this.data.favoriteCities.includes(city.city);
+
       return {
         city: city.city,
         country: city.country,
         offset: city.offset,
         offsetDiff: offsetDiff,
-        offsetText: offsetDiff >= 0 ? `+${offsetDiff}` : `${offsetDiff}`,
+        offsetText: city.offset >= 0 ? `+${city.offset}` : `${city.offset}`,
         localDate: this.formatDate(localTime),
         localTime: this.formatTime(localTime),
-        isNight: localTime.getHours() < 6 || localTime.getHours() >= 22,
-        isWorkTime: localTime.getHours() >= 9 && localTime.getHours() < 18,
-        isFavorite: this.data.favoriteCities.includes(city.city)
+        // JS预计算展示值
+        itemClass: isNight ? 'city-item night' : isWorkTime ? 'city-item worktime' : 'city-item',
+        itemFlag: isNight ? '🌙' : '☀️',
+        itemStatusClass: isWorkTime ? 'time-status work' : 'time-status normal',
+        itemStatusText: isWorkTime ? '工作时间' : '非工作时间',
+        itemFavClass: isFavorite ? 'action-btn favorited' : 'action-btn',
+        itemFavIcon: isFavorite ? '★' : '☆'
       };
     }).filter(Boolean);
 
-    this.setData({ convertedTimes });
+    this.setData({
+      convertedTimes,
+      favoriteTagsWithState: this.buildFavoriteTagsWithState(),
+      durationOptions: this.buildDurationOptions()
+    });
   },
 
   // 显示城市选择器
   showCityPicker(e) {
     const mode = e.currentTarget.dataset.mode || 'add';
+    const selectedCities = this.data.selectedCities;
+    const favoriteCitiesWithState = this.data.favoriteCities.map(name => ({
+      name,
+      checkClass: selectedCities.includes(name) ? 'option-check checked' : 'option-check',
+      checkIcon: selectedCities.includes(name) ? '✓' : ''
+    }));
+    const filteredCities = TIMEZONE_DATA.map(city => ({
+      ...city,
+      offsetText: city.offset >= 0 ? `+${city.offset}` : `${city.offset}`,
+      isSelected: selectedCities.includes(city.city),
+      checkClass: selectedCities.includes(city.city) ? 'option-check checked' : 'option-check',
+      checkIcon: selectedCities.includes(city.city) ? '✓' : ''
+    }));
     this.setData({
       showCityPicker: true,
+      pickerModalClass: 'city-picker-modal',
       pickerMode: mode,
       searchKeyword: '',
-      filteredCities: TIMEZONE_DATA
+      cityGroupFavTitle: '⭐ 收藏城市',
+      cityGroupAllTitle: '所有城市',
+      favoriteCitiesWithState,
+      filteredCities
     });
   },
 
   // 关闭城市选择器
   closeCityPicker() {
-    this.setData({ showCityPicker: false });
+    this.setData({ showCityPicker: false, pickerModalClass: 'city-picker-modal hidden' });
   },
 
   // 搜索城市
   onSearchInput(e) {
     const keyword = e.detail.value.toLowerCase();
-    const filtered = TIMEZONE_DATA.filter(city => 
+    const selectedCities = this.data.selectedCities;
+    const filtered = TIMEZONE_DATA.map(city => ({
+      ...city,
+      offsetText: city.offset >= 0 ? `+${city.offset}` : `${city.offset}`,
+      isSelected: selectedCities.includes(city.city),
+      checkClass: selectedCities.includes(city.city) ? 'option-check checked' : 'option-check',
+      checkIcon: selectedCities.includes(city.city) ? '✓' : ''
+    })).filter(city => 
       city.city.toLowerCase().includes(keyword) ||
       city.country.toLowerCase().includes(keyword) ||
       city.abbr.toLowerCase().includes(keyword)
     );
     this.setData({ 
       searchKeyword: keyword,
+      cityGroupFavTitle: keyword ? '' : '⭐ 收藏城市',
+      cityGroupAllTitle: keyword ? '搜索结果' : '所有城市',
       filteredCities: filtered
     });
   },
@@ -312,11 +400,22 @@ Page({
 
   // 会议协调器：添加城市
   addMeetingCity() {
+    const selectedCities = this.data.selectedCities;
+    const filteredCities = TIMEZONE_DATA.map(city => ({
+      ...city,
+      offsetText: city.offset >= 0 ? `+${city.offset}` : `${city.offset}`,
+      isSelected: selectedCities.includes(city.city),
+      checkClass: selectedCities.includes(city.city) ? 'option-check checked' : 'option-check',
+      checkIcon: selectedCities.includes(city.city) ? '✓' : ''
+    }));
     this.setData({
       showCityPicker: true,
+      pickerModalClass: 'city-picker-modal',
       pickerMode: 'meeting',
       searchKeyword: '',
-      filteredCities: TIMEZONE_DATA
+      cityGroupFavTitle: '⭐ 收藏城市',
+      cityGroupAllTitle: '所有城市',
+      filteredCities
     });
   },
 
@@ -331,16 +430,16 @@ Page({
 
   // 会议协调器：设置时长
   onDurationChange(e) {
-    const duration = parseInt(e.detail.value) || 60;
+    const duration = parseInt(e.currentTarget.dataset.value) || 60;
     this.setData({ meetingDuration: duration }, () => {
       this.calculateMeetingTimes();
     });
   },
 
-  // 计算会议时间
+  // 计算会议时间（JS预计算所有展示值）
   calculateMeetingTimes() {
     if (this.data.meetingCities.length < 2) {
-      this.setData({ meetingResults: [] });
+      this.setData({ meetingResults: [], isAllWorkTime: false, hasNightTime: false, suggestionClass: 'suggestion-warning', suggestionText: '部分城市处于非工作时间，请注意协调' });
       return;
     }
 
@@ -348,7 +447,6 @@ Page({
     const baseDateTime = new Date(`${this.data.baseDate}T${this.data.baseTime}:00`);
     const baseOffset = this.data.baseCity.offset;
 
-    // 计算每个城市的工作时间重叠
     this.data.meetingCities.forEach(cityName => {
       const city = TIMEZONE_DATA.find(c => c.city === cityName);
       if (!city) return;
@@ -356,18 +454,37 @@ Page({
       const offsetDiff = city.offset - baseOffset;
       const localTime = new Date(baseDateTime.getTime() + offsetDiff * 60 * 60 * 1000);
       const hour = localTime.getHours();
-      
+      const isWorkTime = hour >= 9 && hour < 18;
+      const isNight = hour < 6 || hour >= 22;
+
       results.push({
         city: city.city,
         country: city.country,
         localTime: this.formatTime(localTime),
-        isWorkTime: hour >= 9 && hour < 18,
-        isOvertime: hour >= 18 && hour < 22,
-        isNight: hour < 6 || hour >= 22
+        isWorkTime: isWorkTime,
+        isNight: isNight,
+        // JS预计算展示值
+        itemClass: isWorkTime ? 'analysis-item good' : 'analysis-item warning',
+        itemFlag: isWorkTime ? '✅' : '⚠️',
+        itemTimeTagClass: isWorkTime ? 'time-tag work' : 'time-tag overtime',
+        itemTimeTagText: isWorkTime ? '工作时间' : '加班时间'
       });
     });
 
-    this.setData({ meetingResults: results });
+    const isAllWorkTime = results.length > 0 && results.every(r => r.isWorkTime);
+    const hasNightTime = results.some(r => r.isNight);
+    
+    const suggestionClass = isAllWorkTime ? 'suggestion-good' : hasNightTime ? 'suggestion-bad' : 'suggestion-warning';
+    const suggestionText = isAllWorkTime ? '所有城市都在工作时间，非常适合开会！' : hasNightTime ? '有城市处于深夜，建议调整会议时间' : '部分城市处于非工作时间，请注意协调';
+
+    this.setData({ 
+      meetingResults: results,
+      isAllWorkTime: isAllWorkTime,
+      hasNightTime: hasNightTime,
+      suggestionClass: suggestionClass,
+      suggestionText: suggestionText,
+      durationOptions: this.buildDurationOptions()
+    });
   },
 
   // 快速设置常用会议时间

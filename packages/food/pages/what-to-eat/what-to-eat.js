@@ -413,7 +413,19 @@ Page({
 
   // 显示全部食物清单
   showAllFoods() {
-    this.setData({ showFoodModal: true });
+    // 预处理食物数据，计算每份食物的热量
+    const processedFoodData = {};
+    Object.keys(this.data.foodData).forEach(category => {
+      processedFoodData[category] = this.data.foodData[category].map(food => ({
+        ...food,
+        caloriesPerPortion: Math.round((food.portion / 100) * food.calories)
+      }));
+    });
+    
+    this.setData({ 
+      showFoodModal: true,
+      foodData: processedFoodData 
+    });
   },
 
   // 关闭食物清单模态框

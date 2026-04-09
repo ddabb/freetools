@@ -51,13 +51,7 @@
       <view class="card-body">
         <textarea 
           class="md-textarea" 
-          placeholder="在此输入 Markdown 文本...
-
-支持：
-# 标题、**粗体**、*斜体*、
-- 列表、[链接](url)、
-> 引用、`code`、```代码块```
-| 表格 | 支持 |"
+          placeholder="在此输入 Markdown 文本... 支持： # 标题、**粗体**、*斜体*、 - 列表、[链接](url)、 > 引用、`code`、```代码块``` | 表格 | 支持 |"
           bindinput="mdInputChange"
           value="{{mdText}}"
           maxlength="-1"

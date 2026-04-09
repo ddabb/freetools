@@ -347,6 +347,19 @@
   color: #333;
 }
 
+/* 查询词本身：蓝色高亮，底部点线提示可点击查释义 */
+.result-query-word {
+  color: #1565c0;
+  border-bottom: 2rpx dotted #1565c0;
+  padding-bottom: 2rpx;
+}
+
+/* 候选词（接龙结果）：深色，底部点线提示可点击查释义 */
+.result-candidate-word {
+  border-bottom: 2rpx dotted #aaa;
+  padding-bottom: 2rpx;
+}
+
 .result-tail {
   display: flex;
   align-items: center;

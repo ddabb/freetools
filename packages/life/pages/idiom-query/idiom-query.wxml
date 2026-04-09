@@ -89,14 +89,20 @@
         class="result-item"
         wx:for="{{queryResults}}"
         wx:key="index"
-        data-word="{{item.detailWord}}"
-        bindtap="onQueryItemTap"
       >
         <view class="result-row">
           <view class="result-main">
-            <text class="result-word">{{item.leftWord}}</text>
+            <text
+              class="{{item.leftWord === item.queryWord ? 'result-word result-query-word' : 'result-word result-candidate-word'}}"
+              data-word="{{item.leftWord}}"
+              catchtap="onWordTap"
+            >{{item.leftWord}}</text>
             <text class="result-arrow-icon">→</text>
-            <text class="result-next">{{item.rightWord}}</text>
+            <text
+              class="{{item.rightWord === item.queryWord ? 'result-next result-query-word' : 'result-next result-candidate-word'}}"
+              data-word="{{item.rightWord}}"
+              catchtap="onWordTap"
+            >{{item.rightWord}}</text>
           </view>
           <view class="result-tail">
             <text

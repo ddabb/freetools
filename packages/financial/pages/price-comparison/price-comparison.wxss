@@ -70,9 +70,9 @@
 
 .btn-remove {
   font-size: 24rpx;
-  color: #ef4444;
+  color: #b91c1c;
   padding: 10rpx 20rpx;
-  background: #fef2f2;
+  background: #fecaca;
   border-radius: 24rpx;
   margin-left: 16rpx;
 }
@@ -118,7 +118,7 @@
 }
 
 .input-placeholder {
-  color: #bbb;
+  color: #9ca3af;
 }
 
 /* 单位选择器 */
@@ -226,19 +226,19 @@
   justify-content: center;
   padding: 24rpx;
   background: #fff;
-  border: 2rpx dashed #3498db;
+  border: 2rpx dashed #2563eb;
   border-radius: 16rpx;
 }
 
 .add-icon {
   font-size: 36rpx;
-  color: #3498db;
+  color: #2563eb;
   margin-right: 12rpx;
 }
 
 .add-text {
   font-size: 30rpx;
-  color: #3498db;
+  color: #2563eb;
   font-weight: 500;
 }
 
@@ -275,8 +275,8 @@
 }
 
 .btn-share {
-  background: #f0f9ff !important;
-  color: #0284c7 !important;
+  background: #dbeafe !important;
+  color: #1d4ed8 !important;
 }
 
 .btn-share.disabled {
@@ -285,8 +285,8 @@
 }
 
 .btn-reset {
-  background: #f3f4f6 !important;
-  color: #666 !important;
+  background: #e5e7eb !important;
+  color: #374151 !important;
 }
 
 .btn-icon {

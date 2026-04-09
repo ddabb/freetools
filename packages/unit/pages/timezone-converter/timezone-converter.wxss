@@ -4,6 +4,11 @@
   background: #f5f7fa;
 }
 
+/* 隐藏状态（JS控制显示） */
+.hidden {
+  display: none !important;
+}
+
 /* 标签栏 */
 .tab-bar {
   display: flex;
@@ -100,7 +105,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20rpx 24rpx;
-  background: #f8f9fa;
+  background: #eef2f7;
   border-radius: 12rpx;
   margin-bottom: 24rpx;
 }
@@ -119,14 +124,14 @@
 
 .city-detail {
   font-size: 24rpx;
-  color: #999;
+  color: #6b7280;
 }
 
 .change-btn {
   font-size: 26rpx;
-  color: #1890ff;
+  color: #096dd9;
   padding: 8rpx 20rpx;
-  background: #e6f7ff;
+  background: #d6e8fa;
   border-radius: 24rpx;
 }
 
@@ -142,7 +147,7 @@
 }
 
 .picker-box {
-  background: #f8f9fa;
+  background: #eef2f7;
   border-radius: 12rpx;
   padding: 20rpx 24rpx;
 }
@@ -206,19 +211,19 @@
   display: flex;
   align-items: center;
   padding: 10rpx 20rpx;
-  background: #e6f7ff;
+  background: #d6e8fa;
   border-radius: 24rpx;
 }
 
 .add-icon {
   font-size: 28rpx;
-  color: #1890ff;
+  color: #096dd9;
   margin-right: 8rpx;
 }
 
 .add-btn text:last-child {
   font-size: 26rpx;
-  color: #1890ff;
+  color: #096dd9;
 }
 
 /* 空提示 */
@@ -240,19 +245,19 @@
   display: flex;
   align-items: center;
   padding: 24rpx;
-  background: #f8f9fa;
+  background: #eef2f7;
   border-radius: 16rpx;
   border-left: 6rpx solid #ddd;
 }
 
 .city-item.worktime {
-  border-left-color: #52c41a;
-  background: #f6ffed;
+  border-left-color: #389e0d;
+  background: #e8f8d4;
 }
 
 .city-item.night {
-  border-left-color: #722ed1;
-  background: #f9f0ff;
+  border-left-color: #531dab;
+  background: #efdbff;
 }
 
 .city-main {
@@ -285,7 +290,7 @@
 
 .city-name-row .country {
   font-size: 24rpx;
-  color: #999;
+  color: #6b7280;
 }
 
 .offset-info {
@@ -296,8 +301,8 @@
 
 .offset-badge {
   font-size: 22rpx;
-  color: #1890ff;
-  background: #e6f7ff;
+  color: #1d4ed8;
+  background: #dbeafe;
   padding: 4rpx 12rpx;
   border-radius: 10rpx;
 }
@@ -309,18 +314,18 @@
 }
 
 .time-status.work {
-  color: #52c41a;
-  background: #f6ffed;
+  color: #389e0d;
+  background: #d9f7be;
 }
 
 .time-status.night {
-  color: #722ed1;
-  background: #f9f0ff;
+  color: #531dab;
+  background: #efdbff;
 }
 
 .time-status.normal {
-  color: #fa8c16;
-  background: #fff7e6;
+  color: #d46b08;
+  background: #ffe7ba;
 }
 
 .city-time {
@@ -476,7 +481,7 @@
 
 .analysis-city .country {
   font-size: 24rpx;
-  color: #999;
+  color: #6b7280;
 }
 
 .analysis-time {

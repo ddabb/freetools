@@ -160,7 +160,7 @@
                   <text class="food-emoji">{{foodItem.emoji}}</text>
                   <text class="food-name">{{foodItem.name}}</text>
                   <text class="food-portion">{{foodItem.portionDesc}}</text>
-                  <text class="food-calories">约{{(foodItem.portion/100*foodItem.calories).toFixed(0)}}大卡</text>
+                  <text class="food-calories">约{{foodItem.caloriesPerPortion}}大卡</text>
                 </view>
               </block>
             </view>

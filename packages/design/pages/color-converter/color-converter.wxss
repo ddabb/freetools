@@ -86,6 +86,7 @@ page {
   margin-top: -24rpx;
   position: relative;
   z-index: 1;
+  border: 1rpx solid #d1d5db;
 }
 
 .rgb-value-display {

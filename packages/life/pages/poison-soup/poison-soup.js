@@ -28,8 +28,7 @@ Page({
   onShareAppMessage() {
     return {
       title: '每日毒鸡汤',
-      path: '/packages/life/pages/poison-soup/poison-soup',
-      imageUrl: '/assets/icons/logo.png'
+      path: '/packages/life/pages/poison-soup/poison-soup'
     };
   },
 
