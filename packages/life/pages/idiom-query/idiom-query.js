@@ -30,18 +30,24 @@ Page({
   buildQueryResults(word, candidates, mode = this.data.queryMode) {
     return candidates.slice(0, 100).map(matchWord => {
       if (mode === 'reverse') {
+        // 逆查：查询词在右侧（word），候选词在左侧（matchWord）
         return {
           leftWord: matchWord,
           rightWord: word,
           queryWord: word,
+          leftClass: 'result-word result-candidate-word',
+          rightClass: 'result-next result-query-word',
           continueWord: matchWord,
           actionText: '继续逆查'
         };
       }
+      // 顺查：查询词在左侧（word），候选词在右侧（matchWord）
       return {
         leftWord: word,
         rightWord: matchWord,
         queryWord: word,
+        leftClass: 'result-word result-query-word',
+        rightClass: 'result-next result-candidate-word',
         continueWord: matchWord,
         actionText: '继续顺查'
       };
