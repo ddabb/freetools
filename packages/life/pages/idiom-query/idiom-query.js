@@ -12,6 +12,9 @@ Page({
     loading: true,
     hasContent: false, // 控制滚动区域显示
 
+    // 模糊匹配列表
+    fuzzyResults: [],
+
     // 详情弹窗
     showDetail: false,
     detailItem: null,
@@ -77,27 +80,40 @@ Page({
   },
 
   onQueryModeChange(e) {
-
+    console.log('[debug] onQueryModeChange 被调用', e);
+    
     const mode = e.currentTarget.dataset.mode;
-    if (!mode || mode === this.data.queryMode) return;
+    console.log('[debug] 目标模式:', mode, '当前模式:', this.data.queryMode);
+    
+    if (!mode) {
+      console.log('[debug] 无模式，直接返回');
+      return;
+    }
 
     const queryInput = this.data.queryInput.trim();
+    console.log('[debug] 当前输入内容:', queryInput);
+    
     const queryPlaceholder = this.getModePlaceholder(mode);
 
+    // 先更新模式
     this.setData({
       queryMode: mode,
       queryPlaceholder,
-      queryTip: queryInput ? this.data.queryTip : queryPlaceholder,
-      hasContent: queryInput ? this.data.hasContent : false,
     });
 
+    console.log('[debug] 数据服务就绪状态:', dataService.isReady());
+    
     if (queryInput && dataService.isReady()) {
+      console.log('[debug] 开始执行查询...');
+      // 立即使用新的模式进行查询（即使模式相同也要重新查询）
       this._doQuery(queryInput, mode);
       return;
     }
 
+    console.log('[debug] 条件不满足，清空结果');
     this.setData({
       queryResults: [],
+      fuzzyResults: [],
       queryTip: queryPlaceholder,
       hasContent: false,
     });
@@ -110,6 +126,7 @@ Page({
   _doQuery(word, mode = this.data.queryMode) {
     if (!dataService.isReady()) {
       wx.showToast({ title: '数据加载中，请稍候', icon: 'none' });
+      console.log('[debug] 数据服务未就绪');
       return;
     }
 
@@ -117,8 +134,20 @@ Page({
     const queryPlaceholder = this.getModePlaceholder(mode);
     const modeLabel = this.getModeLabel(mode);
 
-    // 先检查是否在成语库中
-    if (!dataService.hasWord(word)) {
+    console.log('[debug] 开始查询:', word, '模式:', mode);
+
+    // 精确匹配：直接走接龙查询
+    if (dataService.hasWord(word)) {
+      console.log('[debug] 精确匹配到成语:', word);
+      this._querySolitaire(word, mode);
+      return;
+    }
+
+    // 模糊匹配
+    const fuzzy = dataService.fuzzySearch(word);
+    console.log('[debug] 模糊匹配结果数量:', fuzzy.length, '结果:', fuzzy);
+    
+    if (fuzzy.length === 0) {
       wx.showToast({
         title: `"${word}" 不在成语词库中`,
         icon: 'none',
@@ -127,6 +156,7 @@ Page({
       this.setData({
         queryMode: mode,
         queryResults: [],
+        fuzzyResults: [],
         queryPlaceholder,
         queryTip: queryPlaceholder,
         hasContent: false,
@@ -135,24 +165,34 @@ Page({
       return;
     }
 
+    if (fuzzy.length === 1) {
+      // 唯一匹配 → 直接接龙（走现有逻辑）
+      const exact = fuzzy[0];
+      this.setData({ queryInput: exact });
+      this._querySolitaire(exact, mode);
+      return;
+    }
+
+    // 多个模糊匹配 → 每个结果只接一条龙
+    this._handleMultipleFuzzyResults(word, fuzzy, mode);
+  },
+
+  _querySolitaire(word, mode) {
+    // 查询词库中的成语接龙
+    const queryPlaceholder = this.getModePlaceholder(mode);
+    const modeLabel = this.getModeLabel(mode);
     const result = dataService.querySolitaire(word, mode);
 
     if (result.error) {
       let errorMessage = result.error;
-
       if (result.error === '该成语不在词库中') {
         errorMessage = `"${word}" 不在成语词库中`;
       }
-
-      wx.showToast({
-        title: errorMessage,
-        icon: 'none',
-        duration: 2000
-      });
-
+      wx.showToast({ title: errorMessage, icon: 'none', duration: 2000 });
       this.setData({
         queryMode: mode,
         queryResults: [],
+        fuzzyResults: [],
         queryPlaceholder,
         queryTip: queryPlaceholder,
         hasContent: false,
@@ -162,8 +202,6 @@ Page({
     }
 
     const results = this.buildQueryResults(word, result.candidates, mode);
-
-    // 更新历史记录
     const history = [word, ...this.data.queryHistory.filter(h => h !== word)].slice(0, 5);
     wx.setStorageSync('idiom_query_history', history);
 
@@ -172,11 +210,54 @@ Page({
       queryInput: word,
       queryPlaceholder,
       queryResults: results,
+      fuzzyResults: [],
       queryTip: result.candidates.length > 0 ? `共 ${result.candidates.length} 条${modeLabel}结果` : `暂无${modeLabel}结果`,
       queryHistory: history,
       hasContent: true,
     });
     this.queryCount = result.candidates.length;
+  },
+
+  /**
+   * 处理多个模糊匹配结果
+   * 每个结果只接一条龙（随机选择）
+   */
+  _handleMultipleFuzzyResults(word, fuzzyWords, mode) {
+    const queryPlaceholder = this.getModePlaceholder(mode);
+    const modeLabel = this.getModeLabel(mode);
+
+    // 为每个模糊匹配的成语获取一条随机接龙结果
+    const results = [];
+    fuzzyWords.forEach(fuzzyWord => {
+      const result = dataService.querySolitaire(fuzzyWord, mode);
+      if (!result.error && result.candidates.length > 0) {
+        // 随机选择一个接龙结果
+        const randomIndex = Math.floor(Math.random() * result.candidates.length);
+        const solitaireResults = this.buildQueryResults(fuzzyWord, [result.candidates[randomIndex]], mode);
+        results.push(...solitaireResults);
+      } else {
+        // 如果没有接龙结果，也显示该成语
+        const emptyResult = this.buildQueryResults(fuzzyWord, [], mode);
+        if (emptyResult.length > 0) {
+          results.push(emptyResult[0]);
+        }
+      }
+    });
+
+    const history = [word, ...this.data.queryHistory.filter(h => h !== word)].slice(0, 5);
+    wx.setStorageSync('idiom_query_history', history);
+
+    this.setData({
+      queryMode: mode,
+      queryInput: word,
+      queryPlaceholder,
+      queryResults: results,
+      fuzzyResults: [],
+      queryTip: `找到 ${fuzzyWords.length} 条匹配，已为每条显示一条随机接龙`,
+      queryHistory: history,
+      hasContent: true,
+    });
+    this.queryCount = results.length;
   },
 
   // =====================
@@ -263,6 +344,14 @@ Page({
     }
   },
 
+  // 点击模糊匹配结果 → 查询接龙
+  onFuzzyTap(e) {
+    const word = e.currentTarget.dataset.word;
+    if (!word) return;
+    this.setData({ queryInput: word });
+    this._doQuery(word);
+  },
+
   // =====================
   //  复制结果
   // =====================
@@ -283,6 +372,7 @@ Page({
     this.setData({
       queryInput: '',
       queryResults: [],
+      fuzzyResults: [],
       queryPlaceholder,
       queryTip: queryPlaceholder,
       hasContent: false,

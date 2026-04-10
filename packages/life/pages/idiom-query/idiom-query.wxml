@@ -76,7 +76,26 @@
         <text class="empty-text">{{queryTip}}</text>
       </view>
 
-      <!-- 结果列表 -->
+      <!-- 模糊匹配列表（多结果时展示） -->
+      <view class="fuzzy-section" wx:if="{{fuzzyResults.length > 0}}">
+        <view class="fuzzy-header">
+          <text class="fuzzy-title">找到 {{fuzzyResults.length}} 条匹配，请点选成语</text>
+        </view>
+        <view class="fuzzy-list">
+          <view
+            class="fuzzy-item"
+            wx:for="{{fuzzyResults}}"
+            wx:key="index"
+            data-word="{{item.word}}"
+            bindtap="onFuzzyTap"
+          >
+            <text class="fuzzy-word">{{item.word}}</text>
+            <text class="fuzzy-arrow">→</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 接龙结果列表 -->
       <scroll-view
         class="result-list"
         wx:if="{{queryResults.length > 0}}"

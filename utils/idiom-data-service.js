@@ -339,6 +339,25 @@ function isReady() {
 }
 
 /**
+ * 模糊搜索成语（包含匹配）
+ * @param {string} query - 查询字符串
+ * @returns {Array} 匹配的成语数组，最多返回 200 条
+ */
+function fuzzySearch(query) {
+  if (!query || !allWords) return [];
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  const results = [];
+  for (const word of allWords) {
+    if (word.includes(q)) {
+      results.push(word);
+    }
+    if (results.length >= 200) break;
+  }
+  return results;
+}
+
+/**
  * 获取成语尾字
  * @param {string} word - 成语
  * @returns {string}
@@ -348,69 +367,68 @@ function getLastChar(word) {
 }
 
 /**
- * 获取所有成语数组
- * @returns {Array} 所有成语数组
+ * 获取所有成语集合
+ * @returns {Set|null} 所有成语的 Set 集合，若未初始化则返回 null
  */
 function getAllWords() {
-  if (!allWords) return [];
-  return Array.from(allWords);
+  return allWords;
 }
 
 /**
- * 随机获取一个四字成语
- * @returns {string|null} 随机成语或 null
+ * 从所有成语中随机获取一个成语
+ * @returns {string|null} 随机成语，若未初始化则返回 null
  */
 function getRandomWord() {
-  if (!allWords) return null;
-  const fourCharWords = Array.from(allWords).filter(w => w.length === 4);
-  if (fourCharWords.length === 0) return null;
-  return fourCharWords[Math.floor(Math.random() * fourCharWords.length)];
+  if (!allWords || allWords.size === 0) return null;
+  const words = Array.from(allWords);
+  return words[Math.floor(Math.random() * words.length)];
 }
 
 /**
- * 查询成语接龙候选
+ * 查询成语接龙
  * @param {string} word - 查询的成语
- * @param {string} mode - 查询模式：forward(顺查) / reverse(逆查)
- * @returns {Object} { candidates: [], error: string|null }
+ * @param {string} mode - 模式：'forward'（顺查）或 'reverse'（逆查）
+ * @returns {Object} { candidates: Array, error: string|null }
  */
 function querySolitaire(word, mode = 'forward') {
   if (!isInitialized) {
-    return { candidates: [], error: '数据加载中' };
+    return { candidates: [], error: '数据未初始化' };
   }
-
-  if (!word) {
-    return { candidates: [], error: '请输入成语' };
-  }
-
-  if (!allWords.has(word)) {
+  
+  if (!hasWord(word)) {
     return { candidates: [], error: '该成语不在词库中' };
   }
-
+  
+  let candidates = [];
+  
   if (mode === 'reverse') {
-    const firstPy = wordToFirstPy.get(word);
-    if (!firstPy) {
-      return { candidates: [], error: '无法获取首字拼音' };
+    // 逆查：查找可以接在当前成语前面的成语
+    const firstPy = getWordFirstPy(word);
+    if (firstPy) {
+      candidates = getWordsEndingWith(firstPy);
     }
-
-    const candidates = lastIndex[firstPy] || [];
-    return { candidates, error: null };
+  } else {
+    // 顺查：查找可以接在当前成语后面的成语
+    const lastPy = getWordLastPy(word);
+    if (lastPy) {
+      candidates = getCandidates(lastPy);
+    }
   }
-
-  const lastPy = wordToLastPy.get(word);
-  if (!lastPy) {
-    return { candidates: [], error: '无法获取尾字拼音' };
-  }
-
-  const candidates = firstFullIndex[lastPy] || [];
+  
   return { candidates, error: null };
 }
 
-// 获取日志
+/**
+ * 获取日志
+ * @returns {Array} 日志数组
+ */
 function getLogs() {
   return wx.getStorageSync(LOG_KEY) || [];
 }
 
-// 清空日志
+/**
+ * 清除日志
+ */
 function clearLogs() {
   wx.removeStorageSync(LOG_KEY);
 }
@@ -432,6 +450,7 @@ module.exports = {
   getAllWords,
   getRandomWord,
   querySolitaire,
+  fuzzySearch,
   // 日志相关
   getLogs,
   clearLogs,
