@@ -12,7 +12,7 @@
   </view>
 
   <!-- 内容区域 -->
-  <view class="content-section" wx:if="{{!loading && !error && changelog}}">
+  <view class="content-section" wx:if="{{!loading}}">
     <!-- 最新版本 -->
     <view class="latest-section">
       <view class="latest-card">
@@ -20,8 +20,7 @@
           <view class="latest-info">
             <view class="latest-label">当前版本</view>
             <view class="version-row">
-              <text class="version-tag">v{{changelog.latestVersion}}</text>
-              <text class="version-date">{{changelog.lastUpdate}}</text>
+              <text class="version-tag">{{currentVersion}}</text>
             </view>
           </view>
           <view class="export-section">
@@ -35,7 +34,7 @@
     </view>
 
     <!-- 版本历史 -->
-    <view class="history-section">
+    <view class="history-section" wx:if="{{!error && changelog}}">
       <view class="section-header">
         <text class="section-title">更新历史</text>
       </view>

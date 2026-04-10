@@ -15,10 +15,13 @@ Page({
     loading: true,
     error: '',
     changelog: null,
-    exporting: false
+    exporting: false,
+    currentVersion: ''
   },
 
   onLoad() {
+    // 获取微信小程序的真实版本信息
+    this.getAppVersion();
     this.loadChangelog();
   },
 
@@ -144,6 +147,37 @@ Page({
       url,
       ttl: CACHE_EXPIRE
     });
+  },
+
+  // 获取微信小程序真实版本信息
+  getAppVersion() {
+    try {
+      // 获取小程序账号信息，包含版本信息
+      const accountInfo = wx.getAccountInfoSync();
+      console.log('[changelog] 账号信息:', accountInfo);
+      
+      const envVersion = accountInfo.miniProgram.envVersion;
+      console.log('[changelog] 环境类型:', envVersion);
+      
+      let version = accountInfo.miniProgram.version;
+      console.log('[changelog] 获取到小程序版本:', version);
+      
+      // 处理开发版和体验版版本号为空的情况
+      if (!version) {
+        version = envVersion === 'develop' ? '开发版' : envVersion === 'trial' ? '体验版' : '2.0.0';
+        console.log('[changelog] 使用默认版本:', version);
+      }
+      
+      this.setData({
+        currentVersion: version
+      });
+    } catch (error) {
+      console.error('[changelog] 获取版本信息失败:', error);
+      // 如果获取失败，使用默认版本
+      this.setData({
+        currentVersion: '2.0.0'
+      });
+    }
   },
 
   // 从 jsDelivr CDN 加载 changelog（带缓存）

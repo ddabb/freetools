@@ -85,6 +85,9 @@ Page({
       console.log('[copywriting] 使用缓存数据，分类数量:', cachedData.length);
       allCategories = cachedData;
       this.setData({ categories: cachedData });
+      
+      // 默认选择第一个分类
+      this.selectFirstCategory();
       return;
     }
 
@@ -133,6 +136,9 @@ Page({
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
                   console.log('[copywriting] 数据已保存到缓存');
+                  
+                  // 默认选择第一个分类
+                  this.selectFirstCategory();
                 }
               },
               fail: (err) => {
@@ -148,6 +154,9 @@ Page({
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
                   console.log('[copywriting] 数据已保存到缓存(含部分失败)');
+                  
+                  // 默认选择第一个分类
+                  this.selectFirstCategory();
                 }
               }
             });
@@ -160,6 +169,9 @@ Page({
             allCategories = cachedData;
             this.setData({ categories: cachedData });
             utils.showText('网络异常，使用缓存数据');
+            
+            // 默认选择第一个分类
+            this.selectFirstCategory();
           } else {
             console.error('[copywriting] 没有缓存数据可用');
             utils.showText('分类数据加载失败');
@@ -175,12 +187,32 @@ Page({
           allCategories = cachedData;
           this.setData({ categories: cachedData });
           utils.showText('网络连接失败，使用缓存数据');
+          
+          // 默认选择第一个分类
+          this.selectFirstCategory();
         } else {
           console.error('[copywriting] 网络失败且无缓存数据');
           utils.showText('网络请求失败，请检查网络连接');
         }
       }
     });
+  },
+
+  // 默认选择第一个分类
+  selectFirstCategory() {
+    const { categories } = this.data;
+    if (categories && categories.length > 0) {
+      const firstCategory = categories[0];
+      if (firstCategory && firstCategory.id) {
+        console.log('[copywriting] 自动选择第一个分类:', firstCategory.name, firstCategory.id);
+        this.setData({
+          selectedCategory: firstCategory.id,
+          searchKeyword: '',
+          scrollTop: 0
+        });
+        this.filterCopywritings();
+      }
+    }
   },
 
   // 选择分类
@@ -265,7 +297,7 @@ Page({
     const query = wx.createSelectorQuery().in(this);
     query.select('#cvs1')
       .fields({ node: true, size: true })
-      .exec((res) => {
+      .exec(async (res) => {
         if (!res[0] || !res[0].node) {
           wx.hideLoading();
           console.error('画布初始化失败', res);
@@ -284,44 +316,44 @@ Page({
         ctx.scale(dpr, dpr);
 
         // 绘制图片
-        this.drawImage(ctx, canvas, width, height, () => {
-          // 导出图片
-          wx.canvasToTempFilePath({
-            canvas: canvas,
-            x: 0, y: 0, width, height,
-            destWidth: width * dpr,
-            destHeight: height * dpr,
-            quality: 1, fileType: 'png',
-            success: (res) => {
-              wx.hideLoading();
-              // 保存到相册
-              wx.saveImageToPhotosAlbum({
-                filePath: res.tempFilePath,
-                success: () => utils.showSuccess('保存相册成功'),
-                fail: (err) => {
-                  if (err.errMsg && err.errMsg.includes('auth denied')) {
-                    wx.showModal({
-                      title: '提示',
-                      content: '需要您授权保存相册',
-                      success: (res) => res.confirm && wx.openSetting()
-                    });
-                  } else {
-                    utils.showText('保存失败');
-                  }
+        await this.drawImage(ctx, canvas, width, height);
+        
+        // 导出图片
+        wx.canvasToTempFilePath({
+          canvas: canvas,
+          x: 0, y: 0, width, height,
+          destWidth: width * dpr,
+          destHeight: height * dpr,
+          quality: 1, fileType: 'png',
+          success: (res) => {
+            wx.hideLoading();
+            // 保存到相册
+            wx.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: () => utils.showSuccess('保存相册成功'),
+              fail: (err) => {
+                if (err.errMsg && err.errMsg.includes('auth denied')) {
+                  wx.showModal({
+                    title: '提示',
+                    content: '需要您授权保存相册',
+                    success: (res) => res.confirm && wx.openSetting()
+                  });
+                } else {
+                  utils.showText('保存失败');
                 }
-              });
-            },
-            fail: () => {
-              wx.hideLoading();
-              utils.showText('生成失败');
-            }
-          });
+              }
+            });
+          },
+          fail: () => {
+            wx.hideLoading();
+            utils.showText('生成失败');
+          }
         });
       });
   },
 
   // 绘制图片
-  drawImage(ctx, canvas, width, height, callback) {
+  async drawImage(ctx, canvas, width, height, callback) {
     const { currentCopywriting } = this.data;
     const padding = 10;
     const qrSize = 85;
@@ -340,7 +372,7 @@ Page({
     let fromY = contentY;
     if (currentCopywriting && currentCopywriting.text) {
       const textHeight = qrY - contentY - 30;
-      fromY = imgGen.drawText(ctx, currentCopywriting.text, {
+      fromY = await imgGen.drawText(ctx, currentCopywriting.text, {
         x: padding,
         startY: contentY,
         maxWidth: maxContentWidth,
@@ -370,18 +402,26 @@ Page({
     // 绘制二维码
     const qrPath = '/images/mini.png';
     if (qrPath.startsWith('/') || qrPath.startsWith('http')) {
-      const img = canvas.createImage();
-      img.src = qrPath;
-      img.onload = () => {
-        imgGen.drawQRCode(ctx, img, {
-          qrX,
-          qrY,
-          qrSize
-        });
-        if (callback) callback();
-      };
+      return new Promise((resolve) => {
+        const img = canvas.createImage();
+        img.src = qrPath;
+        img.onload = () => {
+          imgGen.drawQRCode(ctx, img, {
+            qrX,
+            qrY,
+            qrSize
+          });
+          if (callback) callback();
+          resolve();
+        };
+        img.onerror = () => {
+          if (callback) callback();
+          resolve();
+        };
+      });
     } else {
       if (callback) callback();
+      return Promise.resolve();
     }
   },
 

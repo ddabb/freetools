@@ -4,7 +4,7 @@
  * 平台兼容：微信小程序 + 鸿蒙
  */
 
-const utils = require('./index');
+const fontLoader = require('./fontLoader');
 
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
@@ -150,23 +150,6 @@ function drawBackground(ctx, width, height, options = {}) {
  * @param {boolean} isBold - 是否加粗
  */
 function setCanvasFont(ctx, fontSize, fontType = 'handwriting', isBold = false) {
-  // 尝试获取全局应用实例，检查字体加载状态
-  let loadedFonts = [];
-  let fontsFailed = false;
-  
-  try {
-    if (typeof getApp === 'function') {
-      const app = getApp();
-      if (app && app.globalData) {
-        loadedFonts = app.globalData.loadedFonts || [];
-        fontsFailed = app.globalData.fontsFailed || false;
-        logDraw('获取全局字体加载状态', { loadedFonts, fontsFailed });
-      }
-    }
-  } catch (e) {
-    logDraw('获取全局应用实例失败', { error: e.message });
-  }
-
   // 基础字体栈
   const baseFontStacks = {
     title: ['Montserrat', 'Pacifico', 'Inter', 'Roboto', 'Noto Sans SC', '-apple-system', 'sans-serif'],
@@ -175,27 +158,9 @@ function setCanvasFont(ctx, fontSize, fontType = 'handwriting', isBold = false) 
     elegant: ['Raleway', 'Lato', 'Source Sans 3', 'Noto Sans SC', 'STKaiti', 'serif']
   };
 
-  // 根据加载状态构建字体栈
-  const buildFontFamily = (fontList) => {
-    const availableFonts = [];
-    const fallbackFonts = [];
-    
-    fontList.forEach(font => {
-      // 处理带引号的字体名称
-      const fontName = font.replace(/"/g, '');
-      if (loadedFonts.includes(fontName) || font === '-apple-system' || font === 'sans-serif' || font === 'serif' || font === 'cursive') {
-        availableFonts.push(font);
-      } else {
-        fallbackFonts.push(font);
-      }
-    });
-    
-    // 优先使用已加载的字体，然后是回退字体
-    return [...availableFonts, ...fallbackFonts].join(', ');
-  };
-
+  // 构建字体栈
   const fontList = baseFontStacks[fontType] || baseFontStacks.body;
-  const fontFamily = buildFontFamily(fontList);
+  const fontFamily = fontList.join(', ');
   const style = isBold ? 'bold ' : '';
   
   ctx.font = `${style}${fontSize}px ${fontFamily}`;
@@ -204,7 +169,7 @@ function setCanvasFont(ctx, fontSize, fontType = 'handwriting', isBold = false) 
   
   // 获取实际使用的字体
   const actualFont = ctx.font;
-  logDraw('设置Canvas字体', { fontSize, fontType, isBold, fontFamily, actualFont, loadedFonts });
+  logDraw('设置Canvas字体', { fontSize, fontType, isBold, fontFamily, actualFont });
 }
 
 /**
@@ -270,7 +235,7 @@ function getLineText(ctx, text, maxWidth) {
  * @param {object} options - 配置 {x, y, maxWidth, maxHeight, align}
  * @returns {number} 实际绘制高度
  */
-function drawText(ctx, text, options = {}) {
+async function drawText(ctx, text, options = {}) {
   const {
     x = 10,
     startY = 95,
@@ -278,6 +243,9 @@ function drawText(ctx, text, options = {}) {
     maxHeight = 400,
     align = 'left'
   } = options;
+
+  // 加载字体
+  await fontLoader.loadFonts('core');
 
   const params = calculateTextParams(text.length, maxHeight);
   const { fontSize, lineHeight, maxLines } = params;

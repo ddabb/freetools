@@ -15,6 +15,20 @@ Page({
 
   onLoad() {
     wx.setNavigationBarTitle({ title: '文案生图' });
+    
+    // 加载字体
+    this.loadFonts();
+  },
+  
+  // 加载字体
+  async loadFonts() {
+    try {
+      console.log('开始加载字体...');
+      const result = await utils.loadFonts('core');
+      console.log('字体加载完成:', result);
+    } catch (error) {
+      console.error('字体加载失败:', error);
+    }
   },
 
   // 文字输入
@@ -36,7 +50,7 @@ Page({
   },
 
   // 绘制图片
-  drawImage(ctx, canvas, width, height, callback) {
+  async drawImage(ctx, canvas, width, height, callback) {
     const { text, from, selectedQrCode, customQrCodeImage } = this.data;
     const padding = 45;
     const qrSize = 85;
@@ -55,7 +69,7 @@ Page({
     let fromY = contentY;
     if (text) {
       const textHeight = qrY - contentY - 30;
-      fromY = imgGen.drawText(ctx, text, {
+      fromY = await imgGen.drawText(ctx, text, {
         x: padding,
         startY: contentY,
         maxWidth: maxContentWidth,
@@ -189,7 +203,7 @@ Page({
         ctx.scale(dpr, dpr);
 
         // 绘制完整图片
-        this.drawImage(ctx, canvas, this.data.canvaswidth, this.data.canvasheight, () => {
+        this.drawImage(ctx, canvas, this.data.canvaswidth, this.data.canvasheight, async () => {
           // 获取字体相关日志
           const logs = imgGen.getDrawLogs();
           console.log('字体绘制日志:', logs);

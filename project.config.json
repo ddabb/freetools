@@ -4,28 +4,32 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "file",
-        "value": "data/**/*"
+        "value": "data/**/*",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "pmpimages/**/*"
+        "value": "pmpimages/**/*",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "docs/**/*"
+        "value": "docs/**/*",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": ".codebuddy/**/*"
+        "value": ".codebuddy/**/*",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "项目提案.html"
+        "value": "项目提案.html",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "*.md"
+        "value": "*.md",
+        "type": "file"
+      },
+      {
+        "type": "folder",
+        "value": "minitest/"
       }
     ],
     "include": []
@@ -66,5 +70,6 @@
   "simulatorPluginLibVersion": {
     "wxext14566970e7e9f62": "2.27.3"
   },
-  "projectArchitecture": "multiPlatform"
+  "projectArchitecture": "multiPlatform",
+  "testRoot": "minitest/"
 }

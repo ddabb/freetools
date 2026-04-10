@@ -44,6 +44,9 @@ const { debounce, throttle } = require('./debounce');
 // 基础工具
 const util = require('./util');
 
+// 字体加载工具
+const fontLoader = require('./fontLoader');
+
 /**
  * 合并导出所有工具
  */
@@ -136,5 +139,10 @@ module.exports = {
   throttle: throttle,
   
   // 版本信息
-  VERSION: '1.0.0'
+  VERSION: '1.0.0',
+  
+  // 字体加载工具
+  fontLoader: fontLoader,
+  loadFonts: fontLoader.loadFonts,
+  preloadCoreFonts: fontLoader.preloadCoreFonts
 };
