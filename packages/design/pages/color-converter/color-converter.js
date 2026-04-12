@@ -26,7 +26,7 @@ Page({
       name: '紫蓝色',
       brightness: '偏亮 (154)',
       contrast: '良好',
-      suggestedTextColor: '#FFFFFF'
+      suggestedTextColor: '#000000'  // 亮度154>128，应用黑色文字
     },
     
     // 配色方案
