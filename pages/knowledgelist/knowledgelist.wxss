@@ -81,12 +81,17 @@ page {
 }
 
 /* ========== 分类导航 ========== */
+.category-container {
+  width: 100%;
+  position: relative;
+}
+
 .category-nav {
   width: 100%;
   white-space: nowrap;
   padding: 0;
   margin: 16rpx 0 24rpx;
-  height: auto;
+  height: 120rpx;
   flex-shrink: 0;
 }
 
@@ -94,8 +99,19 @@ page {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  height: auto;
+  height: 120rpx;
   padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+
+/* 隐藏滚动条但保持滚动功能 */
+.category-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.category-nav {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .category-item {
@@ -112,6 +128,8 @@ page {
   flex-shrink: 0;
   flex: none;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  height: 88rpx;
+  box-sizing: border-box;
 }
 
 .category-item text {

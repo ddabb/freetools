@@ -24,7 +24,7 @@
 
   <!-- 分类导航 -->
   <view class="category-container">
-    <scroll-view class="category-nav" scroll-x="true" scroll-with-animation="true">
+    <scroll-view class="category-nav" scroll-x="true" scroll-with-animation="true" scroll-left="{{categoryScrollLeft}}" enable-flex="true">
       <view class="category-nav-inner">
         <view 
           class="category-item category-tree-trigger {{showCategoryTree ? 'tree-open' : ''}}"

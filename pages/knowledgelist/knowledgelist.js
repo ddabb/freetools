@@ -43,6 +43,7 @@ Page({
     // UI
     scrollHeight: 0,
     showCategoryTree: false,
+    categoryScrollLeft: 0,
   },
 
   safeDecode(value) {
@@ -342,12 +343,13 @@ Page({
       this.categoryTree = categoryTree;
       this.searchIndex = searchIndex;
 
-      this.setData({
-        categoryTreeNodes,
-        categories,
-        currentCategory: selectedCategory,
-        list: []
-      });
+    this.setData({
+      categoryTreeNodes,
+      categories,
+      currentCategory: selectedCategory,
+      list: [],
+      categoryScrollLeft: 0
+    });
       this.page = 1;
       this.setPageTitle(selectedCategory, this.data.currentTag);
 
