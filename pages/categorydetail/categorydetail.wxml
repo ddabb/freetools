@@ -7,7 +7,7 @@
       </view>
       <view class="category-title">
         <text class="icon">📁</text>
-        <text class="title-text">{{categoryName}}</text>
+        <text class="title-text">{{categoryName.split('/').pop() || categoryName}}</text>
       </view>
       <text class="article-count">共 {{articles.length}} 篇文章</text>
     </view>
@@ -19,7 +19,15 @@
     <text class="breadcrumb-separator">/</text>
     <text class="breadcrumb-item" bindtap="goCategoryList">分类列表</text>
     <text class="breadcrumb-separator">/</text>
-    <text class="breadcrumb-item active">{{categoryName}}</text>
+    <block wx:for="{{categoryName.split('/')}}" wx:key="*this" wx:for-index="index">
+      <text wx:if="index < categoryName.split('/').length - 1" class="breadcrumb-item">
+        {{item}}
+      </text>
+      <text wx:else class="breadcrumb-item active">
+        {{item}}
+      </text>
+      <text wx:if="index < categoryName.split('/').length - 1" class="breadcrumb-separator">/</text>
+    </block>
   </view>
 
   <!-- 加载状态 -->

@@ -20,8 +20,9 @@ Page({
   onLoad(options) {
     if (options.category) {
       this.setData({ categoryName: options.category });
+      const displayName = options.category.split('/').pop() || options.category;
       wx.setNavigationBarTitle({
-        title: options.category + ' - 分类详情'
+        title: displayName + ' - 分类详情'
       });
       this.loadArticles();
     }
@@ -34,6 +35,12 @@ Page({
       url,
       ttl: CACHE_EXPIRE
     });
+  },
+
+  getLeafCategoryName(category) {
+    if (!category) return '未分类';
+    const parts = String(category).split('/').filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : category;
   },
 
   async loadArticles(isLoadMore = false) {
@@ -53,9 +60,15 @@ Page({
       );
 
       const articles = res.articles || [];
-      const filteredArticles = articles.filter(article => 
-        article.category === this.data.categoryName
-      );
+      const categoryName = this.data.categoryName;
+      
+      // 改进过滤逻辑，处理多层分类
+      const filteredArticles = articles.filter(article => {
+        if (!article.category) return false;
+        // 匹配精确分类或子分类（确保只匹配完整的路径段）
+        return article.category === categoryName || 
+               article.category.startsWith(categoryName + '/');
+      });
 
       // 按更新时间排序
       filteredArticles.sort((a, b) => {
@@ -64,11 +77,24 @@ Page({
         return dateB - dateA;
       });
 
-      // 添加序号
-      const articlesWithOrder = filteredArticles.map((article, index) => ({
-        ...article,
-        order: index + 1
-      }));
+      // 添加序号和显示分类
+      const articlesWithOrder = filteredArticles.map((article, index) => {
+        const categoryParts = article.category.split('/').filter(Boolean);
+        let displayCategory = article.category;
+        
+        // 如果分类路径较长，只显示最后两级，以便区分不同项目下的同名子文件夹
+        if (categoryParts.length > 2) {
+          displayCategory = categoryParts.slice(-2).join('/');
+        } else if (categoryParts.length > 1) {
+          displayCategory = categoryParts.join('/');
+        }
+        
+        return {
+          ...article,
+          order: index + 1,
+          displayCategory: displayCategory
+        };
+      });
 
       this.setData({
         articles: articlesWithOrder,
@@ -136,15 +162,17 @@ Page({
   },
 
   onShareAppMessage() {
+    const displayName = this.data.categoryName.split('/').pop() || this.data.categoryName;
     return {
-      title: this.data.categoryName + ' - 分类详情',
+      title: displayName + ' - 分类详情',
       path: `/pages/categorydetail/categorydetail?category=${this.data.categoryName}`
     };
   },
 
   onShareTimeline() {
+    const displayName = this.data.categoryName.split('/').pop() || this.data.categoryName;
     return {
-      title: this.data.categoryName + ' - 分类详情'
+      title: displayName + ' - 分类详情'
     };
   }
 });
