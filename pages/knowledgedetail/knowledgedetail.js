@@ -339,14 +339,8 @@ Page({
    */
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
-    wx.switchTab({
-      url: '/pages/knowledgelist/knowledgelist',
-      success: () => {
-        const app = getApp();
-        app.globalData = app.globalData || {};
-        app.globalData.pendingTag = tag;
-        app.globalData.pendingCategory = '';
-      }
+    wx.navigateTo({
+      url: `/pages/tagdetail/tagdetail?tag=${tag}`
     });
   },
 
@@ -374,14 +368,8 @@ Page({
   onCategoryTap() {
     const { article } = this.data;
     if (!article || !article.category) return;
-    wx.switchTab({
-      url: '/pages/knowledgelist/knowledgelist',
-      success: () => {
-        const app = getApp();
-        app.globalData = app.globalData || {};
-        app.globalData.pendingCategory = article.category;
-        app.globalData.pendingTag = '';
-      }
+    wx.navigateTo({
+      url: `/pages/categorydetail/categorydetail?category=${article.category}`
     });
   },
 

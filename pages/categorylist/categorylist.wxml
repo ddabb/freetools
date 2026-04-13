@@ -1,56 +1,73 @@
-<!-- packages/knowledge/pages/categorylist/categorylist.wxml -->
-
 <view class="container">
-  <!-- 页面标题 -->
   <view class="page-header">
     <text class="page-title">知识库分类</text>
     <text class="page-subtitle">按分类浏览知识内容</text>
   </view>
 
-  <!-- 页面加载动画 -->
-  <view class="page-loading" wx:if="{{loading && categories.length === 0}}">
-    <view class="loading-spinner">
-      <view class="spinner-circle"></view>
-      <view class="spinner-text">正在加载分类列表...</view>
+  <view class="search-container" wx:if="{{!loading && !error}}">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索分类..." 
+        placeholder-class="search-placeholder"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+      <text class="search-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
     </view>
   </view>
 
-  <!-- 分类列表（可滚动） -->
+  <view class="alphabet-filter" wx:if="{{!loading && !error && sortedLetters.length > 0}}">
+    <scroll-view class="alphabet-scroll" scroll-x="true" scroll-with-animation="true">
+      <view class="alphabet-list">
+        <view 
+          class="alphabet-item {{activeLetter === item ? 'active' : ''}}" 
+          wx:for="{{sortedLetters}}" 
+          wx:key="*this"
+          data-letter="{{item}}"
+          bindtap="onLetterTap"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
   <scroll-view class="category-scroll" scroll-y style="height: {{scrollHeight}}px;">
     <view class="category-list">
-      <!-- 加载状态 -->
-      <view class="loading-state" wx:if="{{loading && categories.length > 0}}">
+      <view class="loading-state" wx:if="{{loading && categories.length === 0}}">
         <text>加载中...</text>
       </view>
 
-      <!-- 错误提示 -->
       <view class="error-state" wx:if="{{error}}">
         <text class="error-text">{{errorMsg}}</text>
         <button class="retry-btn" bindtap="loadCategories">重试</button>
       </view>
 
-      <!-- 分类项 -->
-      <view 
-        class="category-item" hover-class="category-item-hover" 
-        wx:for="{{categories}}" 
-        wx:key="name"
-        data-category="{{item.name}}"
-        bindtap="onCategoryTap"
-      >
-        <view class="category-info">
-          <text class="category-name">{{item.label || item.name}}</text>
-          <text class="category-count">{{item.count}} 篇</text>
-        </view>
-
-        <view class="category-arrow">
-          <text class="arrow">→</text>
+      <view class="category-grid" wx:if="{{!loading && !error && displayCategories.length > 0}}">
+        <view 
+          class="category-card" 
+          hover-class="category-card-hover" 
+          wx:for="{{displayCategories}}" 
+          wx:key="name"
+          data-category="{{item.name}}"
+          bindtap="onCategoryTap"
+        >
+          <view class="category-card-body">
+            <view class="category-info">
+              <text class="category-name">{{item.label}}</text>
+              <text class="category-count">{{item.count}} 篇</text>
+            </view>
+          </view>
         </view>
       </view>
 
-      <!-- 空状态 -->
-      <view class="empty-state" wx:if="{{!loading && !error && categories.length === 0}}">
+      <view class="empty-state" wx:if="{{!loading && !error && displayCategories.length === 0}}">
         <text class="empty-icon">📂</text>
         <text class="empty-text">暂无分类</text>
+        <text class="empty-subtext" wx:if="{{searchKeyword}}">请尝试其他关键词</text>
       </view>
     </view>
   </scroll-view>

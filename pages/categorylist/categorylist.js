@@ -1,16 +1,19 @@
-// packages/knowledge/pages/categorylist/categorylist.js
-
 const cacheManager = require('../../utils/cacheManager');
+const pinyin = require('pinyin-pro');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
-// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
 const CACHE_KEY_CATEGORY_TREE = 'cdn_know_category_tree';
 const CACHE_KEY_CATEGORY_TREE_TS = 'cdn_know_category_tree_ts';
-const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000;
 
 Page({
   data: {
     categories: [],
+    displayCategories: [],
+    searchKeyword: '',
+    activeLetter: '',
+    letters: [],
+    sortedLetters: [],
     loading: true,
     error: false,
     errorMsg: '',
@@ -19,7 +22,6 @@ Page({
 
   getLeafCategoryName(category) {
     if (!category) return '未分类';
-
     const parts = String(category).split('/').filter(Boolean);
     return parts.length ? parts[parts.length - 1] : category;
   },
@@ -36,10 +38,22 @@ Page({
     return list;
   },
 
+  getPinyinFirstLetter(text) {
+    if (!text) return '其他';
+    const firstChar = text.charAt(0);
+    if (/[A-Za-z0-9]/.test(firstChar)) {
+      return firstChar.toUpperCase();
+    }
+    const pinyinResult = pinyin.pinyin(firstChar, { toneType: 'none', type: 'array' });
+    if (pinyinResult && pinyinResult.length > 0) {
+      const firstLetter = pinyinResult[0].charAt(0).toUpperCase();
+      if (/[A-Z]/.test(firstLetter)) {
+        return firstLetter;
+      }
+    }
+    return '其他';
+  },
 
-  /**
-   * 带缓存的请求（内存 → Storage → CDN，支持 304 + LRU）
-   */
   fetchWithCache(cacheKey, tsKey, url) {
     return cacheManager.fetchWithCache({
       cacheKey,
@@ -50,16 +64,14 @@ Page({
   },
 
   onLoad() {
-
     const systemInfo = wx.getSystemInfoSync();
-    const scrollHeight = systemInfo.windowHeight - 180;
+    const scrollHeight = systemInfo.windowHeight - 280;
     this.setData({ scrollHeight });
 
     wx.setNavigationBarTitle({
       title: '分类列表'
     });
 
-    // 设置分享按钮
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
@@ -68,7 +80,6 @@ Page({
     this.loadCategories();
   },
 
-  // 分享给好友
   onShareAppMessage() {
     return {
       title: '知识库分类列表',
@@ -76,7 +87,6 @@ Page({
     };
   },
 
-  // 分享到朋友圈
   onShareTimeline() {
     return {
       title: '知识库分类列表'
@@ -99,9 +109,23 @@ Page({
       const categoryList = this.flattenCategories(res)
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'zh-CN'));
 
+      const categoriesWithLetter = categoryList.map(category => ({
+        ...category,
+        letter: this.getPinyinFirstLetter(category.label)
+      }));
+
+      const lettersSet = new Set();
+      categoriesWithLetter.forEach(c => lettersSet.add(c.letter));
+      const sortedLetters = Array.from(lettersSet).sort((a, b) => {
+        if (a === '其他') return 1;
+        if (b === '其他') return -1;
+        return a.localeCompare(b);
+      });
 
       this.setData({
-        categories: categoryList,
+        categories: categoriesWithLetter,
+        displayCategories: categoriesWithLetter,
+        sortedLetters,
         loading: false,
         error: false
       });
@@ -113,18 +137,63 @@ Page({
     }
   },
 
+  onSearchInput(e) {
+    const keyword = e.detail.value;
+    this.setData({ searchKeyword: keyword });
+    this.filterCategories();
+  },
+
+  onSearchConfirm(e) {
+    const keyword = e.detail.value;
+    this.setData({ searchKeyword: keyword });
+    this.filterCategories();
+  },
+
+  clearSearch() {
+    this.setData({ searchKeyword: '' });
+    this.filterCategories();
+  },
+
+  onLetterTap(e) {
+    const letter = e.currentTarget.dataset.letter;
+    this.setData({ activeLetter: letter });
+    this.filterCategories();
+  },
+
+  filterCategories() {
+    let { categories, searchKeyword, activeLetter } = this.data;
+    let filtered = categories;
+
+    if (searchKeyword) {
+      const keyword = searchKeyword.toLowerCase();
+      filtered = filtered.filter(c => 
+        c.label.toLowerCase().includes(keyword)
+      );
+    }
+
+    if (activeLetter) {
+      filtered = filtered.filter(c => c.letter === activeLetter);
+    }
+
+    // 保持所有字母可见，即使没有对应分类
+    const allLettersSet = new Set();
+    categories.forEach(c => allLettersSet.add(c.letter));
+    const sortedLetters = Array.from(allLettersSet).sort((a, b) => {
+      if (a === '其他') return 1;
+      if (b === '其他') return -1;
+      return a.localeCompare(b);
+    });
+
+    this.setData({ 
+      displayCategories: filtered,
+      sortedLetters
+    });
+  },
 
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
-    wx.switchTab({
-      url: '/pages/knowledgelist/knowledgelist',
-      success: () => {
-        // switchTab 不支持传参，跳转后通过全局变量告知 knowledgelist 筛选
-        const app = getApp();
-        app.globalData = app.globalData || {};
-        app.globalData.pendingCategory = category;
-        app.globalData.pendingTag = '';
-      }
+    wx.navigateTo({
+      url: `/pages/categorydetail/categorydetail?category=${category}`
     });
   },
 
@@ -149,9 +218,7 @@ Page({
   },
 
   onRefresh() {
-    // 只清知识库相关缓存
     cacheManager.clearCdnCache('know_');
     this.loadCategories();
   }
 });
-

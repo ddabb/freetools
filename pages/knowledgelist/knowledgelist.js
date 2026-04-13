@@ -617,20 +617,9 @@ Page({
    */
   switchCategory(e) {
     const category = e.currentTarget.dataset.category || '';
-    if (this.data.currentCategory === category && !this.data.currentTag) {
-      this.setData({ showCategoryTree: false });
-      return;
-    }
-
-    this.setData({
-      currentCategory: category,
-      currentTag: '',
-      searchKeyword: '',
-      showCategoryTree: false
+    wx.navigateTo({
+      url: `/pages/categorydetail/categorydetail?category=${category}`
     });
-
-    this.setPageTitle(category, '');
-    this.refreshView();
   },
 
 
@@ -715,12 +704,9 @@ Page({
    */
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
-    this.setData({
-      currentTag: tag || '',
-      searchKeyword: ''
+    wx.navigateTo({
+      url: `/pages/tagdetail/tagdetail?tag=${tag}`
     });
-    this.setPageTitle(this.data.currentCategory, tag || '');
-    this.refreshView();
   },
 
 
@@ -729,7 +715,9 @@ Page({
    */
   onCategoryTap(e) {
     const { category } = e.currentTarget.dataset;
-    this.switchCategory({ currentTarget: { dataset: { category } } });
+    wx.navigateTo({
+      url: `/pages/categorydetail/categorydetail?category=${category}`
+    });
   },
 
   /**
@@ -798,7 +786,7 @@ Page({
 
     return {
       title,
-      query: `category=${encodeURIComponent(currentCategory)}`
+      query: `category=${currentCategory}`
     };
   }
 

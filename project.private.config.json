@@ -23,11 +23,32 @@
     "miniprogram": {
       "list": [
         {
+          "name": "知识分类明细",
+          "pathName": "pages/categorydetail/categorydetail",
+          "query": "category=%E8%BD%AF%E8%80%83%2F%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%2F%E9%A1%B9%E7%9B%AE%E9%87%87%E8%B4%AD%E7%AE%A1%E7%90%86",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "标签列表",
+          "pathName": "pages/taglist/taglist",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "分类列表",
+          "pathName": "pages/categorylist/categorylist",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "今天吃什么",
           "pathName": "packages/food/pages/what-to-eat/what-to-eat",
           "query": "",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "电子木鱼",

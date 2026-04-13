@@ -4,7 +4,9 @@
     "pages/knowledgelist/knowledgelist",
     "pages/knowledgedetail/knowledgedetail",
     "pages/categorylist/categorylist",
+    "pages/categorydetail/categorydetail",
     "pages/taglist/taglist",
+    "pages/tagdetail/tagdetail",
     "pages/changelog/changelog",
     "pages/about/about"
   ],

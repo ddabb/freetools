@@ -1,0 +1,90 @@
+<view class="container">
+  <!-- 分类头部 -->
+  <view class="category-header">
+    <view class="header-content">
+      <view class="back-button" bindtap="goBack">
+        <text class="back-icon">←</text>
+      </view>
+      <view class="category-title">
+        <text class="icon">📁</text>
+        <text class="title-text">{{categoryName}}</text>
+      </view>
+      <text class="article-count">共 {{articles.length}} 篇文章</text>
+    </view>
+  </view>
+
+  <!-- 面包屑导航 -->
+  <view class="breadcrumb">
+    <text class="breadcrumb-item" bindtap="goHome">首页</text>
+    <text class="breadcrumb-separator">/</text>
+    <text class="breadcrumb-item" bindtap="goCategoryList">分类列表</text>
+    <text class="breadcrumb-separator">/</text>
+    <text class="breadcrumb-item active">{{categoryName}}</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading && articles.length === 0}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && articles.length === 0}}">
+    <text class="empty-icon">📄</text>
+    <text class="empty-text">暂无文章</text>
+    <text class="empty-subtext">该分类下还没有文章</text>
+  </view>
+
+  <!-- 文章列表 -->
+  <view class="article-list" wx:if="{{!loading && articles.length > 0}}">
+    <view 
+      class="article-card" 
+      wx:for="{{articles}}" 
+      wx:key="filename"
+      bindtap="onArticleTap"
+      data-filename="{{item.filename}}"
+    >
+      <view class="card-inner">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="card-category">{{item.displayCategory || item.category}}</view>
+          <text class="card-order">#{{item.order}}</text>
+        </view>
+
+        <!-- 卡片标题 -->
+        <text class="card-title">{{item.title}}</text>
+
+        <!-- 卡片描述 -->
+        <text class="card-desc" wx:if="{{item.description}}">{{item.description}}</text>
+
+        <!-- 卡片底部 -->
+        <view class="card-footer">
+          <view class="card-tags">
+            <text 
+              class="card-tag" 
+              wx:for="{{item.tags}}" 
+              wx:for-item="tag" 
+              wx:key="*this"
+              catchtap="onTagTap"
+              data-tag="{{tag}}"
+            >#{{tag}}</text>
+          </view>
+          <view class="card-meta">
+            <text class="card-words">{{item.wordCount}}字</text>
+            <text class="card-time" wx:if="{{item.updateTime}}">{{item.updateTime}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading-more" wx:if="{{loading && articles.length > 0}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 结束提示 -->
+  <view class="list-end" wx:if="{{isOver && articles.length > 0}}">
+    <text class="end-text">— 已加载全部 —</text>
+  </view>
+</view>

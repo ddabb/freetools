@@ -1,28 +1,41 @@
-// packages/knowledge/pages/taglist/taglist.js
-
 const cacheManager = require('../../utils/cacheManager');
+const pinyin = require('pinyin-pro');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
-// 缓存配置（cdn_ 前缀支持 app.js 自动清理）
 const CACHE_KEY_TAGS = 'cdn_know_tags';
 const CACHE_KEY_TAGS_TS = 'cdn_know_tags_ts';
-const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
+const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000;
 
 Page({
   data: {
     tags: [],
     displayTags: [],
-    hasMore: false,
     searchKeyword: '',
+    activeLetter: '',
+    letters: [],
+    sortedLetters: [],
     loading: true,
     error: false,
     errorMsg: '',
     scrollHeight: 0
   },
 
-  /**
-   * 带缓存的请求（内存 → Storage → CDN，支持 304 + LRU）
-   */
+  getPinyinFirstLetter(text) {
+    if (!text) return '其他';
+    const firstChar = text.charAt(0);
+    if (/[A-Za-z0-9]/.test(firstChar)) {
+      return firstChar.toUpperCase();
+    }
+    const pinyinResult = pinyin.pinyin(firstChar, { toneType: 'none', type: 'array' });
+    if (pinyinResult && pinyinResult.length > 0) {
+      const firstLetter = pinyinResult[0].charAt(0).toUpperCase();
+      if (/[A-Z]/.test(firstLetter)) {
+        return firstLetter;
+      }
+    }
+    return '其他';
+  },
+
   fetchWithCache(cacheKey, tsKey, url) {
     return cacheManager.fetchWithCache({
       cacheKey,
@@ -33,16 +46,14 @@ Page({
   },
 
   onLoad() {
-
     const systemInfo = wx.getSystemInfoSync();
-    const scrollHeight = systemInfo.windowHeight - 180;
+    const scrollHeight = systemInfo.windowHeight - 280;
     this.setData({ scrollHeight });
 
     wx.setNavigationBarTitle({
       title: '标签列表'
     });
 
-    // 设置分享按钮
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
@@ -51,7 +62,6 @@ Page({
     this.loadTags();
   },
 
-  // 分享给好友
   onShareAppMessage() {
     return {
       title: '知识库标签列表',
@@ -59,7 +69,6 @@ Page({
     };
   },
 
-  // 分享到朋友圈
   onShareTimeline() {
     return {
       title: '知识库标签列表'
@@ -79,13 +88,25 @@ Page({
         CACHE_KEY_TAGS_TS,
         CDN_BASE + 'tags.json'
       );
-      const tags = res.tags || [];
-      this.filteredTags = tags;
-      this.displayLimit = 60;
+      const tags = (res.tags || []).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'zh-CN'));
+
+      const tagsWithLetter = tags.map(tag => ({
+        ...tag,
+        letter: this.getPinyinFirstLetter(tag.name)
+      }));
+
+      const lettersSet = new Set();
+      tagsWithLetter.forEach(t => lettersSet.add(t.letter));
+      const sortedLetters = Array.from(lettersSet).sort((a, b) => {
+        if (a === '其他') return 1;
+        if (b === '其他') return -1;
+        return a.localeCompare(b);
+      });
+
       this.setData({
-        tags,
-        displayTags: tags.slice(0, 60),
-        hasMore: tags.length > 60,
+        tags: tagsWithLetter,
+        displayTags: tagsWithLetter,
+        sortedLetters,
         loading: false,
         error: false
       });
@@ -97,86 +118,63 @@ Page({
     }
   },
 
-
-  /**
-   * 搜索输入
-   */
   onSearchInput(e) {
     const keyword = e.detail.value;
     this.setData({ searchKeyword: keyword });
-    this.filterTags(keyword);
+    this.filterTags();
   },
 
-  /**
-   * 搜索确认
-   */
   onSearchConfirm(e) {
     const keyword = e.detail.value;
     this.setData({ searchKeyword: keyword });
-    this.filterTags(keyword);
+    this.filterTags();
   },
 
-  /**
-   * 清除搜索
-   */
   clearSearch() {
     this.setData({ searchKeyword: '' });
-    this.filterTags('');
+    this.filterTags();
   },
 
-  /**
-   * 过滤标签
-   */
-  filterTags(keyword) {
-    const { tags } = this.data;
-    if (!keyword) {
-      const displayTags = tags.slice(0, 60);
-      this.filteredTags = tags;
-      this.displayLimit = 60;
-      this.setData({
-        displayTags,
-        hasMore: tags.length > 60
-      });
-      return;
+  onLetterTap(e) {
+    const letter = e.currentTarget.dataset.letter;
+    this.setData({ activeLetter: letter });
+    this.filterTags();
+  },
+
+  filterTags() {
+    let { tags, searchKeyword, activeLetter } = this.data;
+    let filtered = tags;
+
+    if (searchKeyword) {
+      const keyword = searchKeyword.toLowerCase();
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(keyword)
+      );
     }
 
-    const filtered = tags.filter(tag =>
-      tag.name.toLowerCase().includes(keyword.toLowerCase())
-    );
-    this.filteredTags = filtered;
-    this.displayLimit = 60;
-    const displayTags = filtered.slice(0, 60);
-    this.setData({
-      displayTags,
-      hasMore: filtered.length > 60
+    if (activeLetter) {
+      filtered = filtered.filter(t => t.letter === activeLetter);
+    }
+
+    // 保持所有字母可见，即使没有对应标签
+    const allLettersSet = new Set();
+    tags.forEach(t => allLettersSet.add(t.letter));
+    const sortedLetters = Array.from(allLettersSet).sort((a, b) => {
+      if (a === '其他') return 1;
+      if (b === '其他') return -1;
+      return a.localeCompare(b);
+    });
+
+    this.setData({ 
+      displayTags: filtered,
+      sortedLetters
     });
   },
 
   onTagTap(e) {
     const { tag } = e.currentTarget.dataset;
-    wx.switchTab({
-      url: '/pages/knowledgelist/knowledgelist',
-      success: () => {
-        const app = getApp();
-        app.globalData = app.globalData || {};
-        app.globalData.pendingTag = tag;
-        app.globalData.pendingCategory = '';
-      }
-    });
-  },
-
-  /**
-   * 加载更多标签
-   */
-  loadMore() {
-    const displayLimit = this.displayLimit || 0;
-    const filteredTags = this.filteredTags || [];
-    if (displayLimit >= filteredTags.length) return;
-    const newLimit = displayLimit + 60;
-    this.displayLimit = newLimit;
-    this.setData({
-      displayTags: filteredTags.slice(0, newLimit),
-      hasMore: newLimit < filteredTags.length
+    wx.navigateTo({
+      url: `/pages/tagdetail/tagdetail?tag=${tag}`
     });
   },
 
@@ -201,9 +199,7 @@ Page({
   },
 
   onRefresh() {
-    // 只清知识库相关缓存
     cacheManager.clearCdnCache('know_');
     this.loadTags();
   }
 });
-
