@@ -10,6 +10,7 @@ Page({
   data: {
     categories: [],
     displayCategories: [],
+    renderedCategories: [],  // 当前已渲染的分类（分页用）
     searchKeyword: '',
     activeLetter: '',
     letters: [],
@@ -17,7 +18,10 @@ Page({
     loading: true,
     error: false,
     errorMsg: '',
-    scrollHeight: 0
+    scrollHeight: 0,
+    pageSize: 30,           // 每页渲染数量
+    currentPage: 1,         // 当前页码
+    hasMore: true           // 是否还有更多
   },
 
   getLeafCategoryName(category) {
@@ -129,6 +133,9 @@ Page({
         loading: false,
         error: false
       });
+
+      // 分页渲染首屏
+      this.renderPage(1);
     } catch (err) {
       console.error('加载分类失败:', err);
       this.showError('网络错误，请检查连接');
@@ -160,6 +167,26 @@ Page({
     this.filterCategories();
   },
 
+  // 分页渲染：将 displayCategories 分批渲染到 renderedCategories
+  renderPage(page) {
+    const { displayCategories, pageSize } = this.data;
+    const end = page * pageSize;
+    const renderedCategories = displayCategories.slice(0, end);
+    const hasMore = end < displayCategories.length;
+    this.setData({
+      renderedCategories,
+      currentPage: page,
+      hasMore
+    });
+  },
+
+  // 加载更多（触底加载）
+  loadMore() {
+    const { currentPage, hasMore } = this.data;
+    if (!hasMore) return;
+    this.renderPage(currentPage + 1);
+  },
+
   filterCategories() {
     let { categories, searchKeyword, activeLetter } = this.data;
     let filtered = categories;
@@ -188,6 +215,9 @@ Page({
       displayCategories: filtered,
       sortedLetters
     });
+
+    // 筛选后重新从第一页渲染
+    this.renderPage(1);
   },
 
   onCategoryTap(e) {

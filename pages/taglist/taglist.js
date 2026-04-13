@@ -17,8 +17,14 @@ Page({
     loading: true,
     error: false,
     errorMsg: '',
-    scrollHeight: 0
+    scrollHeight: 0,
+    pageSize: 50,
+    hasMore: true,
+    loadingMore: false
   },
+
+  // 页面实例属性，不通过setData传递到渲染层
+  currentPage: 1,
 
   getPinyinFirstLetter(text) {
     if (!text) return '其他';
@@ -105,11 +111,15 @@ Page({
 
       this.setData({
         tags: tagsWithLetter,
-        displayTags: tagsWithLetter,
-        sortedLetters,
+        hasMore: true,
         loading: false,
         error: false
       });
+
+      // 重置分页状态
+      this.currentPage = 1;
+
+      this.filterTags();
     } catch (err) {
       console.error('加载标签失败:', err);
       this.showError('网络错误，请检查连接');
@@ -142,7 +152,7 @@ Page({
   },
 
   filterTags() {
-    let { tags, searchKeyword, activeLetter } = this.data;
+    let { tags, searchKeyword, activeLetter, pageSize } = this.data;
     let filtered = tags;
 
     if (searchKeyword) {
@@ -165,10 +175,18 @@ Page({
       return a.localeCompare(b);
     });
 
+    // 重置分页状态，只显示第一页
+    const paginatedTags = filtered.slice(0, pageSize);
+    const hasMore = filtered.length > pageSize;
+
     this.setData({ 
-      displayTags: filtered,
-      sortedLetters
+      displayTags: paginatedTags,
+      sortedLetters,
+      hasMore
     });
+
+    // 重置分页状态
+    this.currentPage = 1;
   },
 
   onTagTap(e) {
@@ -176,6 +194,43 @@ Page({
     wx.navigateTo({
       url: `/pages/tagdetail/tagdetail?tag=${tag}`
     });
+  },
+
+  loadMore() {
+    const { tags, searchKeyword, activeLetter, pageSize, hasMore, loadingMore } = this.data;
+
+    if (!hasMore || loadingMore) return;
+
+    this.setData({ loadingMore: true });
+
+    // 重新计算过滤后的标签
+    let filtered = tags;
+    if (searchKeyword) {
+      const keyword = searchKeyword.toLowerCase();
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(keyword)
+      );
+    }
+
+    if (activeLetter) {
+      filtered = filtered.filter(t => t.letter === activeLetter);
+    }
+
+    // 计算下一页的数据
+    const startIndex = this.currentPage * pageSize;
+    const endIndex = startIndex + pageSize;
+    const moreTags = filtered.slice(startIndex, endIndex);
+    const newDisplayTags = [...this.data.displayTags, ...moreTags];
+    const newHasMore = endIndex < filtered.length;
+
+    this.setData({
+      displayTags: newDisplayTags,
+      hasMore: newHasMore,
+      loadingMore: false
+    });
+
+    // 更新分页状态
+    this.currentPage++;
   },
 
   showError(message) {

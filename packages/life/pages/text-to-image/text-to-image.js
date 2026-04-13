@@ -16,8 +16,10 @@ Page({
   onLoad() {
     wx.setNavigationBarTitle({ title: '文案生图' });
     
-    // 加载字体
-    this.loadFonts();
+    // 延迟加载字体，避免阻塞 onLoad
+    setTimeout(() => {
+      this.loadFonts();
+    }, 0);
   },
   
   // 加载字体

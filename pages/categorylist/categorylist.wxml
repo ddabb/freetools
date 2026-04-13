@@ -46,11 +46,11 @@
         <button class="retry-btn" bindtap="loadCategories">重试</button>
       </view>
 
-      <view class="category-grid" wx:if="{{!loading && !error && displayCategories.length > 0}}">
+      <view class="category-grid" wx:if="{{!loading && !error && renderedCategories.length > 0}}">
         <view 
           class="category-card" 
           hover-class="category-card-hover" 
-          wx:for="{{displayCategories}}" 
+          wx:for="{{renderedCategories}}" 
           wx:key="name"
           data-category="{{item.name}}"
           bindtap="onCategoryTap"
@@ -64,7 +64,15 @@
         </view>
       </view>
 
-      <view class="empty-state" wx:if="{{!loading && !error && displayCategories.length === 0}}">
+      <view class="load-more" wx:if="{{hasMore && !loading && !error}}" bindtap="loadMore">
+        <text class="load-more-text">加载更多</text>
+      </view>
+
+      <view class="list-end" wx:if="{{!hasMore && renderedCategories.length > 0 && !loading && !error}}">
+        <text class="end-text">— 已加载全部 —</text>
+      </view>
+
+      <view class="empty-state" wx:if="{{!loading && !error && renderedCategories.length === 0}}">
         <text class="empty-icon">📂</text>
         <text class="empty-text">暂无分类</text>
         <text class="empty-subtext" wx:if="{{searchKeyword}}">请尝试其他关键词</text>

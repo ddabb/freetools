@@ -282,3 +282,29 @@ page {
   font-size: 28rpx;
   color: #999;
 }
+
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 0 16rpx;
+}
+
+.load-more-text {
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 500;
+  padding: 12rpx 40rpx;
+  border: 2rpx solid rgba(102, 126, 234, 0.3);
+  border-radius: 40rpx;
+}
+
+.list-end {
+  text-align: center;
+  padding: 32rpx 0 16rpx;
+}
+
+.end-text {
+  font-size: 24rpx;
+  color: #ccc;
+}

@@ -11,8 +11,7 @@
     "pages/about/about"
   ],
   "usingComponents": {
-    "tool-card": "/components/tool-card/tool-card",
-    "category-card": "/components/category-card/category-card"
+    "tool-card": "/components/tool-card/tool-card"
   },
   "requiredBackgroundModes": [],
   "subPackages": [
