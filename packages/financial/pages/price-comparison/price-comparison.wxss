@@ -140,7 +140,7 @@
 
 .unit-arrow {
   font-size: 20rpx;
-  color: #999;
+  color: #666;
 }
 
 /* 错误提示 */
@@ -281,7 +281,7 @@
 
 .btn-share.disabled {
   background: #f3f4f6 !important;
-  color: #9ca3af !important;
+  color: #666 !important;
 }
 
 .btn-reset {
@@ -315,7 +315,7 @@
 
 .history-text {
   font-size: 28rpx;
-  color: #666;
+  color: #333;
 }
 
 .toggle-icon {

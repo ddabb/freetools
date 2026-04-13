@@ -52,9 +52,13 @@ Page({
   },
 
   onLoad() {
-    const systemInfo = wx.getSystemInfoSync();
-    const scrollHeight = systemInfo.windowHeight - 280;
-    this.setData({ scrollHeight });
+    // 异步获取系统信息，避免阻塞
+    wx.getSystemInfo({
+      success: (res) => {
+        const scrollHeight = res.windowHeight - 280;
+        this.setData({ scrollHeight });
+      }
+    });
 
     wx.setNavigationBarTitle({
       title: '标签列表'
@@ -65,7 +69,10 @@ Page({
       menus: ['shareAppMessage', 'shareTimeline']
     });
 
-    this.loadTags();
+    // 延迟执行加载，让页面先渲染
+    setTimeout(() => {
+      this.loadTags();
+    }, 50);
   },
 
   onShareAppMessage() {

@@ -4,11 +4,6 @@
   background: #f5f7fa;
 }
 
-/* 隐藏状态（JS控制显示） */
-.hidden {
-  display: none !important;
-}
-
 /* 标签栏 */
 .tab-bar {
   display: flex;
@@ -28,17 +23,6 @@
   position: relative;
 }
 
-.tab-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  right: 20%;
-  height: 4rpx;
-  background: #1890ff;
-  border-radius: 2rpx;
-}
-
 .tab-icon {
   font-size: 32rpx;
   margin-right: 12rpx;
@@ -49,14 +33,8 @@
   color: #666;
 }
 
-.tab-item.active .tab-text {
-  color: #1890ff;
-  font-weight: 500;
-}
-
 /* 页面内容 */
-.converter-page,
-.meeting-page {
+.converter-page {
   padding: 24rpx;
   padding-bottom: 60rpx;
 }
@@ -64,9 +42,7 @@
 /* 卡片样式 */
 .base-time-card,
 .results-card,
-.favorites-card,
-.meeting-cities-card,
-.analysis-card {
+.favorites-card {
   background: #fff;
   border-radius: 16rpx;
   padding: 28rpx;
@@ -166,8 +142,7 @@
 }
 
 /* 快速时间 */
-.quick-time-section,
-.duration-section {
+.quick-time-section {
   margin-bottom: 24rpx;
 }
 
@@ -178,15 +153,13 @@
   margin-bottom: 16rpx;
 }
 
-.quick-times,
-.duration-options {
+.quick-times {
   display: flex;
   gap: 16rpx;
   flex-wrap: wrap;
 }
 
-.quick-item,
-.duration-item {
+.quick-item {
   padding: 16rpx 28rpx;
   background: #fff;
   border-radius: 30rpx;
@@ -195,15 +168,8 @@
   border: 2rpx solid #e8e8e8;
 }
 
-.quick-item-hover,
-.duration-item-hover {
+.quick-item-hover {
   background: #f0f0f0;
-}
-
-.duration-item.active {
-  background: #1890ff;
-  color: #fff;
-  border-color: #1890ff;
 }
 
 /* 添加按钮 */
@@ -403,153 +369,7 @@
   border: none;
 }
 
-/* 会议城市 */
-.meeting-city-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-}
 
-.meeting-city-item {
-  display: flex;
-  align-items: center;
-  padding: 16rpx 24rpx;
-  background: #f0f5ff;
-  border-radius: 30rpx;
-}
-
-.meeting-city-item .city-name {
-  font-size: 28rpx;
-  color: #1890ff;
-  margin-right: 16rpx;
-}
-
-.remove-btn {
-  font-size: 24rpx;
-  color: #999;
-  padding: 4rpx;
-}
-
-/* 分析结果 */
-.analysis-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-  margin-bottom: 24rpx;
-}
-
-.analysis-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24rpx;
-  background: #f8f9fa;
-  border-radius: 12rpx;
-  border-left: 6rpx solid #ddd;
-}
-
-.analysis-item.good {
-  border-left-color: #52c41a;
-  background: #f6ffed;
-}
-
-.analysis-item.warning {
-  border-left-color: #faad14;
-  background: #fffbe6;
-}
-
-.analysis-item.bad {
-  border-left-color: #ff4d4f;
-  background: #fff1f0;
-}
-
-.analysis-city {
-  display: flex;
-  align-items: center;
-}
-
-.analysis-city .city-flag {
-  margin-right: 16rpx;
-}
-
-.analysis-city .city-name {
-  font-size: 30rpx;
-  font-weight: 500;
-  color: #333;
-  margin-right: 12rpx;
-}
-
-.analysis-city .country {
-  font-size: 24rpx;
-  color: #6b7280;
-}
-
-.analysis-time {
-  text-align: right;
-}
-
-.local-time {
-  display: block;
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8rpx;
-}
-
-.time-tag {
-  font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 10rpx;
-}
-
-.time-tag.work {
-  color: #52c41a;
-  background: #d9f7be;
-}
-
-.time-tag.overtime {
-  color: #faad14;
-  background: #ffe7ba;
-}
-
-.time-tag.night {
-  color: #ff4d4f;
-  background: #ffccc7;
-}
-
-/* 建议框 */
-.suggestion-box {
-  padding: 24rpx;
-  background: #f6ffed;
-  border-radius: 12rpx;
-  border: 2rpx solid #b7eb8f;
-}
-
-.suggestion-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #52c41a;
-  margin-bottom: 12rpx;
-}
-
-.suggestion-good,
-.suggestion-warning,
-.suggestion-bad {
-  font-size: 28rpx;
-  line-height: 1.6;
-}
-
-.suggestion-good {
-  color: #52c41a;
-}
-
-.suggestion-warning {
-  color: #fa8c16;
-}
-
-.suggestion-bad {
-  color: #ff4d4f;
-}
 
 /* 城市选择器弹窗 */
 .city-picker-modal {

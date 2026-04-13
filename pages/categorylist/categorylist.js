@@ -9,7 +9,6 @@ const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000;
 Page({
   data: {
     categories: [],
-    displayCategories: [],
     renderedCategories: [],  // 当前已渲染的分类（分页用）
     searchKeyword: '',
     activeLetter: '',
@@ -20,7 +19,6 @@ Page({
     errorMsg: '',
     scrollHeight: 0,
     pageSize: 30,           // 每页渲染数量
-    currentPage: 1,         // 当前页码
     hasMore: true           // 是否还有更多
   },
 
@@ -97,6 +95,9 @@ Page({
     };
   },
 
+  // 页面实例属性，不通过setData传递到渲染层
+  displayCategories: [],
+
   async loadCategories() {
     this.setData({
       loading: true,
@@ -126,9 +127,11 @@ Page({
         return a.localeCompare(b);
       });
 
+      // 存储到实例属性，不通过setData传递到渲染层
+      this.displayCategories = categoriesWithLetter;
+
       this.setData({
         categories: categoriesWithLetter,
-        displayCategories: categoriesWithLetter,
         sortedLetters,
         loading: false,
         error: false
@@ -169,21 +172,21 @@ Page({
 
   // 分页渲染：将 displayCategories 分批渲染到 renderedCategories
   renderPage(page) {
-    const { displayCategories, pageSize } = this.data;
+    const { pageSize } = this.data;
     const end = page * pageSize;
-    const renderedCategories = displayCategories.slice(0, end);
-    const hasMore = end < displayCategories.length;
+    const renderedCategories = this.displayCategories.slice(0, end);
+    const hasMore = end < this.displayCategories.length;
     this.setData({
       renderedCategories,
-      currentPage: page,
       hasMore
     });
   },
 
   // 加载更多（触底加载）
   loadMore() {
-    const { currentPage, hasMore } = this.data;
+    const { renderedCategories, pageSize, hasMore } = this.data;
     if (!hasMore) return;
+    const currentPage = Math.ceil(renderedCategories.length / pageSize);
     this.renderPage(currentPage + 1);
   },
 
@@ -211,8 +214,10 @@ Page({
       return a.localeCompare(b);
     });
 
+    // 更新实例属性，不通过setData传递到渲染层
+    this.displayCategories = filtered;
+
     this.setData({ 
-      displayCategories: filtered,
       sortedLetters
     });
 

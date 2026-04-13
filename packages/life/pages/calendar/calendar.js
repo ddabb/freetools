@@ -190,8 +190,12 @@ Page({
     wx.setNavigationBarTitle({
       title: '万年历'
     })
-    const now = new Date()
-    this.initCalendar(now.getFullYear(), now.getMonth(), now.getDate())
+    
+    // 延迟初始化日历，让页面先渲染
+    setTimeout(() => {
+      const now = new Date()
+      this.initCalendar(now.getFullYear(), now.getMonth(), now.getDate())
+    }, 50);
   },
 
   initCalendar(year, month, day) {

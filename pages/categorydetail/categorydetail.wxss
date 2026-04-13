@@ -82,7 +82,7 @@ page {
   gap: 12rpx;
   margin: 20rpx 24rpx;
   font-size: 24rpx;
-  color: #666;
+  color: #333;
   background: white;
   padding: 16rpx 24rpx;
   border-radius: 16rpx;
@@ -138,7 +138,7 @@ page {
 
 .loading-text {
   font-size: 28rpx;
-  color: #667eea;
+  color: #333;
   font-weight: 500;
 }
 
