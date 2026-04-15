@@ -14,7 +14,7 @@ page {
 .tag-header {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
-  padding: 40rpx 24rpx 32rpx;
+  padding: 24rpx 24rpx 20rpx;
   box-shadow: 0 4rpx 16rpx rgba(240, 147, 251, 0.3);
   position: relative;
 }
@@ -73,38 +73,6 @@ page {
   font-size: 24rpx;
   opacity: 0.9;
   margin: 0 0 0 70rpx;
-}
-
-/* 面包屑导航 */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  margin: 20rpx 24rpx;
-  font-size: 24rpx;
-  color: #666;
-  background: white;
-  padding: 16rpx 24rpx;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.breadcrumb-item {
-  color: #f093fb;
-  transition: color 0.3s ease;
-}
-
-.breadcrumb-item:active {
-  color: #f5576c;
-}
-
-.breadcrumb-item.active {
-  color: #333;
-  font-weight: 600;
-}
-
-.breadcrumb-separator {
-  color: #999;
 }
 
 /* 加载状态 */

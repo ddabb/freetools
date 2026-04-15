@@ -109,18 +109,6 @@ Page({
     wx.navigateBack();
   },
 
-  goHome() {
-    wx.switchTab({
-      url: '/pages/index/index'
-    });
-  },
-
-  goTagList() {
-    wx.navigateTo({
-      url: '/pages/taglist/taglist'
-    });
-  },
-
   onPullDownRefresh() {
     this.setData({ page: 1 });
     this.loadArticles().finally(() => {

@@ -80,43 +80,29 @@ Page({
   },
 
   onQueryModeChange(e) {
-    console.log('[debug] onQueryModeChange 被调用', e);
-    
     const mode = e.currentTarget.dataset.mode;
-    console.log('[debug] 目标模式:', mode, '当前模式:', this.data.queryMode);
-    
-    if (!mode) {
-      console.log('[debug] 无模式，直接返回');
-      return;
-    }
-
+    if (!mode) return;
     const queryInput = this.data.queryInput.trim();
-    console.log('[debug] 当前输入内容:', queryInput);
-    
     const queryPlaceholder = this.getModePlaceholder(mode);
-
-    // 先更新模式
-    this.setData({
-      queryMode: mode,
-      queryPlaceholder,
-    });
-
-    console.log('[debug] 数据服务就绪状态:', dataService.isReady());
-    
+    this.setData({ queryMode: mode, queryPlaceholder });
     if (queryInput && dataService.isReady()) {
-      console.log('[debug] 开始执行查询...');
-      // 立即使用新的模式进行查询（即使模式相同也要重新查询）
       this._doQuery(queryInput, mode);
       return;
     }
+    this.setData({ queryResults: [], fuzzyResults: [], queryTip: queryPlaceholder, hasContent: false });
+  },
 
-    console.log('[debug] 条件不满足，清空结果');
-    this.setData({
-      queryResults: [],
-      fuzzyResults: [],
-      queryTip: queryPlaceholder,
-      hasContent: false,
-    });
+  // 切换查询模式（顺查/逆查）
+  onQueryModeToggle() {
+    const newMode = this.data.queryMode === 'forward' ? 'reverse' : 'forward';
+    const queryInput = this.data.queryInput.trim();
+    const queryPlaceholder = this.getModePlaceholder(newMode);
+    this.setData({ queryMode: newMode, queryPlaceholder });
+    if (queryInput && dataService.isReady()) {
+      this._doQuery(queryInput, newMode);
+      return;
+    }
+    this.setData({ queryResults: [], fuzzyResults: [], queryTip: queryPlaceholder, hasContent: false });
   },
 
   // =====================

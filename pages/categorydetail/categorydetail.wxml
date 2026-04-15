@@ -13,22 +13,6 @@
     </view>
   </view>
 
-  <!-- 面包屑导航 -->
-  <view class="breadcrumb">
-    <text class="breadcrumb-item" bindtap="goHome">首页</text>
-    <text class="breadcrumb-separator">/</text>
-    <text class="breadcrumb-item" bindtap="goCategoryList">分类列表</text>
-    <text class="breadcrumb-separator">/</text>
-    <block wx:for="{{categoryName.split('/')}}" wx:key="*this" wx:for-index="index">
-      <text wx:if="index < categoryName.split('/').length - 1" class="breadcrumb-item">
-        {{item}}
-      </text>
-      <text wx:else class="breadcrumb-item active">
-        {{item}}
-      </text>
-      <text wx:if="index < categoryName.split('/').length - 1" class="breadcrumb-separator">/</text>
-    </block>
-  </view>
 
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{loading && articles.length === 0}}">

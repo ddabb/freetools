@@ -135,18 +135,6 @@ Page({
     wx.navigateBack();
   },
 
-  goHome() {
-    wx.switchTab({
-      url: '/pages/index/index'
-    });
-  },
-
-  goCategoryList() {
-    wx.navigateTo({
-      url: '/pages/categorylist/categorylist'
-    });
-  },
-
   onPullDownRefresh() {
     this.setData({ page: 1 });
     this.loadArticles().finally(() => {

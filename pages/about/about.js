@@ -3,8 +3,8 @@ const utils = require('../../utils/index');
 
 Page({
   data: {
-    // 版本号（从 app.json 读取）
-    version: '2.0.12',
+    // 版本号（动态获取）
+    version: '',
     // CDN缓存是否已清除
     cacheCleared: false
   },
@@ -15,6 +15,27 @@ Page({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     });
+
+    // 获取小程序真实版本号
+    this.getAppVersion();
+  },
+
+  // 获取微信小程序真实版本信息
+  getAppVersion() {
+    try {
+      const accountInfo = wx.getAccountInfoSync();
+      const envVersion = accountInfo.miniProgram.envVersion;
+      let version = accountInfo.miniProgram.version;
+
+      if (!version) {
+        version = envVersion === 'develop' ? '开发版' : envVersion === 'trial' ? '体验版' : '';
+      }
+
+      this.setData({ version });
+    } catch (error) {
+      console.error('[about] 获取版本信息失败:', error);
+      this.setData({ version: '' });
+    }
   },
 
   onShow() {

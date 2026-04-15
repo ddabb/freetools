@@ -12,7 +12,7 @@
       <!-- 搜索框区域 -->
       <view class="search-bar">
         <view class="search-row">
-          <view class="search-input-wrap">
+          <view class="search-input-wrap search-input-wrap-with-btn">
             <input
               class="search-input"
               placeholder="{{queryPlaceholder}}"
@@ -24,18 +24,12 @@
             />
             <view class="search-clear" wx:if="{{queryInput}}" bindtap="onClearQuery">✕</view>
           </view>
+          <view class="mode-toggle" bindtap="onQueryModeToggle">
+            <text class="mode-toggle-text">{{queryMode === 'forward' ? '顺查' : '逆查'}}</text>
+          </view>
         </view>
-        <view class="mode-switch">
-          <view
-            class="mode-item {{queryMode === 'forward' ? 'active' : ''}}"
-            data-mode="forward"
-            bindtap="onQueryModeChange"
-          >顺查</view>
-          <view
-            class="mode-item {{queryMode === 'reverse' ? 'active' : ''}}"
-            data-mode="reverse"
-            bindtap="onQueryModeChange"
-          >逆查</view>
+        <view class="search-hint">
+          <text class="search-hint-text">点击按钮切换查询模式</text>
         </view>
         <view class="search-helper">
           <text class="search-helper-text">顺查看后续可接成语，逆查看前面可接成语；点词条看释义，点右侧按钮继续查询</text>
