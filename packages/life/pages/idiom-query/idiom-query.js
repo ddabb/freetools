@@ -164,10 +164,16 @@ Page({
   },
 
   _querySolitaire(word, mode) {
-    // 查询词库中的成语接龙
     const queryPlaceholder = this.getModePlaceholder(mode);
     const modeLabel = this.getModeLabel(mode);
     const result = dataService.querySolitaire(word, mode);
+
+    // 逆查时尾字索引仍在后台加载中，稍后重查
+    if (result.lastIndexLoading) {
+      wx.showToast({ title: '数据加载中，请稍候…', icon: 'none', duration: 1500 });
+      setTimeout(() => this._querySolitaire(word, mode), 1500);
+      return;
+    }
 
     if (result.error) {
       let errorMessage = result.error;
@@ -397,20 +403,17 @@ Page({
   // =====================
   _loadData() {
     this.setData({ loading: true });
-    
-    dataService.loadData().then(() => {
-      this.setData({ loading: false });
-      // CDN加载完成后，自动查询默认成语"为所欲为"
-      this._autoQueryDefault();
-    }).catch((err) => {
-      console.error('[idiom-query] 数据加载失败:', err);
-      this.setData({ loading: false });
-      wx.showToast({ 
-        title: '数据加载失败', 
-        icon: 'none',
-        duration: 2000 
-      });
-    });
+
+    // 顺查就绪时（首字索引加载完成）
+    dataService.loadData(
+      // onReady：首字索引就绪，顺查可工作
+      () => {
+        this.setData({ loading: false });
+        this._autoQueryDefault();
+      },
+      // onLastReady：尾字索引就绪，逆查可工作（静默后台加载，用户无感知）
+      () => {}
+    );
 
     // 恢复历史记录
     const history = wx.getStorageSync('idiom_query_history') || [];

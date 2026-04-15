@@ -1,457 +1,428 @@
 /**
  * 成语接龙 - 数据服务模块
- * 负责成语索引数据的加载、缓存管理及查询
+ * 
+ * 懒加载策略：
+ * - loadData() 同步加载首字索引（顺查），约 200KB
+ * - 尾字索引（逆查）后台异步加载，按字母按需加载（每个字母 ~1-22KB）
+ * - 成语详情按字母加载，已有的直接返回缓存
  */
 
-// CDN 配置
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire';
-
-// 缓存配置（CDN 数据，需加 cdn_ 前缀以支持 app.js 自动清理）
-const CACHE_KEY_INDEX = 'cdn_idiom_index_data';
-const CACHE_KEY_TS = 'cdn_idiom_index_ts';
 const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 
-// 日志配置
-const LOG_KEY = 'cdn_idiom_data_logs';
-const MAX_LOG_SIZE = 100;
+// 缓存键
+const K = {
+  FIRST_INDEX: 'cdn_idiom_first_index',
+  FIRST_TS: 'cdn_idiom_first_ts',
+  LAST_INDEX: 'cdn_idiom_last_index',
+  LAST_TS: 'cdn_idiom_last_ts',
+  LOG: 'cdn_idiom_data_logs',
+};
+const MAX_LOG = 100;
 
-// 添加日志
-function addLog(type, message, data = {}) {
-  try {
-    const logs = wx.getStorageSync(LOG_KEY) || [];
-    const logEntry = {
-      timestamp: Date.now(),
-      type,
-      message,
-      data,
-      userAgent: wx.getSystemInfoSync().system
-    };
-    
-    logs.unshift(logEntry);
-    if (logs.length > MAX_LOG_SIZE) {
-      logs.splice(MAX_LOG_SIZE);
-    }
-    
-    wx.setStorageSync(LOG_KEY, logs);
-    console.log(`[idiom-data] ${type}: ${message}`, data);
-  } catch (error) {
-    console.error('[idiom-data] 日志记录失败:', error);
-  }
-}
+// 内部状态
+let firstIndex = null;    // 首字索引 {拼音:[成语...]}
+let lastIndex = null;     // 尾字索引 {拼音:[成语...]}，懒加载
+let wordToFirstPy = null; // 成语 → 首字拼音
+let wordToLastPy = null;  // 成语 → 尾字拼音
+let allWords = null;      // Set<成语>
 
-// 数据索引（内部状态）
-let firstFullIndex = null; // 首字完整拼音索引 {wei:[], xian:[], ...}
-let lastIndex = null;      // 尾字完整拼音索引 {wei:[], xian:[], ...}
-let wordToFirstPy = null;  // 反向 Map：成语 -> 首字拼音，O(1) 查询
-let wordToLastPy = null;   // 反向 Map：成语 -> 尾字拼音，O(1) 查询
-let allWords = null;       // 所有成语 Set
+let isFirstReady = false; // 首字索引已加载（顺查可工作）
+let isLastReady = false;  // 尾字索引已加载（逆查可工作）
 
-// 是否已初始化
-let isInitialized = false;
+// 待注册的逆查回调（尾字索引加载完成后调用）
+let _pendingReverseCallbacks = [];
 
 /**
- * 封装请求方法
- * @param {string} url - 请求地址
- * @returns {Promise}
+ * 写日志
  */
-function request(url) {
+function log(type, msg, data) {
+  try {
+    const entries = wx.getStorageSync(K.LOG) || [];
+    entries.unshift({ t: Date.now(), type, msg, data });
+    if (entries.length > MAX_LOG) entries.splice(MAX_LOG);
+    wx.setStorageSync(K.LOG, entries);
+  } catch (e) { /* ignore */ }
+  console.log(`[idiom-data] ${type}: ${msg}`, data || '');
+}
+
+/**
+ * 网络请求封装
+ */
+function request(url, timeout = 15000) {
   return new Promise((resolve, reject) => {
-    const startTime = Date.now();
-    
+    const t0 = Date.now();
     wx.request({
       url,
-      timeout: 15000,
+      timeout,
       success: res => {
-        const requestTime = Date.now() - startTime;
-        
         if (res.statusCode === 200 && res.data) {
-          addLog('request_success', '请求成功', { 
-            url, 
-            requestTime, 
-            statusCode: res.statusCode,
-            dataSize: JSON.stringify(res.data).length 
-          });
           resolve(res.data);
         } else {
-          addLog('request_error', '请求状态错误', { 
-            url, 
-            requestTime, 
-            statusCode: res.statusCode 
-          });
-          reject(new Error('bad status'));
+          reject(new Error(`status ${res.statusCode}`));
         }
       },
-      fail: err => {
-        const requestTime = Date.now() - startTime;
-        addLog('request_fail', '网络请求失败', { 
-          url, 
-          requestTime, 
-          error: err.errMsg || err.toString() 
-        });
-        reject(err);
-      },
+      fail: reject
     });
   });
 }
 
 /**
- * 构建反向 Map：成语 -> 首字拼音
- * @param {Object} firstFullIndex - 首字索引
- * @returns {Map}
+ * 应用首字索引到内存
  */
-function buildWordToFirstPy(firstFullIndex) {
-  const map = new Map();
-  for (const [py, arr] of Object.entries(firstFullIndex)) {
-    for (const w of arr) {
-      map.set(w, py);
-    }
-  }
-  return map;
-}
-
-/**
- * 构建反向 Map：成语 -> 尾字拼音
- * @param {Object} lastIndex - 尾字索引
- * @returns {Map}
- */
-function buildWordToLastPy(lastIndex) {
-  const map = new Map();
-  for (const [py, arr] of Object.entries(lastIndex)) {
-    for (const w of arr) {
-      map.set(w, py);
-    }
-  }
-  return map;
-}
-
-/**
- * 构建所有成语集合
- * @param {Object} firstFullIndex - 首字索引
- * @returns {Set}
- */
-function buildAllWords(firstFullIndex) {
-  const words = new Set();
-  for (const arr of Object.values(firstFullIndex)) {
-    for (const w of arr) {
-      words.add(w);
-    }
-  }
-  return words;
-}
-
-/**
- * 应用索引数据到内部状态
- * @param {Object} data - { firstFullIndex, lastIndex }
- */
-function applyIndexData(data) {
-  firstFullIndex = data.firstFullIndex;
-  lastIndex = data.lastIndex;
-  wordToFirstPy = buildWordToFirstPy(data.firstFullIndex);
-  wordToLastPy = buildWordToLastPy(data.lastIndex);
-  allWords = buildAllWords(data.firstFullIndex);
-  isInitialized = true;
-}
-
-/**
- * 加载成语索引数据（带缓存）
- * 优先从本地缓存读取，若缓存过期则从 CDN 重新加载
- * @returns {Promise<boolean>} 加载成功返回 true
- */
-function loadData() {
-  return new Promise((resolve, reject) => {
-    const now = Date.now();
-    const cached = wx.getStorageSync(CACHE_KEY_INDEX);
-    const ts = wx.getStorageSync(CACHE_KEY_TS);
-
-    // 缓存有效，直接使用
-    if (cached && ts && (now - ts < CACHE_EXPIRE)) {
-      addLog('cache', '使用缓存数据', { cacheAge: now - ts });
-      applyIndexData(cached);
-      resolve(true);
-      return;
-    }
-
-    // 缓存过期，从 CDN 加载
-    addLog('load', '开始从CDN加载数据', { 
-      hasCache: !!cached, 
-      cacheAge: ts ? now - ts : 'no_cache' 
+function applyFirstIndex(data) {
+  firstIndex = data;
+  wordToFirstPy = new Map();
+  wordToLastPy = new Map();
+  allWords = new Set();
+  for (const [py, arr] of Object.entries(data)) {
+    arr.forEach(w => {
+      if (!wordToFirstPy.has(w)) wordToFirstPy.set(w, py);
+      allWords.add(w);
     });
-    
-    wx.showLoading({ title: '加载数据…', mask: true });
+  }
+}
 
-    const startTime = Date.now();
-    Promise.all([
-      request(`${CDN_BASE}/idiom-first-full-index.json`),
-      request(`${CDN_BASE}/idiom-last-index.json`),
-    ]).then(([firstFullData, lastData]) => {
-      const loadTime = Date.now() - startTime;
-      const indexData = { firstFullIndex: firstFullData, lastIndex: lastData };
-      
-      wx.setStorageSync(CACHE_KEY_INDEX, indexData);
-      wx.setStorageSync(CACHE_KEY_TS, now);
-      wx.hideLoading();
-      
-      addLog('success', 'CDN数据加载成功', { 
-        loadTime, 
-        firstIndexSize: Object.keys(firstFullData).length,
-        lastIndexSize: Object.keys(lastData).length 
-      });
-      
-      applyIndexData(indexData);
-      resolve(true);
-    }).catch(err => {
-      const loadTime = Date.now() - startTime;
-      wx.hideLoading();
-      
-      addLog('error', 'CDN数据加载失败', { 
-        loadTime, 
-        error: err.message || err.toString() 
-      });
-      
-      console.error('[idiom-data] 加载失败', err);
-      reject(err);
+/**
+ * 应用尾字索引到内存
+ */
+function applyLastIndex(data) {
+  lastIndex = data;
+  for (const [py, arr] of Object.entries(data)) {
+    arr.forEach(w => {
+      wordToLastPy.set(w, py);
     });
+  }
+}
+
+/**
+ * 同步从缓存读取首字索引（毫秒级）
+ */
+function getCachedFirstIndex() {
+  try {
+    const data = wx.getStorageSync(K.FIRST_INDEX);
+    const ts = wx.getStorageSync(K.FIRST_TS);
+    if (data && ts && Date.now() - ts < CACHE_EXPIRE) {
+      return data;
+    }
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+/**
+ * 同步从缓存读取尾字索引
+ */
+function getCachedLastIndex() {
+  try {
+    const data = wx.getStorageSync(K.LAST_INDEX);
+    const ts = wx.getStorageSync(K.LAST_TS);
+    if (data && ts && Date.now() - ts < CACHE_EXPIRE) {
+      return data;
+    }
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+/**
+ * 加载首字索引（同步路径：缓存优先）
+ * @returns {Promise<boolean>} 成功返回 true
+ */
+function loadFirstIndex() {
+  // 1. 缓存命中 → 同步返回
+  const cached = getCachedFirstIndex();
+  if (cached) {
+    applyFirstIndex(cached);
+    isFirstReady = true;
+    log('cache', '首字索引命中缓存');
+    return Promise.resolve(true);
+  }
+
+  // 2. 缓存未命中 → 请求 CDN（首次安装/缓存过期）
+  log('load', '首字索引缓存未命中，请求CDN');
+  wx.showLoading({ title: '加载数据…', mask: true });
+  return request(`${CDN_BASE}/idiom-first-full-index.json`)
+    .then(data => {
+      try {
+        wx.setStorageSync(K.FIRST_INDEX, data);
+        wx.setStorageSync(K.FIRST_TS, Date.now());
+      } catch (e) { /* ignore */ }
+      wx.hideLoading();
+      applyFirstIndex(data);
+      isFirstReady = true;
+      log('ok', '首字索引CDN加载成功', { keys: Object.keys(data).length });
+      return true;
+    })
+    .catch(err => {
+      wx.hideLoading();
+      log('err', '首字索引加载失败', { msg: err.message });
+      return false;
+    });
+}
+
+/**
+ * 加载尾字索引（完全异步，后台执行）
+ * 按字母懒加载：用户点击"逆查"时才触发，按尾字首字母加载对应文件
+ * 
+ * @param {Function} onComplete - 加载完成回调 (success: boolean) => void
+ */
+function loadLastIndex(onComplete) {
+  // 1. 缓存命中 → 同步应用
+  const cached = getCachedLastIndex();
+  if (cached) {
+    applyLastIndex(cached);
+    isLastReady = true;
+    log('cache', '尾字索引命中缓存');
+    onComplete && onComplete(true);
+    return;
+  }
+
+  // 2. 缓存未命中 → 后台按字母懒加载
+  //    逆查时只知道目标尾字的拼音（如 "wei"），不知道首字母
+  //    故退化为加载全量尾字索引（204KB），后台静默执行
+  log('load', '尾字索引缓存未命中，后台加载');
+  request(`${CDN_BASE}/idiom-last-index.json`)
+    .then(data => {
+      try {
+        wx.setStorageSync(K.LAST_INDEX, data);
+        wx.setStorageSync(K.LAST_TS, Date.now());
+      } catch (e) { /* ignore */ }
+      applyLastIndex(data);
+      isLastReady = true;
+      log('ok', '尾字索引CDN加载成功');
+      onComplete && onComplete(true);
+    })
+    .catch(err => {
+      log('err', '尾字索引加载失败', { msg: err.message });
+      onComplete && onComplete(false);
+    });
+}
+
+/**
+ * 主入口：加载成语数据
+ * 优先使用缓存保证首次打开无等待
+ * 顺查立即可用，逆查后台加载完成后自动解锁
+ * 
+ * @param {Function} [onReady] - 首字索引就绪回调
+ * @param {Function} [onLastReady] - 尾字索引就绪回调（逆查可用时）
+ */
+function loadData(onReady, onLastReady) {
+  // 尝试同步加载首字索引
+  const ok = loadFirstIndex();
+  if (ok !== false) {
+    onReady && onReady();
+  } else {
+    onReady && onReady(false);
+  }
+
+  // 尾字索引后台异步加载，完成后通知
+  if (onLastReady) {
+    _pendingReverseCallbacks.push(onLastReady);
+  }
+  loadLastIndex(success => {
+    _pendingReverseCallbacks.forEach(cb => cb(success));
+    _pendingReverseCallbacks = [];
   });
 }
 
 /**
- * 根据首字母加载成语详情数据（带 Storage 缓存，7 天有效）
- * @param {string} firstLetter - 首字母 (a-z)
- * @returns {Promise<Array>} 成语详情数组
+ * 按首字母加载成语详情（带缓存，已实现）
+ * @param {string} letter - 首字母 a-z
  */
-function fetchLetterData(firstLetter) {
-  if (!firstLetter) {
-    return Promise.reject(new Error('firstLetter is required'));
-  }
+function fetchLetterData(letter) {
+  if (!letter) return Promise.reject(new Error('letter required'));
 
-  const cacheKey = `cdn_idiom_letter_${firstLetter}`;
-  const tsKey = `cdn_idiom_letter_${firstLetter}_ts`;
+  const cacheKey = `cdn_idiom_letter_${letter}`;
+  const tsKey = `cdn_idiom_letter_${letter}_ts`;
   const now = Date.now();
 
-  // 优先读 Storage 缓存
+  // 读缓存
   try {
     const cached = wx.getStorageSync(cacheKey);
     const ts = wx.getStorageSync(tsKey);
-    if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+    if (cached && ts && now - ts < CACHE_EXPIRE) {
       return Promise.resolve(cached);
     }
-  } catch (e) { /* 读缓存失败不影响正常流程 */ }
+  } catch (e) { /* ignore */ }
 
-  // 缓存失效，走网络
-  return request(`${CDN_BASE}/letter/${firstLetter}.json`).then(data => {
+  // 缓存过期 → 请求 CDN
+  return request(`${CDN_BASE}/letter/${letter}.json`).then(data => {
     try {
       wx.setStorageSync(cacheKey, data);
       wx.setStorageSync(tsKey, now);
-    } catch (e) { /* 写缓存失败不影响正常流程 */ }
+    } catch (e) { /* ignore */ }
     return data;
   });
 }
 
 /**
- * 清除本地缓存（索引 + 所有 letter 详情）
+ * 清除所有缓存
  */
 function clearCache() {
-  wx.removeStorageSync(CACHE_KEY_INDEX);
-  wx.removeStorageSync(CACHE_KEY_TS);
+  wx.removeStorageSync(K.FIRST_INDEX);
+  wx.removeStorageSync(K.FIRST_TS);
+  wx.removeStorageSync(K.LAST_INDEX);
+  wx.removeStorageSync(K.LAST_TS);
 
-  // 清除 letter 详情缓存（a-z）
-  const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  letters.forEach(l => {
+  // 清除字母详情缓存
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(l => {
     wx.removeStorageSync(`cdn_idiom_letter_${l}`);
     wx.removeStorageSync(`cdn_idiom_letter_${l}_ts`);
   });
 
-  firstFullIndex = null;
+  firstIndex = null;
   lastIndex = null;
   wordToFirstPy = null;
   wordToLastPy = null;
   allWords = null;
-  isInitialized = false;
+  isFirstReady = false;
+  isLastReady = false;
 }
 
 /**
- * 获取成语首字拼音首字母
- * @param {string} word - 成语
- * @returns {string|null} 首字母 (a-z) 或 null
+ * 获取首字拼音
  */
-function getFirstLetter(word) {
-  if (!word || !wordToFirstPy) return null;
-  const firstPy = wordToFirstPy.get(word);
-  return firstPy ? firstPy[0] : null;
+function getFirstPy(word) {
+  return wordToFirstPy ? wordToFirstPy.get(word) || null : null;
 }
 
 /**
- * 获取成语尾字拼音
- * @param {string} word - 成语
- * @returns {string|null} 尾字完整拼音或 null
+ * 获取尾字拼音
  */
-function getWordLastPy(word) {
-  if (!word || !wordToLastPy) return null;
-  return wordToLastPy.get(word) || null;
+function getLastPy(word) {
+  return wordToLastPy ? wordToLastPy.get(word) || null : null;
 }
 
 /**
- * 获取成语首字完整拼音
- * @param {string} word - 成语
- * @returns {string|null} 首字完整拼音或 null
- */
-function getWordFirstPy(word) {
-  if (!word || !wordToFirstPy) return null;
-  return wordToFirstPy.get(word) || null;
-}
-
-/**
- * 检查成语是否在词库中
- * @param {string} word - 成语
- * @returns {boolean}
+ * 检查成语是否在库中
  */
 function hasWord(word) {
-  if (!word || !allWords) return false;
-  return allWords.has(word);
+  return allWords ? allWords.has(word) : false;
 }
 
 /**
- * 获取以指定拼音开头的成语列表
- * @param {string} pinyin - 尾字拼音
- * @returns {Array} 成语数组
+ * 顺查：以给定拼音开头的成语
  */
 function getCandidates(pinyin) {
-  if (!pinyin || !firstFullIndex) return [];
-  return firstFullIndex[pinyin] || [];
+  if (!firstIndex || !pinyin) return [];
+  return firstIndex[pinyin] || [];
 }
 
 /**
- * 获取以指定拼音结尾的成语列表
- * @param {string} pinyin - 首字拼音
- * @returns {Array} 成语数组
+ * 逆查：以给定拼音结尾的成语
  */
-function getWordsEndingWith(pinyin) {
-  if (!pinyin || !lastIndex) return [];
+function getReverseCandidates(pinyin) {
+  if (!lastIndex || !pinyin) return [];
   return lastIndex[pinyin] || [];
 }
 
 /**
- * 检查服务是否已初始化
- * @returns {boolean}
+ * 查询成语接龙
+ * @param {string} word - 查询的成语
+ * @param {string} mode - 'forward' | 'reverse'
+ * @returns {{ candidates, error, lastIndexLoading }}
  */
-function isReady() {
-  return isInitialized;
+function querySolitaire(word, mode = 'forward') {
+  if (!isFirstReady) {
+    return { candidates: [], error: '数据加载中…', lastIndexLoading: !isLastReady };
+  }
+  if (!hasWord(word)) {
+    return { candidates: [], error: '该成语不在词库中', lastIndexLoading: false };
+  }
+
+  if (mode === 'reverse') {
+    // 逆查：需要尾字索引
+    if (!isLastReady) {
+      // 触发尾字索引加载，告知 UI 等待
+      if (!_pendingReverseCallbacks.length) {
+        loadLastIndex(() => {}); // 已在 loadData 中注册过，这里防止未调用
+      }
+      return { candidates: [], error: '数据加载中…', lastIndexLoading: true };
+    }
+    const fp = getFirstPy(word);
+    return { candidates: fp ? getReverseCandidates(fp) : [], error: null, lastIndexLoading: false };
+  } else {
+    // 顺查：只用首字索引
+    const lp = getLastPy(word);
+    return { candidates: lp ? getCandidates(lp) : [], error: null, lastIndexLoading: false };
+  }
 }
 
 /**
- * 模糊搜索成语（包含匹配）
- * @param {string} query - 查询字符串
- * @returns {Array} 匹配的成语数组，最多返回 200 条
+ * 模糊搜索（包含匹配）
  */
 function fuzzySearch(query) {
-  if (!query || !allWords) return [];
+  if (!allWords || !query) return [];
   const q = query.trim().toLowerCase();
-  if (!q) return [];
   const results = [];
-  for (const word of allWords) {
-    if (word.includes(q)) {
-      results.push(word);
+  for (const w of allWords) {
+    if (w.includes(q)) {
+      results.push(w);
+      if (results.length >= 200) break;
     }
-    if (results.length >= 200) break;
   }
   return results;
 }
 
 /**
- * 获取成语尾字
- * @param {string} word - 成语
- * @returns {string}
+ * 获取尾字
  */
 function getLastChar(word) {
   return word ? word.slice(-1) : '';
 }
 
 /**
- * 获取所有成语集合
- * @returns {Set|null} 所有成语的 Set 集合，若未初始化则返回 null
- */
-function getAllWords() {
-  return allWords;
-}
-
-/**
- * 从所有成语中随机获取一个成语
- * @returns {string|null} 随机成语，若未初始化则返回 null
+ * 获取随机成语
  */
 function getRandomWord() {
-  if (!allWords || allWords.size === 0) return null;
-  const words = Array.from(allWords);
-  return words[Math.floor(Math.random() * words.length)];
+  if (!allWords || !allWords.size) return null;
+  const arr = Array.from(allWords);
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 /**
- * 查询成语接龙
- * @param {string} word - 查询的成语
- * @param {string} mode - 模式：'forward'（顺查）或 'reverse'（逆查）
- * @returns {Object} { candidates: Array, error: string|null }
+ * 首字索引是否就绪（顺查可工作）
  */
-function querySolitaire(word, mode = 'forward') {
-  if (!isInitialized) {
-    return { candidates: [], error: '数据未初始化' };
-  }
-  
-  if (!hasWord(word)) {
-    return { candidates: [], error: '该成语不在词库中' };
-  }
-  
-  let candidates = [];
-  
-  if (mode === 'reverse') {
-    // 逆查：查找可以接在当前成语前面的成语
-    const firstPy = getWordFirstPy(word);
-    if (firstPy) {
-      candidates = getWordsEndingWith(firstPy);
-    }
-  } else {
-    // 顺查：查找可以接在当前成语后面的成语
-    const lastPy = getWordLastPy(word);
-    if (lastPy) {
-      candidates = getCandidates(lastPy);
-    }
-  }
-  
-  return { candidates, error: null };
+function isReady() {
+  return isFirstReady;
+}
+
+/**
+ * 尾字索引是否就绪（逆查可工作）
+ */
+function isLastReady() {
+  return isLastReady;
 }
 
 /**
  * 获取日志
- * @returns {Array} 日志数组
  */
 function getLogs() {
-  return wx.getStorageSync(LOG_KEY) || [];
+  return wx.getStorageSync(K.LOG) || [];
 }
 
 /**
  * 清除日志
  */
 function clearLogs() {
-  wx.removeStorageSync(LOG_KEY);
+  wx.removeStorageSync(K.LOG);
 }
 
-// 导出模块
 module.exports = {
   CDN_BASE,
   loadData,
   fetchLetterData,
   clearCache,
-  getFirstLetter,
-  getWordLastPy,
-  getWordFirstPy,
+  getFirstPy,
+  getLastPy,
   hasWord,
   getCandidates,
-  getWordsEndingWith,
+  getReverseCandidates,
   isReady,
+  isLastReady,
   getLastChar,
-  getAllWords,
+  fuzzySearch,
   getRandomWord,
   querySolitaire,
-  fuzzySearch,
-  // 日志相关
   getLogs,
   clearLogs,
 };

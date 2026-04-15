@@ -87,7 +87,7 @@ Page({
     }
     const first = this.data.battleFirst;
 
-    this._lastPinyin = dataService.getWordLastPy(startWord);
+    this._lastPinyin = dataService.getLastPy(startWord);
     this._lastCharNeed = startWord.slice(-1);
     this._battleUsed.add(startWord);
 
@@ -146,7 +146,7 @@ Page({
 
     const needChar = this._lastCharNeed;
     const firstChar = word[0];
-    const firstPy = dataService.getWordFirstPy(word);
+    const firstPy = dataService.getFirstPy(word);
     const lastPy = this._lastPinyin;
     const isCharMatch = (firstChar === needChar);
     const isPyMatch = (firstPy && firstPy === lastPy);
@@ -162,7 +162,7 @@ Page({
     const newItem = { word, side: 'user', lastChar };
     const chain = [...this.data.battleChain, newItem];
     this._battleUsed.add(word);
-    this._lastPinyin = dataService.getWordLastPy(word) || this._lastPinyin;
+    this._lastPinyin = dataService.getLastPy(word) || this._lastPinyin;
     this._lastCharNeed = lastChar;
 
     this.setData({
@@ -197,7 +197,7 @@ Page({
     const newItem = { word, side: 'ai', lastChar };
     const chain = [...this.data.battleChain, newItem];
     this._battleUsed.add(word);
-    this._lastPinyin = dataService.getWordLastPy(word) || this._lastPinyin;
+    this._lastPinyin = dataService.getLastPy(word) || this._lastPinyin;
     this._lastCharNeed = lastChar;
 
     this.setData({
@@ -319,18 +319,10 @@ Page({
   // =====================
   _loadData() {
     this.setData({ loading: true });
-    
-    dataService.loadData().then(() => {
-      this.setData({ loading: false });
-    }).catch((err) => {
-      console.error('[idiom-battle] 数据加载失败:', err);
-      this.setData({ loading: false });
-      wx.showToast({ 
-        title: '数据加载失败', 
-        icon: 'none',
-        duration: 2000 
-      });
-    });
+    dataService.loadData(
+      () => { this.setData({ loading: false }); },
+      () => {}  // 尾字索引后台加载，battle 不需要逆查
+    );
   },
 
   _clearAndReload() {
