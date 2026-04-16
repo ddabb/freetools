@@ -71,7 +71,16 @@ Page({
   //  输入处理
   // =====================
   onQueryInput(e) {
-    this.setData({ queryInput: e.detail.value });
+    const val = e.detail.value;
+    this.setData({ queryInput: val });
+
+    // 如果输入包含中文，自动触发查询
+    if (/[\u4e00-\u9fa5]/.test(val)) {
+      const trimmed = val.trim();
+      if (trimmed) {
+        this._doQuery(trimmed);
+      }
+    }
   },
 
   onQueryConfirm(e) {
@@ -152,9 +161,8 @@ Page({
     }
 
     if (fuzzy.length === 1) {
-      // 唯一匹配 → 直接接龙（走现有逻辑）
+      // 唯一匹配 → 直接接龙（走现有逻辑），但保持用户输入不变
       const exact = fuzzy[0];
-      this.setData({ queryInput: exact });
       this._querySolitaire(exact, mode);
       return;
     }
@@ -199,7 +207,6 @@ Page({
 
     this.setData({
       queryMode: mode,
-      queryInput: word,
       queryPlaceholder,
       queryResults: results,
       fuzzyResults: [],
@@ -241,7 +248,6 @@ Page({
 
     this.setData({
       queryMode: mode,
-      queryInput: word,
       queryPlaceholder,
       queryResults: results,
       fuzzyResults: [],
@@ -409,7 +415,6 @@ Page({
       // onReady：首字索引就绪，顺查可工作
       () => {
         this.setData({ loading: false });
-        this._autoQueryDefault();
       },
       // onLastReady：尾字索引就绪，逆查可工作（静默后台加载，用户无感知）
       () => {}
@@ -418,16 +423,6 @@ Page({
     // 恢复历史记录
     const history = wx.getStorageSync('idiom_query_history') || [];
     this.setData({ queryHistory: history });
-  },
-
-  _autoQueryDefault() {
-    const defaultWord = '为所欲为';
-    this.setData({ queryInput: defaultWord });
-    
-    // 延迟一下确保UI已经更新
-    setTimeout(() => {
-      this._doQuery(defaultWord);
-    }, 300);
   },
 
   _clearAndReload() {

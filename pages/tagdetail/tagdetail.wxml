@@ -2,14 +2,11 @@
   <!-- 标签头部 -->
   <view class="tag-header">
     <view class="header-content">
-      <view class="back-button" bindtap="goBack">
-        <text class="back-icon">←</text>
-      </view>
       <view class="tag-title">
         <text class="icon">🏷️</text>
         <text class="title-text">{{tagName}}</text>
       </view>
-      <text class="article-count">共 {{articles.length}} 篇文章</text>
+      <text class="article-count">共 {{articles.length}} 篇</text>
     </view>
   </view>
 

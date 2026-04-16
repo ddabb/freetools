@@ -165,15 +165,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4f5fc2 0%, #6676e6 100%);
   border-radius: 32rpx;
-  box-shadow: 0 8rpx 20rpx rgba(79, 95, 194, 0.24);
   flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .mode-toggle:active {
   opacity: 0.85;
   transform: scale(0.97);
+}
+
+/* 顺查模式 - 蓝色系 */
+.mode-toggle-forward {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+  box-shadow: 0 8rpx 20rpx rgba(41, 128, 185, 0.3);
+}
+
+/* 逆查模式 - 橙色系 */
+.mode-toggle-reverse {
+  background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%);
+  box-shadow: 0 8rpx 20rpx rgba(230, 126, 34, 0.3);
 }
 
 .mode-toggle-text {

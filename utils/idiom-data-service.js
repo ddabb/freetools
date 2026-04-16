@@ -286,6 +286,14 @@ function getFirstPy(word) {
 }
 
 /**
+ * 获取首字拼音的首字母（用于加载详情数据）
+ */
+function getFirstLetter(word) {
+  const py = getFirstPy(word);
+  return py ? py[0] : null;
+}
+
+/**
  * 获取尾字拼音
  */
 function getLastPy(word) {
@@ -389,7 +397,7 @@ function isReady() {
 /**
  * 尾字索引是否就绪（逆查可工作）
  */
-function isLastReady() {
+function isLastIndexReady() {
   return isLastReady;
 }
 
@@ -413,12 +421,13 @@ module.exports = {
   fetchLetterData,
   clearCache,
   getFirstPy,
+  getFirstLetter,
   getLastPy,
   hasWord,
   getCandidates,
   getReverseCandidates,
   isReady,
-  isLastReady,
+  isLastIndexReady,
   getLastChar,
   fuzzySearch,
   getRandomWord,

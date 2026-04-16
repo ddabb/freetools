@@ -24,7 +24,7 @@
             />
             <view class="search-clear" wx:if="{{queryInput}}" bindtap="onClearQuery">✕</view>
           </view>
-          <view class="mode-toggle" bindtap="onQueryModeToggle">
+          <view class="mode-toggle mode-toggle-{{queryMode}}" bindtap="onQueryModeToggle">
             <text class="mode-toggle-text">{{queryMode === 'forward' ? '顺查' : '逆查'}}</text>
           </view>
         </view>
