@@ -237,11 +237,16 @@ Page({
 
     this.setPageTitle(category || '', tag || '');
     
-    // 优先尝试缓存秒开
-    const hasCache = this.tryLoadFromCache();
-    
-    // 无论是否有缓存，都继续加载最新数据
-    this.loadArticles();
+    // 异步加载数据，不阻塞 onLoad 返回
+    setTimeout(() => {
+      // 优先尝试缓存秒开
+      const hasCache = this.tryLoadFromCache();
+      
+      // 无论是否有缓存，都继续加载最新数据
+      if (!hasCache) {
+        this.loadArticles();
+      }
+    }, 0);
   },
 
   /**
