@@ -64,10 +64,13 @@ function getPageInfo() {
 
   const pages = []
   let indexPage = null
+  let knowledgeListPage = null
   for (const p of appJson.pages || []) {
     const pagePath = '/' + p
     if (p === 'pages/index/index') {
       indexPage = pagePath  // 暂存 index 页面
+    } else if (p === 'pages/knowledgelist/knowledgelist') {
+      knowledgeListPage = pagePath  // 暂存 knowledgelist 页面
     } else {
       pages.push(pagePath)
     }
@@ -77,7 +80,8 @@ function getPageInfo() {
       for (const p of sub.pages || []) pages.push('/' + sub.root + '/' + p)
     }
   }
-  // 把 index 页面放到最后访问
+  // 把 knowledgelist 和 index 页面放到最后访问
+  if (knowledgeListPage) pages.push(knowledgeListPage)
   if (indexPage) pages.push(indexPage)
 
   return { pages, tabBarPages }

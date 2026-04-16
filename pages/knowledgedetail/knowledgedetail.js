@@ -51,8 +51,14 @@ Page({
       console.debug('开始加载文章:', {
         filename: options.filename
       });
-      this.setData({ filename: options.filename });
-      this.loadDetail(options.filename);
+      this.setData({ 
+        filename: options.filename,
+        loading: true  // 立即显示loading
+      });
+      // 异步加载，不阻塞 onLoad 返回
+      setTimeout(() => {
+        this.loadDetail(options.filename);
+      }, 0);
     } else {
       console.warn('缺少文章filename参数:', {
         options: options
