@@ -267,22 +267,6 @@ Page({
     });
   },
 
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: 'JSON·XML转换器 - 数据格式互转神器',
-      path: '/packages/converter/pages/json-xml-converter/json-xml-converter'
-    }
-  },
-
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: 'JSON·XML转换器 - 数据格式互转神器',
-      query: 'json-xml-converter'
-    }
-  },
-
   // 页面加载时执行
   onLoad() {
     wx.setNavigationBarTitle({ title: 'JSON·XML转换器' });

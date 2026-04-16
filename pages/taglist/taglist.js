@@ -75,19 +75,6 @@ Page({
     }, 50);
   },
 
-  onShareAppMessage() {
-    return {
-      title: '知识库标签列表',
-      path: '/pages/taglist/taglist'
-    };
-  },
-
-  onShareTimeline() {
-    return {
-      title: '知识库标签列表'
-    };
-  },
-
   async loadTags() {
     this.setData({
       loading: true,

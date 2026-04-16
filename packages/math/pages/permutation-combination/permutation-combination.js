@@ -149,23 +149,6 @@ Page({
     this.calculate();
   },
 
-  /**
-   * 分享
-   */
-  onShareAppMessage: function() {
-    return {
-      title: '排列组合计算器 - 轻松算概率',
-      path: '/packages/math/pages/permutation-combination/permutation-combination'
-    };
-  },
-
-  onShareTimeline: function() {
-    return {
-      title: '排列组合计算器 - 轻松算概率',
-      query: 'permutation-combination'
-    };
-  },
-
   onLoad: function() {
     wx.setNavigationBarTitle({ title: '🔢 排列组合' });
   }

@@ -146,23 +146,6 @@ Page({
     this.calculate(number);
   },
 
-  /**
-   * 分享
-   */
-  onShareAppMessage: function() {
-    return {
-      title: '求约数 - 轻松找出所有因数',
-      path: '/packages/math/pages/divisor-finder/divisor-finder'
-    };
-  },
-
-  onShareTimeline: function() {
-    return {
-      title: '求约数 - 轻松找出所有因数',
-      query: 'divisor-finder'
-    };
-  },
-
   onLoad: function() {
     wx.setNavigationBarTitle({ title: '📋 求约数' });
   }

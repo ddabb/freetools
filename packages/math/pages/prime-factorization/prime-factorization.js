@@ -164,23 +164,6 @@ Page({
     this.calculate(number);
   },
 
-  /**
-   * 分享
-   */
-  onShareAppMessage: function() {
-    return {
-      title: '质因数分解 - 轻松学习数论',
-      path: '/packages/math/pages/prime-factorization/prime-factorization'
-    };
-  },
-
-  onShareTimeline: function() {
-    return {
-      title: '质因数分解 - 轻松学习数论',
-      query: 'prime-factorization'
-    };
-  },
-
   onLoad: function() {
     wx.setNavigationBarTitle({ title: '🔢 质因数分解' });
   }

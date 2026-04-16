@@ -161,18 +161,5 @@ Page({
     }
       }   // 确认弹窗 success 结束
     });
-  },
-
-  onShareAppMessage() {
-    return {
-      title: '亲戚关系对照表 - 随身工具宝',
-      path: '/pages/relative-export/relative-export'
-    };
-  },
-
-  onShareTimeline() {
-    return {
-      title: '亲戚关系对照表 - 完整的中国亲戚称呼对照表'
-    };
   }
 });

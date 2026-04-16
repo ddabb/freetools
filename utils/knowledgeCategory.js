@@ -1,5 +1,5 @@
 // CDN 主题配置（按 className 索引梯度）
-const CDN_THEME_URL = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know-category-theme.json';
+const CDN_THEME_URL = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/know-category-theme.json';
 const CACHE_KEY_THEME = 'cdn_know_theme';
 const CACHE_KEY_THEME_TS = 'cdn_know_theme_ts';
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7天

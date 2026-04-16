@@ -104,18 +104,5 @@ Page({
   // 返回上一页
   onBack() {
     wx.navigateBack();
-  },
-
-  onShareAppMessage() {
-    return {
-      title: '随身工具宝 - 版本日志',
-      path: '/pages/changelog/changelog'
-    };
-  },
-
-  onShareTimeline() {
-    return {
-      title: '随身工具宝 - 版本日志'
-    };
   }
 });

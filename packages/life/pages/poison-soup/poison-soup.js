@@ -25,19 +25,6 @@ Page({
     });
   },
 
-  onShareAppMessage() {
-    return {
-      title: '每日毒鸡汤',
-      path: '/packages/life/pages/poison-soup/poison-soup'
-    };
-  },
-
-  onShareTimeline() {
-    return {
-      title: '每日毒鸡汤，专治各种不服 🍵'
-    };
-  },
-
   // 从CDN加载毒鸡汤数据
   loadData() {
     wx.showLoading({ title: '加载中...' });

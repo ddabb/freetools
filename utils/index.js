@@ -23,8 +23,7 @@ const validator = require('./validator');
 // 日期工具
 const dateUtil = require('./dateUtil');
 
-// 分享工具
-const share = require('./share');
+
 
 // 图片生成工具
 const imageGenerator = require('./imageGenerator');
@@ -88,13 +87,7 @@ module.exports = {
   // 日期相关
   ...dateUtil,
   
-  // 分享相关
-  shareAppMessage: share.shareAppMessage,
-  shareTimeline: share.shareTimeline,
-  showShareMenu: share.showShareMenu,
-  hideShareMenu: share.hideShareMenu,
-  updateShareMenu: share.updateShareMenu,
-  createShareHandlers: share.createShareHandlers,
+
   
   // 图片生成相关
   imageGenerator: imageGenerator,

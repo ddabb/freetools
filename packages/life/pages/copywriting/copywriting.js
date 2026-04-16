@@ -425,18 +425,4 @@ Page({
     }
   },
 
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: '文案宝库 - 精选优质文案',
-      path: '/packages/life/pages/copywriting/copywriting'
-    };
-  },
-
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '文案宝库 - 精选优质文案'
-    };
-  }
 });

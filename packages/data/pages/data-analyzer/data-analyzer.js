@@ -356,19 +356,5 @@ Page({
       console.error('[导出Excel] 异常:', err);
       wx.showToast({ title: '导出失败', icon: 'none' });
     }
-  },
-
-  onShareAppMessage() {
-    return {
-      title: '数据统计器 - 专业的数据分析工具',
-      path: '/packages/data/pages/data-analyzer/data-analyzer'
-    }
-  },
-
-  onShareTimeline() {
-    return {
-      title: '数据统计器 - 专业的数据分析工具',
-      query: 'data-analyzer'
-    }
   }
 })

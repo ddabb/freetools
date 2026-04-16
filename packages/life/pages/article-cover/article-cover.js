@@ -307,23 +307,5 @@ Page({
           });
         });
       });
-  },
-
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '公众号配图',
-      imageUrl: '/images/mini.png',
-      path: '/packages/life/pages/article-cover/article-cover'
-    };
-  },
-
-  // 分享给朋友
-  onShareAppMessage() {
-    return {
-      title: '公众号配图',
-      imageUrl: '/images/mini.png',
-      path: '/packages/life/pages/article-cover/article-cover'
-    };
   }
 });

@@ -98,21 +98,4 @@ Page({
     });
   },
 
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '海报生成',
-      imageUrl: '/images/mini.png',
-      path: '/packages/text/pages/poster-generator/poster-generator'
-    };
-  },
-
-  // 分享给朋友
-  onShareAppMessage() {
-    return {
-      title: '海报生成',
-      imageUrl: '/images/mini.png',
-      path: '/packages/text/pages/poster-generator/poster-generator'
-    };
-  }
 });

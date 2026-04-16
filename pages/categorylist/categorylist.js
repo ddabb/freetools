@@ -82,19 +82,6 @@ Page({
     this.loadCategories();
   },
 
-  onShareAppMessage() {
-    return {
-      title: '知识库分类列表',
-      path: '/pages/categorylist/categorylist'
-    };
-  },
-
-  onShareTimeline() {
-    return {
-      title: '知识库分类列表'
-    };
-  },
-
   // 页面实例属性，不通过setData传递到渲染层
   displayCategories: [],
 

@@ -79,20 +79,5 @@ Page({
       packingList
     });
   },
-  
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: '旅行助手 - 智能生成行李清单',
-      path: '/packages/other/pages/travel-tool/travel-tool'
-    }
-  },
-  
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '旅行助手 - 智能生成行李清单',
-      query: 'travel-tool'
-    }
-  }
+
 })

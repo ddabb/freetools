@@ -11,7 +11,7 @@ Page({
 
   onLoad() {
     // 显示分享按钮
-    utils.showShareMenu({
+    wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     });
@@ -61,22 +61,6 @@ Page({
         }
       }
     });
-  },
-
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: '随身工具宝 - 关于我们',
-      path: '/pages/about/about'
-    }
-  },
-
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '随身工具宝 - 关于我们',
-      query: 'about'
-    }
   },
 
   // 复制微信公众号名称

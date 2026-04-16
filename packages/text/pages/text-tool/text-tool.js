@@ -261,19 +261,4 @@ Page({
     });
   },
 
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: '文本工具 - 文本处理和转换工具',
-      path: '/packages/text/pages/text-tool/text-tool'
-    }
-  },
-
-  // 分享到朋友圈
-  onShareTimeline() {
-    return {
-      title: '文本工具 - 文本处理和转换工具',
-      query: 'text-tool'
-    }
-  }
 })
