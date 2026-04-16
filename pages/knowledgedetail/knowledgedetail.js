@@ -200,7 +200,9 @@ Page({
       ...article,
       displayCategory,
       categoryIcon: categoryMeta.icon,
-      categoryClass: categoryMeta.className
+      categoryClass: categoryMeta.className,
+      // CDN 主题梯度，loadTheme 完成后自动生效；未完成时使用默认梯度兜底
+      categoryGradient: knowledgeCategory.getCategoryGradient(categoryMeta.className)
     };
   },
 

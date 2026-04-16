@@ -1,8 +1,57 @@
 // app.js
+const { allTools } = require('./config/tools');
+const knowledgeCategory = require('./utils/knowledgeCategory');
+
+// 重写 Page 函数，为所有页面自动添加分享功能
+const originalPage = Page;
+Page = function(pageConfig) {
+  // 自动添加 onShareAppMessage 方法
+  if (!pageConfig.onShareAppMessage) {
+    pageConfig.onShareAppMessage = function(res) {
+      const app = getApp();
+      const currentPage = getCurrentPages().pop();
+      const pagePath = currentPage.route;
+      const shareConfig = app.createShareByPath(`/${pagePath}`);
+      
+      return {
+        title: shareConfig.title,
+        path: shareConfig.path,
+        success: function(res) {
+          console.debug('[share] 分享成功', res);
+        },
+        fail: function(res) {
+          console.debug('[share] 分享失败', res);
+        }
+      };
+    };
+  }
+  
+  // 自动添加 onShareTimeline 方法
+  if (!pageConfig.onShareTimeline) {
+    pageConfig.onShareTimeline = function() {
+      const app = getApp();
+      const currentPage = getCurrentPages().pop();
+      const pagePath = currentPage.route;
+      const shareConfig = app.createShareByPath(`/${pagePath}`);
+      
+      return {
+        title: shareConfig.title,
+        path: shareConfig.path
+      };
+    };
+  }
+  
+  // 调用原始 Page 函数
+  originalPage(pageConfig);
+};
+
 App({
   onLaunch() {
     // 初始化小程序
     console.debug('随身工具宝小程序启动');
+
+    // 预加载知识库分类主题配置（静默，不阻塞用户）
+    knowledgeCategory.loadTheme(() => {});
 
     // 检查更新
     this.checkForUpdate();
@@ -52,6 +101,54 @@ App({
 
   globalData: {
     userInfo: null
+  },
+
+  /**
+   * 根据页面路径获取工具信息
+   * @param {string} pagePath - 页面路径
+   * @returns {Object|null} - 工具信息对象
+   */
+  getToolByPath(pagePath) {
+    // 标准化路径格式
+    const normalizedPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
+    
+    // 遍历所有工具，查找匹配的路径
+    return allTools.find(tool => {
+      // 处理工具配置中的url可能包含或不包含开头斜杠的情况
+      const toolUrl = tool.url.startsWith('/') ? tool.url : `/${tool.url}`;
+      return normalizedPath === toolUrl;
+    });
+  },
+
+  /**
+   * 创建工具分享配置
+   * @param {Object} tool - 工具信息对象
+   * @returns {Object} - 分享配置对象
+   */
+  createToolShare(tool) {
+    if (!tool) {
+      return {
+        title: '随身工具宝',
+        path: '/pages/index/index',
+        imageUrl: null
+      };
+    }
+
+    return {
+      title: `${tool.icon} ${tool.name} - 随身工具宝`,
+      path: tool.url,
+      imageUrl: tool.shareImage || null
+    };
+  },
+
+  /**
+   * 根据页面路径创建分享配置
+   * @param {string} pagePath - 页面路径
+   * @returns {Object} - 分享配置对象
+   */
+  createShareByPath(pagePath) {
+    const tool = this.getToolByPath(pagePath);
+    return this.createToolShare(tool);
   },
 
   /**

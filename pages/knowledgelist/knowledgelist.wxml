@@ -135,7 +135,7 @@
         <view class="card-inner">
           <!-- 卡片头部 -->
           <view class="card-header">
-            <view class="card-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
+            <view class="card-category" style="background: {{item.categoryGradient}};">{{item.displayCategory || item.category}}</view>
             <text class="card-order">#{{item.order}}</text>
           </view>
 

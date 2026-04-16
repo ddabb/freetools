@@ -25,7 +25,8 @@
       </view>
       <!-- 分类标签 -->
       <view
-        class="hero-category {{article.categoryClass}}" hover-class="hero-category-hover"
+        class="hero-category" hover-class="hero-category-hover"
+          style="background: {{article.categoryGradient}};"
         bindtap="onCategoryTap"
       >
         <text class="category-arrow-left">‹</text>
@@ -118,7 +119,7 @@
             bindtap="onRelatedTap"
             data-filename="{{item.filename}}"
           >
-            <view class="related-category {{item.categoryClass}}">{{item.displayCategory || item.category}}</view>
+            <view class="related-category" style="background: {{item.categoryGradient}};">{{item.displayCategory || item.category}}</view>
 
             <text class="related-card-title">{{item.title}}</text>
             <text class="related-card-desc">{{item.description}}</text>

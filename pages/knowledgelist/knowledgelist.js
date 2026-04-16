@@ -136,7 +136,8 @@ Page({
     return {
       ...article,
       displayCategory,
-      categoryClass: categoryMeta.className
+      categoryClass: categoryMeta.className,
+      categoryGradient: knowledgeCategory.getCategoryGradient(categoryMeta.className)
     };
   },
 

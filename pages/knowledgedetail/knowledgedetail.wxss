@@ -160,19 +160,7 @@ page {
   transform: scale(0.95);
 }
 
-.hero-category.category-product-usage { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.hero-category.category-product-design { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.hero-category.category-product-thinking { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.hero-category.category-dev-practice { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.hero-category.category-dev-story { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-.hero-category.category-project-mgmt { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.hero-category.category-pmp { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
-.hero-category.category-agile { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-.hero-category.category-soft-exam { background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); }
-.hero-category.category-legal { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
-.hero-category.category-safety { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
-.hero-category.category-calculation { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
-.hero-category.category-uncategorized { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+/* 分类渐变由 CDN 主题配置（know-category-theme.json）动态注入，无需在此硬编码 */
 
 
 .category-icon { font-size: 24rpx; color: #333; }
