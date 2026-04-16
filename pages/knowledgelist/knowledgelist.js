@@ -235,6 +235,73 @@ Page({
     this.loadArticles();
   },
 
+  /**
+   * 尝试从缓存快速加载数据，实现秒开
+   * @returns {boolean} 是否命中缓存
+   */
+  tryLoadFromCache() {
+    try {
+      const now = Date.now();
+      
+      // 尝试读取缓存
+      const categoryTreeData = wx.getStorageSync(CACHE_KEY_META);
+      const articlesData = wx.getStorageSync(CACHE_KEY_ARTICLES);
+      const searchIndexData = wx.getStorageSync(CACHE_KEY_SEARCH);
+      
+      const categoryTreeTs = wx.getStorageSync(CACHE_KEY_META_TS);
+      const articlesTs = wx.getStorageSync(CACHE_KEY_ARTICLES_TS);
+      const searchTs = wx.getStorageSync(CACHE_KEY_SEARCH_TS);
+      
+      // 检查缓存是否有效（7天内）
+      const isCacheValid = categoryTreeData && articlesData && 
+        (now - categoryTreeTs < CACHE_EXPIRE) && 
+        (now - articlesTs < CACHE_EXPIRE);
+      
+      if (!isCacheValid) return false;
+      
+      console.debug('使用缓存数据快速渲染');
+      
+      // 更新内存缓存
+      metaCache = categoryTreeData;
+      articlesCache = articlesData;
+      searchCache = searchIndexData;
+      
+      // 立即渲染页面
+      const articles = (articlesData.articles || []).map(article => this.decorateArticle(article));
+      const taxonomy = articlesData.taxonomy || {};
+      const categoryTree = categoryTreeData || { children: {} };
+      const searchIndex = searchIndexData || [];
+      
+      this.taxonomy = taxonomy;
+      this.allArticles = articles;
+      this.searchIndex = searchIndex;
+      this.categoryLeafLookup = this.buildCategoryLeafLookup(categoryTree);
+      
+      const topCategories = this.buildTopCategories(categoryTree);
+      const categoryStats = this.buildCategoryStatsFromTree(categoryTree);
+      
+      // 设置默认分类
+      let currentCategory = this.data.currentCategory;
+      if (!currentCategory && topCategories.length > 0) {
+        currentCategory = topCategories[0].name;
+      }
+      
+      this.setData({
+        categories: topCategories,
+        categoryTreeNodes: this.buildRenderableCategoryTree(categoryTree),
+        currentCategory,
+        loading: true // 保持loading状态，后台更新时会关闭
+      });
+      
+      // 加载第一页数据
+      this.loadPageData();
+      
+      return true;
+    } catch (e) {
+      console.debug('缓存读取失败:', e);
+      return false;
+    }
+  },
 
   onShow() {
     // 接收来自 categorylist / taglist 通过 globalData 传来的筛选参数
@@ -297,20 +364,25 @@ Page({
 
   /**
    * 加载元数据（分类树、标签等，带缓存）
+   * 优化策略：优先使用缓存快速渲染，后台静默更新
    */
   loadMetadata() {
     const now = Date.now();
 
     // 构造元数据缓存 key（categoryTree + taxonomy 打包）
     const metaUrl = CDN_BASE + 'articles.json';
+    const categoryTreeUrl = CDN_BASE + 'category-tree.json';
+    const searchIndexUrl = CDN_BASE + 'search-index.json';
 
-    // 1. 先尝试元数据缓存（categoryTree + taxonomy）
+    // 快速检查缓存，有缓存则立即渲染
+    const hasCache = this.tryLoadFromCache();
+    
+    // 后台异步加载/更新数据
     const loadMeta = () => {
-      const categoryTreeUrl = CDN_BASE + 'category-tree.json';
       return Promise.all([
-        this.fetchWithCache(null, CACHE_KEY_META, CACHE_KEY_META_TS, categoryTreeUrl),
-        this.fetchWithCache(null, CACHE_KEY_ARTICLES, CACHE_KEY_ARTICLES_TS, metaUrl),
-        this.fetchWithCache(null, CACHE_KEY_SEARCH, CACHE_KEY_SEARCH_TS, CDN_BASE + 'search-index.json')
+        this.fetchWithCache(metaCache, CACHE_KEY_META, CACHE_KEY_META_TS, categoryTreeUrl),
+        this.fetchWithCache(articlesCache, CACHE_KEY_ARTICLES, CACHE_KEY_ARTICLES_TS, metaUrl),
+        this.fetchWithCache(searchCache, CACHE_KEY_SEARCH, CACHE_KEY_SEARCH_TS, searchIndexUrl)
       ]);
     };
 
@@ -327,6 +399,19 @@ Page({
 
       const categoryTree = categoryTreeData || { children: {} };
       const searchIndex = searchIndexData || [];
+
+      // 如果已经通过缓存渲染过，检查数据是否有变化
+      if (this.allArticles && this.allArticles.length > 0) {
+        const cachedCount = this.allArticles.length;
+        const newCount = articles.length;
+        if (cachedCount === newCount) {
+          console.debug('数据未变化，跳过重新渲染');
+          this.setData({ loading: false, refreshing: false });
+          wx.stopPullDownRefresh();
+          return;
+        }
+        console.debug(`数据已更新: ${cachedCount} → ${newCount}`);
+      }
 
       const categoryStats = this.buildCategoryStatsFromTree(categoryTree);
 
@@ -362,7 +447,10 @@ Page({
 
     }).catch(err => {
       console.error('加载元数据失败:', err);
-      this.showError('加载失败，请重试');
+      // 如果已经有缓存数据，不显示错误
+      if (!this.allArticles || this.allArticles.length === 0) {
+        this.showError('加载失败，请重试');
+      }
       this.setData({ loading: false, refreshing: false });
       wx.stopPullDownRefresh();
     });
