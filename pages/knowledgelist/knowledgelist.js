@@ -224,14 +224,23 @@ Page({
     this.page = 1;
     this.totalCount = 0;
 
+    // 立即显示骨架屏/loading状态，避免白屏
     this.setData({
       scrollHeight,
       currentCategory: category || '',
       currentTag: tag || '',
-      searchKeyword: ''
+      searchKeyword: '',
+      loading: true,  // 立即显示loading
+      list: [],       // 空列表，等待数据
+      isOver: false
     });
 
     this.setPageTitle(category || '', tag || '');
+    
+    // 优先尝试缓存秒开
+    const hasCache = this.tryLoadFromCache();
+    
+    // 无论是否有缓存，都继续加载最新数据
     this.loadArticles();
   },
 
@@ -290,7 +299,7 @@ Page({
         categories: topCategories,
         categoryTreeNodes: this.buildRenderableCategoryTree(categoryTree),
         currentCategory,
-        loading: true // 保持loading状态，后台更新时会关闭
+        loading: false // 缓存加载完成，关闭loading
       });
       
       // 加载第一页数据
