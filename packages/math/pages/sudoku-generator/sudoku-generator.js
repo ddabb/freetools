@@ -118,49 +118,25 @@ Page({
   },
 
   refreshBoard() {
-    // 基于当前棋盘状态计算候选解
+    // 构建当前棋盘的数字网格（参考求解器的方式）
+    const board = this.data.board;
     const grid = [];
     for (let r = 0; r < 9; r++) {
       const row = [];
       for (let c = 0; c < 9; c++) {
-        const cell = this.data.board[r][c];
-        // 使用当前棋盘的实际值
-        if (cell.value) {
-          row.push(parseInt(cell.value, 10));
-        } else {
-          // 使用原始谜题数据
-          const v = this._puzzleBoard[r][c];
-          row.push(v ? parseInt(v, 10) : 0);
-        }
+        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : 0);
       }
       grid.push(row);
     }
     
-    const candidates = sudoku.calculateAllCandidates(grid);
-    const board = this.data.board;
+    // 使用与求解器相同的 toDisplayBoard 函数计算候选数
+    const displayBoard = sudoku.toDisplayBoard(grid, this.data.showCandidates);
     
-    // 调试：检查候选解数据
-    console.debug('候选解开关状态:', this.data.showCandidates);
-    
-    // 确保有候选解时才显示提示
-    let hasCandidates = false;
-    
+    // 更新棋盘数据
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
-        if (this.data.showCandidates && grid[r][c] === 0) {
-          // 创建固定长度的候选数数组
-          const candidateNumbers = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-          candidates[r][c].forEach(num => {
-            candidateNumbers[num - 1] = num;
-          });
-          
-          board[r][c].candidates = candidateNumbers;
-          board[r][c].showCandidates = true;
-          
-          if (candidates[r][c].length > 0) hasCandidates = true;
-        } else {
-          board[r][c].showCandidates = false;
-        }
+        board[r][c].candidates = displayBoard[r][c].candidates;
+        board[r][c].showCandidates = displayBoard[r][c].showCandidates;
       }
     }
     
@@ -367,20 +343,16 @@ Page({
       grid.push(row);
     }
     
-    // 使用toDisplayBoard确保数据结构一致
-    const displayBoard = sudoku.toDisplayBoard(grid, this.data.showCandidates);
-    let hasCandidates = false;
+    // 使用与求解器相同的 toDisplayBoard 函数计算候选数
+    const displayBoard = sudoku.toDisplayBoard(grid, true);
+    
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
-        if (grid[r][c] === 0) {
-          board[r][c].candidates = displayBoard[r][c].candidates;
-          board[r][c].showCandidates = true;
-          if (displayBoard[r][c].candidates.some(num => num !== 0)) hasCandidates = true;
-        } else {
-          board[r][c].showCandidates = false;
-        }
+        board[r][c].candidates = displayBoard[r][c].candidates;
+        board[r][c].showCandidates = displayBoard[r][c].showCandidates;
       }
     }
+    
     this.setData({ board: board });
   },
 

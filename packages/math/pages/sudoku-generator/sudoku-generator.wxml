@@ -54,7 +54,7 @@
           <!-- 候选解显示 -->
           <view 
             class="candidates-grid" 
-            wx:if="{{showCandidates && !cell.value && cell.candidates}}"
+            wx:if="{{showCandidates && cell.showCandidates && cell.candidates}}"
             bindtap="onCellTap"
             data-row="{{rowIndex}}"
             data-col="{{colIndex}}"
