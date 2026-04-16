@@ -224,6 +224,9 @@ Page({
     this.page = 1;
     this.totalCount = 0;
 
+    // 只保存参数，不加载数据
+    this._pendingOptions = { category, tag };
+
     // 立即显示骨架屏/loading状态，避免白屏
     this.setData({
       scrollHeight,
@@ -236,9 +239,14 @@ Page({
     });
 
     this.setPageTitle(category || '', tag || '');
-    
-    // 异步加载数据，不阻塞 onLoad 返回
-    setTimeout(() => {
+  },
+
+  onReady() {
+    // 页面 ready 后再加载数据，避免阻塞导航
+    if (this._pendingOptions) {
+      const { category, tag } = this._pendingOptions;
+      this._pendingOptions = null;
+      
       // 优先尝试缓存秒开
       const hasCache = this.tryLoadFromCache();
       
@@ -246,7 +254,7 @@ Page({
       if (!hasCache) {
         this.loadArticles();
       }
-    }, 0);
+    }
   },
 
   /**

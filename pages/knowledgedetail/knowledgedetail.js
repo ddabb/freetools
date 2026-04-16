@@ -48,22 +48,29 @@ Page({
     });
     
     if (options.filename) {
-      console.debug('开始加载文章:', {
+      console.debug('准备加载文章:', {
         filename: options.filename
       });
+      // 只保存参数，不加载数据
+      this._pendingFilename = options.filename;
       this.setData({ 
         filename: options.filename,
         loading: true  // 立即显示loading
       });
-      // 异步加载，不阻塞 onLoad 返回
-      setTimeout(() => {
-        this.loadDetail(options.filename);
-      }, 0);
     } else {
       console.warn('缺少文章filename参数:', {
         options: options
       });
       this.setError('文章不存在');
+    }
+  },
+
+  onReady() {
+    // 页面 ready 后再加载数据，避免阻塞导航
+    if (this._pendingFilename) {
+      const filename = this._pendingFilename;
+      this._pendingFilename = null;
+      this.loadDetail(filename);
     }
   },
 
