@@ -2,5 +2,7 @@
   "navigationBarTitleText": "成语查询",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark",
-  "usingComponents": {}
+  "usingComponents": {
+    "error-state": "../../../../components/error-state/error-state"
+  }
 }

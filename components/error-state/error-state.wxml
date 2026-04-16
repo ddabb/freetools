@@ -1,0 +1,27 @@
+<view class="error-state">
+  <view class="error-icon">
+    <view wx:if="{{ icon }}">
+      <icon type="{{ icon }}" size="{{ iconSize }}" color="{{ iconColor }}"></icon>
+    </view>
+    <view wx:elif="{{ image }}">
+      <image src="{{ image }}" class="error-image" style="width: {{ iconSize }}rpx; height: {{ iconSize }}rpx;"></image>
+    </view>
+    <view wx:else>
+      <view class="error-default-icon">
+        <text class="error-default-text">!</text>
+      </view>
+    </view>
+  </view>
+  <view class="error-text">{{ text }}</view>
+  <view wx:if="{{ subText }}" class="error-subtext">{{ subText }}</view>
+  <view wx:if="{{ showButton }}" class="error-button">
+    <button bindtap="onButtonClick" type="warn" size="{{ buttonSize }}">
+      {{ buttonText }}
+    </button>
+  </view>
+  <view wx:if="{{ showSecondaryButton }}" class="error-secondary-button">
+    <button bindtap="onSecondaryButtonClick" type="default" size="{{ buttonSize }}">
+      {{ secondaryButtonText }}
+    </button>
+  </view>
+</view>

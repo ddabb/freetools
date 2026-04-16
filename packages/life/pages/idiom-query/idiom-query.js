@@ -10,6 +10,9 @@ Page({
     queryTip: '输入任意成语，查看可接龙的下联',
     queryHistory: [],
     loading: true,
+    error: false,
+    errorText: '加载失败',
+    errorSubText: '网络连接异常，请检查网络后重试',
     hasContent: false, // 控制滚动区域显示
 
     // 模糊匹配列表
@@ -407,8 +410,14 @@ Page({
   // =====================
   //  私有方法
   // =====================
+  // 错误重试
+  onErrorRetry() {
+    this.setData({ error: false, loading: true });
+    this._loadData();
+  },
+
   _loadData() {
-    this.setData({ loading: true });
+    this.setData({ loading: true, error: false });
 
     // 顺查就绪时（首字索引加载完成）
     dataService.loadData(

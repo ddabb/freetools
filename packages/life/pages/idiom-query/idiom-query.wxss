@@ -504,3 +504,9 @@
   color: #555;
   line-height: 1.6;
 }
+
+/* 错误状态容器 */
+.error-container {
+  padding: 40rpx 20rpx;
+  margin-top: 340rpx;
+}

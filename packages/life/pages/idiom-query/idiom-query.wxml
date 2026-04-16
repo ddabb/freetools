@@ -6,6 +6,17 @@
     <text class="loading-text">加载数据中...</text>
   </view>
 
+  <!-- 错误状态 -->
+  <view wx:if="{{error}}" class="error-container">
+    <error-state
+      text="{{errorText}}"
+      subText="{{errorSubText}}"
+      showButton="{{true}}"
+      buttonText="重试"
+      bindbuttonClick="onErrorRetry"
+    />
+  </view>
+
   <!-- 固定顶部区域：搜索栏、历史记录 -->
   <view class="sticky-header">
     <view class="sticky-content">
