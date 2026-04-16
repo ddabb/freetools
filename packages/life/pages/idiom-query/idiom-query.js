@@ -233,16 +233,34 @@ Page({
     fuzzyWords.forEach(fuzzyWord => {
       const result = dataService.querySolitaire(fuzzyWord, mode);
       if (!result.error && result.candidates.length > 0) {
-        // 随机选择一个接龙结果
+        // 有接龙结果 → 随机选择一个
         const randomIndex = Math.floor(Math.random() * result.candidates.length);
         const solitaireResults = this.buildQueryResults(fuzzyWord, [result.candidates[randomIndex]], mode);
         results.push(...solitaireResults);
       } else {
-        // 如果没有接龙结果，也显示该成语
-        const emptyResult = this.buildQueryResults(fuzzyWord, [], mode);
-        if (emptyResult.length > 0) {
-          results.push(emptyResult[0]);
-        }
+        // 无接龙结果 → 直接创建无结果的显示项，按钮禁用
+        const noResultItem = mode === 'reverse'
+          ? {
+              leftWord: '—',
+              rightWord: fuzzyWord,
+              queryWord: fuzzyWord,
+              leftClass: 'result-word result-empty',
+              rightClass: 'result-word result-query-word',
+              continueWord: fuzzyWord,
+              actionText: '无法继续',
+              canContinue: false
+            }
+          : {
+              leftWord: fuzzyWord,
+              rightWord: '—',
+              queryWord: fuzzyWord,
+              leftClass: 'result-word result-query-word',
+              rightClass: 'result-word result-empty',
+              continueWord: fuzzyWord,
+              actionText: '无法继续',
+              canContinue: false
+            };
+        results.push(noResultItem);
       }
     });
 
@@ -321,17 +339,12 @@ Page({
   },
 
   // =====================
-  //  复制释义
+  //  复制详情内容（组件回调）
   // =====================
-  onCopyExplanation() {
-    const { detailItem } = this.data;
-    if (!detailItem || !detailItem.explanation) return;
-    
-    const text = `${detailItem.word}（${detailItem.pinyin}）：${detailItem.explanation}`;
-    wx.setClipboardData({
-      data: text,
-      success: () => wx.showToast({ title: '释义已复制', icon: 'success' }),
-    });
+  onDetailCopy(e) {
+    const { key, text } = e.detail;
+    // 组件内部已处理复制和提示，这里可以额外处理埋点等
+    console.debug('[idiom-query] 复制详情:', key);
   },
 
   // =====================

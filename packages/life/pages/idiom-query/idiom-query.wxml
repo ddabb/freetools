@@ -127,9 +127,9 @@
           </view>
           <view class="result-tail">
             <text
-              class="result-action"
+              class="result-action {{item.canContinue === false ? 'result-action-disabled' : ''}}"
               data-word="{{item.continueWord}}"
-              catchtap="onContinueChain"
+              catchtap="{{item.canContinue !== false ? 'onContinueChain' : ''}}"
             >{{item.actionText}}</text>
           </view>
         </view>
@@ -137,27 +137,15 @@
     </scroll-view>
   </view>
 
-  <!-- 详情弹窗 -->
-  <view class="detail-modal {{showDetail ? 'show' : ''}}" catchtap="onDetailClose">
-    <view class="detail-box" catchtap="">
-      <view class="detail-close" bindtap="onDetailClose">✕</view>
-      <view wx:if="{{detailItem}}">
-        <view class="detail-word">{{detailItem.word}}</view>
-        <view class="detail-pinyin">{{detailItem.pinyin}}</view>
-        <view class="detail-section" wx:if="{{detailItem.explanation}}">
-          <view class="detail-section-header">
-            <text class="detail-section-title">释义</text>
-            <view class="detail-copy-btn" hover-class="detail-copy-btn-hover" bindtap="onCopyExplanation">📋 复制</view>
-          </view>
-          <text class="detail-section-content">{{detailItem.explanation}}</text>
-        </view>
-        <view class="detail-section" wx:if="{{detailItem.derivation}}">
-          <text class="detail-section-title">出处</text>
-          <text class="detail-section-content">{{detailItem.derivation}}</text>
-        </view>
-      </view>
-    </view>
-  </view>
+  <!-- 详情弹窗 - 使用通用组件 -->
+  <tool-detail-modal
+    show="{{showDetail}}"
+    type="idiom"
+    data="{{detailItem}}"
+    showCopy="{{true}}"
+    bindclose="onDetailClose"
+    bindcopy="onDetailCopy"
+  />
 
 </view>
 </view>

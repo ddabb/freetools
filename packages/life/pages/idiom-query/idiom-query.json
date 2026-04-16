@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark",
   "usingComponents": {
-    "error-state": "../../../../components/error-state/error-state"
+    "error-state": "../../../../components/error-state/error-state",
+    "tool-detail-modal": "../../../../components/tool-detail-modal/tool-detail-modal"
   }
 }

@@ -1,0 +1,298 @@
+/* components/tool-detail-modal/tool-detail-modal.wxss */
+
+/* ========== 弹窗遮罩 ========== */
+.detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+}
+
+.detail-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ========== 内容盒子 ========== */
+.detail-box {
+  position: relative;
+  width: 85%;
+  max-width: 600rpx;
+  max-height: 75vh;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9) translateY(20rpx);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+.detail-modal.show .detail-box {
+  transform: scale(1) translateY(0);
+}
+
+/* ========== 关闭按钮 ========== */
+.detail-close {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #999;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.detail-close:active {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.95);
+}
+
+/* ========== 加载状态 ========== */
+.detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #f0f0f0;
+  border-top-color: #07c160;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* ========== 头部区域 ========== */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  padding: 40rpx 40rpx 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.detail-icon {
+  font-size: 64rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.detail-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.detail-subtitle {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* ========== 标签列表 ========== */
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 20rpx 40rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.detail-tag {
+  padding: 8rpx 20rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.detail-tag:active {
+  background: #e8e8e8;
+  transform: scale(0.95);
+}
+
+/* ========== 滚动区域 ========== */
+.detail-scroll {
+  flex: 1;
+  max-height: 50vh;
+  padding: 0 40rpx;
+}
+
+.detail-sections {
+  padding: 24rpx 0;
+}
+
+/* ========== 内容区块 ========== */
+.detail-section {
+  margin-bottom: 32rpx;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.detail-section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-copy-btn {
+  padding: 8rpx 20rpx;
+  background: #f0f7ff;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #1989fa;
+  transition: all 0.2s ease;
+}
+
+.detail-copy-btn-hover {
+  background: #e0efff;
+  transform: scale(0.95);
+}
+
+.detail-section-content {
+  display: block;
+  font-size: 30rpx;
+  color: #444;
+  line-height: 1.8;
+  text-align: justify;
+  word-break: break-all;
+}
+
+/* ========== 底部操作 ========== */
+.detail-footer {
+  padding: 24rpx 0 40rpx;
+}
+
+.detail-copy-all {
+  text-align: center;
+  padding: 20rpx;
+  background: #f8f8f8;
+  border-radius: 12rpx;
+  transition: all 0.2s ease;
+}
+
+.detail-copy-all:active {
+  background: #f0f0f0;
+}
+
+.detail-copy-all-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* ========== 操作按钮栏 ========== */
+.detail-action-bar {
+  padding: 24rpx 40rpx 40rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.detail-action-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #07c160;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border-radius: 12rpx;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.detail-action-btn::after {
+  border: none;
+}
+
+.detail-action-btn:active {
+  background: #06ad56;
+  transform: scale(0.98);
+}
+
+/* ========== 空状态 ========== */
+.detail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+}
+
+.detail-empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.detail-empty-text {
+  font-size: 30rpx;
+  color: #999;
+}
+
+/* ========== 类型特定样式 ========== */
+
+/* 成语类型 */
+.detail-modal[data-type="idiom"] .detail-title {
+  font-size: 48rpx;
+  letter-spacing: 8rpx;
+}
+
+/* 工具类型 */
+.detail-modal[data-type="tool"] .detail-icon {
+  font-size: 80rpx;
+}
+
+/* 文章类型 */
+.detail-modal[data-type="article"] .detail-section-content {
+  font-size: 28rpx;
+  line-height: 2;
+}
