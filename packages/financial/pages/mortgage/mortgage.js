@@ -38,10 +38,10 @@ const platform = {
         key: key,
         value: JSON.stringify(value),
         success: function() {
-          console.log('存储成功');
+          console.debug('存储成功');
         },
         fail: function(data, code) {
-          console.log('存储失败', code, data);
+          console.debug('存储失败', code, data);
         }
       });
     } else {
@@ -61,7 +61,7 @@ const platform = {
           }
         },
         fail: (data, code) => {
-          console.log('获取存储失败', code, data);
+          console.debug('获取存储失败', code, data);
           callback(null);
         }
       });
@@ -76,10 +76,10 @@ const platform = {
       storage.delete({ 
         key: key,
         success: function() {
-          console.log('清除存储成功');
+          console.debug('清除存储成功');
         },
         fail: function(data, code) {
-          console.log('清除存储失败', code, data);
+          console.debug('清除存储失败', code, data);
         }
       });
     } else {
@@ -99,15 +99,15 @@ const platform = {
           });
         },
         fail: (data, code) => {
-          console.log('获取设备信息失败', code, data);
+          console.debug('获取设备信息失败', code, data);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667 });
         }
       });
     } else {
-      console.log('微信小程序平台获取设备信息');
+      console.debug('微信小程序平台获取设备信息');
       wx.getDeviceInfo({
         success: (data) => {
-          console.log('获取设备信息成功:', data);
+          console.debug('获取设备信息成功:', data);
           callback({
             pixelRatio: data.pixelRatio || 1,
             screenWidth: data.screenWidth || 375,
@@ -118,7 +118,7 @@ const platform = {
           });
         },
         fail: (err) => {
-          console.log('获取设备信息失败', err);
+          console.debug('获取设备信息失败', err);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
         }
       });
@@ -133,15 +133,15 @@ const platform = {
         content: options.content || options.title,
         imageUrl: options.imageUrl || '',
         success: function() {
-          console.log('分享成功');
+          console.debug('分享成功');
         },
         fail: function(data, code) {
-          console.log('分享失败', code, data);
+          console.debug('分享失败', code, data);
         }
       });
     } else {
       // 微信小程序分享由系统处理
-      console.log('微信分享');
+      console.debug('微信分享');
     }
   },
   
@@ -283,7 +283,7 @@ Page({
       // 在鸿蒙平台，我们需要通过组件引用获取Canvas
       const canvas = this.$element('cvs1');
       if (canvas) {
-        console.log('鸿蒙平台获取Canvas成功');
+        console.debug('鸿蒙平台获取Canvas成功');
         this.MergeImage(canvas);
       } else {
         console.error('获取Canvas元素失败');
@@ -293,7 +293,7 @@ Page({
       }
     } else {
       // 在微信小程序平台
-      console.log('开始获取微信小程序Canvas');
+      console.debug('开始获取微信小程序Canvas');
       wx.createSelectorQuery()
         .select('#cvs1')
         .fields({
@@ -301,9 +301,9 @@ Page({
           size: true,
         })
         .exec((res) => {
-          console.log('微信小程序获取Canvas结果:', res);
+          console.debug('微信小程序获取Canvas结果:', res);
           if (res && res[0] && res[0].node) {
-            console.log('微信小程序获取Canvas成功');
+            console.debug('微信小程序获取Canvas成功');
             this.MergeImage(res);
           } else {
             console.error('微信小程序获取Canvas失败:', res);
@@ -317,12 +317,12 @@ Page({
 
   // 绘制分享图片
   MergeImage(res) {
-    console.log('开始执行MergeImage方法');
+    console.debug('开始执行MergeImage方法');
     let canvas, ctx;
     
     if (isHarmonyOS) {
       // 鸿蒙平台
-      console.log('鸿蒙平台处理');
+      console.debug('鸿蒙平台处理');
       canvas = res;
       if (!canvas) {
         console.error('鸿蒙平台获取Canvas失败');
@@ -332,11 +332,11 @@ Page({
         return;
       }
       ctx = canvas.getContext('2d');
-      console.log('鸿蒙平台Canvas:', { width: canvas.width, height: canvas.height });
+      console.debug('鸿蒙平台Canvas:', { width: canvas.width, height: canvas.height });
     } else {
       // 微信小程序平台
-      console.log('微信小程序平台处理');
-      console.log('res参数:', res);
+      console.debug('微信小程序平台处理');
+      console.debug('res参数:', res);
       if (!res || !res[0] || !res[0].node) {
         console.error('微信小程序平台获取Canvas失败:', res);
         platform.showToast({
@@ -344,15 +344,15 @@ Page({
         });
         return;
       }
-      console.log('微信小程序平台获取Canvas节点成功');
+      console.debug('微信小程序平台获取Canvas节点成功');
       canvas = res[0].node;
-      console.log('Canvas节点:', canvas);
-      console.log('Canvas节点类型:', typeof canvas);
-      console.log('Canvas节点属性:', Object.keys(canvas));
+      console.debug('Canvas节点:', canvas);
+      console.debug('Canvas节点类型:', typeof canvas);
+      console.debug('Canvas节点属性:', Object.keys(canvas));
       
       try {
         ctx = canvas.getContext('2d');
-        console.log('获取Canvas上下文成功:', ctx);
+        console.debug('获取Canvas上下文成功:', ctx);
       } catch (e) {
         console.error('获取Canvas上下文失败:', e);
         platform.showToast({
@@ -369,11 +369,11 @@ Page({
         return;
       }
       
-      console.log('微信小程序Canvas:', { width: canvas.width, height: canvas.height });
+      console.debug('微信小程序Canvas:', { width: canvas.width, height: canvas.height });
     }
 
-    console.log('Canvas元素:', canvas);
-    console.log('Context:', ctx);
+    console.debug('Canvas元素:', canvas);
+    console.debug('Context:', ctx);
     if (!ctx) {
       console.error('获取Canvas上下文失败');
       platform.showToast({
@@ -381,13 +381,13 @@ Page({
       });
       return;
     }
-    console.log('获取Canvas上下文成功');
+    console.debug('获取Canvas上下文成功');
     let that = this;
 
-    console.log('开始获取系统信息');
+    console.debug('开始获取系统信息');
     
     // 直接使用默认值，不依赖系统信息
-    console.log('使用默认系统信息');
+    console.debug('使用默认系统信息');
     const systemInfo = {
       pixelRatio: 2,
       screenWidth: 375,
@@ -397,12 +397,12 @@ Page({
       SDKVersion: '2.0.0'
     };
     
-    console.log('系统信息:', systemInfo);
+    console.debug('系统信息:', systemInfo);
     const dpr = systemInfo.pixelRatio || 1;
     const width = this.data.canvaswidth;
     const height = this.data.canvasheight;
     
-    console.log('设置Canvas尺寸:', { width, height, dpr });
+    console.debug('设置Canvas尺寸:', { width, height, dpr });
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.scale(dpr, dpr); // 适配分辨率
@@ -417,7 +417,7 @@ Page({
     const subtitleY = titleY + 30; // 副标题位置
     const infoY = subtitleY + 40; // 信息区域起始位置
 
-    console.log('开始绘制背景');
+    console.debug('开始绘制背景');
     // 背景色 - 使用更专业的金融蓝色调
     ctx.fillStyle = '#f0f8ff';
     ctx.fillRect(0, 0, width, height);
@@ -431,7 +431,7 @@ Page({
     ctx.arc(50, height - 50, 25, 0, Math.PI * 2);
     ctx.fill();
 
-    console.log('开始绘制标题');
+    console.debug('开始绘制标题');
     // 标题
     ctx.font = 'bold 24px 微软雅黑';
     ctx.fillStyle = '#1a73e8';
@@ -442,7 +442,7 @@ Page({
     ctx.fillStyle = '#666666';
     ctx.fillText('嘿，这是你的房贷计划', padding, subtitleY);
 
-    console.log('开始绘制贷款信息');
+    console.debug('开始绘制贷款信息');
     // 贷款信息
     const { loanAmount, years, rate, monthlyPayment, totalInterest, totalPayment, loanType } = this.data;
     const loanTypeText = ['商业贷款', '公积金贷款', '组合贷款'][loanType];
@@ -474,7 +474,7 @@ Page({
     ctx.fillStyle = '#1a73e8';
     ctx.fillText(rate + '%', padding + 90, infoY + 100);
 
-    console.log('开始绘制计算结果');
+    console.debug('开始绘制计算结果');
     // 计算结果
     if (this.data.hasValidResult) {
       // 结果标题
@@ -509,19 +509,19 @@ Page({
       ctx.fillText('快输入你的贷款信息，我来帮你算！', padding + 10, infoY + 135);
     }
 
-    console.log('开始加载并绘制二维码');
+    console.debug('开始加载并绘制二维码');
     // 加载并绘制二维码
     const img = isHarmonyOS ? new Image() : canvas.createImage();
     img.onload = () => {
-      console.log('二维码加载成功');
+      console.debug('二维码加载成功');
       ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-      console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+      console.debug('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
       
       if (isHarmonyOS) {
         // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
-        console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+        console.debug('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
         const imageData = canvas.toDataURL('image/png');
-        console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+        console.debug('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
         
         if (!imageData || !imageData.startsWith('data:image/png')) {
           console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
@@ -534,13 +534,13 @@ Page({
         // 保存图片到相册
         platform.saveImageToAlbum(imageData, 
           function() {
-            console.log("保存相册成功");
+            console.debug("保存相册成功");
             platform.showToast({
               title: '保存成功'
             });
           },
           function(data, code) {
-            console.log("保存到相册失败", { code, data, dataType: typeof data });
+            console.debug("保存到相册失败", { code, data, dataType: typeof data });
             platform.showToast({
               title: '保存失败，请重试'
             });
@@ -548,7 +548,7 @@ Page({
         );
       } else {
         // 在微信小程序平台
-        console.log('微信小程序平台保存图片');
+        console.debug('微信小程序平台保存图片');
         wx.canvasToTempFilePath({
           x: 0,
           y: 0,
@@ -557,17 +557,17 @@ Page({
           destWidth: width * (systemInfo.pixelRatio / 2),
           destHeight: height * (systemInfo.pixelRatio / 2),
           success: (res) => {
-            console.log('canvasToTempFilePath成功:', res);
+            console.debug('canvasToTempFilePath成功:', res);
             const drawurl = res.tempFilePath;
             platform.saveImageToAlbum(drawurl, 
               function(res) {
-                console.log("保存相册成功" + res);
+                console.debug("保存相册成功" + res);
                 platform.showToast({
                   title: '保存相册成功'
                 });
               },
               function(err) {
-                console.log("保存到相册失败", err);
+                console.debug("保存到相册失败", err);
                 if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
                     err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
                     err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
@@ -590,7 +590,7 @@ Page({
             );
           },
           fail: function (error) {
-            console.log("canvasToTempFilePath失败:" + error);
+            console.debug("canvasToTempFilePath失败:" + error);
             platform.showToast({
               title: '生成图片失败，请重试'
             });
@@ -605,7 +605,7 @@ Page({
       });
     };
     img.src = '/images/mini.png';
-    console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
+    console.debug('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
   },
 
   // 生成分享海报
@@ -619,7 +619,7 @@ Page({
         that.savecodetofile()
       }, 1000);
     } catch (ex) {
-      console.log("绘图出现了错误" + ex)
+      console.debug("绘图出现了错误" + ex)
       platform.showToast({
         title: '请重试'
       });

@@ -6,7 +6,7 @@
   <view class="empty-text">{{ text }}</view>
   <view wx:if="{{ subText }}" class="empty-subtext">{{ subText }}</view>
   <view wx:if="{{ showButton }}" class="empty-button">
-    <button bindtap="onButtonClick" type="primary" size="{{ buttonSize }}">
+    <button bindtap="onButtonClick" type="primary" size="{{ buttonSize }}" class="empty-button-btn">
       {{ buttonText }}
     </button>
   </view>

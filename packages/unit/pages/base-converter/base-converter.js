@@ -137,8 +137,8 @@ Page({
         });
       }
 
-      console.log('转换结果:', baseValues);
-      console.log('Base64值:', baseValues['Base64']);
+      console.debug('转换结果:', baseValues);
+      console.debug('Base64值:', baseValues['Base64']);
       this.setData({ baseValues, base64Decoded });
       wx.vibrateShort();
 

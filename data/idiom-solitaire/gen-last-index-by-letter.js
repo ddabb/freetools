@@ -13,7 +13,7 @@ const lastIndexPath = path.join(dataDir, 'idiom-last-index.json');
 const letterDir = path.join(dataDir, 'letter-last');
 
 // 读取尾字索引
-console.log('读取 idiom-last-index.json...');
+console.debug('读取 idiom-last-index.json...');
 const lastIndex = JSON.parse(fs.readFileSync(lastIndexPath, 'utf8'));
 
 // 统计每个尾字包含多少个首字母组合
@@ -28,7 +28,7 @@ for (const [lastPy, words] of Object.entries(lastIndex)) {
   totalEntries += words.length;
 }
 
-console.log(`共 ${Object.keys(lastIndex).length} 个尾字拼音，` +
+console.debug(`共 ${Object.keys(lastIndex).length} 个尾字拼音，` +
   `${Object.keys(letterGroups).length} 个首字母分组，` +
   `${totalEntries} 条记录`);
 
@@ -49,10 +49,10 @@ for (const letter of letters) {
   totalSize += Buffer.byteLength(content, 'utf8');
   const pyCount = Object.keys(letterGroups[letter]).length;
   const wordCount = Object.values(letterGroups[letter]).reduce((s, arr) => s + arr.length, 0);
-  console.log(`  letter-last/${letter}.json: ${pyCount} 个尾字拼音, ${wordCount} 个成语 (${sizeKB}KB)`);
+  console.debug(`  letter-last/${letter}.json: ${pyCount} 个尾字拼音, ${wordCount} 个成语 (${sizeKB}KB)`);
 }
 
-console.log(`\n总计: ${totalSize / 1024 / 1024} MB（应约等于原文件 ${(fs.statSync(lastIndexPath).size / 1024 / 1024).toFixed(2)} MB）`);
+console.debug(`\n总计: ${totalSize / 1024 / 1024} MB（应约等于原文件 ${(fs.statSync(lastIndexPath).size / 1024 / 1024).toFixed(2)} MB）`);
 
 // 生成元数据文件（包含每个字母文件的基本信息，用于预加载提示）
 const meta = {};
@@ -66,7 +66,7 @@ fs.writeFileSync(
   JSON.stringify(meta, null, 2),
   'utf8'
 );
-console.log('✓ letter-last/meta.json 生成完成');
-console.log('\n全部完成！请将 letter-last/ 目录上传到 CDN:');
-console.log(`  ${path.join(letterDir)}`);
-console.log(`  上传路径: data/idiom-solitaire/letter-last/`);
+console.debug('✓ letter-last/meta.json 生成完成');
+console.debug('\n全部完成！请将 letter-last/ 目录上传到 CDN:');
+console.debug(`  ${path.join(letterDir)}`);
+console.debug(`  上传路径: data/idiom-solitaire/letter-last/`);

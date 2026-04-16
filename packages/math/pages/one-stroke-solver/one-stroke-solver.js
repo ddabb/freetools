@@ -34,7 +34,7 @@ Page({
       query.select('#graphCanvas')
         .fields({ node: true, size: true })
         .exec((res) => {
-          console.log('获取Canvas元素结果:', res);
+          console.debug('获取Canvas元素结果:', res);
           if (!res || res.length === 0 || !res[0] || !res[0].node) {
             console.error('获取Canvas元素失败:', res);
             return;

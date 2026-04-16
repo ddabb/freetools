@@ -32,13 +32,13 @@ Page({
   },
 
   refreshData() {
-    console.log('[copywriting] 手动刷新数据，清除缓存');
+    console.debug('[copywriting] 手动刷新数据，清除缓存');
     wx.showLoading({ title: '刷新中...' });
     
     try {
       wx.removeStorageSync('wordbank_categories');
       wx.removeStorageSync('wordbank_timestamp');
-      console.log('[copywriting] 缓存已清除');
+      console.debug('[copywriting] 缓存已清除');
       
       allCategories = [];
       this.setData({ 
@@ -62,7 +62,7 @@ Page({
 
   // 从CDN加载分类数据（带缓存机制）
   loadCategories() {
-    console.log('[copywriting] loadCategories 开始执行');
+    console.debug('[copywriting] loadCategories 开始执行');
     
     // 先尝试从缓存读取数据
     const cachedData = wx.getStorageSync('wordbank_categories');
@@ -70,7 +70,7 @@ Page({
     const now = Date.now();
     const cacheExpiry = 24 * 60 * 60 * 1000; // 24小时过期
 
-    console.log('[copywriting] 缓存检查', {
+    console.debug('[copywriting] 缓存检查', {
       hasCachedData: !!cachedData,
       hasCachedTimestamp: !!cachedTimestamp,
       cachedTimestamp,
@@ -82,7 +82,7 @@ Page({
 
     // 如果缓存存在且未过期，直接使用缓存数据
     if (cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)) {
-      console.log('[copywriting] 使用缓存数据，分类数量:', cachedData.length);
+      console.debug('[copywriting] 使用缓存数据，分类数量:', cachedData.length);
       allCategories = cachedData;
       this.setData({ categories: cachedData });
       
@@ -91,7 +91,7 @@ Page({
       return;
     }
 
-    console.log('[copywriting] 缓存无效，开始从CDN加载');
+    console.debug('[copywriting] 缓存无效，开始从CDN加载');
     // 缓存不存在或已过期，从CDN加载
     wx.showLoading({ title: '加载中...' });
     wx.request({
@@ -99,7 +99,7 @@ Page({
       method: 'GET',
       timeout: 10000,
       success: (res) => {
-        console.log('[copywriting] 主索引请求成功', {
+        console.debug('[copywriting] 主索引请求成功', {
           statusCode: res.statusCode,
           dataType: typeof res.data,
           dataKeys: res.data ? Object.keys(res.data) : null
@@ -108,17 +108,17 @@ Page({
         if (res.statusCode === 200 && res.data) {
           const categoryKeys = Object.keys(res.data);
           const categories = [];
-          console.log('[copywriting] 开始加载分类数据，共', categoryKeys.length, '个分类', categoryKeys);
+          console.debug('[copywriting] 开始加载分类数据，共', categoryKeys.length, '个分类', categoryKeys);
           
           // 加载每个分类的数据
           let loadedCount = 0;
           categoryKeys.forEach(key => {
-            console.log('[copywriting] 加载分类:', key);
+            console.debug('[copywriting] 加载分类:', key);
             wx.request({
               url: `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/wordbank/${key}.json`,
               method: 'GET',
               success: (categoryRes) => {
-                console.log('[copywriting] 分类', key, '加载成功', {
+                console.debug('[copywriting] 分类', key, '加载成功', {
                   statusCode: categoryRes.statusCode,
                   hasData: !!categoryRes.data
                 });
@@ -126,16 +126,16 @@ Page({
                   categories.push(categoryRes.data);
                 }
                 loadedCount++;
-                console.log('[copywriting] 加载进度:', loadedCount, '/', categoryKeys.length);
+                console.debug('[copywriting] 加载进度:', loadedCount, '/', categoryKeys.length);
                 if (loadedCount === categoryKeys.length) {
-                  console.log('[copywriting] 所有分类加载完成，共', categories.length, '个分类');
+                  console.debug('[copywriting] 所有分类加载完成，共', categories.length, '个分类');
                   allCategories = categories;
                   this.setData({ categories });
                   
                   // 保存数据到缓存
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
-                  console.log('[copywriting] 数据已保存到缓存');
+                  console.debug('[copywriting] 数据已保存到缓存');
                   
                   // 默认选择第一个分类
                   this.selectFirstCategory();
@@ -144,16 +144,16 @@ Page({
               fail: (err) => {
                 console.error('[copywriting] 分类', key, '加载失败', err);
                 loadedCount++;
-                console.log('[copywriting] 加载进度(失败):', loadedCount, '/', categoryKeys.length);
+                console.debug('[copywriting] 加载进度(失败):', loadedCount, '/', categoryKeys.length);
                 if (loadedCount === categoryKeys.length) {
-                  console.log('[copywriting] 所有分类加载完成(含失败)，成功加载', categories.length, '个分类');
+                  console.debug('[copywriting] 所有分类加载完成(含失败)，成功加载', categories.length, '个分类');
                   allCategories = categories;
                   this.setData({ categories });
                   
                   // 保存数据到缓存（即使部分加载失败）
                   wx.setStorageSync('wordbank_categories', categories);
                   wx.setStorageSync('wordbank_timestamp', Date.now());
-                  console.log('[copywriting] 数据已保存到缓存(含部分失败)');
+                  console.debug('[copywriting] 数据已保存到缓存(含部分失败)');
                   
                   // 默认选择第一个分类
                   this.selectFirstCategory();
@@ -165,7 +165,7 @@ Page({
           console.error('[copywriting] 主索引加载失败或数据为空', res);
           // 加载失败，尝试使用缓存数据
           if (cachedData) {
-            console.log('[copywriting] 使用缓存数据作为降级方案');
+            console.debug('[copywriting] 使用缓存数据作为降级方案');
             allCategories = cachedData;
             this.setData({ categories: cachedData });
             utils.showText('网络异常，使用缓存数据');
@@ -183,7 +183,7 @@ Page({
         wx.hideLoading();
         // 网络请求失败，尝试使用缓存数据
         if (cachedData) {
-          console.log('[copywriting] 网络失败，使用缓存数据作为降级方案');
+          console.debug('[copywriting] 网络失败，使用缓存数据作为降级方案');
           allCategories = cachedData;
           this.setData({ categories: cachedData });
           utils.showText('网络连接失败，使用缓存数据');
@@ -204,7 +204,7 @@ Page({
     if (categories && categories.length > 0) {
       const firstCategory = categories[0];
       if (firstCategory && firstCategory.id) {
-        console.log('[copywriting] 自动选择第一个分类:', firstCategory.name, firstCategory.id);
+        console.debug('[copywriting] 自动选择第一个分类:', firstCategory.name, firstCategory.id);
         this.setData({
           selectedCategory: firstCategory.id,
           searchKeyword: '',

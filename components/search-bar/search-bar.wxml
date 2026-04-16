@@ -11,7 +11,7 @@
       bindconfirm="onConfirm"
     ></input>
     <view wx:if="{{ value }}" class="clear-btn" bindtap="onClear">
-      <icon type="clear" size="20"></icon>
+      <icon type="clear" size="20" class="clear-btn-icon"></icon>
     </view>
   </view>
   <view wx:if="{{ showCancel }}" class="cancel-btn" bindtap="onCancel">

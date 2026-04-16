@@ -43,7 +43,7 @@ function log(type, msg, data) {
     if (entries.length > MAX_LOG) entries.splice(MAX_LOG);
     wx.setStorageSync(K.LOG, entries);
   } catch (e) { /* ignore */ }
-  console.log(`[idiom-data] ${type}: ${msg}`, data || '');
+  console.debug(`[idiom-data] ${type}: ${msg}`, data || '');
 }
 
 /**

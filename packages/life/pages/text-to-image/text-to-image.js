@@ -25,9 +25,9 @@ Page({
   // 加载字体
   async loadFonts() {
     try {
-      console.log('开始加载字体...');
+      console.debug('开始加载字体...');
       const result = await utils.loadFonts('core');
-      console.log('字体加载完成:', result);
+      console.debug('字体加载完成:', result);
     } catch (error) {
       console.error('字体加载失败:', error);
     }
@@ -208,7 +208,7 @@ Page({
         this.drawImage(ctx, canvas, this.data.canvaswidth, this.data.canvasheight, async () => {
           // 获取字体相关日志
           const logs = imgGen.getDrawLogs();
-          console.log('字体绘制日志:', logs);
+          console.debug('字体绘制日志:', logs);
           
           // 导出图片
           wx.canvasToTempFilePath({
@@ -229,7 +229,7 @@ Page({
                 success: () => {
                   utils.showSuccess('保存相册成功');
                   // 再次打印日志，方便复制
-                  console.log('字体绘制日志:', logs);
+                  console.debug('字体绘制日志:', logs);
                 },
                 fail: (err) => {
                   if (err.errMsg && err.errMsg.includes('auth denied')) {

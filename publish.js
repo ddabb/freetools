@@ -50,15 +50,15 @@ function autoVersion() {
 const resolvedVersion = version || autoVersion();
 const resolvedDesc = desc || `自动化发布 ${resolvedVersion}`;
 
-console.log('========================================');
-console.log('  freetools 小程序发布脚本');
-console.log('========================================');
-console.log(`  AppID:       ${config.appid}`);
-console.log(`  项目路径:    ${config.projectPath}`);
-console.log(`  版本号:      ${resolvedVersion}`);
-console.log(`  备注:        ${resolvedDesc}`);
-console.log(`  模式:        ${uploadOnly ? '仅上传代码' : '上传 + 提交审核'}`);
-console.log('========================================\n');
+console.debug('========================================');
+console.debug('  freetools 小程序发布脚本');
+console.debug('========================================');
+console.debug(`  AppID:       ${config.appid}`);
+console.debug(`  项目路径:    ${config.projectPath}`);
+console.debug(`  版本号:      ${resolvedVersion}`);
+console.debug(`  备注:        ${resolvedDesc}`);
+console.debug(`  模式:        ${uploadOnly ? '仅上传代码' : '上传 + 提交审核'}`);
+console.debug('========================================\n');
 
 async function publish() {
   // 初始化项目
@@ -72,7 +72,7 @@ async function publish() {
   });
 
   // 步骤1：上传代码
-  console.log('📤 步骤1/2：正在上传代码...\n');
+  console.debug('📤 步骤1/2：正在上传代码...\n');
   const uploadResult = await ci.upload({
     project,
     version: resolvedVersion,
@@ -88,14 +88,14 @@ async function publish() {
     },
   });
 
-  console.log(`\n\n✅ 代码上传成功！`);
-  console.log(`   生成的 package: ${uploadResult.packageFileName}`);
-  console.log(`   版本: ${uploadResult.version}`);
-  console.log('');
+  console.debug(`\n\n✅ 代码上传成功！`);
+  console.debug(`   生成的 package: ${uploadResult.packageFileName}`);
+  console.debug(`   版本: ${uploadResult.version}`);
+  console.debug('');
 
   // 步骤2：提交审核（仅完整流程模式）
   if (!uploadOnly) {
-    console.log('📋 步骤2/2：正在提交审核...\n');
+    console.debug('📋 步骤2/2：正在提交审核...\n');
 
     try {
       const auditResult = await ci.submitAudit({
@@ -104,48 +104,48 @@ async function publish() {
         desc: resolvedDesc,
       });
 
-      console.log(`✅ 审核提交成功！`);
-      console.log(`   审核单编号: ${auditResult.auditId}`);
-      console.log('');
-      console.log('📌 下一步：');
-      console.log(`   微信后台 → 管理 → 版本管理 → 查看审核进度`);
-      console.log(`   审核通过后可通过 ci.release() 自动发布上线\n`);
+      console.debug(`✅ 审核提交成功！`);
+      console.debug(`   审核单编号: ${auditResult.auditId}`);
+      console.debug('');
+      console.debug('📌 下一步：');
+      console.debug(`   微信后台 → 管理 → 版本管理 → 查看审核进度`);
+      console.debug(`   审核通过后可通过 ci.release() 自动发布上线\n`);
 
       // 可选：查询审核状态
-      console.log('⏳ 等待10秒后查询审核状态...\n');
+      console.debug('⏳ 等待10秒后查询审核状态...\n');
       await new Promise(r => setTimeout(r, 10000));
 
       const auditInfo = await ci.getAuditInfo({ project });
-      console.log('📊 当前审核状态:');
-      console.log(`   审核单: ${auditInfo.auditId}`);
-      console.log(`   状态: ${auditInfo.status === 0 ? '审核中' : auditInfo.status === 1 ? '审核通过' : '审核驳回'}`);
+      console.debug('📊 当前审核状态:');
+      console.debug(`   审核单: ${auditInfo.auditId}`);
+      console.debug(`   状态: ${auditInfo.status === 0 ? '审核中' : auditInfo.status === 1 ? '审核通过' : '审核驳回'}`);
       if (auditInfo.status === 1) {
-        console.log(`   发布时间: ${auditInfo.publishTime}`);
+        console.debug(`   发布时间: ${auditInfo.publishTime}`);
       }
       if (auditInfo.status === 2) {
-        console.log(`   驳回原因: ${auditInfo.reason}`);
+        console.debug(`   驳回原因: ${auditInfo.reason}`);
       }
     } catch (err) {
-      console.log('\n❌ 审核提交失败:');
-      console.log(`   ${err.message}`);
-      console.log('');
-      console.log('💡 可能的原因:');
-      console.log('   - 管理员未完成身份认证');
-      console.log('   - 小程序内容不符合规范');
-      console.log('   - 今日提交次数已达上限（3次/天）');
-      console.log('');
-      console.log('📌 请登录微信后台手动提交审核：');
-      console.log('   https://mp.weixin.qq.com\n');
+      console.debug('\n❌ 审核提交失败:');
+      console.debug(`   ${err.message}`);
+      console.debug('');
+      console.debug('💡 可能的原因:');
+      console.debug('   - 管理员未完成身份认证');
+      console.debug('   - 小程序内容不符合规范');
+      console.debug('   - 今日提交次数已达上限（3次/天）');
+      console.debug('');
+      console.debug('📌 请登录微信后台手动提交审核：');
+      console.debug('   https://mp.weixin.qq.com\n');
     }
   } else {
-    console.log('✅ 仅上传模式，跳过审核提交。');
-    console.log('📌 请登录微信后台手动提交审核：');
-    console.log('   https://mp.weixin.qq.com\n');
+    console.debug('✅ 仅上传模式，跳过审核提交。');
+    console.debug('📌 请登录微信后台手动提交审核：');
+    console.debug('   https://mp.weixin.qq.com\n');
   }
 
-  console.log('========================================');
-  console.log('  发布流程完成！');
-  console.log('========================================');
+  console.debug('========================================');
+  console.debug('  发布流程完成！');
+  console.debug('========================================');
 }
 
 publish().catch(err => {

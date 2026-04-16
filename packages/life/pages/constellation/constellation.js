@@ -66,13 +66,13 @@ Page({
 
     // 检查缓存是否有效
     if (cached && timestamp && (now - timestamp < CACHE_EXPIRE)) {
-      console.log('[constellation] 使用缓存数据');
+      console.debug('[constellation] 使用缓存数据');
       this.setConstellationData(cached);
       return;
     }
 
     // 从CDN加载
-    console.log('[constellation] 从CDN加载');
+    console.debug('[constellation] 从CDN加载');
     wx.request({
       url: `${CDN_BASE}/constellation-info.json`,
       method: 'GET',

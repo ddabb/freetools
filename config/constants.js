@@ -1,5 +1,8 @@
 // 常量配置文件
 
+// 数据版本号（用于缓存版本控制）
+const DATA_VERSION = '20260416';
+
 // 工具频率数据
 const toolFrequency = {
   'mortgage': 95,           // 房贷计算
@@ -43,5 +46,6 @@ const toolFrequency = {
 };
 
 module.exports = {
-  toolFrequency
+  toolFrequency,
+  DATA_VERSION
 };

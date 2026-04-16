@@ -42,13 +42,13 @@ Page({
   },
 
   onLoad(options) {
-    console.log('页面加载参数:', {
+    console.debug('页面加载参数:', {
       options: options,
       timestamp: new Date().toISOString()
     });
     
     if (options.filename) {
-      console.log('开始加载文章:', {
+      console.debug('开始加载文章:', {
         filename: options.filename
       });
       this.setData({ filename: options.filename });
@@ -118,7 +118,7 @@ Page({
         html = html.replace(/<td>/g, '<td class="md-td">');
         
         // 记录生成的 HTML 内容
-        console.log('markdown-it 生成的 HTML:', {
+        console.debug('markdown-it 生成的 HTML:', {
           html: html,
           hasTable: html.includes('<table'),
           tableCount: (html.match(/<table/g) || []).length,
@@ -405,7 +405,7 @@ Page({
    */
   onToggleDebug() {
     const { debugMode } = this.data;
-    console.log('切换调试模式:', {
+    console.debug('切换调试模式:', {
       currentMode: debugMode,
       newMode: !debugMode,
       timestamp: new Date().toISOString()
@@ -439,7 +439,7 @@ Page({
           duration: 2000
         });
         
-        console.log('复制调试HTML成功:', {
+        console.debug('复制调试HTML成功:', {
           length: contentHtml.length,
           timestamp: new Date().toISOString()
         });

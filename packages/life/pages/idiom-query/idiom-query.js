@@ -124,7 +124,7 @@ Page({
   _doQuery(word, mode = this.data.queryMode) {
     if (!dataService.isReady()) {
       wx.showToast({ title: '数据加载中，请稍候', icon: 'none' });
-      console.log('[debug] 数据服务未就绪');
+      console.debug('[debug] 数据服务未就绪');
       return;
     }
 
@@ -132,18 +132,18 @@ Page({
     const queryPlaceholder = this.getModePlaceholder(mode);
     const modeLabel = this.getModeLabel(mode);
 
-    console.log('[debug] 开始查询:', word, '模式:', mode);
+    console.debug('[debug] 开始查询:', word, '模式:', mode);
 
     // 精确匹配：直接走接龙查询
     if (dataService.hasWord(word)) {
-      console.log('[debug] 精确匹配到成语:', word);
+      console.debug('[debug] 精确匹配到成语:', word);
       this._querySolitaire(word, mode);
       return;
     }
 
     // 模糊匹配
     const fuzzy = dataService.fuzzySearch(word);
-    console.log('[debug] 模糊匹配结果数量:', fuzzy.length, '结果:', fuzzy);
+    console.debug('[debug] 模糊匹配结果数量:', fuzzy.length, '结果:', fuzzy);
     
     if (fuzzy.length === 0) {
       wx.showToast({

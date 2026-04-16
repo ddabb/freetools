@@ -37,10 +37,10 @@ const platform = {
         key: key,
         value: JSON.stringify(value),
         success: function() {
-          console.log('存储成功');
+          console.debug('存储成功');
         },
         fail: function(data, code) {
-          console.log('存储失败', code, data);
+          console.debug('存储失败', code, data);
         }
       });
     } else {
@@ -60,7 +60,7 @@ const platform = {
           }
         },
         fail: (data, code) => {
-          console.log('获取存储失败', code, data);
+          console.debug('获取存储失败', code, data);
           callback(null);
         }
       });
@@ -75,10 +75,10 @@ const platform = {
       storage.delete({ 
         key: key,
         success: function() {
-          console.log('清除存储成功');
+          console.debug('清除存储成功');
         },
         fail: function(data, code) {
-          console.log('清除存储失败', code, data);
+          console.debug('清除存储失败', code, data);
         }
       });
     } else {
@@ -98,7 +98,7 @@ const platform = {
           });
         },
         fail: (data, code) => {
-          console.log('获取设备信息失败', code, data);
+          console.debug('获取设备信息失败', code, data);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667 });
         }
       });
@@ -115,7 +115,7 @@ const platform = {
           });
         },
         fail: (err) => {
-          console.log('获取设备信息失败', err);
+          console.debug('获取设备信息失败', err);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
         }
       });
@@ -130,15 +130,15 @@ const platform = {
         content: options.content || options.title,
         imageUrl: options.imageUrl || '',
         success: function() {
-          console.log('分享成功');
+          console.debug('分享成功');
         },
         fail: function(data, code) {
-          console.log('分享失败', code, data);
+          console.debug('分享失败', code, data);
         }
       });
     } else {
       // 微信小程序分享由系统处理
-      console.log('微信分享');
+      console.debug('微信分享');
     }
   },
   
@@ -249,7 +249,7 @@ Page({
     let that = this;
 
     // 直接使用默认值，不依赖系统信息
-    console.log('使用默认系统信息');
+    console.debug('使用默认系统信息');
     const systemInfo = {
       pixelRatio: 2,
       screenWidth: 375,
@@ -259,11 +259,11 @@ Page({
       SDKVersion: '2.0.0'
     };
     
-    console.log('系统信息:', systemInfo);
+    console.debug('系统信息:', systemInfo);
     const width = this.data.canvaswidth;
     const height = this.data.canvasheight;
     
-    console.log('画布尺寸:', { width, height });
+    console.debug('画布尺寸:', { width, height });
 
       const padding = 30; // 页面内边距
       const qrSize = 100; // 二维码大小
@@ -399,13 +399,13 @@ Page({
           // 保存图片到相册
           platform.saveImageToAlbum(imageData, 
             function() {
-              console.log("保存相册成功");
+              console.debug("保存相册成功");
               platform.showToast({
                 title: '保存相册成功'
               });
             },
             function(data, code) {
-              console.log("保存到相册失败", code, data);
+              console.debug("保存到相册失败", code, data);
               platform.showToast({
                 title: '保存失败，请重试'
               });
@@ -419,7 +419,7 @@ Page({
         img.src = '/images/mini.png';
         img.onload = () => {
           ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-          console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+          console.debug('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
 
           // 生成临时文件路径并保存到相册
           wx.canvasToTempFilePath({
@@ -435,7 +435,7 @@ Page({
               const drawurl = res.tempFilePath;
               platform.saveImageToAlbum(drawurl, 
                 function(res) {
-                  console.log("保存相册成功" + res);
+                  console.debug("保存相册成功" + res);
                   platform.showToast({
                     title: '保存相册成功'
                   });
@@ -451,7 +451,7 @@ Page({
                       success: modalSuccess => {
                         wx.openSetting({
                           success(settingdata) {
-                            console.log("settingdata", settingdata);
+                            console.debug("settingdata", settingdata);
                             if (settingdata.authSetting['scope.writePhotosAlbum']) {
                               wx.showModal({
                                 title: '提示',
@@ -467,22 +467,22 @@ Page({
                             }
                           },
                           fail(failData) {
-                            console.log("failData", failData);
+                            console.debug("failData", failData);
                           },
                           complete(finishData) {
-                            console.log("finishData", finishData);
+                            console.debug("finishData", finishData);
                           }
                         });
                       }
                     });
                   } else {
-                    console.log("保存到相册失败" + res);
+                    console.debug("保存到相册失败" + res);
                   }
                 }
               );
             },
             fail: function (error) {
-              console.log("canvasToTempFilePath" + error);
+              console.debug("canvasToTempFilePath" + error);
             }
           });
         };
@@ -500,7 +500,7 @@ Page({
         that.savecodetofile()
       }, 1000);
     } catch (ex) {
-      console.log("绘图出现了错误" + ex)
+      console.debug("绘图出现了错误" + ex)
       platform.showToast({
         title: '请重试'
       });

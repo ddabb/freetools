@@ -26,7 +26,7 @@ function debounce(func, wait) {
 function searchTools(keyword, allTools) {
   // 检查缓存
   if (searchCache.has(keyword)) {
-    console.log('[搜索] 从缓存获取结果:', keyword);
+    console.debug('[搜索] 从缓存获取结果:', keyword);
     return searchCache.get(keyword);
   }
   
@@ -37,8 +37,8 @@ function searchTools(keyword, allTools) {
   }
   
   // 添加调试信息
-  console.log('[搜索] 搜索关键词:', keyword);
-  console.log('[搜索] 总工具数量:', allTools.length);
+  console.debug('[搜索] 搜索关键词:', keyword);
+  console.debug('[搜索] 总工具数量:', allTools.length);
   
   const results = allTools.filter(tool => {
     if (!tool) return false;
@@ -52,7 +52,7 @@ function searchTools(keyword, allTools) {
     const match = nameMatch || keywordsMatch || descriptionMatch;
     
     if (match) {
-      console.log('[搜索匹配] 工具:', tool.name, '关键词:', keyword, 
+      console.debug('[搜索匹配] 工具:', tool.name, '关键词:', keyword, 
         'nameMatch:', nameMatch, 'descMatch:', descriptionMatch, 'keywordsMatch:', keywordsMatch);
     }
     
@@ -71,8 +71,8 @@ function searchTools(keyword, allTools) {
   // 添加到搜索历史
   addSearchHistory(keyword);
   
-  console.log('[搜索] 搜索结果数量:', results.length);
-  console.log('[搜索] 匹配工具:', results.map(t => t.name).join(', '));
+  console.debug('[搜索] 搜索结果数量:', results.length);
+  console.debug('[搜索] 匹配工具:', results.map(t => t.name).join(', '));
   
   return results;
 }
@@ -82,7 +82,7 @@ function searchTools(keyword, allTools) {
  */
 function clearSearchCache() {
   searchCache.clear();
-  console.log('[搜索] 缓存已清除');
+  console.debug('[搜索] 缓存已清除');
 }
 
 /**

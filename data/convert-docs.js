@@ -116,7 +116,7 @@ function readDocsArticles() {
       return { filename, filePath, content };
     });
 
-  console.log(`📁 找到 ${files.length} 篇 docs 文章\n`);
+  console.debug(`📁 找到 ${files.length} 篇 docs 文章\n`);
   return files;
 }
 
@@ -181,9 +181,9 @@ function convertArticle(article) {
 
 // 主函数
 async function convert() {
-  console.log('🚀 开始转换 docs 文章...\n');
-  console.log(`源目录: ${SOURCE_DIR}`);
-  console.log(`目标目录: ${TARGET_DIR}\n`);
+  console.debug('🚀 开始转换 docs 文章...\n');
+  console.debug(`源目录: ${SOURCE_DIR}`);
+  console.debug(`目标目录: ${TARGET_DIR}\n`);
 
   const articles = readDocsArticles();
   const results = [];
@@ -192,12 +192,12 @@ async function convert() {
     const result = convertArticle(article);
     if (result) {
       results.push(result);
-      console.log(`✅ ${result.source} → ${result.target}`);
-      console.log(`   分类: ${result.category} | 标签: ${result.tags.join(', ')}`);
+      console.debug(`✅ ${result.source} → ${result.target}`);
+      console.debug(`   分类: ${result.category} | 标签: ${result.tags.join(', ')}`);
     }
   }
 
-  console.log(`\n✨ 转换完成！共转换 ${results.length} 篇文章`);
+  console.debug(`\n✨ 转换完成！共转换 ${results.length} 篇文章`);
 }
 
 // 运行

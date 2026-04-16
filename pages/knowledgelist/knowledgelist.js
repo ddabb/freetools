@@ -261,7 +261,7 @@ Page({
   },
 
   onPullDownRefresh() {
-    console.log('下拉刷新触发:', {
+    console.debug('下拉刷新触发:', {
       timestamp: new Date().toISOString(),
       currentCategory: this.data.currentCategory,
       searchKeyword: this.data.searchKeyword,
@@ -275,11 +275,11 @@ Page({
    */
   loadArticles() {
     if (this.data.loading) {
-      console.log('正在加载中，跳过请求');
+      console.debug('正在加载中，跳过请求');
       return;
     }
 
-    console.log('开始加载文章列表:', {
+    console.debug('开始加载文章列表:', {
       timestamp: new Date().toISOString(),
       refreshing: this.data.refreshing,
       page: this.page
@@ -314,7 +314,7 @@ Page({
     };
 
     loadMeta().then(([categoryTreeData, articlesData, searchIndexData]) => {
-      console.log('元数据加载成功');
+      console.debug('元数据加载成功');
 
       // 更新内存缓存引用
       metaCache = categoryTreeData;
@@ -377,7 +377,7 @@ Page({
     }
 
     this.fetchPageWithCache(this.data.page).then(pageData => {
-      console.log('分页数据加载成功:', {
+      console.debug('分页数据加载成功:', {
         page: pageData.page,
         totalPages: pageData.totalPages,
         itemCount: pageData.items.length
@@ -501,7 +501,7 @@ Page({
     const { currentCategory, currentTag, searchKeyword } = this.data;
     let filteredArticles = Array.isArray(allArticles) ? [...allArticles] : [];
 
-    console.log('应用筛选和排序:', {
+    console.debug('应用筛选和排序:', {
       originalCount: filteredArticles.length,
       currentCategory,
       currentTag,
@@ -511,7 +511,7 @@ Page({
     if (currentCategory) {
       const beforeCategoryCount = filteredArticles.length;
       filteredArticles = filteredArticles.filter(article => this.isCategoryMatch(article.category, currentCategory));
-      console.log(`分类筛选: ${currentCategory}, 从 ${beforeCategoryCount} 筛选到 ${filteredArticles.length}`);
+      console.debug(`分类筛选: ${currentCategory}, 从 ${beforeCategoryCount} 筛选到 ${filteredArticles.length}`);
     }
 
     if (currentTag) {
@@ -520,7 +520,7 @@ Page({
       filteredArticles = filteredArticles.filter(article =>
         Array.isArray(article.tags) && article.tags.some(tag => (tag || '').toLowerCase() === normalizedTag)
       );
-      console.log(`标签筛选: ${currentTag}, 从 ${beforeTagCount} 筛选到 ${filteredArticles.length}`);
+      console.debug(`标签筛选: ${currentTag}, 从 ${beforeTagCount} 筛选到 ${filteredArticles.length}`);
     }
 
     if (searchKeyword) {
@@ -548,7 +548,7 @@ Page({
         );
       }
 
-      console.log(`搜索筛选: "${searchKeyword}", 从 ${beforeSearchCount} 筛选到 ${filteredArticles.length}`);
+      console.debug(`搜索筛选: "${searchKeyword}", 从 ${beforeSearchCount} 筛选到 ${filteredArticles.length}`);
     }
 
     // 保存全部筛选结果到实例属性，只渲染前 pageSize 条
@@ -627,7 +627,7 @@ Page({
    * 下拉刷新（只清知识库相关缓存）
    */
   onRefresh() {
-    console.log('开始执行下拉刷新:', {
+    console.debug('开始执行下拉刷新:', {
       timestamp: new Date().toISOString(),
       currentCategory: this.data.currentCategory,
       searchKeyword: this.data.searchKeyword
@@ -693,7 +693,7 @@ Page({
    */
   onArticleTap(e) {
     const { filename } = e.currentTarget.dataset;
-    console.log('点击文章，文件名：', filename);
+    console.debug('点击文章，文件名：', filename);
     wx.navigateTo({
       url: `/pages/knowledgedetail/knowledgedetail?filename=${filename}`
     });

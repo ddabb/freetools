@@ -89,7 +89,7 @@ function readFiles() {
       return { filename, filePath, content };
     });
   
-  console.log(`📁 找到 ${files.length} 个 Markdown 文件`);
+  console.debug(`📁 找到 ${files.length} 个 Markdown 文件`);
   return files;
 }
 
@@ -243,7 +243,7 @@ function countCategories(results) {
 
 // 主函数
 async function organize() {
-  console.log('🚀 开始整理知识库文章...\n');
+  console.debug('🚀 开始整理知识库文章...\n');
   
   const files = readFiles();
   const results = [];
@@ -252,28 +252,28 @@ async function organize() {
     try {
       const result = processFile(file);
       results.push(result);
-      console.log(`✅ ${result.filename}`);
-      console.log(`   分类: ${result.category}`);
-      console.log(`   标签: ${result.tags.join(', ')}`);
-      console.log(`   描述: ${result.description.substring(0, 50)}...`);
-      console.log('');
+      console.debug(`✅ ${result.filename}`);
+      console.debug(`   分类: ${result.category}`);
+      console.debug(`   标签: ${result.tags.join(', ')}`);
+      console.debug(`   描述: ${result.description.substring(0, 50)}...`);
+      console.debug('');
     } catch (e) {
       console.error(`❌ 处理失败 ${file.filename}:`, e.message);
     }
   }
   
   // 输出统计
-  console.log('\n📊 整理完成统计:');
-  console.log(`   总文章数: ${results.length}`);
-  console.log('\n   分类分布:');
+  console.debug('\n📊 整理完成统计:');
+  console.debug(`   总文章数: ${results.length}`);
+  console.debug('\n   分类分布:');
   const stats = countCategories(results);
   Object.entries(stats)
     .sort((a, b) => b[1] - a[1])
     .forEach(([category, count]) => {
-      console.log(`   - ${category}: ${count}篇`);
+      console.debug(`   - ${category}: ${count}篇`);
     });
   
-  console.log('\n✨ 整理完成！现在可以运行 node data/build.js 生成数据');
+  console.debug('\n✨ 整理完成！现在可以运行 node data/build.js 生成数据');
 }
 
 // 运行

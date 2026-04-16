@@ -39,9 +39,6 @@
             <text class="mode-toggle-text">{{queryMode === 'forward' ? '顺查' : '逆查'}}</text>
           </view>
         </view>
-        <view class="search-hint">
-          <text class="search-hint-text">点击按钮切换查询模式</text>
-        </view>
         <view class="search-helper">
           <text class="search-helper-text">顺查看后续可接成语，逆查看前面可接成语；点词条看释义，点右侧按钮继续查询</text>
         </view>

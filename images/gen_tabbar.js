@@ -251,7 +251,7 @@ icons.forEach(([name, draw]) => {
     if (x === 0 && y === 0) draw(buf, w, h);
   });
   fs.writeFileSync(path.join(OUT_DIR, name), png);
-  console.log(`✅ ${name}`);
+  console.debug(`✅ ${name}`);
 });
 
-console.log('\n全部生成完成！');
+console.debug('\n全部生成完成！');

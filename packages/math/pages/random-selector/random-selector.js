@@ -97,7 +97,7 @@ Page({
       expandedCards: newExpandedCards
     });
     
-    console.log('[toggleCard] 卡片状态切换:', { cardType, expanded: !currentExpanded });
+    console.debug('[toggleCard] 卡片状态切换:', { cardType, expanded: !currentExpanded });
   },
 
   // 生成随机号码
@@ -150,7 +150,7 @@ Page({
     // 计算新的选中注数（所有selected为true的注数）
     const updatedSelectedNotes = updatedGeneratedNotes.filter(note => note.selected);
     
-    console.log('[generateNumbers] 生成注数:', {
+    console.debug('[generateNumbers] 生成注数:', {
       selectedGenerateCount,
       generatedNotesLength: generatedNotes.length,
       updatedGeneratedNotesLength: updatedGeneratedNotes.length,
@@ -259,7 +259,7 @@ Page({
     brownBalls.sort((a, b) => a - b);
     greenBalls.sort((a, b) => a - b);
     
-    console.log('[simulateResult] 模拟开奖结果:', {
+    console.debug('[simulateResult] 模拟开奖结果:', {
       brownBalls,
       greenBalls,
       mode
@@ -287,7 +287,7 @@ Page({
       }, 100);
     });
     
-    console.log('[simulateResult] 初始化 singleResult:', this.data.singleResult);
+    console.debug('[simulateResult] 初始化 singleResult:', this.data.singleResult);
   },
 
   // 计算匹配结果
@@ -414,7 +414,7 @@ Page({
     
     const netProfit = totalRevenue - totalCost;
     
-    console.log('[calculateMatch] 计算结果:', {
+    console.debug('[calculateMatch] 计算结果:', {
       selectedNotesCount: selectedNotes.length,
       costPerNote: 2,
       totalCost,
@@ -432,15 +432,15 @@ Page({
         netProfit
       }
     }, () => {
-      console.log('[calculateMatch] setData 回调 - 数据更新完成:', {
+      console.debug('[calculateMatch] setData 回调 - 数据更新完成:', {
         showMatchResult: this.data.showMatchResult,
         singleResult: this.data.singleResult,
         matchResultsLength: this.data.matchResults.length
       });
     });
     
-    console.log('[calculateMatch] 更新后 singleResult:', this.data.singleResult);
-    console.log('[calculateMatch] showMatchResult:', this.data.showMatchResult);
+    console.debug('[calculateMatch] 更新后 singleResult:', this.data.singleResult);
+    console.debug('[calculateMatch] showMatchResult:', this.data.showMatchResult);
     
     // 如果没有选中注数，显示提示但仍然显示成本和收益为0的结果
     if (selectedNotes.length === 0) {
@@ -481,7 +481,7 @@ Page({
   setInvestmentPeriods(e) {
     const index = e.detail.value;
     const periods = this.data.periodOptions[index];
-    console.log('[setInvestmentPeriods] 更新定投期数:', { periods, index });
+    console.debug('[setInvestmentPeriods] 更新定投期数:', { periods, index });
     this.setData({
       selectedPeriod: periods,
     });
@@ -500,7 +500,7 @@ Page({
   setInvestmentPeriodsDirectly(e) {
     const periods = e.currentTarget.dataset.periods;
     const index = this.data.periodOptions.indexOf(periods);
-    console.log('[setInvestmentPeriodsDirectly] 更新定投期数:', { periods, index });
+    console.debug('[setInvestmentPeriodsDirectly] 更新定投期数:', { periods, index });
     this.setData({
       selectedPeriod: periods,
     });
@@ -761,7 +761,7 @@ Page({
         icon: 'success'
       });
       
-      console.log('[fetchPrizePool] 奖池信息更新成功:', prizePoolAmount);
+      console.debug('[fetchPrizePool] 奖池信息更新成功:', prizePoolAmount);
     } catch (error) {
       wx.hideLoading();
       console.error('[fetchPrizePool] 获取奖池信息失败:', error);
@@ -829,7 +829,7 @@ Page({
   
   // 页面显示时执行
   onShow() {
-    console.log('[onShow] 页面显示时数据状态:', {
+    console.debug('[onShow] 页面显示时数据状态:', {
       showMatchResult: this.data.showMatchResult,
       singleResult: this.data.singleResult,
       selectedNotes: this.data.selectedNotes

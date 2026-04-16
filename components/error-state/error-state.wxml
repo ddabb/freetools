@@ -15,12 +15,12 @@
   <view class="error-text">{{ text }}</view>
   <view wx:if="{{ subText }}" class="error-subtext">{{ subText }}</view>
   <view wx:if="{{ showButton }}" class="error-button">
-    <button bindtap="onButtonClick" type="warn" size="{{ buttonSize }}">
+    <button bindtap="onButtonClick" type="warn" size="{{ buttonSize }}" class="error-button-btn">
       {{ buttonText }}
     </button>
   </view>
   <view wx:if="{{ showSecondaryButton }}" class="error-secondary-button">
-    <button bindtap="onSecondaryButtonClick" type="default" size="{{ buttonSize }}">
+    <button bindtap="onSecondaryButtonClick" type="default" size="{{ buttonSize }}" class="error-secondary-button-btn">
       {{ secondaryButtonText }}
     </button>
   </view>

@@ -78,7 +78,7 @@ Page({
     try {
       const inputEmoji = this.data.inputEmoji.trim() || '😀';
       
-      console.log('开始生成emoji PNG:', {
+      console.debug('开始生成emoji PNG:', {
         inputEmoji: inputEmoji
       });
       
@@ -87,7 +87,7 @@ Page({
       try {
         const systemInfo = wx.getSystemInfoSync();
         dpr = systemInfo.pixelRatio || 1;
-        console.log('设备像素比:', dpr);
+        console.debug('设备像素比:', dpr);
       } catch (error) {
         console.warn('获取系统信息失败:', error);
         dpr = 1;
@@ -137,7 +137,7 @@ Page({
           ctx.fillText(inputEmoji, canvasWidth / 2, canvasHeight / 2);
           
           // 绘制完成后保存图片
-          console.log('Canvas绘制完成，开始生成PNG图片');
+          console.debug('Canvas绘制完成，开始生成PNG图片');
           
           // 使用新的2D Canvas API保存图片
           wx.canvasToTempFilePath({
@@ -151,7 +151,7 @@ Page({
             quality: 0.7,
             fileType: 'png',
             success: (res) => {
-              console.log('PNG图片生成成功:', res.tempFilePath);
+              console.debug('PNG图片生成成功:', res.tempFilePath);
               that.saveImageToAlbum(res.tempFilePath);
             },
             fail: (err) => {
@@ -173,7 +173,7 @@ Page({
     wx.saveImageToPhotosAlbum({
       filePath: tempFilePath,
       success: () => {
-        console.log('图片保存到相册成功');
+        console.debug('图片保存到相册成功');
         utils.showSuccess('图片已保存到相册');
         this.setData({ isLoading: false });
       },
@@ -190,7 +190,7 @@ Page({
               if (res.confirm) {
                 wx.openSetting({
                   success: (settingRes) => {
-                    console.log('打开设置页面:', settingRes);
+                    console.debug('打开设置页面:', settingRes);
                   }
                 });
               }
@@ -212,7 +212,7 @@ Page({
     this.setData({ isLoading: true });
     
     try {
-      console.log('开始导出PNG图片，参数:', {
+      console.debug('开始导出PNG图片，参数:', {
         inputEmoji: inputValue || '😀' // 如果没有输入，使用默认emoji
       });
       

@@ -208,7 +208,7 @@ Page({
   },
 
   loadDefaultContent() {
-    const md = '# Markdown 预览器\n\n## 功能特点\n\n- **实时预览**：切换到预览 Tab 即可看到渲染效果\n- **多主题**：支持默认、GitHub、暗黑、护眼四种主题\n- **工具按钮**：快速插入常用语法\n\n## 语法示例\n\n这里有 **粗体**、*斜体* 和 ~~删除线~~。\n> 引用块：写下你想引用的内容\n`javascript\nconsole.log(\'Hello, Markdown!\');\n`\n\n---\n\n1. 有序列表第一项\n2. 有序列表第二项\n\n开始编写你的 Markdown 文档吧！';
+    const md = '# Markdown 预览器\n\n## 功能特点\n\n- **实时预览**：切换到预览 Tab 即可看到渲染效果\n- **多主题**：支持默认、GitHub、暗黑、护眼四种主题\n- **工具按钮**：快速插入常用语法\n\n## 语法示例\n\n这里有 **粗体**、*斜体* 和 ~~删除线~~。\n> 引用块：写下你想引用的内容\n`javascript\nconsole.debug(\'Hello, Markdown!\');\n`\n\n---\n\n1. 有序列表第一项\n2. 有序列表第二项\n\n开始编写你的 Markdown 文档吧！';
     this.setData({ markdownText: md });
     this.renderMarkdown(md);
   },

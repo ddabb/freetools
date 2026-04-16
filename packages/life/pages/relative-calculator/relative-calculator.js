@@ -44,15 +44,15 @@ Page({
       return;
     }
 
-    console.log('addRelation called', e);
-    console.log('current dataset:', e.currentTarget.dataset);
+    console.debug('addRelation called', e);
+    console.debug('current dataset:', e.currentTarget.dataset);
 
     // 直接使用 data-relation 的值（按钮上显示的文本）
     const relation = e.currentTarget.dataset.relation;
-    console.log('selected relation:', relation);
+    console.debug('selected relation:', relation);
 
     const newChain = [...this.data.relationshipChain, relation];
-    console.log('new relationship chain:', newChain);
+    console.debug('new relationship chain:', newChain);
 
     // 实时计算结果
     const result = calculator.calculate(newChain);
@@ -63,7 +63,7 @@ Page({
       result: result,
       inputDisplayText: inputDisplayText
     }, () => {
-      console.log('UI updated, current data:', this.data);
+      console.debug('UI updated, current data:', this.data);
     });
   },
 
@@ -107,11 +107,11 @@ Page({
 
   // 获取口语化显示文本
   getDisplayText: function (chain) {
-    console.log('getDisplayText called with chain:', chain);
+    console.debug('getDisplayText called with chain:', chain);
     if (!chain || chain.length === 0) return '';
 
     const result = chain.join('的');
-    console.log('getDisplayText result:', result);
+    console.debug('getDisplayText result:', result);
     return result;
   },
 
@@ -151,7 +151,7 @@ Page({
       }
       
       const graph = calculator.relationGraph;
-      console.log('导出数据:', graph);
+      console.debug('导出数据:', graph);
       
       // 获取所有关系列（排除gender字段）
       const firstNode = Object.values(graph)[0];

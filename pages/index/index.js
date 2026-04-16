@@ -25,11 +25,10 @@ Page({
     categories: sortedCategories,
     activeCategory: '常用工具',
     commonTools: toolsWithCategory,
-    currentCategoryTools: toolsWithCategory,
+    _allTools: allToolsWithCategory,
 
     // 搜索
     searchText: '',
-    filteredTools: [],
     showSearchResult: false,
 
     // 最近使用
@@ -57,46 +56,30 @@ Page({
     const category = e.currentTarget.dataset.category;
     if (category === this.data.activeCategory) return;
 
-    const tools = this.getToolsByCategory(category);
     this.setData({
       activeCategory: category,
-      currentCategoryTools: tools,
       searchText: '',
-      showSearchResult: false,
-      filteredTools: []
+      showSearchResult: false
     });
-  },
-
-  // 获取分类工具（置顶的排前面）
-  getToolsByCategory(categoryName) {
-    if (categoryName === '常用工具') return this.data.commonTools;
-    return this._allTools
-      .filter(tool => tool.categories && tool.categories.includes(categoryName))
-      .sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return (this._toolFrequency[b.id] || 0) - (this._toolFrequency[a.id] || 0);
-      });
   },
 
   // 搜索输入
   onSearchInput(e) {
     const searchText = e.detail.value.trim().toLowerCase();
     if (!searchText) {
-      this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
+      this.setData({ searchText: '', showSearchResult: false });
       return;
     }
 
     this.setData({
       searchText,
-      showSearchResult: true,
-      filteredTools: searchTools(searchText)
+      showSearchResult: true
     });
   },
 
   // 清除搜索
   onClearSearch() {
-    this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
+    this.setData({ searchText: '', showSearchResult: false });
   },
 
   // 搜索确认
@@ -104,15 +87,10 @@ Page({
     const searchText = e.detail.value.trim().toLowerCase();
     if (!searchText) return;
 
-    this.setData({ loading: true });
-    setTimeout(() => {
-      this.setData({
-        searchText,
-        showSearchResult: true,
-        filteredTools: searchTools(searchText),
-        loading: false
-      });
-    }, 300);
+    this.setData({ 
+      searchText,
+      showSearchResult: true 
+    });
   },
 
   // 导航到工具

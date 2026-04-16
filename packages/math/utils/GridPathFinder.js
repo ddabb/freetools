@@ -52,7 +52,7 @@ GridPathFinder.prototype.passedPotIndexOutOfBounds = function(a) {
 
 GridPathFinder.prototype.showPath = function() {
     for (var i = 0; i < this.path.length; i++) {
-        console.log(this.path[i] + " ");
+        console.debug(this.path[i] + " ");
     }
 };
 
@@ -206,7 +206,7 @@ GridPathFinder.prototype.checkPathCompleteness = function() {
         if (this.passedPot[i]) activeCells++;
     }
     var totalActiveCells = this.row * this.column - this.notExistPotList.length;
-    console.log('Active cells:', activeCells, 'Total active cells:', totalActiveCells);
+    console.debug('Active cells:', activeCells, 'Total active cells:', totalActiveCells);
     return activeCells === totalActiveCells;
 };
 

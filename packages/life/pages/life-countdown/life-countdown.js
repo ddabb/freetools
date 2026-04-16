@@ -36,10 +36,10 @@ const platform = {
         key: key,
         value: JSON.stringify(value),
         success: function() {
-          console.log('存储成功');
+          console.debug('存储成功');
         },
         fail: function(data, code) {
-          console.log('存储失败', code, data);
+          console.debug('存储失败', code, data);
         }
       });
     } else {
@@ -59,7 +59,7 @@ const platform = {
           }
         },
         fail: (data, code) => {
-          console.log('获取存储失败', code, data);
+          console.debug('获取存储失败', code, data);
           callback(null);
         }
       });
@@ -74,10 +74,10 @@ const platform = {
       storage.delete({ 
         key: key,
         success: function() {
-          console.log('清除存储成功');
+          console.debug('清除存储成功');
         },
         fail: function(data, code) {
-          console.log('清除存储失败', code, data);
+          console.debug('清除存储失败', code, data);
         }
       });
     } else {
@@ -97,7 +97,7 @@ const platform = {
           });
         },
         fail: (data, code) => {
-          console.log('获取设备信息失败', code, data);
+          console.debug('获取设备信息失败', code, data);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667 });
         }
       });
@@ -114,7 +114,7 @@ const platform = {
           });
         },
         fail: (err) => {
-          console.log('获取设备信息失败', err);
+          console.debug('获取设备信息失败', err);
           callback({ pixelRatio: 1, screenWidth: 375, screenHeight: 667, platform: '', version: '', SDKVersion: '' });
         }
       });
@@ -129,15 +129,15 @@ const platform = {
         content: options.content || options.title,
         imageUrl: options.imageUrl || '',
         success: function() {
-          console.log('分享成功');
+          console.debug('分享成功');
         },
         fail: function(data, code) {
-          console.log('分享失败', code, data);
+          console.debug('分享失败', code, data);
         }
       });
     } else {
       // 微信小程序分享由系统处理
-      console.log('微信分享');
+      console.debug('微信分享');
     }
   },
   
@@ -238,7 +238,7 @@ const PageDefinition = {
   // 设置出生日期
   setBirthDate(e) {
     const selectedDate = e.detail.value;
-    console.log('设置出生日期:', selectedDate);
+    console.debug('设置出生日期:', selectedDate);
     this.setData({
       birthDate: selectedDate
     });
@@ -269,7 +269,7 @@ const PageDefinition = {
   // 计算人生A4纸
   calculate() {
     const { birthDate, expectedLifeYears = 75 } = this.data;
-    console.log('计算开始，当前数据:', { birthDate, expectedLifeYears });
+    console.debug('计算开始，当前数据:', { birthDate, expectedLifeYears });
     
     if (!birthDate) {
       platform.showToast({
@@ -307,38 +307,38 @@ const PageDefinition = {
     }
 
     try {
-      console.log('=== 人生格子计算开始 ===');
-      console.log('出生日期:', birthDate);
-      console.log('预期寿命:', finalExpectedLife, '岁');
-      console.log('当前日期:', today.toISOString());
+      console.debug('=== 人生格子计算开始 ===');
+      console.debug('出生日期:', birthDate);
+      console.debug('预期寿命:', finalExpectedLife, '岁');
+      console.debug('当前日期:', today.toISOString());
 
       // 计算已活天数（精确到小数）
       const preciseDaysLived = (today - birth) / (1000 * 60 * 60 * 24);
       const daysLived = Math.floor(preciseDaysLived);
-      console.log('精确已活天数:', preciseDaysLived);
-      console.log('已活天数:', daysLived);
+      console.debug('精确已活天数:', preciseDaysLived);
+      console.debug('已活天数:', daysLived);
 
       // 计算预期寿命总天数
       const expectedLifeTotal = finalExpectedLife * 365.25;
       const lifeLeft = Math.max(0, Math.floor(expectedLifeTotal - preciseDaysLived));
-      console.log('预期寿命总天数:', expectedLifeTotal);
-      console.log('剩余天数:', lifeLeft);
+      console.debug('预期寿命总天数:', expectedLifeTotal);
+      console.debug('剩余天数:', lifeLeft);
 
       // 计算人生进度百分比
       const progress = Math.min(100, Math.round((preciseDaysLived / expectedLifeTotal) * 10000) / 100);
-      console.log('人生进度百分比:', progress, '%');
+      console.debug('人生进度百分比:', progress, '%');
 
       // 精确计算900个格子的填充情况
       // 每个格子代表：总寿命天数 ÷ 900格
       const daysPerGrid = expectedLifeTotal / this.data.totalGrids;
-      console.log('总格子数:', this.data.totalGrids);
-      console.log('每格代表天数:', daysPerGrid);
+      console.debug('总格子数:', this.data.totalGrids);
+      console.debug('每格代表天数:', daysPerGrid);
       
       // 使用精确计算，确保格子数量正确
       const livedGrids = Math.min(this.data.totalGrids, Math.ceil(preciseDaysLived / daysPerGrid));
       const gridPercentage = Math.min(100, Math.round((livedGrids / this.data.totalGrids) * 10000) / 100);
-      console.log('已填充格子数:', livedGrids);
-      console.log('格子百分比:', gridPercentage, '%');
+      console.debug('已填充格子数:', livedGrids);
+      console.debug('格子百分比:', gridPercentage, '%');
 
       // 检查计算结果是否合理
       if (livedGrids > this.data.totalGrids) {
@@ -357,14 +357,14 @@ const PageDefinition = {
         daysPerGridText = `${daysPerGrid.toFixed(3)}天`;
       }
       
-      console.log('每格代表天数文本:', daysPerGridText);
+      console.debug('每格代表天数文本:', daysPerGridText);
 
       // 设置初始问题索引
       const randomIndex = Math.floor(Math.random() * this.data.questions.length);
       this.setData({
         currentIndex: randomIndex
       });
-      console.log('随机问题索引:', randomIndex);
+      console.debug('随机问题索引:', randomIndex);
 
       // 确保数组已初始化
       this.initArrays();
@@ -384,7 +384,7 @@ const PageDefinition = {
       // 保存数据到本地存储
       this.saveData();
 
-      console.log('=== 人生格子计算结束 ===');
+      console.debug('=== 人生格子计算结束 ===');
 
     } catch (error) {
       console.error('计算失败', error);
@@ -539,7 +539,7 @@ const PageDefinition = {
     const { gridRows, gridCols } = this.data;
     const rowsArray = Array.from({ length: gridRows }, (_, index) => index);
     const colsArray = Array.from({ length: gridCols }, (_, index) => index);
-    console.log('初始化数组:', { gridRows, gridCols, rowsArray: rowsArray.length, colsArray: colsArray.length });
+    console.debug('初始化数组:', { gridRows, gridCols, rowsArray: rowsArray.length, colsArray: colsArray.length });
     this.setData({
       rowsArray,
       colsArray
@@ -551,11 +551,11 @@ const PageDefinition = {
   // 获取每格代表的天数文本
   getDaysPerGridText() {
     // 这个函数现在主要是为了兼容性，实际数据通过 daysPerGridText 属性提供
-    console.log('getDaysPerGridText 被调用，当前数据:', this.data);
+    console.debug('getDaysPerGridText 被调用，当前数据:', this.data);
     const { daysPerGridText } = this.data;
     
     if (!daysPerGridText) {
-      console.log('getDaysPerGridText: 没有找到 daysPerGridText，返回默认值');
+      console.debug('getDaysPerGridText: 没有找到 daysPerGridText，返回默认值');
       return '约2.67天';
     }
     
@@ -592,7 +592,7 @@ const PageDefinition = {
 
   // 页面数据更新时执行
   onReady() {
-    console.log('页面准备就绪');
+    console.debug('页面准备就绪');
     // 不再重复调用 initArrays，onInit 中已经调用过
   },
 
@@ -660,10 +660,10 @@ const PageDefinition = {
   MergeImage(ctx) {
     let that = this;
     
-    console.log('开始获取系统信息');
+    console.debug('开始获取系统信息');
     
     // 直接使用默认值，不依赖系统信息
-    console.log('使用默认系统信息');
+    console.debug('使用默认系统信息');
     const systemInfo = {
       pixelRatio: 2,
       screenWidth: 375,
@@ -673,11 +673,11 @@ const PageDefinition = {
       SDKVersion: '2.0.0'
     };
     
-    console.log('系统信息:', systemInfo);
+    console.debug('系统信息:', systemInfo);
     const width = this.data.canvaswidth;
     const height = this.data.canvasheight;
     
-    console.log('画布尺寸:', { width, height });
+    console.debug('画布尺寸:', { width, height });
 
     const padding = 30; // 页面内边距
     const gridRows = 30;
@@ -712,20 +712,20 @@ const PageDefinition = {
     const legendY = daysInfoY + 30; // 图例位置，确保不与格子信息重叠
     const questionY = legendY + 40; // 人生思考问题位置，确保不与图例重叠
 
-    console.log('=== 图片生成布局分析 ===');
-    console.log('调整后画布尺寸:', {width, height});
-    console.log('内边距:', padding);
-    console.log('格子区域位置:', {top: gridSectionTop, height: gridSectionHeight});
-    console.log('格子网格配置:', {rows: gridRows, cols: gridCols, cellSize: gridCellSize, gap: gridGap, actualWidth: gridWidth, actualHeight: gridHeight});
-    console.log('二维码位置:', {x: qrX, y: qrY, size: qrSize});
-    console.log('格子起始坐标:', {x: gridStartX, y: gridStartY});
-    console.log('格子区域结束坐标:', {x: gridEndX, y: gridEndY});
-    console.log('二维码区域:', {x: qrX, y: qrY, width: qrSize, height: qrSize});
-    console.log('图例位置:', {y: legendY});
-    console.log('格子信息文本位置:', {y: gridInfoY});
-    console.log('出生日期信息位置:', {y: birthDateY});
-    console.log('预期寿命信息位置:', {y: expectedLifeY});
-    console.log('人生思考问题位置:', {y: questionY});
+    console.debug('=== 图片生成布局分析 ===');
+    console.debug('调整后画布尺寸:', {width, height});
+    console.debug('内边距:', padding);
+    console.debug('格子区域位置:', {top: gridSectionTop, height: gridSectionHeight});
+    console.debug('格子网格配置:', {rows: gridRows, cols: gridCols, cellSize: gridCellSize, gap: gridGap, actualWidth: gridWidth, actualHeight: gridHeight});
+    console.debug('二维码位置:', {x: qrX, y: qrY, size: qrSize});
+    console.debug('格子起始坐标:', {x: gridStartX, y: gridStartY});
+    console.debug('格子区域结束坐标:', {x: gridEndX, y: gridEndY});
+    console.debug('二维码区域:', {x: qrX, y: qrY, width: qrSize, height: qrSize});
+    console.debug('图例位置:', {y: legendY});
+    console.debug('格子信息文本位置:', {y: gridInfoY});
+    console.debug('出生日期信息位置:', {y: birthDateY});
+    console.debug('预期寿命信息位置:', {y: expectedLifeY});
+    console.debug('人生思考问题位置:', {y: questionY});
     
     // 检查是否有重叠风险
     const overlapCheck = {
@@ -735,24 +735,24 @@ const PageDefinition = {
       legendVsQr: legendY + 30 > qrY,
       questionVsBottom: questionY + 60 > height - padding // 确保底部有留白
     };
-    console.log('重叠检查:', overlapCheck);
+    console.debug('重叠检查:', overlapCheck);
 
     // 背景色 - 使用更舒适的配色方案
     ctx.fillStyle = '#f8f9fa'; // 使用更现代的浅灰色背景，更舒适
     ctx.fillRect(0, 0, width, height);
-    console.log('背景色填充完成:', {color: '#f8f9fa', bounds: {x: 0, y: 0, width, height}});
+    console.debug('背景色填充完成:', {color: '#f8f9fa', bounds: {x: 0, y: 0, width, height}});
 
     // 标题 - 使用更现代的样式
     ctx.font = '26px Montserrat, Roboto, sans-serif';
     ctx.fillStyle = '#2c3e50'; // 深灰色标题，更专业
     ctx.fillText('人生A4纸', padding, titleY);
-    console.log('标题绘制完成:', {text: '人生A4纸', position: {x: padding, y: titleY}});
+    console.debug('标题绘制完成:', {text: '人生A4纸', position: {x: padding, y: titleY}});
 
     // 副标题 - 使用更现代的样式
     ctx.font = '16px Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#7f8c8d'; // 中灰色副标题，更柔和
     ctx.fillText('900个格子，见证生命的成长~', padding, subtitleY);
-    console.log('副标题绘制完成:', {text: '生命的成长~', position: {x: padding, y: subtitleY}});
+    console.debug('副标题绘制完成:', {text: '生命的成长~', position: {x: padding, y: subtitleY}});
 
     // 出生日期信息
     ctx.font = '16px Inter, Noto Sans SC, sans-serif';
@@ -761,7 +761,7 @@ const PageDefinition = {
     ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#3498db'; // 蓝色强调，更醒目
     ctx.fillText(this.data.birthDate || '未知', padding + 100, birthDateY);
-    console.log('出生日期信息绘制完成:', {position: {x: padding, y: birthDateY}, date: this.data.birthDate});
+    console.debug('出生日期信息绘制完成:', {position: {x: padding, y: birthDateY}, date: this.data.birthDate});
 
     // 预期寿命信息
     ctx.font = '16px Inter, Noto Sans SC, sans-serif';
@@ -770,10 +770,10 @@ const PageDefinition = {
     ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.expectedLifeYears + ' 岁', padding + 100, expectedLifeY);
-    console.log('预期寿命信息绘制完成:', {position: {x: padding, y: expectedLifeY}, years: this.data.expectedLifeYears});
+    console.debug('预期寿命信息绘制完成:', {position: {x: padding, y: expectedLifeY}, years: this.data.expectedLifeYears});
 
     // 统计信息区域
-    console.log('统计信息区域起始位置:', statsY);
+    console.debug('统计信息区域起始位置:', statsY);
     
     // 已活天数
     ctx.font = '18px Inter, Noto Sans SC, sans-serif';
@@ -782,7 +782,7 @@ const PageDefinition = {
     ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.daysLived + ' 天', padding + 100, statsY);
-    console.log('已活天数绘制完成:', {position: {x: padding, y: statsY}});
+    console.debug('已活天数绘制完成:', {position: {x: padding, y: statsY}});
 
     // 剩余天数
     ctx.font = '18px Inter, Noto Sans SC, sans-serif';
@@ -791,7 +791,7 @@ const PageDefinition = {
     ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.lifeLeft + ' 天', padding + 100, statsY + 25);
-    console.log('剩余天数绘制完成:', {position: {x: padding, y: statsY + 25}});
+    console.debug('剩余天数绘制完成:', {position: {x: padding, y: statsY + 25}});
 
     // 人生进度
     ctx.font = '18px Inter, Noto Sans SC, sans-serif';
@@ -800,16 +800,16 @@ const PageDefinition = {
     ctx.font = '16px Roboto, Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#3498db';
     ctx.fillText(this.data.progress + '%', padding + 100, statsY + 50);
-    console.log('人生进度绘制完成:', {position: {x: padding, y: statsY + 50}});
+    console.debug('人生进度绘制完成:', {position: {x: padding, y: statsY + 50}});
 
     // 绘制格子网格 - 所见即所得
     const totalGrids = this.data.totalGrids;
     const livedGrids = Math.min(this.data.livedGrids, totalGrids);
     const expectedLifeYears = this.data.expectedLifeYears || 75;
-    console.log('格子绘制开始:', {total: totalGrids, lived: livedGrids});
+    console.debug('格子绘制开始:', {total: totalGrids, lived: livedGrids});
     
     // 添加调试信息
-    console.log('网格配置:', {
+    console.debug('网格配置:', {
       gridRows: this.data.gridRows, 
       gridCols: this.data.gridCols,
       gridCellSize, 
@@ -856,7 +856,7 @@ const PageDefinition = {
                   this.data.gridCols * (gridCellSize + gridGap) - gridGap, 
                   this.data.gridRows * (gridCellSize + gridGap) - gridGap);
     
-    console.log('格子网格绘制完成，边界尺寸:', {
+    console.debug('格子网格绘制完成，边界尺寸:', {
       width: this.data.gridCols * (gridCellSize + gridGap) - gridGap,
       height: this.data.gridRows * (gridCellSize + gridGap) - gridGap
     });
@@ -871,13 +871,13 @@ const PageDefinition = {
     ctx.fillStyle = '#7f8c8d';
     ctx.fillText('每格 ≈ ' + this.data.daysPerGridText, padding, daysInfoY);
     
-    console.log('格子信息文本绘制完成:', {
+    console.debug('格子信息文本绘制完成:', {
       position: {x: padding, y: gridInfoY},
       daysInfoPosition: {x: padding, y: daysInfoY}
     });
 
     // 绘制图例 - 避免与格子重叠
-    console.log('图例区域位置:', legendY);
+    console.debug('图例区域位置:', legendY);
     
     // 已度过的时光
     ctx.fillStyle = '#3498db'; // 更现代的蓝色
@@ -900,7 +900,7 @@ const PageDefinition = {
     ctx.fillStyle = '#2c3e50';
     ctx.fillText('未来可期', padding + 250, legendY + 12);
     
-    console.log('图例绘制完成:', {position: {x: padding, y: legendY}});
+    console.debug('图例绘制完成:', {position: {x: padding, y: legendY}});
 
     // 人生思考问题
     const randomQuestion = this.data.questions[Math.floor(Math.random() * this.data.questions.length)];
@@ -934,7 +934,7 @@ const PageDefinition = {
       startIndex = endIndex + 1;
       currentY += lineHeight;
     }
-    console.log('人生思考问题绘制完成:', {position: {x: padding, y: questionY}, question: randomQuestion.text});
+    console.debug('人生思考问题绘制完成:', {position: {x: padding, y: questionY}, question: randomQuestion.text});
 
     // 加载并绘制二维码
     if (isHarmonyOS) {
@@ -946,12 +946,12 @@ const PageDefinition = {
           const ctx2d = canvas.getContext('2d');
           if (ctx2d) {
             ctx2d.drawImage(img, qrX, qrY, qrSize, qrSize);
-            console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+            console.debug('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
             
             // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
-            console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+            console.debug('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
             const imageData = canvas.toDataURL('image/png');
-            console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+            console.debug('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
             
             if (!imageData || !imageData.startsWith('data:image/png')) {
               console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
@@ -964,13 +964,13 @@ const PageDefinition = {
             // 保存图片到相册 - 使用增强的权限校验
             platform.saveImageToAlbum(imageData, 
               function() {
-                console.log("保存相册成功");
+                console.debug("保存相册成功");
                 platform.showToast({
                   title: '保存成功'
                 });
               },
               function(data, code) {
-                console.log("保存到相册失败", { code, data, dataType: typeof data });
+                console.debug("保存到相册失败", { code, data, dataType: typeof data });
                 // 增强的权限处理已经在saveImageToAlbum函数中实现
                 // 这里只显示通用错误提示
                 platform.showToast({
@@ -981,11 +981,11 @@ const PageDefinition = {
           }
         };
         img.src = '/images/mini.png';
-        console.log('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
+        console.debug('二维码加载开始:', {source: '/images/mini.png', target: {x: qrX, y: qrY, size: qrSize}, exists: true});
       }
     } else {
       // 在微信小程序平台，使用新的2D Canvas API绘制二维码
-      console.log('开始绘制二维码');
+      console.debug('开始绘制二维码');
       // 获取canvas元素来创建图片对象
       const query = wx.createSelectorQuery().in(this);
       query.select('#cvs1')
@@ -1004,10 +1004,10 @@ const PageDefinition = {
           img.src = '/images/mini.png';
           img.onload = () => {
             ctx.drawImage(img, qrX, qrY, qrSize, qrSize);
-            console.log('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
+            console.debug('二维码绘制完成:', {position: {x: qrX, y: qrY}, size: qrSize});
             
             // 绘制完成后执行保存
-            console.log('开始执行保存操作');
+            console.debug('开始执行保存操作');
             wx.canvasToTempFilePath({
               canvas: canvas,
               x: 0,
@@ -1018,17 +1018,17 @@ const PageDefinition = {
               destWidth: width * systemInfo.pixelRatio,
               destHeight: height * systemInfo.pixelRatio,
               success: (res) => {
-                console.log('canvasToTempFilePath成功:', res);
+                console.debug('canvasToTempFilePath成功:', res);
                 const drawurl = res.tempFilePath;
                 platform.saveImageToAlbum(drawurl, 
                   function(res) {
-                    console.log("保存相册成功" + res);
+                    console.debug("保存相册成功" + res);
                     platform.showToast({
                       title: '保存相册成功'
                     });
                   },
                   function(err) {
-                    console.log("保存到相册失败", err);
+                    console.debug("保存到相册失败", err);
                     if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || 
                         err.errMsg === "saveImageToPhotosAlbum:fail auth deny" || 
                         err.errMsg === "saveImageToPhotosAlbum:fail authorize no response") {
@@ -1051,7 +1051,7 @@ const PageDefinition = {
                 );
               },
               fail: function (error) {
-                console.log("canvasToTempFilePath失败:" + error);
+                console.debug("canvasToTempFilePath失败:" + error);
                 platform.showToast({
                   title: '生成图片失败，请重试'
                 });
@@ -1102,7 +1102,7 @@ const PageDefinition = {
         that.savecodetofile()
       }, 1000);
     } catch (ex) {
-      console.log("绘图出现了错误" + ex)
+      console.debug("绘图出现了错误" + ex)
       platform.showToast({
         title: '请重试'
       });

@@ -1,0 +1,77 @@
+// filters.wxs - 用于在 WXML 层进行工具过滤和排序
+
+/**
+ * 根据分类过滤工具
+ * @param {Array} tools 工具列表
+ * @param {String} category 分类名称
+ * @param {Array} commonTools 常用工具列表
+ * @return {Array} 过滤后的工具列表
+ */
+function filterByCategory(tools, category, commonTools) {
+  if (category === '常用工具') {
+    return commonTools;
+  }
+  return tools.filter(function(tool) {
+    return tool.categories && tool.categories.indexOf(category) !== -1;
+  });
+}
+
+/**
+ * 根据搜索关键词过滤工具
+ * @param {Array} tools 工具列表
+ * @param {String} keyword 搜索关键词
+ * @return {Array} 过滤后的工具列表
+ */
+function filterBySearch(tools, keyword) {
+  if (!keyword) {
+    return [];
+  }
+  keyword = keyword.toLowerCase();
+  return tools.filter(function(tool) {
+    // 搜索工具名称
+    if (tool.name.toLowerCase().indexOf(keyword) !== -1) {
+      return true;
+    }
+    // 搜索工具关键词
+    if (tool.keywords) {
+      for (var i = 0; i < tool.keywords.length; i++) {
+        if (tool.keywords[i].toLowerCase().indexOf(keyword) !== -1) {
+          return true;
+        }
+      }
+    }
+    // 搜索工具分类
+    if (tool.categories) {
+      for (var j = 0; j < tool.categories.length; j++) {
+        if (tool.categories[j].toLowerCase().indexOf(keyword) !== -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  });
+}
+
+/**
+ * 对工具进行排序
+ * @param {Array} tools 工具列表
+ * @param {Object} toolFrequency 工具使用频率
+ * @return {Array} 排序后的工具列表
+ */
+function sortTools(tools, toolFrequency) {
+  return tools.sort(function(a, b) {
+    // 置顶的工具排前面
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    // 按使用频率排序
+    var freqA = toolFrequency[a.id] || 0;
+    var freqB = toolFrequency[b.id] || 0;
+    return freqB - freqA;
+  });
+}
+
+module.exports = {
+  filterByCategory: filterByCategory,
+  filterBySearch: filterBySearch,
+  sortTools: sortTools
+};

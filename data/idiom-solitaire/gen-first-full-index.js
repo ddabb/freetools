@@ -13,11 +13,11 @@ for (const item of idioms) {
 for (const k of Object.keys(firstFullIndex)) firstFullIndex[k].sort();
 
 const keys = Object.keys(firstFullIndex).slice(0, 10);
-console.log('sample keys:', keys);
-console.log('wei:', (firstFullIndex['wei'] || []).slice(0, 5));
-console.log('total keys:', Object.keys(firstFullIndex).length);
+console.debug('sample keys:', keys);
+console.debug('wei:', (firstFullIndex['wei'] || []).slice(0, 5));
+console.debug('total keys:', Object.keys(firstFullIndex).length);
 
 const outPath = path.join(__dirname, 'idiom-first-full-index.json');
 fs.writeFileSync(outPath, JSON.stringify(firstFullIndex), 'utf8');
 const size = (fs.statSync(outPath).size / 1024).toFixed(0);
-console.log('done:', outPath, size + 'KB');
+console.debug('done:', outPath, size + 'KB');

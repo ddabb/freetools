@@ -338,7 +338,7 @@ Page({
     // 调试模式：检查是否为 [6,6,8,8]
     const debugMode = JSON.stringify(numbers) === JSON.stringify([6,6,8,8]);
     if (debugMode) {
-      console.log('调试模式：求解 6,6,8,8');
+      console.debug('调试模式：求解 6,6,8,8');
     }
     
     const solutions = [];
@@ -350,7 +350,7 @@ Page({
         if (Math.abs(nums[0] - 24) < 0.000001) {
           solutions.push(exprs[0]);
           if (debugMode) {
-            console.log('找到解:', exprs[0]);
+            console.debug('找到解:', exprs[0]);
           }
         }
         return;
@@ -426,8 +426,8 @@ Page({
     solve(numbers, initExprs);
     
     if (debugMode) {
-      console.log('总共找到原始解数量:', solutions.length);
-      console.log('原始解列表:', solutions);
+      console.debug('总共找到原始解数量:', solutions.length);
+      console.debug('原始解列表:', solutions);
     }
     
     // 去重并格式化解法
@@ -448,19 +448,19 @@ Page({
             uniqueSolutions.push({ expression: normalized, description: '' });
           }
         } else if (debugMode) {
-          console.log('表达式计算结果不为24:', normalized, '=', result);
+          console.debug('表达式计算结果不为24:', normalized, '=', result);
         }
       } catch (error) {
         // 忽略无效表达式
         if (debugMode) {
-          console.log('表达式无效:', normalized, error);
+          console.debug('表达式无效:', normalized, error);
         }
       }
     }
     
     if (debugMode) {
-      console.log('去重后解数量:', uniqueSolutions.length);
-      console.log('去重后解列表:', uniqueSolutions);
+      console.debug('去重后解数量:', uniqueSolutions.length);
+      console.debug('去重后解列表:', uniqueSolutions);
     }
     
     return uniqueSolutions.slice(0, 10); // 最多返回10种解法
@@ -469,7 +469,7 @@ Page({
   // 切换游戏模式
   switchGameMode(e) {
     const mode = e.currentTarget.dataset.mode;
-    console.log('switchGameMode called, mode:', mode);
+    console.debug('switchGameMode called, mode:', mode);
     if (this.data.gameMode === mode) return;
     
     this.setData({
@@ -481,7 +481,7 @@ Page({
     
     // 切换到预设模式时，生成新游戏
     if (mode === 'preset') {
-      console.log('Switching to preset, generating new game');
+      console.debug('Switching to preset, generating new game');
       this.generateNewGame();
     }
     
@@ -490,7 +490,7 @@ Page({
 
   // 生成新游戏
   generateNewGame() {
-    console.log('generateNewGame called');
+    console.debug('generateNewGame called');
     try {
       // 检查题目库是否已加载
       if (!this._questionBank || this._questionBank.length === 0) {
@@ -747,12 +747,12 @@ Page({
 
     // 检查缓存是否有效
     if (cached && timestamp && (now - timestamp < CACHE_EXPIRE)) {
-      console.log('[24point] 使用缓存题目');
+      console.debug('[24point] 使用缓存题目');
       this._questionBank = cached;
       return;
     }
 
-    console.log('[24point] 从CDN加载预设题目');
+    console.debug('[24point] 从CDN加载预设题目');
     wx.request({
       url: `${CDN_BASE}/24point-questions.json`,
       method: 'GET',
@@ -763,7 +763,7 @@ Page({
           // 保存到缓存
           wx.setStorageSync(QUESTION_KEY, res.data.questions);
           wx.setStorageSync(QUESTION_TIMESTAMP_KEY, now);
-          console.log('[24point] CDN题目加载成功，共', res.data.questions.length, '道');
+          console.debug('[24point] CDN题目加载成功，共', res.data.questions.length, '道');
         } else {
           console.warn('[24point] CDN数据格式错误，使用本地数据');
         }

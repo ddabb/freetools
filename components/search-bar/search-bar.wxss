@@ -34,7 +34,7 @@
   padding: 5rpx;
 }
 
-.clear-btn icon {
+.clear-btn .clear-btn-icon {
   color: #999999;
 }
 

@@ -34,4 +34,4 @@ const csv = rows.map(r => r.map(escape).join(',')).join('\n');
 
 // Write with BOM for Excel UTF-8 compatibility
 fs.writeFileSync(path.join(baseDir, './data/relative-relation.csv'), '\ufeff' + csv, 'utf8');
-console.log('Done! Rows:', rows.length, 'Cols:', props.length + 1);
+console.debug('Done! Rows:', rows.length, 'Cols:', props.length + 1);

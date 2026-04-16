@@ -58,7 +58,7 @@ const loadFontGroup = (fonts, groupName) => {
         global: true,
         scopes: ['webview', 'native'],
         success: (res) => {
-          console.log(`字体加载成功 [${groupName}]: ${font.family}`);
+          console.debug(`字体加载成功 [${groupName}]: ${font.family}`);
           fontResolve({ ok: true, family: font.family });
         },
         fail: (err) => {
@@ -71,7 +71,7 @@ const loadFontGroup = (fonts, groupName) => {
     Promise.all(promises).then(results => {
       const loaded = results.filter(r => r.ok).map(r => r.family);
       const failed = results.filter(r => !r.ok).map(r => r.family);
-      console.log(`${groupName} 字体加载完成。成功:${loaded.length} 失败:${failed.length}`);
+      console.debug(`${groupName} 字体加载完成。成功:${loaded.length} 失败:${failed.length}`);
       resolve({ loaded, failed });
     });
   });
@@ -107,7 +107,7 @@ const loadFonts = async (group = 'core') => {
       results = result;
     }
 
-    console.log('字体加载完成', results);
+    console.debug('字体加载完成', results);
     return results;
   } catch (error) {
     console.error('字体加载出错:', error);

@@ -24,7 +24,7 @@ function logDraw(message, data = {}) {
     data
   };
   drawLogs.push(logEntry);
-  console.log(`[ImageGenerator] ${message}`, data);
+  console.debug(`[ImageGenerator] ${message}`, data);
 }
 
 /**

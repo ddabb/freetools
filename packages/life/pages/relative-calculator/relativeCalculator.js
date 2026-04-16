@@ -7,9 +7,9 @@ class RelativeCalculator {
 
   // 从CDN加载亲属关系数据
   async loadRelationGraph() {
-    console.log('[relative-calculator] loadRelationGraph 开始执行');
+    console.debug('[relative-calculator] loadRelationGraph 开始执行');
     if (this.relationGraph) {
-      console.log('[relative-calculator] 使用内存中的关系图');
+      console.debug('[relative-calculator] 使用内存中的关系图');
       return this.relationGraph;
     }
 
@@ -19,7 +19,7 @@ class RelativeCalculator {
     const now = Date.now();
     const cacheExpiry = 7 * 24 * 60 * 60 * 1000; // 7天过期
 
-    console.log('[relative-calculator] 缓存检查', {
+    console.debug('[relative-calculator] 缓存检查', {
       hasCachedData: !!cachedData,
       hasCachedTimestamp: !!cachedTimestamp,
       cachedTimestamp,
@@ -30,12 +30,12 @@ class RelativeCalculator {
     });
 
     if (cachedData && cachedTimestamp && (now - cachedTimestamp < cacheExpiry)) {
-      console.log('[relative-calculator] 使用缓存数据');
+      console.debug('[relative-calculator] 使用缓存数据');
       this.relationGraph = cachedData;
       return this.relationGraph;
     }
 
-    console.log('[relative-calculator] 缓存无效，开始从CDN加载');
+    console.debug('[relative-calculator] 缓存无效，开始从CDN加载');
     // 从CDN加载
     return new Promise((resolve, reject) => {
       wx.request({
@@ -43,7 +43,7 @@ class RelativeCalculator {
         method: 'GET',
         timeout: 10000,
         success: (res) => {
-          console.log('[relative-calculator] CDN请求成功', {
+          console.debug('[relative-calculator] CDN请求成功', {
             statusCode: res.statusCode,
             hasData: !!res.data,
             hasRelationGraph: !!(res.data && res.data.relationGraph)
@@ -54,7 +54,7 @@ class RelativeCalculator {
             // 保存到缓存
             wx.setStorageSync('relation_graph', this.relationGraph);
             wx.setStorageSync('relation_graph_timestamp', now);
-            console.log('[relative-calculator] 数据已保存到缓存');
+            console.debug('[relative-calculator] 数据已保存到缓存');
             
             resolve(this.relationGraph);
           } else {

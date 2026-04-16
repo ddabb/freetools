@@ -140,7 +140,7 @@ Page({
     const board = this.data.board;
     
     // 调试：检查候选解数据
-    console.log('候选解开关状态:', this.data.showCandidates);
+    console.debug('候选解开关状态:', this.data.showCandidates);
     
     // 确保有候选解时才显示提示
     let hasCandidates = false;

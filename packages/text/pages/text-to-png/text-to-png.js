@@ -515,7 +515,7 @@ Page({
       const baseFontSize = fontConfig.fontSize;
       const lineHeight = fontConfig.lineHeight;
       
-      console.log('开始生成文本PNG:', {
+      console.debug('开始生成文本PNG:', {
         inputText: inputText,
         template: this.data.selectedTemplate,
         textEffect: this.data.selectedTextEffect
@@ -852,7 +852,7 @@ Page({
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
           
-          console.log('Canvas绘制完成，开始生成PNG图片');
+          console.debug('Canvas绘制完成，开始生成PNG图片');
           
           // 使用新的Canvas转图片API
           wx.canvasToTempFilePath({
@@ -866,7 +866,7 @@ Page({
             quality: 1,
             fileType: 'png',
             success: (res) => {
-              console.log('PNG图片生成成功:', res.tempFilePath);
+              console.debug('PNG图片生成成功:', res.tempFilePath);
               that.saveImageToAlbum(res.tempFilePath);
             },
             fail: (err) => {
@@ -888,7 +888,7 @@ Page({
     wx.saveImageToPhotosAlbum({
       filePath: tempFilePath,
       success: () => {
-        console.log('图片保存到相册成功');
+        console.debug('图片保存到相册成功');
         utils.showSuccess('图片已保存到相册');
         this.setData({ isLoading: false });
       },
@@ -905,7 +905,7 @@ Page({
               if (res.confirm) {
                 wx.openSetting({
                   success: (settingRes) => {
-                    console.log('打开设置页面:', settingRes);
+                    console.debug('打开设置页面:', settingRes);
                   }
                 });
               }
@@ -932,7 +932,7 @@ Page({
     this.setData({ isLoading: true });
     
     try {
-      console.log('开始导出PNG图片');
+      console.debug('开始导出PNG图片');
       
       // 延迟执行以确保UI更新
       setTimeout(() => {

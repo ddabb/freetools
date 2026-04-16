@@ -5,10 +5,35 @@
  * 2. 304 增量更新（If-Modified-Since 减少重复下载）
  * 3. 统一的智能写入（smartSet）
  * 4. 定点缓存清理（只清 cdn_ 前缀，不影响其他数据）
+ * 5. 版本号管理（数据版本变化时自动清理旧缓存）
  */
+
+// 引入数据版本号
+const { DATA_VERSION } = require('../config/constants');
 
 // Storage 上限 10MB，保留 3MB 余量
 const MAX_CACHE_SIZE_KB = 7 * 1024;
+
+// 版本号缓存键
+const VERSION_KEY = 'cache_version';
+
+/**
+ * 检查并更新版本号，版本变化时清除旧缓存
+ */
+function checkVersion() {
+  try {
+    const currentVersion = wx.getStorageSync(VERSION_KEY);
+    if (currentVersion !== DATA_VERSION) {
+      // 版本变化，清除所有 cdn_ 缓存
+      clearCdnCache();
+      // 更新版本号
+      wx.setStorageSync(VERSION_KEY, DATA_VERSION);
+      console.debug('[cacheManager] 版本更新，已清除旧缓存:', currentVersion, '→', DATA_VERSION);
+    }
+  } catch (e) {
+    // 版本检查失败，忽略
+  }
+}
 
 /**
  * 智能写入：自动 LRU 淘汰后写入
@@ -19,6 +44,9 @@ const MAX_CACHE_SIZE_KB = 7 * 1024;
  */
 function smartSet(cacheKey, data, tsKey) {
   try {
+    // 检查版本号
+    checkVersion();
+    
     const info = wx.getStorageInfoSync();
     const dataSizeKB = estimateSizeKB(data);
     const neededKB = dataSizeKB + (tsKey ? 1 : 0) + 1; // 余量 1KB
@@ -54,7 +82,7 @@ function evictOldest(allKeys) {
   const victim = cdnKeys[0].key;
   wx.removeStorageSync(victim);
   wx.removeStorageSync(victim + '_ts');
-  console.log('[cacheManager] LRU 淘汰:', victim);
+  console.debug('[cacheManager] LRU 淘汰:', victim);
 }
 
 /**
@@ -100,11 +128,12 @@ function clearCdnCache(prefix) {
  * 带 304 支持的缓存请求（核心方法）
  *
  * 策略：
- * 1. 内存缓存 → Storage 缓存（TTL 内直接返回）
- * 2. Storage 过期或无缓存 → 发请求，带 If-Modified-Since
+ * 1. 版本号检查 → 确保缓存版本与当前数据版本一致
+ * 2. 内存缓存 → Storage 缓存（TTL 内直接返回）
+ * 3. Storage 过期或无缓存 → 发请求，带 If-Modified-Since
  *    - 304 → 缓存未变，延长 TTL，返回旧缓存（用户无感知）
  *    - 200 → 缓存已变，更新 Storage，返回新数据
- * 3. 无缓存直接 200 → 写入 Storage
+ * 4. 无缓存直接 200 → 写入 Storage
  *
  * @param {object} opts
  * @param {string}   opts.cacheKey     数据 key
@@ -119,6 +148,9 @@ function fetchWithCache(opts) {
     cacheKey, tsKey, url, ttl = 7 * 24 * 60 * 60 * 1000, memRef
   } = opts;
   const now = Date.now();
+
+  // 检查版本号
+  checkVersion();
 
   // 内存缓存优先
   if (memRef !== undefined && memRef !== null) {

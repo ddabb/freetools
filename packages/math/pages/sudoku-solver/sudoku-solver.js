@@ -94,14 +94,14 @@ Page({
     });
 
     if (cached && cached.puzzle) {
-      console.log('[daily-sudoku] 使用日期缓存:', dateValue);
+      console.debug('[daily-sudoku] 使用日期缓存:', dateValue);
       this.setTodaySudoku(cached, dateValue);
       return;
     }
 
     wx.showLoading({ title: '加载数独中...' });
-    console.log(`[daily-sudoku] 从CDN加载: ${CDN_BASE}/sudoku/${dateKey}.json`);
-    console.log(`[daily-sudoku] 目标日期: ${dateValue}`);
+    console.debug(`[daily-sudoku] 从CDN加载: ${CDN_BASE}/sudoku/${dateKey}.json`);
+    console.debug(`[daily-sudoku] 目标日期: ${dateValue}`);
 
     wx.request({
       url: `${CDN_BASE}/sudoku/${dateKey}.json`,
@@ -109,11 +109,11 @@ Page({
       timeout: 10000,
       success: (res) => {
         wx.hideLoading();
-        console.log(`[daily-sudoku] CDN响应状态码: ${res.statusCode}`);
+        console.debug(`[daily-sudoku] CDN响应状态码: ${res.statusCode}`);
         if (res.statusCode === 200 && res.data && res.data.puzzle) {
-          console.log('[daily-sudoku] CDN数据加载成功，保存到缓存');
-          console.log('[daily-sudoku] 题目名称:', res.data.name);
-          console.log('[daily-sudoku] 难度:', res.data.level, res.data.difficulty);
+          console.debug('[daily-sudoku] CDN数据加载成功，保存到缓存');
+          console.debug('[daily-sudoku] 题目名称:', res.data.name);
+          console.debug('[daily-sudoku] 难度:', res.data.level, res.data.difficulty);
           wx.setStorageSync(cacheKey, res.data);
           wx.setStorageSync(cacheTsKey, Date.now());
           this.setTodaySudoku(res.data, dateValue);
@@ -128,7 +128,7 @@ Page({
       fail: (err) => {
         wx.hideLoading();
         console.warn('[daily-sudoku] CDN加载失败', err);
-        console.log('[daily-sudoku] 使用备用题目');
+        console.debug('[daily-sudoku] 使用备用题目');
         this.generateRandomSudoku(dateValue);
       }
     });
@@ -182,7 +182,7 @@ Page({
     const dateValue = normalizeDateValue(targetDate);
     const [year, month, day] = dateValue.split('-');
 
-    console.log('[daily-sudoku] 开始生成备用数独题目:', dateValue);
+    console.debug('[daily-sudoku] 开始生成备用数独题目:', dateValue);
 
     try {
       const fullBoard = sudoku.generateFullBoard();
@@ -197,12 +197,12 @@ Page({
         emptyCells: 40
       };
 
-      console.log('[daily-sudoku] 备用题目生成成功');
+      console.debug('[daily-sudoku] 备用题目生成成功');
       this.setTodaySudoku(randomData, dateValue);
       utils.showText('该日期暂无预置题目，已为你生成备用数独');
     } catch (error) {
       console.error('[daily-sudoku] 备用题目生成失败:', error);
-      console.log('[daily-sudoku] 使用本地备用数独');
+      console.debug('[daily-sudoku] 使用本地备用数独');
       this.useLocalDailySudoku(dateValue);
       utils.showText('该日期加载失败，已切换为本地备用数独');
     }
@@ -348,7 +348,7 @@ Page({
 
   calculateCandidates() {
     if (!this.data.showCandidates) return;
-    console.log('开始计算候选数...');
+    console.debug('开始计算候选数...');
     
     const board = this.data.board;
     const grid = [];

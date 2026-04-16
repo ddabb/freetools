@@ -11,7 +11,7 @@ const dataDir = __dirname;
 const content = fs.readFileSync(path.join(dataDir, 'idiom-source.txt'), 'utf8');
 const lines = content.split('\n').filter(l => l.trim().length > 0);
 
-console.log(`共 ${lines.length} 条，开始解析...`);
+console.debug(`共 ${lines.length} 条，开始解析...`);
 
 // ============================================================
 // 手动 CSV 解析：先切7个字段
@@ -80,7 +80,7 @@ for (const line of lines) {
   const entry = parseLine(line);
   if (!entry || !entry.word || entry.word.length < 2) {
     skipped++;
-    if (skipped <= 3) console.log('跳过:', line.substring(0, 80));
+    if (skipped <= 3) console.debug('跳过:', line.substring(0, 80));
     continue;
   }
 
@@ -98,7 +98,7 @@ for (const line of lines) {
   });
 }
 
-console.log(`解析完成: ${idioms.length} 条有效，跳过 ${skipped} 条`);
+console.debug(`解析完成: ${idioms.length} 条有效，跳过 ${skipped} 条`);
 
 // ============================================================
 // 去重 & 排序
@@ -110,7 +110,7 @@ const unique = idioms.filter(item => {
   return true;
 });
 unique.sort((a, b) => a.word.localeCompare(b.word));
-console.log(`去重后: ${unique.length} 条`);
+console.debug(`去重后: ${unique.length} 条`);
 
 // ============================================================
 // 输出文件
@@ -119,7 +119,7 @@ const outDir = dataDir;
 
 // idiom.json（完整版，用于调试）
 fs.writeFileSync(path.join(outDir, 'idiom.json'), JSON.stringify(unique), 'utf8');
-console.log('✓ idiom.json', (JSON.stringify(unique).length/1024).toFixed(0), 'KB');
+console.debug('✓ idiom.json', (JSON.stringify(unique).length/1024).toFixed(0), 'KB');
 
 // ============================================================
 // 按首字母分片：生成 letter/a.json, letter/b.json, ...
@@ -144,7 +144,7 @@ for (const letter of letters) {
     d: i.derivation
   }));
   fs.writeFileSync(path.join(letterDir, `${letter}.json`), JSON.stringify(compact), 'utf8');
-  console.log(`  letter/${letter}.json: ${compact.length} 条 (${(JSON.stringify(compact).length/1024).toFixed(0)}KB)`);
+  console.debug(`  letter/${letter}.json: ${compact.length} 条 (${(JSON.stringify(compact).length/1024).toFixed(0)}KB)`);
 }
 
 // 按首字索引
@@ -156,7 +156,7 @@ for (const item of unique) {
 }
 for (const k of Object.keys(firstIndex)) firstIndex[k].sort();
 fs.writeFileSync(path.join(outDir, 'idiom-first-index.json'), JSON.stringify(firstIndex), 'utf8');
-console.log('✓ idiom-first-index.json', Object.keys(firstIndex).length, '个首字母');
+console.debug('✓ idiom-first-index.json', Object.keys(firstIndex).length, '个首字母');
 
 // 按尾字索引
 const lastIndex = {};
@@ -167,7 +167,7 @@ for (const item of unique) {
 }
 for (const k of Object.keys(lastIndex)) lastIndex[k].sort();
 fs.writeFileSync(path.join(outDir, 'idiom-last-index.json'), JSON.stringify(lastIndex), 'utf8');
-console.log('✓ idiom-last-index.json', Object.keys(lastIndex).length, '个尾字母');
+console.debug('✓ idiom-last-index.json', Object.keys(lastIndex).length, '个尾字母');
 
 // 统计
 const stats = {
@@ -178,5 +178,5 @@ const stats = {
   generatedAt: new Date().toISOString()
 };
 fs.writeFileSync(path.join(outDir, 'stats.json'), JSON.stringify(stats, null, 2), 'utf8');
-console.log('\n统计:', JSON.stringify(stats));
-console.log('\n全部完成！');
+console.debug('\n统计:', JSON.stringify(stats));
+console.debug('\n全部完成！');

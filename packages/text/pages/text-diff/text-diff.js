@@ -309,7 +309,7 @@ Page({
   return sum;
 }
 
-console.log(calculateSum([1, 2, 3, 4, 5]));`;
+console.debug(calculateSum([1, 2, 3, 4, 5]));`;
 
     const sampleB = `function calculateSum(numbers) {
   let total = 0;
@@ -321,7 +321,7 @@ console.log(calculateSum([1, 2, 3, 4, 5]));`;
 
 // Calculate and display result
 const result = calculateSum([1, 2, 3, 4, 5]);
-console.log('The sum is:', result);`;
+console.debug('The sum is:', result);`;
 
     this.setData({ textA: sampleA, textB: sampleB });
     wx.showToast({ title: '已加载示例代码', icon: 'success' });

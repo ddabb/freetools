@@ -251,7 +251,7 @@ const PageDefinition = {
       canGenerate: canGenerate
     })
     // 添加日志记录
-    console.log('文本输入变化:', {
+    console.debug('文本输入变化:', {
       value: value,
       trimmedLength: value.trim().length,
       canGenerate: canGenerate,
@@ -383,7 +383,7 @@ const PageDefinition = {
             foreground: '#000000',
             correctLevel: correctLevel
           }).then(() => {
-            console.log('生成二维码成功')
+            console.debug('生成二维码成功')
             
             // 如果有中心图片，绘制中心图片
             if (this.data.hasImage && this.data.centerImage) {
@@ -420,7 +420,7 @@ const PageDefinition = {
     
     // 获取设备像素比
     const dpr = wx.getSystemInfoSync().pixelRatio
-    console.log('设备像素比:', dpr)
+    console.debug('设备像素比:', dpr)
     
     // 使用兼容的图片创建方式
     let image = null
@@ -501,7 +501,7 @@ const PageDefinition = {
         const physicalRadius = radius * dpr
         
         // 添加详细调试日志
-        console.log('中心图片绘制详细信息:', {
+        console.debug('中心图片绘制详细信息:', {
           '图片原始宽度': image.width,
           '图片原始高度': image.height,
           '缩放比例 scale': scale.toFixed(4),
@@ -613,7 +613,7 @@ const PageDefinition = {
         foreground: '#000000',
         correctLevel: correctLevel
       }).then(() => {
-        console.log('生成二维码成功');
+        console.debug('生成二维码成功');
         
         // 如果有中心图片，绘制中心图片
         if (this.data.hasImage && this.data.centerImage) {
@@ -781,14 +781,14 @@ const PageDefinition = {
         // 重置变换矩阵，确保没有缩放或平移
         try {
           ctx.setTransform(1, 0, 0, 1, 0, 0)
-          console.log('重置变换矩阵后')
+          console.debug('重置变换矩阵后')
         } catch (e) {
-          console.log('重置变换矩阵失败:', e)
+          console.debug('重置变换矩阵失败:', e)
         }
         
         // 获取设备像素比
         const dpr = isHarmonyOS ? 2 : (wx.getSystemInfoSync().pixelRatio || 1)
-        console.log('鸿蒙平台设备像素比:', dpr)
+        console.debug('鸿蒙平台设备像素比:', dpr)
         
         // 计算图片缩放比例以保持比例
         const scale = imageSize / Math.min(image.width, image.height)
@@ -809,7 +809,7 @@ const PageDefinition = {
         const physicalRadius = radius * dpr
         
         // 添加详细调试日志
-        console.log('鸿蒙平台中心图片绘制详细信息:', {
+        console.debug('鸿蒙平台中心图片绘制详细信息:', {
           '图片原始宽度': image.width,
           '图片原始高度': image.height,
           '缩放比例 scale': scale.toFixed(4),
@@ -892,11 +892,11 @@ const PageDefinition = {
   // 鸿蒙平台保存图片
   saveImageHarmony(canvas) {
     try {
-      console.log('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
+      console.debug('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
       
       // 在鸿蒙平台，使用canvas.toDataURL()获取图片数据，指定PNG格式
       const imageData = canvas.toDataURL('image/png');
-      console.log('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
+      console.debug('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
       
       if (!imageData || !imageData.startsWith('data:image/png')) {
         console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');
@@ -909,13 +909,13 @@ const PageDefinition = {
       // 保存图片到相册
       platform.saveImageToAlbum(imageData, 
         function() {
-          console.log("保存相册成功");
+          console.debug("保存相册成功");
           platform.showToast({
             title: '保存成功'
           });
         },
         function(data, code) {
-          console.log("保存到相册失败", { code, data, dataType: typeof data });
+          console.debug("保存到相册失败", { code, data, dataType: typeof data });
           if (code === 201 || (data && data.code === 201)) {
             // 权限被拒绝
             if (isHarmonyOS) {

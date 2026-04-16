@@ -29,7 +29,7 @@ const config = {
 function ensureDirectory(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
-    console.log(`Created directory: ${dirPath}`);
+    console.debug(`Created directory: ${dirPath}`);
   }
 }
 
@@ -102,7 +102,7 @@ function generateArticleId(title) {
 
 // 主构建函数
 async function build() {
-  console.log('开始构建知识库...');
+  console.debug('开始构建知识库...');
 
   // 确保目录存在
   ensureDirectory(config.sourceDir);
@@ -110,7 +110,7 @@ async function build() {
   // 清空整个 know 输出目录
   if (fs.existsSync(config.outputDir)) {
     emptyDirectory(config.outputDir);
-    console.log('✅ 已清空输出目录');
+    console.debug('✅ 已清空输出目录');
   }
 
   // 确保子目录存在
@@ -183,7 +183,7 @@ async function build() {
 
     // 写入文章列表文件
     fs.writeFileSync(config.articlesFile, JSON.stringify(articlesData, null, 2));
-    console.log(`✅ 已更新: ${config.articlesFile}`);
+    console.debug(`✅ 已更新: ${config.articlesFile}`);
 
     // 生成分类文件
     Object.keys(taxonomy.categories).forEach(category => {
@@ -208,7 +208,7 @@ async function build() {
       const categoryFileName = `${category}.json`;
       const categoryFilePath = path.join(config.categoryDir, categoryFileName);
       fs.writeFileSync(categoryFilePath, JSON.stringify(categoryData, null, 2));
-      console.log(`✅ 已生成分类文件: ${categoryFilePath}`);
+      console.debug(`✅ 已生成分类文件: ${categoryFilePath}`);
     });
 
     // 生成标签文件
@@ -234,7 +234,7 @@ async function build() {
       const tagFileName = `${tag}.json`;
       const tagFilePath = path.join(config.tagDir, tagFileName);
       fs.writeFileSync(tagFilePath, JSON.stringify(tagData, null, 2));
-      console.log(`✅ 已生成标签文件: ${tagFilePath}`);
+      console.debug(`✅ 已生成标签文件: ${tagFilePath}`);
     });
 
     // 生成文章详情文件
@@ -255,7 +255,7 @@ async function build() {
       const detailFileName = path.basename(file.name, '.md') + '.json';
       const detailFilePath = path.join(config.detailDir, detailFileName);
       fs.writeFileSync(detailFilePath, JSON.stringify(detailData, null, 2));
-      console.log(`✅ 已生成详情文件: ${detailFilePath}`);
+      console.debug(`✅ 已生成详情文件: ${detailFilePath}`);
     });
 
     // 生成标签文件
@@ -270,7 +270,7 @@ async function build() {
       })).sort((a, b) => b.count - a.count)
     };
     fs.writeFileSync(config.tagsFile, JSON.stringify(tagsData, null, 2));
-    console.log(`✅ 已更新: ${config.tagsFile}`);
+    console.debug(`✅ 已更新: ${config.tagsFile}`);
 
     // 生成首页索引文件
     const indexData = {
@@ -297,17 +297,17 @@ async function build() {
         .slice(0, 10)
     };
     fs.writeFileSync(config.indexFile, JSON.stringify(indexData, null, 2));
-    console.log(`✅ 已更新: ${config.indexFile}`);
+    console.debug(`✅ 已更新: ${config.indexFile}`);
 
     // 生成知识库索引文件（与index.json相同，保持兼容性）
     fs.writeFileSync(config.knowledgeFile, JSON.stringify(indexData, null, 2));
-    console.log(`✅ 已更新: ${config.knowledgeFile}`);
+    console.debug(`✅ 已更新: ${config.knowledgeFile}`);
 
-    console.log('\n📊 构建统计:');
-    console.log(`📄 文章总数: ${mdFiles.length}篇`);
-    console.log(`📂 分类数量: ${Object.keys(taxonomy.categories).length}个`);
-    console.log(`🏷️ 标签数量: ${Object.keys(taxonomy.tags).length}个`);
-    console.log('\n✅ 知识库构建完成！');
+    console.debug('\n📊 构建统计:');
+    console.debug(`📄 文章总数: ${mdFiles.length}篇`);
+    console.debug(`📂 分类数量: ${Object.keys(taxonomy.categories).length}个`);
+    console.debug(`🏷️ 标签数量: ${Object.keys(taxonomy.tags).length}个`);
+    console.debug('\n✅ 知识库构建完成！');
 
   } catch (error) {
     console.error('❌ 构建失败:', error.message);

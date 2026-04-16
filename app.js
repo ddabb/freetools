@@ -2,7 +2,7 @@
 App({
   onLaunch() {
     // 初始化小程序
-    console.log('随身工具宝小程序启动');
+    console.debug('随身工具宝小程序启动');
 
     // 检查更新
     this.checkForUpdate();
@@ -28,7 +28,7 @@ App({
       const updateManager = wx.getUpdateManager();
       
       updateManager.onCheckForUpdate(function (res) {
-        console.log('检查更新结果：', res.hasUpdate);
+        console.debug('检查更新结果：', res.hasUpdate);
       });
 
       updateManager.onUpdateReady(function () {
@@ -86,7 +86,7 @@ App({
           expire: expire * 1000
         };
         wx.setStorageSync(key, cacheData);
-        console.log(`缓存设置成功: ${key}`);
+        console.debug(`缓存设置成功: ${key}`);
       } catch (e) {
         console.error('缓存设置失败:', e);
       }
@@ -105,11 +105,11 @@ App({
         const now = Date.now();
         if (now - cacheData.timestamp > cacheData.expire) {
           wx.removeStorageSync(key);
-          console.log(`缓存已过期: ${key}`);
+          console.debug(`缓存已过期: ${key}`);
           return null;
         }
 
-        console.log(`缓存命中: ${key}`);
+        console.debug(`缓存命中: ${key}`);
         return cacheData.data;
       } catch (e) {
         console.error('缓存获取失败:', e);
@@ -124,7 +124,7 @@ App({
     remove(key) {
       try {
         wx.removeStorageSync(key);
-        console.log(`缓存删除成功: ${key}`);
+        console.debug(`缓存删除成功: ${key}`);
       } catch (e) {
         console.error('缓存删除失败:', e);
       }
@@ -138,7 +138,7 @@ App({
         const keys = wx.getStorageInfoSync().keys;
         const cdnKeys = keys.filter(key => key.startsWith('cdn_'));
         cdnKeys.forEach(key => wx.removeStorageSync(key));
-        console.log(`CDN缓存已清除，共 ${cdnKeys.length} 个缓存项`);
+        console.debug(`CDN缓存已清除，共 ${cdnKeys.length} 个缓存项`);
       } catch (e) {
         console.error('CDN缓存清除失败:', e);
       }

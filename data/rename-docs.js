@@ -115,7 +115,7 @@ const ARTICLES = [
 
 // 重命名文件
 function renameFiles() {
-  console.log('🚀 开始重命名文档...\n');
+  console.debug('🚀 开始重命名文档...\n');
 
   let renamed = 0;
   
@@ -125,28 +125,28 @@ function renameFiles() {
     
     if (fs.existsSync(oldPath)) {
       fs.renameSync(oldPath, newPath);
-      console.log(`✅ ${oldName} → ${newName}`);
+      console.debug(`✅ ${oldName} → ${newName}`);
       renamed++;
     } else {
-      console.log(`⚠️  文件不存在: ${oldName}`);
+      console.debug(`⚠️  文件不存在: ${oldName}`);
     }
   }
   
-  console.log(`\n✨ 重命名完成！共 ${renamed} 个文件`);
+  console.debug(`\n✨ 重命名完成！共 ${renamed} 个文件`);
 }
 
 // 输出文章列表
 function outputArticleList() {
-  console.log('\n📚 白天写的文章列表：\n');
-  console.log('| 序号 | 标题 | 分类 | 标签 |');
-  console.log('|:---|:---|:---|:---|');
+  console.debug('\n📚 白天写的文章列表：\n');
+  console.debug('| 序号 | 标题 | 分类 | 标签 |');
+  console.debug('|:---|:---|:---|:---|');
   
   ARTICLES.forEach((article, index) => {
     const tags = article.tags.join('、');
-    console.log(`| ${index + 1} | ${article.title} | ${article.category} | ${tags} |`);
+    console.debug(`| ${index + 1} | ${article.title} | ${article.category} | ${tags} |`);
   });
   
-  console.log(`\n共 ${ARTICLES.length} 篇文章`);
+  console.debug(`\n共 ${ARTICLES.length} 篇文章`);
 }
 
 // 主函数

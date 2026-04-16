@@ -24,7 +24,7 @@ function generateSudokuForDate(date) {
   const difficultyIndex = (dayOfYear - 1) % difficultyConfig.length;
   const difficulty = difficultyConfig[difficultyIndex];
   
-  console.log(`生成 ${date.toISOString().split('T')[0]} - 难度: ${difficulty.name}`);
+  console.debug(`生成 ${date.toISOString().split('T')[0]} - 难度: ${difficulty.name}`);
   
   try {
     // 生成完整终盘
@@ -83,7 +83,7 @@ function generateYearData(year) {
     
     // 检查文件是否已存在
     if (fs.existsSync(filepath)) {
-      console.log(`  跳过已存在的文件: ${filename}`);
+      console.debug(`  跳过已存在的文件: ${filename}`);
       skippedCount++;
     } else {
       const sudokuData = generateSudokuForDate(currentDate);
@@ -100,27 +100,27 @@ function generateYearData(year) {
     currentDate.setDate(currentDate.getDate() + 1);
   }
   
-  console.log(`\n${year} 年生成完成!`);
-  console.log(`  新生成文件: ${generatedCount}`);
-  console.log(`  跳过已存在文件: ${skippedCount}`);
-  console.log(`  失败文件: ${failedCount}`);
+  console.debug(`\n${year} 年生成完成!`);
+  console.debug(`  新生成文件: ${generatedCount}`);
+  console.debug(`  跳过已存在文件: ${skippedCount}`);
+  console.debug(`  失败文件: ${failedCount}`);
 }
 
 // 主程序
-console.log('========================================');
-console.log('  2025-2030 全年数独数据生成器');
-console.log('========================================');
+console.debug('========================================');
+console.debug('  2025-2030 全年数独数据生成器');
+console.debug('========================================');
 
 try {
   // 生成 2025-2030 年数据
   for (let year = 2025; year <= 2030; year++) {
     generateYearData(year);
-    console.log('\n----------------------------------------');
+    console.debug('\n----------------------------------------');
   }
   
-  console.log('\n========================================');
-  console.log('  全部生成完成!');
-  console.log('========================================');
+  console.debug('\n========================================');
+  console.debug('  全部生成完成!');
+  console.debug('========================================');
 } catch (error) {
   console.error('\n发生错误:', error.message);
   console.error(error.stack);
