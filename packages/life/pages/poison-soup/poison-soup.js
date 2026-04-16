@@ -4,7 +4,6 @@ const utils = require('../../../../utils/index');
 Page({
   data: {
     currentSoup: '',
-    currentIndex: 0,
     soupList: [],
     isAnimating: false,
     dailyCount: 0,
@@ -94,17 +93,18 @@ Page({
     }
 
     this.setData({
-      currentIndex,
       currentSoup: soupList[currentIndex].text,
       todayDate: todayStr,
       dailyCount: wx.getStorageSync('poison_soup_daily_count') || 0,
       totalCount: wx.getStorageSync('poison_soup_total_count') || 0
     });
+    this._currentIndex = currentIndex;
   },
 
   // 换一碗鸡汤
   changeSoup() {
-    const { soupList, currentIndex, isAnimating } = this.data;
+    const { soupList, isAnimating } = this.data;
+    const currentIndex = this._currentIndex || 0;
     if (isAnimating || !soupList.length) return;
 
     this.setData({ isAnimating: true });
@@ -117,8 +117,8 @@ Page({
     } while (newIndex === currentIndex && soupList.length > 1);
 
     setTimeout(() => {
+      this._currentIndex = newIndex;
       this.setData({
-        currentIndex: newIndex,
         currentSoup: soupList[newIndex].text,
         isAnimating: false
       });

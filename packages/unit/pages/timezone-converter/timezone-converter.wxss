@@ -105,10 +105,11 @@
 
 .change-btn {
   font-size: 26rpx;
-  color: #096dd9;
+  color: #0654a3;
   padding: 8rpx 20rpx;
   background: #d6e8fa;
   border-radius: 24rpx;
+  font-weight: 600;
 }
 
 /* 时间输入 */
@@ -183,13 +184,13 @@
 
 .add-icon {
   font-size: 28rpx;
-  color: #096dd9;
+  color: #0654a3;
   margin-right: 8rpx;
 }
 
 .add-btn text:last-child {
   font-size: 26rpx;
-  color: #096dd9;
+  color: #0654a3;
 }
 
 /* 空提示 */
@@ -424,7 +425,7 @@
 
 .search-icon {
   font-size: 28rpx;
-  color: #999;
+  color: #666;
   margin-right: 16rpx;
 }
 

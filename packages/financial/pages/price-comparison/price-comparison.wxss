@@ -70,11 +70,12 @@
 
 .btn-remove {
   font-size: 24rpx;
-  color: #b91c1c;
+  color: #991b1b;
   padding: 10rpx 20rpx;
   background: #fecaca;
   border-radius: 24rpx;
   margin-left: 16rpx;
+  font-weight: 600;
 }
 
 /* 表单行 */
@@ -118,7 +119,7 @@
 }
 
 .input-placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 /* 单位选择器 */

@@ -89,10 +89,14 @@ function getPageInfo() {
 
 // 导航到指定页面，统一用 reLaunch（最稳定，无页面栈问题）
 async function navigateToPage(miniProgram, pagePath) {
+  // 知识库相关页面需要更长的超时时间（CDN 数据加载）
+  const isKnowledgePage = pagePath.includes('knowledge');
+  const timeoutMs = isKnowledgePage ? 30000 : NAVIGATE_TIMEOUT_MS;
+  
   await Promise.race([
     miniProgram.reLaunch(pagePath),
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout (' + NAVIGATE_TIMEOUT_MS / 1000 + 's)')), NAVIGATE_TIMEOUT_MS)
+      setTimeout(() => reject(new Error('timeout (' + timeoutMs / 1000 + 's)')), timeoutMs)
     )
   ])
 }
