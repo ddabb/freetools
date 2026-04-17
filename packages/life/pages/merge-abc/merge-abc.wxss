@@ -33,28 +33,36 @@
   display: flex;
   background: #bbada0;
   border-radius: 16rpx;
-  padding: 20rpx 60rpx;
+  padding: 16rpx 40rpx;
   margin-bottom: 30rpx;
+  width: 100%;
+  max-width: 660rpx;
+  box-sizing: border-box;
 }
 
 .score-item {
-  text-align: center;
+  display: flex;
+  align-items: baseline;
   flex: 1;
+  min-width: 0;
 }
 
 .score-label {
-  display: block;
   font-size: 22rpx;
   color: #eee4da;
   text-transform: uppercase;
+  white-space: nowrap;
+  margin-right: 12rpx;
 }
 
 .score-value {
-  display: block;
-  font-size: 48rpx;
+  font-size: 40rpx;
   font-weight: bold;
   color: #fff;
-  margin-top: 4rpx;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .score-value.best {
