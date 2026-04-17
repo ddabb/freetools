@@ -129,7 +129,7 @@ Page({
           breaks: true
         });
 
-        // 只有�?markdownItTable 不为 null 时才使用表格插件
+        // 只有当 markdownItTable 不为 null 时才使用表格插件
         if (markdownItTable) {
           md.use(markdownItTable, { multiline: true, rowspan: true, headerless: false });
         }

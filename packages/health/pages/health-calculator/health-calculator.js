@@ -363,7 +363,7 @@ Page({
 
   // 绘制分享图片
   MergeImage(ctx, canvas) {
-    console.debug('Canvas上下�?', ctx);
+    console.debug('Canvas上下文:', ctx);
     let that = this;
 
     // 直接使用默认值，不依赖系统信息

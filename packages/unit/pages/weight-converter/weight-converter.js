@@ -1,13 +1,13 @@
 // packages/unit/pages/weight-converter/weight-converter.js
 Page({
   data: {
-    units: ['千克', '�', '毫克', '�', '盎司'],
+    units: ['千克', '克', '毫克', '吨', '磅', '盎司'],
     unitValues: {
       '千克': '',
-      '�': '',
+      '克': '',
       '毫克': '',
-      '�': '',
-      '�': '',
+      '吨': '',
+      '磅': '',
       '盎司': ''
     }
   },
@@ -62,16 +62,16 @@ Page({
 
   toBaseUnit(value, unit) {
     const weightMap = {
-      '千克': 1, '�': 0.001, '毫克': 0.000001, '�': 1000,
-      '�': 0.45359237, '盎司': 0.02834952
+      '千克': 1, '克': 0.001, '毫克': 0.000001, '吨': 1000,
+      '磅': 0.45359237, '盎司': 0.02834952
     }
     return value * weightMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
     const weightMap = {
-      '千克': 1, '�': 1000, '毫克': 1000000, '�': 0.001,
-      '�': 2.20462, '盎司': 35.274
+      '千克': 1, '克': 1000, '毫克': 1000000, '吨': 0.001,
+      '磅': 2.20462, '盎司': 35.274
     }
     return baseValue * weightMap[unit]
   }

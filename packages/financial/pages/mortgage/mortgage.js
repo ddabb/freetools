@@ -403,11 +403,11 @@ Page({
     const infoY = subtitleY + 40; // 信息区域起始位置
 
     console.debug('开始绘制背景');
-    // 背景�?- 使用更专业的金融蓝色�?
+    // 背景颜色 - 使用更专业的金融蓝色
     ctx.fillStyle = '#f0f8ff';
     ctx.fillRect(0, 0, width, height);
 
-    // 添加装饰性背景元�?
+    // 添加装饰性背景元素
     ctx.fillStyle = 'rgba(52, 152, 219, 0.1)';
     ctx.beginPath();
     ctx.arc(width - 50, 50, 30, 0, Math.PI * 2);
@@ -506,7 +506,7 @@ Page({
         // 在鸿蒙平台，我们使用canvas.toDataURL()获取图片数据，指定PNG格式
         console.debug('鸿蒙平台保存图片，canvas尺寸:', { width: canvas.width, height: canvas.height });
         const imageData = canvas.toDataURL('image/png');
-        console.debug('生成的图片数据长�?', imageData ? imageData.length : 0, '�?00字符:', imageData ? imageData.substring(0, 100) : 'null');
+        console.debug('生成的图片数据长度:', imageData ? imageData.length : 0, '前100字符:', imageData ? imageData.substring(0, 100) : 'null');
         
         if (!imageData || !imageData.startsWith('data:image/png')) {
           console.error('生成的图片数据格式不正确:', imageData ? imageData.substring(0, 50) : 'null');

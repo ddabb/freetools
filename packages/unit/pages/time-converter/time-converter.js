@@ -1,16 +1,16 @@
 // packages/unit/pages/time-converter/time-converter.js
 Page({
   data: {
-    units: ['毫秒', '�?', '分钟', '小时', '�?', '�?', '�?', '�?', '十年', '世纪'],
+    units: ['毫秒', '秒', '分钟', '小时', '天', '周', '月', '年', '十年', '世纪'],
     unitValues: {
       '毫秒': '',
-      '�': '',
+      '秒': '',
       '分钟': '',
       '小时': '',
-      '�': '',
-      '�': '',
-      '�': '',
-      '�': '',
+      '天': '',
+      '周': '',
+      '月': '',
+      '年': '',
       '十年': '',
       '世纪': ''
     }
@@ -27,7 +27,7 @@ Page({
     const value = e.detail.value
     
     if (!value) {
-      // 如果值为空，清空所有单位的�?
+      // 如果值为空，清空所有单位的值
       const unitValues = {}
       this.data.units.forEach(u => {
         unitValues[u] = ''
@@ -39,7 +39,7 @@ Page({
     const unitValues = { ...this.data.unitValues }
     unitValues[unit] = value
     
-    // 计算其他单位的�?
+    // 计算其他单位的值
     const inputValue = parseFloat(value)
     
     if (!isNaN(inputValue)) {
@@ -59,23 +59,23 @@ Page({
     if (result === 0) {
       return '0'
     } else {
-      // 移除科学计数法，保留合理的小数位�?
+      // 移除科学计数法，保留合理的小数位数
       return parseFloat(result.toFixed(6)).toString()
     }
   },
 
   toBaseUnit(value, unit) {
     const timeMap = {
-      '毫秒': 0.001, '�': 1, '分钟': 60, '小时': 3600, '�': 86400,
-      '�': 604800, '�': 2629743.83, '�': 31536000, '十年': 315360000, '世纪': 3153600000
+      '毫秒': 0.001, '秒': 1, '分钟': 60, '小时': 3600, '天': 86400,
+      '周': 604800, '月': 2592000, '年': 31536000, '十年': 315360000, '世纪': 3153600000
     }
     return value * timeMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
     const timeMap = {
-      '毫秒': 1000, '�': 1, '分钟': 1/60, '小时': 1/3600, '�': 1/86400,
-      '�': 1/604800, '�': 1/2629743.83, '�': 1/31536000, '十年': 1/315360000, '世纪': 1/3153600000
+      '毫秒': 1000, '秒': 1, '分钟': 1/60, '小时': 1/3600, '天': 1/86400,
+      '周': 1/604800, '月': 1/2592000, '年': 1/31536000, '十年': 1/315360000, '世纪': 1/3153600000
     }
     return baseValue * timeMap[unit]
   }

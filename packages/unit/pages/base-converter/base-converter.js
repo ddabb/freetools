@@ -11,10 +11,10 @@ Page({
     },
     base64Decoded: '', // base64解码结果
     baseInfo: [
-      { base: 'decimal', name: '十进制', symbol: 'DEC', description: '使用0-9�?0个数�?' },
-      { base: 'binary', name: '二进制', symbol: 'BIN', description: '使用0�?，计算机基础' },
-      { base: 'octal', name: '八进制', symbol: 'OCT', description: '使用0-7�?个数�?' },
-      { base: 'hexadecimal', name: '十六进制', symbol: 'HEX', description: '使用0-9和A-F�?，6个字�?' }, 
+      { base: 'decimal', name: '十进制', symbol: 'DEC', description: '使用0-9，10个数字' },
+      { base: 'binary', name: '二进制', symbol: 'BIN', description: '使用0和1，计算机基础' },
+      { base: 'octal', name: '八进制', symbol: 'OCT', description: '使用0-7，8个数字' },
+      { base: 'hexadecimal', name: '十六进制', symbol: 'HEX', description: '使用0-9和A-F，6个数字' }, 
       { base: 'base64', name: 'Base64', symbol: 'B64', description: '用于编码二进制数据为文本' }
     ],
     examples: [
@@ -111,11 +111,11 @@ Page({
                   let bytes = [];
                   let num = decimal;
                   
-                  // 处理0的情�?
+                  // 处理0的情况
                   if (num === 0) {
                     bytes = [0];
                   } else {
-                    // 将数字转换为字节（大端序�?
+                    // 将数字转换为字节（大端序）
                     while (num > 0) {
                       bytes.unshift(num & 0xFF);
                       num = Math.floor(num / 256);
@@ -139,7 +139,7 @@ Page({
       }
 
       console.debug('转换结果:', baseValues);
-      console.debug('Base64�?', baseValues['Base64']);
+      console.debug('Base64编码:', baseValues['Base64']);
       this.setData({ baseValues, base64Decoded });
       wx.vibrateShort();
 
@@ -161,7 +161,7 @@ Page({
     return baseMap[baseName];
   },
 
-  // 验证输入�?
+  // 验证输入
   validateInput(value, sourceBase) {
     switch(sourceBase) {
       case 'binary':

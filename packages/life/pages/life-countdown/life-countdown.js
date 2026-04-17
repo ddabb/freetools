@@ -248,7 +248,7 @@ const PageDefinition = {
   setExpectedLifeYears(e) {
     const inputValue = e.detail.value;
     if (inputValue === '') {
-      // 允许清空输入�?
+      // 允许清空输入框
       this.setData({
         expectedLifeYears: ''
       });
@@ -266,7 +266,7 @@ const PageDefinition = {
     });
   },
 
-  // 计算人生A4�?
+  // 计算人生A4纸
   calculate() {
     const { birthDate, expectedLifeYears = 75 } = this.data;
     console.debug('计算开始，当前数据:', { birthDate, expectedLifeYears });
@@ -307,7 +307,7 @@ const PageDefinition = {
     }
 
     try {
-      console.debug('=== 人生格子计算开�?===');
+      console.debug('=== 人生格子计算开始 ===');
       console.debug('出生日期:', birthDate);
       console.debug('预期寿命:', finalExpectedLife, '岁');
       console.debug('当前日期:', today.toISOString());
@@ -422,7 +422,11 @@ const PageDefinition = {
     platform.getStorage('lifeCountdownData', (data) => {
       if (data) {
         try {
-          // 确保expectedLifeYears有�?
+          // 确保expectedLifeYears有值
+          if (!data.expectedLifeYears) {
+            data.expectedLifeYears = 75;
+          }
+          
           const finalExpectedLife = data.expectedLifeYears || 75;
           
           this.setData({
@@ -524,7 +528,7 @@ const PageDefinition = {
     const { gridRows, gridCols } = this.data;
     const rowsArray = Array.from({ length: gridRows }, (_, index) => index);
     const colsArray = Array.from({ length: gridCols }, (_, index) => index);
-    console.debug('初始化数�?', { gridRows, gridCols, rowsArray: rowsArray.length, colsArray: colsArray.length });
+    console.debug('初始化数据:', { gridRows, gridCols, rowsArray: rowsArray.length, colsArray: colsArray.length });
     this.setData({
       rowsArray,
       colsArray
@@ -560,17 +564,17 @@ const PageDefinition = {
     }
   },
 
-  // 页面显示时执�?
+  // 页面显示时执行
   onShow() {
     this.startAutoPlay();
   },
 
-  // 页面隐藏时执�?
+  // 页面隐藏时执行
   onHide() {
     this.stopAutoPlay();
   },
 
-  // 页面卸载时执�?
+  // 页面卸载时执行
   onUnload() {
     this.stopAutoPlay();
   },
@@ -605,7 +609,7 @@ const PageDefinition = {
         });
       }
     } else {
-      // 在微信小程序平台，使用新�?D Canvas API
+      // 在微信小程序平台，使用新2D Canvas API
       try {
         const query = wx.createSelectorQuery().in(this);
         query.select('#cvs1')
@@ -631,7 +635,7 @@ const PageDefinition = {
             this.MergeImage(ctx);
           });
       } catch (error) {
-        console.error('创建Canvas上下文失�?', error);
+        console.error('创建Canvas上下文失败:', error);
         platform.showToast({
           title: '创建画布失败，请重试'
         });
@@ -787,11 +791,11 @@ const PageDefinition = {
     ctx.fillText(this.data.progress + '%', padding + 100, statsY + 50);
     console.debug('人生进度绘制完成:', {position: {x: padding, y: statsY + 50}});
 
-    // 绘制格子网格 - 所见即所�?
+    // 绘制格子网格 - 所见即所得
     const totalGrids = this.data.totalGrids;
     const livedGrids = Math.min(this.data.livedGrids, totalGrids);
     const expectedLifeYears = this.data.expectedLifeYears || 75;
-    console.debug('格子绘制开�?', {total: totalGrids, lived: livedGrids});
+    console.debug('格子绘制开始:', {total: totalGrids, lived: livedGrids});
     
     // 添加调试信息
     console.debug('网格配置:', {
@@ -811,7 +815,7 @@ const PageDefinition = {
         const x = gridStartX + j * (gridCellSize + gridGap);
         const y = gridStartY + i * (gridCellSize + gridGap);
 
-        // 根据格子状态设置颜�?
+        // 根据格子状态设置颜色
         if (index < livedGrids - 1) {
           // 已度过的时光 - 使用优化后的颜色
           ctx.fillStyle = '#3498db';
@@ -841,7 +845,7 @@ const PageDefinition = {
                   this.data.gridCols * (gridCellSize + gridGap) - gridGap, 
                   this.data.gridRows * (gridCellSize + gridGap) - gridGap);
     
-    console.debug('格子网格绘制完成，边界尺�?', {
+    console.debug('格子网格绘制完成:', {
       width: this.data.gridCols * (gridCellSize + gridGap) - gridGap,
       height: this.data.gridRows * (gridCellSize + gridGap) - gridGap
     });
@@ -861,7 +865,7 @@ const PageDefinition = {
       daysInfoPosition: {x: padding, y: daysInfoY}
     });
 
-    // 绘制图例 - 避免与格子重�?
+    // 绘制图例 - 避免与格子重叠
     console.debug('图例区域位置:', legendY);
     
     // 已度过的时光
@@ -887,7 +891,7 @@ const PageDefinition = {
     
     console.debug('图例绘制完成:', {position: {x: padding, y: legendY}});
 
-    // 人生思考问�?
+    // 人生思考问题
     const randomQuestion = this.data.questions[Math.floor(Math.random() * this.data.questions.length)];
     ctx.font = '16px Inter, Noto Sans SC, sans-serif';
     ctx.fillStyle = '#2c3e50';

@@ -1,10 +1,10 @@
 // packages/unit/pages/temperature-converter/temperature-converter.js
 Page({
   data: {
-    units: ['摄氏�?', '华氏�?', '开尔文', '兰金温标', '列氏温标', '牛顿温标', '罗默温标'],
+    units: ['摄氏度', '华氏度', '开尔文', '兰金温标', '列氏温标', '牛顿温标', '罗默温标'],
     unitValues: {
-      '摄氏�': '',
-      '华氏�': '',
+      '摄氏度': '',
+      '华氏度': '',
       '开尔文': '',
       '兰金温标': '',
       '列氏温标': '',
@@ -24,7 +24,7 @@ Page({
     const value = e.detail.value
     
     if (!value) {
-      // 如果值为空，清空所有单位的�?
+      // 如果值为空，清空所有单位的值
       const unitValues = {}
       this.data.units.forEach(u => {
         unitValues[u] = ''
@@ -36,7 +36,7 @@ Page({
     const unitValues = { ...this.data.unitValues }
     unitValues[unit] = value
     
-    // 计算其他单位的�?
+    // 计算其他单位的值
     const inputValue = parseFloat(value)
     
     if (!isNaN(inputValue)) {
@@ -56,15 +56,15 @@ Page({
     if (result === 0) {
       return '0'
     } else {
-      // 移除科学计数法，保留合理的小数位�?
+      // 移除科学计数法，保留合理的小数位数
       return parseFloat(result.toFixed(6)).toString()
     }
   },
 
   toBaseUnit(value, unit) {
     // 温度特殊处理，以摄氏度为基准
-    if (unit === '摄氏�') return value
-    if (unit === '华氏�') return (value - 32) * 5 / 9
+    if (unit === '摄氏度') return value
+    if (unit === '华氏度') return (value - 32) * 5 / 9
     if (unit === '开尔文') return value - 273.15
     if (unit === '兰金温标') return (value - 491.67) * 5 / 9
     if (unit === '列氏温标') return value * 5 / 4
@@ -75,8 +75,8 @@ Page({
 
   fromBaseUnit(baseValue, unit) {
     // 从摄氏度转换到其他单位
-    if (unit === '摄氏�') return baseValue
-    if (unit === '华氏�') return baseValue * 9 / 5 + 32
+    if (unit === '摄氏度') return baseValue
+    if (unit === '华氏度') return baseValue * 9 / 5 + 32
     if (unit === '开尔文') return baseValue + 273.15
     if (unit === '兰金温标') return baseValue * 9 / 5 + 491.67
     if (unit === '列氏温标') return baseValue * 4 / 5

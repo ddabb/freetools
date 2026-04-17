@@ -1,10 +1,11 @@
 // packages/unit/pages/volume-converter/volume-converter.js
 Page({
   data: {
-    units: ['立方?:', '�', '�', '毫升', '加仑'],
+    units: ['立方米', '升', '分升', '毫升', '加仑'],
     unitValues: {
-      '立方': '',
-      '�': '',
+      '立方米': '',
+      '升': '',
+      '分升': '',
       '毫升': '',
       '加仑': ''
     }
@@ -53,20 +54,21 @@ Page({
     if (result === 0) {
       return '0'
     } else {
-      // 移除科学计数法，保留合理的小数位�?      return parseFloat(result.toFixed(6)).toString()
+      // 移除科学计数法，保留合理的小数位数
+      return parseFloat(result.toFixed(6)).toString()
     }
   },
 
   toBaseUnit(value, unit) {
     const volumeMap = {
-      '立方': 1, '�': 0.001, '毫升': 0.000001, '加仑': 0.00378541
+      '立方米': 1, '升': 0.001, '分升': 0.0001, '毫升': 0.000001, '加仑': 0.00378541
     }
     return value * volumeMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
     const volumeMap = {
-      '立方': 1, '�': 1000, '毫升': 1000000, '加仑': 264.172
+      '立方米': 1, '升': 1000, '分升': 10000, '毫升': 1000000, '加仑': 264.172
     }
     return baseValue * volumeMap[unit]
   }

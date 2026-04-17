@@ -491,7 +491,7 @@ const PageDefinition = {
         const finalDrawX = qrCenterX - drawWidth / 2
         const finalDrawY = qrCenterY - drawHeight / 2
         
-        // 考虑设备像素比，将逻辑坐标转换为物理坐标�?
+        // 考虑设备像素比，将逻辑坐标转换为物理坐标
         const physicalQrCenterX = qrCenterX * dpr
         const physicalQrCenterY = qrCenterY * dpr
         const physicalDrawWidth = drawWidth * dpr
@@ -834,7 +834,7 @@ const PageDefinition = {
         
       } catch (error) {
         console.error('绘制图片失败:', error)
-        // 如果绘制失败，绘制边�?
+        // 如果绘制失败，绘制边框
         const ctx = canvas.getContext('2d')
         if (ctx) {
           ctx.beginPath()

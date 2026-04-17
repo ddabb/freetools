@@ -45,7 +45,7 @@ Page({
           const width = 300;
           const height = 300;
 
-          // 调整canvas的实际尺�?
+          // 调整canvas的实际尺寸
           canvas.width = width;
           canvas.height = height;
 
@@ -145,7 +145,7 @@ Page({
     const nodes = [];
     const edges = [];
     
-    // 计算单元格大小，确保每个单元格都是方�?
+    // 计算单元格大小，确保每个单元格都是方形
     const canvasSize = 300;
     const cellSize = Math.min(canvasSize / (width + 1), canvasSize / (height + 1));
     const startX = (canvasSize - cellSize * width) / 2;
@@ -163,7 +163,7 @@ Page({
       }
     }
     
-    // 生成�?
+    // 生成边
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
         const id = i * width + j;
@@ -218,7 +218,7 @@ Page({
     const width = this.data.gridWidth;
     const height = this.data.gridHeight;
     
-    // 使用 GridPathFinder 的静态方法生成有效题�?
+    // 使用 GridPathFinder 的静态方法生成有效题目
     const validHoles = GridPathFinder.generateValidPuzzle(height, width);
     
     this.setData({

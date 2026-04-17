@@ -1,13 +1,13 @@
 // packages/unit/pages/speed-converter/speed-converter.js
 Page({
   data: {
-    units: ['�?�', '千米/小时', '英里/小时', '�', '光�?'],
+    units: ['米/秒', '千米/小时', '英里/小时', '节', '光速'],
     unitValues: {
-      '�?� ?': '',
+      '米/秒': '',
       '千米/小时': '',
       '英里/小时': '',
-      '�': '',
-      '光�?': ''
+      '节': '',
+      '光速': ''
     }
   },
 
@@ -54,21 +54,21 @@ Page({
     if (result === 0) {
       return '0'
     } else {
-      // 移除科学计数法，保留合理的小数位�?
+      // 移除科学计数法，保留合理的小数位数
       return parseFloat(result.toFixed(6)).toString()
     }
   },
 
   toBaseUnit(value, unit) {
     const speedMap = {
-      '�?� ?': 1, '千米/小时': 0.277778, '英里/小时': 0.44704, '�?': 0.514444, '光�?': 299792458
+      '米/秒': 1, '千米/小时': 0.277778, '英里/小时': 0.44704, '节': 0.514444, '光速': 299792458
     }
     return value * speedMap[unit]
   },
 
   fromBaseUnit(baseValue, unit) {
     const speedMap = {
-      '�?� ?': 1, '千米/小时': 3.6, '英里/小时': 2.23694, '�?': 1.94384, '光�?': 1/299792458
+      '米/秒': 1, '千米/小时': 3.6, '英里/小时': 2.23694, '节': 1.94384, '光速': 1/299792458
     }
     return baseValue * speedMap[unit]
   }

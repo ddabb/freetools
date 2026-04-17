@@ -164,10 +164,10 @@ Page({
       return;
     }
     
-    // 转换为数字数�?
+    // 转换为数字数组
     const numbers = customNumbers.map(num => parseInt(num));
     
-    // 检查是否有�?
+    // 检查是否有解
     const solutions = this.solve24(numbers);
     const isSolvable = solutions.length > 0;
     
@@ -175,13 +175,13 @@ Page({
       showSolvabilityResult: true,
       isSolvable,
       solvabilityMessage: isSolvable ? 
-        `数字 [${numbers.join(', ')}] 可以计算�?4！` : 
-        `数字 [${numbers.join(', ')}] 无法计算�?4。`,
+        `数字 [${numbers.join(', ')}] 可以计算24！` : 
+        `数字 [${numbers.join(', ')}] 无法计算24。`,
       customSolutions: solutions
     });
   },
 
-  // 使用自定义数字开始游�?
+  // 使用自定义数字开始游戏
   useCustomNumbers() {
     const { customNumbers } = this.data;
     
@@ -211,15 +211,15 @@ Page({
       showingSolution: false,
       solutionFound: false,
       solutions: solutions,
-      showSolvabilityResult: false // 隐藏可解性结�?
+      showSolvabilityResult: false // 隐藏可解性结果
     });
     
     // 移除振动和成功弹窗，界面切换已经提供足够反馈
   },
 
-  // 安全表达式求值函数（替代eval，避免微信小程序环境限制�?
+  // 安全表达式求值函数（替代eval，避免微信小程序环境限制）
   safeEval(expression) {
-    // 移除所有空�?
+    // 移除所有空格
     let expr = expression.replace(/\s+/g, '');
     
     // 运算符优先级映射
@@ -243,7 +243,7 @@ Page({
         case '/': 
           if (Math.abs(b) < 0.000001) throw new Error('除零错误');
           return a / b;
-        default: throw new Error(`未知运算�? ${op}`);
+        default: throw new Error(`未知运算符 ${op}`);
       }
     };
     
@@ -269,14 +269,14 @@ Page({
         continue;
       }
       
-      // 处理左括�?
+      // 处理左括号
       if (expr[i] === '(') {
         ops.push('(');
         i++;
         continue;
       }
       
-      // 处理右括�?
+      // 处理右括号
       if (expr[i] === ')') {
         while (ops.length > 0 && ops[ops.length - 1] !== '(') {
           processTopOp();
@@ -292,7 +292,7 @@ Page({
         // 处理负号（一元减号）
         if (expr[i] === '-' && (i === 0 || expr[i-1] === '(' || ['+', '-', '*', '/'].includes(expr[i-1]))) {
           // 一元负号：推入0和减号，或者直接处理为负数
-          // 简单处理：读取下一个数字作为负�?数
+          // 简单处理：读取下一个数字作为负数
           i++;
           if (expr[i] >= '0' && expr[i] <= '9') {
             let num = '-';
@@ -307,7 +307,8 @@ Page({
           continue;
         }
         
-        // 二元运算�?
+        // 二元运算符
+        // 处理高优先级运算符
         while (ops.length > 0 && ops[ops.length - 1] !== '(' && 
                precedence[ops[ops.length - 1]] >= precedence[expr[i]]) {
           processTopOp();
@@ -321,7 +322,7 @@ Page({
       throw new Error(`无效字符: ${expr[i]}`);
     }
     
-    // 处理剩余运算�?
+    // 处理剩余运算符
     while (ops.length > 0) {
       if (ops[ops.length - 1] === '(') throw new Error('括号不匹配');
       processTopOp();
@@ -331,14 +332,14 @@ Page({
     return values[0];
   },
 
-  // 24点求解算�?
+  // 24点求解算法
   solve24(numbers) {
     if (numbers.length !== 4) return [];
     
     // 调试模式：检查是否为 [6,6,8,8]
     const debugMode = JSON.stringify(numbers) === JSON.stringify([6,6,8,8]);
     if (debugMode) {
-      console.debug('调试模式：求�?6,6,8,8');
+      console.debug('调试模式：求解 [6,6,8,8]');
     }
     
     const solutions = [];
@@ -350,7 +351,7 @@ Page({
         if (Math.abs(nums[0] - 24) < 0.000001) {
           solutions.push(exprs[0]);
           if (debugMode) {
-            console.debug('找到�?', exprs[0]);
+            console.debug('找到解:', exprs[0]);
           }
         }
         return;
@@ -358,7 +359,7 @@ Page({
       
       for (let i = 0; i < nums.length; i++) {
         for (let j = i + 1; j < nums.length; j++) {
-          // 选择两个数字 nums[i] �?nums[j]
+          // 选择两个数字 nums[i] 和 nums[j]
           const a = nums[i];
           const b = nums[j];
           const aExpr = exprs[i];
@@ -376,7 +377,7 @@ Page({
           
           // 尝试所有运算符
           for (const op of ops) {
-            // 加法、乘法满足交换律，避免重�?
+            // 加法、乘法满足交换律，避免重复计算
             if ((op === '+' || op === '*') && i > j) continue;
             
             let newVal, newExpr;
@@ -421,7 +422,7 @@ Page({
       }
     };
     
-    // 初始表达式就是数字本�?
+    // 初始表达式就是数字本身
     const initExprs = numbers.map(num => num.toString());
     solve(numbers, initExprs);
     
@@ -451,7 +452,7 @@ Page({
           console.debug('表达式计算结果不为24:', normalized, '=', result);
         }
       } catch (error) {
-        // 忽略无效表达�?
+        // 忽略无效表达式
         if (debugMode) {
           console.debug('表达式无结果:', normalized, error);
         }
@@ -488,7 +489,7 @@ Page({
     // 移除振动，选项卡切换已提供视觉反馈
   },
 
-  // 生成新游�?
+  // 生成新游戏
   generateNewGame() {
     console.debug('generateNewGame called');
     try {
@@ -564,7 +565,7 @@ Page({
     return n * this.factorial(n - 1);
   },
 
-  // 检验答�?
+  // 检查答案
   checkAnswer() {
     const { expression, numbers, solutions } = this.data;
     
