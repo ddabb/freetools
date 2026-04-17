@@ -275,6 +275,11 @@ Page({
     this.setData({ showGameOverModal: false });
   },
 
+  // 阻止触摸滚动（游戏棋盘用）
+  preventTouchMove() {
+    return;
+  },
+
   // 分享
   onShareAppMessage() {
     return {

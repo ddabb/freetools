@@ -19,7 +19,7 @@
   </view>
 
   <!-- 游戏棋盘 -->
-  <view class="game-board" catchtouchstart="onTouchStart" catchtouchend="onTouchEnd" catchtouchmove="{{void}}" >
+  <view class="game-board" catchtouchstart="onTouchStart" catchtouchend="onTouchEnd" catchtouchmove="preventTouchMove" >
     <view class="grid-row" wx:for="{{[0,1,2,3]}}" wx:for-item="row" wx:key="row">
       <view class="cell cell-{{board[row * 4 + col] || 'empty'}}" wx:for="{{[0,1,2,3]}}" wx:for-item="col" wx:key="col">
         <text wx:if="{{board[row * 4 + col]}}">{{board[row * 4 + col]}}</text>
