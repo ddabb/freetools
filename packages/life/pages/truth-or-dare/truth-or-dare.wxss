@@ -7,30 +7,9 @@
   box-sizing: border-box;
 }
 
-/* 头部 */
-.header {
-  text-align: center;
-  padding: 20rpx 0 35rpx;
-}
-
-.header-title {
-  display: block;
-  font-size: 56rpx;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 4rpx 20rpx rgba(139, 92, 246, 0.5);
-  letter-spacing: 2rpx;
-}
-
-.header-subtitle {
-  display: block;
-  font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 10rpx;
-}
-
 /* 模式切换 */
 .mode-tabs {
+  margin-top: 10rpx;
   display: flex;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 25rpx;
@@ -250,21 +229,23 @@
 .action-section {
   display: flex;
   justify-content: center;
-  gap: 18rpx;
-  margin: 0 5rpx 30rpx;
+  gap: 24rpx;
+  margin: 10rpx 10rpx 40rpx;
+  padding: 0 10rpx;
 }
 
 .action-btn {
   flex: 1;
+  max-width: 160rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 20rpx;
-  padding: 22rpx 10rpx;
+  padding: 28rpx 10rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.1);
-  min-height: 120rpx;
+  min-height: 130rpx;
   transition: all 0.2s ease;
 }
 

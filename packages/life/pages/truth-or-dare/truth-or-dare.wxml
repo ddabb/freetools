@@ -1,10 +1,4 @@
 <view class="container">
-  <!-- 顶部标题 -->
-  <view class="header">
-    <text class="header-title">🎭 真心话大冒险</text>
-    <text class="header-subtitle">聚会必备 · 题目按难度分类</text>
-  </view>
-
   <!-- 真心话/大冒险 切换 -->
   <view class="mode-tabs">
     <view class="mode-tab {{mode === 'truth' ? 'active truth' : ''}}" data-mode="truth" bindtap="switchMode">
