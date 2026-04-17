@@ -51,7 +51,7 @@
                 bindtap="onCopyTap"
               >{{copyText}}</view>
             </view>
-            <text class="detail-section-content">{{section.content}}</text>
+            <view class="detail-section-content">{{section.content}}</view>
           </view>
         </view>
 
