@@ -273,7 +273,7 @@ Page({
       return;
     }
     wx.setClipboardData({ data: this.data.textA, success: () => {
-      wx.showToast({ title: '已复�?, icon: 'success' });
+      wx.showToast({ title: '已复制, icon: 'success' });
     }});
   },
 
@@ -296,7 +296,7 @@ Page({
       return;
     }
     wx.setClipboardData({ data: this.data.textB, success: () => {
-      wx.showToast({ title: '已复�?, icon: 'success' });
+      wx.showToast({ title: '已复制, icon: 'success' });
     }});
   },
 
@@ -324,7 +324,7 @@ const result = calculateSum([1, 2, 3, 4, 5]);
 console.debug('The sum is:', result);`;
 
     this.setData({ textA: sampleA, textB: sampleB });
-    wx.showToast({ title: '已加载示例代�?, icon: 'success' });
+    wx.showToast({ title: '已加载示例代码, icon: 'success' });
   },
 
   exportDiff() {
@@ -350,7 +350,7 @@ console.debug('The sum is:', result);`;
     wx.setClipboardData({
       data: exportText,
       success: () => {
-        wx.showToast({ title: '报告已复�?, icon: 'success' });
+        wx.showToast({ title: '报告已复制, icon: 'success' });
       }
     });
   },
@@ -373,7 +373,7 @@ console.debug('The sum is:', result);`;
     wx.setClipboardData({
       data: shareText,
       success: () => {
-        wx.showToast({ title: '分享信息已复�?, icon: 'success' });
+        wx.showToast({ title: '分享信息已复制, icon: 'success' });
       }
     });
   },
