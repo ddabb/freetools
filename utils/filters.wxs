@@ -29,7 +29,7 @@ function filterBySearch(tools, keyword) {
   keyword = keyword.toLowerCase();
   return tools.filter(function(tool) {
     // 搜索工具名称
-    if (tool.name.toLowerCase().indexOf(keyword) !== -1) {
+    if (tool.name && tool.name.toLowerCase().indexOf(keyword) !== -1) {
       return true;
     }
     // 搜索工具关键词

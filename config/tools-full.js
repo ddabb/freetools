@@ -422,6 +422,16 @@ const tools = [
     keywords: ['答案', 'Magic8Ball', '指点', '迷津', '占卜'],
     description: 'Magic 8 Ball 答案之书，为你指点迷津'
   },
+  {
+    id: 'truth-or-dare',
+    name: '真心话大冒险',
+    icon: '🎭',
+    color: 'purple',
+    url: '/packages/life/pages/truth-or-dare/truth-or-dare',
+    categories: ['休闲工具'],
+    keywords: ['真心话', '大冒险', '聚会', '游戏', '派对', '真心话大冒险', '考验', '冒险', '真心'],
+    description: '聚会必备真心话大冒险题目，支持按难度和类型筛选'
+  },
 
   {
     id: 'health-calculator',

@@ -9,192 +9,104 @@ const sortedCategories = [...tools.categories].sort((a, b) => {
   return 0;
 });
 
-// 预计算 _categoryClass（同步加载，commonTools 体积小）
-const commonToolsWithCategory = tools.commonTools.map(tool => ({
+// 为工具补上 _categoryClass（WXS 层用于样式，不依赖对象引用）
+const makeToolItem = (tool) => ({
   ...tool,
   _categoryClass: (tool.categories && tool.categories[0])
     ? tool.categories[0].replace(/[^\w]/g, '')
     : 'text'
-}));
+});
+
+const commonToolsWithCategory = tools.commonTools.map(makeToolItem);
+
+// 同步加载全部工具（WXS 层过滤数据源，require 有缓存只执行一次）
+const allToolsWithCategory = tools.getAllTools().map(makeToolItem);
 
 Page({
   data: {
     categories: sortedCategories,
     activeCategory: '常用工具',
     commonTools: commonToolsWithCategory,
-    currentCategoryTools: [],  // 分类工具列表
+    allTools: allToolsWithCategory,       // WXS 层过滤数据源
+    toolFrequency: tools.toolFrequency,    // WXS 排序用
     searchText: '',
     showSearchResult: false,
-    filteredTools: [],  // 搜索结果
     recentTools: [],
     loading: false
   },
 
   onLoad() {
-    // 首页只渲染 commonTools，allTools 在后台异步加载
-    // 不阻塞 UI，首屏渲染更快
-    this._allTools = null;   // 懒加载，搜索时才填充
-
-    // 预计算 _categoryClass（供搜索结果用）
+    // 预建 Map（用于 recentTools 验证、navigateToTool 查找）
     this._toolsMap = {};
     this._urlMap = {};
-    this._toolFrequency = tools.toolFrequency;
+    allToolsWithCategory.forEach(t => {
+      this._toolsMap[t.id] = t;
+      this._urlMap[t.url] = t;
+    });
 
     this.loadRecentTools();
     wx.showShareMenu({ withShareTicket: true });
-
-    // 后台预加载 allTools（不阻塞首屏）
-    setTimeout(() => {
-      this._loadAllTools();
-    }, 100);
   },
 
   /**
-   * 后台懒加载全部工具（供搜索使用）
-   * commonTools 已满足首页渲染，allTools 仅搜索时需要
+   * 分类切换 — 仅更新状态，WXS 层自动过滤
    */
-  _loadAllTools() {
-    try {
-      const allTools = tools.getAllTools();
-      this._allTools = allTools.map(tool => ({
-        ...tool,
-        _categoryClass: (tool.categories && tool.categories[0])
-          ? tool.categories[0].replace(/[^\w]/g, '')
-          : 'text'
-      }));
-      this._allTools.forEach(t => {
-        this._toolsMap[t.id] = t;
-        this._urlMap[t.url] = t;
-      });
-      // 重新刷新最近使用（此时能识别全部工具 ID）
-      this.loadRecentTools();
-      console.debug('全部工具已加载', { total: this._allTools.length });
-    } catch (err) {
-      console.error('allTools 加载失败', err);
-    }
-  },
-
-  /**
-   * 获取当前搜索数据源
-   * - 未加载完：先用 commonTools（搜索范围受限，但不会卡）
-   * - 已加载完：用 allTools（完整搜索）
-   */
-  _getSearchSource() {
-    return this._allTools || tools.commonTools;
-  },
-
   switchCategory(e) {
     const category = e.currentTarget.dataset.category;
     if (category === this.data.activeCategory) return;
-    
-    // 计算当前分类的工具
-    let categoryTools = [];
-    if (category !== '常用工具') {
-      // 使用懒加载的 getToolsByCategory 方法
-      try {
-        const allTools = this._allTools || tools.getAllTools();
-        categoryTools = allTools
-          .filter(tool => {
-            if (!tool.categories) return false;
-            return tool.categories.some(cat => cat === category || cat.includes(category) || category.includes(cat));
-          })
-          .map(tool => ({
-            ...tool,
-            _categoryClass: (tool.categories && tool.categories[0])
-              ? tool.categories[0].replace(/[^\w]/g, '')
-              : 'text'
-          }));
-      } catch (err) {
-        console.error('获取分类工具失败', err);
-      }
-    }
-    
     this.setData({
       activeCategory: category,
       searchText: '',
-      showSearchResult: false,
-      currentCategoryTools: categoryTools
+      showSearchResult: false
     });
   },
 
+  /**
+   * 搜索输入 — 仅更新状态，WXS 层自动过滤
+   */
   onSearchInput(e) {
-    const searchText = e.detail.value.trim().toLowerCase();
-    if (!searchText) {
-      this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
-      return;
-    }
-    
-    // 执行搜索
-    let results = [];
-    try {
-      const searchSource = this._allTools || tools.getAllTools();
-      // 使用 keywords 搜索
-      results = searchSource.filter(tool => {
-        if (!tool) return false;
-        const nameMatch = tool.name && tool.name.toLowerCase().includes(searchText);
-        const descMatch = tool.description && tool.description.toLowerCase().includes(searchText);
-        const keywordsMatch = tool.keywords && tool.keywords.some(k => 
-          k && k.toLowerCase().includes(searchText)
-        );
-        return nameMatch || keywordsMatch || descMatch;
-      });
-    } catch (err) {
-      console.error('搜索失败', err);
-    }
-    
-    this.setData({ 
-      searchText, 
-      showSearchResult: true,
-      filteredTools: results
+    const searchText = (e.detail.value || '').trim();
+    this.setData({
+      searchText,
+      showSearchResult: !!searchText
     });
   },
 
   onClearSearch() {
-    this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
+    this.setData({ searchText: '', showSearchResult: false });
   },
 
   onSearchConfirm(e) {
-    const searchText = e.detail.value.trim().toLowerCase();
-    if (!searchText) return;
-    
-    // 执行搜索
-    let results = [];
-    try {
-      const searchSource = this._allTools || tools.getAllTools();
-      results = searchSource.filter(tool => {
-        if (!tool) return false;
-        const nameMatch = tool.name && tool.name.toLowerCase().includes(searchText);
-        const descMatch = tool.description && tool.description.toLowerCase().includes(searchText);
-        const keywordsMatch = tool.keywords && tool.keywords.some(k => 
-          k && k.toLowerCase().includes(searchText)
-        );
-        return nameMatch || keywordsMatch || descMatch;
-      });
-    } catch (err) {
-      console.error('搜索失败', err);
-    }
-    
-    this.setData({ 
-      searchText, 
-      showSearchResult: true,
-      filteredTools: results
+    const searchText = (e.detail.value || '').trim().toLowerCase();
+    this.setData({
+      searchText,
+      showSearchResult: !!searchText
     });
   },
 
+  /**
+   * 跳转工具页面
+   * 优先用 dataset 中的 id/url，回退到 data 传递的 url
+   */
   navigateToTool(e) {
     let tool = null;
     let url = null;
+
     if (e.detail && e.detail.url) {
+      // tool-card 组件透传
       url = e.detail.url;
       tool = this._urlMap[url];
-    } else if (e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.url) {
-      url = e.currentTarget.dataset.url;
-      tool = this._urlMap[url];
+    } else if (e.currentTarget && e.currentTarget.dataset) {
+      const { id, url: datasetUrl } = e.currentTarget.dataset;
+      if (datasetUrl) {
+        url = datasetUrl;
+        tool = this._urlMap[url];
+      } else if (id) {
+        tool = this._toolsMap[id];
+        if (tool) url = tool.url;
+      }
     }
-    if (!tool) {
-      tool = this._toolsMap[e.currentTarget.dataset.id];
-      if (tool) url = tool.url;
-    }
+
     if (!tool || !url) return;
     this.addToRecentTools(tool);
     wx.navigateTo({ url, fail: () => utils.showText('页面开发中') });
@@ -204,7 +116,13 @@ Page({
     try {
       let recent = wx.getStorageSync('recentTools') || [];
       recent = recent.filter(item => item.id !== tool.id);
-      recent.unshift({ id: tool.id, name: tool.name, icon: tool.icon, url: tool.url, timestamp: Date.now() });
+      recent.unshift({
+        id: tool.id,
+        name: tool.name,
+        icon: tool.icon,
+        url: tool.url,
+        timestamp: Date.now()
+      });
       recent = recent.slice(0, 10);
       wx.setStorageSync('recentTools', recent);
       this.loadRecentTools();

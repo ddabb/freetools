@@ -1,4 +1,6 @@
 <!--index.wxml-->
+<wxs module="filters" src="../../utils/filters.wxs" />
+
 <view class="home-container">
   <!-- 顶部搜索栏 -->
   <search-bar 
@@ -15,16 +17,17 @@
     text="加载中..."
   />
   
-  <!-- 空状态 -->
+  <!-- 搜索无结果空状态 -->
   <empty-state 
-    wx:if="{{ !loading && showSearchResult && filteredTools.length === 0 }}"
+    wx:if="{{ !loading && showSearchResult && filters.filterBySearch(allTools, searchText).length === 0 }}"
     icon="search"
     text="未找到工具"
     subText="请尝试其他关键词"
   />
   
+  <!-- 分类工具空状态 -->
   <empty-state 
-    wx:if="{{ !loading && !showSearchResult && activeCategory !== '常用工具' && currentCategoryTools.length === 0 }}"
+    wx:if="{{ !loading && !showSearchResult && activeCategory !== '常用工具' && filters.filterByCategory(allTools, activeCategory, commonTools).length === 0 }}"
     icon="info"
     text="该分类下暂无工具"
   />
@@ -53,13 +56,11 @@
     <!-- 右侧工具详情列表 -->
     <view class="tools-panel">
       <scroll-view class="tools-list" scroll-y="{{true}}" enhanced="{{true}}" bounces="{{true}}">
-        <!-- 搜索结果 -->
+        <!-- 搜索结果（WXS 层过滤，无需 setData） -->
         <view wx:if="{{showSearchResult}}">
           <text class="section-title">搜索结果</text>
-          <view wx:if="{{filteredTools.length > 0}}">
+          <block wx:for="{{filters.filterBySearch(allTools, searchText)}}" wx:key="id">
             <tool-card 
-              wx:for="{{filteredTools}}" 
-              wx:key="id"
               id="{{item.id}}"
               name="{{item.name}}"
               icon="{{item.icon}}"
@@ -68,45 +69,42 @@
               category="{{item._categoryClass}}"
               bind:tap="navigateToTool"
             />
-          </view>
-          <view wx:else class="no-result">
-            <text class="no-result-text">未找到相关工具</text>
-          </view>
+          </block>
         </view>
 
         <!-- 默认显示的工具列表 -->
         <view wx:else>
           <text class="section-title">{{activeCategory === '常用工具' ? '常用工具' : activeCategory}}</text>
 
-          <!-- 常用工具 -->
-          <view wx:if="{{activeCategory === '常用工具'}}">
-            <tool-card
-              wx:for="{{commonTools}}"
-              wx:key="id"
-              id="{{item.id}}"
-              name="{{item.name}}"
-              icon="{{item.icon}}"
-              description="{{item.description}}"
-              url="{{item.url}}"
-              category="{{item._categoryClass}}"
-              bind:tap="navigateToTool"
-            />
-          </view>
+          <!-- 常用工具（固定数据，无需 WXS 过滤） -->
+          <block wx:if="{{activeCategory === '常用工具'}}">
+            <block wx:for="{{commonTools}}" wx:key="id">
+              <tool-card
+                id="{{item.id}}"
+                name="{{item.name}}"
+                icon="{{item.icon}}"
+                description="{{item.description}}"
+                url="{{item.url}}"
+                category="{{item._categoryClass}}"
+                bind:tap="navigateToTool"
+              />
+            </block>
+          </block>
 
-          <!-- 分类工具 -->
-          <view wx:else>
-            <tool-card
-              wx:for="{{currentCategoryTools}}"
-              wx:key="id"
-              id="{{item.id}}"
-              name="{{item.name}}"
-              icon="{{item.icon}}"
-              description="{{item.description}}"
-              url="{{item.url}}"
-              category="{{item._categoryClass}}"
-              bind:tap="navigateToTool"
-            />
-          </view>
+          <!-- 分类工具（WXS 层过滤，无需 setData） -->
+          <block wx:else>
+            <block wx:for="{{filters.filterByCategory(allTools, activeCategory, commonTools)}}" wx:key="id">
+              <tool-card
+                id="{{item.id}}"
+                name="{{item.name}}"
+                icon="{{item.icon}}"
+                description="{{item.description}}"
+                url="{{item.url}}"
+                category="{{item._categoryClass}}"
+                bind:tap="navigateToTool"
+              />
+            </block>
+          </block>
         </view>
       </scroll-view>
     </view>

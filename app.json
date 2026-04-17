@@ -49,7 +49,8 @@
         "pages/qrcode/qrcode",
         "pages/idiom-query/idiom-query",
         "pages/idiom-battle/idiom-battle",
-        "pages/idiom-chain/idiom-chain"
+        "pages/idiom-chain/idiom-chain",
+        "pages/truth-or-dare/truth-or-dare"
       ]
     },
     {

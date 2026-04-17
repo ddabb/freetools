@@ -1,0 +1,156 @@
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="header-title">🎭 真心话大冒险</text>
+    <text class="header-subtitle">聚会必备 · 题目按难度分类</text>
+  </view>
+
+  <!-- 真心话/大冒险 切换 -->
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'truth' ? 'active truth' : ''}}" data-mode="truth" bindtap="switchMode">
+      <text class="mode-icon">💬</text>
+      <text class="mode-text">真心话</text>
+    </view>
+    <view class="mode-tab {{mode === 'dare' ? 'active dare' : ''}}" data-mode="dare" bindtap="switchMode">
+      <text class="mode-icon">🎲</text>
+      <text class="mode-text">大冒险</text>
+    </view>
+  </view>
+
+  <!-- 难度筛选 -->
+  <view class="filter-section">
+    <text class="filter-label">难度：</text>
+    <view class="filter-tags">
+      <view class="filter-tag {{difficulty === 'all' ? 'active' : ''}}" data-difficulty="all" bindtap="switchDifficulty">全部</view>
+      <view class="filter-tag easy {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="switchDifficulty">🍀 入门</view>
+      <view class="filter-tag medium {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="switchDifficulty">🔥 刺激</view>
+      <view class="filter-tag hard {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="switchDifficulty">💀 疯狂</view>
+    </view>
+  </view>
+
+  <!-- 分类筛选（真心话） -->
+  <view class="filter-section" wx:if="{{mode === 'truth'}}">
+    <text class="filter-label">类型：</text>
+    <view class="filter-tags">
+      <view class="filter-tag {{category === 'all' ? 'active' : ''}}" data-category="all" bindtap="switchCategory">全部</view>
+      <view class="filter-tag {{category === '感情' ? 'active' : ''}}" data-category="感情" bindtap="switchCategory">💕 感情</view>
+      <view class="filter-tag {{category === '秘密' ? 'active' : ''}}" data-category="秘密" bindtap="switchCategory">🤫 秘密</view>
+      <view class="filter-tag {{category === '经历' ? 'active' : ''}}" data-category="经历" bindtap="switchCategory">📖 经历</view>
+      <view class="filter-tag {{category === '性格' ? 'active' : ''}}" data-category="性格" bindtap="switchCategory">🪞 性格</view>
+      <view class="filter-tag {{category === '八卦' ? 'active' : ''}}" data-category="八卦" bindtap="switchCategory">🍉 八卦</view>
+    </view>
+  </view>
+
+  <!-- 分类筛选（大冒险） -->
+  <view class="filter-section" wx:if="{{mode === 'dare'}}">
+    <text class="filter-label">类型：</text>
+    <view class="filter-tags">
+      <view class="filter-tag {{category === 'all' ? 'active' : ''}}" data-category="all" bindtap="switchCategory">全部</view>
+      <view class="filter-tag {{category === '表演' ? 'active' : ''}}" data-category="表演" bindtap="switchCategory">🎭 表演</view>
+      <view class="filter-tag {{category === '社交' ? 'active' : ''}}" data-category="社交" bindtap="switchCategory">🤝 社交</view>
+      <view class="filter-tag {{category === '创意' ? 'active' : ''}}" data-category="创意" bindtap="switchCategory">💡 创意</view>
+      <view class="filter-tag {{category === '搞笑' ? 'active' : ''}}" data-category="搞笑" bindtap="switchCategory">😂 搞笑</view>
+      <view class="filter-tag {{category === '挑战' ? 'active' : ''}}" data-category="挑战" bindtap="switchCategory">💪 挑战</view>
+    </view>
+  </view>
+
+  <!-- 题库数量提示 -->
+  <view class="stats-bar">
+    <text class="stats-hint">真心话 {{truthList.length}} 题 · 大冒险 {{dareList.length}} 题</text>
+  </view>
+
+  <!-- 题目卡片 -->
+  <view class="question-card {{isAnimating ? 'shake' : ''}}" bindtap="onCardTap">
+    <view class="card-mode-badge" wx:if="{{currentItem}}">
+      <text class="badge-mode">{{mode === 'truth' ? '💬 真心话' : '🎲 大冒险'}}</text>
+      <text class="badge-difficulty {{currentItem.difficulty}}">{{currentItem.difficulty === 'easy' ? '🍀 入门' : currentItem.difficulty === 'medium' ? '🔥 刺激' : '💀 疯狂'}}</text>
+      <text class="badge-category" style="color: {{getCategoryColor(currentItem.category)}}">{{currentItem.category}}</text>
+    </view>
+    <view class="card-icon">
+      <text wx:if="{{mode === 'truth'}}">💬</text>
+      <text wx:else>🎲</text>
+    </view>
+    <text class="question-text">{{currentQuestion || '点击抽取题目'}}</text>
+    <view class="card-hint">
+      <text>👆 点击换题 · 长按可复制</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <view class="action-btn secondary" bindtap="skipQuestion">
+      <text class="action-icon">⏭️</text>
+      <text class="action-text">跳过</text>
+    </view>
+    <view class="action-btn primary" bindtap="copyQuestion">
+      <text class="action-icon">📋</text>
+      <text class="action-text">复制</text>
+    </view>
+    <view class="action-btn secondary" bindtap="generateImage">
+      <text class="action-icon">🖼️</text>
+      <text class="action-text">生图</text>
+    </view>
+    <view class="action-btn secondary" bindtap="toggleHistory">
+      <text class="action-icon">📜</text>
+      <text class="action-text">历史</text>
+    </view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stats-section">
+    <view class="stat-item">
+      <text class="stat-value">{{truthCount}}</text>
+      <text class="stat-label">真心话</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{dareCount}}</text>
+      <text class="stat-label">大冒险</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value">{{totalCount}}</text>
+      <text class="stat-label">总计</text>
+    </view>
+  </view>
+
+  <!-- 历史记录弹窗 -->
+  <view class="history-modal {{showHistory ? 'show' : ''}}" bindtap="toggleHistory">
+    <view class="history-content" catchtap="">
+      <view class="history-header">
+        <text class="history-title">抽取历史</text>
+        <view class="history-close" bindtap="toggleHistory">×</view>
+      </view>
+      <scroll-view class="history-list" scroll-y>
+        <view class="history-empty" wx:if="{{history.length === 0}}">
+          <text>暂无历史记录</text>
+        </view>
+        <view class="history-item" wx:for="{{history}}" wx:key="id">
+          <view class="history-item-left">
+            <text class="history-mode-badge {{item.mode}}">{{item.mode === 'truth' ? '💬' : '🎲'}}</text>
+            <view class="history-item-info">
+              <text class="history-question">{{item.question}}</text>
+              <text class="history-meta">{{item.time}} · {{item.difficulty === 'easy' ? '入门' : item.difficulty === 'medium' ? '刺激' : '疯狂'}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 分享弹窗 -->
+  <view class="share-modal" wx:if="{{showShare}}" bindtap="hideShareModal">
+    <view class="share-content" catchtap="">
+      <view class="share-title">分享题目</view>
+      <view class="share-item" bindtap="shareToGroup">
+        <text class="share-icon">👥</text>
+        <text class="share-text">发送给朋友</text>
+      </view>
+      <view class="share-item" bindtap="generateImage">
+        <text class="share-icon">🖼️</text>
+        <text class="share-text">生成分享图片</text>
+      </view>
+      <view class="share-cancel" bindtap="hideShareModal">取消</view>
+    </view>
+  </view>
+</view>
