@@ -3,6 +3,10 @@ const knowledgeCategory = require('../../utils/knowledgeCategory');
 const cacheManager = require('../../utils/cacheManager');
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/PortableKnowledge@main/know/';
 
+// 调试开关
+const DEBUG = true;
+const log = (...args) => DEBUG && console.log('[KnowList]', ...args);
+
 // 缓存配置（cdn_ 前缀支持 app.js 自动清理）
 const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 const CACHE_KEY_META = 'cdn_know_meta';        // category-tree + taxonomy
@@ -215,8 +219,10 @@ Page({
   },
 
   onLoad(options) {
+    log('onLoad 开始, options:', options);
     const category = this.safeDecode((options || {}).category);
     const tag = this.safeDecode((options || {}).tag);
+    log('解析参数 - category:', category, 'tag:', tag);
 
     const systemInfo = wx.getSystemInfoSync();
     const scrollHeight = systemInfo.windowHeight - 180;
@@ -252,6 +258,8 @@ Page({
       
       // 无论是否有缓存，都继续加载最新数据
       if (!hasCache) {
+        // 重置 loading 状态，避免被跳过
+        this.setData({ loading: false });
         this.loadArticles();
       }
     }
@@ -264,6 +272,7 @@ Page({
   tryLoadFromCache() {
     try {
       const now = Date.now();
+      log('尝试从缓存加载数据...');
       
       // 尝试读取缓存
       const categoryTreeData = wx.getStorageSync(CACHE_KEY_META);
@@ -274,14 +283,19 @@ Page({
       const articlesTs = wx.getStorageSync(CACHE_KEY_ARTICLES_TS);
       const searchTs = wx.getStorageSync(CACHE_KEY_SEARCH_TS);
       
+      log('缓存状态 - categoryTree:', !!categoryTreeData, 'articles:', !!articlesData, 'search:', !!searchIndexData);
+      log('缓存时间 - categoryTreeTs:', categoryTreeTs, 'articlesTs:', articlesTs);
+      
       // 检查缓存是否有效（7天内）
       const isCacheValid = categoryTreeData && articlesData && 
         (now - categoryTreeTs < CACHE_EXPIRE) && 
         (now - articlesTs < CACHE_EXPIRE);
       
+      log('缓存是否有效:', isCacheValid);
+      
       if (!isCacheValid) return false;
       
-      console.debug('使用缓存数据快速渲染');
+      log('使用缓存数据快速渲染');
       
       // 更新内存缓存
       metaCache = categoryTreeData;
@@ -318,9 +332,10 @@ Page({
       // 加载第一页数据
       this.loadPageData();
       
+      log('缓存加载完成，文章数:', articles.length);
       return true;
     } catch (e) {
-      console.debug('缓存读取失败:', e);
+      log('缓存读取失败:', e);
       return false;
     }
   },
@@ -390,17 +405,21 @@ Page({
    */
   loadMetadata() {
     const now = Date.now();
+    log('开始加载元数据...');
 
     // 构造元数据缓存 key（categoryTree + taxonomy 打包）
     const metaUrl = CDN_BASE + 'articles.json';
     const categoryTreeUrl = CDN_BASE + 'category-tree.json';
     const searchIndexUrl = CDN_BASE + 'search-index.json';
+    log('CDN URLs:', { metaUrl, categoryTreeUrl, searchIndexUrl });
 
     // 快速检查缓存，有缓存则立即渲染
     const hasCache = this.tryLoadFromCache();
+    log('是否有缓存:', hasCache);
     
     // 后台异步加载/更新数据
     const loadMeta = () => {
+      log('开始从 CDN 加载元数据...');
       return Promise.all([
         this.fetchWithCache(metaCache, CACHE_KEY_META, CACHE_KEY_META_TS, categoryTreeUrl),
         this.fetchWithCache(articlesCache, CACHE_KEY_ARTICLES, CACHE_KEY_ARTICLES_TS, metaUrl),
@@ -409,9 +428,12 @@ Page({
     };
 
     loadMeta().then(([categoryTreeData, articlesData, searchIndexData]) => {
-      console.debug('元数据加载成功');
+      log('元数据加载成功');
+      log('categoryTreeData:', categoryTreeData ? '有数据' : '无数据', '类型:', typeof categoryTreeData);
+      log('articlesData:', articlesData ? '有数据' : '无数据', '类型:', typeof articlesData, 'articles数量:', articlesData?.articles?.length);
+      log('searchIndexData:', searchIndexData ? '有数据' : '无数据', '类型:', typeof searchIndexData);
 
-      // 更新内存缓存引用
+      // 更新内存缓存引用（按正确的对应关系）
       metaCache = categoryTreeData;
       articlesCache = articlesData;
       searchCache = searchIndexData;
@@ -451,13 +473,13 @@ Page({
       this.categoryTree = categoryTree;
       this.searchIndex = searchIndex;
 
-    this.setData({
-      categoryTreeNodes,
-      categories,
-      currentCategory: selectedCategory,
-      list: [],
-      categoryScrollLeft: 0
-    });
+      this.setData({
+        categoryTreeNodes,
+        categories,
+        currentCategory: selectedCategory,
+        list: [],
+        categoryScrollLeft: 0
+      });
       this.page = 1;
       this.setPageTitle(selectedCategory, this.data.currentTag);
 
@@ -467,7 +489,10 @@ Page({
         this.loadPageData();
       }
 
+      log('元数据处理完成，文章总数:', articles.length, '分类数:', categories.length);
+
     }).catch(err => {
+      log('加载元数据失败:', err);
       console.error('加载元数据失败:', err);
       // 如果已经有缓存数据，不显示错误
       if (!this.allArticles || this.allArticles.length === 0) {
@@ -482,16 +507,17 @@ Page({
    * 加载分页数据（带缓存）
    */
   loadPageData() {
+    log('loadPageData 开始, page:', this.page, 'hasActiveFilters:', this.hasActiveFilters());
     if (this.hasActiveFilters()) {
       this.applyFiltersAndSort();
       return;
     }
 
     this.fetchPageWithCache(this.data.page).then(pageData => {
-      console.debug('分页数据加载成功:', {
+      log('分页数据加载成功:', {
         page: pageData.page,
         totalPages: pageData.totalPages,
-        itemCount: pageData.items.length
+        itemCount: pageData.items?.length
       });
 
       const decoratedItems = (pageData.items || []).map(article => this.decorateArticle(article));
@@ -526,23 +552,36 @@ Page({
    */
   fetchWithCache(memRef, cacheKey, tsKey, url) {
     const now = Date.now();
+    log('fetchWithCache:', { cacheKey, url, hasMemRef: !!memRef });
 
     // 1. 内存缓存
-    if (memRef) return Promise.resolve(memRef);
+    if (memRef) {
+      log('使用内存缓存:', cacheKey);
+      return Promise.resolve(memRef);
+    }
 
     // 2. Storage 缓存
     try {
       const cached = wx.getStorageSync(cacheKey);
       const ts = wx.getStorageSync(tsKey);
+      log('Storage缓存状态:', { cacheKey, hasCache: !!cached, ts: ts, expired: ts ? (now - ts >= CACHE_EXPIRE) : true });
       if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+        log('使用Storage缓存:', cacheKey);
         return Promise.resolve(cached);
       }
-    } catch (e) { /* 读缓存失败 */ }
+    } catch (e) { 
+      log('读Storage缓存失败:', e);
+    }
 
     // 3. CDN（支持 304，命中时自动延长 TTL；写入时触发 LRU 淘汰）
+    log('从CDN加载:', url);
     return this.requestWith304(url, cacheKey, tsKey).then(data => {
+      log('CDN加载成功:', cacheKey, '数据类型:', typeof data);
       cacheManager.smartSet(cacheKey, data, tsKey);
       return data;
+    }).catch(err => {
+      log('CDN加载失败:', url, err);
+      throw err;
     });
   },
 
@@ -559,23 +598,31 @@ Page({
         }
       } catch (e) { /* ignore */ }
 
+      log('发起请求:', url, 'headers:', headers);
+
       wx.request({
         url,
         method: 'GET',
         timeout: 30000,
         header: headers,
         success: (res) => {
+          log('请求响应:', url, 'statusCode:', res.statusCode, 'hasData:', !!res.data);
           if (res.statusCode === 304) {
             // 内容未变，延长 TTL，返回旧缓存
             try { wx.setStorageSync(tsKey, Date.now()); } catch (e) { /* ignore */ }
-            resolve(cacheKey ? wx.getStorageSync(cacheKey) : null);
+            const cachedData = cacheKey ? wx.getStorageSync(cacheKey) : null;
+            log('304 使用缓存数据:', cacheKey, 'hasData:', !!cachedData);
+            resolve(cachedData);
           } else if (res.statusCode === 200 && res.data) {
             resolve(res.data);
           } else {
             reject(new Error('请求失败: ' + res.statusCode));
           }
         },
-        fail: reject
+        fail: (err) => {
+          log('请求失败:', url, err);
+          reject(err);
+        }
       });
     });
   },
@@ -588,18 +635,28 @@ Page({
     const tsKey = cacheKey + '_ts';
     const url = CDN_BASE + `page/page-${page}.json`;
     const now = Date.now();
+    log('fetchPageWithCache:', { page, cacheKey, url });
 
     try {
       const cached = wx.getStorageSync(cacheKey);
       const ts = wx.getStorageSync(tsKey);
+      log('分页缓存状态:', { page, hasCache: !!cached, ts: ts, expired: ts ? (now - ts >= CACHE_EXPIRE) : true });
       if (cached && ts && (now - ts < CACHE_EXPIRE)) {
+        log('使用分页缓存:', page);
         return Promise.resolve(cached);
       }
-    } catch (e) { /* 读缓存失败 */ }
+    } catch (e) { 
+      log('读分页缓存失败:', e);
+    }
 
+    log('从CDN加载分页:', url);
     return this.requestWith304(url, cacheKey, tsKey).then(data => {
+      log('分页CDN加载成功:', page, '数据类型:', typeof data);
       cacheManager.smartSet(cacheKey, data, tsKey);
       return data;
+    }).catch(err => {
+      log('分页CDN加载失败:', url, err);
+      throw err;
     });
   },
 
@@ -612,8 +669,9 @@ Page({
     const { currentCategory, currentTag, searchKeyword } = this.data;
     let filteredArticles = Array.isArray(allArticles) ? [...allArticles] : [];
 
-    console.debug('应用筛选和排序:', {
+    log('应用筛选和排序:', {
       originalCount: filteredArticles.length,
+      allArticlesLength: allArticles.length,
       currentCategory,
       currentTag,
       searchKeyword
@@ -667,6 +725,8 @@ Page({
     this._filteredPage = 0;
     const pageSize = this.data.pageSize || 20;
     const initialList = filteredArticles.slice(0, pageSize);
+
+    log('筛选完成，结果数:', filteredArticles.length, '渲染数:', initialList.length);
 
     this.setData({
       list: initialList,
