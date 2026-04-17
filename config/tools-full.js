@@ -439,8 +439,8 @@ const tools = [
     color: 'amber',
     url: '/packages/life/pages/merge-abc/merge-abc',
     categories: ['休闲工具'],
-    keywords: ['ABC', '合成', '2048', '字母', '合并', '游戏', 'merge', '字母游戏'],
-    description: '合并相同字母进化，类似2048的字母合成游戏'
+    keywords: ['ABC', '合成', '字母', '合并', '游戏', 'merge', '字母游戏', '益智'],
+    description: '合并相同字母进化，趣味字母合成游戏'
   },
 
   {

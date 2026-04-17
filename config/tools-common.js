@@ -36,7 +36,7 @@ const commonTools = [
   { id: 'poison-soup', name: '每日毒鸡汤', icon: '🍵', color: 'amber', url: '/packages/life/pages/poison-soup/poison-soup', categories: ['休闲工具'], keywords: ['毒鸡汤', '负能量', '扎心', '文案', '鸡汤'], description: '每日一碗毒鸡汤，专治各种不服' },
   { id: 'answer-book', name: '答案之书', icon: '🔮', color: 'indigo', url: '/packages/life/pages/answer-book/answer-book', categories: ['休闲工具'], keywords: ['答案', 'Magic8Ball', '指点', '迷津', '占卜'], description: 'Magic 8 Ball 答案之书，为你指点迷津' },
   { id: 'truth-or-dare', name: '真心话大冒险', icon: '🎭', color: 'purple', url: '/packages/life/pages/truth-or-dare/truth-or-dare', categories: ['休闲工具'], keywords: ['真心话', '大冒险', '聚会', '游戏', '派对', '真心话大冒险', '考验', '冒险', '真心'], description: '聚会必备题目，支持按难度和类型筛选' },
-  { id: 'merge-abc', name: 'ABC合成记', icon: '🔤', color: 'amber', url: '/packages/life/pages/merge-abc/merge-abc', categories: ['休闲工具'], keywords: ['ABC', '合成', '2048', '字母', '合并', '游戏', 'merge'], description: '合并相同字母进化，类似2048的字母合成游戏' },
+  { id: 'merge-abc', name: 'ABC合成记', icon: '🔤', color: 'amber', url: '/packages/life/pages/merge-abc/merge-abc', categories: ['休闲工具'], keywords: ['ABC', '合成', '字母', '合并', '游戏', 'merge', '益智'], description: '合并相同字母进化，趣味字母合成游戏' },
 
   // ===== 财务工具 =====
   { id: 'mortgage', name: '房贷计算', icon: '🏠', color: 'blue', url: '/packages/financial/pages/mortgage/mortgage', categories: ['财务工具'], keywords: ['房贷', '贷款', '计算', '房屋'], description: '计算房贷月供、利息和还款总额' },

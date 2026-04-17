@@ -100,7 +100,7 @@
   transition: all 0.15s ease;
 }
 
-/* 方块颜色 - 前6个用2048经典色 */
+/* 方块颜色 - 低阶方块 */
 .cell-A { background: #eee4da; color: #776e65; }
 .cell-B { background: #ede0c8; color: #776e65; }
 .cell-C { background: #f2b179; color: #f9f6f2; }

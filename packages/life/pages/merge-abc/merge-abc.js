@@ -1,5 +1,5 @@
 // packages/life/pages/merge-abc/merge-abc.js
-// ABC合成记 - 类2048字母合并游戏
+// ABC合成记 - 字母合并游戏
 
 const utils = require('../../../../utils/index');
 
