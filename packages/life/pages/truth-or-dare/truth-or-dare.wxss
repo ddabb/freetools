@@ -238,14 +238,15 @@
   flex: 1;
   max-width: 160rpx;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 8rpx;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 20rpx;
-  padding: 28rpx 10rpx;
+  padding: 22rpx 10rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.1);
-  min-height: 130rpx;
+  min-height: 80rpx;
   transition: all 0.2s ease;
 }
 
@@ -266,8 +267,7 @@
 }
 
 .action-icon {
-  font-size: 40rpx;
-  margin-bottom: 8rpx;
+  font-size: 36rpx;
 }
 
 .action-text {
