@@ -84,13 +84,7 @@ Page({
       '英里': 0.000621371, '英尺': 3.28084, '英寸': 39.3701, '码': 1.09361, '海里': 5.39957e-4, '丈': 0.3, '尺': 3, '寸': 30
     }
     return baseValue * lengthMap[unit]
-  },
-
-  // 分享给好友
-  onShareAppMessage() {
-    return {
-      title: '长度单位换算工具',
-      path: '/packages/unit/pages/length-converter/length-converter'
-    }
   }
+
+
 })
