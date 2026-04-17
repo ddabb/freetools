@@ -485,6 +485,10 @@ Page({
 
   clearBoard() {
     this.initBoard();
+    // 如果是每日数独模式，重置后重新加载当前日期的数独数据
+    if (this.data.mode === 'daily') {
+      this.loadDailySudoku(this.data.selectedDate);
+    }
   },
 
   solveSudoku() {
