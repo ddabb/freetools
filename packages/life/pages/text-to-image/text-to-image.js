@@ -13,9 +13,20 @@ Page({
     textLength: 0
   },
 
-  onLoad() {
+  onLoad(options) {
     wx.setNavigationBarTitle({ title: '文案生图' });
-    
+
+    // 接收其他页面传入的参数（真心话大冒险等跳转时带入）
+    if (options && options.text) {
+      this.setData({
+        text: decodeURIComponent(options.text),
+        textLength: decodeURIComponent(options.text).length
+      });
+    }
+    if (options && options.from) {
+      this.setData({ from: decodeURIComponent(options.from) });
+    }
+
     // 延迟加载字体，避免阻塞 onLoad
     setTimeout(() => {
       this.loadFonts();
