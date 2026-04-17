@@ -22,8 +22,10 @@ Page({
     categories: sortedCategories,
     activeCategory: '常用工具',
     commonTools: commonToolsWithCategory,
+    currentCategoryTools: [],  // 分类工具列表
     searchText: '',
     showSearchResult: false,
+    filteredTools: [],  // 搜索结果
     recentTools: [],
     loading: false
   },
@@ -84,30 +86,99 @@ Page({
   switchCategory(e) {
     const category = e.currentTarget.dataset.category;
     if (category === this.data.activeCategory) return;
+    
+    // 计算当前分类的工具
+    let categoryTools = [];
+    if (category !== '常用工具') {
+      // 使用懒加载的 getToolsByCategory 方法
+      try {
+        const allTools = this._allTools || tools.getAllTools();
+        categoryTools = allTools
+          .filter(tool => {
+            if (!tool.categories) return false;
+            return tool.categories.some(cat => cat === category || cat.includes(category) || category.includes(cat));
+          })
+          .map(tool => ({
+            ...tool,
+            _categoryClass: (tool.categories && tool.categories[0])
+              ? tool.categories[0].replace(/[^\w]/g, '')
+              : 'text'
+          }));
+      } catch (err) {
+        console.error('获取分类工具失败', err);
+      }
+    }
+    
     this.setData({
       activeCategory: category,
       searchText: '',
-      showSearchResult: false
+      showSearchResult: false,
+      currentCategoryTools: categoryTools
     });
   },
 
   onSearchInput(e) {
     const searchText = e.detail.value.trim().toLowerCase();
     if (!searchText) {
-      this.setData({ searchText: '', showSearchResult: false });
+      this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
       return;
     }
-    this.setData({ searchText, showSearchResult: true });
+    
+    // 执行搜索
+    let results = [];
+    try {
+      const searchSource = this._allTools || tools.getAllTools();
+      // 使用 keywords 搜索
+      results = searchSource.filter(tool => {
+        if (!tool) return false;
+        const nameMatch = tool.name && tool.name.toLowerCase().includes(searchText);
+        const descMatch = tool.description && tool.description.toLowerCase().includes(searchText);
+        const keywordsMatch = tool.keywords && tool.keywords.some(k => 
+          k && k.toLowerCase().includes(searchText)
+        );
+        return nameMatch || keywordsMatch || descMatch;
+      });
+    } catch (err) {
+      console.error('搜索失败', err);
+    }
+    
+    this.setData({ 
+      searchText, 
+      showSearchResult: true,
+      filteredTools: results
+    });
   },
 
   onClearSearch() {
-    this.setData({ searchText: '', showSearchResult: false });
+    this.setData({ searchText: '', showSearchResult: false, filteredTools: [] });
   },
 
   onSearchConfirm(e) {
     const searchText = e.detail.value.trim().toLowerCase();
     if (!searchText) return;
-    this.setData({ searchText, showSearchResult: true });
+    
+    // 执行搜索
+    let results = [];
+    try {
+      const searchSource = this._allTools || tools.getAllTools();
+      results = searchSource.filter(tool => {
+        if (!tool) return false;
+        const nameMatch = tool.name && tool.name.toLowerCase().includes(searchText);
+        const descMatch = tool.description && tool.description.toLowerCase().includes(searchText);
+        const keywordsMatch = tool.keywords && tool.keywords.some(k => 
+          k && k.toLowerCase().includes(searchText)
+        );
+        return nameMatch || keywordsMatch || descMatch;
+      });
+    } catch (err) {
+      console.error('搜索失败', err);
+    }
+    
+    this.setData({ 
+      searchText, 
+      showSearchResult: true,
+      filteredTools: results
+    });
   },
 
   navigateToTool(e) {

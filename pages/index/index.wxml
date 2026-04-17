@@ -24,7 +24,7 @@
   />
   
   <empty-state 
-    wx:if="{{ !loading && !showSearchResult && currentCategoryTools.length === 0 }}"
+    wx:if="{{ !loading && !showSearchResult && activeCategory !== '常用工具' && currentCategoryTools.length === 0 }}"
     icon="info"
     text="该分类下暂无工具"
   />
