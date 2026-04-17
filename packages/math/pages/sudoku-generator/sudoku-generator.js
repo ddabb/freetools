@@ -144,7 +144,12 @@ Page({
   },
 
   toggleAnswer() {
-    const { showingAnswer, answerBoard, puzzleBoard, userBoard } = this.data;
+    const { showingAnswer } = this.data;
+    const answerBoard = this._answerBoard;
+    const puzzleBoard = this._puzzleBoard;
+    const userBoard = this._userBoard;
+    
+    if (!answerBoard || !puzzleBoard) return;
     
     if (!showingAnswer) {
       // 显示答案
@@ -194,7 +199,10 @@ Page({
 
   // 恢复原始谜题状态，不显示弹窗
   restorePuzzle() {
-    const { puzzleBoard, showCandidates, userBoard } = this.data;
+    const puzzleBoard = this._puzzleBoard;
+    const { showCandidates } = this.data;
+    
+    if (!puzzleBoard) return;
     
     // 创建自定义的棋盘数据，确保只有原始题目格子是固定的
     const board = [];
