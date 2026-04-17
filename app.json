@@ -50,7 +50,8 @@
         "pages/idiom-query/idiom-query",
         "pages/idiom-battle/idiom-battle",
         "pages/idiom-chain/idiom-chain",
-        "pages/truth-or-dare/truth-or-dare"
+        "pages/truth-or-dare/truth-or-dare",
+        "pages/merge-abc/merge-abc"
       ]
     },
     {

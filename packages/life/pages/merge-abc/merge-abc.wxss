@@ -1,0 +1,255 @@
+.container {
+  min-height: 100vh;
+  background: #faf8ef;
+  padding: 30rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 标题 */
+.header {
+  text-align: center;
+  margin-bottom: 25rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #776e65;
+}
+
+.subtitle {
+  display: block;
+  font-size: 24rpx;
+  color: #9e948a;
+  margin-top: 6rpx;
+}
+
+/* 分数栏 */
+.score-bar {
+  display: flex;
+  background: #bbada0;
+  border-radius: 16rpx;
+  padding: 20rpx 60rpx;
+  margin-bottom: 30rpx;
+}
+
+.score-item {
+  text-align: center;
+  flex: 1;
+}
+
+.score-label {
+  display: block;
+  font-size: 22rpx;
+  color: #eee4da;
+  text-transform: uppercase;
+}
+
+.score-value {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 4rpx;
+}
+
+.score-value.best {
+  color: #f9f6f2;
+}
+
+.score-divider {
+  width: 2rpx;
+  background: rgba(255,255,255,0.2);
+  margin: 10rpx 0;
+}
+
+/* 游戏棋盘 */
+.game-board {
+  background: #bbada0;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-bottom: 30rpx;
+  width: 100%;
+  max-width: 660rpx;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.grid-row:last-child {
+  margin-bottom: 0;
+}
+
+.cell {
+  width: 146rpx;
+  height: 146rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52rpx;
+  font-weight: bold;
+  color: #776e65;
+  transition: all 0.15s ease;
+}
+
+/* 方块颜色 - 前6个用2048经典色 */
+.cell-A { background: #eee4da; color: #776e65; }
+.cell-B { background: #ede0c8; color: #776e65; }
+.cell-C { background: #f2b179; color: #f9f6f2; }
+.cell-D { background: #f59563; color: #f9f6f2; }
+.cell-E { background: #f67c5f; color: #f9f6f2; }
+.cell-F { background: #f65e3b; color: #f9f6f2; font-size: 46rpx; }
+
+/* G以后的方块 - 炫彩风格 */
+.cell-G { background: linear-gradient(135deg, #edcf72, #e6c84b); color: #f9f6f2; font-size: 42rpx; }
+.cell-H { background: linear-gradient(135deg, #edcc61, #d4b63d); color: #f9f6f2; font-size: 42rpx; }
+.cell-I { background: linear-gradient(135deg, #edc850, #c9a32e); color: #f9f6f2; font-size: 40rpx; }
+.cell-J { background: linear-gradient(135deg, #edc53f, #b99025); color: #f9f6f2; font-size: 38rpx; }
+.cell-K { background: linear-gradient(135deg, #edc22e, #a87d1c); color: #f9f6f2; font-size: 36rpx; }
+
+/* L-N - 深色阶段 */
+.cell-L { background: linear-gradient(135deg, #3c3a32, #2c2a22); color: #f9f6f2; font-size: 36rpx; }
+.cell-M { background: linear-gradient(135deg, #3c3a32, #1c1a12); color: #f9f6f2; font-size: 34rpx; }
+.cell-N { background: linear-gradient(135deg, #3c3a32, #0c0a02); color: #f9f6f2; font-size: 32rpx; }
+
+/* O-Z - 金色传说阶段 */
+.cell-O, .cell-P, .cell-Q, .cell-R, .cell-S, .cell-T,
+.cell-U, .cell-V, .cell-W, .cell-X, .cell-Y, .cell-Z {
+  background: linear-gradient(145deg, #f9d423, #ff4e50);
+  color: #fff;
+  font-size: 30rpx;
+  box-shadow: 0 4rpx 15rpx rgba(255,78,80,0.3);
+}
+
+.cell-Z {
+  background: linear-gradient(145deg, #f9d423, #ff4e50);
+  box-shadow: 0 0 30rpx rgba(255,78,80,0.6);
+}
+
+/* 空格 */
+.cell-empty {
+  background: rgba(238,228,218,0.35);
+}
+
+/* 按钮 */
+.btn-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+  width: 100%;
+  max-width: 660rpx;
+}
+
+.btn {
+  flex: 1;
+  padding: 22rpx;
+  text-align: center;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #8f7a66;
+  color: #f9f6f2;
+}
+
+.btn-primary:active {
+  background: #7a6756;
+}
+
+.btn-secondary {
+  background: #cdc1b4;
+  color: #776e65;
+}
+
+.btn-secondary:active {
+  background: #b8ab9e;
+}
+
+/* 提示 */
+.tips {
+  text-align: center;
+  padding: 0 20rpx;
+}
+
+.tips-text {
+  font-size: 24rpx;
+  color: #9e948a;
+}
+
+/* 游戏结束弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(250,248,239,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 50rpx 60rpx;
+  text-align: center;
+  min-width: 400rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0,0,0,0.15);
+}
+
+.modal-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #776e65;
+  margin-bottom: 30rpx;
+}
+
+.modal-score {
+  margin-bottom: 20rpx;
+}
+
+.modal-score-num {
+  display: block;
+  font-size: 72rpx;
+  font-weight: bold;
+  color: #8f7a66;
+}
+
+.modal-score-label {
+  display: block;
+  font-size: 26rpx;
+  color: #9e948a;
+  margin-top: 4rpx;
+}
+
+.modal-best {
+  font-size: 28rpx;
+  color: #776e65;
+  margin-bottom: 20rpx;
+}
+
+.modal-btn {
+  background: #8f7a66;
+  color: #f9f6f2;
+  padding: 20rpx 60rpx;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.modal-btn:active {
+  background: #7a6756;
+}

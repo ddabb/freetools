@@ -432,6 +432,16 @@ const tools = [
     keywords: ['真心话', '大冒险', '聚会', '游戏', '派对', '真心话大冒险', '考验', '冒险', '真心'],
     description: '聚会必备真心话大冒险题目，支持按难度和类型筛选'
   },
+  {
+    id: 'merge-abc',
+    name: 'ABC合成记',
+    icon: '🔤',
+    color: 'amber',
+    url: '/packages/life/pages/merge-abc/merge-abc',
+    categories: ['休闲工具'],
+    keywords: ['ABC', '合成', '2048', '字母', '合并', '游戏', 'merge', '字母游戏'],
+    description: '合并相同字母进化，类似2048的字母合成游戏'
+  },
 
   {
     id: 'health-calculator',

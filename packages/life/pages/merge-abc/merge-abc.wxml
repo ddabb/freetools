@@ -1,0 +1,64 @@
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title">🔤 ABC合成记</text>
+    <text class="subtitle">合并相同字母，挑战最高分</text>
+  </view>
+
+  <!-- 分数栏 -->
+  <view class="score-bar">
+    <view class="score-item">
+      <text class="score-label">当前分数</text>
+      <text class="score-value">{{score}}</text>
+    </view>
+    <view class="score-divider"></view>
+    <view class="score-item">
+      <text class="score-label">最高分</text>
+      <text class="score-value best">{{bestScore}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏棋盘 -->
+  <view class="game-board" catchtouchstart="onTouchStart" catchtouchend="onTouchEnd" catchtouchmove="{{void}}" >
+    <view class="grid-row" wx:for="{{[0,1,2,3]}}" wx:for-item="row" wx:key="row">
+      <view class="cell cell-{{board[row * 4 + col] || 'empty'}}" wx:for="{{[0,1,2,3]}}" wx:for-item="col" wx:key="col">
+        <text wx:if="{{board[row * 4 + col]}}">{{board[row * 4 + col]}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="btn-row">
+    <view class="btn btn-primary" bindtap="restart">
+      <text>🔄 重玩</text>
+    </view>
+    <view class="btn btn-secondary" bindtap="undo">
+      <text>↩️ 撤销</text>
+    </view>
+  </view>
+
+  <!-- 玩法说明 -->
+  <view class="tips">
+    <text class="tips-text">👆 滑动棋盘移动方块，相同字母合并进化（A→B→C→...→Z）</text>
+  </view>
+
+  <!-- 游戏结束弹窗 -->
+  <view class="modal-mask" wx:if="{{showGameOverModal}}" bindtap="closeGameOverModal">
+    <view class="modal-box" catchtap="">
+      <view class="modal-title">游戏结束</view>
+      <view class="modal-score">
+        <text class="modal-score-num">{{score}}</text>
+        <text class="modal-score-label">最终得分</text>
+      </view>
+      <view class="modal-best" wx:if="{{score >= bestScore && score > 0}}">
+        <text>🎉 新纪录！</text>
+      </view>
+      <view class="modal-best" wx:else>
+        <text>最高纪录：{{bestScore}}</text>
+      </view>
+      <view class="modal-btn" bindtap="restart">
+        <text>再来一局</text>
+      </view>
+    </view>
+  </view>
+</view>
