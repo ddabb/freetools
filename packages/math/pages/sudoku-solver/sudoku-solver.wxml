@@ -89,7 +89,7 @@
           </view>
           
           <!-- 候选数模式开启 - 3x3网格显示 -->
-          <view class="candidates-grid" wx:elif="{{showCandidates && cell.value === '' && cell.candidates}}">
+          <view class="candidates-grid" wx:elif="{{showCandidates && !cell.value && cell.candidates.length > 0}}">
             <view 
               class="candidate-item"
               wx:for="{{[1,2,3,4,5,6,7,8,9]}}"
@@ -100,7 +100,7 @@
               data-col="{{colIndex}}"
               data-num="{{num}}"
             >
-              <text class="{{cell.candidates.includes(num) ? 'has' : 'empty'}}">{{cell.candidates.includes(num) ? num : ''}}</text>
+              <text class="{{cell.candidates[num-1] > 0 ? 'has' : 'empty'}}">{{cell.candidates[num-1] > 0 ? cell.candidates[num-1] : ''}}</text>
             </view>
           </view>
           

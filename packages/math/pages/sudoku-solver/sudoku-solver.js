@@ -234,7 +234,12 @@ Page({
     for (let r = 0; r < 9; r++) {
       const row = [];
       for (let c = 0; c < 9; c++) {
-        row.push({ value: '', fixed: false, candidates: [] });
+        row.push({ 
+          value: '', 
+          fixed: false, 
+          candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          showCandidates: false
+        });
       }
       board.push(row);
     }
@@ -332,7 +337,13 @@ Page({
       const row = [];
       for (let c = 0; c < 9; c++) {
         const num = puzzle[r][c];
-        row.push({ value: num === 0 ? '' : String(num), fixed: num !== 0, candidates: [] });
+        const isEmpty = num === 0;
+        row.push({ 
+          value: isEmpty ? '' : String(num), 
+          fixed: !isEmpty, 
+          candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          showCandidates: false
+        });
       }
       board.push(row);
     }
@@ -347,30 +358,52 @@ Page({
   },
 
   calculateCandidates() {
-    if (!this.data.showCandidates) return;
-    console.debug('开始计算候选数...');
-    
-    const board = this.data.board;
-    const grid = [];
-    for (let r = 0; r < 9; r++) {
-      const row = [];
-      for (let c = 0; c < 9; c++) {
-        row.push(board[r][c].value ? parseInt(board[r][c].value, 10) : 0);
-      }
-      grid.push(row);
+    if (!this.data.showCandidates) {
+      console.debug('[候选数] showCandidates 为 false，直接返回');
+      return;
     }
     
-    // 使用与生成器相同的 toDisplayBoard 函数
-    const displayBoard = sudoku.toDisplayBoard(grid, true);
-    
-    // 更新棋盘数据
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        board[r][c].candidates = displayBoard[r][c].candidates;
+    try {
+      console.debug('[候选数] ========== 开始计算候选数 ==========');
+      
+      const board = this.data.board;
+      console.debug('[候选数] board 类型:', typeof board, Array.isArray(board));
+      console.debug('[候选数] board 长度:', board ? board.length : 'undefined');
+      
+      const grid = [];
+      for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+          const cell = board[r][c];
+          const val = cell && cell.value ? parseInt(cell.value, 10) : 0;
+          row.push(val);
+        }
+        grid.push(row);
       }
+      console.debug('[候选数] grid 构建完成');
+      
+      // 使用与生成器相同的 toDisplayBoard 函数
+      const displayBoard = sudoku.toDisplayBoard(grid, true);
+      console.debug('[候选数] toDisplayBoard 完成');
+      console.debug('[候选数] displayBoard[0][0]:', JSON.stringify(displayBoard[0][0]));
+      
+      // 更新棋盘数据（同步候选数和显示状态）
+      let emptyCellCount = 0;
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          board[r][c].candidates = displayBoard[r][c].candidates;
+          board[r][c].showCandidates = displayBoard[r][c].showCandidates;
+          if (board[r][c].showCandidates) emptyCellCount++;
+        }
+      }
+      console.debug('[候选数] 更新完成，空格数量:', emptyCellCount);
+      
+      this.setData({ board: board }, () => {
+        console.debug('[候选数] setData 回调完成');
+      });
+    } catch (err) {
+      console.error('[候选数] 发生错误:', err.message, err.stack);
     }
-    
-    this.setData({ board: board });
   },
 
   // 点击格子
