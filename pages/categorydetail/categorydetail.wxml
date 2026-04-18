@@ -6,14 +6,6 @@
 </view>
 
 <view class="container">
-  <!-- 分类头部 -->
-  <view class="category-header">
-    <view class="header-content">
-      <text class="article-count">共 {{articles.length}} 篇</text>
-    </view>
-  </view>
-
-
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{loading && articles.length === 0}}">
     <view class="loading-spinner"></view>
