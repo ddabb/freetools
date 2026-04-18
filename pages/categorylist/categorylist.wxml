@@ -1,11 +1,9 @@
-<!-- 面包屑导航 -->
-<view class="breadcrumb">
-  <text class="breadcrumb-item" hover-class="breadcrumb-item-hover" bindtap="goToKnowledgeList">📚 知识库</text>
-  <text class="breadcrumb-sep">/</text>
-  <text class="breadcrumb-current">分类列表</text>
-</view>
+<view class="container">
+  <view class="page-header">
+    <text class="page-title">📁 分类列表</text>
+    <text class="page-subtitle">按分类浏览知识内容</text>
+  </view>
 
-<view class="container" style="height: auto;">
   <view class="search-container" wx:if="{{!loading && !error}}">
     <view class="search-box">
       <text class="search-icon">🔍</text>
