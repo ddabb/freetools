@@ -5,7 +5,7 @@
   <text class="breadcrumb-current">分类列表</text>
 </view>
 
-<view class="container">
+<view class="container" style="height: auto;">
   <view class="search-container" wx:if="{{!loading && !error}}">
     <view class="search-box">
       <text class="search-icon">🔍</text>
