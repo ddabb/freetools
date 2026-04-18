@@ -1,9 +1,11 @@
-<view class="container">
-  <view class="page-header">
-    <text class="page-title">知识库标签</text>
-    <text class="page-subtitle">按标签浏览知识内容</text>
-  </view>
+<!-- 面包屑导航 -->
+<view class="breadcrumb">
+  <text class="breadcrumb-item" hover-class="breadcrumb-item-hover" bindtap="goToKnowledgeList">📚 知识库</text>
+  <text class="breadcrumb-sep">/</text>
+  <text class="breadcrumb-current">标签列表</text>
+</view>
 
+<view class="container">
   <view class="search-container" wx:if="{{!loading && !error}}">
     <view class="search-box">
       <text class="search-icon">🔍</text>

@@ -36,6 +36,10 @@ Page({
     });
   },
 
+  goToTagList() {
+    wx.navigateTo({ url: '/pages/taglist/taglist' });
+  },
+
   async loadArticles(isLoadMore = false) {
     if (!isLoadMore) {
       this.setData({

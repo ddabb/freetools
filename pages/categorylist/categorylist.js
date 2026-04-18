@@ -28,6 +28,10 @@ Page({
     return parts.length ? parts[parts.length - 1] : category;
   },
 
+  goToKnowledgeList() {
+    wx.navigateTo({ url: '/pages/knowledgelist/knowledgelist' });
+  },
+
   flattenCategories(node, list = []) {
     Object.values((node && node.children) || {}).forEach(category => {
       list.push({

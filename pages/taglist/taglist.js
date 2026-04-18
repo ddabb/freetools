@@ -26,6 +26,10 @@ Page({
   // 页面实例属性，不通过setData传递到渲染层
   currentPage: 1,
 
+  goToKnowledgeList() {
+    wx.navigateTo({ url: '/pages/knowledgelist/knowledgelist' });
+  },
+
   getPinyinFirstLetter(text) {
     if (!text) return '其他';
     const firstChar = text.charAt(0);

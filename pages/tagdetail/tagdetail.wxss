@@ -14,45 +14,41 @@ page {
   box-sizing: border-box;
 }
 
-/* 标签头部 - 水墨风格 */
-.tag-header {
-  background: linear-gradient(135deg, #7A6658 0%, #6D5D4D 100%);
-  color: #FFFDF8;
-  padding: 36rpx 28rpx 44rpx;
-  box-shadow: 0 4rpx 16rpx rgba(122, 102, 88, 0.2);
-}
-
-.header-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.tag-title {
+/* 面包屑导航 */
+.breadcrumb {
   display: flex;
   align-items: center;
-  gap: 14rpx;
-  font-size: 38rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1rpx solid #f0ebe3;
 }
 
-.tag-title .icon {
-  font-size: 40rpx;
+.breadcrumb-item {
+  font-size: 26rpx;
+  color: #576b95;
 }
 
-.title-text {
-  flex: 1;
+.breadcrumb-item-hover {
+  opacity: 0.7;
+}
+
+.breadcrumb-sep {
+  font-size: 24rpx;
+  color: #bbb;
+  margin: 0 12rpx;
+}
+
+.breadcrumb-current {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.article-count {
-  font-size: 24rpx;
-  opacity: 0.85;
-  margin-left: 54rpx;
-  letter-spacing: 1rpx;
+  max-width: 420rpx;
 }
 
 /* 加载状态 */
