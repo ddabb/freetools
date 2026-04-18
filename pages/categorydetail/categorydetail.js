@@ -43,6 +43,10 @@ Page({
     return parts.length ? parts[parts.length - 1] : category;
   },
 
+  goToCategoryList() {
+    wx.navigateTo({ url: '/pages/categorylist/categorylist' });
+  },
+
   async loadArticles(isLoadMore = false) {
     if (!isLoadMore) {
       this.setData({
