@@ -1,3 +1,10 @@
+<!-- 分类详情页导航 -->
+<view class="detail-nav" bindtap="goToCategoryList">
+  <view class="nav-arrow">‹</view>
+  <text class="nav-text">{{categoryName}}</text>
+  <view class="nav-btn">分类列表</view>
+</view>
+
 <view class="container">
   <!-- 分类头部 -->
   <view class="category-header">
