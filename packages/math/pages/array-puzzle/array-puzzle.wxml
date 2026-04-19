@@ -1,64 +1,82 @@
 <view class="container">
   <!-- 难度选择 -->
   <view class="difficulty-bar">
-    <view class="diff-btn {{difficulty==='easy'?'active':''}}" bindtap="setDifficulty" data-diff="easy">简单5×5</view>
-    <view class="diff-btn {{difficulty==='medium'?'active':''}}" bindtap="setDifficulty" data-diff="medium">中等8×8</view>
-    <view class="diff-btn {{difficulty==='hard'?'active':''}}" bindtap="setDifficulty" data-diff="hard">困难10×10</view>
+    <view class="diff-btn {{difficulty==='easy'?'active':''}}" bindtap="setDifficulty" data-diff="easy">简单</view>
+    <view class="diff-btn {{difficulty==='medium'?'active':''}}" bindtap="setDifficulty" data-diff="medium">中等</view>
+    <view class="diff-btn {{difficulty==='hard'?'active':''}}" bindtap="setDifficulty" data-diff="hard">困难</view>
+    <view class="diff-btn {{difficulty==='infinite'?'active':''}}" bindtap="setDifficulty" data-diff="infinite">无限</view>
   </view>
 
   <!-- 关卡信息 -->
-  <view class="level-info">
-    <text class="level-text">第 {{currentLevel + 1}} 关</text>
-    <text class="timer-text" wx:if="{{timerRunning}}">⏱ {{timerDisplay}}</text>
+  <view class="level-bar">
+    <view class="level-left">
+      <text class="level-label">{{isInfinite?'无限模式':'第 ' + (currentLevel + 1) + ' 关'}}</text>
+    </view>
+    <view class="level-right">
+      <text class="timer">⏱ {{timerDisplay}}</text>
+      <text class="progress">{{filledCount}}/{{totalFill}}</text>
+    </view>
+  </view>
+
+  <!-- 模式切换 -->
+  <view class="mode-bar">
+    <view class="mode-btn {{mode==='fill'?'mode-active':''}}" bindtap="setMode" data-mode="fill">
+      <text>● 填充</text>
+    </view>
+    <view class="mode-btn {{mode==='mark'?'mode-active':''}}" bindtap="setMode" data-mode="mark">
+      <text>✕ 标记</text>
+    </view>
   </view>
 
   <!-- 游戏棋盘 -->
-  <scroll-view class="board-scroll" scroll-x scroll-y enhanced show-scrollbar="{{false}}">
-    <view class="board-wrapper">
+  <view class="board-area">
+    <view class="board-wrapper" style="width:{{boardWidth}}px;">
       <!-- 列提示 -->
       <view class="col-hints-row">
-        <view class="corner"></view>
-        <view class="col-hint" wx:for="{{colHints}}" wx:key="index">
-          <view class="hint-num" wx:for="{{item}}" wx:key="*this" wx:for-item="num">{{num}}</view>
+        <view class="corner-cell"></view>
+        <view class="col-hint {{completedCols.indexOf(index)>=0?'hint-done':''}}" wx:for="{{colHints}}" wx:key="index" style="width:{{cellSize}}px;">
+          <view class="hint-num" wx:for="{{item}}" wx:for-item="n" wx:key="*this">{{n}}</view>
         </view>
       </view>
-      <!-- 行 -->
-      <view class="game-row" wx:for="{{grid}}" wx:key="row" wx:for-item="rowCells" wx:for-index="row">
-        <view class="row-hint">
-          <view class="hint-num" wx:for="{{rowHints[row]}}" wx:key="*this" wx:for-item="num">{{num}}</view>
-        </view>
-        <view class="cell {{cell==='blocked'?'blocked':(cell==='filled'?'filled':(cell==='marked'?'marked':''))}} {{rowHints[row+'_done']?'row-done':''}} {{colHints[col+'_done'+col]?'col-done':''}}"
-              wx:for="{{rowCells}}" wx:key="col" wx:for-item="cell" wx:for-index="col"
-              bindtap="onCellTap" data-row="{{row}}" data-col="{{col}}"
-              bindlongpress="onCellLongPress" data-row="{{row}}" data-col="{{col}}">
-          <text wx:if="{{cell==='filled'}}">●</text>
-          <text wx:elif="{{cell==='marked'}}">✕</text>
-          <text wx:elif="{{cell==='blocked'}}"></text>
+      
+      <!-- 滑动捕获层 -->
+      <view class="touch-layer" 
+            catchtouchstart="onBoardTouchStart"
+            catchtouchmove="onBoardTouchMove"
+            catchtouchend="onBoardTouchEnd"
+            catchtouchcancel="onBoardTouchEnd">
+        <!-- 行 -->
+        <view class="game-row" wx:for="{{grid}}" wx:key="rowIndex" wx:for-item="rowCells" wx:for-index="rowIndex">
+          <view class="row-hint {{completedRows.indexOf(rowIndex)>=0?'hint-done':''}}" style="height:{{cellSize}}px;">
+            <view class="hint-num" wx:for="{{rowHints[rowIndex]}}" wx:for-item="n" wx:key="*this">{{n}}</view>
+          </view>
+          <view class="cells-container">
+            <view class="cell {{item==='filled'?'cell-filled':(item==='marked'?'cell-marked':'')}}"
+                  wx:for="{{rowCells}}" wx:key="colIndex" wx:for-index="colIndex"
+                  style="width:{{cellSize}}px;height:{{cellSize}}px;"
+                  data-row="{{rowIndex}}" data-col="{{colIndex}}">
+              <view wx:if="{{item==='filled'}}" class="cell-dot"></view>
+              <text wx:elif="{{item==='marked'}}" class="cell-x">✕</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>
-  </scroll-view>
-
-  <!-- 操作提示 -->
-  <view class="tips">
-    <text class="tip-item">👆点击：填充</text>
-    <text class="tip-item">👆长按：标记×</text>
-    <text class="tip-item">再次点击：清除</text>
   </view>
 
-  <!-- 按钮 -->
-  <view class="btn-bar">
-    <view class="btn btn-undo" bindtap="undo">↩ 撤销</view>
-    <view class="btn btn-reset" bindtap="reset">🔄 重置</view>
-    <view class="btn btn-next" bindtap="nextLevel">下一关 ▶</view>
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <view class="act-btn" bindtap="undo">↩ 撤销</view>
+    <view class="act-btn" bindtap="reset">🔄 重置</view>
   </view>
 
-  <!-- 完成弹窗 -->
-  <view class="modal-mask" wx:if="{{showWin}}" bindtap="closeWin">
-    <view class="modal" catchtap="">
-      <view class="modal-icon">🎉</view>
-      <view class="modal-title">恭喜通关！</view>
-      <view class="modal-info">用时：{{timerDisplay}}</view>
+  <!-- 通关弹窗 -->
+  <view class="overlay" wx:if="{{showWin}}" catchtap="closeWin">
+    <view class="win-card" catchtap="">
+      <view class="win-emoji">🎉</view>
+      <view class="win-title">{{isInfinite?'太棒了！':'恭喜通关！'}}</view>
+      <view class="win-info">用时 {{timerDisplay}}</view>
+      <view class="win-btn" bindtap="nextLevel">下一关 ▶</view>
     </view>
   </view>
 </view>

@@ -1,0 +1,5 @@
+﻿{
+  "appid": "wxbe3bb18e2b2532d4",
+  "privateKeyPath": "private.wxbe3bb18e2b2532d4.key",
+  "ignores": ["node_modules/**"]
+}

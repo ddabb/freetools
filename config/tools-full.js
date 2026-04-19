@@ -653,7 +653,7 @@ const tools = [
   },
   {
     id: 'array-puzzle',
-    name: '数组迷宫',
+    name: '数织',
     icon: '🧩',
     color: 'green',
     url: '/packages/math/pages/array-puzzle/array-puzzle',
@@ -726,7 +726,7 @@ const commonTools = [
   tools.find(t => t.id === 'health-calculator'),  // 健康计算
   tools.find(t => t.id === 'emoji-to-png'),      // Emoji转图片
   tools.find(t => t.id === 'text-to-png'),        // 文本转图片
-  tools.find(t => t.id === 'array-puzzle'),       // 数组迷宫
+  tools.find(t => t.id === 'array-puzzle'),       // 数织
 ];
 
 // 确保在导出前 allTools 已经定义
