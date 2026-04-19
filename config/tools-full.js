@@ -650,6 +650,16 @@ const tools = [
     keywords: ['一笔画', '欧拉路径', '图论', '谜题'],
     description: '判断图形是否可以一笔画成并给出路径',
     publish: false
+  },
+  {
+    id: 'array-puzzle',
+    name: '数组迷宫',
+    icon: '🧩',
+    color: 'green',
+    url: '/packages/math/pages/array-puzzle/array-puzzle',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数织', '逻辑', '谜题', 'Nonogram', '填字'],
+    description: '根据行列数字提示填充格子，经典数织逻辑谜题'
   }
 ];
 
@@ -716,6 +726,7 @@ const commonTools = [
   tools.find(t => t.id === 'health-calculator'),  // 健康计算
   tools.find(t => t.id === 'emoji-to-png'),      // Emoji转图片
   tools.find(t => t.id === 'text-to-png'),        // 文本转图片
+  tools.find(t => t.id === 'array-puzzle'),       // 数组迷宫
 ];
 
 // 确保在导出前 allTools 已经定义

@@ -81,7 +81,8 @@
         "pages/random-selector/random-selector",
         "pages/sudoku-solver/sudoku-solver",
         "pages/sudoku-generator/sudoku-generator",
-        "pages/one-stroke-solver/one-stroke-solver"
+        "pages/one-stroke-solver/one-stroke-solver",
+        "pages/array-puzzle/array-puzzle"
       ]
     },
     {

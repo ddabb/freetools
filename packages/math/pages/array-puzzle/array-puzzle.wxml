@@ -1,0 +1,64 @@
+<view class="container">
+  <!-- 难度选择 -->
+  <view class="difficulty-bar">
+    <view class="diff-btn {{difficulty==='easy'?'active':''}}" bindtap="setDifficulty" data-diff="easy">简单5×5</view>
+    <view class="diff-btn {{difficulty==='medium'?'active':''}}" bindtap="setDifficulty" data-diff="medium">中等8×8</view>
+    <view class="diff-btn {{difficulty==='hard'?'active':''}}" bindtap="setDifficulty" data-diff="hard">困难10×10</view>
+  </view>
+
+  <!-- 关卡信息 -->
+  <view class="level-info">
+    <text class="level-text">第 {{currentLevel + 1}} 关</text>
+    <text class="timer-text" wx:if="{{timerRunning}}">⏱ {{timerDisplay}}</text>
+  </view>
+
+  <!-- 游戏棋盘 -->
+  <scroll-view class="board-scroll" scroll-x scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="board-wrapper">
+      <!-- 列提示 -->
+      <view class="col-hints-row">
+        <view class="corner"></view>
+        <view class="col-hint" wx:for="{{colHints}}" wx:key="index">
+          <view class="hint-num" wx:for="{{item}}" wx:key="*this" wx:for-item="num">{{num}}</view>
+        </view>
+      </view>
+      <!-- 行 -->
+      <view class="game-row" wx:for="{{grid}}" wx:key="row" wx:for-item="rowCells" wx:for-index="row">
+        <view class="row-hint">
+          <view class="hint-num" wx:for="{{rowHints[row]}}" wx:key="*this" wx:for-item="num">{{num}}</view>
+        </view>
+        <view class="cell {{cell==='blocked'?'blocked':(cell==='filled'?'filled':(cell==='marked'?'marked':''))}} {{rowHints[row+'_done']?'row-done':''}} {{colHints[col+'_done'+col]?'col-done':''}}"
+              wx:for="{{rowCells}}" wx:key="col" wx:for-item="cell" wx:for-index="col"
+              bindtap="onCellTap" data-row="{{row}}" data-col="{{col}}"
+              bindlongpress="onCellLongPress" data-row="{{row}}" data-col="{{col}}">
+          <text wx:if="{{cell==='filled'}}">●</text>
+          <text wx:elif="{{cell==='marked'}}">✕</text>
+          <text wx:elif="{{cell==='blocked'}}"></text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 操作提示 -->
+  <view class="tips">
+    <text class="tip-item">👆点击：填充</text>
+    <text class="tip-item">👆长按：标记×</text>
+    <text class="tip-item">再次点击：清除</text>
+  </view>
+
+  <!-- 按钮 -->
+  <view class="btn-bar">
+    <view class="btn btn-undo" bindtap="undo">↩ 撤销</view>
+    <view class="btn btn-reset" bindtap="reset">🔄 重置</view>
+    <view class="btn btn-next" bindtap="nextLevel">下一关 ▶</view>
+  </view>
+
+  <!-- 完成弹窗 -->
+  <view class="modal-mask" wx:if="{{showWin}}" bindtap="closeWin">
+    <view class="modal" catchtap="">
+      <view class="modal-icon">🎉</view>
+      <view class="modal-title">恭喜通关！</view>
+      <view class="modal-info">用时：{{timerDisplay}}</view>
+    </view>
+  </view>
+</view>
