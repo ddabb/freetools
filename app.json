@@ -82,7 +82,8 @@
         "pages/sudoku-solver/sudoku-solver",
         "pages/sudoku-generator/sudoku-generator",
         "pages/one-stroke-solver/one-stroke-solver",
-        "pages/array-puzzle/array-puzzle"
+        "pages/array-puzzle/array-puzzle",
+        "pages/othello/othello"
       ]
     },
     {

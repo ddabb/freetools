@@ -1,0 +1,78 @@
+<!-- 黑白棋 (Othello / Reversi) -->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="score-board">
+      <view class="score-item black">
+        <view class="piece-icon black-icon"></view>
+        <text class="score">{{blackCount}}</text>
+      </view>
+      <view class="score-divider">VS</view>
+      <view class="score-item white">
+        <view class="piece-icon white-icon"></view>
+        <text class="score">{{whiteCount}}</text>
+      </view>
+    </view>
+    <view class="status">{{message}}</view>
+  </view>
+
+  <!-- 难度选择 -->
+  <view class="difficulty-bar">
+    <view class="diff-item {{difficulty === 'easy' ? 'active' : ''}}" data-diff="easy" bindtap="setDifficulty">简单</view>
+    <view class="diff-item {{difficulty === 'medium' ? 'active' : ''}}" data-diff="medium" bindtap="setDifficulty">中等</view>
+    <view class="diff-item {{difficulty === 'hard' ? 'active' : ''}}" data-diff="hard" bindtap="setDifficulty">困难</view>
+    <view class="diff-item {{difficulty === 'expert' ? 'active' : ''}}" data-diff="expert" bindtap="setDifficulty">专家</view>
+  </view>
+
+  <!-- 棋盘 -->
+  <view class="board-container" style="width: {{boardWidth}}px; height: {{boardWidth}}px;">
+    <view class="board" style="width: {{boardWidth}}px; height: {{boardWidth}}px;">
+      <!-- 格子 -->
+      <block wx:for="{{board}}" wx:for-index="row" wx:for-item="rowData">
+        <block wx:for="{{rowData}}" wx:for-index="col" wx:for-item="cell">
+          <view 
+            class="cell {{cell === 1 ? 'black' : ''}} {{cell === 2 ? 'white' : ''}}"
+            style="width: {{cellSize}}px; height: {{cellSize}}px; left: {{col * cellSize}}px; top: {{row * cellSize}}px;"
+            data-row="{{row}}" 
+            data-col="{{col}}"
+            bindtap="onCellTap"
+          >
+            <!-- 棋子 -->
+            <view wx:if="{{cell !== 0}}" class="piece {{cell === 1 ? 'black-piece' : 'white-piece'}} {{lastMove.row === row && lastMove.col === col ? 'last-move' : ''}} {{flippedCells.some(item => item.row === row && item.col === col) ? 'flipped' : ''}}"></view>
+            <!-- 合法落子提示 -->
+            <view wx:if="{{cell === 0 && validMoves.some(item => item.row === row && item.col === col)}}" class="valid-hint"></view>
+          </view>
+        </block>
+      </block>
+    </view>
+  </view>
+
+  <!-- 当前回合指示 -->
+  <view class="turn-indicator">
+    <view class="turn-piece {{currentPlayer === 1 ? 'black-turn' : 'white-turn'}}"></view>
+    <text>{{currentPlayer === 1 ? '黑棋回合' : '白棋回合'}}</text>
+    <text wx:if="{{aiThinking}}" class="thinking">思考中...</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="controls">
+    <button class="btn-restart" bindtap="restart">重新开始</button>
+  </view>
+
+  <!-- 结果弹窗 -->
+  <view class="result-modal {{showResult ? 'show' : ''}}" bindtap="closeResult">
+    <view class="result-content" catchtap="">
+      <view class="result-title">
+        <text wx:if="{{winner === 1}}">🎉 黑棋获胜！</text>
+        <text wx:elif="{{winner === 2}}">💻 白棋获胜！</text>
+        <text wx:else>🤝 平局！</text>
+      </view>
+      <view class="result-score">
+        <text>黑棋: {{blackCount}}</text>
+        <text class="vs">VS</text>
+        <text>白棋: {{whiteCount}}</text>
+      </view>
+      <button class="btn-play-again" bindtap="restart">再来一局</button>
+    </view>
+  </view>
+</view>

@@ -660,6 +660,16 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['数织', '逻辑', '谜题', 'Nonogram', '填字'],
     description: '根据行列数字提示填充格子，经典数织逻辑谜题'
+  },
+  {
+    id: 'othello',
+    name: '黑白棋',
+    icon: '⚫',
+    color: 'purple',
+    url: '/packages/math/pages/othello/othello',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['黑白棋', '奥赛罗', '翻转', 'AI', '对战'],
+    description: '经典黑白棋游戏，支持多难度AI对战'
   }
 ];
 
