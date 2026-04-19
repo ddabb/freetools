@@ -463,16 +463,7 @@ const tools = [
     keywords: ['密码', '生成', '安全', '随机'],
     description: '生成安全的随机密码'
   },
-  {
-    id: 'idcard',
-    name: '身份证验证',
-    icon: '🆔',
-    color: 'blue',
-    url: '/packages/life/pages/idcard/idcard',
-    categories: ['安全工具'],
-    keywords: ['身份证', '验证', '身份', '校验'],
-    description: '验证身份证号码的有效性'
-  },
+
   {
     id: 'price-comparison',
     name: '价格对比',
@@ -719,7 +710,6 @@ const commonTools = [
 
   // ===== 安全工具 =====
   tools.find(t => t.id === 'password-generator'), // 密码生成
-  tools.find(t => t.id === 'idcard'),             // 身份证验证
 
   // ===== 其他常用 =====
   tools.find(t => t.id === 'random-selector'),    // 取数模拟器
