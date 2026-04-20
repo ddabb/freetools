@@ -79,14 +79,14 @@ function solveLine(hints, line, n) {
   var mustFill = [];
   var mustEmpty = [];
   for (var i = 0; i < n; i++) {
-    var allFill = true;
-    var allEmpty = true;
+    var mustFillFlag = true;
+    var mustEmptyFlag = true;
     for (var j = 0; j < valid.length; j++) {
-      if (valid[j][i] !== 1) allFill = false;
-      if (valid[j][i] !== -1) allEmpty = false;
+      if (valid[j][i] !== 1) mustFillFlag = false;
+      if (valid[j][i] === 1) mustEmptyFlag = false; // 只要有一个placement在该位置填了，就不能mustEmpty
     }
-    if (allFill) mustFill.push(i);
-    if (allEmpty) mustEmpty.push(i);
+    if (mustFillFlag) mustFill.push(i);
+    if (mustEmptyFlag) mustEmpty.push(i);
   }
   return { mustFill: mustFill, mustEmpty: mustEmpty };
 }
