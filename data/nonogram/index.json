@@ -1,0 +1,42 @@
+{
+  "total": 3000,
+  "difficulties": [
+    "easy",
+    "medium",
+    "hard"
+  ],
+  "generatedAt": "2026-04-20T01:14:34.069Z",
+  "files": [
+    "easy-0001.json",
+    "easy-0002.json",
+    "easy-0003.json",
+    "easy-0004.json",
+    "easy-0005.json",
+    "easy-0006.json",
+    "easy-0007.json",
+    "easy-0008.json",
+    "easy-0009.json",
+    "easy-0010.json",
+    "hard-0001.json",
+    "hard-0002.json",
+    "hard-0003.json",
+    "hard-0004.json",
+    "hard-0005.json",
+    "hard-0006.json",
+    "hard-0007.json",
+    "hard-0008.json",
+    "hard-0009.json",
+    "hard-0010.json",
+    "index.json",
+    "medium-0001.json",
+    "medium-0002.json",
+    "medium-0003.json",
+    "medium-0004.json",
+    "medium-0005.json",
+    "medium-0006.json",
+    "medium-0007.json",
+    "medium-0008.json",
+    "medium-0009.json",
+    "medium-0010.json"
+  ]
+}
