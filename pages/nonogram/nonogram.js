@@ -252,12 +252,12 @@ Page({
 
     this.setData({ rowGroups: groups, filledCount });
 
-    // 通关判断
+    // 通关判断：所有应该填的格子(answer=1)都填了(s=1)就通关，标记(s=2)不算错
     const { answer, gridSize } = this.data;
     let win = true;
-    outer: for (let rr = 0; rr < gridSize; rr++) {
+    outer: for (let rr = 0; rr < gridSize && win; rr++) {
       for (let cc = 0; cc < gridSize; cc++) {
-        if ((groups[rr].cells[cc].s === 1) !== (answer[rr][cc] === 1)) {
+        if (answer[rr][cc] === 1 && groups[rr].cells[cc].s !== 1) {
           win = false;
           break outer;
         }
