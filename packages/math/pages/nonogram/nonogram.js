@@ -178,6 +178,24 @@ Page({
   },
 
   // ─── 触摸 ───────────────────────────────────────────────
+  onTap(e) {
+    const { row, col } = e.currentTarget.dataset;
+    const r = Number(row), c = Number(col);
+    if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
+
+    const current = this.data.rowGroups[r].cells[c].s;
+    const mode = this.data.mode;
+    let op;
+    if (mode === 'fill') {
+      op = current === 1 ? 0 : 1;
+    } else {
+      op = current === 2 ? 0 : 2;
+    }
+
+    this._startTimer();
+    this._doOp(r, c, op);
+  },
+
   onTouchStart(e) {
     const { row, col } = e.currentTarget.dataset;
     const r = Number(row), c = Number(col);

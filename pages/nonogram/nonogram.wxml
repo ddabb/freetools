@@ -1,16 +1,12 @@
 <wxs module="utils">
-function cellStyle(cell, rowIdx, colIdx, gridSize) {
+function cellStyle(cell, rowIdx, colIdx, gridSize, cellPx) {
   var s = cell.s;
-  var lastRow = (rowIdx === gridSize - 1);
-  var lastCol = (colIdx === gridSize - 1);
-  var bw = '1px';
-  var bc = '#ccc';
-  if (lastRow) { bw = '1px 1px 2.5px'; bc = '#555 #555 #555'; }
-  if (lastCol) { var suffix = lastRow ? '2.5px 2.5px' : '2.5px 1px'; bw = '1px ' + suffix; bc = '#ccc #555 #555'; }
-
-  if (s === 1) return 'background:#2d2d2d;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
-  if (s === 2) return 'background:#fffde7;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
-  return 'background:#fff;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
+  var lastRow = rowIdx === gridSize - 1;
+  var lastCol = colIdx === gridSize - 1;
+  var br = lastCol ? '2.5px solid #555' : '1px solid #ccc';
+  var bb = lastRow ? '2.5px solid #555' : '1px solid #ccc';
+  var bg = s === 1 ? '#2d2d2d' : (s === 2 ? '#fffde7' : '#fff');
+  return 'width:' + cellPx + 'px;height:' + cellPx + 'px;background:' + bg + ';border-top:1px solid #ccc;border-right:' + br + ';border-bottom:' + bb + ';border-left:1px solid #ccc;border-radius:2px;box-sizing:border-box;';
 }
 module.exports = { cellStyle: cellStyle };
 </wxs>
@@ -62,7 +58,7 @@ module.exports = { cellStyle: cellStyle };
           wx:for-item="cell"
           wx:key="ci"
           wx:for-index="ci"
-          style="{{utils.cellStyle(cell, item.rowIdx, ci, gridSize)}}"
+          style="{{utils.cellStyle(cell, item.rowIdx, ci, gridSize, cellPx)}}"
           catchtouchstart="onTouchStart"
           catchtouchmove="onTouchMove"
           catchtouchend="onTouchEnd"
