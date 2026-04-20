@@ -349,7 +349,6 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    applyConstraints(grid, this.data.rowHints, this.data.colHints, size);
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
