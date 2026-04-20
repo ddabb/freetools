@@ -130,10 +130,20 @@ Page({
 
       this._calcLayout(puzzle.rowHints, puzzle.colHints, size);
 
-      // 构建行组（每5行加大分隔）
+      // 构建行组（带预计算的格子class）
       const rowGroups = [];
       for (let r = 0; r < size; r++) {
-        rowGroups.push({ rowIdx: r, cells: Array.from({ length: size }, () => ({ s: 0 })) });
+        const cells = [];
+        for (let c = 0; c < size; c++) {
+          const s = 0;
+          let cls = '';
+          if (size === 5) {
+            if (c === 4) cls = 'bd-right-bold';
+            if (r === 4) cls = cls ? 'bd-right-bold bd-bottom-bold' : 'bd-bottom-bold';
+          }
+          cells.push({ s, cls });
+        }
+        rowGroups.push({ rowIdx: r, cells });
       }
 
       let totalFill = 0;
@@ -191,13 +201,12 @@ Page({
   },
 
   // ─── 格子样式 ───────────────────────────────────────────
-  cellClass(cellVal, rowIdx, colIdx) {
-    // cellVal: 数字(0/1/2) 或对象 {s}
-    const s = typeof cellVal === 'object' ? cellVal.s : cellVal;
+  _getCellClass(s, rowIdx, colIdx) {
     if (s === 1) return 'filled';
     if (s === 2) return 'marked';
-    // 5×5 棋盘格边框加重（每5格一条）
-    if (this.data.gridSize === 5) {
+    // 5×5 加重分隔
+    const size = this._gridSize;
+    if (size === 5) {
       if (colIdx === 4) return 'bd-right-bold';
       if (rowIdx === 4) return 'bd-bottom-bold';
     }
@@ -264,6 +273,7 @@ Page({
     const old = groups[r].cells[c].s;
     if (old === op) return;
     groups[r].cells[c].s = op;
+    groups[r].cells[c].cls = this._getCellClass(op, r, c);
 
     let filledCount = 0;
     groups.forEach(g => g.cells.forEach(cell => { if (cell.s === 1) filledCount++; }));

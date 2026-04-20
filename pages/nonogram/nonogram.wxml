@@ -39,7 +39,7 @@
           <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
             <text class="hn" wx:for="{{rowHints[item.rowIdx]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
           </view>
-          <view class="cell {{cellClass(cell, item.rowIdx, ci)}}"
+          <view class="cell {{cell.cls}}"
                 wx:for="{{item.cells}}" wx:key="ci" wx:for-index="ci"
                 wx:for-item="cell"
                 style="width:{{cellPx}}px;height:{{cellPx}}px;"
