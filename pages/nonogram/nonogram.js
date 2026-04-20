@@ -349,14 +349,6 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    applyConstraints(grid, this.data.rowHints, this.data.colHints, size);
-    var prev = this.data.grid;
-    var filledCells = [], markCells = [];
-    for (var i = 0; i < size; i++) for (var j = 0; j < size; j++) {
-      if (grid[i][j] === 1 && prev[i][j] !== 1) filledCells.push([i, j]);
-      if (grid[i][j] === 2 && prev[i][j] !== 2) markCells.push([i, j]);
-    }
-    console.log('[nonogram] op:', op === 1 ? 'fill' : 'mark', '@', r, c, '| auto-fill:', JSON.stringify(filledCells), '| auto-mark:', JSON.stringify(markCells));
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
