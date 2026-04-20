@@ -68,7 +68,10 @@ function solveLine(hints, line, n) {
   for (var i = 0; i < placements.length; i++) {
     var ok = true;
     for (var j = 0; j < n; j++) {
-      if (line[j] !== 0 && line[j] !== placements[i][j]) { ok = false; break; }
+      // line[j]: 0=未知 1=用户填了 -1=用户标了X
+      // placement[j]: 1=该填 -1=该空
+      if (line[j] === 1 && placements[i][j] !== 1) { ok = false; break; } // 用户填了必须匹配
+      if (line[j] === -1 && placements[i][j] !== -1) { ok = false; break; } // 用户标X必须是空格
     }
     if (ok) valid.push(placements[i]);
   }
