@@ -1,16 +1,3 @@
-<wxs module="utils">
-function cellStyle(cell, rowIdx, colIdx, gridSize, cellPx) {
-  var s = cell.s;
-  var lastRow = rowIdx === gridSize - 1;
-  var lastCol = colIdx === gridSize - 1;
-  var br = lastCol ? '2.5px solid #555' : '1px solid #ccc';
-  var bb = lastRow ? '2.5px solid #555' : '1px solid #ccc';
-  var bg = s === 1 ? '#2d2d2d' : (s === 2 ? '#fffde7' : '#fff');
-  return 'width:' + cellPx + 'px;height:' + cellPx + 'px;background:' + bg + ';border-top:1px solid #ccc;border-right:' + br + ';border-bottom:' + bb + ';border-left:1px solid #ccc;border-radius:2px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;';
-}
-module.exports = { cellStyle: cellStyle };
-</wxs>
-
 <view class="container">
   <!-- 难度 -->
   <view class="diff-bar">
@@ -35,7 +22,7 @@ module.exports = { cellStyle: cellStyle };
     </view>
   </view>
 
-  <!-- 加载中 -->
+  <!-- 加载 -->
   <view class="loading" wx:if="{{loading}}"><text>加载中...</text></view>
 
   <!-- 棋盘 -->
@@ -49,23 +36,23 @@ module.exports = { cellStyle: cellStyle };
         </view>
       </view>
       <!-- 行 -->
-      <view class="row-row" wx:for="{{rowGroups}}" wx:key="rowIdx">
+      <view class="row-group" wx:for="{{rowGroups}}" wx:key="ri">
         <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
-          <text class="hn" wx:for="{{rowHints[item.rowIdx]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
+          <text class="hn" wx:for="{{rowHints[item.ri]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
         </view>
         <view
           wx:for="{{item.cells}}"
           wx:for-item="cell"
           wx:key="ci"
-          wx:for-index="ci"
-          style="{{utils.cellStyle(cell, item.rowIdx, ci, gridSize, cellPx)}}"
+          class="{{cell.cls}}"
+          style="width:{{cellPx}}px;height:{{cellPx}}px;"
           catchtouchstart="onTouchStart"
           catchtouchmove="onTouchMove"
           catchtouchend="onTouchEnd"
-          data-row="{{item.rowIdx}}"
-          data-col="{{ci}}"
+          data-row="{{item.ri}}"
+          data-col="{{cell.ci}}"
         >
-          <text wx:if="{{cell.s===2}}" class="mark-x">✕</text>
+          <text wx:if="{{cell.s === 2}}" class="mark-x">✕</text>
         </view>
       </view>
     </view>
@@ -96,13 +83,13 @@ module.exports = { cellStyle: cellStyle };
       <scroll-view class="level-scroll" scroll-y>
         <view class="level-grid">
           <view
-            class="level-item {{isCompleted(l)?'done':''}} {{l===currentLevel?'curr':''}}"
+            class="level-item {{isCompleted(n)?'done':''}} {{n===currentLevel?'curr':''}}"
             wx:for="{{levelNumbers}}"
-            wx:for-item="l"
+            wx:for-item="n"
             wx:key="*this"
             bindtap="selectLevel"
-            data-l="{{l}}"
-          >{{l}}<text class="done-mark" wx:if="{{isCompleted(l)}}">✓</text></view>
+            data-l="{{n}}"
+          >{{n}}<text class="done-mark" wx:if="{{isCompleted(n)}}">✓</text></view>
         </view>
       </scroll-view>
     </view>

@@ -25,15 +25,35 @@ page { background: #eef0ec; min-height: 100vh; }
 .board-wrap { display: flex; justify-content: center; margin-top: 6px; }
 .board { display: flex; flex-direction: column; }
 
+/* 列提示 */
 .col-hints-row { display: flex; }
-.corner { flex-shrink: 0; }
+.corner { flex-shrink: 0; overflow: hidden; }
 .col-hint { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 3px; overflow: hidden; }
-.hn { font-size: 11px; font-weight: 600; color: #555; line-height: 14px; text-align: center; white-space: nowrap; }
+.hn { font-size: 11px; font-weight: 600; color: #555; line-height: 14px; text-align: center; }
 
+/* 行 */
 .row-row { display: flex; }
 .row-hint { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 1px; padding-right: 5px; flex-shrink: 0; }
 
-/* X标记 - 由flex居中 */
+/* 格子 */
+.cell {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background: #fff;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.06s;
+}
+.cell-filled { background: #2d2d2d !important; border-color: #2d2d2d !important; }
+.cell-marked { background: #fffde7 !important; border-color: #f0e68c !important; }
+.cell-row-last { border-bottom-width: 2px !important; border-bottom-color: #555 !important; }
+.cell-col-last { border-right-width: 2px !important; border-right-color: #555 !important; }
+
+/* X标记 */
 .mark-x { font-size: 65%; color: #e53935; font-weight: 700; line-height: 1; }
 
 /* 操作栏 */
