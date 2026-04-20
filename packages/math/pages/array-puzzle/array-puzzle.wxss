@@ -1,319 +1,47 @@
-page {
-  background: linear-gradient(180deg, #e8f5e9 0%, #f1f8e9 100%);
-  min-height: 100vh;
-}
+page { background: #f2f5f2; min-height: 100vh; }
+.container { display: flex; flex-direction: column; align-items: center; padding: 12px 0 30px; min-height: 100vh; }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 0 24px;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
+/* 顶栏 */
+.top-bar { display: flex; align-items: center; justify-content: center; width: 100%; padding: 6px 0; }
+.diff-bar { gap: 10px; }
+.info-bar { justify-content: space-between; padding: 4px 24px; }
+.mode-bar { gap: 12px; }
 
-/* 难度选择栏 */
-.difficulty-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding: 0 12px;
-}
+.pill { font-size: 13px; padding: 6px 16px; border-radius: 20px; background: #e0e0e0; color: #666; }
+.pill.on { background: #43a047; color: #fff; }
+.pill-sm { font-size: 12px; padding: 5px 18px; border-radius: 16px; background: #e0e0e0; color: #666; }
+.pill-sm.on { background: #333; color: #fff; }
 
-.diff-btn {
-  font-size: 13px;
-  padding: 8px 14px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.8);
-  color: #666;
-  border: 1px solid #e0e0e0;
-  transition: all 0.2s;
-}
+.level-text { font-size: 16px; font-weight: 700; color: #333; }
+.sub-text { font-size: 12px; color: #999; }
+.sub-text.accent { color: #43a047; font-weight: 600; }
 
-.diff-btn.active {
-  background: linear-gradient(135deg, #66bb6a, #43a047);
-  color: #fff;
-  border-color: #43a047;
-  box-shadow: 0 2px 8px rgba(67,160,71,0.3);
-}
+/* 棋盘 */
+.board-wrap { display: flex; justify-content: center; align-items: flex-start; margin-top: 8px; }
+.board { display: flex; flex-direction: column; }
 
-/* 关卡栏 */
-.level-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 90%;
-  max-width: 360px;
-  margin-bottom: 10px;
-  padding: 0 8px;
-}
+.col-hints-row { display: flex; }
+.corner { flex-shrink: 0; }
+.col-hint { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 3px; }
 
-.level-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.hn { font-size: 11px; font-weight: 600; color: #555; line-height: 14px; text-align: center; }
 
-.level-label {
-  font-size: 16px;
-  font-weight: 700;
-  color: #2e7d32;
-}
+.grow { display: flex; }
+.row-hint { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 2px; padding-right: 6px; flex-shrink: 0; }
+.row-hint .hn { line-height: 14px; }
 
-.level-right {
-  display: flex;
-  gap: 16px;
-}
+.cell { background: #fff; border-radius: 3px; flex-shrink: 0; transition: background 0.05s; }
+.cell.f { background: #333; }
+.cell.m { background: #fff8e1; }
 
-.timer {
-  font-size: 14px;
-  color: #888;
-}
+/* 底栏 */
+.bottom-bar { margin-top: 16px; }
+.btn { font-size: 13px; padding: 10px 30px; border-radius: 20px; background: #fff; color: #555; border: 1px solid #ccc; }
 
-.progress {
-  font-size: 14px;
-  color: #43a047;
-  font-weight: 600;
-  background: rgba(67,160,71,0.1);
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-
-/* 模式切换 */
-.mode-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.mode-btn {
-  font-size: 14px;
-  padding: 8px 20px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.8);
-  color: #555;
-  border: 1px solid #ddd;
-  transition: all 0.2s;
-}
-
-.mode-btn.mode-active {
-  background: #333;
-  color: #fff;
-  border-color: #333;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-/* 棋盘区域 */
-.board-area {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  overflow-x: auto;
-  padding: 8px 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-.board-wrapper {
-  display: flex;
-  flex-direction: column;
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
-
-/* 列提示行 */
-.col-hints-row {
-  display: flex;
-  gap: 2px;
-}
-
-.corner-cell {
-  width: 72px;
-  min-width: 72px;
-}
-
-.col-hint {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 4px 0 6px;
-  min-height: 50px;
-}
-
-.hint-num {
-  font-size: 12px;
-  font-weight: 600;
-  color: #444;
-  line-height: 1.3;
-  text-align: center;
-}
-
-/* 已完成行/列的提示 */
-.hint-done .hint-num {
-  color: #bbb;
-  text-decoration: line-through;
-}
-
-.hint-done {
-  opacity: 0.5;
-}
-
-/* 触摸层 - 覆盖整个棋盘用于滑动操作 */
-.touch-layer {
-  position: relative;
-}
-
-/* 行容器 */
-.game-row {
-  display: flex;
-  gap: 2px;
-}
-
-.row-hint {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-width: 72px;
-  width: 72px;
-  padding-right: 6px;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.row-hint .hint-num {
-  display: inline;
-}
-
-/* 格子容器 */
-.cells-container {
-  display: flex;
-  gap: 2px;
-}
-
-/* 格子 */
-.cell {
-  background: #fff;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  transition: background-color 0.15s;
-  flex-shrink: 0;
-  touch-action: none;
-}
-
-.cell-filled {
-  background: #333 !important;
-}
-
-.cell-marked {
-  background: #fff8e1 !important;
-}
-
-.cell-dot {
-  width: 60%;
-  height: 60%;
-  border-radius: 50%;
-  background: #4caf50;
-}
-
-.cell-marked .cell-x {
-  font-size: 14px;
-  color: #e53935;
-  font-weight: bold;
-}
-
-/* 操作按钮栏 */
-.action-bar {
-  display: flex;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.act-btn {
-  font-size: 14px;
-  padding: 10px 24px;
-  border-radius: 20px;
-  background: #fff;
-  color: #555;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: all 0.2s;
-}
-
-.act-btn:active {
-  background: #f5f5f5;
-  transform: scale(0.98);
-}
-
-/* 通关弹窗 */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.win-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 32px 40px;
-  text-align: center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.win-emoji {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.win-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.win-info {
-  font-size: 16px;
-  color: #888;
-  margin-bottom: 20px;
-}
-
-.win-btn {
-  display: inline-block;
-  font-size: 16px;
-  padding: 12px 32px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #66bb6a, #43a047);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(67,160,71,0.4);
-}
+/* 弹窗 */
+.mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 99; }
+.card { background: #fff; border-radius: 16px; padding: 32px 40px; text-align: center; }
+.card-icon { font-size: 48px; margin-bottom: 8px; }
+.card-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 6px; }
+.card-time { font-size: 14px; color: #999; margin-bottom: 16px; }
+.card-btn { display: inline-block; font-size: 14px; padding: 10px 32px; border-radius: 20px; background: #43a047; color: #fff; font-weight: 600; }

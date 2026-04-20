@@ -1,5 +1,5 @@
-// 数组迷宫 - 数织(Nonogram) 完整版
-// 支持：无限关卡唯一解生成、手指滑动连续标记、模式切换
+// 数组迷宫 - 数织Nonogram
+// 唯一解生成 · 滑动标记 · 无限关卡 · 自适应屏幕
 
 // ─── 工具函数 ───────────────────────────────────────────────
 function seededRand(seed) {
@@ -21,48 +21,36 @@ function calcHints(line) {
   return h.length ? h : [0];
 }
 
-// ─── 唯一解验证（行列约束传播求解器）────────────────────────
-// 返回解的数量（最多数到 2，超过即非唯一）
-function countSolutions(rowHints, colHints, size, limit) {
-  // 用 0=未知 1=填 -1=空 表示
+// ─── 唯一解验证 ─────────────────────────────────────────────
+function hasUniqueSolution(rowHints, colHints, size) {
   const board = Array.from({ length: size }, () => new Array(size).fill(0));
 
   function lineSolve(hints, line) {
-    // 返回该行/列可以确定的格子（1=必填，-1=必空，0=不确定）
     const n = line.length;
     const result = new Array(n).fill(0);
     const total = hints.reduce((a, b) => a + b, 0) + hints.length - 1;
     if (total > n) return result;
-
-    // 生成所有合法排列，取交集
     const placements = [];
-    function place(idx, pos, current) {
+    function place(idx, pos, cur) {
       if (idx === hints.length) {
-        // 填满剩余为空
-        const full = [...current];
+        const full = cur.slice();
         for (let i = pos; i < n; i++) full[i] = -1;
         placements.push(full);
         return;
       }
       const len = hints[idx];
-      const maxPos = n - (hints.slice(idx).reduce((a, b) => a + b, 0) + hints.length - idx - 1);
-      for (let p = pos; p <= maxPos; p++) {
-        const cur = [...current];
-        for (let i = pos; i < p; i++) cur[i] = -1;
-        for (let i = p; i < p + len; i++) cur[i] = 1;
-        place(idx + 1, p + len + 1, cur);
+      const maxP = n - (hints.slice(idx).reduce((a, b) => a + b, 0) + hints.length - idx - 1);
+      for (let p = pos; p <= maxP; p++) {
+        const c2 = cur.slice();
+        for (let i = pos; i < p; i++) c2[i] = -1;
+        for (let i = p; i < p + len; i++) c2[i] = 1;
+        place(idx + 1, p + len + 1, c2);
       }
     }
     place(0, 0, new Array(n).fill(0));
-
     if (!placements.length) return result;
-
-    // 过滤与已知状态冲突的排列
-    const valid = placements.filter(p =>
-      p.every((v, i) => line[i] === 0 || line[i] === v)
-    );
-    if (!valid.length) return null; // 矛盾
-
+    const valid = placements.filter(p => p.every((v, i) => line[i] === 0 || line[i] === v));
+    if (!valid.length) return null;
     for (let i = 0; i < n; i++) {
       const vals = valid.map(p => p[i]);
       if (vals.every(v => v === 1)) result[i] = 1;
@@ -71,31 +59,23 @@ function countSolutions(rowHints, colHints, size, limit) {
     return result;
   }
 
-  // 约束传播
   function propagate() {
     let changed = true;
     while (changed) {
       changed = false;
       for (let r = 0; r < size; r++) {
-        const line = board[r].slice();
-        const res = lineSolve(rowHints[r], line);
+        const res = lineSolve(rowHints[r], board[r].slice());
         if (!res) return false;
         for (let c = 0; c < size; c++) {
-          if (res[c] !== 0 && board[r][c] === 0) {
-            board[r][c] = res[c];
-            changed = true;
-          }
+          if (res[c] !== 0 && board[r][c] === 0) { board[r][c] = res[c]; changed = true; }
         }
       }
       for (let c = 0; c < size; c++) {
-        const line = board.map(r => r[c]);
-        const res = lineSolve(colHints[c], line);
+        const col = board.map(r => r[c]);
+        const res = lineSolve(colHints[c], col);
         if (!res) return false;
         for (let r = 0; r < size; r++) {
-          if (res[r] !== 0 && board[r][c] === 0) {
-            board[r][c] = res[r];
-            changed = true;
-          }
+          if (res[r] !== 0 && board[r][c] === 0) { board[r][c] = res[r]; changed = true; }
         }
       }
     }
@@ -103,94 +83,50 @@ function countSolutions(rowHints, colHints, size, limit) {
   }
 
   let count = 0;
-  function backtrack(pos) {
-    if (count >= limit) return;
+  function bt() {
+    if (count >= 2) return;
     if (!propagate()) return;
-
-    // 找第一个未知格
     let fr = -1, fc = -1;
-    outer: for (let r = 0; r < size; r++) {
-      for (let c = 0; c < size; c++) {
-        if (board[r][c] === 0) { fr = r; fc = c; break outer; }
-      }
-    }
+    for (let r = 0; r < size && fr === -1; r++)
+      for (let c = 0; c < size; c++)
+        if (board[r][c] === 0) { fr = r; fc = c; break; }
     if (fr === -1) { count++; return; }
-
-    // 保存状态
     const saved = board.map(r => r.slice());
-    for (const v of [1, -1]) {
-      board.splice(0, size, ...saved.map(r => r.slice()));
-      board[fr][fc] = v;
-      backtrack(pos + 1);
-      if (count >= limit) return;
-    }
-    board.splice(0, size, ...saved.map(r => r.slice()));
+    board[fr][fc] = 1; bt();
+    if (count >= 2) { for (let r = 0; r < size; r++) board[r] = saved[r]; return; }
+    for (let r = 0; r < size; r++) board[r] = saved[r].slice();
+    board[fr][fc] = -1; bt();
+    for (let r = 0; r < size; r++) board[r] = saved[r];
   }
-
-  backtrack(0);
-  return count;
+  bt();
+  return count === 1;
 }
 
-// ─── 谜题生成（带唯一解验证）────────────────────────────────
+// ─── 谜题生成 ───────────────────────────────────────────────
 function generatePuzzle(size, seed) {
   const rand = seededRand(seed);
-  const density = size <= 5 ? 0.55 : size <= 8 ? 0.5 : 0.48;
-
-  for (let attempt = 0; attempt < 200; attempt++) {
+  const density = size <= 5 ? 0.55 : size <= 8 ? 0.5 : 0.45;
+  for (let attempt = 0; attempt < 300; attempt++) {
     const answer = Array.from({ length: size }, () =>
       Array.from({ length: size }, () => rand() < density ? 1 : 0)
     );
-
-    // 确保每行每列至少有1个填充
-    let valid = true;
-    for (let r = 0; r < size; r++) {
-      if (!answer[r].some(v => v)) { valid = false; break; }
-    }
-    if (valid) {
-      for (let c = 0; c < size; c++) {
-        if (!answer.some(r => r[c])) { valid = false; break; }
-      }
-    }
-    if (!valid) continue;
-
-    const rowHints = answer.map(row => calcHints(row));
-    const colHints = Array.from({ length: size }, (_, c) =>
-      calcHints(answer.map(r => r[c]))
-    );
-
-    // 验证唯一解（最多找2个解，只要1个就通过）
-    const sols = countSolutions(
-      rowHints.map(h => [...h]),
-      colHints.map(h => [...h]),
-      size, 2
-    );
-    if (sols === 1) {
-      return { answer, rowHints, colHints };
+    let ok = true;
+    for (let r = 0; r < size; r++) if (!answer[r].some(v => v)) { ok = false; break; }
+    if (ok) for (let c = 0; c < size; c++) if (!answer.some(r => r[c])) { ok = false; break; }
+    if (!ok) continue;
+    const rh = answer.map(row => calcHints(row));
+    const ch = Array.from({ length: size }, (_, c) => calcHints(answer.map(r => r[c])));
+    if (hasUniqueSolution(rh.map(h => h.slice()), ch.map(h => h.slice()), size)) {
+      return { answer, rowHints: rh, colHints: ch };
     }
   }
-
-  // 兜底：返回一个简单的有唯一解谜题
-  return fallbackPuzzle(size);
+  // 兜底
+  const answer = Array.from({ length: size }, (_, r) => Array.from({ length: size }, (_, c) => (r + c) % 2));
+  return { answer, rowHints: answer.map(r => calcHints(r)), colHints: Array.from({ length: size }, (_, c) => calcHints(answer.map(r => r[c]))) };
 }
 
-function fallbackPuzzle(size) {
-  // 棋盘格，必然唯一解
-  const answer = Array.from({ length: size }, (_, r) =>
-    Array.from({ length: size }, (_, c) => (r + c) % 2)
-  );
-  return {
-    answer,
-    rowHints: answer.map(row => calcHints(row)),
-    colHints: Array.from({ length: size }, (_, c) =>
-      calcHints(answer.map(r => r[c]))
-    )
-  };
-}
-
-// ─── 棋盘尺寸计算 ────────────────────────────────────────────
+// ─── 页面配置 ───────────────────────────────────────────────
 const SIZES = { easy: 5, medium: 8, hard: 10 };
-const CELL_SIZES = { easy: 80, medium: 64, hard: 56 }; // rpx
-const HINT_WIDTH = 76; // rpx
 
 Page({
   data: {
@@ -200,213 +136,205 @@ Page({
     rowHints: [],
     colHints: [],
     answer: [],
-    history: [],
-    mode: 'fill',       // 'fill' | 'mark'
+    mode: 'fill',
     showWin: false,
-    timerDisplay: '0:00',
+    timerText: '0:00',
     filledCount: 0,
     totalFill: 0,
-    cellSize: 80,
-    boardWidth: 0,
-    // 滑动状态
-    _touchActive: false,
-    _touchMode: null,   // 本次滑动的操作类型
-    _touchedCells: {},  // 本次滑动已处理的格子
-    _timer: null,
-    _seconds: 0,
-    _timerStarted: false
+    cellPx: 40,      // px
+    hintPx: 50,      // px
+    boardPx: 300,    // px
   },
 
+  // 实例属性（不放入 data 避免不必要渲染）
+  _timer: null,
+  _seconds: 0,
+  _timerRunning: false,
+  _gridSize: 5,
+  _swipeOp: null,
+  _swiped: null,
+  _boardRect: null,
+  _colHintBottom: 0,
+
   onLoad() {
-    this.loadLevel(1);
+    this.newGame(1);
   },
 
   onUnload() {
-    this.clearTimer();
+    if (this._timer) clearInterval(this._timer);
   },
 
+  // ─── 难度 / 模式 ──────────────────────────────────────────
   setDifficulty(e) {
-    const diff = e.currentTarget.dataset.diff;
-    this.setData({ difficulty: diff, currentLevel: 1 });
-    this.loadLevel(1);
+    const d = e.currentTarget.dataset.diff;
+    if (d === this.data.difficulty) return;
+    this.setData({ difficulty: d });
+    this.newGame(1);
   },
 
   setMode(e) {
     this.setData({ mode: e.currentTarget.dataset.mode });
   },
 
-  loadLevel(level) {
-    this.clearTimer();
-    const diff = this.data.difficulty;
-    const size = SIZES[diff];
-    const cellSize = CELL_SIZES[diff];
-    const boardWidth = HINT_WIDTH + size * cellSize + (size + 1) * 2;
+  // ─── 新游戏 ───────────────────────────────────────────────
+  newGame(level) {
+    if (this._timer) { clearInterval(this._timer); this._timer = null; }
+    this._seconds = 0;
+    this._timerRunning = false;
 
-    // 用关卡号作为种子，保证同一关卡每次一样
-    const seed = level * 31337 + (diff === 'easy' ? 1 : diff === 'medium' ? 1000 : 2000);
+    const size = SIZES[this.data.difficulty];
+    this._gridSize = size;
+    const diffKey = this.data.difficulty;
+    const seed = level * 31337 + (diffKey === 'easy' ? 1 : diffKey === 'medium' ? 1000 : 2000);
     const puzzle = generatePuzzle(size, seed);
 
-    const grid = Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => ({ state: 'empty', error: false }))
-    );
+    // 自适应布局计算（全用 px）
+    this._calcLayout(puzzle.rowHints, puzzle.colHints, size);
 
-    const totalFill = puzzle.answer.reduce((s, r) => s + r.reduce((a, b) => a + b, 0), 0);
+    const grid = Array.from({ length: size }, () =>
+      Array.from({ length: size }, () => ({ s: 0 }))  // 0=空 1=填 2=标记
+    );
+    let totalFill = 0;
+    puzzle.answer.forEach(r => r.forEach(v => { if (v) totalFill++; }));
 
     this.setData({
-      grid, answer: puzzle.answer,
+      level, grid, answer: puzzle.answer,
       rowHints: puzzle.rowHints, colHints: puzzle.colHints,
-      history: [], showWin: false,
-      timerDisplay: '0:00', filledCount: 0, totalFill,
-      cellSize, boardWidth, currentLevel: level,
-      _seconds: 0, _timerStarted: false
+      showWin: false, timerText: '0:00', filledCount: 0, totalFill,
     });
   },
 
-  // ─── 触摸事件（支持滑动连续标记）──────────────────────────
+  _calcLayout(rowHints, colHints, size) {
+    const sys = wx.getSystemInfoSync();
+    const W = sys.windowWidth;
+    const H = sys.windowHeight;
+    const dpr = sys.pixelRatio || 2;
+
+    // UI 元素预留高度（px）
+    const topH = 56 + 36 + 36; // 难度栏 + 关卡栏 + 模式栏
+    const bottomH = 50;         // 操作按钮
+    const padX = 16;            // 水平内边距
+
+    // 计算提示区域大小
+    const numFont = 11; // 提示数字字号 px
+    let maxRowLen = 0, maxColLen = 0;
+    rowHints.forEach(h => { if (h.length > maxRowLen) maxRowLen = h.length; });
+    colHints.forEach(h => { if (h.length > maxColLen) maxColLen = h.length; });
+
+    const hintCellW = numFont + 5;  // 每个提示数字宽度
+    const hintCellH = numFont + 3;  // 每个提示数字高度
+    const hintGap = 2;
+
+    const rowHintW = Math.max(40, maxRowLen * (hintCellW + hintGap) + 6);
+    const colHintH = Math.max(20, maxColLen * hintCellH + 6);
+
+    const gap = 1.5;
+
+    // 根据宽度计算格子大小
+    const availW = W - padX * 2 - rowHintW;
+    const cellFromW = Math.floor((availW - (size - 1) * gap) / size);
+
+    // 根据高度计算格子大小
+    const availH = H - topH - bottomH - colHintH - 8;
+    const cellFromH = Math.floor((availH - (size - 1) * gap) / size);
+
+    // 取较小值，限制范围
+    const cellPx = Math.max(22, Math.min(cellFromW, cellFromH, 52));
+    const boardPx = rowHintW + size * cellPx + (size - 1) * gap;
+
+    this.setData({ cellPx, hintPx: rowHintW, boardPx });
+  },
+
+  // ─── 触摸事件 ─────────────────────────────────────────────
   onTouchStart(e) {
     const { row, col } = e.currentTarget.dataset;
-    const cell = this.data.grid[row][col];
+    const r = Number(row), c = Number(col);
+
+    // 缓存棋盘位置（供 onTouchMove 使用）
+    const query = wx.createSelectorQuery().in(this);
+    query.select('.board').boundingClientRect();
+    query.select('.col-hints-row').boundingClientRect();
+    query.exec(res => {
+      if (res[0]) this._boardRect = res[0];
+      if (res[1]) this._colHintBottom = res[1].bottom;
+    });
+
+    const cell = this.data.grid[r][c];
     const mode = this.data.mode;
+    let op;
+    if (mode === 'fill') op = cell.s === 1 ? 0 : 1;       // 填充 / 清除
+    else op = cell.s === 2 ? 0 : 2;                        // 标记 / 清除
 
-    // 确定本次滑动的操作
-    let touchMode;
-    if (mode === 'fill') {
-      touchMode = cell.state === 'filled' ? 'clear' : 'fill';
-    } else {
-      touchMode = cell.state === 'marked' ? 'clear' : 'mark';
-    }
+    this._swipeOp = op;
+    this._swiped = {};
+    this._swiped[`${r}_${c}`] = true;
 
-    this._touchActive = true;
-    this._touchMode = touchMode;
-    this._touchedCells = {};
     this._startTimer();
-
-    this._applyToCell(parseInt(row), parseInt(col));
+    this._doOp(r, c, op);
   },
 
   onTouchMove(e) {
-    if (!this._touchActive) return;
+    if (!this._swipeOp || !this._boardRect) return;
     const touch = e.touches[0];
-    // 通过坐标找到对应格子
-    this._findCellByTouch(touch.clientX, touch.clientY);
+    const br = this._boardRect;
+    const size = this._gridSize;
+    const gap = 1.5;
+    const step = this.data.cellPx + gap;
+
+    const col = Math.floor((touch.clientX - br.left - this.data.hintPx) / step);
+    const row = Math.floor((touch.clientY - this._colHintBottom) / step);
+
+    if (row >= 0 && row < size && col >= 0 && col < size) {
+      const key = `${row}_${col}`;
+      if (!this._swiped[key]) {
+        this._swiped[key] = true;
+        this._doOp(row, col, this._swipeOp);
+      }
+    }
   },
 
   onTouchEnd() {
-    this._touchActive = false;
-    this._touchMode = null;
-    this._touchedCells = {};
+    this._swipeOp = null;
+    this._swiped = null;
   },
 
-  _findCellByTouch(clientX, clientY) {
-    // 用 wx.createSelectorQuery 性能差，改用坐标计算
-    const query = wx.createSelectorQuery().in(this);
-    query.select('.board').boundingClientRect(rect => {
-      if (!rect) return;
-      const cellSize = this.data.cellSize;
-      const hintW = HINT_WIDTH;
-      const gap = 2;
-      const px = clientX - rect.left - hintW - gap;
-      const py = clientY - rect.top - this._colHintHeight - gap;
-      const size = SIZES[this.data.difficulty];
-      const col = Math.floor(px / (cellSize + gap));
-      const row = Math.floor(py / (cellSize + gap));
-      if (row >= 0 && row < size && col >= 0 && col < size) {
-        this._applyToCell(row, col);
-      }
-    }).exec();
-  },
+  _doOp(r, c, op) {
+    const grid = this.data.grid.map(row => row.map(cell => ({ s: cell.s })));
+    const old = grid[r][c].s;
+    if (old === op) return; // 无变化
+    grid[r][c].s = op;
 
-  _applyToCell(row, col) {
-    const key = `${row}_${col}`;
-    if (this._touchedCells[key]) return;
-    this._touchedCells[key] = true;
-
-    const grid = this.data.grid.map(r => r.map(c => ({ ...c })));
-    const cell = grid[row][col];
-    const oldState = cell.state;
-    let newState;
-
-    if (this._touchMode === 'fill') newState = 'filled';
-    else if (this._touchMode === 'mark') newState = 'marked';
-    else newState = 'empty';
-
-    if (oldState === newState) return;
-
-    cell.state = newState;
-    cell.error = false;
-
-    // 记录历史
-    const history = [...this.data.history, { row, col, oldState }];
-
-    // 统计填充数
     let filledCount = 0;
-    grid.forEach(r => r.forEach(c => { if (c.state === 'filled') filledCount++; }));
+    grid.forEach(row => row.forEach(cell => { if (cell.s === 1) filledCount++; }));
+    this.setData({ grid, filledCount });
 
-    this.setData({ grid, history, filledCount });
-
-    if (this.checkWin(grid)) this.onWin();
-  },
-
-  checkWin(grid) {
+    // 判断通关
     const { answer } = this.data;
-    for (let r = 0; r < answer.length; r++) {
-      for (let c = 0; c < answer[r].length; c++) {
-        const filled = grid[r][c].state === 'filled';
-        if (filled !== (answer[r][c] === 1)) return false;
-      }
+    let win = true;
+    for (let rr = 0; rr < this._gridSize && win; rr++)
+      for (let cc = 0; cc < this._gridSize && win; cc++)
+        if ((grid[rr][cc].s === 1) !== (answer[rr][cc] === 1)) win = false;
+    if (win) {
+      if (this._timer) clearInterval(this._timer);
+      this.setData({ showWin: true });
     }
-    return true;
   },
 
-  onWin() {
-    this.clearTimer();
-    this.setData({ showWin: true });
-  },
+  // ─── 撤销 / 重置 / 下一关 ─────────────────────────────────
+  undo() { this.newGame(this.data.currentLevel); },
+  reset() { this.newGame(this.data.currentLevel); },
+  nextLevel() { this.setData({ showWin: false }); this.newGame(this.data.currentLevel + 1); },
+  closeWin() { this.setData({ showWin: false }); },
 
-  closeWin() {
-    this.setData({ showWin: false });
-  },
-
-  nextLevel() {
-    const next = this.data.currentLevel + 1;
-    this.setData({ showWin: false });
-    this.loadLevel(next);
-  },
-
-  undo() {
-    const history = [...this.data.history];
-    if (!history.length) return;
-    const last = history.pop();
-    const grid = this.data.grid.map(r => r.map(c => ({ ...c })));
-    grid[last.row][last.col].state = last.oldState;
-    grid[last.row][last.col].error = false;
-    let filledCount = 0;
-    grid.forEach(r => r.forEach(c => { if (c.state === 'filled') filledCount++; }));
-    this.setData({ grid, history, filledCount });
-  },
-
-  reset() {
-    this.loadLevel(this.data.currentLevel);
-  },
-
+  // ─── 计时器 ───────────────────────────────────────────────
   _startTimer() {
-    if (this.data._timerStarted) return;
-    this.setData({ _timerStarted: true });
+    if (this._timerRunning) return;
+    this._timerRunning = true;
     this._timer = setInterval(() => {
-      const s = this.data._seconds + 1;
-      const m = Math.floor(s / 60);
-      const sec = s % 60;
-      this.setData({ _seconds: s, timerDisplay: `${m}:${sec < 10 ? '0' : ''}${sec}` });
+      this._seconds++;
+      const m = Math.floor(this._seconds / 60);
+      const s = this._seconds % 60;
+      this.setData({ timerText: `${m}:${s < 10 ? '0' : ''}${s}` });
     }, 1000);
-  },
-
-  clearTimer() {
-    if (this._timer) { clearInterval(this._timer); this._timer = null; }
-    this.setData({ _timerStarted: false });
-  },
-
-  // 记录列提示区域高度（用于滑动坐标计算）
-  onColHintLayout(e) {
-    this._colHintHeight = e.detail.height || 80;
   }
 });
