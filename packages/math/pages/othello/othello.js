@@ -61,19 +61,28 @@ Page({
 
   // 初始化游戏
   initGame() {
-    // 创建空棋盘
+    // 创建空棋盘（增强版：包含格子状态）
     const board = [];
     for (let r = 0; r < 8; r++) {
-      board.push([0, 0, 0, 0, 0, 0, 0, 0]);
+      const row = [];
+      for (let c = 0; c < 8; c++) {
+        row.push({ value: 0, isLastMove: false, isFlipped: false, isValidMove: false });
+      }
+      board.push(row);
     }
 
     // 开局中央4格：白黑白黑
-    board[3][3] = WHITE;
-    board[3][4] = BLACK;
-    board[4][3] = BLACK;
-    board[4][4] = WHITE;
+    board[3][3].value = WHITE;
+    board[3][4].value = BLACK;
+    board[4][3].value = BLACK;
+    board[4][4].value = WHITE;
 
     const validMoves = this.getValidMoves(board, BLACK);
+    
+    // 标记合法落子位置
+    for (const move of validMoves) {
+      board[move.row][move.col].isValidMove = true;
+    }
 
     this.setData({
       board,
@@ -103,7 +112,7 @@ Page({
     const moves = [];
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        if (board[r][c] === 0 && this.canFlip(board, r, c, player)) {
+        if (board[r][c].value === 0 && this.canFlip(board, r, c, player)) {
           moves.push({ row: r, col: c });
         }
       }
@@ -121,9 +130,9 @@ Page({
       let foundOpponent = false;
       
       while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === opponent) {
+        if (board[r][c].value === opponent) {
           foundOpponent = true;
-        } else if (board[r][c] === player) {
+        } else if (board[r][c].value === player) {
           if (foundOpponent) return true;
           break;
         } else {
@@ -147,9 +156,9 @@ Page({
       const line = [];
       
       while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === opponent) {
+        if (board[r][c].value === opponent) {
           line.push({ row: r, col: c });
-        } else if (board[r][c] === player) {
+        } else if (board[r][c].value === player) {
           cellsToFlip.push(...line);
           break;
         } else {
@@ -164,12 +173,13 @@ Page({
 
   // 执行落子
   makeMove(board, row, col, player) {
-    const newBoard = board.map(r => [...r]);
+    // 复制增强版棋盘
+    const newBoard = board.map(r => r.map(cell => ({ ...cell })));
     const cellsToFlip = this.getCellsToFlip(board, row, col, player);
     
-    newBoard[row][col] = player;
+    newBoard[row][col].value = player;
     for (const cell of cellsToFlip) {
-      newBoard[cell.row][cell.col] = player;
+      newBoard[cell.row][cell.col].value = player;
     }
     
     return { newBoard, cellsToFlip };
@@ -180,8 +190,8 @@ Page({
     let black = 0, white = 0;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        if (board[r][c] === BLACK) black++;
-        else if (board[r][c] === WHITE) white++;
+        if (board[r][c].value === BLACK) black++;
+        else if (board[r][c].value === WHITE) white++;
       }
     }
     return { black, white };
@@ -215,6 +225,24 @@ Page({
     const { newBoard, cellsToFlip } = this.makeMove(board, row, col, player);
     const counts = this.countPieces(newBoard);
 
+    // 更新棋盘状态
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        newBoard[r][c].isLastMove = false;
+        newBoard[r][c].isFlipped = false;
+      }
+    }
+    // 标记最后落子位置
+    if (newBoard[row][col]) {
+      newBoard[row][col].isLastMove = true;
+    }
+    // 标记翻转格子
+    for (const cell of cellsToFlip) {
+      if (newBoard[cell.row][cell.col]) {
+        newBoard[cell.row][cell.col].isFlipped = true;
+      }
+    }
+
     // 更新棋盘
     this.setData({
       board: newBoard,
@@ -235,6 +263,18 @@ Page({
     const nextPlayer = this.data.currentPlayer === BLACK ? WHITE : BLACK;
     const nextMoves = this.getValidMoves(board, nextPlayer);
 
+    // 清除翻转标记
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        board[r][c].isFlipped = false;
+        board[r][c].isValidMove = false;
+      }
+    }
+    // 标记合法落子位置
+    for (const move of nextMoves) {
+      board[move.row][move.col].isValidMove = true;
+    }
+
     // 检查游戏是否结束
     if (this.isGameOver(board)) {
       this.endGame(board);
@@ -246,13 +286,18 @@ Page({
       const skipPlayer = nextPlayer === BLACK ? '黑棋' : '白棋';
       this.setData({
         message: `${skipPlayer}无法落子，跳过`,
-        flippedCells: []
+        flippedCells: [],
+        board
       });
 
       // 跳过后继续当前玩家
       const currentMoves = this.getValidMoves(board, this.data.currentPlayer);
+      for (const move of currentMoves) {
+        board[move.row][move.col].isValidMove = true;
+      }
       this.setData({
         validMoves: currentMoves,
+        board,
         message: this.data.currentPlayer === BLACK ? '黑棋继续' : '白棋思考中...'
       });
 
@@ -267,6 +312,7 @@ Page({
       currentPlayer: nextPlayer,
       validMoves: nextMoves,
       flippedCells: [],
+      board,
       message: nextPlayer === BLACK ? '黑棋回合' : '白棋思考中...'
     });
 
@@ -376,9 +422,9 @@ Page({
     let score = 0;
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        if (board[r][c] === WHITE) {
+        if (board[r][c].value === WHITE) {
           score += POSITION_WEIGHT[r][c];
-        } else if (board[r][c] === BLACK) {
+        } else if (board[r][c].value === BLACK) {
           score -= POSITION_WEIGHT[r][c];
         }
       }

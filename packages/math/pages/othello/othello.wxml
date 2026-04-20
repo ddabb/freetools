@@ -28,19 +28,19 @@
   <view class="board-container" style="width: {{boardWidth}}px; height: {{boardWidth}}px;">
     <view class="board" style="width: {{boardWidth}}px; height: {{boardWidth}}px;">
       <!-- 格子 -->
-      <block wx:for="{{board}}" wx:for-index="row" wx:for-item="rowData">
-        <block wx:for="{{rowData}}" wx:for-index="col" wx:for-item="cell">
+      <block wx:for="{{board}}" wx:for-index="row" wx:for-item="rowData" wx:key="row">
+        <block wx:for="{{rowData}}" wx:for-index="col" wx:for-item="cell" wx:key="col">
           <view 
-            class="cell {{cell === 1 ? 'black' : ''}} {{cell === 2 ? 'white' : ''}}"
+            class="cell {{cell.value === 1 ? 'black' : ''}} {{cell.value === 2 ? 'white' : ''}}"
             style="width: {{cellSize}}px; height: {{cellSize}}px; left: {{col * cellSize}}px; top: {{row * cellSize}}px;"
             data-row="{{row}}" 
             data-col="{{col}}"
             bindtap="onCellTap"
           >
             <!-- 棋子 -->
-            <view wx:if="{{cell !== 0}}" class="piece {{cell === 1 ? 'black-piece' : 'white-piece'}} {{lastMove.row === row && lastMove.col === col ? 'last-move' : ''}} {{flippedCells.some(item => item.row === row && item.col === col) ? 'flipped' : ''}}"></view>
+            <view wx:if="{{cell.value !== 0}}" class="piece {{cell.value === 1 ? 'black-piece' : 'white-piece'}} {{cell.isLastMove ? 'last-move' : ''}} {{cell.isFlipped ? 'flipped' : ''}}"></view>
             <!-- 合法落子提示 -->
-            <view wx:if="{{cell === 0 && validMoves.some(item => item.row === row && item.col === col)}}" class="valid-hint"></view>
+            <view wx:if="{{cell.value === 0 && cell.isValidMove}}" class="valid-hint"></view>
           </view>
         </block>
       </block>
