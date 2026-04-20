@@ -215,6 +215,7 @@ Page({
 
   // ─── 触摸事件 ───────────────────────────────────────────
   onTouchStart(e) {
+    if (!this.data.rowGroups || !this.data.rowGroups.length) return;
     const { row, col } = e.currentTarget.dataset;
     const r = Number(row), c = Number(col);
 
@@ -241,7 +242,7 @@ Page({
   },
 
   onTouchMove(e) {
-    if (!this._swipeOp || !this._boardRect) return;
+    if (!this._swipeOp || !this._boardRect || !this.data.rowGroups.length) return;
     const touch = e.touches[0];
     const br = this._boardRect;
     const size = this._gridSize;
@@ -266,10 +267,12 @@ Page({
   },
 
   _doOp(r, c, op) {
+    if (!this.data.rowGroups || !this.data.rowGroups.length) return;
     const groups = this.data.rowGroups.map(g => ({
       rowIdx: g.rowIdx,
-      cells: g.cells.map(cell => ({ s: cell.s }))
+      cells: g.cells.map(cell => ({ s: cell.s, cls: cell.cls || '' }))
     }));
+    if (!groups[r] || !groups[r].cells[c]) return;
     const old = groups[r].cells[c].s;
     if (old === op) return;
     groups[r].cells[c].s = op;
