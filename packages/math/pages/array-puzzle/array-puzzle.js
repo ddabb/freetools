@@ -102,27 +102,92 @@ function hasUniqueSolution(rowHints, colHints, size) {
   return count === 1;
 }
 
+// ─── 谜题质量评分 ───────────────────────────────────────────
+function scorePuzzle(rowHints, colHints, size) {
+  let s = 0;
+  // 多样性：每行/列的提示数不能都一样
+  const rowLens = new Set(rowHints.map(h => h.length));
+  const colLens = new Set(colHints.map(h => h.length));
+  s += rowLens.size * 3 + colLens.size * 3;
+  // 每行/列至少有2个以上提示块（不是简单的一整块）
+  rowHints.forEach(h => { if (h.length >= 2) s += 2; });
+  colHints.forEach(h => { if (h.length >= 2) s += 2; });
+  // 提示数字要多样
+  const allNums = rowHints.concat(colHints).flat();
+  const numSet = new Set(allNums);
+  s += numSet.size * 2;
+  // 不能有全空或全满的行/列
+  rowHints.forEach(h => { if (h[0] !== 0 && !(h.length === 1 && h[0] === size)) s += 2; });
+  colHints.forEach(h => { if (h[0] !== 0 && !(h.length === 1 && h[0] === size)) s += 2; });
+  return s;
+}
+
 // ─── 谜题生成 ───────────────────────────────────────────────
 function generatePuzzle(size, seed) {
   const rand = seededRand(seed);
-  const density = size <= 5 ? 0.55 : size <= 8 ? 0.5 : 0.45;
-  for (let attempt = 0; attempt < 300; attempt++) {
+  let best = null, bestScore = -1;
+
+  // 策略1：随机生成，找最优
+  for (let attempt = 0; attempt < 400; attempt++) {
+    // 密度随attempt变化，产生不同风格
+    const density = 0.4 + (attempt % 20) * 0.015;
     const answer = Array.from({ length: size }, () =>
       Array.from({ length: size }, () => rand() < density ? 1 : 0)
     );
+    // 每行每列至少有1个填充且不全满
     let ok = true;
-    for (let r = 0; r < size; r++) if (!answer[r].some(v => v)) { ok = false; break; }
-    if (ok) for (let c = 0; c < size; c++) if (!answer.some(r => r[c])) { ok = false; break; }
+    for (let r = 0; r < size; r++) {
+      const sum = answer[r].reduce((a, b) => a + b, 0);
+      if (sum === 0 || sum === size) { ok = false; break; }
+    }
+    if (ok) for (let c = 0; c < size; c++) {
+      let sum = 0; for (let r = 0; r < size; r++) sum += answer[r][c];
+      if (sum === 0 || sum === size) { ok = false; break; }
+    }
     if (!ok) continue;
+
     const rh = answer.map(row => calcHints(row));
     const ch = Array.from({ length: size }, (_, c) => calcHints(answer.map(r => r[c])));
-    if (hasUniqueSolution(rh.map(h => h.slice()), ch.map(h => h.slice()), size)) {
-      return { answer, rowHints: rh, colHints: ch };
+    if (!hasUniqueSolution(rh.map(h => h.slice()), ch.map(h => h.slice()), size)) continue;
+
+    const score = scorePuzzle(rh, ch, size);
+    if (score > bestScore) { bestScore = score; best = { answer, rowHints: rh, colHints: ch }; }
+    if (score >= size * 6) break; // 够好了
+  }
+
+  // 策略2：基于形状生成（如果随机的不够好）
+  if (!best || bestScore < size * 3) {
+    const shapes = [
+      // 心形、十字、三角、菱形等
+      (r, c, n) => {
+        const cx = (n-1)/2, cy = (n-1)/2;
+        return (Math.abs(r-cy)/cy + Math.abs(c-cx)/cx <= 1.2) ? 1 : 0;
+      },
+      (r, c, n) => (Math.abs(r - (n-1)/2) + Math.abs(c - (n-1)/2) <= Math.floor(n/3)) ? 1 : 0,
+      (r, c, n) => r <= c && r < n/2 || c <= r && c < n/2 ? 1 : 0,
+      (r, c, n) => { const x = (c-(n-1)/2)/((n-1)/2), y = (r-(n-1)/2)/((n-1)/2); return (x*x + y*y <= 1) ? 1 : 0; },
+      (r, c, n) => r >= n*0.3 && r <= n*0.7 && c >= n*0.3 && c <= n*0.7 ? 1 : 0,
+    ];
+    for (let si = 0; si < shapes.length; si++) {
+      const fn = shapes[(seed + si) % shapes.length];
+      const answer = Array.from({ length: size }, (_, r) =>
+        Array.from({ length: size }, (_, c) => fn(r, c, size) ? 1 : 0)
+      );
+      let ok = true;
+      for (let r = 0; r < size; r++) { if (!answer[r].some(v => v)) { ok = false; break; } }
+      if (ok) for (let c = 0; c < size; c++) { if (!answer.some(r => r[c])) { ok = false; break; } }
+      if (!ok) continue;
+      const rh = answer.map(row => calcHints(row));
+      const ch = Array.from({ length: size }, (_, c) => calcHints(answer.map(r => r[c])));
+      if (hasUniqueSolution(rh.map(h => h.slice()), ch.map(h => h.slice()), size)) {
+        const score = scorePuzzle(rh, ch, size);
+        if (!best || score > bestScore) { bestScore = score; best = { answer, rowHints: rh, colHints: ch }; }
+        if (score >= size * 5) break;
+      }
     }
   }
-  // 兜底
-  const answer = Array.from({ length: size }, (_, r) => Array.from({ length: size }, (_, c) => (r + c) % 2));
-  return { answer, rowHints: answer.map(r => calcHints(r)), colHints: Array.from({ length: size }, (_, c) => calcHints(answer.map(r => r[c]))) };
+
+  return best || generatePuzzle(size, seed + 99999); // 递归换种子
 }
 
 // ─── 页面配置 ───────────────────────────────────────────────
@@ -198,7 +263,7 @@ Page({
     puzzle.answer.forEach(r => r.forEach(v => { if (v) totalFill++; }));
 
     this.setData({
-      level, grid, answer: puzzle.answer,
+      currentLevel: level, grid, answer: puzzle.answer,
       rowHints: puzzle.rowHints, colHints: puzzle.colHints,
       showWin: false, timerText: '0:00', filledCount: 0, totalFill,
     });
