@@ -260,7 +260,6 @@ Page({
           if (puzzle.answer[r][c]) totalFill++;
         }
       }
-      applyConstraints(grid, puzzle.rowHints, puzzle.colHints, size);
       var filledCount = 0;
       for (var r = 0; r < size; r++) {
         for (var c = 0; c < size; c++) {
