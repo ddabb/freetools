@@ -1,25 +1,16 @@
 <wxs module="utils">
 function cellStyle(cell, rowIdx, colIdx, gridSize) {
   var s = cell.s;
-  var isLastRow = (rowIdx === gridSize - 1);
-  var isLastCol = (colIdx === gridSize - 1);
+  var lastRow = (rowIdx === gridSize - 1);
+  var lastCol = (colIdx === gridSize - 1);
+  var bw = '1px';
+  var bc = '#ccc';
+  if (lastRow) { bw = '1px 1px 2.5px'; bc = '#555 #555 #555'; }
+  if (lastCol) { var suffix = lastRow ? '2.5px 2.5px' : '2.5px 1px'; bw = '1px ' + suffix; bc = '#ccc #555 #555'; }
 
-  // 基础边框
-  var borderW = '1px';
-  var borderC = '#ccc';
-  if (isLastRow) { borderW = '1px 1px 2.5px'; borderC = '#555 #555 #555'; }
-  if (isLastCol) { borderW = isLastRow ? '1px 2.5px 2.5px' : '1px 2.5px 1px'; borderC = isLastRow ? '#ccc #555 #555' : '#ccc #555 #ccc'; }
-
-  if (s === 1) {
-    // 填充：深黑
-    return 'background:#2d2d2d;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
-  } else if (s === 2) {
-    // 标记：淡黄
-    return 'background:#fffde7;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
-  } else {
-    // 空：白
-    return 'background:#fff;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
-  }
+  if (s === 1) return 'background:#2d2d2d;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
+  if (s === 2) return 'background:#fffde7;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
+  return 'background:#fff;border:' + bw + ' solid ' + bc + ';border-radius:3px;box-sizing:border-box;';
 }
 module.exports = { cellStyle: cellStyle };
 </wxs>
@@ -68,16 +59,17 @@ module.exports = { cellStyle: cellStyle };
         </view>
         <view
           wx:for="{{item.cells}}"
+          wx:for-item="cell"
           wx:key="ci"
           wx:for-index="ci"
-          style="{{utils.cellStyle(item.cells[ci], item.rowIdx, ci, gridSize)}}"
+          style="{{utils.cellStyle(cell, item.rowIdx, ci, gridSize)}}"
           catchtouchstart="onTouchStart"
           catchtouchmove="onTouchMove"
           catchtouchend="onTouchEnd"
           data-row="{{item.rowIdx}}"
           data-col="{{ci}}"
         >
-          <text wx:if="{{item.cells[ci].s===2}}" class="mark-x">✕</text>
+          <text wx:if="{{cell.s===2}}" class="mark-x">✕</text>
         </view>
       </view>
     </view>
