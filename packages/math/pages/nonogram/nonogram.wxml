@@ -6,7 +6,7 @@ function cellStyle(cell, rowIdx, colIdx, gridSize, cellPx) {
   var br = lastCol ? '2.5px solid #555' : '1px solid #ccc';
   var bb = lastRow ? '2.5px solid #555' : '1px solid #ccc';
   var bg = s === 1 ? '#2d2d2d' : (s === 2 ? '#fffde7' : '#fff');
-  return 'width:' + cellPx + 'px;height:' + cellPx + 'px;background:' + bg + ';border-top:1px solid #ccc;border-right:' + br + ';border-bottom:' + bb + ';border-left:1px solid #ccc;border-radius:2px;box-sizing:border-box;';
+  return 'width:' + cellPx + 'px;height:' + cellPx + 'px;background:' + bg + ';border-top:1px solid #ccc;border-right:' + br + ';border-bottom:' + bb + ';border-left:1px solid #ccc;border-radius:2px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;';
 }
 module.exports = { cellStyle: cellStyle };
 </wxs>

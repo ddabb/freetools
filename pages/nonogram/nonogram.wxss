@@ -33,8 +33,8 @@ page { background: #eef0ec; min-height: 100vh; }
 .row-row { display: flex; }
 .row-hint { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 1px; padding-right: 5px; flex-shrink: 0; }
 
-/* X标记 */
-.mark-x { font-size: 60%; color: #e53935; font-weight: 700; line-height: 1; }
+/* X标记 - 由flex居中 */
+.mark-x { font-size: 65%; color: #e53935; font-weight: 700; line-height: 1; }
 
 /* 操作栏 */
 .action-bar { display: flex; gap: 14px; margin-top: 12px; }

@@ -30,11 +30,11 @@ page { background: #eef0ec; min-height: 100vh; }
 .col-hint { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 3px; overflow: hidden; }
 .hn { font-size: 11px; font-weight: 600; color: #555; line-height: 14px; text-align: center; white-space: nowrap; }
 
-.row-row { display: flex; gap: 1.5px; justify-content: center; }
+.row-row { display: flex; }
 .row-hint { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 1px; padding-right: 5px; flex-shrink: 0; }
 
-/* X标记 */
-.mark-x { font-size: 60%; color: #e53935; font-weight: 700; line-height: 1; }
+/* X标记 - 由flex居中 */
+.mark-x { font-size: 65%; color: #e53935; font-weight: 700; line-height: 1; }
 
 /* 操作栏 */
 .action-bar { display: flex; gap: 14px; margin-top: 12px; }
