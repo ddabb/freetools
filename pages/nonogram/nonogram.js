@@ -349,6 +349,34 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
+    // 仅在同一行+同一列内做约束传播，不扩散到其他行列
+    var changed = true;
+    while (changed) {
+      changed = false;
+      // 求解当前行
+      var rowLine = grid[r].map(function(v) { return v === 1 ? 1 : v === 2 ? -1 : 0; });
+      var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      for (var i = 0; i < rowRes.mustFill.length; i++) {
+        var cc = rowRes.mustFill[i];
+        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+      }
+      for (var i = 0; i < rowRes.mustEmpty.length; i++) {
+        var cc = rowRes.mustEmpty[i];
+        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
+      }
+      // 求解当前列
+      var colLine = [];
+      for (var rr2 = 0; rr2 < size; rr2++) colLine.push(grid[rr2][c] === 1 ? 1 : grid[rr2][c] === 2 ? -1 : 0);
+      var colRes = solveLine(this.data.colHints[c], colLine, size);
+      for (var i = 0; i < colRes.mustFill.length; i++) {
+        var rr2 = colRes.mustFill[i];
+        if (grid[rr2][c] === 0) { grid[rr2][c] = 1; changed = true; }
+      }
+      for (var i = 0; i < colRes.mustEmpty.length; i++) {
+        var rr2 = colRes.mustEmpty[i];
+        if (grid[rr2][c] === 0) { grid[rr2][c] = 2; changed = true; }
+      }
+    }
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
