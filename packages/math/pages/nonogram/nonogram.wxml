@@ -1,3 +1,29 @@
+<wxs module="utils">
+function cellStyle(cell, rowIdx, colIdx, gridSize) {
+  var s = cell.s;
+  var isLastRow = (rowIdx === gridSize - 1);
+  var isLastCol = (colIdx === gridSize - 1);
+
+  // 基础边框
+  var borderW = '1px';
+  var borderC = '#ccc';
+  if (isLastRow) { borderW = '1px 1px 2.5px'; borderC = '#555 #555 #555'; }
+  if (isLastCol) { borderW = isLastRow ? '1px 2.5px 2.5px' : '1px 2.5px 1px'; borderC = isLastRow ? '#ccc #555 #555' : '#ccc #555 #ccc'; }
+
+  if (s === 1) {
+    // 填充：深黑
+    return 'background:#2d2d2d;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
+  } else if (s === 2) {
+    // 标记：淡黄
+    return 'background:#fffde7;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
+  } else {
+    // 空：白
+    return 'background:#fff;border:' + borderW + ' solid ' + borderC + ';border-radius:3px;box-sizing:border-box;';
+  }
+}
+module.exports = { cellStyle: cellStyle };
+</wxs>
+
 <view class="container">
   <!-- 难度 -->
   <view class="diff-bar">
@@ -6,11 +32,15 @@
     <view class="pill {{difficulty==='hard'?'on':''}}" bindtap="setDifficulty" data-diff="hard">困难</view>
   </view>
 
-  <!-- 关卡栏 -->
-  <view class="info-bar">
+  <!-- 顶栏 -->
+  <view class="top-info">
     <view class="level-btn" bindtap="openLevelSelector">
       <text class="level-num">第 {{currentLevel}} 关</text>
       <text class="level-arrow">▼</text>
+    </view>
+    <view class="mode-toggle">
+      <view class="mode-btn {{mode==='fill'?'on':''}}" bindtap="setMode" data-mode="fill">● 填充</view>
+      <view class="mode-btn {{mode==='mark'?'on':''}}" bindtap="setMode" data-mode="mark">✕ 标记</view>
     </view>
     <view class="info-right">
       <text class="timer">⏱ {{timerText}}</text>
@@ -26,37 +56,35 @@
     <view class="board" style="width:{{boardPx}}px;">
       <!-- 列提示 -->
       <view class="col-hints-row">
-        <view class="corner" style="width:{{hintPx}}px;"></view>
-        <view class="col-hint" wx:for="{{colHints}}" wx:key="idx" style="width:{{cellPx}}px;">
+        <view class="corner" style="width:{{hintPx}}px;height:{{colHintH}}px;"></view>
+        <view class="col-hint" wx:for="{{colHints}}" wx:key="idx" style="width:{{cellPx}}px;height:{{colHintH}}px;">
           <text class="hn" wx:for="{{item}}" wx:for-item="n" wx:key="*this">{{n}}</text>
         </view>
       </view>
       <!-- 行 -->
-      <block wx:for="{{rowGroups}}" wx:key="rowIdx">
-        <view class="row-hint-row">
-          <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
-            <text class="hn" wx:for="{{rowHints[item.rowIdx]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
-          </view>
-          <view
-            class="cell {{item.s===1?'cell-filled':''}} {{item.s===2?'cell-marked':''}} {{item.rowIdx===gridSize-1?'cell-row-last':''}} {{ci===gridSize-1?'cell-col-last':''}}"
-            wx:for="{{item.cells}}"
-            wx:key="ci"
-            wx:for-index="ci"
-            wx:for-item="v"
-            style="width:{{cellPx}}px;height:{{cellPx}}px;"
-            catchtouchstart="onTouchStart"
-            catchtouchmove="onTouchMove"
-            catchtouchend="onTouchEnd"
-            data-row="{{item.rowIdx}}"
-            data-col="{{ci}}"
-          ></view>
+      <view class="row-row" wx:for="{{rowGroups}}" wx:key="rowIdx">
+        <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
+          <text class="hn" wx:for="{{rowHints[item.rowIdx]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
         </view>
-      </block>
+        <view
+          wx:for="{{item.cells}}"
+          wx:key="ci"
+          wx:for-index="ci"
+          style="{{utils.cellStyle(item.cells[ci], item.rowIdx, ci, gridSize)}}"
+          catchtouchstart="onTouchStart"
+          catchtouchmove="onTouchMove"
+          catchtouchend="onTouchEnd"
+          data-row="{{item.rowIdx}}"
+          data-col="{{ci}}"
+        >
+          <text wx:if="{{item.cells[ci].s===2}}" class="mark-x">✕</text>
+        </view>
+      </view>
     </view>
   </view>
 
-  <!-- 操作按钮 -->
-  <view class="action-bar">
+  <!-- 操作 -->
+  <view class="action-bar" wx:if="{{!loading}}">
     <view class="btn" bindtap="undo">↩ 重来</view>
   </view>
 

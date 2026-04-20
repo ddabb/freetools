@@ -49,6 +49,7 @@ Page({
     totalFill: 0,
     cellPx: 40,
     hintPx: 50,
+    colHintH: 22,
     boardPx: 300,
     loading: false,
     showLevelSelector: false,
@@ -173,12 +174,11 @@ Page({
     const availH = H - topH - bottomH - colHintH - 10;
     const cellPx = Math.max(22, Math.min(Math.floor(availW / size), Math.floor(availH / size), 50));
     const boardPx = rowHintW + size * cellPx + (size - 1) * gap;
-    this.setData({ cellPx, hintPx: rowHintW, boardPx });
+    this.setData({ cellPx, hintPx: rowHintW, colHintH, boardPx });
   },
 
   // ─── 触摸 ───────────────────────────────────────────────
   onTouchStart(e) {
-    if (this.data.loading || !this.data.rowGroups.length) return;
     const { row, col } = e.currentTarget.dataset;
     const r = Number(row), c = Number(col);
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;

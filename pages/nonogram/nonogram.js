@@ -49,6 +49,7 @@ Page({
     totalFill: 0,
     cellPx: 40,
     hintPx: 50,
+    colHintH: 22,
     boardPx: 300,
     loading: false,
     showLevelSelector: false,
@@ -173,13 +174,12 @@ Page({
     const availH = H - topH - bottomH - colHintH - 10;
     const cellPx = Math.max(22, Math.min(Math.floor(availW / size), Math.floor(availH / size), 50));
     const boardPx = rowHintW + size * cellPx + (size - 1) * gap;
-    this.setData({ cellPx, hintPx: rowHintW, boardPx });
+    this.setData({ cellPx, hintPx: rowHintW, colHintH, boardPx });
   },
 
   // ─── 触摸 ───────────────────────────────────────────────
   onTouchStart(e) {
     const { row, col } = e.currentTarget.dataset;
-    console.log('[onTouchStart]', { row, col, type: typeof row, type2: typeof col, loading: this.data.loading, rowGroupsLen: this.data.rowGroups ? this.data.rowGroups.length : -1 });
     const r = Number(row), c = Number(col);
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
 
@@ -233,16 +233,14 @@ Page({
   },
 
   _doOp(r, c, op) {
-    console.log('[_doOp] start', { r, c, op, gridSize: this.data.gridSize, loading: this.data.loading, rowGroupsLen: this.data.rowGroups ? this.data.rowGroups.length : -1 });
-    if (this.data.loading || !this.data.rowGroups.length) { console.log('[_doOp] blocked: loading or empty'); return; }
+    if (this.data.loading || !this.data.rowGroups.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
 
     // 深拷贝行组
     const groups = this.data.rowGroups.map(g => ({
       rowIdx: g.rowIdx,
-      cells: g.cells.map(cell => ({ s: cell.s, rowIdx: cell.rowIdx, colIdx: cell.colIdx, cls: cell.cls || '' }))
+      cells: g.cells.map(cell => ({ s: cell.s, rowIdx: cell.rowIdx, colIdx: cell.colIdx }))
     }));
-    console.log('[_doOp] before update', { old: groups[r].cells[c].s, op });
 
     const old = groups[r].cells[c].s;
     if (old === op) return;
