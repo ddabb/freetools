@@ -1,17 +1,14 @@
-// 数组迷宫 - 数织Nonogram CDN版
-// CDN数据加载 · 滑动标记 · 无限关卡 · 已完成关卡记录
+// 数织 Nonogram - CDN版
+// 支持：CDN关卡 · 滑动标记 · 已完成关卡记录
 
-// ─── 常量 ─────────────────────────────────────────────────
 const SIZES = { easy: 5, medium: 8, hard: 10 };
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const DIFF_TEXT = { easy: '简单 5×5', medium: '中等 8×8', hard: '困难 10×10' };
-const RECORDS_KEY = 'nonogram_records_v2'; // 版本号区分新旧记录
+const RECORDS_KEY = 'nonogram_records_v3';
 
-// ─── 工具函数 ─────────────────────────────────────────────
 function getRecords() {
-  try {
-    return JSON.parse(wx.getStorageSync(RECORDS_KEY) || '{}');
-  } catch { return {}; }
+  try { return JSON.parse(wx.getStorageSync(RECORDS_KEY) || '{}'); }
+  catch { return {}; }
 }
 
 function saveRecord(difficulty, level, bestTime) {
@@ -40,13 +37,12 @@ Page({
     difficulty: 'easy',
     difficultyText: '简单 5×5',
     currentLevel: 1,
-    grid: [],
-    rowHints: [],
     colHints: [],
+    rowHints: [],
     answer: [],
     gridSize: 5,
-    rowGroups: [],      // 带大分隔的行组
-    mode: 'fill',       // 'fill' | 'mark'
+    rowGroups: [],   // [{rowIdx, cells: [{s, rowIdx, colIdx}]}]
+    mode: 'fill',
     showWin: false,
     timerText: '0:00',
     filledCount: 0,
@@ -55,7 +51,6 @@ Page({
     hintPx: 50,
     boardPx: 300,
     loading: false,
-    // 关卡选择器
     showLevelSelector: false,
     completedCount: 0,
     levelNumbers: [],
@@ -64,7 +59,6 @@ Page({
   _timer: null,
   _seconds: 0,
   _timerRunning: false,
-  _gridSize: 5,
   _swipeOp: null,
   _swiped: null,
   _boardRect: null,
@@ -90,18 +84,16 @@ Page({
     this.setData({ mode: e.currentTarget.dataset.mode });
   },
 
-  // ─── 加载 ────────────────────────────────────────────────
+  // ─── 加载关卡 ───────────────────────────────────────────
   async loadPuzzle(difficulty, level) {
     const cacheKey = `cdn_nonogram_${difficulty}_${String(level).padStart(4, '0')}`;
     const cached = wx.getStorageSync(cacheKey);
     if (cached) return cached;
-
     const filename = `${difficulty}-${String(level).padStart(4, '0')}.json`;
     return new Promise((resolve, reject) => {
       wx.request({
         url: `${CDN_BASE}/nonogram/${filename}`,
-        method: 'GET',
-        timeout: 8000,
+        method: 'GET', timeout: 8000,
         success: res => {
           if (res.statusCode === 200) {
             wx.setStorageSync(cacheKey, res.data);
@@ -126,27 +118,29 @@ Page({
       const difficulty = this.data.difficulty;
       const puzzle = await this.loadPuzzle(difficulty, level);
       const size = puzzle.size;
-      this._gridSize = size;
 
       this._calcLayout(puzzle.rowHints, puzzle.colHints, size);
 
-      // 构建行组（每5行加大分隔）
+      // 构建行组：每个cell带自己的rowIdx和colIdx
       const rowGroups = [];
       for (let r = 0; r < size; r++) {
-        rowGroups.push({ rowIdx: r, cells: Array.from({ length: size }, () => ({ s: 0 })) });
+        const cells = [];
+        for (let c = 0; c < size; c++) {
+          cells.push({ s: 0, rowIdx: r, colIdx: c });
+        }
+        rowGroups.push({ rowIdx: r, cells });
       }
 
       let totalFill = 0;
       puzzle.answer.forEach(r => r.forEach(v => { if (v) totalFill++; }));
 
-      // 更新已完成数
       const completed = getCompletedLevels(difficulty);
 
       this.setData({
         currentLevel: level,
-        grid: puzzle.answer,
-        rowHints: puzzle.rowHints,
         colHints: puzzle.colHints,
+        rowHints: puzzle.rowHints,
+        answer: puzzle.answer,
         gridSize: size,
         rowGroups,
         showWin: false,
@@ -166,49 +160,30 @@ Page({
 
   _calcLayout(rowHints, colHints, size) {
     const sys = wx.getSystemInfoSync();
-    const W = sys.windowWidth;
-    const H = sys.windowHeight;
-
-    const topH = 50 + 40 + 36;
-    const bottomH = 50;
-    const padX = 16;
-
+    const W = sys.windowWidth, H = sys.windowHeight;
+    const topH = 50 + 40 + 36, bottomH = 50, padX = 16;
     const numFont = 11;
     let maxRowLen = 0, maxColLen = 0;
     rowHints.forEach(h => { if (h.length > maxRowLen) maxRowLen = h.length; });
     colHints.forEach(h => { if (h.length > maxColLen) maxColLen = h.length; });
-
     const rowHintW = Math.max(42, maxRowLen * (numFont + 6) + 8);
     const colHintH = Math.max(22, maxColLen * (numFont + 3) + 6);
-
     const gap = 1.5;
     const availW = W - padX * 2 - rowHintW;
     const availH = H - topH - bottomH - colHintH - 10;
     const cellPx = Math.max(22, Math.min(Math.floor(availW / size), Math.floor(availH / size), 50));
-
     const boardPx = rowHintW + size * cellPx + (size - 1) * gap;
     this.setData({ cellPx, hintPx: rowHintW, boardPx });
   },
 
-  // ─── 格子样式 ───────────────────────────────────────────
-  cellClass(cellVal, rowIdx, colIdx) {
-    // cellVal: 数字(0/1/2) 或对象 {s}
-    const s = typeof cellVal === 'object' ? cellVal.s : cellVal;
-    if (s === 1) return 'filled';
-    if (s === 2) return 'marked';
-    // 5×5 棋盘格边框加重（每5格一条）
-    if (this.data.gridSize === 5) {
-      if (colIdx === 4) return 'bd-right-bold';
-      if (rowIdx === 4) return 'bd-bottom-bold';
-    }
-    return '';
-  },
-
-  // ─── 触摸事件 ───────────────────────────────────────────
+  // ─── 触摸 ───────────────────────────────────────────────
   onTouchStart(e) {
+    if (this.data.loading || !this.data.rowGroups.length) return;
     const { row, col } = e.currentTarget.dataset;
     const r = Number(row), c = Number(col);
+    if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
 
+    // 缓存棋盘位置
     const query = wx.createSelectorQuery().in(this);
     query.select('.board').boundingClientRect();
     query.select('.col-hints-row').boundingClientRect();
@@ -217,12 +192,14 @@ Page({
       if (res[1]) this._colHintBottom = res[1].bottom;
     });
 
-    const grid = this.data.rowGroups;
-    const cell = grid[r].cells[c];
+    const current = this.data.rowGroups[r].cells[c].s;
     const mode = this.data.mode;
     let op;
-    if (mode === 'fill') op = cell.s === 1 ? 0 : 1;
-    else op = cell.s === 2 ? 0 : 2;
+    if (mode === 'fill') {
+      op = current === 1 ? 0 : 1;   // 填充或清除
+    } else {
+      op = current === 2 ? 0 : 2;   // 标记或清除
+    }
 
     this._swipeOp = op;
     this._swiped = {};
@@ -232,12 +209,11 @@ Page({
   },
 
   onTouchMove(e) {
-    if (!this._swipeOp || !this._boardRect) return;
+    if (!this._swipeOp || !this._boardRect || this.data.loading) return;
     const touch = e.touches[0];
     const br = this._boardRect;
-    const size = this._gridSize;
-    const gap = 1.5;
-    const step = this.data.cellPx + gap;
+    const size = this.data.gridSize;
+    const step = this.data.cellPx + 1.5;
 
     const col = Math.floor((touch.clientX - br.left - this.data.hintPx) / step);
     const row = Math.floor((touch.clientY - this._colHintBottom) / step);
@@ -257,12 +233,18 @@ Page({
   },
 
   _doOp(r, c, op) {
+    if (this.data.loading || !this.data.rowGroups.length) return;
+    if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
+
+    // 深拷贝行组
     const groups = this.data.rowGroups.map(g => ({
       rowIdx: g.rowIdx,
-      cells: g.cells.map(cell => ({ s: cell.s }))
+      cells: g.cells.map(cell => ({ s: cell.s, rowIdx: cell.rowIdx, colIdx: cell.colIdx }))
     }));
+
     const old = groups[r].cells[c].s;
     if (old === op) return;
+
     groups[r].cells[c].s = op;
 
     let filledCount = 0;
@@ -270,11 +252,17 @@ Page({
 
     this.setData({ rowGroups: groups, filledCount });
 
-    const { answer } = this.data;
+    // 通关判断
+    const { answer, gridSize } = this.data;
     let win = true;
-    for (let rr = 0; rr < this._gridSize && win; rr++)
-      for (let cc = 0; cc < this._gridSize && win; cc++)
-        if ((groups[rr].cells[cc].s === 1) !== (answer[rr][cc] === 1)) win = false;
+    outer: for (let rr = 0; rr < gridSize; rr++) {
+      for (let cc = 0; cc < gridSize; cc++) {
+        if ((groups[rr].cells[cc].s === 1) !== (answer[rr][cc] === 1)) {
+          win = false;
+          break outer;
+        }
+      }
+    }
 
     if (win) {
       if (this._timer) clearInterval(this._timer);
@@ -286,8 +274,10 @@ Page({
   // ─── 关卡选择器 ─────────────────────────────────────────
   openLevelSelector() {
     const size = SIZES[this.data.difficulty];
-    const numbers = Array.from({ length: size }, (_, i) => i + 1);
-    this.setData({ showLevelSelector: true, levelNumbers: numbers });
+    this.setData({
+      showLevelSelector: true,
+      levelNumbers: Array.from({ length: size }, (_, i) => i + 1)
+    });
   },
 
   closeLevelSelector() {
@@ -295,31 +285,21 @@ Page({
   },
 
   selectLevel(e) {
-    const lvl = e.currentTarget.dataset.l;
+    const lvl = Number(e.currentTarget.dataset.l);
     this.setData({ showLevelSelector: false });
     this.newGame(lvl);
   },
 
   isCompleted(level) {
-    const records = getRecords();
-    return !!records[`${this.data.difficulty}_${level}`];
+    return !!getRecords()[`${this.data.difficulty}_${level}`];
   },
 
-  // ─── 按钮操作 ───────────────────────────────────────────
-  undo() {
-    this.newGame(this.data.currentLevel);
-  },
+  // ─── 操作 ────────────────────────────────────────────────
+  undo() { this.newGame(this.data.currentLevel); },
+  nextLevel() { this.setData({ showWin: false }); this.newGame(this.data.currentLevel + 1); },
+  closeWin() { this.setData({ showWin: false }); },
 
-  nextLevel() {
-    this.setData({ showWin: false });
-    this.newGame(this.data.currentLevel + 1);
-  },
-
-  closeWin() {
-    this.setData({ showWin: false });
-  },
-
-  // ─── 计时器 ─────────────────────────────────────────────
+  // ─── 计时 ───────────────────────────────────────────────
   _startTimer() {
     if (this._timerRunning) return;
     this._timerRunning = true;

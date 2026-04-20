@@ -1,5 +1,5 @@
 <view class="container">
-  <!-- 难度选择 -->
+  <!-- 难度 -->
   <view class="diff-bar">
     <view class="pill {{difficulty==='easy'?'on':''}}" bindtap="setDifficulty" data-diff="easy">简单</view>
     <view class="pill {{difficulty==='medium'?'on':''}}" bindtap="setDifficulty" data-diff="medium">中等</view>
@@ -19,9 +19,7 @@
   </view>
 
   <!-- 加载中 -->
-  <view class="loading" wx:if="{{loading}}">
-    <text>加载中...</text>
-  </view>
+  <view class="loading" wx:if="{{loading}}"><text>加载中...</text></view>
 
   <!-- 棋盘 -->
   <view class="board-wrap" wx:else>
@@ -34,24 +32,26 @@
         </view>
       </view>
       <!-- 行 -->
-      <view class="row-group" wx:for="{{rowGroups}}" wx:key="gi">
-        <view class="row-cells">
+      <block wx:for="{{rowGroups}}" wx:key="rowIdx">
+        <view class="row-hint-row">
           <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
             <text class="hn" wx:for="{{rowHints[item.rowIdx]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
           </view>
-          <view class="cell {{cell.cls}}"
-                wx:for="{{item.cells}}" wx:key="ci" wx:for-index="ci"
-                wx:for-item="cell"
-                style="width:{{cellPx}}px;height:{{cellPx}}px;"
-                catchtouchstart="onTouchStart"
-                catchtouchmove="onTouchMove"
-                catchtouchend="onTouchEnd"
-                data-row="{{item.rowIdx}}" data-col="{{ci}}">
-          </view>
+          <view
+            class="cell {{item.s===1?'cell-filled':''}} {{item.s===2?'cell-marked':''}} {{item.rowIdx===gridSize-1?'cell-row-last':''}} {{ci===gridSize-1?'cell-col-last':''}}"
+            wx:for="{{item.cells}}"
+            wx:key="ci"
+            wx:for-index="ci"
+            wx:for-item="v"
+            style="width:{{cellPx}}px;height:{{cellPx}}px;"
+            catchtouchstart="onTouchStart"
+            catchtouchmove="onTouchMove"
+            catchtouchend="onTouchEnd"
+            data-row="{{item.rowIdx}}"
+            data-col="{{ci}}"
+          ></view>
         </view>
-        <!-- 大分隔线（每5行） -->
-        <view class="row-divider" wx:if="{{item.rowIdx % 5 === 4 && item.rowIdx < gridSize - 1}}"></view>
-      </view>
+      </block>
     </view>
   </view>
 
@@ -70,21 +70,23 @@
     </view>
   </view>
 
-  <!-- 关卡选择器弹窗 -->
+  <!-- 关卡选择器 -->
   <view class="mask" wx:if="{{showLevelSelector}}" bindtap="closeLevelSelector">
     <view class="level-card" catchtap="">
       <view class="level-card-header">
         <text class="level-card-title">{{difficultyText}} · {{completedCount}}关已完成</text>
         <view class="level-close" bindtap="closeLevelSelector">✕</view>
       </view>
-      <scroll-view class="level-grid" scroll-y>
-        <view class="level-row">
-          <view class="level-item {{isCompleted(l)?'done':''}} {{l===currentLevel?'curr':''}}"
-                wx:for="{{levelNumbers}}" wx:for-item="l" wx:key="*this"
-                bindtap="selectLevel" data-l="{{l}}">
-            {{l}}
-            <view class="done-check" wx:if="{{isCompleted(l)}}">✓</view>
-          </view>
+      <scroll-view class="level-scroll" scroll-y>
+        <view class="level-grid">
+          <view
+            class="level-item {{isCompleted(l)?'done':''}} {{l===currentLevel?'curr':''}}"
+            wx:for="{{levelNumbers}}"
+            wx:for-item="l"
+            wx:key="*this"
+            bindtap="selectLevel"
+            data-l="{{l}}"
+          >{{l}}<text class="done-mark" wx:if="{{isCompleted(l)}}">✓</text></view>
         </view>
       </scroll-view>
     </view>

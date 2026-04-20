@@ -1,12 +1,12 @@
-page { background: #f0f2ee; min-height: 100vh; }
-.container { display: flex; flex-direction: column; align-items: center; padding: 12px 0 20px; min-height: 100vh; }
+page { background: #eef0ec; min-height: 100vh; }
+.container { display: flex; flex-direction: column; align-items: center; padding: 12px 0 24px; min-height: 100vh; }
 
 /* 难度栏 */
-.diff-bar { display: flex; gap: 10px; padding: 8px 0; }
-.pill { font-size: 13px; padding: 7px 18px; border-radius: 20px; background: #e0e0e0; color: #666; }
+.diff-bar { display: flex; gap: 10px; padding: 6px 0; }
+.pill { font-size: 13px; padding: 6px 16px; border-radius: 20px; background: #e0e0e0; color: #666; }
 .pill.on { background: #43a047; color: #fff; }
 
-/* 关卡信息栏 */
+/* 关卡栏 */
 .info-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 4px 20px 6px; }
 .level-btn { display: flex; align-items: center; gap: 6px; }
 .level-num { font-size: 15px; font-weight: 700; color: #333; }
@@ -15,68 +15,65 @@ page { background: #f0f2ee; min-height: 100vh; }
 .timer { font-size: 12px; color: #999; }
 .progress { font-size: 13px; color: #43a047; font-weight: 600; }
 
-/* 加载中 */
+/* 加载 */
 .loading { padding: 60px 0; font-size: 14px; color: #999; }
 
 /* 棋盘 */
 .board-wrap { display: flex; justify-content: center; margin-top: 8px; }
 .board { display: flex; flex-direction: column; }
 
+/* 列提示 */
 .col-hints-row { display: flex; }
 .corner { flex-shrink: 0; }
 .col-hint { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 3px; }
 .hn { font-size: 11px; font-weight: 600; color: #555; line-height: 14px; text-align: center; }
 
-.row-group { display: flex; flex-direction: column; }
-.row-cells { display: flex; }
+/* 行提示 */
+.row-hint-row { display: flex; }
 .row-hint { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 2px; padding-right: 6px; flex-shrink: 0; }
 
-/* 格子基础样式 */
+/* 格子 */
 .cell {
-  background: #fff;
+  border: 1px solid #ccc;
   border-radius: 3px;
+  background: #fff;
   flex-shrink: 0;
   box-sizing: border-box;
-  /* 细边框 */
-  border: 1px solid #d0d0d0;
-  transition: background 0.06s;
+  transition: background 0.05s;
 }
 
-/* 5×5 加重分隔线 */
-.cell.bd-right-bold { border-right: 2.5px solid #555 !important; }
-.cell.bd-bottom-bold { border-bottom: 2.5px solid #555 !important; }
-
-/* 填充状态 */
-.cell.filled {
+/* 填充：深灰黑底+内阴影 */
+.cell.cell-filled {
   background: #2d2d2d;
   border-color: #2d2d2d;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
-  position: relative;
-}
-/* 填充格内部高光点 */
-.cell.filled::after {
-  content: '';
-  position: absolute;
-  top: 20%; left: 20%; right: 20%; bottom: 20%;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
 }
 
-/* 标记状态 */
-.cell.marked {
+/* 标记：淡黄底+红色X */
+.cell.cell-marked {
   background: #fffde7;
   border-color: #f0e68c;
+  position: relative;
 }
-.cell.marked::after {
+.cell.cell-marked::after {
   content: '✕';
-  font-size: 60%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65%;
   color: #e53935;
   font-weight: 700;
   line-height: 1;
 }
 
+/* 5×5加重分隔线 */
+.cell.cell-col-last { border-right-width: 2px !important; border-right-color: #555 !important; }
+.cell.cell-row-last { border-bottom-width: 2px !important; border-bottom-color: #555 !important; }
+
 /* 操作栏 */
-.action-bar { display: flex; gap: 14px; margin-top: 16px; }
+.action-bar { display: flex; gap: 14px; margin-top: 14px; }
 .btn { font-size: 13px; padding: 10px 28px; border-radius: 20px; background: #fff; color: #555; border: 1px solid #ccc; }
 
 /* 通关弹窗 */
@@ -87,38 +84,24 @@ page { background: #f0f2ee; min-height: 100vh; }
 .card-time { font-size: 14px; color: #999; margin-bottom: 16px; }
 .card-btn { display: inline-block; font-size: 14px; padding: 10px 32px; border-radius: 20px; background: #43a047; color: #fff; font-weight: 600; }
 
-/* 关卡选择器弹窗 */
-.level-card { background: #fff; border-radius: 16px; padding: 20px; width: 80%; max-width: 360px; max-height: 70vh; display: flex; flex-direction: column; }
-.level-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+/* 关卡选择器 */
+.level-card { background: #fff; border-radius: 16px; padding: 20px; width: 82%; max-width: 380px; max-height: 70vh; display: flex; flex-direction: column; }
+.level-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
 .level-card-title { font-size: 14px; font-weight: 600; color: #333; }
-.level-close { font-size: 18px; color: #999; padding: 4px 8px; }
-.level-grid { flex: 1; overflow-y: auto; }
-.level-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.level-close { font-size: 16px; color: #999; padding: 2px 8px; }
+.level-scroll { flex: 1; overflow-y: auto; }
+.level-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .level-item {
-  width: 44px; height: 44px;
+  width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   border-radius: 8px;
   background: #f0f0f0;
   color: #666;
-  position: relative;
   font-weight: 500;
+  position: relative;
 }
-.level-item.done {
-  background: #e8f5e9;
-  color: #43a047;
-}
-.level-item.curr {
-  background: #43a047;
-  color: #fff;
-}
-.level-item.done.curr {
-  background: #2e7d32;
-}
-.done-check {
-  position: absolute;
-  bottom: 1px; right: 3px;
-  font-size: 9px;
-  color: #43a047;
-}
-.level-item.curr .done-check { color: rgba(255,255,255,0.8); }
+.level-item.done { background: #e8f5e9; color: #43a047; }
+.level-item.curr { background: #43a047; color: #fff; }
+.level-item.done.curr { background: #2e7d32; }
+.done-mark { font-size: 9px; position: absolute; bottom: 2px; right: 4px; }
