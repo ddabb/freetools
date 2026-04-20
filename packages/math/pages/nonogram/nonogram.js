@@ -351,11 +351,16 @@ Page({
     grid[r][c] = op;
     // 仅在同一行+同一列内做约束传播，不扩散到其他行列
     var changed = true;
+    var iter = 0;
     while (changed) {
+      iter++;
       changed = false;
       // 求解当前行
       var rowLine = grid[r].map(function(v) { return v === 1 ? 1 : v === 2 ? -1 : 0; });
       var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      if (rowRes.mustFill.length || rowRes.mustEmpty.length) {
+        console.log('[nonogram] row', r, 'mustFill:', JSON.stringify(rowRes.mustFill), 'mustEmpty:', JSON.stringify(rowRes.mustEmpty));
+      }
       for (var i = 0; i < rowRes.mustFill.length; i++) {
         var cc = rowRes.mustFill[i];
         if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
@@ -368,6 +373,9 @@ Page({
       var colLine = [];
       for (var rr2 = 0; rr2 < size; rr2++) colLine.push(grid[rr2][c] === 1 ? 1 : grid[rr2][c] === 2 ? -1 : 0);
       var colRes = solveLine(this.data.colHints[c], colLine, size);
+      if (colRes.mustFill.length || colRes.mustEmpty.length) {
+        console.log('[nonogram] col', c, 'mustFill:', JSON.stringify(colRes.mustFill), 'mustEmpty:', JSON.stringify(colRes.mustEmpty));
+      }
       for (var i = 0; i < colRes.mustFill.length; i++) {
         var rr2 = colRes.mustFill[i];
         if (grid[rr2][c] === 0) { grid[rr2][c] = 1; changed = true; }
@@ -377,6 +385,7 @@ Page({
         if (grid[rr2][c] === 0) { grid[rr2][c] = 2; changed = true; }
       }
     }
+    if (iter > 1) console.log('[nonogram] row+col iter converged after', iter, 'iterations');
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
