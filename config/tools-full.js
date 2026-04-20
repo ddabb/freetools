@@ -652,11 +652,11 @@ const tools = [
     publish: false
   },
   {
-    id: 'array-puzzle',
+    id: 'nonogram',
     name: '数织',
     icon: '🧩',
     color: 'green',
-    url: '/packages/math/pages/array-puzzle/array-puzzle',
+    url: '/packages/math/pages/nonogram/nonogram',
     categories: ['学习工具', '数学工具'],
     keywords: ['数织', '逻辑', '谜题', 'Nonogram', '填字'],
     description: '根据行列数字提示填充格子，经典数织逻辑谜题'
@@ -736,7 +736,7 @@ const commonTools = [
   tools.find(t => t.id === 'health-calculator'),  // 健康计算
   tools.find(t => t.id === 'emoji-to-png'),      // Emoji转图片
   tools.find(t => t.id === 'text-to-png'),        // 文本转图片
-  tools.find(t => t.id === 'array-puzzle'),       // 数织
+  tools.find(t => t.id === 'nonogram'),           // 数织
 ];
 
 // 确保在导出前 allTools 已经定义
