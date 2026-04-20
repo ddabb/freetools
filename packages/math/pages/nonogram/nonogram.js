@@ -180,7 +180,7 @@ Page({
   loadPuzzle: function(difficulty, level) {
     var key = 'cdn_nonogram_' + difficulty + '_' + String(level).padStart(4, '0');
     var cached = wx.getStorageSync(key);
-    if (cached) return cached;
+    if (cached) return Promise.resolve(cached);
     var filename = difficulty + '-' + String(level).padStart(4, '0') + '.json';
     var self = this;
     return new Promise(function(resolve, reject) {
