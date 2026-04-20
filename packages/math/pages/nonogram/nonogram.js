@@ -218,7 +218,7 @@ Page({
     var availW = W - 32 - rowHintW;
     var availH = H - 126 - colHintH;
     var cellPx = Math.max(22, Math.min(Math.floor(availW / size), Math.floor(availH / size), 50));
-    var boardPx = rowHintW + size * cellPx + (size - 1);
+    var boardPx = rowHintW + size * cellPx + (size - 1) * 2 + 1;
     this.setData({ cellPx: cellPx, hintPx: rowHintW, colHintH: colHintH, boardPx: boardPx });
   },
 
@@ -352,40 +352,125 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
+
+    // 辅助函数：检测唯一解，返回唯一解中需要填充的位置
+    function findUniqueSolutionCells(hints, line, n) {
+      var placements = genPlacements(hints, n);
+      if (!placements.length) return [];
+      var valid = [];
+      for (var i = 0; i < placements.length; i++) {
+        var ok = true;
+        for (var j = 0; j < n; j++) {
+          if (line[j] === 1 && placements[i][j] !== 1) { ok = false; break; }
+          if (line[j] === -1 && placements[i][j] !== -1) { ok = false; break; }
+        }
+        if (ok) valid.push(placements[i]);
+      }
+      if (valid.length !== 1) return [];
+      var mustFill = [];
+      for (var i = 0; i < n; i++) {
+        if (valid[0][i] === 1) mustFill.push(i);
+      }
+      return mustFill;
+    }
+
+    // 辅助函数：检查提示数之和
+    function sumHints(hints) {
+      var s = 0;
+      for (var i = 0; i < hints.length; i++) s += hints[i];
+      return s;
+    }
+
     // 仅在同一行+同一列内做约束传播，不扩散到其他行列
     var changed = true;
     var iter = 0;
     while (changed) {
       iter++;
       changed = false;
+
       // 求解当前行
       var rowLine = grid[r].map(function(v) { return v === 1 ? 1 : v === 2 ? -1 : 0; });
       var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
-      if (rowRes.mustFill.length || rowRes.mustEmpty.length) {
-        console.log('[nonogram] row', r, 'mustFill:', JSON.stringify(rowRes.mustFill), 'mustEmpty:', JSON.stringify(rowRes.mustEmpty));
+
+      // 检查行是否有唯一解需要先填充
+      var rowFilled = 0;
+      for (var j = 0; j < size; j++) {
+        if (rowLine[j] === 1) rowFilled++;
       }
-      for (var i = 0; i < rowRes.mustFill.length; i++) {
-        var cc = rowRes.mustFill[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+      if (rowFilled === sumHints(this.data.rowHints[r])) {
+        // 填充数已满足提示数，检查唯一解
+        var uniqueFill = findUniqueSolutionCells(this.data.rowHints[r], rowLine, size);
+        for (var i = 0; i < uniqueFill.length; i++) {
+          var cc = uniqueFill[i];
+          if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+        }
+        // 自动打叉：仅对"mustEmpty"且剩余格子全部是mustEmpty时打叉
+        var emptyCells = [];
+        for (var j = 0; j < size; j++) {
+          if (rowLine[j] === 0) emptyCells.push(j);
+        }
+        // 只有当所有剩余空格都是mustEmpty时才打叉
+        if (emptyCells.length > 0) {
+          var allMustEmpty = true;
+          for (var i = 0; i < emptyCells.length; i++) {
+            if (rowRes.mustEmpty.indexOf(emptyCells[i]) === -1) {
+              allMustEmpty = false;
+              break;
+            }
+          }
+          if (allMustEmpty) {
+            for (var i = 0; i < rowRes.mustEmpty.length; i++) {
+              var cc = rowRes.mustEmpty[i];
+              if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
+            }
+          }
+        }
       }
-      for (var i = 0; i < rowRes.mustEmpty.length; i++) {
-        var cc = rowRes.mustEmpty[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
-      }
+
       // 求解当前列
       var colLine = [];
       for (var rr2 = 0; rr2 < size; rr2++) colLine.push(grid[rr2][c] === 1 ? 1 : grid[rr2][c] === 2 ? -1 : 0);
       var colRes = solveLine(this.data.colHints[c], colLine, size);
-      if (colRes.mustFill.length || colRes.mustEmpty.length) {
-        console.log('[nonogram] col', c, 'mustFill:', JSON.stringify(colRes.mustFill), 'mustEmpty:', JSON.stringify(colRes.mustEmpty));
+
+      // 检查列是否有唯一解需要先填充
+      var colFilled = 0;
+      for (var j = 0; j < size; j++) {
+        if (colLine[j] === 1) colFilled++;
       }
-      for (var i = 0; i < colRes.mustFill.length; i++) {
-        var rr2 = colRes.mustFill[i];
-        if (grid[rr2][c] === 0) { grid[rr2][c] = 1; changed = true; }
+      if (colFilled === sumHints(this.data.colHints[c])) {
+        // 填充数已满足提示数，检查唯一解
+        var uniqueFillCol = findUniqueSolutionCells(this.data.colHints[c], colLine, size);
+        for (var i = 0; i < uniqueFillCol.length; i++) {
+          var rr2 = uniqueFillCol[i];
+          if (grid[rr2][c] === 0) { grid[rr2][c] = 1; changed = true; }
+        }
+        // 自动打叉：仅对"mustEmpty"且剩余格子全部是mustEmpty时打叉
+        var colEmptyCells = [];
+        for (var j = 0; j < size; j++) {
+          if (colLine[j] === 0) colEmptyCells.push(j);
+        }
+        if (colEmptyCells.length > 0) {
+          var allMustEmptyCol = true;
+          for (var i = 0; i < colEmptyCells.length; i++) {
+            if (colRes.mustEmpty.indexOf(colEmptyCells[i]) === -1) {
+              allMustEmptyCol = false;
+              break;
+            }
+          }
+          if (allMustEmptyCol) {
+            for (var i = 0; i < colRes.mustEmpty.length; i++) {
+              var rr2 = colRes.mustEmpty[i];
+              if (grid[rr2][c] === 0) { grid[rr2][c] = 2; changed = true; }
+            }
+          }
+        }
       }
-      for (var i = 0; i < colRes.mustEmpty.length; i++) {
-        var rr2 = colRes.mustEmpty[i];
-        if (grid[rr2][c] === 0) { grid[rr2][c] = 2; changed = true; }
+
+      // 如果本次迭代有变化，重新计算行数据
+      if (changed) {
+        rowLine = grid[r].map(function(v) { return v === 1 ? 1 : v === 2 ? -1 : 0; });
+        colLine = [];
+        for (var rr2 = 0; rr2 < size; rr2++) colLine.push(grid[rr2][c] === 1 ? 1 : grid[rr2][c] === 2 ? -1 : 0);
       }
     }
     if (iter > 1) console.log('[nonogram] row+col iter converged after', iter, 'iterations');

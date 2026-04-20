@@ -10,20 +10,21 @@ Page({
     this.setData({
       startDate: e.detail.value
     });
+    this.calculateDateDiff();
   },
   endDateChange: function(e) {
     this.setData({
       endDate: e.detail.value
     });
+    this.calculateDateDiff();
   },
   calculateDateDiff: function() {
     var startDate = this.data.startDate;
     var endDate = this.data.endDate;
     
     if (!startDate || !endDate) {
-      wx.showToast({
-        title: '请选择开始日期和结束日期',
-        icon: 'none'
+      this.setData({
+        result: ''
       });
       return;
     }
@@ -32,9 +33,8 @@ Page({
     var end = new Date(endDate);
     
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      wx.showToast({
-        title: '请选择有效的日期',
-        icon: 'none'
+      this.setData({
+        result: ''
       });
       return;
     }

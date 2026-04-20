@@ -1,48 +1,69 @@
 <!--datediff.wxml-->
 <view class="container">
-  <!-- 表单区域 -->
-  <view class="form-container">
-    <!-- 开始日期输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">开始日期</text>
-        <text class="required-mark">*</text>
-      </view>
-      <picker mode="date" value="{{startDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="startDateChange" class="form-picker">
-        <view class="picker-display {{!startDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
-          {{startDate || '点击选择开始日期'}}
+  <!-- 标题 -->
+  <view class="page-title">
+    <text class="title-text">日期差计算器</text>
+    <text class="title-subtext">快速计算两个日期之间的天数差</text>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-area">
+    <!-- 表单区域 -->
+    <view class="form-container">
+      <!-- 开始日期输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">开始日期</text>
+          <text class="required-mark">*</text>
         </view>
-      </picker>
+        <picker mode="date" value="{{startDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="startDateChange" class="form-picker">
+          <view class="picker-display {{!startDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
+            {{startDate || '点击选择开始日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 结束日期输入 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text class="label-text">结束日期</text>
+          <text class="required-mark">*</text>
+        </view>
+        <picker mode="date" value="{{endDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="endDateChange" class="form-picker">
+          <view class="picker-display {{!endDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
+            {{endDate || '点击选择结束日期'}}
+          </view>
+        </picker>
+      </view>
     </view>
 
-    <!-- 结束日期输入 -->
-    <view class="form-item">
-      <view class="form-label">
-        <text class="label-text">结束日期</text>
-        <text class="required-mark">*</text>
-      </view>
-      <picker mode="date" value="{{endDate}}" start="1900-01-01" end="{{currentYear}}-12-31" bindchange="endDateChange" class="form-picker">
-        <view class="picker-display {{!endDate ? 'placeholder' : ''}}" hover-class="picker-display-hover">
-          {{endDate || '点击选择结束日期'}}
+    <!-- 结果展示 -->
+    <view class="result-section" wx:if="{{result !== ''}}">
+      <view class="result-box">
+        <view class="result-item">
+          <text class="result-label">计算结果</text>
+          <text class="result-value bmi">{{result}}</text>
         </view>
-      </picker>
-    </view>
-
-    <!-- 计算按钮 -->
-    <view class="form-item btn-item">
-      <button class="calculate-btn full-width-btn" hover-class="full-width-btn-hover" bindtap="calculateDateDiff">
-        <text class="btn-text">计算日期差</text>
-      </button>
+      </view>
     </view>
   </view>
 
-  <!-- 结果展示 -->
-  <view class="result-section" wx:if="{{result !== ''}}">
-    <view class="result-box">
-      <view class="result-item">
-        <text class="result-label">计算结果</text>
-        <text class="result-value bmi">{{result}}</text>
-      </view>
+  <!-- 内链区域 -->
+  <view class="links-section">
+    <text class="links-title">相关工具</text>
+    <view class="links-container">
+      <navigator url="/packages/life/pages/calendar/calendar" class="link-item" hover-class="link-item-hover">
+        <text class="link-text">万年历</text>
+      </navigator>
+      <navigator url="/packages/life/pages/time-tool/time-tool" class="link-item" hover-class="link-item-hover">
+        <text class="link-text">时间工具</text>
+      </navigator>
+      <navigator url="/packages/life/pages/leapyear/leapyear" class="link-item" hover-class="link-item-hover">
+        <text class="link-text">闰年判断</text>
+      </navigator>
+      <navigator url="/packages/life/pages/life-countdown/life-countdown" class="link-item" hover-class="link-item-hover">
+        <text class="link-text">人生A4纸</text>
+      </navigator>
     </view>
   </view>
 </view>
