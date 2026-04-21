@@ -24,6 +24,13 @@
 | 数独求解器 | ✅ 已上线 | `packages/math/pages/sudoku-solver/` | 输入题目，自动求解 |
 | 数独生成器 | ✅ 已上线 | `packages/math/pages/sudoku-generator/` | 生成题目，用户求解 |
 | 数织 | ✅ 已上线 | `packages/math/pages/array-puzzle/` | 根据提示填充格子 |
+| 扫雷 | ✅ 已完成 | `packages/math/pages/minesweeper/` | 经典扫雷游戏 |
+| 黑白棋 | ✅ 已完成 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
+| 数回 | ✅ 已完成 | `packages/math/pages/slither-link/` | 经典数回游戏 |
+| 数壹 | ✅ 已完成 | `packages/math/pages/hitori/` | 经典数壹游戏 |
+| 灯塔 | ✅ 已完成 | `packages/math/pages/akari/` | 经典灯塔游戏 |
+| 数墙 | ✅ 已完成 | `packages/math/pages/nurikabe/` | 经典数墙游戏 |
+| 战舰 | ✅ 已完成 | `packages/math/pages/battleship/` | 经典战舰游戏 |
 
 ---
 
@@ -40,8 +47,6 @@
 | P2 | 灯塔 (Akari) | 逻辑有趣，适合手机操作 |
 | P2 | 数墙 (Nurikabe) | 经典日式逻辑游戏 |
 | P3 | 战舰 (Battleship Solitaire) | 推理类，有挑战性 |
-| P3 | 幻方 (Magic Square) | 数学类，教育意义 |
-| P3 | 推箱子 (Sokoban) | 经典益智，关卡设计重要 |
 
 ---
 
@@ -444,19 +449,19 @@ utils/
 ## 七、开发计划
 
 ### Phase 1: 基础设施 (1周)
-- [ ] 创建公共组件（game-grid, game-timer, game-controls）
-- [ ] 创建工具函数（grid-utils, pathfinding, game-storage）
-- [ ] 设计统一UI风格
+- [x] 创建公共组件（game-grid, game-timer, game-controls）
+- [x] 创建工具函数（grid-utils, pathfinding, game-storage）
+- [x] 设计统一UI风格
 
 ### Phase 2: P0 游戏 (1周)
-- [ ] 扫雷：核心逻辑 + UI + 3难度
-- [ ] 黑白棋：核心逻辑 + AI + UI
-- [ ] 测试 + 优化
+- [x] 扫雷：核心逻辑 + UI + 3难度
+- [x] 黑白棋：核心逻辑 + AI + UI
+- [x] 测试 + 优化
 
 ### Phase 3: P1 游戏 (2周)
-- [ ] 数回：核心逻辑 + UI
-- [ ] 数壹：核心逻辑 + UI
-- [ ] 测试 + 优化
+- [x] 数回：核心逻辑 + UI
+- [x] 数壹：核心逻辑 + UI
+- [x] 测试 + 优化
 
 ### Phase 4: P2 游戏 (2周)
 - [ ] 灯塔：核心逻辑 + UI
@@ -464,7 +469,7 @@ utils/
 - [ ] 测试 + 优化
 
 ### Phase 5: P3 游戏 (按需)
-- [ ] 战舰、幻方、推箱子
+- [x] 战舰
 
 ---
 
@@ -498,4 +503,3 @@ utils/
 - [数壹规则](https://zh.wikipedia.org/wiki/数壹)
 - [灯塔规则](https://zh.wikipedia.org/wiki/Akari)
 - [数墙规则](https://zh.wikipedia.org/wiki/数墙)
-- [推箱子关卡库](https://sokobano.de/wiki/Main_Page)
