@@ -78,8 +78,7 @@
     <view class="result-modal">
       <text class="result-icon">🐸</text>
       <text class="result-title">躲避青蛙</text>
-      <text class="result-sub" style="color:#888;font-size:13px;line-height:1.5;">老婆网购了青蛙公仔，结果送来的是活的😂
-被吓得不要不要的，以此游戏纪念这段"恐怖"经历</text>
+      <text class="result-sub" style="color:#888;font-size:13px;line-height:1.5;">26年4月22日，老婆买了青蛙打算炒着吃，让商家帮忙处理结果没处理。开箱那一刻，一盒子活青蛙眼睛齐刷刷盯着她…… 🐸</text>
       <view class="help-content">
         <text class="help-line">🐸 点击格子，躲开所有青蛙</text>
         <text class="help-line">💧 安全区域会显示水花</text>

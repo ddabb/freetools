@@ -669,7 +669,7 @@ const tools = [
     url: '/packages/math/pages/frog-escape/frog-escape',
     categories: ['学习工具', '数学工具'],
     keywords: ['青蛙', '扫雷', '躲避', '雷', '益智', '逻辑'],
-    description: '老婆网购青蛙却收到活的被吓到不要不要的，开发此游戏纪念这段"恐怖"经历'
+    description: '26年4月22日，老婆买了青蛙打算炒着吃，让商家帮忙处理结果商家没处理。开箱那一刻，一盒子活青蛙眼睛齐刷刷盯着她，当场吓得不要不要的——此游戏以此纪念 😂'
   },
   {
     id: 'othello',
