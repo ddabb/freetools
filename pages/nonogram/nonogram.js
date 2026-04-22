@@ -75,7 +75,15 @@ function solveLine(hints, line, n) {
     }
     if (ok) valid.push(placements[i]);
   }
-  if (!valid.length) return { mustFill: [], mustEmpty: [] };
+  // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
+  // 此时所有未知格子都应该打叉
+  // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
+  // 此时所有未知格子都应该打叉
+  if (!valid.length) {
+    var mf = [];
+    for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
+    return { mustFill: [], mustEmpty: mf };
+  }
   var mustFill = [];
   var mustEmpty = [];
   for (var i = 0; i < n; i++) {
@@ -352,43 +360,8 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    // 仅在同一行+同一列内做约束传播，不扩散到其他行列
-    var changed = true;
-    var iter = 0;
-    while (changed) {
-      iter++;
-      changed = false;
-      // 求解当前行
-      var rowLine = grid[r].map(function(v) { return v === 1 ? 1 : v === 2 ? -1 : 0; });
-      var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
-      if (rowRes.mustFill.length || rowRes.mustEmpty.length) {
-        console.log('[nonogram] row', r, 'mustFill:', JSON.stringify(rowRes.mustFill), 'mustEmpty:', JSON.stringify(rowRes.mustEmpty));
-      }
-      for (var i = 0; i < rowRes.mustFill.length; i++) {
-        var cc = rowRes.mustFill[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
-      }
-      for (var i = 0; i < rowRes.mustEmpty.length; i++) {
-        var cc = rowRes.mustEmpty[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
-      }
-      // 求解当前列
-      var colLine = [];
-      for (var rr2 = 0; rr2 < size; rr2++) colLine.push(grid[rr2][c] === 1 ? 1 : grid[rr2][c] === 2 ? -1 : 0);
-      var colRes = solveLine(this.data.colHints[c], colLine, size);
-      if (colRes.mustFill.length || colRes.mustEmpty.length) {
-        console.log('[nonogram] col', c, 'mustFill:', JSON.stringify(colRes.mustFill), 'mustEmpty:', JSON.stringify(colRes.mustEmpty));
-      }
-      for (var i = 0; i < colRes.mustFill.length; i++) {
-        var rr2 = colRes.mustFill[i];
-        if (grid[rr2][c] === 0) { grid[rr2][c] = 1; changed = true; }
-      }
-      for (var i = 0; i < colRes.mustEmpty.length; i++) {
-        var rr2 = colRes.mustEmpty[i];
-        if (grid[rr2][c] === 0) { grid[rr2][c] = 2; changed = true; }
-      }
-    }
-    if (iter > 1) console.log('[nonogram] row+col iter converged after', iter, 'iterations');
+    // 全棋盘约束传播：每次有格子变化就重新检查所有行和列，直到收敛
+    applyConstraints(grid, this.data.rowHints, this.data.colHints, size);
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
