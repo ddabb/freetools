@@ -370,13 +370,14 @@ Page({
     if (this.data.loading || !this.data.grid.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
     var size = this.data.gridSize;
+    console.log('[doOp ENTER] r=' + r + ' c=' + c + ' op=' + op + ' loading=' + this.data.loading + ' gridLen=' + this.data.grid.length);
     var grid = [];
     for (var i = 0; i < size; i++) grid.push(this.data.grid[i].slice());
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
     // 调试日志：打印约束传播过程（自动开启，用户操作时触发）
-    var DEBUG = (op === 1); // 只在用户填黑块时打日志，方便定位自动标记
+    var DEBUG = (op !== 0); // 只要用户操作（填黑或标X）就打日志
     if (DEBUG) console.log('[doOp] r=' + r + ' c=' + c + ' op=' + op);
     // 仅在同一行+同一列内做约束传播（不影响其他行列）
     // 每轮：先解行→标记→再解列→标记，循环直到收敛
