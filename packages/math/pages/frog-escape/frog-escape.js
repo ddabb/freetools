@@ -1,11 +1,11 @@
 // 躲避牛蛙 (Frog Escape) - 扫雷换皮
-// 雷→🐸牛蛙（要躲避�?| 数字→周围牛蛙数 | 安全→💧水�?/ 数字提示
+// 雷→🐸牛蛙（要躲避） | 数字→周围牛蛙数 | 安全→💧水花 / 数字提示
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/minesweeper';
 const RECORDS_KEY = 'frog_escape_records';
 
 Page({
   data: {
-    board: [],        // 格子状�? {revealed, flagged, value, isFrog, nearby}
+    board: [],        // 格子状态: {revealed, flagged, value, isFrog, nearby}
     rows: 9,
     cols: 9,
     totalMines: 10,
@@ -15,11 +15,11 @@ Page({
     gameOver: false,
     won: false,
     difficulty: 'easy',
-    difficultyText: '简�?9×9 · 10只牛�?,
+    difficultyText: '简单 9×9 · 10只牛蛙',
     difficultyList: [
-      { key: 'easy', label: '简�?9×9 · 10�?, rows: 9, cols: 9, mines: 10 },
-      { key: 'medium', label: '中等 16×16 · 40�?, rows: 16, cols: 16, mines: 40 },
-      { key: 'hard', label: '困难 16×16 · 99�?, rows: 16, cols: 16, mines: 99 },
+      { key: 'easy', label: '简单 9×9 · 10只', rows: 9, cols: 9, mines: 10 },
+      { key: 'medium', label: '中等 16×16 · 40只', rows: 16, cols: 16, mines: 40 },
+      { key: 'hard', label: '困难 16×16 · 99只', rows: 16, cols: 16, mines: 99 },
     ],
     cellSize: 36,
     boardWidth: 324,
@@ -102,7 +102,7 @@ Page({
     const suffix = String(idx).padStart(4, '0');
     const url = `${CDN_BASE}/${fileMap[difficulty]}-${suffix}.json`;
 
-    wx.showLoading({ title: '加载中�? });
+    wx.showLoading({ title: '加载中…' });
     const self = this;
     wx.request({
       url,
@@ -186,7 +186,8 @@ Page({
         placed++;
       }
     }
-    // 计算提示�?    for (let r = 0; r < rows; r++) {
+    // 计算提示数
+    for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (!data[r][c].isFrog) {
           let count = 0;
@@ -217,7 +218,8 @@ Page({
       return;
     }
 
-    // 双击（chord）：点击已揭开的数字格，周围标记数=该数字时自动翻开周围未标记格�?    if (cell.revealed && cell.nearby > 0) {
+    // 双击（chord）：点击已揭开的数字格，周围标记数=该数字时自动翻开周围未标记格子
+    if (cell.revealed && cell.nearby > 0) {
       this.chord(row, col);
       return;
     }
@@ -240,12 +242,14 @@ Page({
     this.checkWin();
   },
 
-  // 双击自动翻开（chord�?  chord(row, col) {
+  // 双击自动翻开（chord）
+  chord(row, col) {
     const { rows, cols } = this.data;
     const cell = this.data.board[row][col];
     if (!cell.revealed || cell.nearby === 0) return;
 
-    // 数周围标记格�?    let flaggedCount = 0;
+    // 数周围标记格数
+    let flaggedCount = 0;
     for (let dr = -1; dr <= 1; dr++) {
       for (let dc = -1; dc <= 1; dc++) {
         if (dr === 0 && dc === 0) continue;
@@ -256,9 +260,11 @@ Page({
       }
     }
 
-    // 周围标记�?!= 该数字，不触�?    if (flaggedCount !== cell.nearby) return;
+    // 周围标记数 != 该数字，不触发
+    if (flaggedCount !== cell.nearby) return;
 
-    // 翻开所有未标记、未翻开的格�?    let exploded = false;
+    // 翻开所有未标记、未翻开的格子
+    let exploded = false;
     let revealed = 0;
     for (let dr = -1; dr <= 1; dr++) {
       for (let dc = -1; dc <= 1; dc++) {
@@ -269,7 +275,8 @@ Page({
         if (neighbor.revealed || neighbor.flagged) continue;
 
         if (this._boardData[nr][nc].isFrog) {
-          // 踩到牛蛙，游戏结�?          this.data.board[nr][nc].revealed = true;
+          // 踩到牛蛙，游戏结束
+          this.data.board[nr][nc].revealed = true;
           this.data.board[nr][nc].isFrog = true;
           this.data.board[nr][nc].nearby = -1;
           revealed++;
@@ -378,7 +385,7 @@ Page({
 
     this.setData({ board, gameOver: true, won, showResult: true,
       resultIcon: won ? '🏆' : '🐸',
-      resultText: won ? '成功逃脱�? : '踩到牛蛙了！' });
+      resultText: won ? '成功逃脱！' : '踩到牛蛙了！' });
 
     if (won) {
       this.saveRecord(this.data.time);

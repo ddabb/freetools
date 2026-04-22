@@ -11,7 +11,7 @@
       </view>
     </view>
     <view class="status-item">
-      <text class="status-icon">�?/text>
+      <text class="status-icon">⏱</text>
       <text class="status-num">{{formatTime(time)}}</text>
     </view>
   </view>
@@ -22,7 +22,7 @@
       <text>🚩 标记牛蛙</text>
     </view>
     <view class="help-btn" bindtap="toggleHelp">
-      <text>�?帮助</text>
+      <text>❓ 帮助</text>
     </view>
   </view>
 
@@ -53,9 +53,9 @@
     </view>
   </view>
 
-  <!-- 最短时�?-->
+  <!-- 最短时间 -->
   <view wx:if="{{bestTime}}" class="best-time">
-    <text>🏆 最短时�? {{formatTime(bestTime)}}</text>
+    <text>🏆 最短时间: {{formatTime(bestTime)}}</text>
   </view>
 
   <!-- 结果弹窗 -->
@@ -64,7 +64,7 @@
       <text class="result-icon">{{resultIcon}}</text>
       <text class="result-title">{{resultText}}</text>
       <text class="result-sub" wx:if="{{resultIcon === '🏆'}}">用时 {{formatTime(time)}}</text>
-      <text class="result-sub" wx:if="{{resultIcon === '🐸'}}">老婆看到会骂人的吧�?😂</text>
+      <text class="result-sub" wx:if="{{resultIcon === '🐸'}}">老婆看到会骂人的吧… 😂</text>
       <view class="result-actions">
         <view class="result-btn primary" bindtap="startGame">
           <text>再来一局</text>
@@ -78,18 +78,18 @@
     <view class="result-modal">
       <text class="result-icon">🐸</text>
       <text class="result-title">躲避牛蛙</text>
-      <text class="result-sub" style="color:#888;font-size:13px;line-height:1.5;">26�?�?2日，老婆买了牛蛙打算炒着吃，让商家帮忙处理结果没处理。开箱那一刻，一盒子活牛蛙眼睛齐刷刷盯着她…�?🐸</text>
+      <text class="result-sub" style="color:#888;font-size:13px;line-height:1.5;">26年4月22日，老婆买了牛蛙打算炒着吃，让商家帮忙处理结果没处理。开箱那一刻，一盒子活牛蛙眼睛齐刷刷盯着她…… 🐸</text>
       <view class="help-content">
-        <text class="help-line">🐸 点击格子，躲开所有牛�?/text>
-        <text class="help-line">💧 安全区域会显示水�?/text>
+        <text class="help-line">🐸 点击格子，躲开所有牛蛙</text>
+        <text class="help-line">💧 安全区域会显示水花</text>
         <text class="help-line">🔢 数字表示周围有多少只牛蛙</text>
-        <text class="help-line">🚩 长按标记可疑的牛蛙位�?/text>
-        <text class="help-line">🏆 全部安全区域翻开后获�?/text>
-        <text class="help-line">�?完成时间越短越好</text>
+        <text class="help-line">🚩 长按标记可疑的牛蛙位置</text>
+        <text class="help-line">🏆 全部安全区域翻开后获胜</text>
+        <text class="help-line">⏱ 完成时间越短越好</text>
       </view>
       <view class="result-actions">
         <view class="result-btn primary" bindtap="toggleHelp">
-          <text>明白�?/text>
+          <text>明白了</text>
         </view>
       </view>
     </view>
