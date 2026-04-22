@@ -212,9 +212,9 @@ Page({
     const { row, col } = e.currentTarget.dataset;
     const cell = this.data.board[row][col];
 
-    // 标记模式下：点击未翻开格子切换标记
-    if (this.data.flagMode) {
-      if (!cell.revealed) this.toggleFlag(row, col);
+    // 标记模式下：点击未翻开格子切换标记；已翻开格子仍可触发 chord
+    if (this.data.flagMode && !cell.revealed) {
+      this.toggleFlag(row, col);
       return;
     }
 
