@@ -69,14 +69,12 @@ function solveLine(hints, line, n, mode) {
     var ok = true;
     for (var j = 0; j < n; j++) {
       if (line[j] === 1 && placements[i][j] !== 1) { ok = false; break; }
-      if (line[j] === -1 && placements[i][j] !== -1) { ok = false; break; }
+      if (line[j] === -1 && placements[i][j] === 1) { ok = false; break; }
     }
     if (ok) valid.push(placements[i]);
   }
   if (!valid.length) {
-    var mf = [];
-    for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
-    return { mustFill: [], mustEmpty: mf };
+    return { mustFill: [], mustEmpty: [] };
   }
   var mustFill = [], mustEmpty = [];
   for (var i = 0; i < n; i++) {
@@ -401,8 +399,7 @@ Page({
       var rfc = 0; for (var _i = 0; _i < size; _i++) { if (rowLine[_i] === 1) rfc++; }
       var rhSum = rHints.reduce(function(a, b) { return a + b; }, 0);
       var rowSatisfied = rfc >= rhSum;
-      // 打叉模式：mustFill不依赖rowSatisfied，唯一解时直接填
-      // 填充模式：mustFill需要rowSatisfied
+      console.log('[doOp] row', r, 'hints', JSON.stringify(rHints), 'line', JSON.stringify(rowLine), 'mustFill', JSON.stringify(rowRes.mustFill), 'mustEmpty', JSON.stringify(rowRes.mustEmpty), 'rfc', rfc, 'rhSum', rhSum, 'rowSat', rowSatisfied, 'mode', this.data.mode);
       if (this.data.mode === 'mark' || rowSatisfied) {
         for (var i = 0; i < rowRes.mustFill.length; i++) {
           var cc = rowRes.mustFill[i];
@@ -426,8 +423,7 @@ Page({
       var cfc = 0; for (var _j = 0; _j < size; _j++) { if (colLine[_j] === 1) cfc++; }
       var chSum = cHints.reduce(function(a, b) { return a + b; }, 0);
       var colSatisfied = cfc >= chSum;
-      // 打叉模式：mustFill不依赖colSatisfied，唯一解时直接填
-      // 填充模式：mustFill需要colSatisfied
+      console.log('[doOp] col', c, 'hints', JSON.stringify(cHints), 'line', JSON.stringify(colLine), 'mustFill', JSON.stringify(colRes.mustFill), 'mustEmpty', JSON.stringify(colRes.mustEmpty), 'cfc', cfc, 'chSum', chSum, 'colSat', colSatisfied, 'mode', this.data.mode);
       if (this.data.mode === 'mark' || colSatisfied) {
         for (var i = 0; i < colRes.mustFill.length; i++) {
           var rr = colRes.mustFill[i];
