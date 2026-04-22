@@ -401,15 +401,21 @@ Page({
       var rfc = 0; for (var _i = 0; _i < size; _i++) { if (rowLine[_i] === 1) rfc++; }
       var rhSum = rHints.reduce(function(a, b) { return a + b; }, 0);
       var rowSatisfied = rfc >= rhSum;
-      if (rowSatisfied) {
-      for (var i = 0; i < rowRes.mustFill.length; i++) {
-        var cc = rowRes.mustFill[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+      // 打叉模式：mustFill不依赖rowSatisfied，唯一解时直接填
+      // 填充模式：mustFill需要rowSatisfied
+      if (this.data.mode === 'mark' || rowSatisfied) {
+        for (var i = 0; i < rowRes.mustFill.length; i++) {
+          var cc = rowRes.mustFill[i];
+          if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+        }
       }
-      for (var i = 0; i < rowRes.mustEmpty.length; i++) {
-        var cc = rowRes.mustEmpty[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
-      }}
+      // mustEmpty仅在rowSatisfied时触发（填充模式编码匹配会添加到mustEmpty）
+      if (rowSatisfied) {
+        for (var i = 0; i < rowRes.mustEmpty.length; i++) {
+          var cc = rowRes.mustEmpty[i];
+          if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
+        }
+      }
       // 求解当前列
       var colLine = [];
       for (var rr = 0; rr < size; rr++) {
@@ -420,15 +426,21 @@ Page({
       var cfc = 0; for (var _j = 0; _j < size; _j++) { if (colLine[_j] === 1) cfc++; }
       var chSum = cHints.reduce(function(a, b) { return a + b; }, 0);
       var colSatisfied = cfc >= chSum;
-      if (colSatisfied) {
-      for (var i = 0; i < colRes.mustFill.length; i++) {
-        var rr = colRes.mustFill[i];
-        if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
+      // 打叉模式：mustFill不依赖colSatisfied，唯一解时直接填
+      // 填充模式：mustFill需要colSatisfied
+      if (this.data.mode === 'mark' || colSatisfied) {
+        for (var i = 0; i < colRes.mustFill.length; i++) {
+          var rr = colRes.mustFill[i];
+          if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
+        }
       }
-      for (var i = 0; i < colRes.mustEmpty.length; i++) {
-        var rr = colRes.mustEmpty[i];
-        if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
-      }}
+      // mustEmpty仅在colSatisfied时触发
+      if (colSatisfied) {
+        for (var i = 0; i < colRes.mustEmpty.length; i++) {
+          var rr = colRes.mustEmpty[i];
+          if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
+        }
+      }
       if (iter > 50) break; // 防死循环
     }
     this._refreshRowGroups(grid, size);
