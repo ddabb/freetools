@@ -371,6 +371,11 @@ Page({
         rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
       }
       var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      var rHints = this.data.rowHints[r];
+      var rfc = 0; for (var _i = 0; _i < size; _i++) { if (rowLine[_i] === 1) rfc++; }
+      var rhSum = rHints.reduce(function(a, b) { return a + b; }, 0);
+      var rowSatisfied = rfc >= rhSum;
+      if (rowSatisfied) {
       for (var i = 0; i < rowRes.mustFill.length; i++) {
         var cc = rowRes.mustFill[i];
         if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
@@ -378,13 +383,18 @@ Page({
       for (var i = 0; i < rowRes.mustEmpty.length; i++) {
         var cc = rowRes.mustEmpty[i];
         if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
-      }
+      }}
       // 求解当前列
       var colLine = [];
       for (var rr = 0; rr < size; rr++) {
         colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
       }
       var colRes = solveLine(this.data.colHints[c], colLine, size);
+      var cHints = this.data.colHints[c];
+      var cfc = 0; for (var _j = 0; _j < size; _j++) { if (colLine[_j] === 1) cfc++; }
+      var chSum = cHints.reduce(function(a, b) { return a + b; }, 0);
+      var colSatisfied = cfc >= chSum;
+      if (colSatisfied) {
       for (var i = 0; i < colRes.mustFill.length; i++) {
         var rr = colRes.mustFill[i];
         if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
@@ -392,7 +402,7 @@ Page({
       for (var i = 0; i < colRes.mustEmpty.length; i++) {
         var rr = colRes.mustEmpty[i];
         if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
-      }
+      }}
       if (iter > 50) break; // 防死循环
     }
     this._refreshRowGroups(grid, size);

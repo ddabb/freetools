@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
+          "name": "数织",
+          "pathName": "packages/math/pages/nonogram/nonogram",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "知识分类明细",
           "pathName": "pages/categorydetail/categorydetail",
           "query": "category=%E8%BD%AF%E8%80%83%2F%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%2F%E9%A1%B9%E7%9B%AE%E9%87%87%E8%B4%AD%E7%AE%A1%E7%90%86",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "标签列表",
