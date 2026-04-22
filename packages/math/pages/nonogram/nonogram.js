@@ -61,38 +61,64 @@ function genPlacements(hints, n) {
   return results;
 }
 
-function solveLine(hints, line, n) {
+function solveLine(hints, line, n, mode) {
   var placements = genPlacements(hints, n);
   if (!placements.length) return { mustFill: [], mustEmpty: [] };
   var valid = [];
   for (var i = 0; i < placements.length; i++) {
     var ok = true;
     for (var j = 0; j < n; j++) {
-      // line[j]: 0=未知 1=用户填了 -1=用户标了X
-      // placement[j]: 1=该填 -1=该空
-      if (line[j] === 1 && placements[i][j] !== 1) { ok = false; break; } // 用户填了必须匹配
-      if (line[j] === -1 && placements[i][j] !== -1) { ok = false; break; } // 用户标X必须是空格
+      if (line[j] === 1 && placements[i][j] !== 1) { ok = false; break; }
+      if (line[j] === -1 && placements[i][j] !== -1) { ok = false; break; }
     }
     if (ok) valid.push(placements[i]);
   }
-  // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
-  // 此时所有未知格子都应该打叉
   if (!valid.length) {
     var mf = [];
     for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
     return { mustFill: [], mustEmpty: mf };
   }
-  var mustFill = [];
-  var mustEmpty = [];
+  var mustFill = [], mustEmpty = [];
   for (var i = 0; i < n; i++) {
-    var mustFillFlag = true;
-    var mustEmptyFlag = true;
+    var mustFillFlag = true, mustEmptyFlag = true;
     for (var j = 0; j < valid.length; j++) {
       if (valid[j][i] !== 1) mustFillFlag = false;
-      if (valid[j][i] === 1) mustEmptyFlag = false; // 只要有一个placement在该位置填了，就不能mustEmpty
+      if (valid[j][i] === 1) mustEmptyFlag = false;
     }
     if (mustFillFlag) mustFill.push(i);
     if (mustEmptyFlag) mustEmpty.push(i);
+  }
+  // 填充模式特殊规则：若已填格子数等于提示数总和，且当前编码与提示数匹配，
+  // 则剩余未标记的格子（必须为空的）全部自动打叉
+  if (mode === 'fill') {
+    var fc = 0;
+    for (var fi = 0; fi < n; fi++) { if (line[fi] === 1) fc++; }
+    var hs = hints.reduce(function(a, b) { return a + b; }, 0);
+    if (fc === hs) {
+      // 计算当前已填格子的编码（run-length 形式）
+      var enc = [];
+      var runLen = 0, inRun = false;
+      for (var ei = 0; ei < n; ei++) {
+        if (line[ei] === 1) { inRun = true; runLen++; }
+        else { if (inRun) { enc.push(runLen); inRun = false; runLen = 0; } }
+      }
+      if (inRun) { enc.push(runLen); inRun = false; runLen = 0; }
+      // 与提示数比较（忽略末尾空串）
+      var match = (enc.length === hints.length);
+      if (match) {
+        for (var mi = 0; mi < enc.length; mi++) {
+          if (enc[mi] !== hints[mi]) { match = false; break; }
+        }
+      }
+      if (match) {
+        // 编码一致：未标记的格子（排除mustFill）全部标记为X
+        for (var xi = 0; xi < n; xi++) {
+          if (line[xi] === 0 && mustFill.indexOf(xi) === -1 && mustEmpty.indexOf(xi) === -1) {
+            mustEmpty.push(xi);
+          }
+        }
+      }
+    }
   }
   return { mustFill: mustFill, mustEmpty: mustEmpty };
 }
@@ -370,7 +396,7 @@ Page({
       for (var cc = 0; cc < size; cc++) {
         rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
       }
-      var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      var rowRes = solveLine(this.data.rowHints[r], rowLine, size, this.data.mode);
       var rHints = this.data.rowHints[r];
       var rfc = 0; for (var _i = 0; _i < size; _i++) { if (rowLine[_i] === 1) rfc++; }
       var rhSum = rHints.reduce(function(a, b) { return a + b; }, 0);
@@ -389,7 +415,7 @@ Page({
       for (var rr = 0; rr < size; rr++) {
         colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
       }
-      var colRes = solveLine(this.data.colHints[c], colLine, size);
+      var colRes = solveLine(this.data.colHints[c], colLine, size, this.data.mode);
       var cHints = this.data.colHints[c];
       var cfc = 0; for (var _j = 0; _j < size; _j++) { if (colLine[_j] === 1) cfc++; }
       var chSum = cHints.reduce(function(a, b) { return a + b; }, 0);
