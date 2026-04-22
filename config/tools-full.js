@@ -662,6 +662,16 @@ const tools = [
     description: '根据行列数字提示填充格子，经典数织逻辑谜题'
   },
   {
+    id: 'frog-escape',
+    name: '躲避青蛙',
+    icon: '🐸',
+    color: 'green',
+    url: '/packages/math/pages/frog-escape/frog-escape',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['青蛙', '扫雷', '躲避', '雷', '益智', '逻辑'],
+    description: '老婆网购青蛙却收到活的被吓到不要不要的，开发此游戏纪念这段"恐怖"经历'
+  },
+  {
     id: 'othello',
     name: '黑白棋',
     icon: '⚫',

@@ -1,0 +1,98 @@
+<view class="container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="status-item">
+      <text class="status-icon">🐸</text>
+      <text class="status-num">{{totalMines - flaggedCount}}</text>
+    </view>
+    <view class="status-center">
+      <view class="diff-btn" bindtap="changeDifficulty">
+        <text>{{difficultyText}}</text>
+      </view>
+    </view>
+    <view class="status-item">
+      <text class="status-icon">⏱</text>
+      <text class="status-num">{{formatTime(time)}}</text>
+    </view>
+  </view>
+
+  <!-- 青蛙/旗子按钮 -->
+  <view class="tool-bar">
+    <view class="flag-btn {{flagMode ? 'active' : ''}}" bindtap="switchFlagMode">
+      <text>🚩 标记青蛙</text>
+    </view>
+    <view class="help-btn" bindtap="toggleHelp">
+      <text>❓ 帮助</text>
+    </view>
+  </view>
+
+  <!-- 棋盘 -->
+  <view class="board-wrapper">
+    <view class="board" style="width:{{boardWidth}}px;height:{{boardWidth}}px;">
+      <view wx:for="{{board}}" wx:for-item="row" wx:for-index="r" class="board-row">
+        <view
+          wx:for="{{row}}"
+          wx:for-item="cell"
+          wx:for-index="c"
+          class="cell {{cell.revealed ? 'revealed' : ''}} {{cell.flagged ? 'flagged' : ''}} {{gameOver && cell.isFrog ? 'frog-reveal' : ''}}"
+          style="width:{{cellSize}}px;height:{{cellSize}}px;"
+          bindtap="onCellTap"
+          bindlongpress="onCellLongPress"
+          data-row="{{r}}"
+          data-col="{{c}}"
+        >
+          <text wx:if="{{cell.revealed}}" class="cell-text">
+            <text wx:if="{{cell.isFrog}}" class="frog-text">🐸</text>
+            <text wx:elif="{{cell.nearby === 0}}" class="water-text">💧</text>
+            <text wx:else class="num-text">{{cell.nearby}}</text>
+          </text>
+          <text wx:elif="{{cell.flagged}}" class="flag-text">🚩</text>
+          <text wx:else class="hidden-cell"></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最短时间 -->
+  <view wx:if="{{bestTime}}" class="best-time">
+    <text>🏆 最短时间: {{formatTime(bestTime)}}</text>
+  </view>
+
+  <!-- 结果弹窗 -->
+  <view wx:if="{{showResult}}" class="result-overlay" bindtap="startGame">
+    <view class="result-modal">
+      <text class="result-icon">{{resultIcon}}</text>
+      <text class="result-title">{{resultText}}</text>
+      <text class="result-sub" wx:if="{{resultIcon === '🏆'}}">用时 {{formatTime(time)}}</text>
+      <text class="result-sub" wx:if="{{resultIcon === '🐸'}}">老婆看到会骂人的吧… 😂</text>
+      <view class="result-actions">
+        <view class="result-btn primary" bindtap="startGame">
+          <text>再来一局</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 帮助弹窗 -->
+  <view wx:if="{{showHelp}}" class="result-overlay" bindtap="toggleHelp">
+    <view class="result-modal">
+      <text class="result-icon">🐸</text>
+      <text class="result-title">躲避青蛙</text>
+      <text class="result-sub" style="color:#888;font-size:13px;line-height:1.5;">老婆网购了青蛙公仔，结果送来的是活的😂
+被吓得不要不要的，以此游戏纪念这段"恐怖"经历</text>
+      <view class="help-content">
+        <text class="help-line">🐸 点击格子，躲开所有青蛙</text>
+        <text class="help-line">💧 安全区域会显示水花</text>
+        <text class="help-line">🔢 数字表示周围有多少只青蛙</text>
+        <text class="help-line">🚩 长按标记可疑的青蛙位置</text>
+        <text class="help-line">🏆 全部安全区域翻开后获胜</text>
+        <text class="help-line">⏱ 完成时间越短越好</text>
+      </view>
+      <view class="result-actions">
+        <view class="result-btn primary" bindtap="toggleHelp">
+          <text>明白了</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

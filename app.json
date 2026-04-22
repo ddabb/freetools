@@ -83,7 +83,8 @@
         "pages/sudoku-generator/sudoku-generator",
         "pages/one-stroke-solver/one-stroke-solver",
         "pages/nonogram/nonogram",
-        "pages/othello/othello"
+        "pages/othello/othello",
+        "pages/frog-escape/frog-escape"
       ]
     },
     {
