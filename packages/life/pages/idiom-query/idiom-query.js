@@ -1,5 +1,5 @@
 // idiom-query.js - 成语查询页面
-const dataService = require('../../../utils/idiom-data-service.js');
+const dataService = require('../../utils/idiom-data-service.js');
 
 Page({
   data: {
