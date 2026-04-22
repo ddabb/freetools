@@ -375,8 +375,8 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    // 调试日志：打印约束传播过程
-    var DEBUG = false;
+    // 调试日志：打印约束传播过程（自动开启，用户操作时触发）
+    var DEBUG = (op === 1); // 只在用户填黑块时打日志，方便定位自动标记
     if (DEBUG) console.log('[doOp] r=' + r + ' c=' + c + ' op=' + op);
     // 仅在同一行+同一列内做约束传播（不影响其他行列）
     // 每轮：先解行→标记→再解列→标记，循环直到收敛
