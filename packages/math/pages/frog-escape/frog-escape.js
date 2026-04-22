@@ -211,12 +211,21 @@ Page({
     if (this.data.gameOver || this.data.showResult) return;
     const { row, col } = e.currentTarget.dataset;
     const cell = this.data.board[row][col];
-    if (cell.revealed || cell.flagged) return;
 
+    // 标记模式下：点击未翻开格子切换标记
     if (this.data.flagMode) {
-      this.toggleFlag(row, col);
+      if (!cell.revealed) this.toggleFlag(row, col);
       return;
     }
+
+    // 双击（chord）：点击已揭开的数字格，周围标记数=该数字时自动翻开周围未标记格子
+    if (cell.revealed && cell.nearby > 0) {
+      this.chord(row, col);
+      return;
+    }
+
+    // 已翻开或已标记的格子，忽略
+    if (cell.revealed || cell.flagged) return;
 
     if (this._firstClick) {
       this._firstClick = false;
@@ -231,6 +240,63 @@ Page({
 
     this.floodFill(row, col);
     this.checkWin();
+  },
+
+  // 双击自动翻开（chord）
+  chord(row, col) {
+    const { rows, cols } = this.data;
+    const cell = this.data.board[row][col];
+    if (!cell.revealed || cell.nearby === 0) return;
+
+    // 数周围标记格数
+    let flaggedCount = 0;
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = row + dr, nc = col + dc;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+          if (this.data.board[nr][nc].flagged) flaggedCount++;
+        }
+      }
+    }
+
+    // 周围标记数 != 该数字，不触发
+    if (flaggedCount !== cell.nearby) return;
+
+    // 翻开所有未标记、未翻开的格子
+    let exploded = false;
+    let revealed = 0;
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = row + dr, nc = col + dc;
+        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+        const neighbor = this.data.board[nr][nc];
+        if (neighbor.revealed || neighbor.flagged) continue;
+
+        if (this._boardData[nr][nc].isFrog) {
+          // 踩到青蛙，游戏结束
+          this.data.board[nr][nc].revealed = true;
+          this.data.board[nr][nc].isFrog = true;
+          this.data.board[nr][nc].nearby = -1;
+          revealed++;
+          exploded = true;
+        } else {
+          this.data.board[nr][nc].revealed = true;
+          this.data.board[nr][nc].nearby = this._boardData[nr][nc].nearby;
+          this.data.board[nr][nc].isFrog = false;
+          revealed++;
+        }
+      }
+    }
+
+    this.setData({ board: this.data.board, revealedCount: this.data.revealedCount + revealed });
+
+    if (exploded) {
+      this.gameOver(false);
+    } else {
+      this.checkWin();
+    }
   },
 
   onCellLongPress(e) {
