@@ -51,7 +51,7 @@ Page({
   },
 
   startGame(diff) {
-    const d = diff || this.data.difficulty;
+    const d = (typeof diff === 'string') ? diff : this.data.difficulty;
     const diffInfo = this.data.difficultyList.find(x => x.key === d) || this.data.difficultyList[0];
     const { rows, cols, mines } = diffInfo;
 
