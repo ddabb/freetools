@@ -75,13 +75,29 @@ function solveLine(hints, line, n) {
     }
     if (ok) valid.push(placements[i]);
   }
-  // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
-  // 此时所有未知格子都应该打叉
+  // 如果没有合法排列：用户标记与所有排列冲突
+  // 只有当行已满足提示数时才自动打叉（row is complete, mark rest as X）
+  // 否则返回空，让用户自己发现错误
   if (!valid.length) {
-    var mf = [];
-    for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
-    return { mustFill: [], mustEmpty: mf };
+    var filledCount = 0;
+    var hintsSum = 0;
+    for (var k = 0; k < n; k++) { if (line[k] === 1) filledCount++; }
+    for (var k = 0; k < hints.length; k++) hintsSum += hints[k];
+    // 行已满足（所有填充数到位），剩余格子必定是空格 → 自动打叉
+    if (filledCount === hintsSum) {
+      var mf = [];
+      for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
+      return { mustFill: [], mustEmpty: mf };
+    }
+    // 行未满足，说明用户标记有误，不自动打叉
+    return { mustFill: [], mustEmpty: [] };
   }
+  // 计算当前已填充数是否满足提示总数（行已满足 = 可以确定剩余格子）
+  var filledCount = 0;
+  var hintsSum = 0;
+  for (var k = 0; k < n; k++) { if (line[k] === 1) filledCount++; }
+  for (var k = 0; k < hints.length; k++) hintsSum += hints[k];
+  var rowSatisfied = (filledCount === hintsSum);
   var mustFill = [];
   var mustEmpty = [];
   for (var i = 0; i < n; i++) {
@@ -91,8 +107,9 @@ function solveLine(hints, line, n) {
       if (valid[j][i] !== 1) mustFillFlag = false;
       if (valid[j][i] === 1) mustEmptyFlag = false; // 只要有一个placement在该位置填了，就不能mustEmpty
     }
-    if (mustFillFlag) mustFill.push(i);
-    if (mustEmptyFlag) mustEmpty.push(i);
+    // 必须行已满足才能自动填，必须列已满足才能自动打叉
+    if (mustFillFlag && rowSatisfied) mustFill.push(i);
+    if (mustEmptyFlag && rowSatisfied) mustEmpty.push(i);
   }
   return { mustFill: mustFill, mustEmpty: mustEmpty };
 }
