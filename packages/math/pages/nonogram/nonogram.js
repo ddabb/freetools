@@ -77,8 +77,6 @@ function solveLine(hints, line, n) {
   }
   // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
   // 此时所有未知格子都应该打叉
-  // 如果没有合法排列，说明当前行/列已经填满（所有提示数都已满足）
-  // 此时所有未知格子都应该打叉
   if (!valid.length) {
     var mf = [];
     for (var k = 0; k < n; k++) { if (line[k] === 0) mf.push(k); }
@@ -360,8 +358,43 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    // 全棋盘约束传播：每次有格子变化就重新检查所有行和列，直到收敛
-    applyConstraints(grid, this.data.rowHints, this.data.colHints, size);
+    // 仅在同一行+同一列内做约束传播（不影响其他行列）
+    // 每轮：先解行→标记→再解列→标记，循环直到收敛
+    var changed = true;
+    var iter = 0;
+    while (changed) {
+      iter++;
+      changed = false;
+      // 求解当前行
+      var rowLine = [];
+      for (var cc = 0; cc < size; cc++) {
+        rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
+      }
+      var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      for (var i = 0; i < rowRes.mustFill.length; i++) {
+        var cc = rowRes.mustFill[i];
+        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+      }
+      for (var i = 0; i < rowRes.mustEmpty.length; i++) {
+        var cc = rowRes.mustEmpty[i];
+        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
+      }
+      // 求解当前列
+      var colLine = [];
+      for (var rr = 0; rr < size; rr++) {
+        colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
+      }
+      var colRes = solveLine(this.data.colHints[c], colLine, size);
+      for (var i = 0; i < colRes.mustFill.length; i++) {
+        var rr = colRes.mustFill[i];
+        if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
+      }
+      for (var i = 0; i < colRes.mustEmpty.length; i++) {
+        var rr = colRes.mustEmpty[i];
+        if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
+      }
+      if (iter > 50) break; // 防死循环
+    }
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
