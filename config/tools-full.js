@@ -663,13 +663,13 @@ const tools = [
   },
   {
     id: 'frog-escape',
-    name: '躲避青蛙',
+    name: '躲避牛蛙',
     icon: '🐸',
     color: 'green',
     url: '/packages/math/pages/frog-escape/frog-escape',
     categories: ['学习工具', '数学工具'],
-    keywords: ['青蛙', '扫雷', '躲避', '雷', '益智', '逻辑'],
-    description: '26年4月22日，老婆买了青蛙打算炒着吃，让商家帮忙处理结果商家没处理。开箱那一刻，一盒子活青蛙眼睛齐刷刷盯着她，当场吓得不要不要的——此游戏以此纪念 😂'
+    keywords: ['牛蛙', '扫雷', '躲避', '雷', '益智', '逻辑'],
+    description: '26年4月22日，老婆买了牛蛙打算炒着吃，让商家帮忙处理结果商家没处理。开箱那一刻，一盒子活牛蛙眼睛齐刷刷盯着她，当场吓得不要不要的——此游戏以此纪念 😂'
   },
   {
     id: 'othello',

@@ -1,4 +1,4 @@
-/* 躲避青蛙 - 绿野沼泽主题 */
+/* 躲避牛蛙 - 绿野沼泽主题 */
 .container {
   min-height: 100vh;
   background: linear-gradient(180deg, #e8f8f0 0%, #d0f0e4 100%);
