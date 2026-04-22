@@ -24,7 +24,6 @@ const toolRoutes = {
   'qrcode': '/packages/life/pages/qrcode/qrcode',
   'calendar': '/packages/life/pages/calendar/calendar',
   'time-tool': '/packages/life/pages/time-tool/time-tool',
-  'idcard': '/packages/life/pages/idcard/idcard',
   'leapyear': '/packages/life/pages/leapyear/leapyear',
   'battery-health': '/packages/life/pages/battery-health/battery-health',
   'datediff': '/packages/life/pages/datediff/datediff',

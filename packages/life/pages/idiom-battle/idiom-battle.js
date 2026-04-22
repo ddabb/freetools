@@ -1,5 +1,5 @@
 // idiom-battle.js - 成语对战页面
-const dataService = require('../../../../utils/idiom-data-service.js');
+const dataService = require('../../../utils/idiom-data-service.js');
 const USER_STATS_KEY = 'idiom_battle_stats';
 
 Page({

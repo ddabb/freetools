@@ -45,7 +45,6 @@ const commonTools = [
 
   // ===== 安全工具 =====
   { id: 'password-generator', name: '密码生成', icon: '🔒', color: 'gray', url: '/packages/text/pages/password-generator/password-generator', categories: ['安全工具'], keywords: ['密码', '生成', '安全', '随机'], description: '生成安全的随机密码' },
-  { id: 'idcard', name: '身份证验证', icon: '🆔', color: 'blue', url: '/packages/life/pages/idcard/idcard', categories: ['安全工具'], keywords: ['身份证', '验证', '身份', '校验'], description: '验证身份证号码的有效性' },
 
   // ===== 其他常用 =====
   { id: 'random-selector', name: '取数模拟器', icon: '🎰', color: 'purple', url: '/packages/math/pages/random-selector/random-selector', categories: ['生活工具', '数学工具'], keywords: ['随机', '选号', '模拟', '六红一蓝', '五红两蓝'], description: '随机生成号码组合，支持模拟结果和匹配计算', frequency: 40 },
