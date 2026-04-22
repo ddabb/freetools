@@ -326,7 +326,7 @@ Page({
     this.setData({ aiThinking: true });
 
     const { difficulty } = this.data;
-    const depthMap = { easy: 1, medium: 3, hard: 6, expert: 8 };
+    const depthMap = { easy: 1, medium: 3, hard: 5, expert: 6 };
     const depth = depthMap[difficulty] || 3;
 
     // 使用setTimeout让UI先更新
