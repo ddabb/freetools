@@ -375,6 +375,9 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
+    // 调试日志：打印约束传播过程
+    var DEBUG = false;
+    if (DEBUG) console.log('[doOp] r=' + r + ' c=' + c + ' op=' + op);
     // 仅在同一行+同一列内做约束传播（不影响其他行列）
     // 每轮：先解行→标记→再解列→标记，循环直到收敛
     var changed = true;
@@ -388,13 +391,18 @@ Page({
         rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
       }
       var rowRes = solveLine(this.data.rowHints[r], rowLine, size);
+      if (DEBUG) {
+        var rfc = 0; for (var k = 0; k < size; k++) if (rowLine[k] === 1) rfc++;
+        var rhSum = 0; for (var k = 0; k < this.data.rowHints[r].length; k++) rhSum += this.data.rowHints[r][k];
+        console.log('[row] r=' + r + ' hints=' + JSON.stringify(this.data.rowHints[r]) + ' filled=' + rfc + '/' + rhSum + ' mustFill=' + JSON.stringify(rowRes.mustFill) + ' mustEmpty=' + JSON.stringify(rowRes.mustEmpty));
+      }
       for (var i = 0; i < rowRes.mustFill.length; i++) {
         var cc = rowRes.mustFill[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+        if (grid[r][cc] === 0) { if (DEBUG) console.log('[AUTO FILL] row ' + r + ' col ' + cc); grid[r][cc] = 1; changed = true; }
       }
       for (var i = 0; i < rowRes.mustEmpty.length; i++) {
         var cc = rowRes.mustEmpty[i];
-        if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
+        if (grid[r][cc] === 0) { if (DEBUG) console.log('[AUTO MARK] row ' + r + ' col ' + cc); grid[r][cc] = 2; changed = true; }
       }
       // 求解当前列
       var colLine = [];
@@ -402,16 +410,22 @@ Page({
         colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
       }
       var colRes = solveLine(this.data.colHints[c], colLine, size);
+      if (DEBUG) {
+        var cfc = 0; for (var k = 0; k < size; k++) if (colLine[k] === 1) cfc++;
+        var chSum = 0; for (var k = 0; k < this.data.colHints[c].length; k++) chSum += this.data.colHints[c][k];
+        console.log('[col] c=' + c + ' hints=' + JSON.stringify(this.data.colHints[c]) + ' filled=' + cfc + '/' + chSum + ' mustFill=' + JSON.stringify(colRes.mustFill) + ' mustEmpty=' + JSON.stringify(colRes.mustEmpty));
+      }
       for (var i = 0; i < colRes.mustFill.length; i++) {
         var rr = colRes.mustFill[i];
-        if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
+        if (grid[rr][c] === 0) { if (DEBUG) console.log('[AUTO FILL] row ' + rr + ' col ' + c); grid[rr][c] = 1; changed = true; }
       }
       for (var i = 0; i < colRes.mustEmpty.length; i++) {
         var rr = colRes.mustEmpty[i];
-        if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
+        if (grid[rr][c] === 0) { if (DEBUG) console.log('[AUTO MARK] row ' + rr + ' col ' + c); grid[rr][c] = 2; changed = true; }
       }
       if (iter > 50) break; // 防死循环
     }
+    if (DEBUG) console.log('[doOp] iter=' + iter + ' final changed=' + changed);
     this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
