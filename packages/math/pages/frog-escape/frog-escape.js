@@ -70,7 +70,7 @@ Page({
       difficultyText: diffInfo.label,
       revealedCount: 0,
       flaggedCount: 0,
-      flagMode: false,
+      flagMode: this.data.flagMode || false,
       gameOver: false,
       won: false,
       time: 0,
