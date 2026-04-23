@@ -785,9 +785,27 @@ Page({
 
 
   /**
-   * 切换分类
+   * 切换分类（页面内筛选）
    */
   switchCategory(e) {
+    const category = e.currentTarget.dataset.category || '';
+    const displayCategory = this.getLeafCategoryName(category);
+    this.setData({
+      currentCategory: category,
+      currentTag: '',
+      searchKeyword: '',
+      list: [],
+      showCategoryTree: false
+    });
+    this.page = 1;
+    this.setPageTitle(category, '');
+    this.refreshView();
+  },
+
+  /**
+   * 跳转到分类详情页
+   */
+  gotoCategoryDetail(e) {
     const category = e.currentTarget.dataset.category || '';
     wx.navigateTo({
       url: `/pages/categorydetail/categorydetail?category=${category}`
