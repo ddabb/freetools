@@ -1,0 +1,288 @@
+/* packages/math/pages/number-one/number-one.wxss */
+
+/* ===== 布局 ===== */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 24rpx 40rpx;
+  background: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ===== 设置栏 ===== */
+.settings-bar {
+  width: 100%;
+  max-width: 700rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.setting-group {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.setting-label {
+  color: #a0a0b0;
+  font-size: 26rpx;
+  width: 60rpx;
+  flex-shrink: 0;
+}
+
+.tab-group {
+  display: flex;
+  gap: 8rpx;
+}
+
+.tab {
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  background: #2a2a3e;
+  color: #888;
+  font-size: 26rpx;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: #4a90d9;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ===== 加载/错误 ===== */
+.loading-section {
+  margin: 80rpx 0;
+  text-align: center;
+}
+.loading-text {
+  color: #a0a0b0;
+  font-size: 28rpx;
+}
+
+.error-section {
+  margin: 80rpx 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.error-text {
+  color: #e06060;
+  font-size: 28rpx;
+}
+
+/* ===== 游戏区 ===== */
+.game-section {
+  width: 100%;
+  max-width: 700rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.game-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8rpx;
+}
+
+.game-info {
+  color: #4a90d9;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.game-hint {
+  color: #606080;
+  font-size: 24rpx;
+}
+
+/* ===== 棋盘 ===== */
+.board-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  border: 4rpx solid #3a3a5e;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.5);
+}
+
+.row {
+  display: flex;
+}
+
+/* 格子 */
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 2rpx solid #2a2a3e;
+  border-bottom: 2rpx solid #2a2a3e;
+  transition: background 0.15s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* 棋盘格子尺寸 */
+.board .row .cell.size-small {
+  width: 100rpx;
+  height: 100rpx;
+}
+.board .row .cell.size-medium {
+  width: 90rpx;
+  height: 90rpx;
+}
+.board .row .cell.size-large {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+/* 棋盘格子颜色 */
+.cell.light {
+  background: #f5f5f0;
+}
+.cell.dark {
+  background: #e8e8e0;
+}
+.cell.is-black.light,
+.cell.is-black.dark {
+  background: #1a1a2e;
+}
+
+/* 格子数字 */
+.cell-num {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #2a2a4e;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+.cell-num-in-black {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #888;
+  position: absolute;
+  bottom: 6rpx;
+  right: 6rpx;
+}
+
+/* 黑格点击时数字半透明 */
+.cell.is-black .cell-num {
+  opacity: 0.15;
+}
+
+/* ===== 操作按钮 ===== */
+.actions {
+  width: 100%;
+  max-width: 700rpx;
+  display: flex;
+  gap: 16rpx;
+  margin-top: 8rpx;
+  justify-content: center;
+}
+
+.action-btn {
+  flex: 1;
+  max-width: 200rpx;
+  padding: 16rpx 0;
+  border-radius: 30rpx;
+  background: #2a2a3e;
+  color: #c0c0d0;
+  font-size: 28rpx;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.action-btn:active {
+  background: #3a3a5e;
+}
+
+.answer-btn {
+  background: #2e3a1a;
+  color: #90c040;
+}
+
+/* ===== 成功横幅 ===== */
+.win-banner {
+  width: 100%;
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #1a3a1a, #2a4a2a);
+  border: 2rpx solid #3a6a3a;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.win-icon {
+  font-size: 48rpx;
+}
+
+.win-text {
+  color: #80e080;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.win-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+/* ===== 规则说明 ===== */
+.rule-section {
+  width: 100%;
+  max-width: 700rpx;
+  margin-top: 32rpx;
+  padding: 20rpx 24rpx;
+  background: #1e1e32;
+  border-radius: 12rpx;
+  border: 1rpx solid #2a2a4e;
+}
+
+.rule-title {
+  color: #c0c0d0;
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.rule-item {
+  color: #808090;
+  font-size: 24rpx;
+  line-height: 1.8;
+}
+
+/* ===== 通用按钮 ===== */
+.btn-sm {
+  padding: 12rpx 28rpx;
+  border-radius: 30rpx;
+  background: #4a90d9;
+  color: #fff;
+  font-size: 26rpx;
+  border: none;
+  line-height: 1.2;
+}
+
+.btn-sm.btn-outline {
+  background: transparent;
+  border: 2rpx solid #4a90d9;
+  color: #4a90d9;
+}

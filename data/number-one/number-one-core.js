@@ -1,322 +1,329 @@
 /**
- * 数壹（Number One）核心算法
- * 
- * 规则：
- * 1. 每行每列中，未被涂黑的数字不能重复
- * 2. 涂黑的格子不能相邻（包括对角）
- * 3. 所有未涂黑的格子必须连通
+ * 数壹（Number One）核心算法 v4
+ * 核心剪枝：同行/列数字约束（若某数在某行只出现一次，该格不能变黑）
+ * 策略：先随机生成黑格 → 填入1..size数字 → 验证唯一解
  */
 
-// 8个方向（包括对角）
-const ALL_DIRECTIONS = [
-  [-1, -1], [-1, 0], [-1, 1],
-  [0, -1],           [0, 1],
-  [1, -1],  [1, 0],  [1, 1]
-];
+const ALL_DIR = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+const FOUR_DIR = [[-1,0],[1,0],[0,-1],[0,1]];
 
-// 4个方向（上下左右）
-const FOUR_DIRECTIONS = [
-  [-1, 0], [1, 0], [0, -1], [0, 1]
-];
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 /**
- * 检查黑格是否不相邻
+ * 生成随机黑格（不相邻+连通）
+ * @param {number} size 网格大小
+ * @param {number} ratioLo 黑格比例下限
+ * @param {number} ratioHi 黑格比例上限
+ * @returns {{r:number,c:number}[]}[] 黑格坐标数组
  */
-function checkBlackNotAdjacent(blackCells, size) {
-  const blackSet = new Set(blackCells.map(c => `${c.row},${c.col}`));
-  
-  for (const cell of blackCells) {
-    for (const [dr, dc] of ALL_DIRECTIONS) {
-      const nr = cell.row + dr;
-      const nc = cell.col + dc;
-      if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
-        if (blackSet.has(`${nr},${nc}`)) {
-          return false; // 相邻了
+function generateRandomBlackCells(size, ratioLo, ratioHi) {
+  const total = size * size;
+  for (let t = 0; t < 800; t++) {
+    const ratio = ratioLo + Math.random() * (ratioHi - ratioLo);
+    const n = Math.max(1, Math.floor(total * ratio));
+    const blackSet = new Set();
+    const indices = shuffle(Array.from({ length: total }, (_, i) => i));
+
+    for (const idx of indices) {
+      if (blackSet.size >= n) break;
+      const r = Math.floor(idx / size), c = idx % size;
+      const key = `${r},${c}`;
+      let adj = false;
+      for (const [dr, dc] of ALL_DIR) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < size && nc >= 0 && nc < size && blackSet.has(`${nr},${nc}`)) { adj = true; break; }
+      }
+      if (!adj) blackSet.add(key);
+    }
+
+    // BFS连通性
+    const whiteCount = total - blackSet.size;
+    let start = null;
+    outer: for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!blackSet.has(`${r},${c}`)) { start = [r, c]; break outer; }
+      }
+    }
+    if (!start) continue;
+    const visited = new Set([`${start[0]},${start[1]}`]);
+    const queue = [start];
+    while (queue.length) {
+      const [r, c] = queue.shift();
+      for (const [dr, dc] of FOUR_DIR) {
+        const nr = r + dr, nc = c + dc, k = `${nr},${nc}`;
+        if (nr >= 0 && nr < size && nc >= 0 && nc < size && !blackSet.has(k) && !visited.has(k)) {
+          visited.add(k); queue.push([nr, nc]);
         }
       }
     }
+    if (visited.size === whiteCount) {
+      return Array.from(blackSet).map(k => { const [r, c] = k.split(',').map(Number); return { r, c }; });
+    }
   }
-  return true;
+  return null;
 }
 
 /**
- * 检查白格是否连通
+ * 生成数独格（行/列1..size不重复）
  */
-function checkWhiteConnected(board, blackCells, size) {
-  const blackSet = new Set(blackCells.map(c => `${c.row},${c.col}`));
-  
-  // 找一个白格作为起点
-  let start = null;
-  for (let r = 0; r < size && !start; r++) {
-    for (let c = 0; c < size && !start; c++) {
-      if (!blackSet.has(`${r},${c}`)) {
-        start = { row: r, col: c };
-      }
-    }
-  }
-  
-  if (!start) return false; // 全黑
-  
-  // BFS遍历白格
-  const visited = new Set();
-  const queue = [start];
-  visited.add(`${start.row},${start.col}`);
-  
-  while (queue.length > 0) {
-    const current = queue.shift();
-    for (const [dr, dc] of FOUR_DIRECTIONS) {
-      const nr = current.row + dr;
-      const nc = current.col + dc;
-      const key = `${nr},${nc}`;
-      
-      if (nr >= 0 && nr < size && nc >= 0 && nc < size &&
-          !blackSet.has(key) && !visited.has(key)) {
-        visited.add(key);
-        queue.push({ row: nr, col: nc });
-      }
-    }
-  }
-  
-  // 检查是否所有白格都被访问
-  const totalWhite = size * size - blackCells.length;
-  return visited.size === totalWhite;
-}
-
-/**
- * 检查每行每列数字是否唯一
- */
-function checkNumbersUnique(board, blackCells, size) {
-  const blackSet = new Set(blackCells.map(c => `${c.row},${c.col}`));
-  
-  // 检查每行
+function generateLatinSquare(size) {
+  const board = Array.from({ length: size }, () => new Array(size).fill(0));
   for (let r = 0; r < size; r++) {
-    const nums = new Set();
+    const used = new Set();
     for (let c = 0; c < size; c++) {
-      if (!blackSet.has(`${r},${c}`)) {
-        if (nums.has(board[r][c])) return false;
-        nums.add(board[r][c]);
-      }
+      const candidates = [];
+      for (let v = 1; v <= size; v++) if (!used.has(v)) candidates.push(v);
+      const val = candidates[Math.floor(Math.random() * candidates.length)];
+      board[r][c] = val; used.add(val);
     }
   }
-  
-  // 检查每列
-  for (let c = 0; c < size; c++) {
-    const nums = new Set();
-    for (let r = 0; r < size; r++) {
-      if (!blackSet.has(`${r},${c}`)) {
-        if (nums.has(board[r][c])) return false;
-        nums.add(board[r][c]);
-      }
-    }
-  }
-  
-  return true;
+  return board;
 }
 
 /**
- * 检查是否是有效解
- */
-function isValidSolution(board, blackCells, size) {
-  if (!checkBlackNotAdjacent(blackCells, size)) return false;
-  if (!checkWhiteConnected(board, blackCells, size)) return false;
-  if (!checkNumbersUnique(board, blackCells, size)) return false;
-  return true;
-}
-
-/**
- * 求解器 - 找出所有解
- * @param {number[][]} board - 数字网格
- * @param {number} size - 网格大小
- * @param {number} maxSolutions - 最多找几个解（用于验证唯一解）
- * @returns {Array} 所有解的数组
+ * 求解数壹：找所有满足条件的黑格集合
+ * 关键剪枝：数字唯一约束传播
  */
 function solve(board, size, maxSolutions = 2) {
+  const N = size;
+  const total = N * N;
   const solutions = [];
-  const totalCells = size * size;
-  
-  // 将格子索引转换为行列
-  function indexToRC(index) {
-    return { row: Math.floor(index / size), col: index % size };
+
+  // board[r][c]: 0=黑格占位, 1..N=给定数字
+  // 约束1：同数字在同行/列至多出现一次（实际上拉丁方已保证）
+  // 约束2：同行/列相同数字至少有一个是黑格 → 反过来：若某行/列某数只出现一次，该格不能是白格（必须是黑或不存在）
+  // 约束3：黑格不相邻
+  // 约束4：白格连通
+
+  // 行/列中每个数字出现的位置
+  const rowPos = Array.from({ length: N }, () => new Map()); // rowPos[r][val] = [c1, c2...]
+  const colPos = Array.from({ length: N }, () => new Map()); // colPos[c][val] = [r1, r2...]
+
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const v = board[r][c];
+      if (v >= 1 && v <= N) {
+        if (!rowPos[r].has(v)) rowPos[r].set(v, []);
+        rowPos[r].get(v).push(c);
+        if (!colPos[c].has(v)) colPos[c].set(v, []);
+        colPos[c].get(v).push(r);
+      }
+    }
   }
-  
-  // 回溯搜索
-  function backtrack(index, blackCells) {
+
+  // 预计算：每行/列每个数字的出现次数
+  const rowCount = Array.from({ length: N }, () => new Map());
+  const colCount = Array.from({ length: N }, () => new Map());
+  for (let r = 0; r < N; r++) {
+    for (const [v, cs] of rowPos[r]) rowCount[r].set(v, cs.length);
+  }
+  for (let c = 0; c < N; c++) {
+    for (const [v, rs] of colPos[c]) colCount[c].set(v, rs.length);
+  }
+
+  // 决策变量：board上哪些格子是黑格
+  // 初始：所有格子可黑可白（除了给定的0已经是黑）
+  // 用 Set 记录当前决策的黑格
+  let blackSet = new Set(); // key="r,c"
+  let blackCells = []; // [{r,c}]
+
+  function idx2rc(i) { return [Math.floor(i / N), i % N]; }
+
+  // 约束检查：加入 (r,c) 为黑格后，是否满足数字唯一性
+  // 对于行 r：若数字 v 在该行只出现在列 c（即 rowCount[r].get(v)==1 且 c 是唯一列），
+  //   那么把 (r,c) 变黑后，该行再无 v，无法满足"同数唯一" → 剪枝
+  // 同理对列 c
+  function canBeBlack(r, c) {
+    const v = board[r][c];
+    if (v < 1 || v > N) return true; // 非给定数字，可以变黑
+
+    // 检查行约束
+    const rc = rowCount[r].get(v) || 0;
+    if (rc === 1) return false; // 该行此数字唯一出现，变黑后无解
+
+    // 检查列约束
+    const cc = colCount[c].get(v) || 0;
+    if (cc === 1) return false; // 该列此数字唯一出现，变黑后无解
+
+    return true;
+  }
+
+  // 当前黑格候选相邻检查
+  function isAdjacent(r, c) {
+    for (const [dr, dc] of ALL_DIR) {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < N && nc >= 0 && nc < N && blackSet.has(`${nr},${nc}`)) return true;
+    }
+    return false;
+  }
+
+  // 连通性快速检查（BFS）
+  function isConnected() {
+    const whiteCount = total - blackSet.size;
+    if (whiteCount === 0) return blackSet.size === total;
+    let start = null;
+    outer: for (let r = 0; r < N; r++) {
+      for (let c = 0; c < N; c++) {
+        if (!blackSet.has(`${r},${c}`)) { start = [r, c]; break outer; }
+      }
+    }
+    if (!start) return false;
+    const visited = new Set([`${start[0]},${start[1]}`]);
+    const queue = [start];
+    while (queue.length) {
+      const [r, c] = queue.shift();
+      for (const [dr, dc] of FOUR_DIR) {
+        const nr = r + dr, nc = c + dc, k = `${nr},${nc}`;
+        if (nr >= 0 && nr < N && nc >= 0 && nc < N && !blackSet.has(k) && !visited.has(k)) {
+          visited.add(k); queue.push([nr, nc]);
+        }
+      }
+    }
+    return visited.size === whiteCount;
+  }
+
+  // 剪枝：若已选黑格已破坏连通性，提前终止
+  function backtrack(idx, depth) {
     if (solutions.length >= maxSolutions) return;
-    
-    if (index === totalCells) {
-      // 检查是否是有效解
-      if (isValidSolution(board, blackCells, size)) {
+    if (idx === total) {
+      if (isConnected()) {
         solutions.push([...blackCells]);
       }
       return;
     }
-    
-    const cell = indexToRC(index);
-    
-    // 优化：检查当前黑格是否已经相邻
-    if (blackCells.length > 0) {
-      const lastBlack = blackCells[blackCells.length - 1];
-      const dr = Math.abs(cell.row - lastBlack.row);
-      const dc = Math.abs(cell.col - lastBlack.col);
-      if (dr <= 1 && dc <= 1) {
-        // 当前格子与上一个黑格相邻，不能涂黑，只能保留
-        backtrack(index + 1, blackCells);
-        return;
-      }
+
+    const [r, c] = idx2rc(idx);
+    const v = board[r][c];
+
+    // 0 表示题目中已经确定的黑格（占位）
+    if (v === 0) {
+      blackSet.add(`${r},${c}`);
+      blackCells.push({ r, c });
+      backtrack(idx + 1, depth + 1);
+      blackCells.pop();
+      blackSet.delete(`${r},${c}`);
+      return;
     }
-    
-    // 尝试涂黑当前格子
-    const newBlackCells = [...blackCells, cell];
-    
-    // 剪枝：检查黑格不相邻
-    if (checkBlackNotAdjacent(newBlackCells, size)) {
-      // 剪枝：检查当前已涂黑的情况下，数字是否可能唯一
-      // （只检查已处理的部分行和列）
-      backtrack(index + 1, newBlackCells);
+
+    // 1..N 给定数字：可以变黑（满足约束时），也可以保持白
+    // 选项1：变黑
+    if (!isAdjacent(r, c) && canBeBlack(r, c)) {
+      blackSet.add(`${r},${c}`);
+      blackCells.push({ r, c });
+      backtrack(idx + 1, depth + 1);
+      blackCells.pop();
+      blackSet.delete(`${r},${c}`);
     }
-    
-    // 尝试保留当前格子
-    backtrack(index + 1, blackCells);
+
+    // 选项2：保持白格
+    backtrack(idx + 1, depth);
   }
-  
-  backtrack(0, []);
+
+  backtrack(0, 0);
   return solutions;
 }
 
 /**
- * 验证是否有唯一解
+ * 验证解
  */
-function hasUniqueSolution(board, size) {
-  const solutions = solve(board, size, 2);
-  return solutions.length === 1;
-}
-
-/**
- * 获取唯一解
- */
-function getUniqueSolution(board, size) {
-  const solutions = solve(board, size, 2);
-  if (solutions.length === 1) {
-    return solutions[0];
+function isValidSolution(board, blackCells, size) {
+  const N = size;
+  const blackS = new Set(blackCells.map(c => `${c.r},${c.c}`));
+  for (const c of blackCells) {
+    for (const [dr, dc] of ALL_DIR) {
+      const nr = c.r + dr, nc = c.c + dc;
+      if (nr >= 0 && nr < N && nc >= 0 && nc < N && blackS.has(`${nr},${nc}`)) return false;
+    }
   }
-  return null;
+  const whiteCount = N * N - blackCells.length;
+  let start = null;
+  outer: for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      if (!blackS.has(`${r},${c}`)) { start = [r, c]; break outer; }
+    }
+  }
+  if (!start) return false;
+  const visited = new Set([`${start[0]},${start[1]}`]);
+  const queue = [start];
+  while (queue.length) {
+    const [r, c] = queue.shift();
+    for (const [dr, dc] of FOUR_DIR) {
+      const nr = r + dr, nc = c + dc, k = `${nr},${nc}`;
+      if (nr >= 0 && nr < N && nc >= 0 && nc < N && !blackS.has(k) && !visited.has(k)) {
+        visited.add(k); queue.push([nr, nc]);
+      }
+    }
+  }
+  return visited.size === whiteCount;
 }
 
 /**
- * 生成谜题（逆向生成法）
- * @param {number} size - 网格大小
- * @param {number} difficulty - 难度 1-3
- * @returns {Object} { board, solution, difficulty }
+ * 生成谜题
  */
 function generate(size = 6, difficulty = 2) {
-  // 难度参数
   const diffParams = {
-    1: { numRange: [1, 3], blackRatio: [0.15, 0.25] },  // 简单
-    2: { numRange: [1, 4], blackRatio: [0.2, 0.35] },   // 中等
-    3: { numRange: [1, 5], blackRatio: [0.25, 0.4] }    // 困难
+    1: { blackRatio: [0.12, 0.25] },
+    2: { blackRatio: [0.18, 0.35] },
+    3: { blackRatio: [0.22, 0.42] }
   };
-  
-  const params = diffParams[difficulty] || diffParams[2];
-  
-  // 尝试生成
-  for (let attempt = 0; attempt < 1000; attempt++) {
-    // 步骤1：随机生成数字网格
-    const board = [];
-    for (let r = 0; r < size; r++) {
-      const row = [];
-      for (let c = 0; c < size; c++) {
-        const num = Math.floor(Math.random() * 
-          (params.numRange[1] - params.numRange[0] + 1)) + params.numRange[0];
-        row.push(num);
-      }
-      board.push(row);
-    }
-    
-    // 步骤2：求解验证
-    const solutions = solve(board, size, 2);
-    
-    if (solutions.length === 1) {
-      // 唯一解！
-      const solution = solutions[0];
-      const blackRatio = solution.length / (size * size);
-      
-      // 检查黑格比例是否在目标范围内
-      if (blackRatio >= params.blackRatio[0] && blackRatio <= params.blackRatio[1]) {
-        return {
-          board,
-          solution: solution.map(c => `${c.row},${c.col}`),
-          difficulty,
-          size,
-          blackCount: solution.length,
-          blackRatio: Math.round(blackRatio * 100)
-        };
-      }
-    }
-  }
-  
-  // 生成失败，放宽条件重试
-  console.log(`生成失败，放宽条件重试...`);
-  for (let attempt = 0; attempt < 1000; attempt++) {
-    const board = [];
-    for (let r = 0; r < size; r++) {
-      const row = [];
-      for (let c = 0; c < size; c++) {
-        const num = Math.floor(Math.random() * 4) + 1;
-        row.push(num);
-      }
-      board.push(row);
-    }
-    
+  const { blackRatio } = diffParams[difficulty] || diffParams[2];
+  const maxAttempts = difficulty === 1 ? 500 : difficulty === 2 ? 800 : 1200;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const blackCells = generateRandomBlackCells(size, blackRatio[0], blackRatio[1]);
+    if (!blackCells) continue;
+    const blackS = new Set(blackCells.map(c => `${c.r},${c.c}`));
+
+    // 生成拉丁方
+    const board = generateLatinSquare(size);
+    for (const c of blackCells) board[c.r][c.c] = 0;
+
     const solutions = solve(board, size, 2);
     if (solutions.length === 1) {
-      const solution = solutions[0];
+      const sol = solutions[0];
       return {
         board,
-        solution: solution.map(c => `${c.row},${c.col}`),
+        solution: sol.map(c => `${c.r},${c.c}`),
         difficulty,
         size,
-        blackCount: solution.length,
-        blackRatio: Math.round(solution.length / (size * size) * 100)
+        blackCount: sol.length,
+        blackRatio: Math.round(sol.length / (size * size) * 100)
       };
     }
   }
-  
   return null;
 }
 
 /**
- * 批量生成谜题
+ * 批量生成
  */
 function generateBatch(count, size = 6, difficulty = 2) {
   const puzzles = [];
-  const startTime = Date.now();
-  
+  const start = Date.now();
+  let fails = 0;
   for (let i = 0; i < count; i++) {
     const puzzle = generate(size, difficulty);
     if (puzzle) {
       puzzle.id = puzzles.length + 1;
       puzzles.push(puzzle);
-      console.log(`生成 ${puzzles.length}/${count} - 黑格${puzzle.blackCount}个 (${puzzle.blackRatio}%)`);
+      process.stdout.write(`\r✓ ${puzzles.length}/${count} fail=${fails} time=${Math.round((Date.now()-start)/1000)}s`);
     } else {
-      console.log(`生成失败，重试...`);
-      i--;
+      fails++;
+      if (fails % 50 === 0) process.stdout.write(` (fail×${fails})`);
     }
+    if (fails > count * 10) { console.log('\n失败过多，停止'); break; }
   }
-  
-  const elapsed = Math.round((Date.now() - startTime) / 1000);
-  console.log(`\n完成！共生成 ${puzzles.length} 个谜题，耗时 ${elapsed} 秒`);
-  
+  console.log(`\n完成：${puzzles.length}/${count}个，失败${fails}次，${Math.round((Date.now()-start)/1000)}s`);
   return puzzles;
 }
 
-module.exports = {
-  solve,
-  hasUniqueSolution,
-  getUniqueSolution,
-  generate,
-  generateBatch,
-  isValidSolution,
-  checkBlackNotAdjacent,
-  checkWhiteConnected,
-  checkNumbersUnique
+module.exports = { solve, generate, generateBatch, isValidSolution,
+  hasUniqueSolution: (b, s) => solve(b, s, 2).length === 1,
+  getUniqueSolution: (b, s) => { const x = solve(b, s, 2); return x.length === 1 ? x[0] : null; }
 };

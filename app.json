@@ -84,7 +84,8 @@
         "pages/one-stroke-solver/one-stroke-solver",
         "pages/nonogram/nonogram",
         "pages/othello/othello",
-        "pages/frog-escape/frog-escape"
+        "pages/frog-escape/frog-escape",
+        "pages/number-one/number-one"
       ]
     },
     {

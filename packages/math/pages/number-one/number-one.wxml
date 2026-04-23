@@ -1,0 +1,107 @@
+<view class="container">
+  <!-- 设置区 -->
+  <view class="settings-bar">
+    <view class="setting-group">
+      <text class="setting-label">尺寸</text>
+      <view class="tab-group">
+        <view
+          wx:for="{{sizeOptions}}"
+          wx:key="value"
+          class="tab {{size === item.value ? 'active' : ''}}"
+          bindtap="onSizeChange"
+          data-value="{{item.value}}"
+        >{{item.label}}</view>
+      </view>
+    </view>
+    <view class="setting-group">
+      <text class="setting-label">难度</text>
+      <view class="tab-group">
+        <view
+          wx:for="{{difficultyOptions}}"
+          wx:key="value"
+          class="tab {{difficulty === item.value ? 'active' : ''}}"
+          bindtap="onDifficultyChange"
+          data-value="{{item.value}}"
+        >{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-section" wx:if="{{loading}}">
+    <text class="loading-text">{{loadingText}}</text>
+  </view>
+
+  <!-- 失败提示 -->
+  <view class="error-section" wx:if="{{failed && !loading}}">
+    <text class="error-text">题库加载失败</text>
+    <button class="btn-sm" bindtap="loadPuzzles">重试</button>
+  </view>
+
+  <!-- 游戏区 -->
+  <view class="game-section" wx:if="{{gameStarted && !loading && !failed}}">
+    <!-- 顶部信息 -->
+    <view class="game-header">
+      <text class="game-info">⏱ {{_formatTime(elapsed)}}</text>
+      <text class="game-hint">点击格子标记黑格</text>
+    </view>
+
+    <!-- 棋盘 -->
+    <view class="board-wrapper">
+      <view class="board">
+        <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
+          <view
+            class="cell {{sizeClass}} {{userBoard[rowIndex][colIndex] === 1 ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}}"
+            wx:for="{{row}}"
+            wx:for-item="cell"
+            wx:for-index="colIndex"
+            wx:key="col"
+            bindtap="onCellTap"
+            bindlongpress="onCellLongPress"
+            data-row="{{rowIndex}}"
+            data-col="{{colIndex}}"
+          >
+            <!-- 数字（仅白格显示） -->
+            <text class="cell-num" wx:if="{{userBoard[rowIndex][colIndex] !== 1 && cell > 0}}">{{cell}}</text>
+            <!-- 黑格标记 -->
+            <view class="black-mark" wx:if="{{userBoard[rowIndex][colIndex] === 1 && cell > 0}}"></view>
+            <!-- 数字在黑格上方 -->
+            <text class="cell-num-in-black" wx:if="{{userBoard[rowIndex][colIndex] === 1 && cell > 0}}">{{cell}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部操作 -->
+    <view class="actions">
+      <view class="action-btn" bindtap="restart">
+        <text>🔄 重置</text>
+      </view>
+      <view class="action-btn" bindtap="undoAll">
+        <text>🗑️ 清除</text>
+      </view>
+      <view class="action-btn answer-btn" bindtap="showAnswer">
+        <text>👁️ 答案</text>
+      </view>
+    </view>
+
+    <!-- 成功提示 -->
+    <view class="win-banner" wx:if="{{solved}}">
+      <text class="win-icon">🎉</text>
+      <text class="win-text">正确！用时 {{_formatTime(elapsed)}}</text>
+      <view class="win-actions">
+        <button class="btn-sm" bindtap="nextPuzzle">下一题</button>
+        <button class="btn-sm btn-outline" bindtap="restart">重玩</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rule-section">
+    <view class="rule-title">📖 数壹规则</view>
+    <view class="rule-item">① 每行每列中，相同数字不能重复</view>
+    <view class="rule-item">② 黑格（涂黑）不相邻（含对角）</view>
+    <view class="rule-item">③ 所有未涂黑的格子必须连通</view>
+    <view class="rule-item">④ 点击格子标记/取消涂黑</view>
+  </view>
+</view>
