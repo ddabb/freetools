@@ -154,6 +154,10 @@ Page({
     const board = puzzle.board;
     const numbers = puzzle.numbers;
 
+    // 题库题目的行列数和雷数可能与默认难度不一致，需同步更新 this.data
+    // 否则 checkWin() 用旧 rows/cols/totalMines 计算 safeCells 会出错
+    this.setData({ rows, cols, totalMines: puzzle.mineCount });
+
     const data = [];
     for (let r = 0; r < rows; r++) {
       const row = [];
