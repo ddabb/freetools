@@ -212,7 +212,7 @@ Page({
   },
 
   onCellTap(e) {
-    if (this.data.gameOver || this.data.showResult) return;
+    if (this.data.gameOver || this.data.showResult || !this._boardData) return;
     const { row, col } = e.currentTarget.dataset;
     const cell = this.data.board[row]?.[col];
     if (!cell) return; // 题库加载未完成时忽略点击
@@ -237,7 +237,8 @@ Page({
       this.startTimer();
     }
 
-    if (this._boardData[row][col].isFrog) {
+    const boardCell = this._boardData?.[row]?.[col];
+    if (boardCell && boardCell.isFrog) {
       this.revealCell(row, col);
       this.gameOver(false);
       return;
@@ -250,8 +251,8 @@ Page({
   // 双击自动翻开（chord）
   chord(row, col) {
     const { rows, cols } = this.data;
-    const cell = this.data.board[row][col];
-    if (!cell.revealed || cell.nearby === 0) return;
+    const cell = this.data.board[row]?.[col];
+    if (!cell || !cell.revealed || cell.nearby === 0) return;
 
     // 数周围标记格数
     let flaggedCount = 0;
