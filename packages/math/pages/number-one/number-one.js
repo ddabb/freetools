@@ -15,6 +15,7 @@ Page({
     failed: false,
     gameStarted: false,
     elapsed: 0,
+    formattedTime: '0:00',
     timer: null,
     difficultyOptions: [
       { label: '简单', value: 1 },
