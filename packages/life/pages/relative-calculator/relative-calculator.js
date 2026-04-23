@@ -142,7 +142,7 @@ Page({
   exportRelationData: function () {
     try {
       // 导入xlsx库
-      const XLSX = require('../../libs/xlsx.full.min.js');
+      const XLSX = require('wechat-xlsx');
       
       // 从内存中获取已加载的亲戚关系数据
       if (!calculator.relationGraph) {

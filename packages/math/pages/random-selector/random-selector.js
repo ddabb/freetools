@@ -1,5 +1,5 @@
 // packages/math/pages/random-selector/random-selector.js
-const XLSX = require('../../libs/xlsx.full.min.js');
+const XLSX = require('wechat-xlsx');
 
 Page({
   data: {
