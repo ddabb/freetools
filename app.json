@@ -167,12 +167,12 @@
       ]
     }
   ],
-  "preloadRule": {
-    "pages/index/index": {
-      "network": "all",
-      "packages": ["life", "text", "math", "unit", "converter"]
-    }
-  },
+  // "preloadRule": {
+  //   "pages/index/index": {
+  //     "network": "all",
+  //     "packages": ["life", "text", "math", "unit", "converter"]
+  //   }
+  // },
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "随身工具宝",
