@@ -4,6 +4,17 @@ var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 var DIFF_TEXT = { easy: '简单 5x5', medium: '中等 8x8', hard: '困难 10x10' };
 var RECORDS_KEY = 'nonogram_records_v7';
 
+// 音效 CDN 地址
+var SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
+
+function playSound(src) {
+  var audio = wx.createInnerAudioContext();
+  audio.src = src;
+  audio.play();
+  audio.onEnded(function() { audio.destroy(); });
+  audio.onError(function() { audio.destroy(); });
+}
+
 function getRecords() {
   try { return JSON.parse(wx.getStorageSync(RECORDS_KEY) || '{}'); } catch(e) { return {}; }
 }
@@ -376,6 +387,7 @@ Page({
   _doOp: function(r, c, op) {
     if (this.data.loading || !this.data.grid.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
+    playSound(SOUNDS_BASE + '/click.wav');
     var size = this.data.gridSize;
     var grid = [];
     for (var i = 0; i < size; i++) grid.push(this.data.grid[i].slice());
@@ -456,6 +468,7 @@ Page({
     this.setData({ grid: grid, filledCount: filledCount });
     if (win) {
       if (this._timer) clearInterval(this._timer);
+      playSound(SOUNDS_BASE + '/win.wav');
       saveRecord(this.data.difficulty, this.data.currentLevel, this._seconds);
       this.setData({ showWin: true, completedCount: getCompleted(this.data.difficulty).length });
     }
