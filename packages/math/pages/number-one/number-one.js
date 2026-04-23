@@ -91,6 +91,7 @@ Page({
     this.setData({
       board,
       userBoard,
+      answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)),
       solution: puzzle.solution,
       size,
       difficulty,
@@ -239,7 +240,7 @@ Page({
     const { board, solution, size, difficulty } = this.data;
     const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
     this._stopTimer();
-    this.setData({ userBoard, solved: false, failed: false, elapsed: 0 });
+    this.setData({ userBoard, solved: false, failed: false, elapsed: 0, board: puzzle.board, answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)) });
     this._startTimer();
   },
 
@@ -247,16 +248,18 @@ Page({
   showAnswer() {
     const { board, solution, size } = this.data;
     const solSet = new Set(solution);
+    const gameHeader = this.selectComponent('.game-header');
     const revealBoard = board.map(row => [...row]);
-    // 将答案黑格填为特殊值 -1
+    const answerBlack = Array.from({ length: size }, () => new Array(size).fill(0));
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         if (solSet.has(`${r},${c}`)) {
           revealBoard[r][c] = -1;
+          answerBlack[r][c] = 1;
         }
       }
     }
-    this.setData({ board: revealBoard, solved: true });
+    this.setData({ board: revealBoard, answerBlack, solved: true });
     this._stopTimer();
     wx.showModal({
       title: '📋 答案',
