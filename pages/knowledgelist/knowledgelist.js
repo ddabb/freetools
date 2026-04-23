@@ -445,7 +445,8 @@ Page({
       const searchIndex = searchIndexData || [];
 
       // 如果已经通过缓存渲染过，检查数据是否有变化
-      if (this.allArticles && this.allArticles.length > 0) {
+      const hasActiveFilter = this.data.currentCategory || this.data.currentTag || this.data.searchKeyword;
+      if (this.allArticles && this.allArticles.length > 0 && !hasActiveFilter) {
         const cachedCount = this.allArticles.length;
         const newCount = articles.length;
         if (cachedCount === newCount) {
@@ -670,6 +671,14 @@ Page({
     const { currentCategory, currentTag, searchKeyword } = this.data;
     let filteredArticles = Array.isArray(allArticles) ? [...allArticles] : [];
 
+    console.log('[DEBUG applyFiltersAndSort] START', {
+      allArticlesCount: allArticles.length,
+      currentCategory,
+      currentTag,
+      searchKeyword,
+      sampleArticle: allArticles[0] ? { category: allArticles[0].category, title: allArticles[0].title } : null
+    });
+
     log('应用筛选和排序:', {
       originalCount: filteredArticles.length,
       allArticlesLength: allArticles.length,
@@ -681,6 +690,10 @@ Page({
     if (currentCategory) {
       const beforeCategoryCount = filteredArticles.length;
       filteredArticles = filteredArticles.filter(article => this.isCategoryMatch(article.category, currentCategory));
+      if (filteredArticles.length === 0 && allArticles.length > 0) {
+        console.log('[DEBUG] 分类筛选无匹配! category:', currentCategory, '样本文章category:', allArticles.slice(0, 5).map(a => a.category));
+      }
+      console.log('[DEBUG] 分类筛选:', currentCategory, '从', beforeCategoryCount, '到', filteredArticles.length);
       console.debug(`分类筛选: ${currentCategory}, 从 ${beforeCategoryCount} 筛选到 ${filteredArticles.length}`);
     }
 
@@ -790,6 +803,7 @@ Page({
   switchCategory(e) {
     const category = e.currentTarget.dataset.category || '';
     const displayCategory = this.getLeafCategoryName(category);
+    console.log('[DEBUG switchCategory] category:', category, 'displayCategory:', displayCategory, 'allArticles:', (this.allArticles || []).length);
     this.setData({
       currentCategory: category,
       currentTag: '',
