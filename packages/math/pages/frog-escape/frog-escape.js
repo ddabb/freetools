@@ -214,7 +214,8 @@ Page({
   onCellTap(e) {
     if (this.data.gameOver || this.data.showResult) return;
     const { row, col } = e.currentTarget.dataset;
-    const cell = this.data.board[row][col];
+    const cell = this.data.board[row]?.[col];
+    if (!cell) return; // 题库加载未完成时忽略点击
 
     // 标记模式下：点击未翻开格子切换标记；已翻开格子仍可触发 chord
     if (this.data.flagMode && !cell.revealed) {
