@@ -316,7 +316,7 @@ Page({
       const topCategories = this.buildTopCategories(categoryTree);
       const categoryStats = this.buildCategoryStatsFromTree(categoryTree);
       
-      // 设置默认分类
+      // 自动选中第一个分类（与下方 loadMetadata CDN 回调保持一致）
       let currentCategory = this.data.currentCategory;
       if (!currentCategory && topCategories.length > 0) {
         currentCategory = topCategories[0].name;
@@ -462,10 +462,11 @@ Page({
       this.categoryLeafLookup = this.buildCategoryLeafLookup(categoryTree);
       const categories = this.buildTopCategories(categoryTree);
       const categoryTreeNodes = this.buildRenderableCategoryTree(categoryTree);
-      const shouldAutoSelectDefaultCategory = !this.data.currentCategory && !this.data.currentTag && !this.data.searchKeyword;
-      const selectedCategory = shouldAutoSelectDefaultCategory
-        ? this.getDefaultCategory(categories)
-        : this.data.currentCategory;
+      // 无查询参数时自动选中第一个分类
+      let selectedCategory = this.data.currentCategory;
+      if (!selectedCategory && categories.length > 0) {
+        selectedCategory = categories[0].name;
+      }
 
       // 大数据量变量存为实例属性，不通过 setData 传递
       this.allArticles = articles;
