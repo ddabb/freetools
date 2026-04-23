@@ -680,6 +680,26 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['黑白棋', '奥赛罗', '翻转', 'AI', '对战'],
     description: '经典黑白棋游戏，支持多难度AI对战'
+  },
+  {
+    id: 'number-one',
+    name: '数壹',
+    icon: '🔢',
+    color: 'blue',
+    url: '/packages/math/pages/number-one/number-one',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数壹', '数字', '谜题', '逻辑', '益智'],
+    description: '数字逻辑谜题，同行同列不能重复'
+  },
+  {
+    id: 'frog-escape',
+    name: '躲避牛蛙',
+    icon: '🐸',
+    color: 'green',
+    url: '/packages/math/pages/frog-escape/frog-escape',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['躲避牛蛙', '扫雷', '踩雷', '青蛙', '益智'],
+    description: '躲避牛蛙踩地雷，经典扫雷玩法'
   }
 ];
 
