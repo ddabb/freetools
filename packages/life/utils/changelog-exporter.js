@@ -1,7 +1,7 @@
 // utils/changelog-exporter.js
 // 版本日志导出工具
 
-const XLSX = require('../../../libs/xlsx.mini.min.js');
+const XLSX = require('../../../libs/xlsx.full.min.js');
 
 /**
  * 导出版本日志为 Excel 文件
