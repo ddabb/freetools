@@ -24,6 +24,17 @@ const DIRECTIONS = [
 const BLACK = 1;  // 黑棋（人类）
 const WHITE = 2;  // 白棋（AI）
 
+// 音效
+const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
+
+function playSound(src) {
+  const audio = wx.createInnerAudioContext();
+  audio.src = src;
+  audio.play();
+  audio.onPlay = () => {};
+  audio.onError = () => {};
+}
+
 Page({
   data: {
     board: [],           // 8x8棋盘，0=空，1=黑，2=白
@@ -252,6 +263,9 @@ Page({
       flippedCells: cellsToFlip
     });
 
+    // 落子音效
+    playSound(SOUNDS_BASE + '/click.wav');
+
     // 短暂显示翻转动画后切换回合
     setTimeout(() => {
       this.switchTurn(newBoard);
@@ -447,12 +461,15 @@ Page({
     if (counts.black > counts.white) {
       winner = BLACK;
       message = `黑棋获胜！${counts.black} vs ${counts.white}`;
+      playSound(SOUNDS_BASE + '/win.wav');
     } else if (counts.white > counts.black) {
       winner = WHITE;
       message = `白棋获胜！${counts.white} vs ${counts.black}`;
+      playSound(SOUNDS_BASE + '/lose.wav');
     } else {
       winner = null;
       message = `平局！${counts.black} vs ${counts.white}`;
+      playSound(SOUNDS_BASE + '/win.wav');
     }
 
     this.setData({
