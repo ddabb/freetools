@@ -19,7 +19,6 @@ Page({
     difficultyList: [
       { key: 'easy', label: '简单 9×9 · 10只', rows: 9, cols: 9, mines: 10 },
       { key: 'medium', label: '中等 16×16 · 40只', rows: 16, cols: 16, mines: 40 },
-      { key: 'hard', label: '困难 16×16 · 99只', rows: 16, cols: 16, mines: 99 },
     ],
     cellSize: 36,
     boardWidth: 324,
@@ -90,12 +89,10 @@ Page({
   loadPuzzle(difficulty) {
     const totalEasy = 1000;
     const totalMedium = 1000;
-    const totalHard = 1000;
-    const totals = { easy: totalEasy, medium: totalMedium, hard: totalHard };
+    const totals = { easy: totalEasy, medium: totalMedium };
     const fileMap = {
       easy: 'easy',
       medium: 'medium',
-      hard: 'hard',
     };
     const maxIdx = totals[difficulty];
     const idx = Math.floor(Math.random() * maxIdx) + 1;
@@ -392,6 +389,7 @@ Page({
     this.setData({ board, gameOver: true, won, showResult: true,
       resultIcon: won ? '🏆' : '🐸',
       resultText: won ? '成功逃脱！' : '踩到牛蛙了！' });
+
 
     if (won) {
       this.saveRecord(this.data.time);
