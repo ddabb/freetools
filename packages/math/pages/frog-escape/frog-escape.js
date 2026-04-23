@@ -2,6 +2,17 @@
 // 雷→🐸牛蛙（要躲避） | 数字→周围牛蛙数 | 安全→💧水花 / 数字提示
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/minesweeper';
 const RECORDS_KEY = 'frog_escape_records';
+const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
+// 音效和震动反馈
+function playSound(src) {
+  const audio = wx.createInnerAudioContext();
+  audio.src = src;
+  audio.play();
+  audio.onEnded(() => audio.destroy());
+}
+
+// 音效和震动反馈
+
 
 Page({
   data: {
@@ -216,7 +227,9 @@ Page({
 
     // 标记模式下：点击未翻开格子切换标记；已翻开格子仍可触发 chord
     if (this.data.flagMode && !cell.revealed) {
+      wx.vibrateShort({ type: 'medium' });
       this.toggleFlag(row, col);
+      playSound(SOUNDS_BASE + '/flag.wav');
       return;
     }
 
@@ -242,9 +255,10 @@ Page({
       return;
     }
 
-    this.floodFill(row, col);
     wx.vibrateShort({ type: 'light' });
+    this.floodFill(row, col);
     this.checkWin();
+    playSound(SOUNDS_BASE + '/click.wav');
   },
 
   // 双击自动翻开（chord）
@@ -379,6 +393,11 @@ Page({
     }
 
     wx.vibrateLong({});
+    if (won) {
+      playSound(SOUNDS_BASE + '/win.wav');
+    } else {
+      playSound(SOUNDS_BASE + '/lose.wav');
+    }
 
     const board = this.data.board;
     for (let r = 0; r < this.data.rows; r++) {
