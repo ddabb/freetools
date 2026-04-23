@@ -7,7 +7,6 @@
     "pages/categorydetail/categorydetail",
     "pages/taglist/taglist",
     "pages/tagdetail/tagdetail",
-    "pages/changelog/changelog",
     "pages/about/about"
   ],
   "usingComponents": {
@@ -50,7 +49,8 @@
         "pages/idiom-battle/idiom-battle",
         "pages/idiom-chain/idiom-chain",
         "pages/truth-or-dare/truth-or-dare",
-        "pages/merge-abc/merge-abc"
+        "pages/merge-abc/merge-abc",
+        "pages/changelog/changelog"
       ]
     },
     {

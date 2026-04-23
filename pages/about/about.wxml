@@ -91,6 +91,11 @@
           <text class="cache-icon">🗑️</text>
           <text class="cache-text">清除 CDN 缓存</text>
         </button>
+        
+        <button class="changelog-btn" hover-class="changelog-btn-hover" bindtap="goToChangelog">
+          <text class="changelog-icon">📋</text>
+          <text class="changelog-text">更新日志</text>
+        </button>
       </view>
     </view>
 

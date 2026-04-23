@@ -63,6 +63,13 @@ Page({
     });
   },
 
+  // 跳转到更新日志
+  goToChangelog() {
+    wx.navigateTo({
+      url: '/packages/life/pages/changelog/changelog'
+    });
+  },
+
   // 复制微信公众号名称
   onCopyWechat() {
     wx.setClipboardData({
