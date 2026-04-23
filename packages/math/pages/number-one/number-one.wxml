@@ -51,7 +51,7 @@
       <view class="board">
         <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
           <view
-            class="cell {{sizeClass}} {{userBoard[rowIndex][colIndex] === 1 ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}}"
+            class="cell {{sizeClass}} {{userBoard[rowIndex][colIndex] === 1 ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}} {{cell === 0 ? 'puzzle-black' : ''}}"
             wx:for="{{row}}"
             wx:for-item="cell"
             wx:for-index="colIndex"
@@ -62,11 +62,7 @@
             data-col="{{colIndex}}"
           >
             <!-- 数字（仅白格显示） -->
-            <text class="cell-num" wx:if="{{userBoard[rowIndex][colIndex] !== 1 && cell > 0}}">{{cell}}</text>
-            <!-- 黑格标记 -->
-            <view class="black-mark" wx:if="{{userBoard[rowIndex][colIndex] === 1 && cell > 0}}"></view>
-            <!-- 数字在黑格上方 -->
-            <text class="cell-num-in-black" wx:if="{{userBoard[rowIndex][colIndex] === 1 && cell > 0}}">{{cell}}</text>
+            <text class="cell-num" wx:if="{{cell > 0}}">{{cell}}</text>
           </view>
         </view>
       </view>

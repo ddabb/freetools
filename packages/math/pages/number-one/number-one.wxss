@@ -164,6 +164,20 @@
   background: #1a1a2e;
 }
 
+/* 题目中预填的黑格（board值为0）—— 灰色底色加对角线标记 */
+.cell.puzzle-black {
+  background: #c8c8c0 !important;
+  position: relative;
+}
+.cell.puzzle-black::after {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: #b0b0a8;
+}
+
 /* 格子数字 */
 .cell-num {
   font-size: 38rpx;
