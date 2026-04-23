@@ -237,11 +237,13 @@ Page({
     const boardCell = this._boardData?.[row]?.[col];
     if (boardCell && boardCell.isFrog) {
       this.revealCell(row, col);
+      wx.vibrateShort({ type: 'heavy' });
       this.gameOver(false);
       return;
     }
 
     this.floodFill(row, col);
+    wx.vibrateShort({ type: 'light' });
     this.checkWin();
   },
 
@@ -296,6 +298,7 @@ Page({
     this.setData({ board: this.data.board, revealedCount: this.data.revealedCount + revealed });
 
     if (exploded) {
+      wx.vibrateShort({ type: 'medium' });
       this.gameOver(false);
     } else {
       this.checkWin();
@@ -374,6 +377,8 @@ Page({
       clearInterval(this.data.timerInterval);
       this.data.timerInterval = null;
     }
+
+    wx.vibrateLong({});
 
     const board = this.data.board;
     for (let r = 0; r < this.data.rows; r++) {
