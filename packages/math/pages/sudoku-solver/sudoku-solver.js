@@ -1,7 +1,7 @@
 // packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
-const XLSX = require('../../../../libs/xlsx.full.min.js');
+const XLSX = require('../../libs/xlsx.full.min.js');
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';

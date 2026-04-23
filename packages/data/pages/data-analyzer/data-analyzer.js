@@ -1,5 +1,5 @@
 // packages/data/pages/data-analyzer/data-analyzer.js
-const XLSX = require('../../../../libs/xlsx.full.min.js');
+const XLSX = require('../../libs/xlsx.full.min.js');
 
 Page({
   data: {
