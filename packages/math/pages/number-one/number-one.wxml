@@ -42,7 +42,7 @@
   <view class="game-section" wx:if="{{gameStarted && !loading && !failed}}">
     <!-- 顶部信息 -->
     <view class="game-header">
-      <text class="game-info">⏱ {{_formatTime(elapsed)}}</text>
+      <text class="game-info">⏱ {{formattedTime}}</text>
       <text class="game-hint">点击格子标记黑格</text>
     </view>
 
@@ -51,7 +51,7 @@
       <view class="board">
         <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
           <view
-            class="cell {{sizeClass}} {{(userBoard[rowIndex][colIndex] === 1 || answerBlack[rowIndex][colIndex] === 1) ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}} {{cell === 0 ? 'puzzle-black' : ''}}"
+            class="cell {{sizeClass}} {{(userBoard[rowIndex][colIndex] === 1 || answerBlack[rowIndex][colIndex] === 1) ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}}"
             wx:for="{{row}}"
             wx:for-item="cell"
             wx:for-index="colIndex"
@@ -61,8 +61,8 @@
             data-row="{{rowIndex}}"
             data-col="{{colIndex}}"
           >
-            <!-- 数字（仅白格显示） -->
-            <text class="cell-num" wx:if="{{cell > 0}}">{{cell}}</text>
+            <!-- 数字（白格显示，黑格隐藏） -->
+            <text class="cell-num" wx:if="{{!(userBoard[rowIndex][colIndex] === 1 || answerBlack[rowIndex][colIndex] === 1)}}">{{cell}}</text>
           </view>
         </view>
       </view>
@@ -84,7 +84,7 @@
     <!-- 成功提示 -->
     <view class="win-banner" wx:if="{{solved}}">
       <text class="win-icon">🎉</text>
-      <text class="win-text">正确！用时 {{_formatTime(elapsed)}}</text>
+      <text class="win-text">正确！用时 {{formattedTime}}</text>
       <view class="win-actions">
         <button class="btn-sm" bindtap="nextPuzzle">下一题</button>
         <button class="btn-sm btn-outline" bindtap="restart">重玩</button>

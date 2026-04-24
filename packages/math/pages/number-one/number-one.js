@@ -2,7 +2,7 @@
 const utils = require('../../../../utils/index');
 
 // CDN 题库地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@geziyouxi/data/number-one/puzzles';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-one/puzzles';
 
 // 音效 CDN 地址
 const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
@@ -41,7 +41,7 @@ Page({
     loading: false,
     loadingText: '加载题库...',
     puzzles: {},
-    indexData: null,
+    currentBoard: null,  // 保存当前谜题原始数据
   },
 
   onLoad() {
@@ -59,6 +59,12 @@ Page({
     if (size === 5) this.setData({ sizeClass: 'size-small' });
     else if (size === 6) this.setData({ sizeClass: 'size-medium' });
     else this.setData({ sizeClass: 'size-large' });
+  },
+
+  _formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${String(sec).padStart(2, '0')}`;
   },
 
   // 从 CDN 加载题库
@@ -93,7 +99,7 @@ Page({
 
   _startGame(puzzle) {
     this._stopTimer();
-    const { size, difficulty } = this.data;
+    const { size } = this.data;
     const board = puzzle.board;
 
     // 用户棋盘：0=未标记, 1=标记为黑
@@ -105,11 +111,13 @@ Page({
       answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)),
       solution: puzzle.solution,
       size,
-      difficulty,
+      difficulty: puzzle.difficulty || this.data.difficulty,
       solved: false,
       failed: false,
       gameStarted: true,
       elapsed: 0,
+      formattedTime: '0:00',
+      currentBoard: puzzle,  // 保存原始谜题数据
     });
 
     this._initSizeClass();
@@ -118,7 +126,11 @@ Page({
 
   _startTimer() {
     const timer = setInterval(() => {
-      this.setData({ elapsed: this.data.elapsed + 1 });
+      const elapsed = this.data.elapsed + 1;
+      this.setData({
+        elapsed,
+        formattedTime: this._formatTime(elapsed),
+      });
     }, 1000);
     this.setData({ timer });
   },
@@ -126,12 +138,6 @@ Page({
   _stopTimer() {
     const { timer } = this.data;
     if (timer) { clearInterval(timer); this.setData({ timer: null }); }
-  },
-
-  _formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${String(sec).padStart(2, '0')}`;
   },
 
   // 点击格子：标记/取消黑格
@@ -156,19 +162,18 @@ Page({
   },
 
   _checkWin(userBoard) {
-    const { solution } = this.data;
+    const { solution, size } = this.data;
     const solSet = new Set(solution);
     let correct = true;
-    let count = 0;
 
-    for (let r = 0; r < this.data.size; r++) {
-      for (let c = 0; c < this.data.size; c++) {
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
         const key = `${r},${c}`;
         const isUserBlack = userBoard[r][c] === 1;
         const isSolBlack = solSet.has(key);
-        if (isUserBlack) count++;
-        if (isUserBlack !== isSolBlack) { correct = false; }
+        if (isUserBlack !== isSolBlack) { correct = false; break; }
       }
+      if (!correct) break;
     }
 
     if (correct) {
@@ -180,13 +185,12 @@ Page({
   },
 
   _showResult(type) {
-    const { elapsed, size, difficulty } = this.data;
+    const { formattedTime, size, difficulty } = this.data;
     const diffNames = ['', '简单', '中等', '困难'];
     const sizeNames = { 5: '5×5', 6: '6×6', 7: '7×7' };
-    const timeStr = this._formatTime(elapsed);
     const title = type === 'success' ? '🎉 正确！' : '❌ 错误';
     const msg = type === 'success'
-      ? `用时 ${timeStr}\n${sizeNames[size]} ${diffNames[difficulty]}`
+      ? `用时 ${formattedTime}\n${sizeNames[size]} ${diffNames[difficulty]}`
       : '还有格子标记错误，继续加油！';
     wx.showModal({
       title,
@@ -233,27 +237,21 @@ Page({
     this.loadPuzzles();
   },
 
-  // 切换尺寸（从设置区）
-  onSizeChangeAlt(e) {
-    const size = e.detail.value;
-    this.setData({ size: parseInt(size), gameStarted: false });
-    this._initSizeClass();
-    this.loadPuzzles();
-  },
-
-  // 切换难度（从设置区）
-  onDifficultyChangeAlt(e) {
-    const diff = e.detail.value;
-    this.setData({ difficulty: parseInt(diff), gameStarted: false });
-    this.loadPuzzles();
-  },
-
   // 重新开始当前题
   restart() {
-    const { board, solution, size, difficulty } = this.data;
-    const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
+    const { currentBoard, size } = this.data;
+    if (!currentBoard) return;
     this._stopTimer();
-    this.setData({ userBoard, solved: false, failed: false, elapsed: 0, board: puzzle.board, answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)) });
+    const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
+    this.setData({
+      board: currentBoard.board,
+      userBoard,
+      answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)),
+      solved: false,
+      failed: false,
+      elapsed: 0,
+      formattedTime: '0:00',
+    });
     this._startTimer();
   },
 
@@ -261,22 +259,19 @@ Page({
   showAnswer() {
     const { board, solution, size } = this.data;
     const solSet = new Set(solution);
-    const gameHeader = this.selectComponent('.game-header');
-    const revealBoard = board.map(row => [...row]);
     const answerBlack = Array.from({ length: size }, () => new Array(size).fill(0));
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         if (solSet.has(`${r},${c}`)) {
-          revealBoard[r][c] = -1;
           answerBlack[r][c] = 1;
         }
       }
     }
-    this.setData({ board: revealBoard, answerBlack, solved: true });
+    this.setData({ answerBlack, solved: true });
     this._stopTimer();
     wx.showModal({
       title: '📋 答案',
-      content: '已显示答案（-1 = 黑格）',
+      content: '已显示答案，黑格即为涂黑位置',
       showCancel: false,
       confirmText: '知道了'
     });
