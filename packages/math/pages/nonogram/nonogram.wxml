@@ -61,6 +61,9 @@
   <!-- 操作 -->
   <view class="action-bar" wx:if="{{!loading}}">
     <view class="btn" bindtap="undo">↩ 重来</view>
+    <view class="btn sound-btn {{soundEnabled ? 'active' : ''}}" bindtap="toggleSound">
+      {{soundEnabled ? '🔊' : '🔇'}}
+    </view>
   </view>
 
   <!-- 通关弹窗 -->

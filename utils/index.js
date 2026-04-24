@@ -46,6 +46,9 @@ const util = require('./util');
 // 字体加载工具
 const fontLoader = require('./fontLoader');
 
+// 音效管理器
+const sound = require('./sound-manager');
+
 /**
  * 合并导出所有工具
  */
@@ -137,5 +140,12 @@ module.exports = {
   // 字体加载工具
   fontLoader: fontLoader,
   loadFonts: fontLoader.loadFonts,
-  preloadCoreFonts: fontLoader.preloadCoreFonts
+  preloadCoreFonts: fontLoader.preloadCoreFonts,
+
+  // 音效管理器
+  sound: sound,
+  playSound: sound.playSound,
+  preloadSounds: sound.preloadSounds,
+  soundClearCache: sound.clearCache,
+  soundCacheSize: sound.getCacheSize
 };

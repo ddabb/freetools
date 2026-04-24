@@ -1,5 +1,6 @@
 // packages/life/pages/truth-or-dare/truth-or-dare.js
 const utils = require('../../../../utils/index');
+const { playSound } = utils;
 
 // 真心话大冒险页面
 Page({
@@ -163,6 +164,7 @@ Page({
   // 点击卡片换题
   onCardTap() {
     if (this.data.isAnimating) return;
+    playSound('click', { pageId: 'truth-or-dare' });
     this.pickQuestion();
     wx.vibrateShort({ type: 'light' });
   },

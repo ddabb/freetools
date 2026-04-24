@@ -1,21 +1,14 @@
 // packages/math/pages/number-one/number-one.js
 const utils = require('../../../../utils/index');
+const { playSound, preloadSounds } = utils;
 
 // CDN 题库地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-one/puzzles';
 
-// 音效 CDN 地址
-const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
-
-function playSound(src) {
-  const audio = wx.createInnerAudioContext();
-  audio.src = src;
-  audio.play();
-  audio.onEnded(() => audio.destroy());
-  audio.onError(() => audio.destroy());
-}
-
 Page({
+  onLoad() {
+    preloadSounds(['click', 'win']);
+  },
   data: {
     size: 6,
     difficulty: 2,
@@ -147,7 +140,7 @@ Page({
     const userBoard = this.data.userBoard.map(r => [...r]);
     // 0→1→0 切换
     userBoard[row][col] = userBoard[row][col] === 1 ? 0 : 1;
-    playSound(SOUNDS_BASE + '/click.wav');
+    playSound('click', { pageId: 'number-one' });
     this.setData({ userBoard, failed: false });
     this._checkWin(userBoard);
   },
@@ -179,7 +172,7 @@ Page({
     if (correct) {
       this._stopTimer();
       this.setData({ solved: true });
-      playSound(SOUNDS_BASE + '/win.wav');
+      playSound('win', { pageId: 'number-one' });
       this._showResult('success');
     }
   },

@@ -1,5 +1,7 @@
 // 黑白棋 (Othello / Reversi)
 // 人机对战版本
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds } = utils;
 
 // 位置权重表（角落最重要，边缘次之，靠近角落的位置最差）
 const POSITION_WEIGHT = [
@@ -24,18 +26,14 @@ const DIRECTIONS = [
 const BLACK = 1;  // 黑棋（人类）
 const WHITE = 2;  // 白棋（AI）
 
-// 音效
-const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
-
-function playSound(src) {
-  const audio = wx.createInnerAudioContext();
-  audio.src = src;
-  audio.play();
-  audio.onPlay = () => {};
-  audio.onError = () => {};
-}
-
+// 音效已移至 utils/sound-manager.js
 Page({
+  onLoad() {
+    preloadSounds(['click', 'win', 'lose']);
+    const soundEnabled = utils.isPageSoundEnabled('othello');
+    this.setData({ soundEnabled });
+    this.initGame();
+  },
   data: {
     board: [],           // 8x8棋盘，0=空，1=黑，2=白
     currentPlayer: BLACK, // 当前玩家
@@ -51,11 +49,21 @@ Page({
     cellSize: 40,         // 格子大小
     boardWidth: 320,      // 棋盘宽度
     lastMove: null,       // 最后落子位置（高亮）
-    flippedCells: []      // 翻转的格子（动画）
+    flippedCells: [],      // 翻转的格子（动画）
+    soundEnabled: true     // 音效开关状态
+  },
+
+  toggleSound() {
+    const newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('othello', newEnabled);
+    if (newEnabled) {
+      playSound('click', { pageId: 'othello' });
+    }
   },
 
   onLoad() {
-    this.initGame();
+    // 已在上方Page onLoad中处理
   },
 
   onReady() {
@@ -264,7 +272,7 @@ Page({
     });
 
     // 落子音效
-    playSound(SOUNDS_BASE + '/click.wav');
+    playSound('click', { pageId: 'othello' });
 
     // 短暂显示翻转动画后切换回合
     setTimeout(() => {
@@ -461,15 +469,15 @@ Page({
     if (counts.black > counts.white) {
       winner = BLACK;
       message = `黑棋获胜！${counts.black} vs ${counts.white}`;
-      playSound(SOUNDS_BASE + '/win.wav');
+      playSound('win', { pageId: 'othello' });
     } else if (counts.white > counts.black) {
       winner = WHITE;
       message = `白棋获胜！${counts.white} vs ${counts.black}`;
-      playSound(SOUNDS_BASE + '/lose.wav');
+      playSound('lose', { pageId: 'othello' });
     } else {
       winner = null;
       message = `平局！${counts.black} vs ${counts.white}`;
-      playSound(SOUNDS_BASE + '/win.wav');
+      playSound('win', { pageId: 'othello' });
     }
 
     this.setData({

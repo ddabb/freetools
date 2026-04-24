@@ -2,19 +2,14 @@
 // 雷→🐸牛蛙（要躲避） | 数字→周围牛蛙数 | 安全→💧水花 / 数字提示
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/minesweeper';
 const RECORDS_KEY = 'frog_escape_records';
-const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
-// 音效和震动反馈
-function playSound(src) {
-  const audio = wx.createInnerAudioContext();
-  audio.src = src;
-  audio.play();
-  audio.onEnded(() => audio.destroy());
-}
-
-// 音效和震动反馈
-
-
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds } = utils;
+// 音效和震动反馈已移至 utils/sound-manager.js
+// 页面加载时预加载音效
 Page({
+  onLoad() {
+    preloadSounds(['click', 'flag', 'win', 'lose']);
+  },
   data: {
     board: [],        // 格子状态: {revealed, flagged, value, isFrog, nearby}
     rows: 9,
@@ -23,6 +18,7 @@ Page({
     revealedCount: 0,
     flaggedCount: 0,
     flagMode: false,
+    soundEnabled: true, // 音效开关状态
     gameOver: false,
     won: false,
     difficulty: 'easy',
@@ -57,6 +53,19 @@ Page({
   onShow() {
     if (this.data.showResult) {
       this.setData({ showResult: false });
+    }
+    // 加载音效开关状态
+    const soundEnabled = utils.isPageSoundEnabled('frog-escape');
+    this.setData({ soundEnabled });
+  },
+
+  toggleSound() {
+    const newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('frog-escape', newEnabled);
+    // 播放一个提示音
+    if (newEnabled) {
+      playSound('click', { pageId: 'frog-escape' });
     }
   },
 
@@ -229,7 +238,7 @@ Page({
     if (this.data.flagMode && !cell.revealed) {
       wx.vibrateShort({ type: 'medium' });
       this.toggleFlag(row, col);
-      playSound(SOUNDS_BASE + '/flag.wav');
+      playSound('flag', { pageId: 'frog-escape' });
       return;
     }
 
@@ -258,7 +267,7 @@ Page({
     wx.vibrateShort({ type: 'light' });
     this.floodFill(row, col);
     this.checkWin();
-    playSound(SOUNDS_BASE + '/click.wav');
+    playSound('click', { pageId: 'frog-escape' });
   },
 
   // 双击自动翻开（chord）
@@ -394,9 +403,9 @@ Page({
 
     wx.vibrateLong({});
     if (won) {
-      playSound(SOUNDS_BASE + '/win.wav');
+      playSound('win', { pageId: 'frog-escape' });
     } else {
-      playSound(SOUNDS_BASE + '/lose.wav');
+      playSound('lose', { pageId: 'frog-escape' });
     }
 
     const board = this.data.board;

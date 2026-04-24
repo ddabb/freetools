@@ -21,6 +21,9 @@
     <view class="flag-btn {{flagMode ? 'active' : ''}}" bindtap="switchFlagMode">
       <text>🚩 标记牛蛙</text>
     </view>
+    <view class="sound-btn {{soundEnabled ? 'active' : ''}}" bindtap="toggleSound">
+      <text>{{soundEnabled ? '🔊' : '🔇'}} 音效</text>
+    </view>
     <view class="help-btn" bindtap="toggleHelp">
       <text>❓ 帮助</text>
     </view>

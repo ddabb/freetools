@@ -2,6 +2,7 @@
 // ABC合成记 - 字母合并游戏
 
 const utils = require('../../../../utils/index');
+const { playSound } = utils;
 
 // 分数映射
 const SCORES = {
@@ -110,6 +111,7 @@ Page({
         arr.splice(i + 1, 1);
         arr.push('');
         merged = true;
+        playSound('click', { pageId: 'merge-abc' });
         i--;
       }
     }
@@ -261,6 +263,7 @@ Page({
 
     if (!canMove) {
       this.saveBestScore();
+      playSound('lose', { pageId: 'merge-abc' });
       this.setData({ gameOver: true, showGameOverModal: true });
     }
   },

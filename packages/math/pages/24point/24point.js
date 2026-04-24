@@ -1,4 +1,6 @@
 // packages/math/pages/24point/24point.js
+const utils = require('../../../../utils/index');
+const { playSound } = utils;
 
 // CDN 数据源地址
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
@@ -607,6 +609,7 @@ Page({
       
       // 允许一定的误差范围（处理浮点数精度问题）
       if (Math.abs(result - 24) < 0.000001) {
+        playSound('win', { pageId: '24point' });
         this.showResult(true, '恭喜你，答对了！');
         this.addToHistory(numbers, true);
         this.updateStats(true);
@@ -614,6 +617,7 @@ Page({
           solutionFound: true
         });
       } else {
+        playSound('lose', { pageId: '24point' });
         this.showResult(false, `计算结果为${result}，正确答案是24`);
         this.addToHistory(numbers, false);
         this.updateStats(false);

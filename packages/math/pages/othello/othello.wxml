@@ -57,6 +57,9 @@
   <!-- 操作按钮 -->
   <view class="controls">
     <button class="btn-restart" bindtap="restart">重新开始</button>
+    <button class="btn-sound {{soundEnabled ? 'active' : ''}}" bindtap="toggleSound">
+      {{soundEnabled ? '🔊' : '🔇'}}
+    </button>
   </view>
 
   <!-- 结果弹窗 -->

@@ -1,6 +1,7 @@
 // packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
+const { playSound } = utils;
 const XLSX = require('wechat-xlsx');
 
 // CDN 数据源地址
@@ -80,7 +81,7 @@ Page({
     this.loadDailySudoku(this.data.selectedDate);
   },
 
-  // 加载指定日期的每日数独（带缓存功能）
+  // 加载指定日期的每日数独(带缓存功能)
   loadDailySudoku(targetDate = this.data.selectedDate) {
     const dateValue = normalizeDateValue(targetDate);
     const dateKey = formatDateKey(dateValue);
@@ -111,17 +112,17 @@ Page({
         wx.hideLoading();
         console.debug(`[daily-sudoku] CDN响应状态码: ${res.statusCode}`);
         if (res.statusCode === 200 && res.data && res.data.puzzle) {
-          console.debug('[daily-sudoku] CDN数据加载成功，保存到缓存');
+          console.debug('[daily-sudoku] CDN数据加载成功,保存到缓存');
           console.debug('[daily-sudoku] 题目名称:', res.data.name);
           console.debug('[daily-sudoku] 难度:', res.data.level, res.data.difficulty);
           wx.setStorageSync(cacheKey, res.data);
           wx.setStorageSync(cacheTsKey, Date.now());
           this.setTodaySudoku(res.data, dateValue);
         } else if (res.statusCode === 404) {
-          console.warn('[daily-sudoku] CDN没有对应日期的数据，生成备用题目');
+          console.warn('[daily-sudoku] CDN没有对应日期的数据,生成备用题目');
           this.generateRandomSudoku(dateValue);
         } else {
-          console.warn('[daily-sudoku] CDN数据格式错误，使用备用题目');
+          console.warn('[daily-sudoku] CDN数据格式错误,使用备用题目');
           this.generateRandomSudoku(dateValue);
         }
       },
@@ -199,12 +200,12 @@ Page({
 
       console.debug('[daily-sudoku] 备用题目生成成功');
       this.setTodaySudoku(randomData, dateValue);
-      utils.showText('该日期暂无预置题目，已为你生成备用数独');
+      utils.showText('该日期暂无预置题目,已为你生成备用数独');
     } catch (error) {
       console.error('[daily-sudoku] 备用题目生成失败:', error);
       console.debug('[daily-sudoku] 使用本地备用数独');
       this.useLocalDailySudoku(dateValue);
-      utils.showText('该日期加载失败，已切换为本地备用数独');
+      utils.showText('该日期加载失败,已切换为本地备用数独');
     }
   },
 
@@ -231,19 +232,19 @@ Page({
     for (let r = 0; r < 9; r++) {
       const row = [];
       for (let c = 0; c < 9; c++) {
-        row.push({ 
-          value: '', 
-          fixed: false, 
+        row.push({
+          value: '',
+          fixed: false,
           candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           showCandidates: false
         });
       }
       board.push(row);
     }
-    this.setData({ 
-      board: board, 
-      hasSolution: false, 
-      solutionMessage: '', 
+    this.setData({
+      board: board,
+      hasSolution: false,
+      solutionMessage: '',
       selectedPreset: -1,
       selectedCell: { row: -1, col: -1 }
     });
@@ -335,20 +336,20 @@ Page({
       for (let c = 0; c < 9; c++) {
         const num = puzzle[r][c];
         const isEmpty = num === 0;
-        row.push({ 
-          value: isEmpty ? '' : String(num), 
-          fixed: !isEmpty, 
+        row.push({
+          value: isEmpty ? '' : String(num),
+          fixed: !isEmpty,
           candidates: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           showCandidates: false
         });
       }
       board.push(row);
     }
-    this.setData({ 
-      board: board, 
-      hasSolution: false, 
-      solutionMessage: '', 
-      pastedText: '', 
+    this.setData({
+      board: board,
+      hasSolution: false,
+      solutionMessage: '',
+      pastedText: '',
       selectedCell: { row: -1, col: -1 }
     });
     if (this.data.showCandidates) this.calculateCandidates();
@@ -356,17 +357,17 @@ Page({
 
   calculateCandidates() {
     if (!this.data.showCandidates) {
-      console.debug('[候选数] showCandidates 为 false，直接返回');
+      console.debug('[候选数] showCandidates 为 false,直接返回');
       return;
     }
-    
+
     try {
       console.debug('[候选数] ========== 开始计算候选数 ==========');
-      
+
       const board = this.data.board;
       console.debug('[候选数] board 类型:', typeof board, Array.isArray(board));
       console.debug('[候选数] board 长度:', board ? board.length : 'undefined');
-      
+
       const grid = [];
       for (let r = 0; r < 9; r++) {
         const row = [];
@@ -378,13 +379,13 @@ Page({
         grid.push(row);
       }
       console.debug('[候选数] grid 构建完成');
-      
+
       // 使用与生成器相同的 toDisplayBoard 函数
       const displayBoard = sudoku.toDisplayBoard(grid, true);
       console.debug('[候选数] toDisplayBoard 完成');
       console.debug('[候选数] displayBoard[0][0]:', JSON.stringify(displayBoard[0][0]));
-      
-      // 更新棋盘数据（同步候选数和显示状态）
+
+      // 更新棋盘数据(同步候选数和显示状态)
       let emptyCellCount = 0;
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
@@ -393,8 +394,8 @@ Page({
           if (board[r][c].showCandidates) emptyCellCount++;
         }
       }
-      console.debug('[候选数] 更新完成，空格数量:', emptyCellCount);
-      
+      console.debug('[候选数] 更新完成,空格数量:', emptyCellCount);
+
       this.setData({ board: board }, () => {
         console.debug('[候选数] setData 回调完成');
       });
@@ -408,12 +409,12 @@ Page({
     const row = e.currentTarget.dataset.row;
     const col = e.currentTarget.dataset.col;
     const cell = this.data.board[row][col];
-    
-    // 如果是固定格子，不允许编辑
+
+    // 如果是固定格子,不允许编辑
     if (cell.fixed) return;
-    
-    // 选中格子（固定底部面板一直显示）
-    this.setData({ 
+
+    // 选中格子(固定底部面板一直显示)
+    this.setData({
       selectedCell: { row, col }
     });
   },
@@ -422,39 +423,36 @@ Page({
   onNumberInput(e) {
     const num = e.currentTarget.dataset.num;
     const { row, col } = this.data.selectedCell;
-    
+
     // 检查是否选中格子
     if (row === undefined || row === -1) {
       utils.showText('请先点击格子');
       return;
     }
-    
+
     const board = this.data.board;
     board[row][col].value = String(num);
-    this.setData({ 
-      board: board, 
-      hasSolution: false, 
-      solutionMessage: '' 
-    });
+    playSound('click', { pageId: 'sudoku-solver' });
+    this.setData({
     this.calculateCandidates();
   },
 
   // 清除格子
   onClearCell() {
     const { row, col } = this.data.selectedCell;
-    
+
     // 检查是否选中格子
     if (row === undefined || row === -1) {
       utils.showText('请先点击格子');
       return;
     }
-    
+
     const board = this.data.board;
     board[row][col].value = '';
-    this.setData({ 
-      board: board, 
-      hasSolution: false, 
-      solutionMessage: '' 
+    this.setData({
+      board: board,
+      hasSolution: false,
+      solutionMessage: ''
     });
     this.calculateCandidates();
   },
@@ -465,16 +463,16 @@ Page({
     const col = e.currentTarget.dataset.col;
     const num = e.currentTarget.dataset.num;
     const board = this.data.board;
-    
+
     // 检查该候选数是否存在
     if (board[row][col].candidates && board[row][col].candidates.includes(num)) {
       board[row][col].value = String(num);
       board[row][col].candidates = [];
-      this.setData({ 
-        board: board, 
+      this.setData({
+        board: board,
         selectedCell: { row, col },
-        hasSolution: false, 
-        solutionMessage: '' 
+        hasSolution: false,
+        solutionMessage: ''
       });
       this.calculateCandidates();
     }
@@ -521,8 +519,9 @@ Page({
         solving: false, 
         hasSolution: true, 
         solutionMessage: '求解成功',
-        showCandidates: false 
+        showCandidates: false
       });
+      playSound('win', { pageId: 'sudoku-solver' });
       utils.showSuccess('求解成功');
     }, 60);
   },
@@ -542,10 +541,10 @@ Page({
     });
   },
 
-  // 导出到Excel（优化边框和背景色）
+  // 导出到Excel(优化边框和背景色)
   exportExcel() {
     const { board } = this.data;
-    
+
     // 构建9x9棋盘数据
     const aoa = [];
     for (let r = 0; r < 9; r++) {
@@ -556,15 +555,15 @@ Page({
       aoa.push(row);
     }
 
-    // 导出（带优化边框和背景色）
+    // 导出(带优化边框和背景色)
     this._exportSudokuWithBorder(aoa, `sudoku_${Date.now()}.xlsx`);
   },
 
-  // 导出题目和答案（两个工作表）
+  // 导出题目和答案(两个工作表)
   exportPuzzleAndSolution() {
     const { board } = this.data;
-    
-    // 构建题目数据（只包含原始题目数字）
+
+    // 构建题目数据(只包含原始题目数字)
     const puzzleAoa = [];
     for (let r = 0; r < 9; r++) {
       const row = [];
@@ -577,15 +576,15 @@ Page({
       }
       puzzleAoa.push(row);
     }
-    
-    // 构建答案数据（先求解数独，然后显示完整答案）
+
+    // 构建答案数据(先求解数独,然后显示完整答案)
     const solutionAoa = this._getSolvedBoard();
-    
-    // 如果求解失败，提示用户
+
+    // 如果求解失败,提示用户
     if (this._isBoardEmpty(solutionAoa)) {
       wx.showModal({
         title: '提示',
-        content: '数独求解失败，无法导出答案。请检查输入是否正确。',
+        content: '数独求解失败,无法导出答案。请检查输入是否正确。',
         confirmText: '确定',
         showCancel: false,
         success: () => {
@@ -594,7 +593,7 @@ Page({
       });
       return;
     }
-    
+
     // 直接导出题目和答案
     this._exportPuzzleAndSolution(puzzleAoa, solutionAoa, `sudoku_puzzle_solution_${Date.now()}.xlsx`);
   },
@@ -607,7 +606,7 @@ Page({
       ws['!cols'] = Array(9).fill({ wch: 8 });
       ws['!rows'] = Array(9).fill({ hpt: 40 });
 
-      // 构建完整样式对象（xlsx.full 要求：ARGB颜色 + patternType: 'solid' + 边框颜色）
+      // 构建完整样式对象(xlsx.full 要求:ARGB颜色 + patternType: 'solid' + 边框颜色)
       const range = XLSX.utils.decode_range('A1:I9');
       for (let R = range.s.r; R <= range.e.r; R++) {
         for (let C = range.s.c; C <= range.e.c; C++) {
@@ -616,7 +615,7 @@ Page({
 
           const isOriginal = this.data.board[R][C].fixed;
 
-          // 边框样式（所有边都是黑色）
+          // 边框样式(所有边都是黑色)
           const borderStyle = {
             top:    { style: 'thin', color: { rgb: 'FF000000' } },
             bottom: { style: 'thin', color: { rgb: 'FF000000' } },
@@ -677,28 +676,28 @@ Page({
     }
   },
 
-  // 导出题目和答案到同一个Excel文件（样式与单sheet导出一致）
+  // 导出题目和答案到同一个Excel文件(样式与单sheet导出一致)
   _exportPuzzleAndSolution(puzzleAoa, solutionAoa, fileName) {
     try {
       const wb = XLSX.utils.book_new();
-      
+
       // 创建题目工作表
       const puzzleWs = XLSX.utils.aoa_to_sheet(puzzleAoa);
       puzzleWs['!cols'] = Array(9).fill({ wch: 8 });
       puzzleWs['!rows'] = Array(9).fill({ hpt: 40 });
-      
+
       // 创建答案工作表
       const solutionWs = XLSX.utils.aoa_to_sheet(solutionAoa);
       solutionWs['!cols'] = Array(9).fill({ wch: 8 });
       solutionWs['!rows'] = Array(9).fill({ hpt: 40 });
-      
-      // 应用题目样式（与单sheet导出风格一致：固定格浅蓝/空格白色）
+
+      // 应用题目样式(与单sheet导出风格一致:固定格浅蓝/空格白色)
       const puzzleRange = XLSX.utils.decode_range('A1:I9');
       for (let R = puzzleRange.s.r; R <= puzzleRange.e.r; R++) {
         for (let C = puzzleRange.s.c; C <= puzzleRange.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!puzzleWs[cellRef]) puzzleWs[cellRef] = { v: '' };
-          
+
           const isOriginal = puzzleAoa[R][C] !== '';  // 题目有数字=原始格
           const borderStyle = this._getSudokuBorderStyle(R, C);
           puzzleWs[cellRef].s = {
@@ -717,14 +716,14 @@ Page({
           };
         }
       }
-      
-      // 应用答案样式（固定格样式与题目一致；用户填入格白色）
+
+      // 应用答案样式(固定格样式与题目一致;用户填入格白色)
       const solutionRange = XLSX.utils.decode_range('A1:I9');
       for (let R = solutionRange.s.r; R <= solutionRange.e.r; R++) {
         for (let C = solutionRange.s.c; C <= solutionRange.e.c; C++) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!solutionWs[cellRef]) solutionWs[cellRef] = { v: '' };
-          
+
           const isOriginal = puzzleAoa[R][C] !== '';  // 沿用题目中的原始格信息
           const borderStyle = this._getSudokuBorderStyle(R, C);
           solutionWs[cellRef].s = {
@@ -775,7 +774,7 @@ Page({
     }
   },
 
-  // 获取数独边框样式（含颜色，xlsx.full 必需）
+  // 获取数独边框样式(含颜色,xlsx.full 必需)
   _getSudokuBorderStyle(R, C) {
     const borderStyle = {
       top:    { style: 'thin', color: { rgb: 'FF000000' } },
@@ -800,8 +799,8 @@ Page({
   // 获取求解后的数独棋盘数据
   _getSolvedBoard() {
     const { board } = this.data;
-    
-    // 如果已经求解，直接返回当前棋盘数据
+
+    // 如果已经求解,直接返回当前棋盘数据
     if (this.data.hasSolution) {
       const solutionAoa = [];
       for (let r = 0; r < 9; r++) {
@@ -813,8 +812,8 @@ Page({
       }
       return solutionAoa;
     }
-    
-    // 如果没有求解，进行求解
+
+    // 如果没有求解,进行求解
     const rawBoard = [];
     for (let r = 0; r < 9; r++) {
       const row = [];
@@ -823,20 +822,20 @@ Page({
       }
       rawBoard.push(row);
     }
-    
+
     // 检查输入是否有效
     if (!sudoku.isValidInput(rawBoard)) {
-      utils.showText('数独输入无效，无法求解');
+      utils.showText('数独输入无效,无法求解');
       return this._getEmptyBoard();
     }
-    
+
     // 尝试求解
     const solved = rawBoard.map(r => [...r]);
     if (!sudoku.solve(solved)) {
       utils.showText('该数独无解');
       return this._getEmptyBoard();
     }
-    
+
     // 构建答案数据
     const solutionAoa = [];
     for (let r = 0; r < 9; r++) {
@@ -846,7 +845,7 @@ Page({
       }
       solutionAoa.push(row);
     }
-    
+
     return solutionAoa;
   },
 

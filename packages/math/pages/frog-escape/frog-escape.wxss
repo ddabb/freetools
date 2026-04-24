@@ -64,7 +64,7 @@
   margin-bottom: 12px;
 }
 
-.flag-btn, .help-btn {
+.flag-btn, .help-btn, .sound-btn {
   flex: 1;
   background: #fff;
   border: 2px solid #b8e6d4;
@@ -79,6 +79,12 @@
 .flag-btn.active {
   background: #f39c12;
   border-color: #e67e22;
+  color: #fff;
+}
+
+.sound-btn.active {
+  background: #27ae60;
+  border-color: #219a52;
   color: #fff;
 }
 

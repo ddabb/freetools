@@ -4,16 +4,9 @@ var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 var DIFF_TEXT = { easy: '简单 5x5', medium: '中等 8x8', hard: '困难 10x10' };
 var RECORDS_KEY = 'nonogram_records_v7';
 
-// 音效 CDN 地址
-var SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
-
-function playSound(src) {
-  var audio = wx.createInnerAudioContext();
-  audio.src = src;
-  audio.play();
-  audio.onEnded(function() { audio.destroy(); });
-  audio.onError(function() { audio.destroy(); });
-}
+var utils = require('../../../../utils/index');
+var playSound = utils.playSound;
+var preloadSounds = utils.preloadSounds;
 
 function getRecords() {
   try { return JSON.parse(wx.getStorageSync(RECORDS_KEY) || '{}'); } catch(e) { return {}; }
@@ -197,6 +190,7 @@ Page({
     showLevelSelector: false,
     completedCount: 0,
     levelNumbers: [],
+    soundEnabled: true // 音效开关状态
   },
 
   _timer: null,
@@ -207,7 +201,27 @@ Page({
   _boardRect: null,
   _colHintBottom: 0,
 
-  onLoad: function() { this.newGame(1); },
+  onLoad: function() {
+    preloadSounds(['click', 'win']);
+    var soundEnabled = utils.isPageSoundEnabled('nonogram');
+    this.setData({ soundEnabled });
+    this.newGame(1);
+  },
+
+  onShow: function() {
+    var soundEnabled = utils.isPageSoundEnabled('nonogram');
+    this.setData({ soundEnabled });
+  },
+
+  toggleSound: function() {
+    var newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('nonogram', newEnabled);
+    if (newEnabled) {
+      playSound('click', { pageId: 'nonogram' });
+    }
+  },
+
   onUnload: function() { if (this._timer) clearInterval(this._timer); },
 
   setDifficulty: function(e) {
@@ -387,7 +401,7 @@ Page({
   _doOp: function(r, c, op) {
     if (this.data.loading || !this.data.grid.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
-    playSound(SOUNDS_BASE + '/click.wav');
+    playSound('click', { pageId: 'nonogram' });
     var size = this.data.gridSize;
     var grid = [];
     for (var i = 0; i < size; i++) grid.push(this.data.grid[i].slice());
@@ -468,7 +482,7 @@ Page({
     this.setData({ grid: grid, filledCount: filledCount });
     if (win) {
       if (this._timer) clearInterval(this._timer);
-      playSound(SOUNDS_BASE + '/win.wav');
+      playSound('win', { pageId: 'nonogram' });
       saveRecord(this.data.difficulty, this.data.currentLevel, this._seconds);
       this.setData({ showWin: true, completedCount: getCompleted(this.data.difficulty).length });
     }

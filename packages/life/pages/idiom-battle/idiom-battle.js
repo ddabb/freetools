@@ -1,5 +1,7 @@
 // idiom-battle.js - 成语对战页面
 const dataService = require('../../utils/idiom-data-service.js');
+const utils = require('../../../../utils/index');
+const { playSound } = utils;
 const USER_STATS_KEY = 'idiom_battle_stats';
 
 Page({
@@ -173,6 +175,8 @@ Page({
       battleHint: '🤖 AI 正在思考…',
     });
 
+    playSound('click', { pageId: 'idiom-battle' });
+
     this._battleConfirming = false;
 
     const candidates = this._getCandidates(this._lastPinyin);
@@ -230,10 +234,12 @@ Page({
     const newStats = { ...userStats };
 
     if (result === 'win') {
+      playSound('win', { pageId: 'idiom-battle' });
       newStats.wins++;
       newStats.streak++;
       newStats.bestStreak = Math.max(newStats.bestStreak, newStats.streak);
     } else {
+      playSound('lose', { pageId: 'idiom-battle' });
       newStats.losses++;
       newStats.streak = 0;
     }

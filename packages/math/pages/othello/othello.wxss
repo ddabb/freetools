@@ -217,6 +217,23 @@
   border: none;
 }
 
+.btn-sound {
+  margin-left: 20rpx;
+  padding: 20rpx 30rpx;
+  font-size: 32rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 40rpx;
+  border: none;
+}
+
+.btn-sound.active {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.btn-sound::after {
+  border: none;
+}
+
 /* 结果弹窗 */
 .result-modal {
   position: fixed;
