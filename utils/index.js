@@ -147,5 +147,7 @@ module.exports = {
   playSound: sound.playSound,
   preloadSounds: sound.preloadSounds,
   soundClearCache: sound.clearCache,
-  soundCacheSize: sound.getCacheSize
+  soundCacheSize: sound.getCacheSize,
+  isPageSoundEnabled: sound.isPageSoundEnabled,
+  setPageSoundEnabled: sound.setPageSoundEnabled
 };
