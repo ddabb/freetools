@@ -1,122 +1,87 @@
 /**
- * 数壹谜题批量生成脚本
- * 生成CDN数据源
+ * 生成数壹(Hitori)题库数据
+ * 按难度分目录，与躲避牛蛙(akari)结构一致
  */
-
 const fs = require('fs');
 const path = require('path');
-const { generateBatch } = require('./number-one-core.js');
+const core = require('./number-one-core');
 
-// 配置
-const CONFIG = {
-  sizes: [5, 6, 7],
-  difficulties: [1, 2, 3], // 1=简单, 2=中等, 3=困难
-  countPerConfig: 20,      // 每种配置生成20个
-  outputDir: path.join(__dirname, 'puzzles')
+// 输出目录
+const OUTPUT_DIR = path.join(__dirname);
+
+// 难度配置
+const DIFFICULTY_MAP = {
+  easy: { value: 1, name: 'easy' },
+  medium: { value: 2, name: 'medium' }, 
+  hard: { value: 3, name: 'hard' }
 };
 
-// 难度名称
-const DIFF_NAMES = {
-  1: 'easy',
-  2: 'medium',
-  3: 'hard'
-};
+// 每种难度和尺寸的题目数量
+const PUZZLE_COUNT = 30;
 
-// 大小名称
-const SIZE_NAMES = {
-  5: 'small',
-  6: 'medium',
-  7: 'large'
-};
-
-function main() {
-  console.log('='.repeat(50));
-  console.log('数壹谜题批量生成');
-  console.log('='.repeat(50));
-  console.log(`配置: ${CONFIG.sizes.join(', ')} 格`);
-  console.log(`难度: ${CONFIG.difficulties.map(d => DIFF_NAMES[d]).join(', ')}`);
-  console.log(`每种配置: ${CONFIG.countPerConfig} 个`);
-  console.log('='.repeat(50));
+function generateForDifficulty(difficultyName, difficultyValue, sizes) {
+  const dir = path.join(OUTPUT_DIR, difficultyName);
   
-  // 创建输出目录
-  if (!fs.existsSync(CONFIG.outputDir)) {
-    fs.mkdirSync(CONFIG.outputDir, { recursive: true });
+  // 确保目录存在
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
   }
-  
-  const allPuzzles = [];
-  const stats = {
-    total: 0,
-    bySize: {},
-    byDifficulty: {}
-  };
-  
-  const startTime = Date.now();
-  
-  // 按大小和难度生成
-  for (const size of CONFIG.sizes) {
-    stats.bySize[size] = 0;
+
+  for (const size of sizes) {
+    console.log(`\n生成 ${difficultyName} ${size}×${size} 题目...`);
     
-    for (const diff of CONFIG.difficulties) {
-      console.log(`\n生成 ${size}×${size} ${DIFF_NAMES[diff]} 难度...`);
-      
-      const puzzles = generateBatch(CONFIG.countPerConfig, size, diff);
-      
-      // 添加元数据
-      puzzles.forEach((p, i) => {
-        p.id = `${size}-${DIFF_NAMES[diff]}-${i + 1}`;
-        p.difficultyName = DIFF_NAMES[diff];
-        p.sizeName = SIZE_NAMES[size];
-      });
-      
-      // 保存到单独文件
-      const filename = `${size}-${DIFF_NAMES[diff]}.json`;
-      const filepath = path.join(CONFIG.outputDir, filename);
-      fs.writeFileSync(filepath, JSON.stringify(puzzles, null, 2));
-      console.log(`保存到: ${filename}`);
-      
-      allPuzzles.push(...puzzles);
-      stats.total += puzzles.length;
-      stats.bySize[size] += puzzles.length;
-      stats.byDifficulty[diff] = (stats.byDifficulty[diff] || 0) + puzzles.length;
+    let count = 0;
+    let failCount = 0;
+    const puzzles = [];
+    
+    while (count < PUZZLE_COUNT && failCount < 100) {
+      const puzzle = core.generate(size, difficultyValue);
+      if (puzzle) {
+        // 格式化数据为akari风格
+        const formatted = {
+          id: count + 1,
+          difficulty: difficultyName,
+          size: puzzle.size,
+          blackRatio: puzzle.blackRatio,
+          blackCount: puzzle.blackCount,
+          board: puzzle.board,
+          solution: puzzle.solution,
+          seed: Math.floor(Math.random() * 999999)
+        };
+        
+        puzzles.push(formatted);
+        count++;
+        process.stdout.write(`\r  进度: ${count}/${PUZZLE_COUNT}`);
+      } else {
+        failCount++;
+      }
     }
+    
+    console.log(`\n  完成: ${count} 题 (失败 ${failCount} 次)`);
+    
+    // 保存到文件 (每种尺寸一个文件，包含所有该尺寸的题目)
+    // 符合akari风格的命名：尺寸-序号.json
+    for (let i = 0; i < puzzles.length; i++) {
+      const filename = `${size}-${String(i + 1).padStart(4, '0')}.json`;
+      const filepath = path.join(dir, filename);
+      fs.writeFileSync(filepath, JSON.stringify(puzzles[i], null, 0));
+    }
+    
+    console.log(`  已保存到 ${difficultyName}/${size}-XXXX.json`);
   }
-  
-  // 保存汇总文件
-  const summaryPath = path.join(CONFIG.outputDir, 'all-puzzles.json');
-  fs.writeFileSync(summaryPath, JSON.stringify(allPuzzles, null, 2));
-  console.log(`\n汇总文件: all-puzzles.json (${allPuzzles.length} 个谜题)`);
-  
-  // 保存索引文件
-  const index = {
-    total: allPuzzles.length,
-    sizes: CONFIG.sizes,
-    difficulties: CONFIG.difficulties.map(d => DIFF_NAMES[d]),
-    countPerConfig: CONFIG.countPerConfig,
-    generatedAt: new Date().toISOString(),
-    files: fs.readdirSync(CONFIG.outputDir).filter(f => f.endsWith('.json')),
-    stats
-  };
-  
-  const indexPath = path.join(CONFIG.outputDir, 'index.json');
-  fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-  console.log(`索引文件: index.json`);
-  
-  // 统计
-  const elapsed = Math.round((Date.now() - startTime) / 1000);
-  console.log('\n' + '='.repeat(50));
-  console.log('生成完成！');
-  console.log('='.repeat(50));
-  console.log(`总计: ${stats.total} 个谜题`);
-  console.log(`耗时: ${elapsed} 秒`);
-  console.log(`\n按大小统计:`);
-  for (const [size, count] of Object.entries(stats.bySize)) {
-    console.log(`  ${size}×${size}: ${count} 个`);
-  }
-  console.log(`\n按难度统计:`);
-  for (const [diff, count] of Object.entries(stats.byDifficulty)) {
-    console.log(`  ${DIFF_NAMES[diff]}: ${count} 个`);
-  }
-  console.log(`\n输出目录: ${CONFIG.outputDir}`);
 }
 
-main();
+console.log('开始生成数壹题库...');
+console.log('输出目录:', OUTPUT_DIR);
+
+// 生成各难度级别的题目
+// 简单：5×5, 6×6
+generateForDifficulty('easy', 1, [5, 6]);
+
+// 中等：6×6, 7×7
+generateForDifficulty('medium', 2, [6, 7]);
+
+// 困难：7×7, 8×8
+generateForDifficulty('hard', 3, [7, 8]);
+
+console.log('\n完成！数壹题库已生成。');

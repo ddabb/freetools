@@ -2,15 +2,21 @@
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
-// CDN 题库地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-one/puzzles';
+// CDN 题库基础路径
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-one';
+
+// 难度到目录名的映射
+const DIFF_DIR = ['easy', 'medium', 'hard'];
+
+// 每种难度-尺寸组合的题目数量
+const PUZZLE_COUNT = 30;
 
 Page({
   onLoad() {
     preloadSounds(['click', 'win']);
     wx.setNavigationBarTitle({ title: '数壹' });
     this._initSizeClass();
-    this.loadPuzzles();
+    this._loadPuzzleList();
   },
   data: {
     size: 6,
@@ -36,8 +42,7 @@ Page({
     ],
     loading: false,
     loadingText: '加载题库...',
-    puzzles: {},
-    currentBoard: null,  // 保存当前谜题原始数据
+    currentPuzzle: null,  // 当前谜题原始数据
   },
 
   onUnload() {
@@ -57,34 +62,37 @@ Page({
     return `${m}:${String(sec).padStart(2, '0')}`;
   },
 
-  // 从 CDN 加载题库
-  loadPuzzles() {
+  // 加载当前难度-尺寸组合的随机一道题
+  _loadPuzzleList() {
     this.setData({ loading: true, loadingText: '加载题库...' });
     const { size, difficulty } = this.data;
-    const diffNames = ['easy', 'medium', 'hard'];
-    const filename = `${size}-${diffNames[difficulty - 1]}.json`;
-
+    const dir = DIFF_DIR[difficulty - 1];
+    
+    // 随机选择一道题的编号 (1-30)
+    const puzzleIndex = Math.floor(Math.random() * PUZZLE_COUNT) + 1;
+    const filename = `${size}-${String(puzzleIndex).padStart(4, '0')}.json`;
+    const url = `${CDN_BASE}/${dir}/${filename}`;
+    
+    console.debug('[数壹] 加载题目:', url);
+    
     wx.request({
-      url: `${CDN_BASE}/${filename}`,
+      url: url,
       timeout: 10000,
       success: (res) => {
-        if (res.statusCode === 200 && Array.isArray(res.data) && res.data.length > 0) {
-          this.setData({ puzzles: { [filename]: res.data }, loading: false });
-          this._pickAndStart(res.data);
+        if (res.statusCode === 200 && res.data && res.data.board) {
+          console.debug('[数壹] 题目加载成功');
+          this._startGame(res.data);
+          this.setData({ loading: false });
         } else {
+          console.warn('[数壹] 题目数据格式错误');
           this.setData({ loading: false, failed: true });
         }
       },
-      fail: () => {
+      fail: (err) => {
+        console.warn('[数壹] 加载失败:', err);
         this.setData({ loading: false, failed: true });
       }
     });
-  },
-
-  // 选一道题开始
-  _pickAndStart(puzzles) {
-    const p = puzzles[Math.floor(Math.random() * puzzles.length)];
-    this._startGame(p);
   },
 
   _startGame(puzzle) {
@@ -100,14 +108,14 @@ Page({
       userBoard,
       answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)),
       solution: puzzle.solution,
-      size,
-      difficulty: puzzle.difficulty || this.data.difficulty,
+      size: puzzle.size || size,
+      difficulty: puzzle.difficulty ? DIFF_DIR.indexOf(puzzle.difficulty) + 1 : this.data.difficulty,
       solved: false,
       failed: false,
       gameStarted: true,
       elapsed: 0,
       formattedTime: '0:00',
-      currentBoard: puzzle,  // 保存原始谜题数据
+      currentPuzzle: puzzle,
     });
 
     this._initSizeClass();
@@ -201,22 +209,14 @@ Page({
 
   // 下一题
   nextPuzzle() {
-    const { puzzles, size, difficulty } = this.data;
-    const diffNames = ['easy', 'medium', 'hard'];
-    const key = `${size}-${diffNames[difficulty - 1]}.json`;
-    const list = puzzles[key];
-    if (list && list.length > 0) {
-      this._pickAndStart(list);
-    } else {
-      this.loadPuzzles();
-    }
+    this._loadPuzzleList();
   },
 
   // 切换难度
   onDifficultyChange(e) {
     const diff = parseInt(e.currentTarget.dataset.value);
     this.setData({ difficulty: diff, gameStarted: false });
-    this.loadPuzzles();
+    this._loadPuzzleList();
   },
 
   // 切换尺寸
@@ -224,17 +224,17 @@ Page({
     const size = parseInt(e.currentTarget.dataset.value);
     this.setData({ size, gameStarted: false });
     this._initSizeClass();
-    this.loadPuzzles();
+    this._loadPuzzleList();
   },
 
   // 重新开始当前题
   restart() {
-    const { currentBoard, size } = this.data;
-    if (!currentBoard) return;
+    const { currentPuzzle, size } = this.data;
+    if (!currentPuzzle) return;
     this._stopTimer();
     const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
     this.setData({
-      board: currentBoard.board,
+      board: currentPuzzle.board,
       userBoard,
       answerBlack: Array.from({ length: size }, () => new Array(size).fill(0)),
       solved: false,

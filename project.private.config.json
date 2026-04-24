@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "数织",
-          "pathName": "packages/math/pages/nonogram/nonogram",
+          "name": "数壹游戏",
+          "pathName": "packages/math/pages/number-one/number-one",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "数织",
+          "pathName": "packages/math/pages/nonogram/nonogram",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "知识分类明细",
