@@ -247,7 +247,7 @@ Page({
 
   // 显示/隐藏答案
   showAnswer() {
-    const { board, solution, size } = this.data;
+    const { solution, size } = this.data;
     const solSet = new Set(solution);
     const answerBlack = Array.from({ length: size }, () => new Array(size).fill(0));
     for (let r = 0; r < size; r++) {
@@ -257,7 +257,14 @@ Page({
         }
       }
     }
-    this.setData({ answerBlack, solved: true });
+    // 显示答案时先清除用户的标记
+    const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
+    this.setData({ 
+      answerBlack, 
+      userBoard,
+      solved: true,
+      failed: false
+    });
     this._stopTimer();
     wx.showModal({
       title: '📋 答案',
