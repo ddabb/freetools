@@ -12,6 +12,7 @@ Page({
     this._initSizeClass();
     this.loadPuzzles();
   },
+  data: {
     size: 6,
     difficulty: 2,
     board: [],
@@ -37,12 +38,6 @@ Page({
     loadingText: '加载题库...',
     puzzles: {},
     currentBoard: null,  // 保存当前谜题原始数据
-  },
-
-  onLoad() {
-    wx.setNavigationBarTitle({ title: '数壹' });
-    this._initSizeClass();
-    this.loadPuzzles();
   },
 
   onUnload() {
