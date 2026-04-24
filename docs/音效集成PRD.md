@@ -1,7 +1,7 @@
 # freetools 音效集成 PRD
 
 > 创建时间：2026-04-24  
-> 状态：进行中（P0 已完成）
+> 状态：✅ 全部完成！
 
 ## 一、背景与目标
 
@@ -22,6 +22,13 @@
 |------|------|----------|
 | 躲避牛蛙 (frog-escape) | ✅ 已完成 | 2026-04-23 |
 | 黑白棋 (othello) | ✅ 已完成 | 2026-04-24 |
+| 数织 (nonogram) | ✅ 已完成 | 2026-04-24 |
+| 24点 (24point) | ✅ 已完成 | 2026-04-24 |
+| 成语接龙 (idiom-query) | ✅ 已完成 | 2026-04-24 |
+| 成语对决 (idiom-battle) | ✅ 已完成 | 2026-04-24 |
+| 合并ABC (merge-abc) | ✅ 已完成 | 2026-04-24 |
+| 真心话大冒险 (truth-or-dare) | ✅ 已完成 | 2026-04-24 |
+| 数独求解器 (sudoku-solver) | ✅ 已完成 | 2026-04-24 |
 
 ---
 
@@ -110,20 +117,20 @@ playSound(SOUNDS_BASE + '/lose.wav');
 
 ### Phase 1：P0 游戏集成
 
-- [x] 数壹 (number-one) 集成音效
-- [x] 数织 (nonogram) 集成音效
+- [x] 数壹 (number-one) 集成音效（P0）
+- [x] 数织 (nonogram) 集成音效（P0）
 
 ### Phase 2：P1 游戏集成
 
-- [ ] 24点 (24point) 集成音效
-- [ ] 成语接龙 (idiom-chain) 集成音效
-- [ ] 成语对决 (idiom-battle) 集成音效
+- [x] 24点 (24point) 集成音效 ✅
+- [x] 成语接龙/查询 (idiom-query) 集成音效 ✅
+- [x] 成语对决 (idiom-battle) 集成音效 ✅
 
 ### Phase 3：P2 游戏集成
 
-- [ ] 合并ABC (merge-abc) 集成音效
-- [ ] 真心话大冒险 (truth-or-dare) 集成音效
-- [ ] 数独求解器 (sudoku-solver) 集成音效
+- [x] 合并ABC (merge-abc) 集成音效 ✅
+- [x] 真心话大冒险 (truth-or-dare) 集成音效 ✅
+- [x] 数独求解器 (sudoku-solver) 集成音效 ✅
 
 ---
 
@@ -152,3 +159,4 @@ playSound(SOUNDS_BASE + '/lose.wav');
 
 ### 备注
 - 数壹 (number-one) 已设置 `publish: false`，从工具列表中移除（算法bug修复后再上线）
+- 所有游戏音效集成已完成！统一使用 utils.playSound() 接口，pageId 参数支持页面级开关控制
