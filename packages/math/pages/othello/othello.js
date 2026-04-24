@@ -62,10 +62,6 @@ Page({
     }
   },
 
-  onLoad() {
-    // 已在上方Page onLoad中处理
-  },
-
   onReady() {
     this.calculateBoardSize();
   },
