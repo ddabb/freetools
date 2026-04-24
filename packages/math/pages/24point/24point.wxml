@@ -17,6 +17,10 @@
         <text class="mode-icon">🎲</text>
         <text class="mode-text">预设模式</text>
       </view>
+      <view class="mode-tab sound-tab {{soundEnabled ? 'active' : ''}}" hover-class="mode-tab-hover" bindtap="toggleSound">
+        <text class="mode-icon">{{soundEnabled ? '🔊' : '🔇'}}</text>
+        <text class="mode-text">音效</text>
+      </view>
     </view>
   </view>
 

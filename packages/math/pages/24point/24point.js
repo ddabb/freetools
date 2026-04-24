@@ -61,6 +61,7 @@ Page({
     isSolvable: false, // 自定义数字是否有解
     solvabilityMessage: '', // 可解性消息
     customSolutions: [], // 自定义数字的解法
+    soundEnabled: true, // 音效开关状态
     hints: [
       "尝试先将两个数字组合成容易计算的数，比如 3×8=24、4×6=24、12×2=24",
       "可以先算出24 的因数，然后看能否用其他数字得到对应的另一个因数",
@@ -709,6 +710,16 @@ Page({
     }
   },
 
+  // 切换音效开关
+  toggleSound() {
+    const newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('24point', newEnabled);
+    if (newEnabled) {
+      playSound('click', { pageId: '24point' });
+    }
+  },
+
 
 
   // 页面加载时运行
@@ -717,6 +728,10 @@ Page({
     wx.setNavigationBarTitle({
       title: '24点速算'
     });
+    
+    // 加载音效开关状态
+    const soundEnabled = utils.isPageSoundEnabled('24point');
+    this.setData({ soundEnabled });
     
     // 从CDN加载预设题目
     this.loadQuestionBank();

@@ -188,5 +188,9 @@
       <text class="btn-icon">📄</text>
       <text class="btn-text">导出全部</text>
     </button>
+    <button class="btn btn-sm sound-btn {{soundEnabled ? 'active' : ''}}" hover-class="btn-hover" bindtap="toggleSound">
+      <text class="btn-icon">{{soundEnabled ? '🔊' : '🔇'}}</text>
+      <text class="btn-text">音效</text>
+    </button>
   </view>
 </view>

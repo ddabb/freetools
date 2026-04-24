@@ -73,11 +73,15 @@ Page({
     dailyLevel: '',
     dailyDifficulty: '',
     dailyDisplayDate: buildDailyDisplay(new Date()),
+    soundEnabled: true, // 音效开关状态
   },
 
   onLoad() {
     this.initBoard();
     wx.setNavigationBarTitle({ title: '数独求解器' });
+    // 加载音效开关状态
+    const soundEnabled = utils.isPageSoundEnabled('sudoku-solver');
+    this.setData({ soundEnabled });
     this.loadDailySudoku(this.data.selectedDate);
   },
 
@@ -884,5 +888,15 @@ Page({
 
   onShareTimeline() {
     return { title: '数独求解器 - 快速解决数独难题' };
+  },
+
+  // 切换音效开关
+  toggleSound() {
+    const newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('sudoku-solver', newEnabled);
+    if (newEnabled) {
+      playSound('click', { pageId: 'sudoku-solver' });
+    }
   }
 });
