@@ -1,5 +1,6 @@
 // idiom-query.js - 成语查询页面
 const dataService = require('../../utils/idiom-data-service.js');
+const { playSound } = utils;
 
 Page({
   data: {
@@ -218,6 +219,9 @@ Page({
       hasContent: true,
     });
     this.queryCount = result.candidates.length;
+    if (result.candidates.length > 0) {
+      playSound('win', { pageId: 'idiom-query' });
+    }
   },
 
   /**
@@ -327,6 +331,7 @@ Page({
   onContinueChain(e) {
     const word = e.currentTarget.dataset.word;
     if (!word) return;
+    playSound('click', { pageId: 'idiom-query' });
     this.setData({ queryInput: word });
     this._doQuery(word);
   },
