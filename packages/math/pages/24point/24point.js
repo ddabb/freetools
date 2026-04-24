@@ -762,6 +762,9 @@ Page({
       },
       fail: (err) => {
         console.warn('[24point] CDN请求失败，使用本地数据', err);
+        // 使用本地备用题目
+        this._questionBank = localQuestionBank;
+        console.debug('[24point] 已加载本地备用题目，共', localQuestionBank.length, '条');
       }
     });
   },
