@@ -31,7 +31,7 @@
 
 | 游戏 | 页面路径 | 建议音效 | 优先级 |
 |------|----------|----------|--------|
-| 数壹 (number-one) | `packages/math/pages/number-one` | click, win | P0 ✅ |
+| 数壹 (number-one) | `packages/math/pages/number-one` | click, win | P0 ✅ (已下线) |
 | 数织 (nonogram) | `packages/math/pages/nonogram` | click, win | P0 ✅ |
 | 24点 (24point) | `packages/math/pages/24point` | click, correct, wrong | P1 |
 | 成语接龙 (idiom-chain) | `packages/life/pages/idiom-chain` | click, correct, wrong | P1 |
@@ -149,3 +149,6 @@ playSound(SOUNDS_BASE + '/lose.wav');
 ---
 
 *最后更新：2026-04-24*
+
+### 备注
+- 数壹 (number-one) 已设置 `publish: false`，从工具列表中移除（算法bug修复后再上线）
