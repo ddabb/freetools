@@ -9,8 +9,9 @@ const { playSound, preloadSounds } = utils;
 Page({
   onLoad() {
     preloadSounds(['click', 'flag', 'win', 'lose']);
+    this.loadRecord();
+    this.startGame();
   },
-  data: {
     board: [],        // 格子状态: {revealed, flagged, value, isFrog, nearby}
     rows: 9,
     cols: 9,

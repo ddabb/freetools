@@ -8,8 +8,10 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-o
 Page({
   onLoad() {
     preloadSounds(['click', 'win']);
+    wx.setNavigationBarTitle({ title: '数壹' });
+    this._initSizeClass();
+    this.loadPuzzles();
   },
-  data: {
     size: 6,
     difficulty: 2,
     board: [],
