@@ -12,6 +12,7 @@ Page({
     this.loadRecord();
     this.startGame();
   },
+  data: {
     board: [],        // 格子状态: {revealed, flagged, value, isFrog, nearby}
     rows: 9,
     cols: 9,
@@ -38,11 +39,6 @@ Page({
     resultIcon: '',
     resultText: '',
     showHelp: false,
-  },
-
-  onLoad() {
-    this.loadRecord();
-    this.startGame();
   },
 
   onUnload() {
