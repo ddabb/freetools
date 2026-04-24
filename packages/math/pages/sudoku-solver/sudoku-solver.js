@@ -433,7 +433,11 @@ Page({
     const board = this.data.board;
     board[row][col].value = String(num);
     playSound('click', { pageId: 'sudoku-solver' });
-    this.setData({
+    this.setData({ 
+      board: board, 
+      hasSolution: false, 
+      solutionMessage: '' 
+    });
     this.calculateCandidates();
   },
 
