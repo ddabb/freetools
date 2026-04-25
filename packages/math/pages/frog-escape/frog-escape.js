@@ -10,7 +10,27 @@ Page({
   onLoad() {
     preloadSounds(['click', 'flag', 'win', 'lose']);
     this.loadRecord();
-    this.startGame();
+    // 尝试恢复上次的游戏进度
+    const saved = wx.getStorageSync('frog_escape_saved');
+    if (saved && saved.board && saved.board.length > 0) {
+      this._boardData = saved._boardData || null;
+      this.setData({
+        difficulty: saved.difficulty || 'easy',
+        board: saved.board,
+        revealedCount: saved.revealedCount || 0,
+        flaggedCount: saved.flaggedCount || 0,
+        flagMode: saved.flagMode || false,
+        gameOver: saved.gameOver || false,
+        won: saved.won || false,
+        time: saved.time || 0,
+        puzzleId: saved.puzzleId || null,
+      });
+      if (!saved.gameOver) {
+        this._restoreTimer();
+      }
+    } else {
+      this.startGame();
+    }
   },
   data: {
     board: [],        // 格子状态: {revealed, flagged, value, isFrog, nearby}
@@ -45,6 +65,19 @@ Page({
     if (this.data.timerInterval) {
       clearInterval(this.data.timerInterval);
     }
+    // 保存游戏进度
+    wx.setStorageSync('frog_escape_saved', {
+      difficulty: this.data.difficulty,
+      board: this.data.board,
+      revealedCount: this.data.revealedCount,
+      flaggedCount: this.data.flaggedCount,
+      flagMode: this.data.flagMode,
+      gameOver: this.data.gameOver,
+      won: this.data.won,
+      time: this.data.time,
+      puzzleId: this.data.puzzleId,
+      _boardData: this._boardData,
+    });
   },
 
   onShow() {
@@ -435,6 +468,17 @@ Page({
   },
 
   startTimer() {
+    const self = this;
+    const interval = setInterval(() => {
+      self.setData({ time: self.data.time + 1 });
+    }, 1000);
+    this.data.timerInterval = interval;
+  },
+
+  _restoreTimer() {
+    if (this.data.timerInterval) {
+      clearInterval(this.data.timerInterval);
+    }
     const self = this;
     const interval = setInterval(() => {
       self.setData({ time: self.data.time + 1 });

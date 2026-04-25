@@ -735,6 +735,22 @@ Page({
     const soundEnabled = utils.isPageSoundEnabled('24point');
     this.setData({ soundEnabled });
     
+    // 尝试恢复上次的游戏进度
+    const saved = wx.getStorageSync('24point_saved');
+    if (saved && saved.numbers && saved.numbers.length === 4) {
+      this.setData({
+        numbers: saved.numbers,
+        expression: saved.expression || '',
+        showingHint: saved.showingHint || false,
+        currentHint: saved.currentHint || '',
+        showingSolution: saved.showingSolution || false,
+        solutionFound: saved.solutionFound || false,
+        isCorrect: false,
+        showResult: false,
+        resultMessage: '',
+      });
+    }
+    
     // 从CDN加载预设题目
     this.loadQuestionBank();
     
@@ -745,6 +761,18 @@ Page({
     
     // 加载统计数据
     this.loadStats();
+  },
+
+  onUnload() {
+    // 保存游戏进度
+    wx.setStorageSync('24point_saved', {
+      numbers: this.data.numbers,
+      expression: this.data.expression,
+      showingHint: this.data.showingHint,
+      currentHint: this.data.currentHint,
+      showingSolution: this.data.showingSolution,
+      solutionFound: this.data.solutionFound,
+    });
   },
 
   // 从CDN加载预设题目

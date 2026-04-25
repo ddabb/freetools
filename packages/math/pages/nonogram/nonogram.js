@@ -205,7 +205,27 @@ Page({
     preloadSounds(['click', 'win']);
     var soundEnabled = utils.isPageSoundEnabled('nonogram');
     this.setData({ soundEnabled });
-    this.newGame(1);
+    // 尝试恢复上次的游戏进度
+    var saved = wx.getStorageSync('nonogram_saved');
+    if (saved && saved.grid && saved.grid.length > 0) {
+      this.setData({
+        difficulty: saved.difficulty || 'easy',
+        difficultyText: saved.difficultyText || '简单 5x5',
+        gridSize: saved.gridSize || 5,
+        grid: saved.grid,
+        colHints: saved.colHints || [],
+        rowHints: saved.rowHints || [],
+        answer: saved.answer || [],
+        currentLevel: saved.currentLevel || 1,
+        mode: saved.mode || 'fill',
+        timerText: saved.timerText || '0:00',
+        filledCount: saved.filledCount || 0,
+        totalFill: saved.totalFill || 0,
+        completedCount: saved.completedCount || 0,
+      });
+    } else {
+      this.newGame(1);
+    }
   },
 
   onShow: function() {
@@ -222,7 +242,25 @@ Page({
     }
   },
 
-  onUnload: function() { if (this._timer) clearInterval(this._timer); },
+  onUnload: function() {
+    if (this._timer) clearInterval(this._timer);
+    // 保存游戏进度
+    wx.setStorageSync('nonogram_saved', {
+      difficulty: this.data.difficulty,
+      difficultyText: this.data.difficultyText,
+      gridSize: this.data.gridSize,
+      grid: this.data.grid,
+      colHints: this.data.colHints,
+      rowHints: this.data.rowHints,
+      answer: this.data.answer,
+      currentLevel: this.data.currentLevel,
+      mode: this.data.mode,
+      timerText: this.data.timerText,
+      filledCount: this.data.filledCount,
+      totalFill: this.data.totalFill,
+      completedCount: this.data.completedCount,
+    });
+  },
 
   setDifficulty: function(e) {
     var d = e.currentTarget.dataset.diff;

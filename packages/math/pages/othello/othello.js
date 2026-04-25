@@ -32,8 +32,36 @@ Page({
     preloadSounds(['click', 'win', 'lose']);
     const soundEnabled = utils.isPageSoundEnabled('othello');
     this.setData({ soundEnabled });
-    this.initGame();
+    // 尝试恢复上次的游戏进度
+    const saved = wx.getStorageSync('othello_saved');
+    if (saved && saved.board && saved.board.length === 8) {
+      this.setData({
+        board: saved.board,
+        currentPlayer: saved.currentPlayer,
+        difficulty: saved.difficulty || 'medium',
+        blackCount: saved.blackCount || 2,
+        whiteCount: saved.whiteCount || 2,
+        gameOver: saved.gameOver || false,
+        winner: saved.winner || null,
+        aiThinking: false,
+      });
+    } else {
+      this.initGame();
+    }
   },
+  onUnload() {
+    // 保存游戏进度
+    wx.setStorageSync('othello_saved', {
+      board: this.data.board,
+      currentPlayer: this.data.currentPlayer,
+      difficulty: this.data.difficulty,
+      blackCount: this.data.blackCount,
+      whiteCount: this.data.whiteCount,
+      gameOver: this.data.gameOver,
+      winner: this.data.winner,
+    });
+  },
+
   data: {
     board: [],           // 8x8棋盘，0=空，1=黑，2=白
     currentPlayer: BLACK, // 当前玩家
