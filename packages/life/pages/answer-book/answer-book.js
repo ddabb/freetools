@@ -1,5 +1,8 @@
 // packages/life/pages/answer-book/answer-book.js
 
+const utils = require('../../../../utils/index');
+const { playSound } = utils;
+
 // 答案库 - 按类型分类
 const ANSWERS = {
   positive: {
@@ -200,8 +203,11 @@ Page({
 
   // 播放摇动音效（模拟）
   playShakeSound() {
-    // 微信小程序音频播放需要用户交互触发
-    // 这里可以预留接口，如果需要可以添加
+    // 摇动开始时播放 spin 音效，答案揭晓时播放 bong 音效
+    playSound('spin', { pageId: 'answer-book' });
+    setTimeout(() => {
+      playSound('bong', { pageId: 'answer-book' });
+    }, 1000);
   },
 
   // 生成答案

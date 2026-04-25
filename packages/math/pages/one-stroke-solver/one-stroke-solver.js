@@ -1,4 +1,6 @@
 const GridPathFinder = require('../../utils/GridPathFinder');
+const utils = require('../../../../utils/index');
+const { playSound } = utils;
 
 Page({
   data: {
@@ -268,7 +270,14 @@ Page({
         endNode,
         isLoading: false
       });
-      
+
+      // 播放结果音效
+      if (isSolvable) {
+        playSound('win', { pageId: 'one-stroke-solver' });
+      } else {
+        playSound('wrong', { pageId: 'one-stroke-solver' });
+      }
+
       this.drawGraph();
     }, 500);
   },

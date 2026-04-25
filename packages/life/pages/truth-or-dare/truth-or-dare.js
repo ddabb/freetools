@@ -100,6 +100,7 @@ Page({
   switchMode(e) {
     const mode = e.currentTarget.dataset.mode;
     if (mode === this.data.mode) return;
+    playSound('spin', { pageId: 'truth-or-dare' });
     this.setData({ mode, currentQuestion: '', currentItem: null }, () => {
       this.pickQuestion();
     });
@@ -108,6 +109,7 @@ Page({
   // 切换难度
   switchDifficulty(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
+    playSound('click', { pageId: 'truth-or-dare' });
     this.setData({ difficulty }, () => {
       this.pickQuestion();
     });
@@ -116,6 +118,7 @@ Page({
   // 切换分类
   switchCategory(e) {
     const category = e.currentTarget.dataset.category;
+    playSound('click', { pageId: 'truth-or-dare' });
     this.setData({ category }, () => {
       this.pickQuestion();
     });
@@ -171,11 +174,13 @@ Page({
 
   // 跳过当前题
   skipQuestion() {
+    playSound('click', { pageId: 'truth-or-dare' });
     this.pickQuestion();
   },
 
   // 标记完成（跳过）
   markDone() {
+    playSound('click', { pageId: 'truth-or-dare' });
     this.pickQuestion();
   },
 

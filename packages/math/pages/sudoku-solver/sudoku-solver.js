@@ -457,6 +457,7 @@ Page({
 
     const board = this.data.board;
     board[row][col].value = '';
+    playSound('click', { pageId: 'sudoku-solver' });
     this.setData({
       board: board,
       hasSolution: false,
@@ -476,6 +477,7 @@ Page({
     if (board[row][col].candidates && board[row][col].candidates.includes(num)) {
       board[row][col].value = String(num);
       board[row][col].candidates = [];
+      playSound('click', { pageId: 'sudoku-solver' });
       this.setData({
         board: board,
         selectedCell: { row, col },
@@ -510,6 +512,7 @@ Page({
       const solved = rawBoard.map(r => [...r]);
       if (!sudoku.solve(solved)) {
         this.setData({ solving: false, hasSolution: false, solutionMessage: '该数独无解' });
+        playSound('wrong', { pageId: 'sudoku-solver' });
         utils.showText('无解');
         return;
       }

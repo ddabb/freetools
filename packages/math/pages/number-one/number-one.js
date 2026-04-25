@@ -13,7 +13,7 @@ const PUZZLE_COUNT = 30;
 
 Page({
   onLoad() {
-    preloadSounds(['click', 'win']);
+    preloadSounds(['click', 'win', 'wrong']);
     wx.setNavigationBarTitle({ title: '数壹' });
     this._initSizeClass();
     this._loadPuzzleList();
@@ -156,6 +156,7 @@ Page({
     const { row, col } = e.currentTarget.dataset;
     const userBoard = this.data.userBoard.map(r => [...r]);
     userBoard[row][col] = 0;
+    playSound('click', { pageId: 'number-one' });
     this.setData({ userBoard, failed: false });
   },
 
@@ -176,9 +177,14 @@ Page({
 
     if (correct) {
       this._stopTimer();
-      this.setData({ solved: true });
+      this.setData({ solved: true, failed: false });
       playSound('win', { pageId: 'number-one' });
       this._showResult('success');
+    } else {
+      // 答错：播放音效（仅一次）、显示红色边框提示、弹出 modal 引导继续
+      playSound('wrong', { pageId: 'number-one' });
+      this.setData({ failed: true });
+      this._showResult('fail');
     }
   },
 
@@ -199,7 +205,12 @@ Page({
       success: (res) => {
         if (res.confirm) {
           if (type === 'success') this.nextPuzzle();
-          else this.setData({ failed: false });
+          else {
+            // 继续：清除错误标记，重新开始当前题
+            const { size } = this.data;
+            const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
+            this.setData({ failed: false, userBoard });
+          }
         } else if (res.cancel) {
           this.nextPuzzle();
         }

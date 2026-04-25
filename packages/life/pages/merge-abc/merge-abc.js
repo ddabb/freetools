@@ -29,12 +29,24 @@ Page({
   _maxHistory: 5,
 
   onLoad() {
+    // 尝试恢复上次的游戏进度
+    const saved = wx.getStorageSync('merge_abc_saved');
+    if (saved && saved.board && saved.board.length === 16) {
+      this._board = saved.board;
+      this.setData({ board: this._board.slice(), score: saved.score || 0, bestScore: saved.bestScore || 0 });
+    } else {
+      this.initBoard();
+    }
     this.loadBestScore();
-    this.initBoard();
   },
 
-  onShow() {
-    this.loadBestScore();
+  onUnload() {
+    // 退出时保存当前游戏进度
+    wx.setStorageSync('merge_abc_saved', {
+      board: this._board,
+      score: this.data.score,
+      bestScore: this.data.bestScore
+    });
   },
 
   // 读取最高分
@@ -111,7 +123,11 @@ Page({
         arr.splice(i + 1, 1);
         arr.push('');
         merged = true;
-        playSound('click', { pageId: 'merge-abc' });
+        playSound('drop', { pageId: 'merge-abc' });
+        // 检测到 Z 触发胜利音效
+        if (arr[i] === 'Z') {
+          setTimeout(() => playSound('win', { pageId: 'merge-abc' }), 150);
+        }
         i--;
       }
     }

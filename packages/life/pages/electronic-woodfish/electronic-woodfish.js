@@ -1,4 +1,6 @@
 const app = getApp();
+const utils = require('../../../../utils/index');
+const { playSound } = utils;
 
 Page({
   data: {
@@ -147,6 +149,9 @@ Page({
       this.showRandomPhrase();
     }, 300);
 
+    // 木鱼敲击音效
+    playSound('bong', { pageId: 'electronic-woodfish' });
+
     // 震动反馈
     wx.vibrateShort({ type: 'light' });
 
@@ -172,6 +177,7 @@ Page({
 
     if (newOne.length > 0) {
       this.setData({ newAchievement: newOne[newOne.length - 1] });
+      playSound('glass', { pageId: 'electronic-woodfish' });
       setTimeout(() => this.setData({ newAchievement: null }), 4000);
     }
 

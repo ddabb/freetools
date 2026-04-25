@@ -106,8 +106,10 @@ Page({
     });
 
     if (first === 'ai') {
+      playSound('click', { pageId: 'idiom-battle' });
       setTimeout(() => this._aiMove(), 800);
     } else {
+      playSound('click', { pageId: 'idiom-battle' });
       this._startTimer();
     }
   },
@@ -210,6 +212,7 @@ Page({
       battleTurn: 'user',
       battleHint: `请接："${lastChar}"字开头`,
     });
+    playSound('click', { pageId: 'idiom-battle' });
     this._startTimer();
   },
 
@@ -282,6 +285,10 @@ Page({
         this._endBattle('timeout');
       } else {
         this.setData({ battleTimer: t });
+        // 倒计时紧迫时（≤30秒）播放滴答音效
+        if (t <= 30) {
+          playSound('tick', { pageId: 'idiom-battle' });
+        }
       }
     }, 1000);
   },

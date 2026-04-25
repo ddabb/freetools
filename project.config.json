@@ -4,20 +4,40 @@
   "packOptions": {
     "ignore": [
       {
-        "value": "data/**/*",
-        "type": "file"
+        "value": "data/sounds",
+        "type": "folder"
       },
       {
-        "value": "pmpimages/**/*",
-        "type": "file"
+        "value": "data/sounds/**",
+        "type": "folder"
       },
       {
-        "value": "docs/**/*",
-        "type": "file"
+        "value": "data",
+        "type": "folder"
       },
       {
-        "value": ".codebuddy/**/*",
-        "type": "file"
+        "value": "data/**",
+        "type": "folder"
+      },
+      {
+        "value": "test-reports",
+        "type": "folder"
+      },
+      {
+        "value": "test-reports/**",
+        "type": "folder"
+      },
+      {
+        "value": "pmpimages",
+        "type": "folder"
+      },
+      {
+        "value": "docs",
+        "type": "folder"
+      },
+      {
+        "value": ".codebuddy",
+        "type": "folder"
       },
       {
         "value": "项目提案.html",
@@ -28,8 +48,8 @@
         "type": "file"
       },
       {
-        "type": "folder",
-        "value": "minitest/"
+        "value": "minitest",
+        "type": "folder"
       }
     ],
     "include": []

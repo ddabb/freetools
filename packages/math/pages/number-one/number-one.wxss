@@ -119,6 +119,26 @@
   border-radius: 12rpx;
   overflow: hidden;
   box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.5);
+  transition: border-color 0.3s;
+}
+
+/* 答错时棋盘抖动 + 红色边框 */
+.board-shake {
+  animation: shake 0.4s ease-in-out;
+  border-color: #e06060 !important;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8rpx); }
+  40% { transform: translateX(8rpx); }
+  60% { transform: translateX(-6rpx); }
+  80% { transform: translateX(6rpx); }
+}
+
+/* 答错时格子轻微红色高亮 */
+.cell.cell-error {
+  background: rgba(220, 80, 80, 0.25) !important;
 }
 
 .row {

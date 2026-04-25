@@ -1,5 +1,22 @@
 ﻿{
   "appid": "wxbe3bb18e2b2532d4",
   "privateKeyPath": "private.wxbe3bb18e2b2532d4.key",
-  "ignores": ["node_modules/**"]
+  "ignores": [
+    "node_modules/**",
+    "data/sounds/**",
+    "data/sounds",
+    "data/**",
+    "data",
+    "docs/**",
+    "docs",
+    "pmpimages/**",
+    "pmpimages",
+    "minitest/**",
+    "minitest",
+    "test-reports/**",
+    "test-reports",
+    ".codebuddy/**",
+    ".codebuddy",
+    "*.md"
+  ]
 }

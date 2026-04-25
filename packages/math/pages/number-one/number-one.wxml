@@ -48,10 +48,10 @@
 
     <!-- 棋盘 -->
     <view class="board-wrapper">
-      <view class="board">
+      <view class="board {{failed ? 'board-shake' : ''}}">
         <view class="row" wx:for="{{board}}" wx:for-index="rowIndex" wx:for-item="row" wx:key="row">
           <view
-            class="cell {{sizeClass}} {{(userBoard[rowIndex][colIndex] === 1 || answerBlack[rowIndex][colIndex] === 1) ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}}"
+            class="cell {{sizeClass}} {{(userBoard[rowIndex][colIndex] === 1 || answerBlack[rowIndex][colIndex] === 1) ? 'is-black' : ''}} {{rowIndex % 2 === colIndex % 2 ? 'light' : 'dark'}} {{failed ? 'cell-error' : ''}}"
             wx:for="{{row}}"
             wx:for-item="cell"
             wx:for-index="colIndex"

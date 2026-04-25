@@ -689,8 +689,7 @@ const tools = [
     url: '/packages/math/pages/number-one/number-one',
     categories: ['学习工具', '数学工具'],
     keywords: ['数壹', '数字', '谜题', '逻辑', '益智'],
-    description: '数字逻辑谜题，同行同列不能重复',
-    publish: false
+    description: '数字逻辑谜题，同行同列不能重复'
   },
   {
     id: 'frog-escape',

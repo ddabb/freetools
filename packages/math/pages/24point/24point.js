@@ -83,6 +83,7 @@ Page({
 
   // 清空表达式
   clearExpression() {
+    playSound('click', { pageId: '24point' });
     this.setData({
       expression: '',
       showResult: false
@@ -92,6 +93,7 @@ Page({
   // 添加运算符
   appendOperator(e) {
     const operator = e.currentTarget.dataset.op;
+    playSound('click', { pageId: '24point' });
     const { expression } = this.data;
     
     // 防止连续添加运算符
@@ -519,8 +521,8 @@ Page({
         solutionFound: false,
         solutions: selectedQuestion.solutions
       });
-      
-      // 移除振动和弹窗，通过界面更新来反馈
+
+      playSound('click', { pageId: '24point' });
     } catch (error) {
       console.error('generateNewGame error:', error);
       wx.showToast({
@@ -610,7 +612,7 @@ Page({
       
       // 允许一定的误差范围（处理浮点数精度问题）
       if (Math.abs(result - 24) < 0.000001) {
-        playSound('win', { pageId: '24point' });
+        playSound('correct', { pageId: '24point' });
         this.showResult(true, '恭喜你，答对了！');
         this.addToHistory(numbers, true);
         this.updateStats(true);
@@ -618,7 +620,7 @@ Page({
           solutionFound: true
         });
       } else {
-        playSound('lose', { pageId: '24point' });
+        playSound('wrong', { pageId: '24point' });
         this.showResult(false, `计算结果为${result}，正确答案是24`);
         this.addToHistory(numbers, false);
         this.updateStats(false);
