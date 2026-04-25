@@ -77,12 +77,49 @@ Page({
   },
 
   onLoad() {
-    this.initBoard();
+    // 尝试恢复之前保存的进度
+    const saved = wx.getStorageSync('sudoku_solver_saved');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        this.setData({
+          board: parsed.board || [],
+          mode: parsed.mode || 'daily',
+          selectedDate: parsed.selectedDate || this.data.selectedDate,
+          selectedCell: parsed.selectedCell || { row: -1, col: -1 },
+          hasSolution: parsed.hasSolution || false,
+          solutionMessage: parsed.solutionMessage || ''
+        });
+        // 如果是每日模式,重新加载该日期的题目
+        if (this.data.mode === 'daily') {
+          this.loadDailySudoku(this.data.selectedDate);
+        }
+      } catch (e) {
+        console.error('[Sudoku] 恢复进度失败', e);
+        this.initBoard();
+        this.loadDailySudoku(this.data.selectedDate);
+      }
+    } else {
+      this.initBoard();
+      this.loadDailySudoku(this.data.selectedDate);
+    }
     wx.setNavigationBarTitle({ title: '数独求解器' });
     // 加载音效开关状态
     const soundEnabled = utils.isPageSoundEnabled('sudoku-solver');
     this.setData({ soundEnabled });
-    this.loadDailySudoku(this.data.selectedDate);
+  },
+
+  onUnload() {
+    // 保存当前进度
+    const saveData = {
+      board: this.data.board,
+      mode: this.data.mode,
+      selectedDate: this.data.selectedDate,
+      selectedCell: this.data.selectedCell,
+      hasSolution: this.data.hasSolution,
+      solutionMessage: this.data.solutionMessage
+    };
+    wx.setStorageSync('sudoku_solver_saved', JSON.stringify(saveData));
   },
 
   // 加载指定日期的每日数独(带缓存功能)
