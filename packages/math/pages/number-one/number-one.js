@@ -181,9 +181,8 @@ Page({
       playSound('win', { pageId: 'number-one' });
       this._showResult('success');
     } else {
-      // 答错：播放音效、显示红色边框提示，但不弹窗，让用户继续玩
+      // 答错：只播放音效，不弹窗也不显示红色边框，让用户继续玩
       playSound('click', { pageId: 'number-one' });
-      this.setData({ failed: true });
     }
   },
 
