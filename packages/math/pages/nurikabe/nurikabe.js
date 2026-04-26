@@ -81,6 +81,7 @@ Page({
     difficulty: 'easy',
     puzzleId: 0,
     time: 0,
+    timeStr: '0:00',   // 格式化的时间字符串
     isPlaying: false,
     isComplete: false,
     cellSize: 50,
@@ -140,8 +141,10 @@ Page({
       difficulty,
       puzzleId,
       time: 0,
+      timeStr: '0:00',
       isPlaying: true,
-      isComplete: false
+      isComplete: false,
+      showAnswer: false
     });
 
     this.startTimer();
@@ -151,7 +154,13 @@ Page({
   startTimer() {
     this.stopTimer();
     this.timer = setInterval(() => {
-      this.setData({ time: this.data.time + 1 });
+      const time = this.data.time + 1;
+      const m = Math.floor(time / 60);
+      const s = time % 60;
+      this.setData({ 
+        time,
+        timeStr: `${m}:${s.toString().padStart(2, '0')}`
+      });
     }, 1000);
   },
 
