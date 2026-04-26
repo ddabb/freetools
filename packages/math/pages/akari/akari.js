@@ -6,7 +6,7 @@
  * 3. 黑格数字表示四周灯塔数
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
 
 // 格子类型
 const CELL_WHITE = 0;    // 白格

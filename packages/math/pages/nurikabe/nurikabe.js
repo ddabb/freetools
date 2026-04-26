@@ -6,7 +6,7 @@
  * 3. 没有 2×2 的全黑区域
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
 
 // 格子状态
 const CELL_WHITE = 0;  // 白格（未确定）

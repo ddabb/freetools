@@ -4,7 +4,7 @@
  * 格子内的数字表示该格子四周的线段数
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
 
 // 题库数据 - 格式：[rows, cols, hints(二维数组，null表示无提示)]
 const PUZZLES = {
