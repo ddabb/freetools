@@ -692,6 +692,36 @@ const tools = [
     description: '数字逻辑谜题，同行同列不能重复'
   },
   {
+    id: 'slither-link',
+    name: '数回',
+    icon: '🔄',
+    color: 'purple',
+    url: '/packages/math/pages/slither-link/slither-link',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数回', '画线', '环路', '逻辑', '益智'],
+    description: '在格点间画线形成闭合环路，数字提示四周线段数'
+  },
+  {
+    id: 'akari',
+    name: '灯塔',
+    icon: '💡',
+    color: 'amber',
+    url: '/packages/math/pages/akari/akari',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['灯塔', '照亮', 'Akari', '逻辑', '益智'],
+    description: '放置灯塔照亮所有白格，灯塔之间不能互相照亮'
+  },
+  {
+    id: 'nurikabe',
+    name: '数墙',
+    icon: '🧱',
+    color: 'cyan',
+    url: '/packages/math/pages/nurikabe/nurikabe',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['数墙', '涂黑', '连通', 'Nurikabe', '逻辑'],
+    description: '涂黑格子形成白色区域，数字表示区域大小'
+  },
+  {
     id: 'frog-escape',
     name: '躲避牛蛙',
     icon: '🐸',

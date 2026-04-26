@@ -23,14 +23,10 @@
 |------|------|------|------|
 | 数独求解器 | ✅ 已上线 | `packages/math/pages/sudoku-solver/` | 输入题目，自动求解 |
 | 数独生成器 | ✅ 已上线 | `packages/math/pages/sudoku-generator/` | 生成题目，用户求解 |
-| 数织 | ✅ 已上线 | `packages/math/pages/array-puzzle/` | 根据提示填充格子 |
-| 扫雷 | ✅ 已完成 | `packages/math/pages/minesweeper/` | 经典扫雷游戏 |
-| 黑白棋 | ✅ 已完成 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
-| 数回 | ✅ 已完成 | `packages/math/pages/slither-link/` | 经典数回游戏 |
-| 数壹 | ✅ 已完成 | `packages/math/pages/hitori/` | 经典数壹游戏 |
-| 灯塔 | ✅ 已完成 | `packages/math/pages/akari/` | 经典灯塔游戏 |
-| 数墙 | ✅ 已完成 | `packages/math/pages/nurikabe/` | 经典数墙游戏 |
-| 战舰 | ✅ 已完成 | `packages/math/pages/battleship/` | 经典战舰游戏 |
+| 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子 |
+| 躲避牛蛙 (frog-escape) | ✅ 已上线 | `packages/math/pages/frog-escape/` | 扫雷换皮（🐸主题） |
+| 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
+| 数壹 (number-one) | ⚠️ 已下线 | `packages/math/pages/number-one/` | 算法bug修复中，暂不展示 |
 
 ---
 
@@ -38,15 +34,16 @@
 
 ### 3.1 优先级排序
 
-| 优先级 | 游戏 | 理由 |
-|--------|------|------|
-| P0 | 扫雷 | 最经典，用户基数大，实现简单 |
-| P0 | 黑白棋 (Othello) | 经典对战游戏，AI实现成熟 |
-| P1 | 数回 (Slither Link) | 规则独特，视觉效果好 |
-| P1 | 数壹 (Hitori) | 规则简单，逻辑清晰 |
-| P2 | 灯塔 (Akari) | 逻辑有趣，适合手机操作 |
-| P2 | 数墙 (Nurikabe) | 经典日式逻辑游戏 |
-| P3 | 战舰 (Battleship Solitaire) | 推理类，有挑战性 |
+| 优先级 | 游戏 | 状态 | 理由 |
+|--------|------|------|------|
+| P0 | 扫雷（躲避牛蛙） | ✅ 已上线 | 最经典，用户基数大 |
+| P0 | 黑白棋 (Othello) | ✅ 已上线 | 经典对战游戏，AI实现成熟 |
+| P1 | 数壹 (Hitori) | ⚠️ 下线修复中 | 规则简单，逻辑清晰 |
+| P1 | 数织 (Nonogram) | ✅ 已上线 | 规则独特，视觉效果好 |
+| P2 | 数回 (Slither Link) | ⏳ 未开始 | 规则独特 |
+| P2 | 灯塔 (Akari) | ⏳ 未开始 | 逻辑有趣 |
+| P2 | 数墙 (Nurikabe) | ⏳ 未开始 | 经典日式逻辑游戏 |
+| P3 | 战舰 (Battleship) | ⏳ 未开始 | 推理类，有挑战性 |
 
 ---
 
@@ -454,22 +451,23 @@ utils/
 - [x] 设计统一UI风格
 
 ### Phase 2: P0 游戏 (1周)
-- [x] 扫雷：核心逻辑 + UI + 3难度
+- [x] 扫雷（躲避牛蛙）：核心逻辑 + UI + 题库
 - [x] 黑白棋：核心逻辑 + AI + UI
 - [x] 测试 + 优化
 
-### Phase 3: P1 游戏 (2周)
-- [x] 数回：核心逻辑 + UI
-- [x] 数壹：核心逻辑 + UI
-- [x] 测试 + 优化
+### Phase 3: P1 游戏 (1周)
+- [x] 数织（Nonogram）：核心逻辑 + UI
+- [ ] 数壹（Hitori）：核心逻辑完成，⚠️ 下线修复中（算法bug）
+- [ ] 测试 + 优化
 
 ### Phase 4: P2 游戏 (2周)
-- [ ] 灯塔：核心逻辑 + UI
-- [ ] 数墙：核心逻辑 + UI
+- [x] 数回（Slither Link）：核心逻辑 + UI
+- [x] 灯塔（Akari）：核心逻辑 + UI
+- [x] 数墙（Nurikabe）：核心逻辑 + UI
 - [ ] 测试 + 优化
 
 ### Phase 5: P3 游戏 (按需)
-- [x] 战舰
+- [ ] 战舰（Battleship）：核心逻辑 + UI
 
 ---
 

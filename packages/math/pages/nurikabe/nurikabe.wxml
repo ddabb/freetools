@@ -1,0 +1,58 @@
+<!--数墙游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
+      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
+      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+    </view>
+    <view class="info">
+      <text class="timer">⏱️ {{time > 0 ? (Math.floor(time/60) + ':' + (time%60).toString().padStart(2,'0')) : '0:00'}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid" style="width: {{cols * cellSize}}px;">
+      <block wx:for="{{board}}" wx:for-index="row" wx:for-item="boardRow">
+        <view class="row">
+          <block wx:for="{{boardRow}}" wx:for-index="col" wx:for-item="cell">
+            <view class="cell {{cell === 1 ? 'black' : 'white'}}"
+                  style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                  data-row="{{row}}" data-col="{{col}}"
+                  bindtap="onCellTap">
+              <!-- 数字格 -->
+              <text wx:if="{{numbers[row][col] > 0}}" class="number">{{numbers[row][col]}}</text>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">恭喜完成！</text>
+      <text class="complete-time">用时 {{Math.floor(time/60)}}:{{(time%60).toString().padStart(2,'0')}}</text>
+      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rules">
+    <text class="rules-title">游戏规则</text>
+    <text class="rules-text">• 点击格子涂黑/涂白</text>
+    <text class="rules-text">• 数字表示该格所属白色区域大小</text>
+    <text class="rules-text">• 所有黑格必须连通</text>
+    <text class="rules-text">• 不能有 2×2 的全黑区域</text>
+  </view>
+</view>

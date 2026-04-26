@@ -1,0 +1,92 @@
+<!--数回游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
+      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
+      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+    </view>
+    <view class="info">
+      <text class="timer">⏱️ {{time > 0 ? (Math.floor(time/60) + ':' + (time%60).toString().padStart(2,'0')) : '0:00'}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid-container" style="width: {{cols * 50 + 30}}px; height: {{rows * 50 + 30}}px;">
+      <!-- 格子和数字提示 -->
+      <view class="cells">
+        <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow">
+          <block wx:for="{{hintRow}}" wx:for-index="col" wx:for-item="hint">
+            <view class="cell" style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px;">
+              <text wx:if="{{hint !== null}}" class="hint">{{hint}}</text>
+            </view>
+          </block>
+        </block>
+      </view>
+
+      <!-- 格点 -->
+      <view class="dots">
+        <block wx:for="{{rows + 1}}" wx:for-index="r">
+          <block wx:for="{{cols + 1}}" wx:for-index="c">
+            <view class="dot" style="left: {{c * 50 + 15}}px; top: {{r * 50 + 15}}px;"></view>
+          </block>
+        </block>
+      </view>
+
+      <!-- 水平边 -->
+      <view class="edges-h">
+        <block wx:for="{{edges.h}}" wx:for-index="row" wx:for-item="hRow">
+          <block wx:for="{{hRow}}" wx:for-index="col" wx:for-item="edge">
+            <view class="edge-h {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
+                  style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; width: 50px;"
+                  data-type="h" data-row="{{row}}" data-col="{{col}}"
+                  bindtap="onEdgeTap">
+              <text wx:if="{{edge === 2}}" class="cross-mark">×</text>
+            </view>
+          </block>
+        </block>
+      </view>
+
+      <!-- 垂直边 -->
+      <view class="edges-v">
+        <block wx:for="{{edges.v}}" wx:for-index="row" wx:for-item="vRow">
+          <block wx:for="{{vRow}}" wx:for-index="col" wx:for-item="edge">
+            <view class="edge-v {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
+                  style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; height: 50px;"
+                  data-type="v" data-row="{{row}}" data-col="{{col}}"
+                  bindtap="onEdgeTap">
+              <text wx:if="{{edge === 2}}" class="cross-mark">×</text>
+            </view>
+          </block>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">恭喜完成！</text>
+      <text class="complete-time">用时 {{Math.floor(time/60)}}:{{(time%60).toString().padStart(2,'0')}}</text>
+      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rules">
+    <text class="rules-title">游戏规则</text>
+    <text class="rules-text">• 点击格点之间的边画线</text>
+    <text class="rules-text">• 数字表示该格子四周的线段数</text>
+    <text class="rules-text">• 目标：画出一个闭合环路</text>
+    <text class="rules-text">• 再点一次标记×（表示不画线）</text>
+  </view>
+</view>

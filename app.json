@@ -85,7 +85,10 @@
         "pages/nonogram/nonogram",
         "pages/othello/othello",
         "pages/frog-escape/frog-escape",
-        "pages/number-one/number-one"
+        "pages/number-one/number-one",
+        "pages/slither-link/slither-link",
+        "pages/akari/akari",
+        "pages/nurikabe/nurikabe"
       ]
     },
     {

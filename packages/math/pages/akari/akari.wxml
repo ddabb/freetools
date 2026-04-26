@@ -1,0 +1,66 @@
+<!--灯塔游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
+      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
+      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+    </view>
+    <view class="info">
+      <text class="timer">⏱️ {{time > 0 ? (Math.floor(time/60) + ':' + (time%60).toString().padStart(2,'0')) : '0:00'}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid" style="width: {{cols * cellSize}}px;">
+      <block wx:for="{{grid}}" wx:for-index="row" wx:for-item="gridRow">
+        <view class="row">
+          <block wx:for="{{gridRow}}" wx:for-index="col" wx:for-item="cell">
+            <!-- 黑格 -->
+            <view wx:if="{{cell >= 2}}"
+                  class="cell black"
+                  style="width: {{cellSize}}px; height: {{cellSize}}px;">
+              <text wx:if="{{cell >= 3}}" class="black-num">{{cell - 2}}</text>
+            </view>
+            <!-- 白格 -->
+            <view wx:else
+                  class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}}"
+                  style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                  data-row="{{row}}" data-col="{{col}}"
+                  bindtap="onCellTap">
+              <text wx:if="{{lights[row][col]}}" class="light-icon">💡</text>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">恭喜完成！</text>
+      <text class="complete-time">用时 {{Math.floor(time/60)}}:{{(time%60).toString().padStart(2,'0')}}</text>
+      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rules">
+    <text class="rules-title">游戏规则</text>
+    <text class="rules-text">• 点击白格放置/移除灯塔 💡</text>
+    <text class="rules-text">• 灯塔照亮同行列直到遇到黑格</text>
+    <text class="rules-text">• 所有白格都要被照亮</text>
+    <text class="rules-text">• 灯塔之间不能互相照亮</text>
+    <text class="rules-text">• 黑格数字表示四周灯塔数</text>
+  </view>
+</view>
