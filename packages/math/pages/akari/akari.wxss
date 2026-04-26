@@ -187,6 +187,11 @@
   color: white;
 }
 
+.btn.active {
+  background: #ff6b6b;
+  color: white;
+}
+
 /* 规则说明 */
 .rules {
   margin-top: 30rpx;

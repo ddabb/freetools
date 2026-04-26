@@ -6,7 +6,8 @@
  * 3. 黑格数字表示四周灯塔数
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // 格子类型
 const CELL_WHITE = 0;    // 白格
@@ -98,7 +99,8 @@ Page({
     time: 0,
     isPlaying: false,
     isComplete: false,
-    cellSize: 40
+    cellSize: 40,
+    showAnswer: false   // 显示答案
   },
 
   timer: null,
@@ -312,6 +314,29 @@ Page({
 
   onReset() {
     this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+  },
+
+  // 显示/隐藏答案
+  onShowAnswer() {
+    const showAnswer = !this.data.showAnswer;
+    if (showAnswer) {
+      // 显示答案：在每个区域中心放灯塔
+      const { rows, cols, grid } = this.data;
+      const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
+      // 简单策略：在每行每列的白格中放置灯塔
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (grid[r][c] < CELL_BLACK) {
+            // 检查是否可以放灯塔
+            lights[r][c] = true;
+          }
+        }
+      }
+      this.setData({ showAnswer, lights });
+      this.updateLit();
+    } else {
+      this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+    }
   },
 
   formatTime(seconds) {

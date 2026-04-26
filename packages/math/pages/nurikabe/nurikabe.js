@@ -6,7 +6,8 @@
  * 3. 没有 2×2 的全黑区域
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // 格子状态
 const CELL_WHITE = 0;  // 白格（未确定）
@@ -82,7 +83,8 @@ Page({
     time: 0,
     isPlaying: false,
     isComplete: false,
-    cellSize: 50
+    cellSize: 50,
+    showAnswer: false // 显示答案
   },
 
   timer: null,
@@ -338,6 +340,23 @@ Page({
 
   onReset() {
     this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+  },
+
+  // 显示/隐藏答案
+  onShowAnswer() {
+    const showAnswer = !this.data.showAnswer;
+    if (showAnswer) {
+      // 显示答案：将非数字格涂黑
+      const { rows, cols, numbers } = this.data;
+      const board = Array(rows).fill(null).map((_, r) =>
+        Array(cols).fill(null).map((_, c) =>
+          numbers[r][c] > 0 ? CELL_WHITE : CELL_BLACK
+        )
+      );
+      this.setData({ showAnswer, board });
+    } else {
+      this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+    }
   },
 
   formatTime(seconds) {

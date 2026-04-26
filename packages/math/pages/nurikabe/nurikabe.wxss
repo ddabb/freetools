@@ -171,6 +171,11 @@
   color: white;
 }
 
+.btn.active {
+  background: #ff6b6b;
+  color: white;
+}
+
 .rules {
   margin-top: 30rpx;
   padding: 30rpx;

@@ -78,6 +78,7 @@
   <!-- 底部按钮 -->
   <view class="footer">
     <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn {{showAnswer ? 'active' : ''}}" bindtap="onShowAnswer">{{showAnswer ? '隐藏答案' : '显示答案'}}</button>
     <button class="btn next" bindtap="nextPuzzle">下一题</button>
   </view>
 

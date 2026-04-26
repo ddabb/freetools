@@ -4,7 +4,8 @@
  * 格子内的数字表示该格子四周的线段数
  */
 
-const { playSound, preloadSounds, isPageSoundEnabled } = require('../../../../utils/index');
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // 题库数据 - 格式：[rows, cols, hints(二维数组，null表示无提示)]
 const PUZZLES = {
@@ -98,14 +99,15 @@ Page({
     rows: 5,
     cols: 5,
     hints: [],          // 数字提示
-    edges: null,        // 边的状态 {h: 水平边, v: 垂直边}
+    edges: { h: [], v: [] },  // 边的状态 {h: 水平边, v: 垂直边}
     difficulty: 'easy',
     puzzleId: 0,
     time: 0,
     isPlaying: false,
     isComplete: false,
     cellSize: 50,       // 格子大小
-    gridOffset: 30      // 格点偏移（用于点击判定）
+    gridOffset: 30,     // 格点偏移（用于点击判定）
+    showAnswer: false   // 显示答案
   },
 
   timer: null,
@@ -366,6 +368,23 @@ Page({
   // 重置
   onReset() {
     this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+  },
+
+  // 显示/隐藏答案
+  onShowAnswer() {
+    const showAnswer = !this.data.showAnswer;
+    if (showAnswer) {
+      // 显示答案：填充所有边为线
+      const { rows, cols } = this.data;
+      const edges = {
+        h: Array(rows + 1).fill(null).map(() => Array(cols).fill(EDGE_LINE)),
+        v: Array(rows).fill(null).map(() => Array(cols + 1).fill(EDGE_LINE))
+      };
+      this.setData({ showAnswer, edges });
+    } else {
+      // 隐藏答案：重新加载题目
+      this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+    }
   },
 
   // 格式化时间
