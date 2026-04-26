@@ -8,7 +8,7 @@
       <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
     </view>
     <view class="info">
-      <text class="timer">⏱️ {{time > 0 ? (Math.floor(time/60) + ':' + (time%60).toString().padStart(2,'0')) : '0:00'}}</text>
+      <text class="timer">⏱️ {{timeStr}}</text>
     </view>
   </view>
 
@@ -70,7 +70,7 @@
     <view class="complete-card">
       <text class="complete-icon">🎉</text>
       <text class="complete-text">恭喜完成！</text>
-      <text class="complete-time">用时 {{Math.floor(time/60)}}:{{(time%60).toString().padStart(2,'0')}}</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
       <button class="next-btn" bindtap="nextPuzzle">下一题</button>
     </view>
   </view>
