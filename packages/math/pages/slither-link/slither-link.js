@@ -513,15 +513,16 @@ function computeHints(rows, cols, answer) {
 
 /**
  * 随机隐藏部分 hint，增加难度
- * 0 和 3 必须保留（强约束），其他随机隐藏
+ * 0 和 4 必须保留（强约束），3 尽量保留
+ * 其他数字适度隐藏，保证题目可解
  */
 function maskHints(hints, hideRatio) {
   return hints.map(row => row.map(val => {
-    if (val === 0) return 0;    // 0 必须显示
-    if (val === 3) return Math.random() < 0.8 ? 3 : null;
-    if (val === 1) return Math.random() < (1 - hideRatio * 0.5) ? 1 : null;
-    if (val === 2) return Math.random() < (1 - hideRatio) ? 2 : null;
-    if (val === 4) return 4;    // 4 必须显示
+    if (val === 0) return 0;    // 0 必须显示（四周无线）
+    if (val === 4) return 4;    // 4 必须显示（四周全有）
+    if (val === 3) return Math.random() < 0.85 ? 3 : null;  // 3 几乎都显示
+    if (val === 2) return Math.random() < 0.7 ? 2 : null;   // 2 大多显示
+    if (val === 1) return Math.random() < 0.6 ? 1 : null;   // 1 适度隐藏
     return null;
   }));
 }

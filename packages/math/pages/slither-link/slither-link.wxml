@@ -33,7 +33,7 @@
           <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow">
             <block wx:for="{{hintRow}}" wx:for-index="col" wx:for-item="hint">
               <view class="cell" style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px;">
-                <text wx:if="{{hint !== null}}" class="hint">{{hint}}</text>
+                <text wx:if="{{hint >= 0}}" class="hint">{{hint}}</text>
               </view>
             </block>
           </block>
