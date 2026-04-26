@@ -1,534 +1,28 @@
 /**
- * 数回 (Slither Link) 游戏
+ * 数回 (Slither Link) 游戏 - CDN版
  * 
  * 规则：
- * 1. 在格点之间画线，形成一条闭合环路（不能分叉、不能断开）
+ * 1. 在格点之间画线，形成一条闭合回路（不能分叉、不能断开、不能交叉）
  * 2. 格子中的数字表示该格子四周有多少条线段
  * 3. 没有数字的格子，四周线段数不限
- * 4. 环路不能交叉，也不能分叉
+ * 4. 只能有一个回路
  */
+
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/slither-link';
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // 边的状态
-const EDGE_EMPTY = 0;   // 无线
-const EDGE_LINE = 1;    // 有线
-const EDGE_CROSS = 2;   // 标记不可画线（×）
+const EDGE_EMPTY = 0;
+const EDGE_LINE = 1;
+const EDGE_CROSS = 2;
 
-const DIFFICULTY_TEXT = {
-  easy: '5×5 简单',
-  medium: '7×7 中等',
-  hard: '10×10 困难'
+const DIFFICULTY_CONFIG = {
+  easy: { text: '5×5 简单', size: 5 },
+  medium: { text: '7×7 中等', size: 7 },
+  hard: { text: '10×10 困难', size: 10 }
 };
-
-/**
- * 从一个已知的 loop 路径反推 hints
- * loop: 格点坐标数组，按顺序排列，首尾相连
- */
-function generatePuzzleFromLoop(rows, cols, loop) {
-  // 构建边集合
-  const hEdges = new Set(); // "r,c" 格式
-  const vEdges = new Set(); // "r,c" 格式
-  
-  for (let i = 0; i < loop.length; i++) {
-    const [r1, c1] = loop[i];
-    const [r2, c2] = loop[(i + 1) % loop.length];
-    
-    if (r1 === r2) {
-      // 水平边
-      const minC = Math.min(c1, c2);
-      hEdges.add(`${r1},${minC}`);
-    } else {
-      // 垂直边
-      const minR = Math.min(r1, r2);
-      vEdges.add(`${minR},${c1}`);
-    }
-  }
-  
-  // 计算每个格子的 hint
-  const hints = [];
-  for (let r = 0; r < rows; r++) {
-    const row = [];
-    for (let c = 0; c < cols; c++) {
-      let count = 0;
-      if (hEdges.has(`${r},${c}`)) count++;       // 上边
-      if (hEdges.has(`${r + 1},${c}`)) count++;   // 下边
-      if (vEdges.has(`${r},${c}`)) count++;        // 左边
-      if (vEdges.has(`${r},${c + 1}`)) count++;    // 右边
-      row.push(count);
-    }
-    hints.push(row);
-  }
-  
-  // 构建 answer
-  const answerH = [];
-  for (let r = 0; r <= rows; r++) {
-    const row = [];
-    for (let c = 0; c < cols; c++) {
-      row.push(hEdges.has(`${r},${c}`) ? 1 : 0);
-    }
-    answerH.push(row);
-  }
-  
-  const answerV = [];
-  for (let r = 0; r < rows; r++) {
-    const row = [];
-    for (let c = 0; c <= cols; c++) {
-      row.push(vEdges.has(`${r},${c}`) ? 1 : 0);
-    }
-    answerV.push(row);
-  }
-  
-  // 决定哪些 hint 显示：随机隐藏一些，但保留 0 和关键约束
-  const displayHints = [];
-  for (let r = 0; r < rows; r++) {
-    const row = [];
-    for (let c = 0; c < cols; c++) {
-      // 0 必须显示（强约束），3 也尽量显示
-      // 其他数字随机隐藏 40%
-      if (hints[r][c] === 0) {
-        row.push(0);
-      } else if (hints[r][c] === 3) {
-        row.push(Math.random() < 0.7 ? 3 : null);
-      } else {
-        row.push(Math.random() < 0.55 ? hints[r][c] : null);
-      }
-    }
-    displayHints.push(row);
-  }
-  
-  return {
-    rows, cols,
-    hints: displayHints,
-    fullHints: hints,
-    answer: { h: answerH, v: answerV }
-  };
-}
-
-/**
- * 生成一个随机环路（在格点上行走，不交叉，回到起点）
- * 使用简单的"蛇形"模式 + 变体生成有保证的环路
- */
-function generateRandomLoop(rows, cols) {
-  // 策略：先在内部生成若干矩形环，再合并
-  // 更简单可靠的方式：蛇形路径
-  
-  const visited = Array(rows + 1).fill(null).map(() => Array(cols + 1).fill(false));
-  const loop = [];
-  const path = [];
-  
-  // 使用 DFS 随机走，尝试回到起点形成环
-  // 从 (0,0) 出发
-  const startR = 0, startC = 0;
-  visited[startR][startC] = true;
-  path.push([startR, startC]);
-  
-  const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // 右下左上
-  
-  function dfs(r, c, depth) {
-    // 打乱方向
-    const shuffled = dirs.slice().sort(() => Math.random() - 0.5);
-    
-    for (const [dr, dc] of shuffled) {
-      const nr = r + dr;
-      const nc = c + dc;
-      
-      // 边界检查
-      if (nr < 0 || nr > rows || nc < 0 || nc > cols) continue;
-      
-      // 回到起点，形成环
-      if (nr === startR && nc === startC && depth >= 3) {
-        loop.push(...path);
-        return true;
-      }
-      
-      // 已访问
-      if (visited[nr][nc]) continue;
-      
-      visited[nr][nc] = true;
-      path.push([nr, nc]);
-      
-      if (dfs(nr, nc, depth + 1)) return true;
-      
-      path.pop();
-      visited[nr][nc] = false;
-    }
-    
-    return false;
-  }
-  
-  if (dfs(startR, startC, 0)) {
-    return loop;
-  }
-  
-  // Fallback: 简单矩形环
-  return generateRectLoop(rows, cols);
-}
-
-/**
- * 生成矩形环路
- */
-function generateRectLoop(rows, cols) {
-  const r1 = 0, c1 = 0;
-  const r2 = rows, c2 = cols;
-  const loop = [];
-  
-  // 上边: (r1,c1) → (r1,c2)
-  for (let c = c1; c <= c2; c++) loop.push([r1, c]);
-  // 右边: (r1,c2) → (r2,c2)
-  for (let r = r1 + 1; r <= r2; r++) loop.push([r, c2]);
-  // 下边: (r2,c2) → (r2,c1)
-  for (let c = c2 - 1; c >= c1; c--) loop.push([r2, c]);
-  // 左边: (r2,c1) → (r1,c1)  (不重复起点)
-  for (let r = r2 - 1; r > r1; r--) loop.push([r, c1]);
-  
-  return loop;
-}
-
-/**
- * 生成蛇形环路 - 适合中等和困难难度
- * 在内部挖出空洞，形成更复杂的环路
- */
-function generateSnakeLoop(rows, cols) {
-  // 生成外围大矩形环
-  const r1 = 0, c1 = 0;
-  const r2 = rows, c2 = cols;
-  const loop = [];
-  
-  // 外圈
-  for (let c = c1; c <= c2; c++) loop.push([r1, c]);
-  for (let r = r1 + 1; r <= r2; r++) loop.push([r, c2]);
-  for (let c = c2 - 1; c >= c1; c--) loop.push([r2, c]);
-  for (let r = r2 - 1; r > r1; r--) loop.push([r, c1]);
-  
-  return loop;
-}
-
-/**
- * 生成带内凹的复杂环路
- */
-function generateComplexLoop(rows, cols) {
-  const loop = [];
-  
-  // 使用"梳子"形路径，在网格中蛇形前进形成环
-  // 顶部横线
-  for (let c = 0; c <= cols; c++) loop.push([0, c]);
-  // 右侧向下
-  for (let r = 1; r <= rows; r++) loop.push([r, cols]);
-  // 底部横线
-  for (let c = cols - 1; c >= 0; c--) loop.push([rows, c]);
-  // 左侧向上（不到顶）
-  for (let r = rows - 1; r >= 1; r--) loop.push([r, 0]);
-  
-  // 内部锯齿：从(1,0)回到(0,0)
-  // 但这样不是环...我们回到 (1,0) 然后需要连到 (0,0)
-  // 其实上面已经包含了 (0,0) 作为起点
-  // 需要修正：左侧向上回到 (0,0)
-  // 重写
-  loop.length = 0;
-  
-  // 从(0,0)出发
-  // 顶部 → 右 → 底部 → 左 → 回到顶部，但是做成蛇形
-  // 简单方案：外圈矩形环 + 内部"齿"
-  
-  // 外圈
-  for (let c = 0; c <= cols; c++) loop.push([0, c]);      // 顶
-  for (let r = 1; r <= rows; r++) loop.push([r, cols]);    // 右
-  for (let c = cols - 1; c >= 0; c--) loop.push([rows, c]); // 底
-  for (let r = rows - 1; r > 0; r--) loop.push([r, 0]);   // 左到(1,0)
-  loop.push([0, 0]); // 回到起点
-  
-  // 去掉最后的重复起点
-  // loop 的最后一个应该和第一个相连形成环
-  // 但 (1,0)→(0,0) 已经由左侧边完成
-  
-  return loop;
-}
-
-/**
- * 预定义题库 - 所有题目经过手工验证
- * hints 和 answer 完全对应
- */
-function buildPuzzles() {
-  // ===== 5×5 简单题库 =====
-  const easyPuzzles = [];
-  
-  // 题目1: 简单矩形环 (外框)
-  // 环路: (0,0)→(0,5)→(5,0)→(0,0) 即外框
-  {
-    const rows = 5, cols = 5;
-    // 外框矩形环
-    const answer = {
-      h: [
-        [1,1,1,1,1], // row 0: 顶边全有
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [1,1,1,1,1]  // row 5: 底边全有
-      ],
-      v: [
-        [1,0,0,0,0,1], // col 0: 左右各1
-        [1,0,0,0,0,1],
-        [1,0,0,0,0,1],
-        [1,0,0,0,0,1],
-        [1,0,0,0,0,1]
-      ]
-    };
-    // 反推 hints
-    const hints = computeHints(rows, cols, answer);
-    easyPuzzles.push({ rows, cols, hints: maskHints(hints, 0.5), fullHints: hints, answer });
-  }
-  
-  // 题目2: L形环
-  {
-    const rows = 5, cols = 5;
-    const answer = {
-      h: [
-        [1,1,1,0,0], // 顶
-        [0,0,1,1,0], // 向右扩展
-        [0,0,0,1,0],
-        [0,0,0,1,0],
-        [0,0,0,1,0],
-        [0,0,1,1,1]  // 底
-      ],
-      v: [
-        [1,0,0,0,0,0],
-        [1,0,0,0,0,0],
-        [1,0,1,1,1,0],
-        [0,0,0,0,1,0],
-        [0,0,1,1,1,1]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    easyPuzzles.push({ rows, cols, hints: maskHints(hints, 0.5), fullHints: hints, answer });
-  }
-  
-  // 题目3: 简单凹形环
-  {
-    const rows = 5, cols = 5;
-    const answer = {
-      h: [
-        [1,1,1,1,1],
-        [0,0,0,0,0],
-        [0,0,1,1,1],
-        [0,0,1,0,0],
-        [0,0,1,0,0],
-        [1,1,1,0,0]
-      ],
-      v: [
-        [1,0,0,0,1,1],
-        [1,0,0,0,1,1],
-        [1,1,0,0,0,1],
-        [0,1,0,0,0,0],
-        [1,1,0,0,0,0]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    easyPuzzles.push({ rows, cols, hints: maskHints(hints, 0.45), fullHints: hints, answer });
-  }
-  
-  // ===== 7×7 中等题库 =====
-  const mediumPuzzles = [];
-  
-  // 题目1: 中等环形
-  {
-    const rows = 7, cols = 7;
-    const answer = {
-      h: [
-        [0,1,1,1,1,1,0],
-        [0,0,0,0,0,0,0],
-        [0,1,1,1,1,1,0],
-        [0,1,0,0,0,1,0],
-        [0,1,0,0,0,1,0],
-        [0,1,1,1,1,1,0],
-        [0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0]
-      ],
-      v: [
-        [0,0,0,0,0,0,0,0],
-        [0,1,0,0,0,1,0,0],
-        [0,1,1,0,1,1,0,0],
-        [0,1,0,0,0,1,0,0],
-        [0,1,1,0,1,1,0,0],
-        [0,1,0,0,0,1,0,0],
-        [0,0,0,0,0,0,0,0]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    mediumPuzzles.push({ rows, cols, hints: maskHints(hints, 0.4), fullHints: hints, answer });
-  }
-  
-  // 题目2: T形环路
-  {
-    const rows = 7, cols = 7;
-    const answer = {
-      h: [
-        [0,1,1,1,1,1,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0],
-        [0,1,1,1,1,1,0],
-        [0,0,0,0,0,0,0]
-      ],
-      v: [
-        [0,0,0,0,0,0,0,0],
-        [0,1,1,0,1,1,0,0],
-        [0,0,1,0,1,0,0,0],
-        [0,0,1,0,1,0,0,0],
-        [0,0,1,0,1,0,0,0],
-        [0,1,1,0,1,1,0,0],
-        [0,0,0,0,0,0,0,0]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    mediumPuzzles.push({ rows, cols, hints: maskHints(hints, 0.4), fullHints: hints, answer });
-  }
-  
-  // 题目3: 凹形环
-  {
-    const rows = 7, cols = 7;
-    const answer = {
-      h: [
-        [1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0],
-        [0,0,1,1,1,0,0],
-        [0,0,1,0,1,0,0],
-        [0,0,1,0,1,0,0],
-        [0,0,1,1,1,0,0],
-        [0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1]
-      ],
-      v: [
-        [1,0,0,0,0,0,1,1],
-        [1,0,1,0,1,0,1,1],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [0,0,1,0,1,0,0,0],
-        [1,0,1,0,1,0,1,0],
-        [1,1,1,1,1,1,1,0]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    mediumPuzzles.push({ rows, cols, hints: maskHints(hints, 0.35), fullHints: hints, answer });
-  }
-  
-  // ===== 10×10 困难题库 =====
-  const hardPuzzles = [];
-  
-  // 题目1: 复杂环路
-  {
-    const rows = 10, cols = 10;
-    // 使用外围大环 + 中间掏洞的方式
-    const answer = {
-      h: [
-        [1,1,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,1,1,1,1,1,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,1,1,1,1,1,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1,1,1,1]
-      ],
-      v: [
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,1,1,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    hardPuzzles.push({ rows, cols, hints: maskHints(hints, 0.35), fullHints: hints, answer });
-  }
-  
-  // 题目2: 双环嵌套
-  {
-    const rows = 10, cols = 10;
-    const answer = {
-      h: [
-        [1,1,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,1,1,1,1,1,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0],
-        [0,0,1,1,1,1,1,1,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1,1,1,1]
-      ],
-      v: [
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [0,0,1,0,0,0,0,1,0,0,0],
-        [0,0,1,0,0,0,0,1,0,0,0],
-        [0,0,1,0,0,0,0,1,0,0,0],
-        [0,0,1,1,1,1,1,1,0,0,0],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ]
-    };
-    const hints = computeHints(rows, cols, answer);
-    hardPuzzles.push({ rows, cols, hints: maskHints(hints, 0.3), fullHints: hints, answer });
-  }
-  
-  return { easy: easyPuzzles, medium: mediumPuzzles, hard: hardPuzzles };
-}
-
-/**
- * 从 answer 反推每个格子的 hint（数字）
- */
-function computeHints(rows, cols, answer) {
-  const hints = [];
-  for (let r = 0; r < rows; r++) {
-    const row = [];
-    for (let c = 0; c < cols; c++) {
-      let count = 0;
-      if (answer.h[r][c] === 1) count++;         // 上边
-      if (answer.h[r + 1][c] === 1) count++;     // 下边
-      if (answer.v[r][c] === 1) count++;          // 左边
-      if (answer.v[r][c + 1] === 1) count++;     // 右边
-      row.push(count);
-    }
-    hints.push(row);
-  }
-  return hints;
-}
-
-/**
- * 随机隐藏部分 hint，增加难度
- * 0 和 4 必须保留（强约束），3 尽量保留
- * 其他数字适度隐藏，保证题目可解
- */
-function maskHints(hints, hideRatio) {
-  return hints.map(row => row.map(val => {
-    if (val === 0) return 0;    // 0 必须显示（四周无线）
-    if (val === 4) return 4;    // 4 必须显示（四周全有）
-    if (val === 3) return Math.random() < 0.85 ? 3 : null;  // 3 几乎都显示
-    if (val === 2) return Math.random() < 0.7 ? 2 : null;   // 2 大多显示
-    if (val === 1) return Math.random() < 0.6 ? 1 : null;   // 1 适度隐藏
-    return null;
-  }));
-}
-
-// 构建题库
-const PUZZLES = buildPuzzles();
 
 Page({
   data: {
@@ -545,25 +39,22 @@ Page({
     isComplete: false,
     cellSize: 50,
     showAnswer: false,
-    showRules: false
+    showRules: false,
+    loading: false
   },
 
   timer: null,
   pageId: 'slither-link',
+  _currentPuzzle: null,
+  _totalPuzzles: { easy: 200, medium: 100, hard: 50 },
 
   onLoad(options) {
     const saved = wx.getStorageSync('slither_link_saved');
     if (saved && saved.edges && saved.edges.h && saved.edges.h.length > 0) {
-      this.setData({
-        ...saved,
-        isPlaying: true,
-        showAnswer: false
-      });
-      // 恢复 _currentPuzzle 以支持显示答案
+      this.setData({ ...saved, isPlaying: true, showAnswer: false, loading: false });
       const difficulty = saved.difficulty || 'easy';
       const puzzleId = saved.puzzleId || 0;
-      const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
-      this._currentPuzzle = puzzles[puzzleId % puzzles.length];
+      this._currentPuzzle = { answer: saved._answer };
       this.startTimer();
     } else {
       const difficulty = options.difficulty || 'easy';
@@ -582,41 +73,116 @@ Page({
         edges: this.data.edges,
         difficulty: this.data.difficulty,
         puzzleId: this.data.puzzleId,
-        time: this.data.time
+        time: this.data.time,
+        _answer: this._currentPuzzle ? this._currentPuzzle.answer : null
       });
     }
   },
 
+  /**
+   * 从CDN加载题目
+   */
   loadPuzzle(difficulty, puzzleId) {
-    const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
-    const puzzle = puzzles[puzzleId % puzzles.length];
+    const self = this;
+    const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
+    const cacheKey = 'cdn_slitherlink_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
+    
+    // 尝试缓存
+    const cached = wx.getStorageSync(cacheKey);
+    if (cached && cached.grid) {
+      self._applyPuzzle(cached, difficulty, puzzleId);
+      return;
+    }
+    
+    self.setData({ loading: true });
+    
+    wx.request({
+      url: CDN_BASE + '/' + filename,
+      method: 'GET',
+      timeout: 8000,
+      success(res) {
+        if (res.statusCode === 200 && res.data && res.data.grid) {
+          wx.setStorageSync(cacheKey, res.data);
+          self._applyPuzzle(res.data, difficulty, puzzleId);
+        } else {
+          console.warn('[slither-link] CDN数据格式错误');
+          self._loadFallback(difficulty, puzzleId);
+        }
+      },
+      fail(err) {
+        console.warn('[slither-link] CDN请求失败', err);
+        self._loadFallback(difficulty, puzzleId);
+      }
+    });
+  },
 
+  _applyPuzzle(puzzleData, difficulty, puzzleId) {
+    const rows = puzzleData.size || puzzleData.grid.length;
+    const cols = puzzleData.grid[0].length;
+    const hints = puzzleData.grid;
+    const answer = puzzleData.answer || null;
+    
     const edges = {
-      h: Array(puzzle.rows + 1).fill(null).map(() => Array(puzzle.cols).fill(EDGE_EMPTY)),
-      v: Array(puzzle.rows).fill(null).map(() => Array(puzzle.cols + 1).fill(EDGE_EMPTY))
+      h: Array(rows + 1).fill(null).map(() => Array(cols).fill(EDGE_EMPTY)),
+      v: Array(rows).fill(null).map(() => Array(cols + 1).fill(EDGE_EMPTY))
     };
 
+    this._currentPuzzle = { answer };
+
     this.setData({
-      rows: puzzle.rows,
-      cols: puzzle.cols,
-      hints: puzzle.hints,
+      rows,
+      cols,
+      hints,
       difficulty,
-      difficultyText: DIFFICULTY_TEXT[difficulty],
+      difficultyText: DIFFICULTY_CONFIG[difficulty].text,
       puzzleId,
       time: 0,
       timeStr: '0:00',
       isPlaying: true,
       isComplete: false,
       showAnswer: false,
-      showRules: false
+      showRules: false,
+      loading: false
     });
-
-    // edges 需要单独设置（可能较大）
     this.setData({ edges });
-    this._currentPuzzle = puzzle;
-
     this.startTimer();
     this.playSoundIfEnabled('click');
+  },
+
+  _loadFallback(difficulty, puzzleId) {
+    // 生成一个简单的备用题目（矩形环路）
+    const size = DIFFICULTY_CONFIG[difficulty].size;
+    const rows = size, cols = size;
+    
+    // 矩形环 → hints
+    const hints = [];
+    for (let r = 0; r < rows; r++) {
+      const row = [];
+      for (let c = 0; c < cols; c++) {
+        if (r === 0 || r === rows - 1) {
+          row.push(c === 0 || c === cols - 1 ? 2 : 1);
+        } else {
+          row.push(c === 0 || c === cols - 1 ? 1 : 0);
+        }
+      }
+      hints.push(row);
+    }
+    
+    const answer = { h: [], v: [] };
+    for (let r = 0; r <= rows; r++) {
+      answer.h.push([]);
+      for (let c = 0; c < cols; c++) {
+        answer.h[r].push((r === 0 || r === rows) ? 1 : 0);
+      }
+    }
+    for (let r = 0; r < rows; r++) {
+      answer.v.push([]);
+      for (let c = 0; c <= cols; c++) {
+        answer.v[r].push((c === 0 || c === cols) ? 1 : 0);
+      }
+    }
+    
+    this._applyPuzzle({ size: rows, grid: hints, answer }, difficulty, puzzleId);
   },
 
   startTimer() {
@@ -662,7 +228,7 @@ Page({
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         const hint = hints[r][c];
-        if (hint !== null) {
+        if (hint !== null && hint !== undefined) {
           const count = (edges.h[r][c] === EDGE_LINE ? 1 : 0) +
                         (edges.h[r + 1][c] === EDGE_LINE ? 1 : 0) +
                         (edges.v[r][c] === EDGE_LINE ? 1 : 0) +
@@ -695,8 +261,6 @@ Page({
 
   /**
    * 检查线段是否形成单一闭合环路
-   * 算法：从任意一个有线的格点出发，沿连线追踪，必须能回到起点
-   * 且过程中每个格点恰好有2条连线（不能分叉或断头）
    */
   isSingleLoop() {
     const { rows, cols, edges } = this.data;
@@ -704,7 +268,6 @@ Page({
     // 统计每个格点的连接数
     const dotDegree = Array(rows + 1).fill(null).map(() => Array(cols + 1).fill(0));
 
-    // 水平边连接 (r,c) 和 (r,c+1)
     for (let r = 0; r <= rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (edges.h[r][c] === EDGE_LINE) {
@@ -714,7 +277,6 @@ Page({
       }
     }
 
-    // 垂直边连接 (r,c) 和 (r+1,c)
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c <= cols; c++) {
         if (edges.v[r][c] === EDGE_LINE) {
@@ -724,25 +286,22 @@ Page({
       }
     }
 
-    // 找起点：任意 degree=2 的格点
+    // 找起点
     let startR = -1, startC = -1;
     let totalDotsWithDegree = 0;
     for (let r = 0; r <= rows && startR === -1; r++) {
       for (let c = 0; c <= cols; c++) {
         if (dotDegree[r][c] > 0) {
-          if (dotDegree[r][c] !== 2) return false; // 有分叉或断头
-          if (startR === -1) {
-            startR = r;
-            startC = c;
-          }
+          if (dotDegree[r][c] !== 2) return false;
+          if (startR === -1) { startR = r; startC = c; }
           totalDotsWithDegree++;
         }
       }
     }
 
-    if (startR === -1) return false; // 没有线
+    if (startR === -1) return false;
 
-    // 从起点沿连线追踪，看能否回到起点
+    // 沿连线追踪
     const visited = new Set();
     let r = startR, c = startC;
     let prevR = -1, prevC = -1;
@@ -751,39 +310,30 @@ Page({
     while (true) {
       const key = `${r},${c}`;
       if (visited.has(key)) {
-        // 回到了已访问的点
         return r === startR && c === startC && steps === totalDotsWithDegree;
       }
       visited.add(key);
       steps++;
 
-      // 找下一个格点：从当前格点出发，沿连线走（不走回头路）
       let nextR = -1, nextC = -1;
 
-      // 检查四个方向
-      // 右
       if (c + 1 <= cols && edges.h[r] && edges.h[r][c] === EDGE_LINE && !(r === prevR && c + 1 === prevC)) {
         nextR = r; nextC = c + 1;
       }
-      // 左
       if (c - 1 >= 0 && edges.h[r] && edges.h[r][c - 1] === EDGE_LINE && !(r === prevR && c - 1 === prevC)) {
         nextR = r; nextC = c - 1;
       }
-      // 下
       if (r + 1 <= rows && edges.v[r] && edges.v[r][c] === EDGE_LINE && !(r + 1 === prevR && c === prevC)) {
         nextR = r + 1; nextC = c;
       }
-      // 上
       if (r - 1 >= 0 && edges.v[r - 1] && edges.v[r - 1][c] === EDGE_LINE && !(r - 1 === prevR && c === prevC)) {
         nextR = r - 1; nextC = c;
       }
 
-      if (nextR === -1) return false; // 走到死胡同
+      if (nextR === -1) return false;
 
-      prevR = r;
-      prevC = c;
-      r = nextR;
-      c = nextC;
+      prevR = r; prevC = c;
+      r = nextR; c = nextC;
     }
   },
 
@@ -795,8 +345,8 @@ Page({
   },
 
   nextPuzzle() {
-    const puzzles = PUZZLES[this.data.difficulty] || PUZZLES.easy;
-    const nextId = (this.data.puzzleId + 1) % puzzles.length;
+    const total = this._totalPuzzles[this.data.difficulty] || 100;
+    const nextId = (this.data.puzzleId + 1) % total;
     this.loadPuzzle(this.data.difficulty, nextId);
   },
 
@@ -814,6 +364,8 @@ Page({
           v: puzzle.answer.v.map(row => row.map(v => v ? EDGE_LINE : EDGE_EMPTY))
         };
         this.setData({ showAnswer, edges });
+      } else {
+        wx.showToast({ title: '答案数据未加载', icon: 'none' });
       }
     } else {
       this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
@@ -822,12 +374,6 @@ Page({
 
   toggleRules() {
     this.setData({ showRules: !this.data.showRules });
-  },
-
-  formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
   },
 
   playSoundIfEnabled(name) {
