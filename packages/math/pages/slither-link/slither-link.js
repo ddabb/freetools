@@ -558,6 +558,11 @@ Page({
         isPlaying: true,
         showAnswer: false
       });
+      // 恢复 _currentPuzzle 以支持显示答案
+      const difficulty = saved.difficulty || 'easy';
+      const puzzleId = saved.puzzleId || 0;
+      const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
+      this._currentPuzzle = puzzles[puzzleId % puzzles.length];
       this.startTimer();
     } else {
       const difficulty = options.difficulty || 'easy';

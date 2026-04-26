@@ -50,8 +50,8 @@
 
         <!-- 水平边 -->
         <view class="edges-h">
-          <block wx:for="{{edges.h}}" wx:for-index="row" wx:key="row">
-            <block wx:for="{{hRow}}" wx:for-index="col" wx:key="col">
+          <block wx:for="{{edges.h}}" wx:for-index="row" wx:for-item="hRow" wx:key="row">
+            <block wx:for="{{hRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
               <view class="edge-h {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
                     style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; width: 50px;"
                     data-type="h" data-row="{{row}}" data-col="{{col}}"
@@ -64,8 +64,8 @@
 
         <!-- 垂直边 -->
         <view class="edges-v">
-          <block wx:for="{{edges.v}}" wx:for-index="row" wx:key="row">
-            <block wx:for="{{vRow}}" wx:for-index="col" wx:key="col">
+          <block wx:for="{{edges.v}}" wx:for-index="row" wx:for-item="vRow" wx:key="row">
+            <block wx:for="{{vRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
               <view class="edge-v {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
                     style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; height: 50px;"
                     data-type="v" data-row="{{row}}" data-col="{{col}}"
