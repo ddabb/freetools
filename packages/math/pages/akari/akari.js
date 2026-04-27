@@ -145,12 +145,20 @@ Page({
     const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
     const puzzle = puzzles[puzzleId % puzzles.length];
 
+    // 映射 puzzle.grid 的值到 CELL 常量
+    // puzzle.grid: 0=白格, 1=黑格(无数字), 2-6=黑格(数字0-4)
+    // CELL_WHITE=0, CELL_BLACK=1, CELL_BLACK_0-4=2-6
+    const grid = puzzle.grid.map(row => row.map(cell => {
+      if (cell === 0) return CELL_WHITE;
+      return cell; // 1-6 直接映射
+    }));
+
     const lights = Array(puzzle.rows).fill(null).map(() => Array(puzzle.cols).fill(false));
 
     this.setData({
       rows: puzzle.rows,
       cols: puzzle.cols,
-      grid: puzzle.grid,
+      grid,
       lights,
       lit: [],
       difficulty,
@@ -159,7 +167,8 @@ Page({
       timeStr: '0:00',
       isPlaying: true,
       isComplete: false,
-      showAnswer: false
+      showAnswer: false,
+      verifyMsg: ''
     });
 
     this.updateLit();
@@ -299,9 +308,10 @@ Page({
       title: '🎉 恭喜完成！',
       content: `用时 ${this.formatTime(this.data.time)}`,
       showCancel: false,
-      confirmText: '再来一局'
-    }).then(() => {
-      this.nextPuzzle();
+      confirmText: '再来一局',
+      success: () => {
+        this.nextPuzzle();
+      }
     });
 
     return true;
@@ -322,29 +332,65 @@ Page({
   },
 
   onReset() {
+    this.setData({ verifyMsg: '' });
     this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
   },
 
-  // 显示/隐藏答案
-  onShowAnswer() {
-    const showAnswer = !this.data.showAnswer;
-    if (showAnswer) {
-      // 显示答案：在每个区域中心放灯塔
-      const { rows, cols, grid } = this.data;
-      const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
-      // 简单策略：在每行每列的白格中放置灯塔
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          if (grid[r][c] < CELL_BLACK) {
-            // 检查是否可以放灯塔
-            lights[r][c] = true;
+  // 验证答案
+  onVerify() {
+    const { rows, cols, grid, lights, lit } = this.data;
+    const errors = [];
+
+    // 1. 检查灯塔互相照亮
+    let lightConflict = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (lights[r][c]) {
+          const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+          for (const [dr, dc] of directions) {
+            let nr = r + dr, nc = c + dc;
+            while (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+              if (grid[nr][nc] >= CELL_BLACK) break;
+              if (lights[nr][nc]) { lightConflict++; break; }
+              nr += dr; nc += dc;
+            }
           }
         }
       }
-      this.setData({ showAnswer, lights });
-      this.updateLit();
+    }
+    if (lightConflict > 0) errors.push(`${lightConflict} 对灯塔互相照亮`);
+
+    // 2. 检查黑格数字约束
+    let numErrors = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cell = grid[r][c];
+        if (cell >= CELL_BLACK_0) {
+          const required = cell - CELL_BLACK_0;
+          let count = 0;
+          if (r > 0 && lights[r - 1][c]) count++;
+          if (r < rows - 1 && lights[r + 1][c]) count++;
+          if (c > 0 && lights[r][c - 1]) count++;
+          if (c < cols - 1 && lights[r][c + 1]) count++;
+          if (count !== required) numErrors++;
+        }
+      }
+    }
+    if (numErrors > 0) errors.push(`${numErrors} 个数字黑格不满足`);
+
+    // 3. 检查未照亮的白格
+    let unlitCount = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (grid[r][c] < CELL_BLACK && !lit[r][c]) unlitCount++;
+      }
+    }
+    if (unlitCount > 0) errors.push(`${unlitCount} 个白格未被照亮`);
+
+    if (errors.length === 0) {
+      wx.showModal({ title: '✅ 验证通过', content: '当前答案正确！', showCancel: false });
     } else {
-      this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
+      wx.showModal({ title: '❌ 还有问题', content: errors.join('\n'), showCancel: false });
     }
   },
 

@@ -26,7 +26,13 @@
 | 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子 |
 | 躲避牛蛙 (frog-escape) | ✅ 已上线 | `packages/math/pages/frog-escape/` | 扫雷换皮（🐸主题） |
 | 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
-| 数壹 (number-one) | ⚠️ 已下线 | `packages/math/pages/number-one/` | 算法bug修复中，暂不展示 |
+| 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 算法重写完成，含黑格数提示 |
+| 数回 (slither-link) | ✅ 已上线 | `packages/math/pages/slither-link/` | 含验证按钮 |
+| 灯塔 (akari) | ✅ 已上线 | `packages/math/pages/akari/` | 含校验反馈 |
+| 数墙 (nurikabe) | ✅ 已上线 | `packages/math/pages/nurikabe/` | 需验证 |
+| 战舰 (battleship) | ⏳ 未开始 | - | - |
+| 幻方 (magic-square) | ⏳ 未开始 | - | - |
+| 推箱子 (sokoban) | ⏳ 未开始 | - | - |
 
 ---
 
@@ -38,11 +44,11 @@
 |--------|------|------|------|
 | P0 | 扫雷（躲避牛蛙） | ✅ 已上线 | 最经典，用户基数大 |
 | P0 | 黑白棋 (Othello) | ✅ 已上线 | 经典对战游戏，AI实现成熟 |
-| P1 | 数壹 (Hitori) | ⚠️ 下线修复中 | 规则简单，逻辑清晰 |
+| P1 | 数壹 (Hitori) | ✅ 已上线 | 算法重写完成，含黑格数提示 |
 | P1 | 数织 (Nonogram) | ✅ 已上线 | 规则独特，视觉效果好 |
-| P2 | 数回 (Slither Link) | ⏳ 未开始 | 规则独特 |
-| P2 | 灯塔 (Akari) | ⏳ 未开始 | 逻辑有趣 |
-| P2 | 数墙 (Nurikabe) | ⏳ 未开始 | 经典日式逻辑游戏 |
+| P2 | 数回 (Slither Link) | ✅ 已上线 | 含验证按钮 |
+| P2 | 灯塔 (Akari) | ✅ 已上线 | 含校验反馈 |
+| P2 | 数墙 (Nurikabe) | ✅ 已上线 | 需验证 |
 | P3 | 战舰 (Battleship) | ⏳ 未开始 | 推理类，有挑战性 |
 
 ---
@@ -457,13 +463,13 @@ utils/
 
 ### Phase 3: P1 游戏 (1周)
 - [x] 数织（Nonogram）：核心逻辑 + UI
-- [ ] 数壹（Hitori）：核心逻辑完成，⚠️ 下线修复中（算法bug）
-- [ ] 测试 + 优化
+- [x] 数壹（Hitori）：算法重写完成，已上线（含黑格数提示）
+- [x] 测试 + 优化
 
 ### Phase 4: P2 游戏 (2周)
-- [x] 数回（Slither Link）：核心逻辑 + UI
-- [x] 灯塔（Akari）：核心逻辑 + UI
-- [x] 数墙（Nurikabe）：核心逻辑 + UI
+- [x] 数回（Slither Link）：核心逻辑 + UI（含验证按钮）
+- [x] 灯塔（Akari）：核心逻辑 + UI（含校验反馈）
+- [x] 数墙（Nurikabe）：核心逻辑 + UI（⚠️ 需验证）
 - [ ] 测试 + 优化
 
 ### Phase 5: P3 游戏 (按需)
