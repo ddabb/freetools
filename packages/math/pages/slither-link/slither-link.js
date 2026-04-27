@@ -13,10 +13,9 @@ const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/slither-
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
-// 边的状态
+// 边的状态：只有空和线两种
 const EDGE_EMPTY = 0;
 const EDGE_LINE = 1;
-const EDGE_CROSS = 2;
 
 const DIFFICULTY_CONFIG = {
   easy: { text: '5×5 简单', size: 5 },
@@ -211,9 +210,9 @@ Page({
     const { type, row, col } = e.currentTarget.dataset;
     const edges = JSON.parse(JSON.stringify(this.data.edges));
 
-    // 循环切换：空 → 线 → 叉 → 空
+    // 循环切换：空 → 线 → 空
     const current = edges[type][row][col];
-    edges[type][row][col] = (current + 1) % 3;
+    edges[type][row][col] = (current + 1) % 2;
 
     this.setData({ edges });
     this.playSoundIfEnabled('click');
