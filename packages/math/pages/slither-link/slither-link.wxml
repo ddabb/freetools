@@ -125,6 +125,10 @@
       <text class="action-icon">{{showAnswer ? '🙈' : '👁'}}</text>
       <text class="action-text">{{showAnswer ? '隐藏' : '答案'}}</text>
     </view>
+    <view class="action-btn verify-btn" bindtap="onVerify">
+      <text class="action-icon">✓</text>
+      <text class="action-text">验证</text>
+    </view>
     <view class="action-btn primary" bindtap="nextPuzzle">
       <text class="action-icon">▶</text>
       <text class="action-text">下一题</text>

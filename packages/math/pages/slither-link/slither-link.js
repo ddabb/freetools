@@ -99,13 +99,13 @@ Page({
     wx.request({
       url: CDN_BASE + '/' + filename,
       method: 'GET',
-      timeout: 8000,
+      timeout: 10000,
       success(res) {
         if (res.statusCode === 200 && res.data && res.data.grid) {
           wx.setStorageSync(cacheKey, res.data);
           self._applyPuzzle(res.data, difficulty, puzzleId);
         } else {
-          console.warn('[slither-link] CDN数据格式错误');
+          console.warn('[slither-link] CDN数据格式错误', res.statusCode, res.data);
           self._loadFallback(difficulty, puzzleId);
         }
       },
@@ -218,29 +218,69 @@ Page({
     this.setData({ edges });
     this.playSoundIfEnabled('click');
 
-    this.checkCompletion();
+    // 不再每次点击都自动检查完成，改为用户手动验证
   },
 
+  /**
+   * 验证答案（用户手动触发）
+   */
+  onVerify() {
+    if (this.data.isComplete) return;
+    const result = this.checkCompletion();
+    if (!result.success) {
+      wx.showToast({ title: result.message, icon: 'none', duration: 2000 });
+    }
+  },
+
+  /**
+   * 检查完成状态，返回详细结果
+   */
   checkCompletion() {
     const { rows, cols, hints, edges } = this.data;
 
     // 1. 检查数字约束
+    let wrongHints = 0;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         const hint = hints[r][c];
-        if (hint !== null && hint !== undefined) {
+        if (hint !== null && hint !== undefined && hint >= 0) {
           const count = (edges.h[r][c] === EDGE_LINE ? 1 : 0) +
                         (edges.h[r + 1][c] === EDGE_LINE ? 1 : 0) +
                         (edges.v[r][c] === EDGE_LINE ? 1 : 0) +
                         (edges.v[r][c + 1] === EDGE_LINE ? 1 : 0);
-          if (count !== hint) return false;
+          if (count !== hint) wrongHints++;
         }
       }
     }
 
-    // 2. 检查是否形成单一闭合环路
-    if (!this.isSingleLoop()) return false;
+    if (wrongHints > 0) {
+      return { success: false, message: `还有 ${wrongHints} 个格子不满足条件` };
+    }
 
+    // 2. 统计线段数
+    let lineCount = 0;
+    for (let r = 0; r <= rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (edges.h[r][c] === EDGE_LINE) lineCount++;
+      }
+    }
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c <= cols; c++) {
+        if (edges.v[r][c] === EDGE_LINE) lineCount++;
+      }
+    }
+
+    if (lineCount === 0) {
+      return { success: false, message: '请先画出线段' };
+    }
+
+    // 3. 检查是否形成单一闭合环路
+    const loopResult = this.isSingleLoop();
+    if (!loopResult.valid) {
+      return { success: false, message: loopResult.reason };
+    }
+
+    // 完成！
     this.setData({ isComplete: true });
     this.stopTimer();
     this.playSoundIfEnabled('win');
@@ -256,11 +296,12 @@ Page({
       this.nextPuzzle();
     });
 
-    return true;
+    return { success: true, message: '完成' };
   },
 
   /**
    * 检查线段是否形成单一闭合环路
+   * 返回 { valid, reason }
    */
   isSingleLoop() {
     const { rows, cols, edges } = this.data;
@@ -270,7 +311,7 @@ Page({
 
     for (let r = 0; r <= rows; r++) {
       for (let c = 0; c < cols; c++) {
-        if (edges.h[r][c] === EDGE_LINE) {
+        if (edges.h[r] && edges.h[r][c] === EDGE_LINE) {
           dotDegree[r][c]++;
           dotDegree[r][c + 1]++;
         }
@@ -279,62 +320,75 @@ Page({
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c <= cols; c++) {
-        if (edges.v[r][c] === EDGE_LINE) {
+        if (edges.v[r] && edges.v[r][c] === EDGE_LINE) {
           dotDegree[r][c]++;
           dotDegree[r + 1][c]++;
         }
       }
     }
 
-    // 找起点
+    // 检查所有有连接的点是否度数恰好为2
     let startR = -1, startC = -1;
     let totalDotsWithDegree = 0;
-    for (let r = 0; r <= rows && startR === -1; r++) {
+    let degreeNot2 = 0;
+    for (let r = 0; r <= rows; r++) {
       for (let c = 0; c <= cols; c++) {
         if (dotDegree[r][c] > 0) {
-          if (dotDegree[r][c] !== 2) return false;
+          if (dotDegree[r][c] !== 2) degreeNot2++;
           if (startR === -1) { startR = r; startC = c; }
           totalDotsWithDegree++;
         }
       }
     }
 
-    if (startR === -1) return false;
-
-    // 沿连线追踪
-    const visited = new Set();
-    let r = startR, c = startC;
-    let prevR = -1, prevC = -1;
-    let steps = 0;
-
-    while (true) {
-      const key = `${r},${c}`;
-      if (visited.has(key)) {
-        return r === startR && c === startC && steps === totalDotsWithDegree;
-      }
-      visited.add(key);
-      steps++;
-
-      let nextR = -1, nextC = -1;
-
-      if (c + 1 <= cols && edges.h[r] && edges.h[r][c] === EDGE_LINE && !(r === prevR && c + 1 === prevC)) {
-        nextR = r; nextC = c + 1;
-      }
-      if (c - 1 >= 0 && edges.h[r] && edges.h[r][c - 1] === EDGE_LINE && !(r === prevR && c - 1 === prevC)) {
-        nextR = r; nextC = c - 1;
-      }
-      if (r + 1 <= rows && edges.v[r] && edges.v[r][c] === EDGE_LINE && !(r + 1 === prevR && c === prevC)) {
-        nextR = r + 1; nextC = c;
-      }
-      if (r - 1 >= 0 && edges.v[r - 1] && edges.v[r - 1][c] === EDGE_LINE && !(r - 1 === prevR && c === prevC)) {
-        nextR = r - 1; nextC = c;
-      }
-
-      if (nextR === -1) return false;
-
-      prevR = r; prevC = c;
-      r = nextR; c = nextC;
+    if (degreeNot2 > 0) {
+      return { valid: false, reason: `有 ${degreeNot2} 个交叉点连接数不为2` };
     }
+
+    if (startR === -1) {
+      return { valid: false, reason: '没有画出任何线段' };
+    }
+
+    // 沿连线追踪，使用 BFS/DFS 检查连通性
+    const visited = new Set();
+    const queue = [[startR, startC]];
+    visited.add(`${startR},${startC}`);
+
+    while (queue.length > 0) {
+      const [cr, cc] = queue.shift();
+      // 检查4个方向的邻居
+      const neighbors = [];
+      // 右：h[cr][cc] 连接 (cr,cc) 和 (cr,cc+1)
+      if (cc + 1 <= cols && edges.h[cr] && edges.h[cr][cc] === EDGE_LINE) {
+        neighbors.push([cr, cc + 1]);
+      }
+      // 左：h[cr][cc-1] 连接 (cr,cc-1) 和 (cr,cc)
+      if (cc - 1 >= 0 && edges.h[cr] && edges.h[cr][cc - 1] === EDGE_LINE) {
+        neighbors.push([cr, cc - 1]);
+      }
+      // 下：v[cr][cc] 连接 (cr,cc) 和 (cr+1,cc)
+      if (cr + 1 <= rows && edges.v[cr] && edges.v[cr][cc] === EDGE_LINE) {
+        neighbors.push([cr + 1, cc]);
+      }
+      // 上：v[cr-1][cc] 连接 (cr-1,cc) 和 (cr,cc)
+      if (cr - 1 >= 0 && edges.v[cr - 1] && edges.v[cr - 1][cc] === EDGE_LINE) {
+        neighbors.push([cr - 1, cc]);
+      }
+
+      for (const [nr, nc] of neighbors) {
+        const key = `${nr},${nc}`;
+        if (!visited.has(key)) {
+          visited.add(key);
+          queue.push([nr, nc]);
+        }
+      }
+    }
+
+    if (visited.size !== totalDotsWithDegree) {
+      return { valid: false, reason: '线段未形成单一环路（可能有多条独立线路）' };
+    }
+
+    return { valid: true, reason: '' };
   },
 
   onDifficultyChange(e) {
@@ -347,6 +401,7 @@ Page({
   nextPuzzle() {
     const total = this._totalPuzzles[this.data.difficulty] || 100;
     const nextId = (this.data.puzzleId + 1) % total;
+    this.setData({ isComplete: false });
     this.loadPuzzle(this.data.difficulty, nextId);
   },
 
