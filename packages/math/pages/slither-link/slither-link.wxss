@@ -124,8 +124,6 @@ page {
 
 .cell {
   position: absolute;
-  width: 50px;
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -167,7 +165,6 @@ page {
 
 .edge-h {
   position: absolute;
-  height: 36px;
   transform: translateY(-50%);
   display: flex;
   justify-content: center;

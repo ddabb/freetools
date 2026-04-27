@@ -27,12 +27,12 @@
   <!-- 游戏区域 -->
   <view class="game-area">
     <view class="grid-shadow">
-      <view class="grid-container" style="width: {{cols * 50 + 30}}px; height: {{rows * 50 + 30}}px;">
+      <view class="grid-container" style="width: {{cols * cellSize + 30}}px; height: {{rows * cellSize + 30}}px;">
         <!-- 格子和数字提示 -->
         <view class="cells">
           <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow">
             <block wx:for="{{hintRow}}" wx:for-index="col" wx:for-item="hint">
-              <view class="cell" style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px;">
+              <view class="cell" style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;">
                 <text wx:if="{{hint >= 0}}" class="hint">{{hint}}</text>
               </view>
             </block>
@@ -43,7 +43,7 @@
         <view class="dots">
           <block wx:for="{{rows + 1}}" wx:for-index="r" wx:key="r">
             <block wx:for="{{cols + 1}}" wx:for-index="c" wx:key="c">
-              <view class="dot" style="left: {{c * 50 + 15}}px; top: {{r * 50 + 15}}px;"></view>
+              <view class="dot" style="left: {{c * cellSize + 15}}px; top: {{r * cellSize + 15}}px;"></view>
             </block>
           </block>
         </view>
@@ -53,7 +53,7 @@
           <block wx:for="{{edges.h}}" wx:for-index="row" wx:for-item="hRow" wx:key="row">
             <block wx:for="{{hRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
               <view class="edge-h {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
-                    style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; width: 50px;"
+                    style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;"
                     data-type="h" data-row="{{row}}" data-col="{{col}}"
                     bindtap="onEdgeTap">
                 <text wx:if="{{edge === 2}}" class="cross-mark">×</text>
@@ -67,7 +67,7 @@
           <block wx:for="{{edges.v}}" wx:for-index="row" wx:for-item="vRow" wx:key="row">
             <block wx:for="{{vRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
               <view class="edge-v {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
-                    style="left: {{col * 50 + 15}}px; top: {{row * 50 + 15}}px; height: 50px;"
+                    style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; height: {{cellSize}}px; width: {{cellSize}}px;"
                     data-type="v" data-row="{{row}}" data-col="{{col}}"
                     bindtap="onEdgeTap">
                 <text wx:if="{{edge === 2}}" class="cross-mark">×</text>

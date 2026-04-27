@@ -23,6 +23,20 @@ const DIFFICULTY_CONFIG = {
   hard: { text: '10×10 困难', size: 10 }
 };
 
+// 动态计算格子大小
+function computeCellSize(cols) {
+  const sysInfo = wx.getSystemInfoSync();
+  const screenWidth = sysInfo.windowWidth;
+  // 预留边距：左右各 40rpx ≈ 20px，加上内部 padding
+  const availableWidth = screenWidth - 40;
+  // 格子区域 = cols * cellSize + 30 (边距)
+  // 目标：让格子区域不超过可用宽度的 90%
+  const targetWidth = availableWidth * 0.9 - 30;
+  const cellSize = Math.floor(targetWidth / cols);
+  // 限制最小和最大值
+  return Math.max(28, Math.min(50, cellSize));
+}
+
 Page({
   data: {
     rows: 5,
@@ -121,6 +135,9 @@ Page({
     const hints = puzzleData.grid;
     const answer = puzzleData.answer || null;
     
+    // 动态计算格子大小
+    const cellSize = computeCellSize(cols);
+    
     const edges = {
       h: Array(rows + 1).fill(null).map(() => Array(cols).fill(EDGE_EMPTY)),
       v: Array(rows).fill(null).map(() => Array(cols + 1).fill(EDGE_EMPTY))
@@ -132,6 +149,7 @@ Page({
       rows,
       cols,
       hints,
+      cellSize,
       difficulty,
       difficultyText: DIFFICULTY_CONFIG[difficulty].text,
       puzzleId,
