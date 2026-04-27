@@ -1,10 +1,13 @@
 /**
- * 灯塔 (Akari / Light Up) 游戏
+ * 灯塔 (Akari / Light Up) 游戏 - CDN版
  * 规则：
  * 1. 在白格放置灯塔，照亮所有白格
  * 2. 灯塔之间不能互相照亮
  * 3. 黑格数字表示四周灯塔数
  */
+
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/akari';
+const _totalPuzzles = { easy: 1000, medium: 1000, hard: 1000 };
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
@@ -18,74 +21,21 @@ const CELL_BLACK_2 = 4;  // 黑格数字2
 const CELL_BLACK_3 = 5;  // 黑格数字3
 const CELL_BLACK_4 = 6;  // 黑格数字4
 
-// 题库
-const PUZZLES = {
-  easy: [
-    // 7x7 简单
-    {
-      rows: 7, cols: 7,
-      grid: [
-        [0, 0, 0, 2, 0, 0, 0],
-        [0, 1, 0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [3, 0, 0, 1, 0, 0, 2],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 1, 0],
-        [0, 0, 0, 3, 0, 0, 0]
-      ]
-    },
-    {
-      rows: 7, cols: 7,
-      grid: [
-        [0, 0, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 2, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 2, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0]
-      ]
-    }
-  ],
-  medium: [
-    // 10x10 中等
-    {
-      rows: 10, cols: 10,
-      grid: [
-        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 2, 0, 0, 0, 0, 0, 0, 2, 0],
-        [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 2, 0, 0, 0, 0, 0, 0, 2, 0],
-        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-      ]
-    }
-  ],
-  hard: [
-    // 12x12 困难
-    {
-      rows: 12, cols: 12,
-      grid: [
-        [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
-        [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0]
-      ]
-    }
-  ]
+// CDN数据格式映射：将CDN数据格式转换为内部常量
+// CDN格式：" "=白格, 0-4=黑格数字0-4
+function mapCell(cell) {
+  if (cell === " ") return CELL_WHITE;      // 白格
+  // cell是0-4，表示黑格数字0-4
+  return CELL_BLACK_0 + cell;  // 0→2, 1→3, 2→4, 3→5, 4→6
+}
+
+const DIFFICULTY_CONFIG = {
+  easy: { text: '7×7 简单', size: 7 },
+  medium: { text: '10×10 中等', size: 10 },
+  hard: { text: '12×12 困难', size: 12 }
 };
+
+// TOTAL_PUZZLES 已废弃，使用 _totalPuzzles
 
 Page({
   data: {
@@ -106,15 +56,19 @@ Page({
 
   timer: null,
   pageId: 'akari',
+  _currentPuzzle: null,
+  _loadId: 0,
 
   onLoad(options) {
     // 恢复进度
     const saved = wx.getStorageSync('akari_saved');
-    if (saved && saved.lights) {
+    if (saved && saved.grid) {
       this.setData({
         ...saved,
-        isPlaying: true
+        isPlaying: true,
+        showAnswer: false
       });
+      this._currentPuzzle = { grid: saved.grid };
       this.updateLit();
       this.startTimer();
     } else {
@@ -140,24 +94,71 @@ Page({
     }
   },
 
-  // 加载题目
+  /**
+   * 从CDN加载题目
+   */
   loadPuzzle(difficulty, puzzleId) {
-    const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
-    const puzzle = puzzles[puzzleId % puzzles.length];
+    const self = this;
+    const filename = difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
+    const cacheKey = 'cdn_akari_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
 
-    // 映射 puzzle.grid 的值到 CELL 常量
-    // puzzle.grid: 0=白格, 1=黑格(无数字), 2-6=黑格(数字0-4)
-    // CELL_WHITE=0, CELL_BLACK=1, CELL_BLACK_0-4=2-6
-    const grid = puzzle.grid.map(row => row.map(cell => {
-      if (cell === 0) return CELL_WHITE;
-      return cell; // 1-6 直接映射
-    }));
+    // 尝试缓存
+    const cached = wx.getStorageSync(cacheKey);
+    if (cached && cached.grid) {
+      cached._loadId = self._loadId;
+      self._applyPuzzle(cached, difficulty, puzzleId);
+      return;
+    }
 
-    const lights = Array(puzzle.rows).fill(null).map(() => Array(puzzle.cols).fill(false));
+    // 递增请求ID，用于防止竞态条件
+    const loadId = ++this._loadId;
+
+    self.setData({ isPlaying: false });
+
+    wx.request({
+      url: CDN_BASE + '/' + filename + '?t=' + Date.now(),
+      method: 'GET',
+      timeout: 10000,
+      success(res) {
+        // 检查是否是最新请求
+        if (loadId !== self._loadId) return;
+        
+        if (res.statusCode === 200 && res.data && res.data.grid) {
+          wx.setStorageSync(cacheKey, res.data);
+          res.data._loadId = loadId;
+          self._applyPuzzle(res.data, difficulty, puzzleId);
+        } else {
+          console.warn('[akari] CDN数据格式错误', res.statusCode, res.data);
+          self._loadFallback(difficulty, puzzleId);
+        }
+      },
+      fail(err) {
+        // 检查是否是最新请求
+        if (loadId !== self._loadId) return;
+        
+        console.warn('[akari] CDN请求失败', err);
+        self._loadFallback(difficulty, puzzleId);
+      }
+    });
+  },
+
+  _applyPuzzle(puzzleData, difficulty, puzzleId) {
+    // 检查是否是最新请求（防止竞态条件）
+    if (this._loadId && puzzleData._loadId !== this._loadId) return;
+
+    const size = puzzleData.size || 7;
+    const rows = size, cols = size;
+
+    // 映射CDN数据格式到内部常量
+    const grid = puzzleData.grid.map(row => row.map(cell => mapCell(cell)));
+
+    const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
+
+    this._currentPuzzle = { grid };
 
     this.setData({
-      rows: puzzle.rows,
-      cols: puzzle.cols,
+      rows,
+      cols,
       grid,
       lights,
       lit: [],
@@ -174,6 +175,28 @@ Page({
     this.updateLit();
     this.startTimer();
     this.playSoundIfEnabled('click');
+  },
+
+  _loadFallback(difficulty, puzzleId) {
+    // 生成一个简单的备用题目
+    const size = DIFFICULTY_CONFIG[difficulty].size;
+    const rows = size, cols = size;
+
+    // 创建简单的棋盘：四周是黑格数字0，中间是白格
+    const gridData = [];
+    for (let r = 0; r < rows; r++) {
+      const row = [];
+      for (let c = 0; c < cols; c++) {
+        if (r === 0 || r === rows - 1 || c === 0 || c === cols - 1) {
+          row.push(0); // 黑格数字0
+        } else {
+          row.push(" "); // 白格
+        }
+      }
+      gridData.push(row);
+    }
+
+    this._applyPuzzle({ size, grid: gridData }, difficulty, puzzleId);
   },
 
   startTimer() {
@@ -326,8 +349,9 @@ Page({
   },
 
   nextPuzzle() {
-    const puzzles = PUZZLES[this.data.difficulty] || PUZZLES.easy;
-    const nextId = (this.data.puzzleId + 1) % puzzles.length;
+    const total = _totalPuzzles[this.data.difficulty] || 1000;
+    const nextId = (this.data.puzzleId + 1) % total;
+    this.setData({ isComplete: false });
     this.loadPuzzle(this.data.difficulty, nextId);
   },
 
