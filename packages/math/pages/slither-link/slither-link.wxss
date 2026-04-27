@@ -118,6 +118,11 @@ page {
   max-width: 100%;
 }
 
+.grid-container.hard-mode {
+  max-width: none;
+  overflow-x: auto;
+}
+
 /* 格子 */
 .cells {
   position: absolute;

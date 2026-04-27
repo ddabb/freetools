@@ -24,17 +24,14 @@ const DIFFICULTY_CONFIG = {
 };
 
 // 动态计算格子大小
-function computeCellSize(cols) {
+function computeCellSize(cols, isHard) {
   const sysInfo = wx.getSystemInfoSync();
   const screenWidth = sysInfo.windowWidth;
-  // 预留更多边距
-  const availableWidth = screenWidth - 60;
-  // 格子区域 = cols * cellSize + 20 (边距)
-  const targetWidth = availableWidth - 20;
-  const cellSize = Math.floor(targetWidth / cols);
-  // 限制最小和最大值
-  const maxSize = cols >= 10 ? 30 : 50;
-  return Math.max(24, Math.min(maxSize, cellSize));
+  // 困难模式用完所有可用宽度，普通模式预留一些
+  const availableWidth = isHard ? (screenWidth - 20) : (screenWidth - 60);
+  const cellSize = Math.floor(availableWidth / cols);
+  const maxSize = isHard ? 28 : 50;
+  return Math.max(22, Math.min(maxSize, cellSize));
 }
 
 Page({
@@ -136,7 +133,7 @@ Page({
     const answer = puzzleData.answer || null;
     
     // 动态计算格子大小
-    const cellSize = computeCellSize(cols);
+    const cellSize = computeCellSize(cols, difficulty === 'hard');
     
     const edges = {
       h: Array(rows + 1).fill(null).map(() => Array(cols).fill(EDGE_EMPTY)),
