@@ -84,7 +84,7 @@ Page({
   loadPuzzle(difficulty, puzzleId) {
     const self = this;
     const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
-    const cacheKey = 'cdn_slitherlink_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
+    const cacheKey = 'cdn_slitherlink_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0') + '_v2';
     
     // 尝试缓存
     const cached = wx.getStorageSync(cacheKey);
@@ -96,7 +96,7 @@ Page({
     self.setData({ loading: true });
     
     wx.request({
-      url: CDN_BASE + '/' + filename,
+      url: CDN_BASE + '/' + filename + '?t=' + Date.now(),
       method: 'GET',
       timeout: 10000,
       success(res) {
