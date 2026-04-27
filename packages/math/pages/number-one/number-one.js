@@ -110,6 +110,8 @@ Page({
       solution: puzzle.solution,
       size: puzzle.size || size,
       difficulty: puzzle.difficulty ? DIFF_DIR.indexOf(puzzle.difficulty) + 1 : this.data.difficulty,
+      userBlackCount: 0,
+      solutionBlackCount: puzzle.solution.length,
       solved: false,
       failed: false,
       gameStarted: true,
@@ -145,8 +147,9 @@ Page({
     const userBoard = this.data.userBoard.map(r => [...r]);
     // 0→1→0 切换
     userBoard[row][col] = userBoard[row][col] === 1 ? 0 : 1;
+    const userBlackCount = userBoard.flat().filter(v => v === 1).length;
     playSound('click', { pageId: 'number-one' });
-    this.setData({ userBoard, failed: false });
+    this.setData({ userBoard, failed: false, userBlackCount });
     this._checkWin(userBoard);
   },
 
@@ -156,8 +159,9 @@ Page({
     const { row, col } = e.currentTarget.dataset;
     const userBoard = this.data.userBoard.map(r => [...r]);
     userBoard[row][col] = 0;
+    const userBlackCount = userBoard.flat().filter(v => v === 1).length;
     playSound('click', { pageId: 'number-one' });
-    this.setData({ userBoard, failed: false });
+    this.setData({ userBoard, failed: false, userBlackCount });
   },
 
   _checkWin(userBoard) {
@@ -250,6 +254,7 @@ Page({
       failed: false,
       elapsed: 0,
       formattedTime: '0:00',
+      userBlackCount: 0,
     });
     this._startTimer();
   },
@@ -272,7 +277,8 @@ Page({
       answerBlack, 
       userBoard,
       solved: true,
-      failed: false
+      failed: false,
+      userBlackCount: solution.length,
     });
     this._stopTimer();
     wx.showModal({
@@ -287,6 +293,6 @@ Page({
   undoAll() {
     const { size } = this.data;
     const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
-    this.setData({ userBoard, failed: false });
+    this.setData({ userBoard, failed: false, userBlackCount: 0 });
   },
 });

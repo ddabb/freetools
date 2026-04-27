@@ -43,7 +43,6 @@
     <!-- 顶部信息 -->
     <view class="game-header">
       <text class="game-info">⏱ {{formattedTime}}</text>
-      <text class="game-hint">点击格子标记黑格</text>
     </view>
 
     <!-- 棋盘 -->
@@ -66,6 +65,11 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <!-- 黑格计数 -->
+    <view class="black-count-bar" wx:if="{{gameStarted && !loading && !failed && !solved}}">
+      <text class="black-count-text">已标记黑格：{{userBlackCount}}{{solutionBlackCount ? ' / ' + solutionBlackCount + ' 个' : ' 个'}}</text>
     </view>
 
     <!-- 底部操作 -->
