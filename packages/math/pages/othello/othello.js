@@ -35,9 +35,16 @@ Page({
     // 尝试恢复上次的游戏进度
     const saved = wx.getStorageSync('othello_saved');
     if (saved && saved.board && saved.board.length === 8) {
+      // 恢复后必须重新计算 validMoves，否则无法点击落子
+      const currentPlayer = saved.currentPlayer || BLACK;
+      const validMoves = this.getValidMoves(saved.board, currentPlayer);
+      for (const move of validMoves) {
+        saved.board[move.row][move.col].isValidMove = true;
+      }
       this.setData({
         board: saved.board,
-        currentPlayer: saved.currentPlayer,
+        currentPlayer,
+        validMoves,
         difficulty: saved.difficulty || 'medium',
         blackCount: saved.blackCount || 2,
         whiteCount: saved.whiteCount || 2,
