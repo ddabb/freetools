@@ -27,16 +27,14 @@ const DIFFICULTY_CONFIG = {
 function computeCellSize(cols) {
   const sysInfo = wx.getSystemInfoSync();
   const screenWidth = sysInfo.windowWidth;
-  // 预留更多边距：左右各 60rpx，加上内部 padding 30px
-  const availableWidth = screenWidth - 80;
-  // 格子区域 = cols * cellSize + 30 (边距)
-  // 目标：让格子区域不超过可用宽度的 95%
-  const targetWidth = availableWidth * 0.95 - 30;
+  // 预留更多边距
+  const availableWidth = screenWidth - 60;
+  // 格子区域 = cols * cellSize + 20 (边距)
+  const targetWidth = availableWidth - 20;
   const cellSize = Math.floor(targetWidth / cols);
   // 限制最小和最大值
-  // 困难模式(10x10)需要更小，确保不溢出
-  const maxSize = cols >= 10 ? 32 : 50;
-  return Math.max(26, Math.min(maxSize, cellSize));
+  const maxSize = cols >= 10 ? 30 : 50;
+  return Math.max(24, Math.min(maxSize, cellSize));
 }
 
 Page({
