@@ -25,11 +25,9 @@ const DIFFICULTY_CONFIG = {
 
 // 动态计算格子大小
 function computeCellSize(cols, isHard) {
-  const sysInfo = wx.getSystemInfoSync();
-  const screenWidth = sysInfo.windowWidth;
-  // 困难模式用完所有可用宽度，普通模式预留一些
-  const availableWidth = isHard ? (screenWidth - 20) : (screenWidth - 60);
-  const cellSize = Math.floor(availableWidth / cols);
+    const screenWidth = wx.getSystemInfoSync().windowWidth;
+  const maxBoardWidth = screenWidth - 32; // 16px margin each side, matches frog-escape pattern
+  const cellSize = Math.floor(maxBoardWidth / cols);
   const maxSize = isHard ? 28 : 50;
   return Math.max(22, Math.min(maxSize, cellSize));
 }

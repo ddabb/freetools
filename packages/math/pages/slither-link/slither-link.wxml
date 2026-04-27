@@ -27,7 +27,7 @@
   <!-- 游戏区域 -->
   <view class="game-area">
     <view class="grid-shadow">
-      <view class="grid-container grid-shadow {{difficulty === 'hard' ? 'hard-mode' : ''}}" style="width: {{cols * cellSize + 30}}px; height: {{rows * cellSize + 30}}px; {{difficulty === 'hard' ? '' : 'display:inline-block;'}}">
+      <view class="grid-container grid-shadow {{difficulty === 'hard' ? 'hard-mode' : ''}}" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px; {{difficulty === 'hard' ? '' : 'display:inline-block;'}}">
         <!-- 格子和数字提示 -->
         <view class="cells">
           <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow">
