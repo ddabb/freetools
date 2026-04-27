@@ -40,16 +40,24 @@
 
 ### 3.1 优先级排序
 
-| 优先级 | 游戏 | 状态 | 理由 |
-|--------|------|------|------|
-| P0 | 扫雷（躲避牛蛙） | ✅ 已上线 | 最经典，用户基数大 |
-| P0 | 黑白棋 (Othello) | ✅ 已上线 | 经典对战游戏，AI实现成熟 |
-| P1 | 数壹 (Hitori) | ✅ 已上线 | 算法重写完成，含黑格数提示 |
-| P1 | 数织 (Nonogram) | ✅ 已上线 | 规则独特，视觉效果好 |
-| P2 | 数回 (Slither Link) | ✅ 已上线 | 含验证按钮 |
-| P2 | 灯塔 (Akari) | ✅ 已上线 | 含校验反馈 |
-| P2 | 数墙 (Nurikabe) | ✅ 已上线 | 需验证 |
-| P3 | 战舰 (Battleship) | ⏳ 未开始 | 推理类，有挑战性 |
+| 优先级 | 游戏 | 状态 | 理由 | GitHub 参考 |
+|--------|------|------|------|------------|
+| P0 | 扫雷（躲避牛蛙） | ✅ 已上线 | 最经典，用户基数大 | jbibi/Minesweeper |
+| P0 | 黑白棋 (Othello) | ✅ 已上线 | 经典对战游戏，AI实现成熟 | - |
+| P1 | 数壹 (Hitori) | ✅ 已上线 | 算法重写完成，含黑格数提示 | Puzzlink_Assistance |
+| P1 | 数织 (Nonogram) | ✅ 已上线 | 规则独特，视觉效果好 | topics/picross (11+ JS项目) |
+| P1 | 桥 (Hashiwokakero) | ⏳ 待开发 | 规则简单，有现成生成器 | Simon Tatham, Hashiwokakero-Generator |
+| P1 | 珍珠 (Masyu) | ⏳ 待开发 | 规则优雅，逻辑性强 | Simon Tatham, Puzzlink_Assistance |
+| P2 | 数回 (Slither Link) | ✅ 已上线 | 含验证按钮 | Simon Tatham, Puzzlink |
+| P2 | 灯塔 (Akari) | ✅ 已上线 | 含校验反馈 | Simon Tatham, Puzzlink |
+| P2 | 数墙 (Nurikabe) | ✅ 已上线 | 需验证 | turtlegraphics/nurikabe |
+| P2 | 帐篷 (Tents) | ⏳ 待开发 | 推理类，有现成求解器 | Simon Tatham, asp-tents-puzzle |
+| P2 | 2048 | ⏳ 待开发 | 用户基数大，实现简单 | topics/2048 (262+ JS项目) |
+| P2 | 单词搜索 | ⏳ 待开发 | 适合中文用户，教育价值 | blex41/word-search |
+| P3 | 战舰 (Battleship) | ⏳ 未开始 | 推理类，有挑战性 | - |
+| P3 | 填字游戏 | ⏳ 待开发 | 经典文字游戏 | HartasCuerdas/jsCrossword |
+| P3 | 星系 (Galaxies) | ⏳ 待开发 | 视觉效果好 | Simon Tatham |
+| P3 | 多米诺 (Dominosa) | ⏳ 待开发 | 逻辑性强 | Simon Tatham |
 
 ---
 
@@ -475,6 +483,13 @@ utils/
 ### Phase 5: P3 游戏 (按需)
 - [ ] 战舰（Battleship）：核心逻辑 + UI
 
+### Phase 6: 新增游戏 (基于 GitHub 资源)
+- [ ] 桥（Hashiwokakero）：参考 Simon Tatham + Hashiwokakero-Generator
+- [ ] 珍珠（Masyu）：参考 Simon Tatham + Puzzlink_Assistance
+- [ ] 帐篷（Tents）：参考 Simon Tatham + asp-tents-puzzle
+- [ ] 2048：参考 topics/2048 (262+ JS项目)
+- [ ] 单词搜索：参考 blex41/word-search (可 npm 安装)
+
 ---
 
 ## 八、验收标准
@@ -497,7 +512,168 @@ utils/
 
 ---
 
-## 九、参考资料
+## 九、GitHub 项目参考资源
+
+### 9.1 核心推荐项目
+
+#### Simon Tatham's Portable Puzzle Collection ⭐⭐⭐
+- **GitHub**: https://github.com/ghewgill/puzzles
+- **语言**: C（可移植到 JS）
+- **包含游戏**: 40+ 种经典格子游戏
+- **价值**: 最权威的格子游戏合集，包含：
+  - ✅ Slither Link（数回）
+  - ✅ Nurikabe（数墙）
+  - ✅ Hitori（数壹）
+  - ✅ Light Up（灯塔/Akari）
+  - ✅ Mines（扫雷）
+  - ✅ Solo（数独）
+  - 🆕 Bridges（桥/Hashiwokakero）
+  - 🆕 Masyu（珍珠）
+  - 🆕 Tents（帐篷）
+  - 🆕 Net（网络）
+  - 🆕 Galaxies（星系）
+  - 🆕 Dominosa（多米诺）
+  - 🆕 Pattern（模式识别）
+  - 🆕 Loopy（循环）
+  - 🆕 Range（范围）
+  - 🆕 Towers（塔）
+  - 🆕 Unequal（不等式）
+
+#### Puzzlink Assistance ⭐⭐⭐
+- **GitHub**: https://github.com/sevenkplus/Puzzlink_Assistance
+- **语言**: JavaScript
+- **功能**: 20+ 种格子游戏的辅助求解器
+- **价值**: 可直接用于验证算法和提供提示功能
+- **支持游戏**: Akari, Hitori, Masyu, Nurikabe, Slither Link, Yajilin, Tapa 等
+
+#### Simon Tatham Android 移植版
+- **GitHub**: https://github.com/marcelogp/sgtpuzzles
+- **语言**: Java/C
+- **价值**: 可直接参考 UI 设计和交互实现
+
+---
+
+### 9.2 数独/数字类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| sugoku | megabyt-dev/sugoku | JS | 数独求解、生成、难度评级 |
+| sudoku | atomicplay/sudoku | Node.js | 数独生成器和求解器，可 npm 安装 |
+| qqwing | kronenthaler/qqwing | C++ | 高性能数独生成求解器 |
+| sudoku-generator | BSVino/sudoku-generator | Python | Python 数独生成器 |
+
+---
+
+### 9.3 数织/图片类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| birja_com | Ismat-Samadov/birja_com | TS/Next.js | Nonogram 游戏，UI 参考 |
+| topics/picross | github.com/topics/picross?l=javascript | - | 11+ 个 JS 数织项目合集 |
+
+---
+
+### 9.4 桥/Hashiwokakero
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| Hashiwokakero-Generator | ErtyumPX/Hashiwokakero-Generator | C#/Unity | 桥游戏生成器，可视化 |
+
+---
+
+### 9.5 扫雷类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| Minesweeper | jbibi/Minesweeper | JS (ES6) | 终端扫雷游戏 |
+| Minesweeper | AlexiusTatius/Minesweeper | JS | 浏览器扫雷，多难度 |
+| minesweeper | hmlendea/minesweeper | - | 扫雷游戏 |
+
+---
+
+### 9.6 2048 类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| topics/2048 | github.com/topics/2048?l=javascript | - | **262+ 个 JS 2048 项目** |
+| 2048-puzzle-game | HoTaBu4/2048-puzzle-game | JS | 2048 游戏实现 |
+
+---
+
+### 9.7 填字/单词类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| word-search | blex41/word-search | JS | 单词搜索拼图生成器，可 npm 安装 |
+| word-search-generator | joshbduncan/word-search-generator | Python | 高级单词搜索生成器 v5.0 |
+| jsCrossword | HartasCuerdas/jsCrossword | JS | JavaScript 填字游戏 |
+
+---
+
+### 9.8 Nurikabe 求解器
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| nurikabe | turtlegraphics/nurikabe | Python | 数墙求解器，支持任意图形 |
+| Nurikabe-solver-OpenCV | igradeca/Nurikabe-solver-OpenCV | Python | 启发式求解，相机输入 |
+
+---
+
+### 9.9 帐篷/Tents
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| asp-tents-puzzle | SandroLinder/asp-tents-puzzle | Python | 帐篷拼图求解器 |
+
+---
+
+### 9.10 滑块拼图类
+
+| 项目 | GitHub | 语言 | 说明 |
+|------|--------|------|------|
+| SlidingPuzzle-V.1.0 | CesarMartini/SlidingPuzzle-V.1.0 | Java | 滑块拼图游戏 |
+| n_puzzle_solver | uttaparsa/n_puzzle_solver | C++ | N拼图求解器（BFS/DFS/A*） |
+
+---
+
+### 9.11 快速集成指南
+
+#### 方案 A：直接使用 npm 包
+```bash
+# 数独
+npm install sudoku
+
+# 单词搜索
+npm install @blex41/word-search
+```
+
+#### 方案 B：移植 Simon Tatham 算法
+- Simon Tatham 的 puzzles 项目使用 C 编写
+- 可将核心算法移植到 JavaScript
+- 已有 Android 移植版（marcelogp/sgtpuzzles）可作为参考
+
+#### 方案 C：使用 Puzzlink Assistance
+- 直接使用其求解器作为验证算法
+- 可集成提示功能
+
+---
+
+### 9.12 已有项目对比（避免重复）
+
+| 游戏 | freetools 状态 | GitHub 参考项目 |
+|------|---------------|----------------|
+| 数独 | ✅ 已上线 | sugoku, qqwing |
+| 数织 | ✅ 已上线 | nonogram, picross topics |
+| 扫雷 | ✅ 已上线（躲避牛蛙） | jbibi/Minesweeper |
+| 黑白棋 | ✅ 已上线 | - |
+| 数壹 | ✅ 已上线 | Puzzlink_Assistance |
+| 数回 | ✅ 已上线 | Simon Tatham, Puzzlink |
+| 灯塔 | ✅ 已上线 | Simon Tatham, Puzzlink |
+| 数墙 | ✅ 已上线 | nurikabe solver |
+
+---
+
+## 十、参考资料
 
 - [数独规则](https://zh.wikipedia.org/wiki/数独)
 - [数织规则](https://zh.wikipedia.org/wiki/数织)
