@@ -27,11 +27,11 @@
             </view>
             <!-- 白格：CELL_WHITE=0 -->
             <view wx:else
-                  class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}}"
+                  class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}} {{showAnswer && answerLights[row][col] ? 'answer-light' : ''}}"
                   style="width: {{cellSize}}px; height: {{cellSize}}px;"
                   data-row="{{row}}" data-col="{{col}}"
                   bindtap="onCellTap">
-              <text wx:if="{{lights[row][col]}}" class="light-icon">💡</text>
+              <text wx:if="{{showAnswer ? answerLights[row][col] : lights[row][col]}}" class="light-icon">{{showAnswer ? '✅' : '💡'}}</text>
             </view>
           </block>
         </view>
@@ -53,6 +53,7 @@
   <view class="footer">
     <button class="btn reset" bindtap="onReset">重置</button>
     <button class="btn verify" bindtap="onVerify">验证答案</button>
+    <button class="btn answer" bindtap="onToggleAnswer">{{showAnswer ? '隐藏答案' : '查看答案'}}</button>
     <button class="btn next" bindtap="nextPuzzle">下一题</button>
   </view>
 

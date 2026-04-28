@@ -436,5 +436,121 @@ Page({
       return cell - CELL_BLACK_0;
     }
     return null;
+  },
+
+  // 切换答案显示
+  onToggleAnswer() {
+    const showAnswer = !this.data.showAnswer;
+    if (showAnswer) {
+      // 保存当前用户操作
+      this._userLights = [...this.data.lights.map(row => [...row])];
+      // 求解正确答案
+      wx.showLoading({ title: '计算答案中...' });
+      const answer = this.solveAkari(this.data.grid, this.data.rows, this.data.cols);
+      wx.hideLoading();
+      if (answer) {
+        this.setData({ showAnswer: true, lights: answer, answerLights: answer });
+        this.updateLit();
+      } else {
+        wx.showToast({ title: '计算失败', icon: 'none' });
+        return;
+      }
+    } else {
+      // 恢复用户操作
+      if (this._userLights) {
+        this.setData({ showAnswer: false, lights: this._userLights });
+        this.updateLit();
+      }
+    }
+  },
+
+  // 回溯求解器
+  solveAkari(grid, rows, cols) {
+    const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
+    const lit = Array(rows).fill(null).map(() => Array(cols).fill(false));
+    
+    const directions = [[0,1],[0,-1],[1,0],[-1,0]];
+    
+    // 辅助：标记照亮
+    const markLit = (r, c) => {
+      if (r < 0 || r >= rows || c < 0 || c >= cols) return;
+      if (grid[r][c] >= CELL_BLACK) return;
+      lit[r][c] = true;
+      for (const [dr, dc] of directions) {
+        let nr = r + dr, nc = c + dc;
+        while (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] < CELL_BLACK) {
+          lit[nr][nc] = true;
+          nr += dr; nc += dc;
+        }
+      }
+    };
+    
+    // 检查当前状态是否合法
+    const isPartialValid = () => {
+      // 检查黑格数字约束
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = grid[r][c];
+          if (cell >= CELL_BLACK_0) {
+            const required = cell - CELL_BLACK_0;
+            let count = 0;
+            if (r > 0 && lights[r-1][c]) count++;
+            if (r < rows-1 && lights[r+1][c]) count++;
+            if (c > 0 && lights[r][c-1]) count++;
+            if (c < cols-1 && lights[r][c+1]) count++;
+            if (count > required) return false; // 超过要求数，剪枝
+          }
+        }
+      }
+      // 检查灯塔互不照射
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (lights[r][c]) {
+            for (const [dr, dc] of directions) {
+              let nr = r + dr, nc = c + dc;
+              while (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                if (grid[nr][nc] >= CELL_BLACK) break;
+                if (lights[nr][nc] && !(nr === r && nc === c)) return false;
+                nr += dr; nc += dc;
+              }
+            }
+          }
+        }
+      }
+      return true;
+    };
+    
+    // 回溯递归
+    const backtrack = (index) => {
+      if (index >= rows * cols) {
+        // 检查所有白格都被照亮
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            if (grid[r][c] < CELL_BLACK && !lit[r][c]) return false;
+          }
+        }
+        return true;
+      }
+      const r = Math.floor(index / cols);
+      const c = index % cols;
+      if (grid[r][c] >= CELL_BLACK) return backtrack(index + 1);
+      
+      // 尝试不放灯塔
+      if (backtrack(index + 1)) return true;
+      
+      // 尝试放灯塔
+      lights[r][c] = true;
+      // 临时标记照亮
+      const prevLit = lit.map(row => [...row]);
+      markLit(r, c);
+      if (isPartialValid() && backtrack(index + 1)) return true;
+      // 回溯
+      lights[r][c] = false;
+      lit = prevLit;
+      return false;
+    };
+    
+    const result = backtrack(0);
+    return result ? lights : null;
   }
 });
