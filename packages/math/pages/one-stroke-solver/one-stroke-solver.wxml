@@ -19,7 +19,10 @@
         <view class="cell-wrap"
               style="width: {{cellSize}}px; height: {{cellSize}}px;"
               data-idx="{{idx}}"
-              bindtap="onCellTap">
+              bindtap="onCellTap"
+              bindtouchstart="onTouchStart"
+              bindtouchmove="onTouchMove"
+              bindtouchend="onTouchEnd">
           <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}}">
             <!-- 洞 -->
             <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>

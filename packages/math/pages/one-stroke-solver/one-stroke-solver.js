@@ -8,15 +8,16 @@ const GridPathFinder = require('../../utils/GridPathFinder');
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
-// 题库 CDN
+// 题库 CDN（本地优先）
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/one-stroke/';
-const TOTAL_PUZZLES = { easy: 200, medium: 200, hard: 200 };
+const LOCAL_BASE = '';  // 使用本地 data/one-stroke/ 目录
+const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 
 // 难度配置
 const DIFFICULTY_CONFIG = {
-  easy:   { rows: 4, cols: 4 },
-  medium: { rows: 5, cols: 5 },
-  hard:   { rows: 6, cols: 6 }
+  easy:   { rows: 6, cols: 6 },
+  medium: { rows: 8, cols: 8 },
+  hard:   { rows: 10, cols: 10 }
 };
 
 // 当前游戏状态（内部）
@@ -51,6 +52,8 @@ Page({
   },
 
   pageId: 'one-stroke-solver',
+  _gridRect: null,        // 棋盘区域位置信息（缓存）
+  _lastTouchIdx: null,    // 上一次触摸的格子索引
 
   onLoad(options) {
     const sysInfo = wx.getSystemInfoSync();
@@ -80,9 +83,14 @@ Page({
 
   calcCellSize(rows, cols) {
     const sw = this.data.screenWidth;
-    const maxGridPx = sw * 0.92;
+    // 根据棋盘大小调整最大占用比例
+    const maxRatio = rows <= 6 ? 0.92 : (rows <= 8 ? 0.88 : 0.85);
+    const maxGridPx = sw * maxRatio;
     const raw = Math.floor(maxGridPx / Math.max(rows, cols));
-    return Math.max(28, Math.min(raw, 70));
+    // 不同大小棋盘的格子尺寸范围
+    const minSize = rows >= 10 ? 26 : (rows >= 8 ? 30 : 32);
+    const maxSize = rows <= 6 ? 70 : (rows <= 8 ? 55 : 45);
+    return Math.max(minSize, Math.min(raw, maxSize));
   },
 
   startGame(difficulty, puzzleId) {
@@ -113,24 +121,9 @@ Page({
   initLocalGame(difficulty) {
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
-    const maxHoles = Math.floor(rows * cols * 0.3);
-    const holeCount = Math.floor(Math.random() * (maxHoles + 1));
-    const holes = this._generateRandomHoles(rows, cols, holeCount);
+    // 使用 GridPathFinder.generateValidPuzzle 生成有效的一笔画题目
+    const holes = GridPathFinder.generateValidPuzzle(rows, cols, 0.3);
     this.initGame(difficulty, 0, holes);
-  },
-
-  _generateRandomHoles(rows, cols, count) {
-    const total = rows * cols;
-    const holes = [];
-    while (holes.length < count) {
-      const r = Math.floor(Math.random() * total);
-      if (holes.indexOf(r) === -1) holes.push(r);
-    }
-    // 验证连通
-    const gp = new GridPathFinder(rows, cols, holes);
-    if (gp.isOneStroke()) return holes;
-    // 减少洞
-    return this._generateRandomHoles(rows, cols, Math.max(0, count - 1));
   },
 
   initGame(difficulty, puzzleId, holes) {
@@ -208,6 +201,98 @@ Page({
     if (_game.path.length === totalValid) {
       this._onComplete();
     }
+  },
+
+  // 触摸开始
+  onTouchStart(e) {
+    if (_game.isComplete || !_game.isPlaying) return;
+    
+    const idx = e.currentTarget.dataset.idx;
+    const { grid, path } = _game;
+    
+    // 洞或已在路径中则返回
+    if (grid[idx] === 1 || path.indexOf(idx) >= 0) return;
+    
+    // 第一个格子直接加入
+    if (path.length === 0) {
+      _game.path = [idx];
+      this._updatePath();
+      this.playSoundIfEnabled('click');
+    }
+    
+    // 缓存棋盘区域位置
+    this._updateGridRect();
+    this._lastTouchIdx = path.length > 0 ? path[path.length - 1] : idx;
+  },
+
+  // 触摸移动（滑动连续走格子）
+  onTouchMove(e) {
+    if (_game.isComplete || !_game.isPlaying) return;
+    
+    const touch = e.touches[0];
+    const idx = this._getCellFromPointSync(touch);
+    if (idx === null) return;
+    
+    const { grid, rows, cols, path } = _game;
+    
+    // 洞或已在路径中则跳过
+    if (grid[idx] === 1 || path.indexOf(idx) >= 0) return;
+    
+    // 必须与上一个格子相邻
+    const last = path.length > 0 ? path[path.length - 1] : null;
+    if (last === null || !this._adjacent(last, idx, cols)) return;
+    
+    // 防止同一格子重复触发
+    if (this._lastTouchIdx === idx) return;
+    
+    _game.path.push(idx);
+    this._lastTouchIdx = idx;
+    this._updatePath();
+    this.playSoundIfEnabled('click');
+    
+    // 检查完成
+    if (_game.path.length === _game.totalValid) {
+      this._onComplete();
+    }
+  },
+
+  // 触摸结束
+  onTouchEnd(e) {
+    this._lastTouchIdx = null;
+  },
+
+  // 更新路径显示
+  _updatePath() {
+    const { grid, rows, cols, path } = _game;
+    const gridData = this._buildGridData(grid, rows, cols, path);
+    this.setData({ gridData, path: path.slice() });
+  },
+
+  // 更新棋盘区域位置缓存
+  _updateGridRect() {
+    const query = wx.createSelectorQuery();
+    query.select('.game-area').boundingClientRect((rect) => {
+      this._gridRect = rect;
+    }).exec();
+  },
+
+  // 根据触摸坐标同步获取格子索引
+  _getCellFromPointSync(touch) {
+    const { rows, cols, cellSize } = this.data;
+    
+    if (!this._gridRect) return null;
+    
+    const x = touch.clientX - this._gridRect.left;
+    const y = touch.clientY - this._gridRect.top;
+    
+    // 计算格子坐标
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    
+    // 边界检查
+    if (row < 0 || row >= rows || col < 0 || col >= cols) return null;
+    
+    return row * cols + col;
   },
 
   _onComplete() {
