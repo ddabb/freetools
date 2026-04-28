@@ -22,11 +22,11 @@ const CELL_BLACK_3 = 5;  // 黑格数字3
 const CELL_BLACK_4 = 6;  // 黑格数字4
 
 // CDN数据格式映射：将CDN数据格式转换为内部常量
-// CDN格式：" "=白格, 0-4=黑格数字0-4
+// CDN格式："."=白格, " "=白格, 0-4=黑格数字
 function mapCell(cell) {
-  if (cell === " ") return CELL_WHITE;      // 白格
+  if (cell === " " || cell === ".") return CELL_WHITE;  // 白格
   // cell是0-4，表示黑格数字0-4
-  return CELL_BLACK_0 + cell;  // 0→2, 1→3, 2→4, 3→5, 4→6
+  return CELL_BLACK_0 + parseInt(cell, 10);  // 0→2, 1→3, 2→4, 3→5, 4→6
 }
 
 const DIFFICULTY_CONFIG = {
@@ -154,7 +154,7 @@ Page({
 
     const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
 
-    this._currentPuzzle = { grid };
+    this._currentPuzzle = { grid, answer: puzzleData.answer || null };
 
     this.setData({
       rows,
@@ -445,16 +445,29 @@ Page({
     if (showAnswer) {
       // 保存当前用户操作
       this._userLights = [...this.data.lights.map(row => [...row])];
-      // 求解正确答案
-      wx.showLoading({ title: '计算答案中...' });
-      const answer = this.solveAkari(this.data.grid, this.data.rows, this.data.cols);
-      wx.hideLoading();
-      if (answer) {
-        this.setData({ showAnswer: true, lights: answer, answerLights: answer });
+      // 直接用题库的 answer 字段（秒级响应）
+      const puzzle = this._currentPuzzle;
+      if (puzzle && puzzle.answer && puzzle.answer.length > 0) {
+        const { rows, cols } = this.data;
+        const answerLights = Array(rows).fill(null).map(() => Array(cols).fill(false));
+        for (const [r, c] of puzzle.answer) {
+          if (r >= 0 && r < rows && c >= 0 && c < cols) answerLights[r][c] = true;
+        }
+        this.setData({ showAnswer: true, lights: answerLights, answerLights });
         this.updateLit();
       } else {
-        wx.showToast({ title: '计算失败', icon: 'none' });
-        return;
+        // 没有预存 answer，降级到实时计算（8×8/10×10 会慢）
+        wx.showLoading({ title: '计算答案中...' });
+        setTimeout(() => {
+          const answer = this.solveAkari(this.data.grid, this.data.rows, this.data.cols);
+          wx.hideLoading();
+          if (answer) {
+            this.setData({ showAnswer: true, lights: answer, answerLights: answer });
+            this.updateLit();
+          } else {
+            wx.showToast({ title: '计算失败', icon: 'none' });
+          }
+        }, 100);
       }
     } else {
       // 恢复用户操作
