@@ -1,154 +1,58 @@
 <view class="container">
-  <!-- 标题区域 -->
-  <view class="header-section">
-    <view class="title">✏️ 一笔画求解</view>
-    <view class="desc">判断网格是否可以一笔画成（连通、不重复）</view>
-  </view>
-
-  <!-- 模式切换 -->
-  <view class="mode-section">
-    <view class="mode-tabs">
-      <view 
-        class="mode-tab {{mode === 'generate' ? 'active' : ''}}" 
-        bindtap="switchMode"
-        data-mode="generate"
-      >
-        🎲 生成题目
-      </view>
-      <view 
-        class="mode-tab {{mode === 'solve' ? 'active' : ''}}" 
-        bindtap="switchMode"
-        data-mode="solve"
-      >
-        ✏️ 求解题目
-      </view>
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
+      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
+      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
     </view>
-  </view>
-
-  <!-- 网格设置 -->
-  <view class="grid-section">
-    <view class="grid-controls">
-      <view class="grid-size-controls">
-        <view class="grid-size-control">
-          <text class="grid-size-label">横向：</text>
-          <picker 
-            mode="selector" 
-            range="{{['3', '4', '5', '6', '7', '8', '9']}}" 
-            value="{{gridWidth - 3}}" 
-            bindchange="updateGridWidth"
-            class="grid-size-picker"
-          >
-            <view class="grid-size-value">{{gridWidth}}</view>
-          </picker>
-        </view>
-        <view class="grid-size-control">
-          <text class="grid-size-label">纵向：</text>
-          <picker 
-            mode="selector" 
-            range="{{['3', '4', '5', '6', '7', '8', '9']}}" 
-            value="{{gridHeight - 3}}" 
-            bindchange="updateGridHeight"
-            class="grid-size-picker"
-          >
-            <view class="grid-size-value">{{gridHeight}}</view>
-          </picker>
-        </view>
-      </view>
-      <button class="btn generate-btn" bindtap="generateValidPuzzle">
-        <text class="btn-icon">🎲</text>
-        <text class="btn-text">随机生成题目</text>
-      </button>
+    <view class="info">
+      <text class="timer">⏱️ {{timeStr}}</text>
+      <text class="progress"> {{path.length}}/{{totalValid}}</text>
     </view>
   </view>
 
   <!-- 游戏区域 -->
-  <view class="game-section">
-    <view class="canvas-wrapper">
-      <canvas 
-        canvas-id="graphCanvas" 
-        type="2d"
-        class="graph-canvas"
-        style="width: 300px; height: 300px;"
-        bindtouchstart="onCanvasTouchStart"
-        bindtouchmove="onCanvasTouchMove"
-        bindtouchend="onCanvasTouchEnd"
-      />
-    </view>
-    
-    <!-- 操作提示 -->
-    <view class="operation-tips" wx:if="{{mode === 'solve'}}">
-      <text class="tips-text">💡 提示：在画布上绘制路径，尝试一笔完成</text>
-    </view>
-  </view>
-
-  <!-- 控制按钮 -->
-  <view class="control-section">
-    <button 
-      class="btn check-btn" 
-      bindtap="checkGridOneStroke"
-      loading="{{isLoading}}"
-    >
-      <text class="btn-icon">🔍</text>
-      <text class="btn-text">检查是否可以一笔画</text>
-    </button>
-    
-    <button 
-      class="btn solve-btn" 
-      bindtap="showSolution"
-      wx:if="{{isSolvable}}"
-    >
-      <text class="btn-icon">✏️</text>
-      <text class="btn-text">显示可行解</text>
-    </button>
-  </view>
-
-  <!-- 结果显示 -->
-  <view class="result-section" wx:if="{{resultMessage}}">
-    <view class="result-box {{isSolvable ? 'success' : 'error'}}">
-      <text class="result-icon">{{isSolvable ? '✅' : '❌'}}</text>
-      <text class="result-text">{{resultMessage}}</text>
+  <view class="game-area">
+    <view class="grid" style="width: {{cols * cellSize}}px;">
+      <block wx:for="{{gridData}}" wx:for-index="idx" wx:for-item="cell">
+        <view class="cell-wrap"
+              style="width: {{cellSize}}px; height: {{cellSize}}px;"
+              data-idx="{{idx}}"
+              bindtap="onCellTap">
+          <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}}">
+            <!-- 洞 -->
+            <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>
+            <!-- 路径序号 -->
+            <text wx:elif="{{cell.visited}}" class="cell-text path-num">{{cell.pathIndex + 1}}</text>
+          </view>
+        </view>
+      </block>
     </view>
   </view>
 
-  <!-- 解路径显示 -->
-  <view class="solution-section" wx:if="{{showSolutionPath}}">
-    <view class="solution-header">
-      <text class="solution-icon">📋</text>
-      <text class="solution-title">可行解路径</text>
-    </view>
-    <view class="solution-content">
-      <text class="path-text">{{solutionPathText}}</text>
-    </view>
-  </view>
-
-  <!-- 图例说明 -->
-  <view class="legend-section" wx:if="{{isSolvable}}">
-    <view class="legend-header">
-      <text class="legend-title">图例说明</text>
-    </view>
-    <view class="legend-grid">
-      <view class="legend-item">
-        <view class="legend-color start"></view>
-        <text class="legend-text">起点</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-color end"></view>
-        <text class="legend-text">终点</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-color both"></view>
-        <text class="legend-text">起终点相同</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-color path"></view>
-        <text class="legend-text">路径</text>
-      </view>
-      <view class="legend-item">
-        <view class="legend-color hole"></view>
-        <text class="legend-text">洞</text>
-      </view>
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">全部通过！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
     </view>
   </view>
 
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
 
+  <!-- 规则说明 -->
+  <view class="rules">
+    <text class="rules-title">游戏规则</text>
+    <text class="rules-text">• 点击格子，按顺序走遍所有白格</text>
+    <text class="rules-text">• 只能走上下左右相邻的格子</text>
+    <text class="rules-text">• × 是洞，不能进入</text>
+    <text class="rules-text">• 走完所有白格即胜利</text>
+  </view>
 </view>

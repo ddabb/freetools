@@ -1,300 +1,282 @@
+/**
+ * 一笔画 (One-Stroke Path) 游戏
+ * 规则：从起点出发，一次经过所有有效格子，不重复，最终回到起点（或不回到起点）
+ * 交互：点击格子按顺序经过
+ */
+
 const GridPathFinder = require('../../utils/GridPathFinder');
 const utils = require('../../../../utils/index');
-const { playSound } = utils;
+const { playSound, preloadSounds, isPageSoundEnabled } = utils;
+
+// 题库 CDN
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/one-stroke/';
+const TOTAL_PUZZLES = { easy: 200, medium: 200, hard: 200 };
+
+// 难度配置
+const DIFFICULTY_CONFIG = {
+  easy:   { rows: 4, cols: 4 },
+  medium: { rows: 5, cols: 5 },
+  hard:   { rows: 6, cols: 6 }
+};
+
+// 当前游戏状态（内部）
+let _game = {
+  grid: null,       // 格子状态：0=有效可走，1=洞
+  rows: 4,
+  cols: 4,
+  path: [],         // 当前路径 [idx, idx, ...]
+  difficulty: 'easy',
+  puzzleId: 0,
+  time: 0,
+  timer: null,
+  isComplete: false,
+  isPlaying: false
+};
 
 Page({
   data: {
-    nodes: [],
-    edges: [],
-    isSolvable: null,
-    resultMessage: '',
-    startNode: null,
-    endNode: null,
+    rows: 4,
+    cols: 4,
+    gridData: [],
     path: [],
-    gridWidth: 5,
-    gridHeight: 5,
-    gridHoles: [],
-    isLoading: false,
-    mode: 'generate' // generate 或verify
+    difficulty: 'easy',
+    puzzleId: 0,
+    time: 0,
+    timeStr: '0:00',
+    cellSize: 60,
+    isComplete: false,
+    isPlaying: false,
+    screenWidth: 375,
+    totalValid: 16
   },
 
-  onLoad() {
-    this.generateGrid();
-  },
+  pageId: 'one-stroke-solver',
 
-  // 切换模式
-  switchMode(e) {
-    const mode = e.currentTarget.dataset.mode;
-    this.setData({ mode: mode });
-  },
+  onLoad(options) {
+    const sysInfo = wx.getSystemInfoSync();
+    this.setData({ screenWidth: sysInfo.screenWidth });
 
-  drawGraph() {
-    const that = this;
-    try {
-      // 使用新的2D Canvas API获取上下文，参照life-countdown.js的方法
-      const query = wx.createSelectorQuery();
-      query.select('#graphCanvas')
-        .fields({ node: true, size: true })
-        .exec((res) => {
-          console.debug('获取Canvas元素结果:', res);
-          if (!res || res.length === 0 || !res[0] || !res[0].node) {
-            console.error('获取Canvas元素失败:', res);
-            return;
-          }
-
-          const canvas = res[0].node;
-          const ctx = canvas.getContext('2d');
-          const width = 300;
-          const height = 300;
-
-          // 调整canvas的实际尺寸
-          canvas.width = width;
-          canvas.height = height;
-
-          ctx.clearRect(0, 0, width, height);
-
-          // 绘制边
-          ctx.strokeStyle = '#ddd';
-          ctx.lineWidth = 3;
-          that.data.edges.forEach(([a, b]) => {
-            // 检查边的两个节点是否都是洞
-            const isHoleA = that.data.gridHoles.indexOf(a) !== -1;
-            const isHoleB = that.data.gridHoles.indexOf(b) !== -1;
-            if (!isHoleA && !isHoleB) {
-              const nodeA = that.data.nodes.find(n => n.id === a);
-              const nodeB = that.data.nodes.find(n => n.id === b);
-              if (nodeA && nodeB) {
-                ctx.beginPath();
-                ctx.moveTo(nodeA.x, nodeA.y);
-                ctx.lineTo(nodeB.x, nodeB.y);
-                ctx.stroke();
-              }
-            }
-          });
-
-          // 绘制路径
-          if (that.data.path && that.data.path.length > 1) {
-            ctx.strokeStyle = '#ff6b35';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            const firstNode = that.data.nodes.find(n => n.id === that.data.path[0]);
-            if (firstNode) {
-              ctx.moveTo(firstNode.x, firstNode.y);
-              for (let i = 1; i < that.data.path.length; i++) {
-                const node = that.data.nodes.find(n => n.id === that.data.path[i]);
-                if (node) {
-                  ctx.lineTo(node.x, node.y);
-                }
-              }
-              ctx.stroke();
-            }
-          }
-
-          // 绘制节点
-          that.data.nodes.forEach(node => {
-            // 检查是否是洞
-            if (that.data.gridHoles.indexOf(node.id) !== -1) {
-              // 绘制洞
-              ctx.beginPath();
-              ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
-              ctx.fillStyle = '#f0f0f0';
-              ctx.fill();
-              ctx.strokeStyle = '#ddd';
-              ctx.lineWidth = 2;
-              ctx.stroke();
-            } else {
-              // 绘制正常节点
-              let fillColor = '#3498db';
-              let radius = 15;
-
-              if (node.id === that.data.startNode && node.id === that.data.endNode) {
-                fillColor = '#f39c12';
-                radius = 18;
-              } else if (node.id === that.data.startNode) {
-                fillColor = '#2ecc71';
-                radius = 18;
-              } else if (node.id === that.data.endNode) {
-                fillColor = '#e74c3c';
-                radius = 18;
-              }
-
-              ctx.beginPath();
-              ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-              ctx.fillStyle = fillColor;
-              ctx.fill();
-              ctx.strokeStyle = '#fff';
-              ctx.lineWidth = 3;
-              ctx.stroke();
-
-              ctx.fillStyle = '#fff';
-              ctx.font = '16px sans-serif';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(node.id + 1, node.x, node.y);
-            }
-          });
-        });
-    } catch (error) {
-      console.error('绘制图形时出错:', error);
+    const saved = wx.getStorageSync('onestroke_saved');
+    if (saved && saved.gridData) {
+      _game = saved._game;
+      this.setData({ ...saved, isPlaying: true });
+      this.startTimer();
+    } else {
+      this.startGame('easy', 0);
     }
-  },
- 
 
-  // 生成网格
-  generateGrid() {
-    const width = this.data.gridWidth;
-    const height = this.data.gridHeight;
-    const nodes = [];
-    const edges = [];
-    
-    // 计算单元格大小，确保每个单元格都是方形
-    const canvasSize = 300;
-    const cellSize = Math.min(canvasSize / (width + 1), canvasSize / (height + 1));
-    const startX = (canvasSize - cellSize * width) / 2;
-    const startY = (canvasSize - cellSize * height) / 2;
-    
-    // 生成节点
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        const id = i * width + j;
-        nodes.push({
-          id: id,
-          x: startX + j * cellSize + cellSize / 2,
-          y: startY + i * cellSize + cellSize / 2
-        });
-      }
-    }
-    
-    // 生成边
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        const id = i * width + j;
-        // 右边的边
-        if (j < width - 1) {
-          edges.push([id, id + 1]);
-        }
-        // 下边的边
-        if (i < height - 1) {
-          edges.push([id, id + width]);
-        }
-      }
-    }
-    
-    this.setData({
-      nodes: nodes,
-      edges: edges,
-      gridHoles: []
-    });
-    this.drawGraph();
+    preloadSounds(['click', 'win'], this.pageId);
   },
 
-  // 生成带洞的网格题目
-  generateGridPuzzle() {
-    this.setData({ isLoading: true });
-    
-    const width = this.data.gridWidth;
-    const height = this.data.gridHeight;
-    const totalCells = width * height;
-    const maxHoles = Math.floor(totalCells * 0.3); // 最多30%的洞
-    const holes = [];
-    
-    // 随机生成洞
-    while (holes.length < maxHoles) {
-      const hole = Math.floor(Math.random() * totalCells);
-      if (holes.indexOf(hole) === -1) {
-        holes.push(hole);
-      }
-    }
-    
-    this.setData({
-      gridHoles: holes,
-      isLoading: false
-    });
-    this.drawGraph();
-  },
-
-  // 生成有效题目（确保可以一笔画成）
-  generateValidPuzzle() {
-    this.setData({ isLoading: true });
-    
-    const width = this.data.gridWidth;
-    const height = this.data.gridHeight;
-    
-    // 使用 GridPathFinder 的静态方法生成有效题目
-    const validHoles = GridPathFinder.generateValidPuzzle(height, width);
-    
-    this.setData({
-      gridHoles: validHoles,
-      isLoading: false,
-      resultMessage: validHoles.length > 0 ? '生成了有效题目！' : '无法生成有效题目，请尝试调整网格大小',
-      isSolvable: validHoles.length > 0
-    });
-    this.drawGraph();
-  },
-
-  // 检查网格模式下的一笔画
-  checkGridOneStroke() {
-    this.setData({ isLoading: true });
-    
-    setTimeout(() => {
-      const width = this.data.gridWidth;
-      const height = this.data.gridHeight;
-      const holes = this.data.gridHoles;
-      
-      const pathFinder = new GridPathFinder(height, width, holes);
-      const isSolvable = pathFinder.isOneStroke();
-      
-      let resultMessage, startNode, endNode;
-      
-      if (isSolvable) {
-        resultMessage = '可以一笔画成！';
-        // 找到第一个有效的单元格作为起始点
-        // 从左到右，从上到下，找到第一个不是洞的单元格
-        for (let i = 0; i < width * height; i++) {
-          if (holes.indexOf(i) === -1) {
-            startNode = i;
-            endNode = i;
-            break;
-          }
-        }
-      } else {
-        resultMessage = '无法一笔画成！';
-        startNode = null;
-        endNode = null;
-      }
-      
-      this.setData({
-        isSolvable,
-        resultMessage,
-        startNode,
-        endNode,
-        isLoading: false
+  onUnload() {
+    this.stopTimer();
+    if (this.data.isPlaying && !this.data.isComplete) {
+      wx.setStorageSync('onestroke_saved', {
+        ...this.data,
+        _game: _game
       });
+    }
+  },
 
-      // 播放结果音效
-      if (isSolvable) {
-        playSound('win', { pageId: 'one-stroke-solver' });
-      } else {
-        playSound('wrong', { pageId: 'one-stroke-solver' });
+  calcCellSize(rows, cols) {
+    const sw = this.data.screenWidth;
+    const maxGridPx = sw * 0.92;
+    const raw = Math.floor(maxGridPx / Math.max(rows, cols));
+    return Math.max(28, Math.min(raw, 70));
+  },
+
+  startGame(difficulty, puzzleId) {
+    wx.showLoading({ title: '加载中…' });
+    const fileId = String(puzzleId + 1).padStart(4, '0');
+    const url = `${CDN_BASE}${difficulty}-${fileId}.json?t=${Date.now()}`;
+
+    wx.request({
+      url,
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode !== 200 || !res.data) {
+          // CDN失败，用内置生成器
+          this.initLocalGame(difficulty);
+          return;
+        }
+
+        const puzzle = res.data;
+        this.initGame(difficulty, puzzleId, puzzle.holes || []);
+      },
+      fail: () => {
+        wx.hideLoading();
+        this.initLocalGame(difficulty);
       }
-
-      this.drawGraph();
-    }, 500);
+    });
   },
 
-  // 更新网格宽度
-  updateGridWidth(e) {
-    const range = [3, 4, 5, 6, 7, 8, 9];
-    const width = range[e.detail.value];
-    this.setData({ gridWidth: width });
-    this.generateGrid();
+  initLocalGame(difficulty) {
+    const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
+    const { rows, cols } = cfg;
+    const maxHoles = Math.floor(rows * cols * 0.3);
+    const holeCount = Math.floor(Math.random() * (maxHoles + 1));
+    const holes = this._generateRandomHoles(rows, cols, holeCount);
+    this.initGame(difficulty, 0, holes);
   },
 
-  // 更新网格高度
-  updateGridHeight(e) {
-    const range = [3, 4, 5, 6, 7, 8, 9];
-    const height = range[e.detail.value];
-    this.setData({ gridHeight: height });
-    this.generateGrid();
+  _generateRandomHoles(rows, cols, count) {
+    const total = rows * cols;
+    const holes = [];
+    while (holes.length < count) {
+      const r = Math.floor(Math.random() * total);
+      if (holes.indexOf(r) === -1) holes.push(r);
+    }
+    // 验证连通
+    const gp = new GridPathFinder(rows, cols, holes);
+    if (gp.isOneStroke()) return holes;
+    // 减少洞
+    return this._generateRandomHoles(rows, cols, Math.max(0, count - 1));
+  },
+
+  initGame(difficulty, puzzleId, holes) {
+    const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
+    const { rows, cols } = cfg;
+    const cellSize = this.calcCellSize(rows, cols);
+
+    // 初始化格子状态
+    const grid = Array(rows * cols).fill(0);
+    for (const h of holes) grid[h] = 1;
+
+    const totalValid = grid.filter(v => v === 0).length;
+    _game = { grid, rows, cols, path: [], difficulty, puzzleId, time: 0, timer: null, isComplete: false, isPlaying: true, totalValid };
+
+    // 构建渲染数据
+    const gridData = this._buildGridData(grid, rows, cols, []);
+
+    this.setData({
+      rows, cols, gridData, path: [],
+      difficulty, puzzleId, cellSize, totalValid,
+      time: 0, timeStr: '0:00',
+      isComplete: false, isPlaying: true
+    });
+
+    this.startTimer();
+    this.playSoundIfEnabled('click');
+  },
+
+  _buildGridData(grid, rows, cols, path) {
+    return grid.map((v, i) => ({
+      type: v,       // 0=有效, 1=洞
+      visited: path.indexOf(i) >= 0,
+      pathIndex: path.indexOf(i)
+    }));
+  },
+
+  // 判断两格子是否相邻
+  _adjacent(a, b, cols) {
+    const ra = Math.floor(a / cols), ca = a % cols;
+    const rb = Math.floor(b / cols), cb = b % cols;
+    return (Math.abs(ra - rb) === 1 && ca === cb) || (ra === rb && Math.abs(ca - cb) === 1);
+  },
+
+  onCellTap(e) {
+    if (_game.isComplete || !_game.isPlaying) return;
+    const idx = e.currentTarget.dataset.idx;
+    const { grid, rows, cols, path } = _game;
+
+    // 洞不能点击
+    if (grid[idx] === 1) return;
+
+    // 已在路径中
+    if (path.indexOf(idx) >= 0) return;
+
+    // 第一个格子：直接加入
+    if (path.length === 0) {
+      _game.path = [idx];
+    } else {
+      const last = path[path.length - 1];
+      if (!this._adjacent(last, idx, cols)) {
+        // 不相邻，提示
+        wx.showToast({ title: '只能走相邻格子', icon: 'none', duration: 800 });
+        return;
+      }
+      _game.path.push(idx);
+    }
+
+    const totalValid = _game.totalValid;
+    const gridData = this._buildGridData(grid, rows, cols, _game.path);
+    this.setData({ gridData, path: _game.path });
+    this.playSoundIfEnabled('click');
+
+    // 检查是否完成（所有有效格子都走完）
+    const totalValid = grid.filter(v => v === 0).length;
+    if (_game.path.length === totalValid) {
+      this._onComplete();
+    }
+  },
+
+  _onComplete() {
+    _game.isComplete = true;
+    this.stopTimer();
+    this.setData({ isComplete: true });
+    this.playSoundIfEnabled('win');
+    wx.removeStorageSync('onestroke_saved');
+
+    wx.showModal({
+      title: '🎉 全部通过！',
+      content: `用时 ${this.formatTime(_game.time)}`,
+      showCancel: false,
+      confirmText: '下一题'
+    }).then(() => this.nextPuzzle());
+  },
+
+  startTimer() {
+    this.stopTimer();
+    _game.timer = setInterval(() => {
+      _game.time++;
+      const m = Math.floor(_game.time / 60);
+      const s = _game.time % 60;
+      this.setData({ time: _game.time, timeStr: `${m}:${s.toString().padStart(2, '0')}` });
+    }, 1000);
+  },
+
+  stopTimer() {
+    if (_game.timer) {
+      clearInterval(_game.timer);
+      _game.timer = null;
+    }
+  },
+
+  onDifficultyChange(e) {
+    const difficulty = e.currentTarget.dataset.difficulty;
+    if (difficulty !== _game.difficulty) {
+      this.startGame(difficulty, 0);
+    }
+  },
+
+  nextPuzzle() {
+    const { difficulty } = _game;
+    const total = TOTAL_PUZZLES[difficulty] || 200;
+    const nextId = (_game.puzzleId + 1) % total;
+    this.startGame(difficulty, nextId);
+  },
+
+  onReset() {
+    const { grid, rows, cols, difficulty, puzzleId } = _game;
+    _game.path = [];
+    _game.time = 0;
+    _game.isComplete = false;
+    const gridData = this._buildGridData(grid, rows, cols, []);
+    this.setData({ gridData, path: [], time: 0, timeStr: '0:00', isComplete: false });
+    this.stopTimer();
+    this.startTimer();
+    this.playSoundIfEnabled('click');
+  },
+
+  formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  },
+
+  playSoundIfEnabled(name) {
+    if (isPageSoundEnabled(this.pageId)) {
+      playSound(name, { pageId: this.pageId });
+    }
   }
-})
+});

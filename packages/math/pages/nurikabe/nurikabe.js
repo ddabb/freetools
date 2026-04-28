@@ -9,95 +9,45 @@
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
-// 格子状态
-const CELL_WHITE = 0;  // 白格（未确定）
-const CELL_BLACK = 1;  // 黑格
-const CELL_NUMBER = 2; // 数字格（属于白格）
+// CDN 路径
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/nurikabe/';
+const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 
-// 题库 - 数字表示该格子所属白色区域的大小
-const PUZZLES = {
-  easy: [
-    {
-      rows: 5, cols: 5,
-      numbers: [
-        [0, 0, 0, 0, 0],
-        [0, 2, 0, 0, 1],
-        [0, 0, 0, 0, 0],
-        [1, 0, 0, 3, 0],
-        [0, 0, 0, 0, 0]
-      ]
-    },
-    {
-      rows: 5, cols: 5,
-      numbers: [
-        [0, 0, 2, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 3],
-        [0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0]
-      ]
-    }
-  ],
-  medium: [
-    {
-      rows: 8, cols: 8,
-      numbers: [
-        [0, 0, 0, 0, 0, 0, 2, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 3, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 2, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 3, 0, 0, 0, 0, 0, 0]
-      ]
-    }
-  ],
-  hard: [
-    {
-      rows: 10, cols: 10,
-      numbers: [
-        [0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 4, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 2, 0, 0, 0, 0, 3, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 2, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    }
-  ]
-};
+// 格子状态
+const CELL_WHITE = 0;
+const CELL_BLACK = 1;
+
+// 题库缓存
+let puzzleCache = { easy: 0, hard: 0 };
 
 Page({
   data: {
     rows: 5,
     cols: 5,
-    numbers: [],      // 数字提示
-    board: [],        // 当前状态 0=白 1=黑
+    numbers: [],
+    board: [],
     difficulty: 'easy',
     puzzleId: 0,
     time: 0,
-    timeStr: '0:00',   // 格式化的时间字符串
+    timeStr: '0:00',
     isPlaying: false,
     isComplete: false,
     cellSize: 50,
-    showAnswer: false // 显示答案
+    showAnswer: false,
+    screenWidth: 375
   },
 
   timer: null,
   pageId: 'nurikabe',
 
   onLoad(options) {
+    // 获取屏幕宽度用于计算格子大小
+    const sysInfo = wx.getSystemInfoSync();
+    this.setData({ screenWidth: sysInfo.screenWidth });
+
     const saved = wx.getStorageSync('nurikabe_saved');
     if (saved && saved.board) {
-      this.setData({
-        ...saved,
-        isPlaying: true
-      });
+      this.setData({ ...saved, isPlaying: true });
       this.startTimer();
     } else {
       const difficulty = options.difficulty || 'easy';
@@ -122,33 +72,68 @@ Page({
     }
   },
 
+  // 计算格子大小，适配屏幕
+  calcCellSize(rows, cols) {
+    const sw = this.data.screenWidth;
+    // 游戏区最大占屏幕 95%，两边各留边距
+    const maxGridPx = sw * 0.95;
+    const rawSize = Math.floor(maxGridPx / Math.max(rows, cols));
+    return Math.max(24, Math.min(rawSize, 50));
+  },
+
   loadPuzzle(difficulty, puzzleId) {
-    const puzzles = PUZZLES[difficulty] || PUZZLES.easy;
-    const puzzle = puzzles[puzzleId % puzzles.length];
+    wx.showLoading({ title: '加载中…' });
 
-    // 初始化：数字格为白，其他未确定
-    const board = Array(puzzle.rows).fill(null).map((_, r) =>
-      Array(puzzle.cols).fill(null).map((_, c) =>
-        puzzle.numbers[r][c] > 0 ? CELL_WHITE : CELL_WHITE
-      )
-    );
+    const fileId = String(puzzleId + 1).padStart(4, '0');
+    const url = `${CDN_BASE}${difficulty}-${fileId}.json?t=${Date.now()}`;
 
-    this.setData({
-      rows: puzzle.rows,
-      cols: puzzle.cols,
-      numbers: puzzle.numbers,
-      board,
-      difficulty,
-      puzzleId,
-      time: 0,
-      timeStr: '0:00',
-      isPlaying: true,
-      isComplete: false,
-      showAnswer: false
+    wx.request({
+      url,
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode !== 200 || !res.data || !res.data.grid) {
+          wx.showToast({ title: '加载失败', icon: 'none' });
+          return;
+        }
+
+        const puzzle = res.data;
+        const rows = puzzle.size;
+        const cols = puzzle.size;
+        const numbers = puzzle.grid;
+        const cellSize = this.calcCellSize(rows, cols);
+
+        // 初始化：数字格为白，其他未确定
+        const board = Array(rows).fill(null).map((_, r) =>
+          Array(cols).fill(null).map((_, c) => CELL_WHITE)
+        );
+
+        this.setData({
+          rows, cols, numbers, board,
+          difficulty,
+          puzzleId,
+          time: 0,
+          timeStr: '0:00',
+          cellSize,
+          isPlaying: true,
+          isComplete: false,
+          showAnswer: false
+        });
+
+        this.startTimer();
+        this.playSoundIfEnabled('click');
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
     });
+  },
 
-    this.startTimer();
-    this.playSoundIfEnabled('click');
+  // 预加载下一题到缓存
+  preloadNext(difficulty, puzzleId) {
+    const fileId = String(puzzleId + 1).padStart(4, '0');
+    const url = `${CDN_BASE}${difficulty}-${fileId}.json`;
+    wx.request({ url, success: () => {} });
   },
 
   startTimer() {
@@ -157,10 +142,7 @@ Page({
       const time = this.data.time + 1;
       const m = Math.floor(time / 60);
       const s = time % 60;
-      this.setData({ 
-        time,
-        timeStr: `${m}:${s.toString().padStart(2, '0')}`
-      });
+      this.setData({ time, timeStr: `${m}:${s.toString().padStart(2, '0')}` });
     }, 1000);
   },
 
@@ -171,36 +153,30 @@ Page({
     }
   },
 
-  // 点击格子切换状态
   onCellTap(e) {
     if (this.data.isComplete) return;
-
     const { row, col } = e.currentTarget.dataset;
     const { numbers, board } = this.data;
 
-    // 数字格不能涂黑
-    if (numbers[row][col] > 0) return;
+    if (numbers[row][col] > 0) return; // 数字格不能涂黑
 
-    // 切换：白 → 黑 → 白
     board[row][col] = board[row][col] === CELL_WHITE ? CELL_BLACK : CELL_WHITE;
     this.setData({ board });
     this.playSoundIfEnabled('click');
-
     this.checkCompletion();
   },
 
-  // 检查完成
   checkCompletion() {
     const { rows, cols, numbers, board } = this.data;
 
-    // 1. 检查没有 2×2 全黑区域
+    // 1. 检查没有 2×2 全黑
     for (let r = 0; r < rows - 1; r++) {
       for (let c = 0; c < cols - 1; c++) {
         if (board[r][c] === CELL_BLACK &&
             board[r][c + 1] === CELL_BLACK &&
             board[r + 1][c] === CELL_BLACK &&
             board[r + 1][c + 1] === CELL_BLACK) {
-          return false;
+          return;
         }
       }
     }
@@ -210,17 +186,16 @@ Page({
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (numbers[r][c] > 0) {
-          const size = this.countWhiteRegion(r, c, visited);
-          if (size !== numbers[r][c]) return false;
+          if (this.countWhiteRegion(r, c, visited) !== numbers[r][c]) return;
         }
       }
     }
 
     // 3. 检查所有黑格连通
-    if (!this.areBlackCellsConnected()) return false;
+    if (!this.areBlackCellsConnected()) return;
 
-    // 4. 检查白色区域之间被黑格分隔
-    if (!this.areWhiteRegionsSeparated()) return false;
+    // 4. 检查白色区域数量 = 数字数量
+    if (!this.areWhiteRegionsSeparated()) return;
 
     // 完成！
     this.setData({ isComplete: true });
@@ -232,88 +207,58 @@ Page({
       title: '🎉 恭喜完成！',
       content: `用时 ${this.formatTime(this.data.time)}`,
       showCancel: false,
-      confirmText: '再来一局'
-    }).then(() => {
-      this.nextPuzzle();
-    });
-
-    return true;
+      confirmText: '下一题'
+    }).then(() => this.nextPuzzle());
   },
 
-  // BFS 计算白色区域大小
   countWhiteRegion(startR, startC, visited) {
     const { rows, cols, board } = this.data;
     const queue = [[startR, startC]];
     let count = 0;
-
     while (queue.length > 0) {
       const [r, c] = queue.shift();
       if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-      if (visited[r][c]) continue;
-      if (board[r][c] === CELL_BLACK) continue;
-
+      if (visited[r][c] || board[r][c] === CELL_BLACK) continue;
       visited[r][c] = true;
       count++;
-
       queue.push([r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]);
     }
-
     return count;
   },
 
-  // 检查所有黑格是否连通
   areBlackCellsConnected() {
     const { rows, cols, board } = this.data;
-
-    // 找第一个黑格
     let startR = -1, startC = -1;
-    for (let r = 0; r < rows && startR === -1; r++) {
+    outer: for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        if (board[r][c] === CELL_BLACK) {
-          startR = r;
-          startC = c;
-          break;
-        }
+        if (board[r][c] === CELL_BLACK) { startR = r; startC = c; break outer; }
       }
     }
+    if (startR === -1) return false;
 
-    if (startR === -1) return false; // 没有黑格
-
-    // BFS 统计连通的黑格数
     const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
     const queue = [[startR, startC]];
     let connectedCount = 0;
-
     while (queue.length > 0) {
       const [r, c] = queue.shift();
       if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-      if (visited[r][c]) continue;
-      if (board[r][c] !== CELL_BLACK) continue;
-
+      if (visited[r][c] || board[r][c] !== CELL_BLACK) continue;
       visited[r][c] = true;
       connectedCount++;
-
       queue.push([r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]);
     }
 
-    // 统计总黑格数
     let totalBlack = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
         if (board[r][c] === CELL_BLACK) totalBlack++;
-      }
-    }
-
     return connectedCount === totalBlack;
   },
 
-  // 检查白色区域是否被黑格分隔
   areWhiteRegionsSeparated() {
     const { rows, cols, numbers, board } = this.data;
     const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
     let regionCount = 0;
-
-    // 统计白色区域数量
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (!visited[r][c] && board[r][c] === CELL_WHITE) {
@@ -322,15 +267,10 @@ Page({
         }
       }
     }
-
-    // 统计数字数量
     let numberCount = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
         if (numbers[r][c] > 0) numberCount++;
-      }
-    }
-
     return regionCount === numberCount;
   },
 
@@ -342,20 +282,20 @@ Page({
   },
 
   nextPuzzle() {
-    const puzzles = PUZZLES[this.data.difficulty] || PUZZLES.easy;
-    const nextId = (this.data.puzzleId + 1) % puzzles.length;
-    this.loadPuzzle(this.data.difficulty, nextId);
+    const { difficulty, puzzleId } = this.data;
+    const total = TOTAL_PUZZLES[difficulty] || 1000;
+    const nextId = (puzzleId + 1) % total;
+    this.preloadNext(difficulty, nextId);
+    this.loadPuzzle(difficulty, nextId);
   },
 
   onReset() {
     this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
   },
 
-  // 显示/隐藏答案
   onShowAnswer() {
     const showAnswer = !this.data.showAnswer;
     if (showAnswer) {
-      // 显示答案：将非数字格涂黑
       const { rows, cols, numbers } = this.data;
       const board = Array(rows).fill(null).map((_, r) =>
         Array(cols).fill(null).map((_, c) =>
