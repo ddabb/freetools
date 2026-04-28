@@ -7,7 +7,7 @@
  */
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/akari';
-const _totalPuzzles = { easy: 50, medium: 20, hard: 0 };
+const _totalPuzzles = { easy: 100, medium: 50, hard: 50 };
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
@@ -58,6 +58,9 @@ Page({
   pageId: 'akari',
   _currentPuzzle: null,
   _loadId: 0,
+  _touchStartMode: null,  // 触摸开始时的灯塔状态（用于判断切换方向）
+  _lastTouchCell: null,   // 上一次触摸的格子（防止重复触发）
+  _gridRect: null,        // 棋盘区域位置信息（缓存）
 
   onLoad(options) {
     // 恢复进度
@@ -239,6 +242,97 @@ Page({
 
     // 检查完成
     this.checkCompletion();
+  },
+
+  // 触摸开始
+  onTouchStart(e) {
+    if (this.data.isComplete) return;
+    
+    const { row, col } = e.currentTarget.dataset;
+    const { grid, lights } = this.data;
+    
+    if (grid[row][col] >= CELL_BLACK) return;
+    
+    // 记录触摸开始时的灯塔状态，用于滑动时统一操作
+    this._touchStartMode = lights[row][col];
+    this._lastTouchCell = { row, col };
+    
+    // 缓存棋盘区域位置
+    this._updateGridRect();
+  },
+
+  // 触摸移动（滑动连续放置/移除灯塔）
+  onTouchMove(e) {
+    if (this.data.isComplete) return;
+    if (this._touchStartMode === null) return;
+    
+    const { grid, lights, cellSize } = this.data;
+    
+    // 获取当前触摸位置对应的格子
+    const touch = e.touches[0];
+    const target = this._getCellFromPointSync(touch, cellSize);
+    if (!target) return;
+    
+    const { row, col } = target;
+    
+    // 防止同一格子重复触发
+    if (this._lastTouchCell && 
+        this._lastTouchCell.row === row && 
+        this._lastTouchCell.col === col) {
+      return;
+    }
+    
+    // 黑格跳过
+    if (grid[row][col] >= CELL_BLACK) return;
+    
+    // 与起始模式一致的操作
+    if (lights[row][col] !== this._touchStartMode) {
+      lights[row][col] = this._touchStartMode;
+      this.setData({ lights });
+      this._lastTouchCell = { row, col };
+      this.updateLit();
+      this.playSoundIfEnabled('click');
+    }
+  },
+
+  // 触摸结束
+  onTouchEnd(e) {
+    if (this.data.isComplete) return;
+    
+    // 重置触摸状态
+    this._touchStartMode = null;
+    this._lastTouchCell = null;
+    
+    // 检查完成
+    this.checkCompletion();
+  },
+
+  // 更新棋盘区域位置缓存
+  _updateGridRect() {
+    const query = wx.createSelectorQuery();
+    query.select('.game-area').boundingClientRect((rect) => {
+      this._gridRect = rect;
+    }).exec();
+  },
+
+  // 根据触摸坐标同步获取格子索引
+  _getCellFromPointSync(touch, cellSize) {
+    const { rows, cols } = this.data;
+    
+    if (!this._gridRect) return null;
+    
+    const x = touch.clientX - this._gridRect.left;
+    const y = touch.clientY - this._gridRect.top;
+    
+    // 计算格子坐标
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    
+    // 边界检查
+    if (row >= 0 && row < rows && col >= 0 && col < cols) {
+      return { row, col };
+    }
+    return null;
   },
 
   // 更新照亮状态

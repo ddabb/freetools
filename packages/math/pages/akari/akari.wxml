@@ -30,7 +30,10 @@
                   class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}} {{showAnswer && answerLights[row][col] ? 'answer-light' : ''}}"
                   style="width: {{cellSize}}px; height: {{cellSize}}px;"
                   data-row="{{row}}" data-col="{{col}}"
-                  bindtap="onCellTap">
+                  bindtap="onCellTap"
+                  bindtouchstart="onTouchStart"
+                  bindtouchmove="onTouchMove"
+                  bindtouchend="onTouchEnd">
               <text wx:if="{{showAnswer ? answerLights[row][col] : lights[row][col]}}" class="light-icon">{{showAnswer ? '✅' : '💡'}}</text>
             </view>
           </block>
