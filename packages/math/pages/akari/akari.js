@@ -7,7 +7,7 @@
  */
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/akari';
-const _totalPuzzles = { easy: 200, medium: 100, hard: 100 };
+const _totalPuzzles = { easy: 50, medium: 20, hard: 0 };
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
@@ -99,7 +99,7 @@ Page({
    */
   loadPuzzle(difficulty, puzzleId) {
     const self = this;
-    const filename = difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
+    const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
     const cacheKey = 'cdn_akari_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
 
     // 尝试缓存
