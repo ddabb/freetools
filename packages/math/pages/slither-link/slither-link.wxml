@@ -26,12 +26,16 @@
 
   <!-- 游戏区域 -->
   <view class="game-area">
+    <view class="loading-mask" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
     <view class="grid-shadow">
-      <view class="grid-container grid-shadow {{difficulty === 'hard' ? 'hard-mode' : ''}}" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px; {{difficulty === 'hard' ? '' : 'display:inline-block;'}}">
+      <view class="grid-container" style="width: {{containerWidth}}px; height: {{containerHeight}}px;">
         <!-- 格子和数字提示 -->
         <view class="cells">
-          <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow">
-            <block wx:for="{{hintRow}}" wx:for-index="col" wx:for-item="hint">
+          <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow" wx:key="row">
+            <block wx:for="{{hintRow}}" wx:for-index="col" wx:for-item="hint" wx:key="col">
               <view class="cell" style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;">
                 <text wx:if="{{hint >= 0}}" class="hint">{{hint}}</text>
               </view>
@@ -52,7 +56,7 @@
         <view class="edges-h">
           <block wx:for="{{edges.h}}" wx:for-index="row" wx:for-item="hRow" wx:key="row">
             <block wx:for="{{hRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
-              <view class="edge-h {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
+              <view class="edge-h {{edge === 1 ? 'line' : ''}}"
                     style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;"
                     data-type="h" data-row="{{row}}" data-col="{{col}}"
                     bindtap="onEdgeTap">
@@ -66,7 +70,7 @@
         <view class="edges-v">
           <block wx:for="{{edges.v}}" wx:for-index="row" wx:for-item="vRow" wx:key="row">
             <block wx:for="{{vRow}}" wx:for-index="col" wx:for-item="edge" wx:key="col">
-              <view class="edge-v {{edge === 1 ? 'line' : ''}} {{edge === 2 ? 'cross' : ''}}"
+              <view class="edge-v {{edge === 1 ? 'line' : ''}}"
                     style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; height: {{cellSize}}px; width: {{cellSize}}px;"
                     data-type="v" data-row="{{row}}" data-col="{{col}}"
                     bindtap="onEdgeTap">

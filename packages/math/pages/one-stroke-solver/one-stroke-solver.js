@@ -204,7 +204,7 @@ Page({
     this.playSoundIfEnabled('click');
 
     // 检查是否完成（所有有效格子都走完）
-    const totalValid = grid.filter(v => v === 0).length;
+    const currentTotalValid = grid.filter(v => v === 0).length;
     if (_game.path.length === totalValid) {
       this._onComplete();
     }

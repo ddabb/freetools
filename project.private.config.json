@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "数壹游戏",
-          "pathName": "packages/math/pages/number-one/number-one",
+          "name": "数回游戏",
+          "pathName": "packages/math/pages/slither-link/slither-link",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "数壹游戏",
+          "pathName": "packages/math/pages/number-one/number-one",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "数织",

@@ -8,6 +8,8 @@ page {
   min-height: 100vh;
   padding: 20rpx;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ==================== 顶部信息栏 ==================== */
@@ -100,10 +102,45 @@ page {
 .game-area {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding: 20rpx 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-height: 0; /* 允许flex收缩 */
+  position: relative;
+}
+
+.loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24rpx;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #64748b;
 }
 
 .grid-shadow {
@@ -115,12 +152,8 @@ page {
   background: #fff;
   border-radius: 24rpx;
   overflow: hidden;
-  max-width: 100%;
-}
-
-.grid-container.hard-mode {
-  max-width: none;
-  overflow-x: auto;
+  min-width: 200px;
+  min-height: 200px;
 }
 
 /* 格子 */
@@ -140,7 +173,7 @@ page {
 }
 
 .hint {
-  font-size: 36rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: #1e40af;
   text-shadow: 0 2rpx 4rpx rgba(30, 64, 175, 0.1);
@@ -155,8 +188,8 @@ page {
 
 .dot {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   background: linear-gradient(135deg, #64748b, #475569);
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -178,7 +211,7 @@ page {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.15s ease;
 }
 
@@ -187,7 +220,7 @@ page {
   position: absolute;
   left: 0;
   right: 0;
-  height: 6px;
+  height: 5px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
@@ -226,7 +259,7 @@ page {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.15s ease;
 }
 
@@ -235,7 +268,7 @@ page {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: 5px;
   left: 50%;
   transform: translateX(-50%);
   background: transparent;

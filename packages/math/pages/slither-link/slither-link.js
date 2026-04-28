@@ -23,13 +23,38 @@ const DIFFICULTY_CONFIG = {
   hard: { text: '10×10 困难', size: 10 }
 };
 
-// 动态计算格子大小
-function computeCellSize(cols, isHard) {
+const TOTAL_PUZZLES = { easy: 200, medium: 100, hard: 50 };
+
+// 动态计算格子大小 - 优先填充屏幕宽度
+function computeCellSize(rows, cols) {
     const screenWidth = wx.getSystemInfoSync().windowWidth;
-  const maxBoardWidth = screenWidth - 32; // 16px margin each side, matches frog-escape pattern
-  const cellSize = Math.floor(maxBoardWidth / cols);
-  const maxSize = isHard ? 28 : 50;
-  return Math.max(22, Math.min(maxSize, cellSize));
+    const screenHeight = wx.getSystemInfoSync().windowHeight;
+    
+    // 预估各部分高度（单位px）
+    const headerHeight = 120;      // 顶部栏
+    const footerHeight = 140;       // 底部按钮
+    const paddingMargin = 60;      // 各种边距和间隙
+    
+    // 预留高度 = header + footer + padding
+    const reservedHeight = headerHeight + footerHeight + paddingMargin;
+    const availableHeight = screenHeight - reservedHeight;
+    
+    // 宽度方向：留20px边距
+    const availableWidth = screenWidth - 40;
+    
+    // 网格实际需要的宽度（包含30px偏移）
+    const gridWidth = cols + 2; // cols格 + 2个格点单位
+    const gridHeight = rows + 2; // rows格 + 2个格点单位
+    
+    // 根据宽度优先计算（优先填满宽度）
+    let cellSize = Math.floor(availableWidth / gridWidth);
+    
+    // 如果按宽度计算太高了，再限制高度
+    const maxByHeight = Math.floor(availableHeight / gridHeight);
+    cellSize = Math.min(cellSize, maxByHeight);
+    
+    // 限制范围：最小32px，最大50px
+    return Math.max(32, Math.min(50, cellSize));
 }
 
 Page({
@@ -46,27 +71,28 @@ Page({
     isPlaying: false,
     isComplete: false,
     cellSize: 50,
+    containerWidth: 0,
+    containerHeight: 0,
     showAnswer: false,
     showRules: false,
-    loading: false
+    loading: true
   },
 
   timer: null,
   pageId: 'slither-link',
   _currentPuzzle: null,
-  _totalPuzzles: { easy: 200, medium: 100, hard: 50 },
+  _loadId: 0,
 
   onLoad(options) {
+    // 优先恢复之前的进度
     const saved = wx.getStorageSync('slither_link_saved');
     if (saved && saved.edges && saved.edges.h && saved.edges.h.length > 0) {
       this.setData({ ...saved, isPlaying: true, showAnswer: false, loading: false });
-      const difficulty = saved.difficulty || 'easy';
-      const puzzleId = saved.puzzleId || 0;
       this._currentPuzzle = { answer: saved._answer };
       this.startTimer();
     } else {
-      const difficulty = options.difficulty || 'easy';
-      this.loadPuzzle(difficulty, 0);
+      // 加载简单模式第一题
+      this.loadPuzzle('easy', 0);
     }
     preloadSounds(['click', 'win'], this.pageId);
   },
@@ -98,9 +124,13 @@ Page({
     // 尝试缓存
     const cached = wx.getStorageSync(cacheKey);
     if (cached && cached.grid) {
+      cached._loadId = loadId;
       self._applyPuzzle(cached, difficulty, puzzleId);
       return;
     }
+    
+    // 递增请求ID，用于防止竞态条件
+    const loadId = ++this._loadId;
     
     self.setData({ loading: true });
     
@@ -109,8 +139,12 @@ Page({
       method: 'GET',
       timeout: 10000,
       success(res) {
+        // 检查是否是最新请求
+        if (loadId !== self._loadId) return;
+        
         if (res.statusCode === 200 && res.data && res.data.grid) {
           wx.setStorageSync(cacheKey, res.data);
+          res.data._loadId = loadId;
           self._applyPuzzle(res.data, difficulty, puzzleId);
         } else {
           console.warn('[slither-link] CDN数据格式错误', res.statusCode, res.data);
@@ -118,6 +152,9 @@ Page({
         }
       },
       fail(err) {
+        // 检查是否是最新请求
+        if (loadId !== self._loadId) return;
+        
         console.warn('[slither-link] CDN请求失败', err);
         self._loadFallback(difficulty, puzzleId);
       }
@@ -125,13 +162,20 @@ Page({
   },
 
   _applyPuzzle(puzzleData, difficulty, puzzleId) {
+    // 检查是否是最新请求（防止竞态条件）
+    if (this._loadId && puzzleData._loadId !== this._loadId) return;
+    
     const rows = puzzleData.size || puzzleData.grid.length;
     const cols = puzzleData.grid[0].length;
     const hints = puzzleData.grid;
     const answer = puzzleData.answer || null;
     
     // 动态计算格子大小
-    const cellSize = computeCellSize(cols, difficulty === 'hard');
+    const cellSize = computeCellSize(rows, cols);
+    
+    // 容器需要包含格点偏移量（每边15px）
+    const containerWidth = cols * cellSize + 30;
+    const containerHeight = rows * cellSize + 30;
     
     const edges = {
       h: Array(rows + 1).fill(null).map(() => Array(cols).fill(EDGE_EMPTY)),
@@ -145,6 +189,8 @@ Page({
       cols,
       hints,
       cellSize,
+      containerWidth,
+      containerHeight,
       difficulty,
       difficultyText: DIFFICULTY_CONFIG[difficulty].text,
       puzzleId,
@@ -229,8 +275,6 @@ Page({
 
     this.setData({ edges });
     this.playSoundIfEnabled('click');
-
-    // 不再每次点击都自动检查完成，改为用户手动验证
   },
 
   /**
@@ -411,7 +455,7 @@ Page({
   },
 
   nextPuzzle() {
-    const total = this._totalPuzzles[this.data.difficulty] || 100;
+    const total = TOTAL_PUZZLES[this.data.difficulty] || 100;
     const nextId = (this.data.puzzleId + 1) % total;
     this.setData({ isComplete: false });
     this.loadPuzzle(this.data.difficulty, nextId);

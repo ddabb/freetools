@@ -18,13 +18,14 @@
       <block wx:for="{{grid}}" wx:for-index="row" wx:for-item="gridRow">
         <view class="row">
           <block wx:for="{{gridRow}}" wx:for-index="col" wx:for-item="cell">
-            <!-- 黑格 -->
-            <view wx:if="{{cell >= 2}}"
+            <!-- 黑格：CELL_BLACK=1, CELL_BLACK_0=2, CELL_BLACK_1=3... -->
+            <view wx:if="{{cell >= 1}}"
                   class="cell black"
                   style="width: {{cellSize}}px; height: {{cellSize}}px;">
-              <text wx:if="{{cell >= 3}}" class="black-num">{{cell - 2}}</text>
+              <!-- 数字黑格显示数字（CELL_BLACK_0=2 及以上） -->
+              <text wx:if="{{cell >= 2}}" class="black-num">{{cell - 2}}</text>
             </view>
-            <!-- 白格 -->
+            <!-- 白格：CELL_WHITE=0 -->
             <view wx:else
                   class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}}"
                   style="width: {{cellSize}}px; height: {{cellSize}}px;"
