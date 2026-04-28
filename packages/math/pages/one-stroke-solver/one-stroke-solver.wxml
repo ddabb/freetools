@@ -2,35 +2,52 @@
   <!-- 顶部信息栏 -->
   <view class="header">
     <view class="difficulty-tabs">
-      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
-      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
-      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌱</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌿</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌳</text>
+        <text class="tab-text">困难</text>
+      </view>
     </view>
     <view class="info">
-      <text class="timer">⏱️ {{timeStr}}</text>
-      <text class="progress"> {{path.length}}/{{totalValid}}</text>
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
+      <view class="progress-box">
+        <text class="progress-icon">📍</text>
+        <text class="progress">{{path.length}}/{{totalValid}}</text>
+      </view>
     </view>
   </view>
 
   <!-- 游戏区域 -->
   <view class="game-area">
-    <view class="grid" style="width: {{cols * cellSize}}px;">
-      <block wx:for="{{gridData}}" wx:for-index="idx" wx:for-item="cell">
-        <view class="cell-wrap"
-              style="width: {{cellSize}}px; height: {{cellSize}}px;"
-              data-idx="{{idx}}"
-              bindtap="onCellTap"
-              bindtouchstart="onTouchStart"
-              bindtouchmove="onTouchMove"
-              bindtouchend="onTouchEnd">
-          <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}}">
-            <!-- 洞 -->
-            <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>
-            <!-- 路径序号 -->
-            <text wx:elif="{{cell.visited}}" class="cell-text path-num">{{cell.pathIndex + 1}}</text>
+    <view class="grid-shadow">
+      <view class="grid" style="width: {{cols * cellSize}}px;">
+        <block wx:for="{{gridData}}" wx:for-index="idx" wx:for-item="cell" wx:key="idx">
+          <view class="cell-wrap"
+                style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                data-idx="{{idx}}"
+                bindtap="onCellTap"
+                bindtouchstart="onTouchStart"
+                bindtouchmove="onTouchMove"
+                bindtouchend="onTouchEnd">
+            <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}}">
+              <!-- 洞 -->
+              <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>
+              <!-- 路径序号 -->
+              <text wx:elif="{{cell.visited}}" class="cell-text path-num">{{cell.pathIndex + 1}}</text>
+            </view>
           </view>
-        </view>
-      </block>
+        </block>
+      </view>
     </view>
   </view>
 
@@ -40,19 +57,23 @@
       <text class="complete-icon">🎉</text>
       <text class="complete-text">全部通过！</text>
       <text class="complete-time">用时 {{timeStr}}</text>
-      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+      <view class="next-btn" bindtap="nextPuzzle">下一题 ›</view>
     </view>
   </view>
 
   <!-- 底部按钮 -->
   <view class="footer">
-    <button class="btn reset" bindtap="onReset">重置</button>
-    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+    <view class="btn reset" bindtap="onReset">
+      <text>↩ 重置</text>
+    </view>
+    <view class="btn next" bindtap="nextPuzzle">
+      <text>▶ 下一题</text>
+    </view>
   </view>
 
   <!-- 规则说明 -->
   <view class="rules">
-    <text class="rules-title">游戏规则</text>
+    <text class="rules-title">📖 游戏规则</text>
     <text class="rules-text">• 点击格子，按顺序走遍所有白格</text>
     <text class="rules-text">• 只能走上下左右相邻的格子</text>
     <text class="rules-text">• × 是洞，不能进入</text>

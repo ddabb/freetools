@@ -71,8 +71,8 @@ Page({
     isPlaying: false,
     isComplete: false,
     cellSize: 50,
-    containerWidth: 0,
-    containerHeight: 0,
+    containerWidth: 300,
+    containerHeight: 300,
     showAnswer: false,
     showRules: false,
     loading: true
@@ -121,6 +121,9 @@ Page({
     const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
     const cacheKey = 'cdn_slitherlink_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0') + '_v2';
     
+    // 递增请求ID，用于防止竞态条件
+    const loadId = ++this._loadId;
+    
     // 尝试缓存
     const cached = wx.getStorageSync(cacheKey);
     if (cached && cached.grid) {
@@ -128,9 +131,6 @@ Page({
       self._applyPuzzle(cached, difficulty, puzzleId);
       return;
     }
-    
-    // 递增请求ID，用于防止竞态条件
-    const loadId = ++this._loadId;
     
     self.setData({ loading: true });
     

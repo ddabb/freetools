@@ -109,6 +109,12 @@ page {
   position: relative;
 }
 
+.loading-hint {
+  padding: 40rpx;
+  font-size: 28rpx;
+  color: #64748b;
+}
+
 .loading-mask {
   position: absolute;
   top: 0;

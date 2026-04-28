@@ -30,9 +30,9 @@ function mapCell(cell) {
 }
 
 const DIFFICULTY_CONFIG = {
-  easy: { text: '7×7 简单', size: 7 },
-  medium: { text: '10×10 中等', size: 10 },
-  hard: { text: '12×12 困难', size: 12 }
+  easy: { text: '6×6 简单', size: 6, cellSize: 50 },
+  medium: { text: '8×8 中等', size: 8, cellSize: 42 },
+  hard: { text: '8×8 困难', size: 8, cellSize: 38 }
 };
 
 // TOTAL_PUZZLES 已废弃，使用 _totalPuzzles
@@ -179,7 +179,8 @@ Page({
 
   _loadFallback(difficulty, puzzleId) {
     // 生成一个简单的备用题目
-    const size = DIFFICULTY_CONFIG[difficulty].size;
+    const config = DIFFICULTY_CONFIG[difficulty];
+    const size = config.size;
     const rows = size, cols = size;
 
     // 创建简单的棋盘：四周是黑格数字0，中间是白格

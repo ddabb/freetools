@@ -26,11 +26,12 @@
 
   <!-- 游戏区域 -->
   <view class="game-area">
-    <view class="loading-mask" wx:if="{{loading}}">
-      <view class="loading-spinner"></view>
-      <text class="loading-text">加载中...</text>
+    <!-- 加载中提示 -->
+    <view class="loading-hint" wx:if="{{loading}}">
+      <text>加载中...</text>
     </view>
-    <view class="grid-shadow">
+    <!-- 棋盘 -->
+    <view class="grid-shadow" wx:if="{{!loading}}">
       <view class="grid-container" style="width: {{containerWidth}}px; height: {{containerHeight}}px;">
         <!-- 格子和数字提示 -->
         <view class="cells">
