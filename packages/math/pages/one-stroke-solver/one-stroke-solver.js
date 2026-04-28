@@ -55,7 +55,7 @@ Page({
   pageId: 'one-stroke-solver',
   _gridRect: null,        // 棋盘区域位置信息（缓存）
   _lastTouchIdx: null,    // 上次触摸的格子索引
-  _touchActive: false,     // 当前是否处于触摸绘制中（防止tap和touch冲突）
+  _tapHandled: false,     // 防止tap和touch重复处理同一次点击
 
   onLoad(options) {
     const sysInfo = wx.getSystemInfoSync();
@@ -172,6 +172,14 @@ Page({
   // 点击格子
   onCellTap(e) {
     if (_game.isComplete || !_game.isPlaying) return;
+
+    // 防止tap和touch重复处理同一次点击
+    if (this._tapHandled) {
+      this._tapHandled = false;
+      return;
+    }
+
+
     const idx = e.currentTarget.dataset.idx;
     const { grid, rows, cols, path } = _game;
 
@@ -212,6 +220,7 @@ Page({
   // 触摸开始
   onTouchStart(e) {
     if (_game.isComplete || !_game.isPlaying) return;
+    this._tapHandled = true;   // 标记本次点击已被touch处理，阻止onCellTap再次处理
     this._touchActive = true;
 
     const idx = e.currentTarget.dataset.idx;
@@ -273,10 +282,11 @@ Page({
     }
   },
 
-  // 触摸结束
   onTouchEnd(e) {
     this._touchActive = false;
     this._lastTouchIdx = null;
+    // 标记本次touch已结束，下次tap可正常处理
+    setTimeout(() => { this._tapHandled = false; }, 0);
   },
 
   // 更新路径显示
