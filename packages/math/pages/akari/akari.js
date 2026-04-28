@@ -7,7 +7,7 @@
  */
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/akari';
-const _totalPuzzles = { easy: 1000, medium: 1000, hard: 1000 };
+const _totalPuzzles = { easy: 200, medium: 100, hard: 100 };
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
