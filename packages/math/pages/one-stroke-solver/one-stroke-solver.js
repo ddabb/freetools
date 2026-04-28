@@ -1,6 +1,6 @@
 /**
  * 一笔画 (One-Stroke Path) 游戏
- * 规则：从起点出发，一次经过所有有效格子，不重复，最终回到起点（或不回到起点）
+ * 规则：从起点出发，一次经过所有有效格子，不重复，最终回到起点（或不回到起点）。
  * 交互：点击格子按顺序经过
  */
 
@@ -31,7 +31,8 @@ let _game = {
   time: 0,
   timer: null,
   isComplete: false,
-  isPlaying: false
+  isPlaying: false,
+  totalValid: 16
 };
 
 Page({
@@ -53,7 +54,8 @@ Page({
 
   pageId: 'one-stroke-solver',
   _gridRect: null,        // 棋盘区域位置信息（缓存）
-  _lastTouchIdx: null,    // 上一次触摸的格子索引
+  _lastTouchIdx: null,    // 上次触摸的格子索引
+  _touchActive: false,     // 当前是否处于触摸绘制中（防止tap和touch冲突）
 
   onLoad(options) {
     const sysInfo = wx.getSystemInfoSync();
@@ -94,7 +96,7 @@ Page({
   },
 
   startGame(difficulty, puzzleId) {
-    wx.showLoading({ title: '加载中…' });
+    wx.showLoading({ title: '加载中...' });
     const fileId = String(puzzleId + 1).padStart(4, '0');
     const url = `${CDN_BASE}${difficulty}-${fileId}.json?t=${Date.now()}`;
 
@@ -160,13 +162,14 @@ Page({
     }));
   },
 
-  // 判断两格子是否相邻
+  // 判断两个格子是否相邻
   _adjacent(a, b, cols) {
     const ra = Math.floor(a / cols), ca = a % cols;
     const rb = Math.floor(b / cols), cb = b % cols;
     return (Math.abs(ra - rb) === 1 && ca === cb) || (ra === rb && Math.abs(ca - cb) === 1);
   },
 
+  // 点击格子
   onCellTap(e) {
     if (_game.isComplete || !_game.isPlaying) return;
     const idx = e.currentTarget.dataset.idx;
@@ -175,8 +178,14 @@ Page({
     // 洞不能点击
     if (grid[idx] === 1) return;
 
-    // 已在路径中
-    if (path.indexOf(idx) >= 0) return;
+    // 已在路径中 → 点击已绘制的格子，把之后的格子截断
+    const existingIdx = path.indexOf(idx);
+    if (existingIdx >= 0) {
+      _game.path = path.slice(0, existingIdx);
+      this._updatePath();
+      this.playSoundIfEnabled('click');
+      return;
+    }
 
     // 第一个格子：直接加入
     if (path.length === 0) {
@@ -191,14 +200,11 @@ Page({
       _game.path.push(idx);
     }
 
-    const totalValid = _game.totalValid;
-    const gridData = this._buildGridData(grid, rows, cols, _game.path);
-    this.setData({ gridData, path: _game.path });
+    this._updatePath();
     this.playSoundIfEnabled('click');
 
-    // 检查是否完成（所有有效格子都走完）
-    const currentTotalValid = grid.filter(v => v === 0).length;
-    if (_game.path.length === totalValid) {
+    // 检查是否完成
+    if (_game.path.length === _game.totalValid) {
       this._onComplete();
     }
   },
@@ -206,20 +212,31 @@ Page({
   // 触摸开始
   onTouchStart(e) {
     if (_game.isComplete || !_game.isPlaying) return;
-    
+    this._touchActive = true;
+
     const idx = e.currentTarget.dataset.idx;
     const { grid, path } = _game;
-    
-    // 洞或已在路径中则返回
-    if (grid[idx] === 1 || path.indexOf(idx) >= 0) return;
-    
+
+    // 已在路径中 → 点击已绘制格子，截断路径
+    const existingIdx = path.indexOf(idx);
+    if (existingIdx >= 0) {
+      _game.path = path.slice(0, existingIdx);
+      this._updatePath();
+      this.playSoundIfEnabled('click');
+      this._lastTouchIdx = existingIdx > 0 ? path[existingIdx - 1] : null;
+      return;
+    }
+
+    // 洞则返回
+    if (grid[idx] === 1) return;
+
     // 第一个格子直接加入
     if (path.length === 0) {
       _game.path = [idx];
       this._updatePath();
       this.playSoundIfEnabled('click');
     }
-    
+
     // 缓存棋盘区域位置
     this._updateGridRect();
     this._lastTouchIdx = path.length > 0 ? path[path.length - 1] : idx;
@@ -227,29 +244,29 @@ Page({
 
   // 触摸移动（滑动连续走格子）
   onTouchMove(e) {
-    if (_game.isComplete || !_game.isPlaying) return;
-    
+    if (_game.isComplete || !_game.isPlaying || !this._touchActive) return;
+
     const touch = e.touches[0];
     const idx = this._getCellFromPointSync(touch);
     if (idx === null) return;
-    
+
     const { grid, rows, cols, path } = _game;
-    
+
     // 洞或已在路径中则跳过
     if (grid[idx] === 1 || path.indexOf(idx) >= 0) return;
-    
+
     // 必须与上一个格子相邻
     const last = path.length > 0 ? path[path.length - 1] : null;
     if (last === null || !this._adjacent(last, idx, cols)) return;
-    
+
     // 防止同一格子重复触发
     if (this._lastTouchIdx === idx) return;
-    
+
     _game.path.push(idx);
     this._lastTouchIdx = idx;
     this._updatePath();
     this.playSoundIfEnabled('click');
-    
+
     // 检查完成
     if (_game.path.length === _game.totalValid) {
       this._onComplete();
@@ -258,6 +275,7 @@ Page({
 
   // 触摸结束
   onTouchEnd(e) {
+    this._touchActive = false;
     this._lastTouchIdx = null;
   },
 
@@ -279,19 +297,19 @@ Page({
   // 根据触摸坐标同步获取格子索引
   _getCellFromPointSync(touch) {
     const { rows, cols, cellSize } = this.data;
-    
+
     if (!this._gridRect) return null;
-    
+
     const x = touch.clientX - this._gridRect.left;
     const y = touch.clientY - this._gridRect.top;
-    
+
     // 计算格子坐标
     const col = Math.floor(x / cellSize);
     const row = Math.floor(y / cellSize);
-    
+
     // 边界检查
     if (row < 0 || row >= rows || col < 0 || col >= cols) return null;
-    
+
     return row * cols + col;
   },
 
