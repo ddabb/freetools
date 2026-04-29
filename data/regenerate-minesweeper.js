@@ -59,8 +59,8 @@ function regenerateInvalidPuzzles() {
   const gameDir = path.join(__dirname, 'minesweeper');
   const files = fs.readdirSync(gameDir).filter(f => f.endsWith('.json') && f !== 'index.json');
   
-  console.log('开始检查扫雷题�?..');
-  console.log('找到 ' + files.length + ' 个题目文�?);
+  console.log('开始检查扫雷题目...');
+  console.log('找到 ' + files.length + ' 个题目文件');
 
   const difficulties = [
     { name: 'easy', rows: 9, cols: 9, mines: 10 },
@@ -82,7 +82,7 @@ function regenerateInvalidPuzzles() {
       validCount++;
     } else {
       invalidCount++;
-      console.log('无效题目: ' + file + ' - 开始重新生�?..');
+      console.log('无效题目: ' + file + ' - 开始重新生成...');
 
       // 提取难度和ID
       const parts = file.replace('.json', '').split('-');
@@ -95,7 +95,7 @@ function regenerateInvalidPuzzles() {
         continue;
       }
 
-      // 使用不同的种子重新生�?
+      // 使用不同的种子重新生成
       let regenerated = false;
       for (let retry = 1; retry <= maxRetries; retry++) {
         const newSeed = puzzle.seed + retry * 99991;
@@ -114,7 +114,7 @@ function regenerateInvalidPuzzles() {
 
         if (validateMinesweeper(newPuzzle)) {
           fs.writeFileSync(filePath, JSON.stringify(newPuzzle));
-          console.log('  重新生成成功! 新种�? ' + newSeed);
+          console.log('  重新生成成功! 新种子: ' + newSeed);
           regeneratedCount++;
           regenerated = true;
           break;
@@ -122,11 +122,11 @@ function regenerateInvalidPuzzles() {
       }
 
       if (!regenerated) {
-        console.log('  重新生成失败: 达到最大重试次�?' + maxRetries);
+        console.log('  重新生成失败: 达到最大重试次数 ' + maxRetries);
       }
 
       if (invalidCount % 10 === 0) {
-        console.log('进度: 无效 ' + invalidCount + ', 已重新生�?' + regeneratedCount);
+        console.log('进度: 无效 ' + invalidCount + ', 已重新生成 ' + regeneratedCount);
       }
     }
   }
@@ -135,7 +135,7 @@ function regenerateInvalidPuzzles() {
   console.log('总计: ' + files.length);
   console.log('有效: ' + validCount);
   console.log('无效: ' + invalidCount);
-  console.log('已重新生�? ' + regeneratedCount);
+  console.log('已重新生成: ' + regeneratedCount);
   console.log('重新生成失败: ' + (invalidCount - regeneratedCount));
 }
 

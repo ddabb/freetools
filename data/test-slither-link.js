@@ -1,5 +1,5 @@
 /**
- * 测试数回游戏验证�?
+ * 测试数回游戏验证器
  */
 
 const fs = require('fs');
@@ -10,10 +10,10 @@ function testSlitherLink() {
   const gameDir = path.join(__dirname, 'slither-link');
   const files = fs.readdirSync(gameDir).filter(f => f.endsWith('.json') && f !== 'index.json');
   
-  console.log('测试数回游戏验证�?..');
-  console.log('找到 ' + files.length + ' 个题目文�?);
+  console.log('测试数回游戏验证器...');
+  console.log('找到 ' + files.length + ' 个题目文件');
   
-  // 只测试前10个文�?
+  // 只测试前10个文件
   const testFiles = files.slice(0, 10);
   
   for (let i = 0; i < testFiles.length; i++) {
