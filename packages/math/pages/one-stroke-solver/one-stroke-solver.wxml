@@ -28,7 +28,7 @@
   </view>
 
   <!-- 游戏区域 -->
-  <view class="game-area">
+  <view class="game-area" catchtouchmove="preventBubble">
     <view class="grid-shadow">
       <view class="grid" style="width: {{cols * cellSize}}px;">
         <block wx:for="{{gridData}}" wx:for-index="idx" wx:for-item="cell" wx:key="idx">

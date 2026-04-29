@@ -642,7 +642,7 @@ const tools = [
   },
   {
     id: 'one-stroke-solver',
-    name: '一笔画求解',
+    name: '一笔画',
     icon: '✏️',
     color: 'pink',
     url: '/packages/math/pages/one-stroke-solver/one-stroke-solver',

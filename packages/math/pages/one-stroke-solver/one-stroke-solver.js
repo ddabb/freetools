@@ -73,6 +73,10 @@ Page({
     preloadSounds(['click', 'win'], this.pageId);
   },
 
+  preventBubble() {
+    // 阻止触摸移动冒泡，防止拖动时页面滚动
+  },
+
   onUnload() {
     this.stopTimer();
     if (this.data.isPlaying && !this.data.isComplete) {
