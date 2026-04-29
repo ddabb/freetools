@@ -146,11 +146,33 @@ Page({
     // 检查是否是最新请求（防止竞态条件）
     if (this._loadId && puzzleData._loadId !== this._loadId) return;
 
-    const size = puzzleData.size || 7;
+    const size = puzzleData.size || DIFFICULTY_CONFIG[difficulty].size || 7;
     const rows = size, cols = size;
 
-    // 映射CDN数据格式到内部常量
-    const grid = puzzleData.grid.map(row => row.map(cell => mapCell(cell)));
+    // 映射CDN数据格式到内部常量 - 兼容多种格式
+    const grid = puzzleData.grid.map(row => {
+      // 处理row可能是对象的情况（CDN格式：{value: [...], Count: N}）
+      let rowData = row;
+      if (typeof row === 'object' && row !== null && !Array.isArray(row)) {
+        if (row.value) {
+          rowData = Array.isArray(row.value) ? row.value : String(row.value).split('');
+        } else if (row.grid) {
+          rowData = Array.isArray(row.grid) ? row.grid : String(row.grid).split('');
+        }
+      }
+      // 确保rowData是数组
+      if (!Array.isArray(rowData)) {
+        rowData = String(rowData).split('');
+      }
+      return rowData.map(cell => {
+        // 处理cell可能是对象的情况
+        let cellVal = cell;
+        if (typeof cell === 'object' && cell !== null && !Array.isArray(cell)) {
+          cellVal = cell.value || cell.val || '';
+        }
+        return mapCell(typeof cellVal === 'string' ? cellVal : '');
+      });
+    });
 
     const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
 
