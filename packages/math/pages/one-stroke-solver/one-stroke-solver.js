@@ -169,7 +169,8 @@ Page({
       rows, cols, gridData, path: [],
       difficulty, puzzleId, cellSize, totalValid,
       time: 0, timeStr: '0:00',
-      isComplete: false, isPlaying: true
+      isComplete: false, isPlaying: true,
+      showAnswer: false, answerPath: []
     });
 
     this.startTimer();
