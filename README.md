@@ -18,7 +18,7 @@
 
 - **小程序**：微信搜索「随身工具宝」
 - **公众号**：微信搜索「随身工具宝」
-- **GitHub**：https://github.com/ddabb/freetools
+- **GitHub**：https://github.com/ddabb/FreeToolsPuzzle
 
 ## 项目结构
 

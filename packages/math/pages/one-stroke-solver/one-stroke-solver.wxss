@@ -191,6 +191,24 @@ page {
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
 }
 
+/* 答案路径样式（蓝色，与用户路径绿色区分） */
+.cell-inner.answer-visited {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  box-shadow: inset 0 2rpx 8rpx rgba(255, 255, 255, 0.3);
+  animation: answerPulse 1.5s ease-in-out infinite;
+}
+
+.answer-num {
+  color: white;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+}
+
+@keyframes answerPulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
 /* ==================== 完成提示 ==================== */
 .complete-overlay {
   position: fixed;
@@ -309,6 +327,19 @@ page {
 .btn.next {
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: white;
+}
+
+/* 查看答案按钮 */
+.btn.answer-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  flex: 1;
+}
+
+.btn.answer-btn.hide {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  flex: 1;
 }
 
 /* ==================== 规则说明 ==================== */

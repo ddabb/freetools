@@ -15,7 +15,7 @@ let _lastEdgeRow = null;
 let _lastEdgeCol = null;
 let _containerRect = null;
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/slither-link';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/slither-link';
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;

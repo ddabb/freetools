@@ -42,7 +42,7 @@ Page({
       return;
     }
 
-    const cdnUrl = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/wordbank/poison-soup.json';
+    const cdnUrl = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/wordbank/poison-soup.json';
 
     wx.request({
       url: cdnUrl,

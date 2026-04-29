@@ -39,11 +39,13 @@
                 bindtouchstart="onTouchStart"
                 bindtouchmove="onTouchMove"
                 bindtouchend="onTouchEnd">
-            <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}}">
+            <view class="cell-inner {{cell.type === 1 ? 'hole' : ''}} {{cell.visited ? 'visited' : ''}} {{cell.answerVisited ? 'answer-visited' : ''}}">
               <!-- 洞 -->
               <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>
-              <!-- 路径序号 -->
+              <!-- 用户路径序号 -->
               <text wx:elif="{{cell.visited}}" class="cell-text path-num">{{cell.pathIndex + 1}}</text>
+              <!-- 答案路径序号（不与用户路径重叠时显示） -->
+              <text wx:elif="{{cell.answerVisited}}" class="cell-text answer-num">{{cell.answerPathIndex + 1}}</text>
             </view>
           </view>
         </block>
@@ -65,6 +67,12 @@
   <view class="footer">
     <view class="btn reset" bindtap="onReset">
       <text>↩ 重置</text>
+    </view>
+    <view class="btn answer-btn" bindtap="onShowAnswer" wx:if="{{!showAnswer}}">
+      <text>💡 查看答案</text>
+    </view>
+    <view class="btn answer-btn hide" bindtap="onHideAnswer" wx:if="{{showAnswer}}">
+      <text>🙈 隐藏答案</text>
     </view>
     <view class="btn next" bindtap="nextPuzzle">
       <text>▶ 下一题</text>

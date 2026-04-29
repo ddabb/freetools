@@ -1,6 +1,6 @@
 // 躲避牛蛙 (Frog Escape) - 扫雷换皮
 // 雷→🐸牛蛙（要躲避） | 数字→周围牛蛙数 | 安全→💧水花 / 数字提示
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/minesweeper';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/minesweeper';
 const RECORDS_KEY = 'frog_escape_records';
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;

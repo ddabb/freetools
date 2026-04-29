@@ -67,7 +67,7 @@
 ### 4.1 CDN 路径约定
 
 ```
-https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds/
+https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/sounds/
 ├── click.wav      # 通用点击音效 (~26KB)
 ├── flag.wav      # 标记/旗帜音效
 ├── win.wav       # 胜利音效
@@ -79,7 +79,7 @@ https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds/
 ### 4.2 playSound 函数标准实现
 
 ```javascript
-const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
+const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/sounds';
 
 function playSound(src) {
   const audio = wx.createInnerAudioContext();

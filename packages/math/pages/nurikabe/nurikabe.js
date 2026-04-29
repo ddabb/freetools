@@ -10,7 +10,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // CDN 路径
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/nurikabe/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/nurikabe/';
 const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 
 // 格子状态

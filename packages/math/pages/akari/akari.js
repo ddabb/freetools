@@ -6,7 +6,7 @@
  * 3. 黑格数字表示四周灯塔数
  */
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/akari';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/akari';
 const _totalPuzzles = { easy: 100, medium: 50, hard: 50 };
 
 const utils = require('../../../../utils/index');

@@ -6,7 +6,7 @@
 
 ### 1. 文案工具页面 (`packages/life/pages/copywriting`)
 - **CDN使用方式**：从 jsDelivr CDN 加载文案数据
-- **数据源**：`https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/wordbank/`
+- **数据源**：`https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/docs/data/wordbank/`
 - **实现特点**：
   - 带缓存机制（24小时过期）
   - 网络失败时使用缓存数据
@@ -14,7 +14,7 @@
 
 ### 2. 版本日志页面 (`pages/changelog`)
 - **CDN使用方式**：从 jsDelivr CDN 加载版本日志
-- **数据源**：`https://cdn.jsdelivr.net/gh/ddabb/freetools@main/docs/data/changelog.json`
+- **数据源**：`https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/docs/data/changelog.json`
 - **实现特点**：
   - 简单的网络请求
   - 基本的错误处理
@@ -90,7 +90,7 @@
  * 统一管理CDN资源的加载、缓存和错误处理
  */
 
-const CDN_BASE_URL = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main';
+const CDN_BASE_URL = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main';
 
 /**
  * 加载CDN资源

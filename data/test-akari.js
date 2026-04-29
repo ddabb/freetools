@@ -1,6 +1,5 @@
 /**
- * 测试 Akari 题目的可解性和唯一解
- */
+ * 测试 Akari 题目的可解性和唯一�? */
 
 const fs = require('fs');
 const path = require('path');
@@ -10,7 +9,7 @@ function testPuzzles() {
   const dir = path.join(__dirname, 'akari');
   const files = fs.readdirSync(dir).filter(f => f.endsWith('.json') && f !== 'index.json').sort();
   
-  console.log(`检查 ${files.length} 个题目...\n`);
+  console.log(`检�?${files.length} 个题�?..\n`);
   
   let validCount = 0;
   let noSolutionCount = 0;
@@ -25,19 +24,19 @@ function testPuzzles() {
       const solutionCount = countSolutions(grid, 2);
       
       if (solutionCount === 0) {
-        console.log(`❌ ${file}: 无解`);
+        console.log(`�?${file}: 无解`);
         noSolutionCount++;
       } else if (solutionCount === 1) {
-        console.log(`✓ ${file}: 唯一解`);
+        console.log(`�?${file}: 唯一解`);
         uniqueSolutionCount++;
         validCount++;
       } else {
-        console.log(`⚠ ${file}: 多个解 (>=2)`);
+        console.log(`�?${file}: 多个�?(>=2)`);
         multipleSolutionsCount++;
         validCount++;
       }
     } catch (e) {
-      console.log(`❌ ${file}: 错误 - ${e.message}`);
+      console.log(`�?${file}: 错误 - ${e.message}`);
       noSolutionCount++;
     }
   }
@@ -45,8 +44,8 @@ function testPuzzles() {
   console.log(`\n========== 总结 ==========`);
   console.log(`总题目数: ${files.length}`);
   console.log(`有解: ${validCount} (${(validCount/files.length*100).toFixed(1)}%)`);
-  console.log(`唯一解: ${uniqueSolutionCount} (${(uniqueSolutionCount/files.length*100).toFixed(1)}%)`);
-  console.log(`多个解: ${multipleSolutionsCount} (${(multipleSolutionsCount/files.length*100).toFixed(1)}%)`);
+  console.log(`唯一�? ${uniqueSolutionCount} (${(uniqueSolutionCount/files.length*100).toFixed(1)}%)`);
+  console.log(`多个�? ${multipleSolutionsCount} (${(multipleSolutionsCount/files.length*100).toFixed(1)}%)`);
   console.log(`无解: ${noSolutionCount} (${(noSolutionCount/files.length*100).toFixed(1)}%)`);
 }
 

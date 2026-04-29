@@ -1934,7 +1934,7 @@ function getLine(buffer, lineStart, lineEnd, position, maxLineLength) {
   }
 
   return {
-    str: head + buffer.slice(lineStart, lineEnd).replace(/\t/g, 'â†’') + tail,
+    str: head + buffer.slice(lineStart, lineEnd).replace(/\t/g, 'â†?) + tail,
     pos: position - lineStart + head.length // relative position
   };
 }
@@ -3240,15 +3240,15 @@ function isNsCharOrWhitespace(c) {
     && c !== CHAR_LINE_FEED;
 }
 
-// [127]  ns-plain-safe(c) ::= c = flow-out  â‡’ ns-plain-safe-out
-//                             c = flow-in   â‡’ ns-plain-safe-in
-//                             c = block-key â‡’ ns-plain-safe-out
-//                             c = flow-key  â‡’ ns-plain-safe-in
+// [127]  ns-plain-safe(c) ::= c = flow-out  â‡?ns-plain-safe-out
+//                             c = flow-in   â‡?ns-plain-safe-in
+//                             c = block-key â‡?ns-plain-safe-out
+//                             c = flow-key  â‡?ns-plain-safe-in
 // [128] ns-plain-safe-out ::= ns-char
 // [129]  ns-plain-safe-in ::= ns-char - c-flow-indicator
-// [130]  ns-plain-char(c) ::=  ( ns-plain-safe(c) - â€œ:â€ - â€œ#â€ )
-//                            | ( /* An ns-char preceding */ â€œ#â€ )
-//                            | ( â€œ:â€ /* Followed by an ns-plain-safe(c) */ )
+// [130]  ns-plain-char(c) ::=  ( ns-plain-safe(c) - â€?â€?- â€?â€?)
+//                            | ( /* An ns-char preceding */ â€?â€?)
+//                            | ( â€?â€?/* Followed by an ns-plain-safe(c) */ )
 function isPlainSafe(c, prev, inblock) {
   var cIsNsCharOrWhitespace = isNsCharOrWhitespace(c);
   var cIsNsChar = cIsNsCharOrWhitespace && !isWhitespace(c);
@@ -3275,11 +3275,11 @@ function isPlainSafe(c, prev, inblock) {
 function isPlainSafeFirst(c) {
   // Uses a subset of ns-char - c-indicator
   // where ns-char = nb-char - s-white.
-  // No support of ( ( â€œ?â€ | â€œ:â€ | â€œ-â€ ) /* Followed by an ns-plain-safe(c)) */ ) part
+  // No support of ( ( â€?â€?| â€?â€?| â€?â€?) /* Followed by an ns-plain-safe(c)) */ ) part
   return isPrintable(c) && c !== CHAR_BOM
     && !isWhitespace(c) // - s-white
     // - (c-indicator ::=
-    // â€œ-â€ | â€œ?â€ | â€œ:â€ | â€œ,â€ | â€œ[â€ | â€œ]â€ | â€œ{â€ | â€œ}â€
+    // â€?â€?| â€?â€?| â€?â€?| â€?â€?| â€œ[â€?| â€œ]â€?| â€œ{â€?| â€œ}â€?
     && c !== CHAR_MINUS
     && c !== CHAR_QUESTION
     && c !== CHAR_COLON
@@ -3288,7 +3288,7 @@ function isPlainSafeFirst(c) {
     && c !== CHAR_RIGHT_SQUARE_BRACKET
     && c !== CHAR_LEFT_CURLY_BRACKET
     && c !== CHAR_RIGHT_CURLY_BRACKET
-    // | â€œ#â€ | â€œ&â€ | â€œ*â€ | â€œ!â€ | â€œ|â€ | â€œ=â€ | â€œ>â€ | â€œ'â€ | â€œ"â€
+    // | â€?â€?| â€?â€?| â€?â€?| â€?â€?| â€œ|â€?| â€?â€?| â€?â€?| â€?â€?| â€?â€?
     && c !== CHAR_SHARP
     && c !== CHAR_AMPERSAND
     && c !== CHAR_ASTERISK
@@ -3298,7 +3298,7 @@ function isPlainSafeFirst(c) {
     && c !== CHAR_GREATER_THAN
     && c !== CHAR_SINGLE_QUOTE
     && c !== CHAR_DOUBLE_QUOTE
-    // | â€œ%â€ | â€œ@â€ | â€œ`â€)
+    // | â€?â€?| â€œ@â€?| â€œ`â€?
     && c !== CHAR_PERCENT
     && c !== CHAR_COMMERCIAL_AT
     && c !== CHAR_GRAVE_ACCENT;
@@ -3417,8 +3417,8 @@ function chooseScalarStyle(string, singleLineOnly, indentPerLevel, lineWidth,
 // Note: line breaking/folding is implemented for only the folded style.
 // NB. We drop the last trailing newline (if any) of a returned block scalar
 //  since the dumper adds its own newline. This always works:
-//    â€¢ No ending newline => unaffected; already using strip "-" chomping.
-//    â€¢ Ending newline    => removed then restored.
+//    â€?No ending newline => unaffected; already using strip "-" chomping.
+//    â€?Ending newline    => removed then restored.
 //  Importantly, this keeps the "+" chomp indicator from gaining an extra line.
 function writeScalar(state, string, level, iskey, inblock) {
   state.dump = (function () {
@@ -3435,7 +3435,7 @@ function writeScalar(state, string, level, iskey, inblock) {
     // As indentation gets deeper, let the width decrease monotonically
     // to the lower bound min(state.lineWidth, 40).
     // Note that this implies
-    //  state.lineWidth â‰¤ 40 + state.indent: width is fixed at the lower bound.
+    //  state.lineWidth â‰?40 + state.indent: width is fixed at the lower bound.
     //  state.lineWidth > 40 + state.indent: width decreases until the lower bound.
     // This behaves better than a constant minimum width which disallows narrower options,
     // or an indent threshold which causes the width to suddenly increase.
@@ -3491,7 +3491,7 @@ function dropEndingNewline(string) {
 // Note: a long line without a suitable break point will exceed the width limit.
 // Pre-conditions: every char in str isPrintable, str.length > 0, width > 0.
 function foldString(string, width) {
-  // In folded style, $k$ consecutive newlines output as $k+1$ newlinesâ€”
+  // In folded style, $k$ consecutive newlines output as $k+1$ newlinesâ€?
   // unless they're before or after a more-indented line, or at the very
   // beginning or end, in which case $k$ maps to $k$.
   // Therefore, parse each chunk as newline(s) followed by a content line.
@@ -3903,10 +3903,10 @@ function writeNode(state, level, object, block, compact, iskey, isblockseq) {
       // [36] ns-hex-digit    ::=  ns-dec-digit
       //                         | [#x41-#x46] /* A-F */ | [#x61-#x66] /* a-f */
       // [37] ns-ascii-letter ::=  [#x41-#x5A] /* A-Z */ | [#x61-#x7A] /* a-z */
-      // [38] ns-word-char    ::=  ns-dec-digit | ns-ascii-letter | â€œ-â€
-      // [39] ns-uri-char     ::=  â€œ%â€ ns-hex-digit ns-hex-digit | ns-word-char | â€œ#â€
-      //                         | â€œ;â€ | â€œ/â€ | â€œ?â€ | â€œ:â€ | â€œ@â€ | â€œ&â€ | â€œ=â€ | â€œ+â€ | â€œ$â€ | â€œ,â€
-      //                         | â€œ_â€ | â€œ.â€ | â€œ!â€ | â€œ~â€ | â€œ*â€ | â€œ'â€ | â€œ(â€ | â€œ)â€ | â€œ[â€ | â€œ]â€
+      // [38] ns-word-char    ::=  ns-dec-digit | ns-ascii-letter | â€?â€?
+      // [39] ns-uri-char     ::=  â€?â€?ns-hex-digit ns-hex-digit | ns-word-char | â€?â€?
+      //                         | â€?â€?| â€?â€?| â€?â€?| â€?â€?| â€œ@â€?| â€?â€?| â€?â€?| â€?â€?| â€?â€?| â€?â€?
+      //                         | â€œ_â€?| â€?â€?| â€?â€?| â€œ~â€?| â€?â€?| â€?â€?| â€?â€?| â€?â€?| â€œ[â€?| â€œ]â€?
       //
       // Also need to encode '!' because it has special meaning (end of tag prefix).
       //

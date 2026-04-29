@@ -3,7 +3,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
 // CDN 题库基础路径
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/number-one';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/number-one';
 
 // 难度到目录名的映射
 const DIFF_DIR = ['easy', 'medium', 'hard'];

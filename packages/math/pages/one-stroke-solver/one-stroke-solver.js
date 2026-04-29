@@ -9,7 +9,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 // 题库 CDN（本地优先）
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/one-stroke/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/one-stroke/';
 const LOCAL_BASE = '';  // 使用本地 data/one-stroke/ 目录
 const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 
@@ -49,7 +49,9 @@ Page({
     isComplete: false,
     isPlaying: false,
     screenWidth: 375,
-    totalValid: 16
+    totalValid: 16,
+    showAnswer: false,
+    answerPath: []
   },
 
   pageId: 'one-stroke-solver',
@@ -144,8 +146,24 @@ Page({
     const totalValid = grid.filter(v => v === 0).length;
     _game = { grid, rows, cols, path: [], difficulty, puzzleId, time: 0, timer: null, isComplete: false, isPlaying: true, totalValid };
 
-    // 构建渲染数据
-    const gridData = this._buildGridData(grid, rows, cols, []);
+    // 计算答案路径（用 GridPathFinder 求解）
+    try {
+      const finder = new GridPathFinder(rows, cols, holes);
+      // 找第一个有效格子作为起点
+      let start = 0;
+      for (let i = 0; i < rows * cols; i++) {
+        if (grid[i] === 0) { start = i; break; }
+      }
+      finder.setPassedPotAndPath(0, start, true);
+      const hasSolution = finder.run(0);
+      _game.answerPath = hasSolution ? finder.getPath() : null;
+    } catch (e) {
+      console.error('计算答案路径失败:', e);
+      _game.answerPath = null;
+    }
+
+    // 构建渲染数据（初始不显示答案）
+    const gridData = this._buildGridData(grid, rows, cols, [], null);
 
     this.setData({
       rows, cols, gridData, path: [],
@@ -158,12 +176,20 @@ Page({
     this.playSoundIfEnabled('click');
   },
 
-  _buildGridData(grid, rows, cols, path) {
-    return grid.map((v, i) => ({
-      type: v,       // 0=有效, 1=洞
-      visited: path.indexOf(i) >= 0,
-      pathIndex: path.indexOf(i)
-    }));
+  _buildGridData(grid, rows, cols, path, answerPath) {
+    return grid.map((v, i) => {
+      const visited = path.indexOf(i) >= 0;
+      const pathIndex = visited ? path.indexOf(i) : -1;
+      const answerVisited = !visited && answerPath && answerPath.indexOf(i) >= 0;
+      const answerPathIndex = answerVisited ? answerPath.indexOf(i) : -1;
+      return {
+        type: v,       // 0=有效, 1=洞
+        visited,
+        pathIndex,
+        answerVisited,
+        answerPathIndex
+      };
+    });
   },
 
   // 判断两个格子是否相邻
@@ -304,7 +330,8 @@ Page({
   // 更新路径显示
   _updatePath() {
     const { grid, rows, cols, path } = _game;
-    const gridData = this._buildGridData(grid, rows, cols, path);
+    const answerPath = this.data.showAnswer ? _game.answerPath : null;
+    const gridData = this._buildGridData(grid, rows, cols, path, answerPath);
     this.setData({ gridData, path: path.slice() });
   },
 
@@ -403,5 +430,23 @@ Page({
     if (isPageSoundEnabled(this.pageId)) {
       playSound(name, { pageId: this.pageId });
     }
+  },
+
+  // 查看答案：显示可行解路径
+  onShowAnswer() {
+    if (!_game.answerPath) {
+      wx.showToast({ title: '暂无答案', icon: 'none' });
+      return;
+    }
+    this.setData({ showAnswer: true });
+    this._updatePath(); // 重新构建 gridData 包含答案路径
+    this.playSoundIfEnabled('click');
+  },
+
+  // 隐藏答案
+  onHideAnswer() {
+    this.setData({ showAnswer: false });
+    this._updatePath(); // 重新构建 gridData 不包含答案路径
+    this.playSoundIfEnabled('click');
   }
 });

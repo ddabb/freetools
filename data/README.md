@@ -65,7 +65,7 @@ category: 分类
 小程序通过CDN访问生成的JSON数据，CDN地址配置在小程序代码中：
 
 ```javascript
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/know/';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/know/';
 ```
 
 ## 注意事项

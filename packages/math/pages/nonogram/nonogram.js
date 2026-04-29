@@ -1,6 +1,6 @@
 // 数织 Nonogram - CDN版（约束传播求解）
 var SIZES = { easy: 5, medium: 8, hard: 10 };
-var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
+var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
 var DIFF_TEXT = { easy: '简单 5x5', medium: '中等 8x8', hard: '困难 10x10' };
 var RECORDS_KEY = 'nonogram_records_v7';
 

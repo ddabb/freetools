@@ -3,7 +3,7 @@
  * 避免每次播放都请求CDN
  */
 
-const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/sounds';
+const SOUNDS_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/sounds';
 const CACHE_PREFIX = 'sound_cache_';
 const CACHE_DIR = `${wx.env.USER_DATA_PATH}/sounds`;
 const SOUND_ENABLED_KEY = 'sound_enabled_global'; // 全局音效开关

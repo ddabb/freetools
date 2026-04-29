@@ -133,7 +133,7 @@ data/idiom-solitaire/
 ### 3.5 CDN 地址
 
 ```
-https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire/
+https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/idiom-solitaire/
 ```
 
 ### 3.6 加载策略
@@ -165,7 +165,7 @@ https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire/
 - **首次加载**：启动时预加载 `first-char-index.json`（约 200KB）
 - **按需加载**：`idioms-meta.json` 只在用户查看详情时按需拉取
 - **本地缓存**：微信 `wx.setStorageSync` 缓存已加载数据
-- **CDN 地址**：`https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire/`
+- **CDN 地址**：`https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/idiom-solitaire/`
 
 ### 3.4 数据来源
 
@@ -289,7 +289,7 @@ function dfs(current, visited, depth) {
 ### 5.3 CDN 数据加载
 
 ```javascript
-const CDN = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire/';
+const CDN = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/idiom-solitaire/';
 
 async function loadIdiomData() {
   const cache = wx.getStorageSync('idiom-index');

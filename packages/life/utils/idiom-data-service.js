@@ -7,7 +7,7 @@
  * - 成语详情按字母加载，已有的直接返回缓存
  */
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/idiom-solitaire';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/idiom-solitaire';
 const CACHE_EXPIRE = 7 * 24 * 60 * 60 * 1000; // 7 天
 
 // 缓存键
@@ -338,22 +338,17 @@ function querySolitaire(word, mode = 'forward') {
   }
 
   if (mode === 'reverse') {
-    // 逆查：需要尾字索引（找以输入成语首字拼音结尾的成语）
     if (!isLastReady) {
-      // 触发尾字索引加载，告知 UI 等待
       if (!_pendingReverseCallbacks.length) {
-        loadLastIndex(() => {}); // 已在 loadData 中注册过，这里防止未调用
+        loadLastIndex(() => {});
       }
       return { candidates: [], error: '数据加载中…', lastIndexLoading: true };
     }
     const fp = getFirstPy(word);
-    // 逆查：用 firstIndex 找尾字拼音为 fp 的成语（接龙）
-    return { candidates: fp ? getCandidates(fp) : [], error: null, lastIndexLoading: false };
+    return { candidates: fp ? getReverseCandidates(fp) : [], error: null, lastIndexLoading: false };
   } else {
-    // 顺查：只用首字索引（找以输入成语尾字拼音开头的成语）
     const lp = getLastPy(word);
-    // 顺查：用 lastIndex 找首字拼音为 lp 的成语（接龙）
-    return { candidates: lp ? getReverseCandidates(lp) : [], error: null, lastIndexLoading: false };
+    return { candidates: lp ? getCandidates(lp) : [], error: null, lastIndexLoading: false };
   }
 }
 

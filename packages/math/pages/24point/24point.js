@@ -3,7 +3,7 @@ const utils = require('../../../../utils/index');
 const { playSound } = utils;
 
 // CDN 数据源地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
 const QUESTION_KEY = 'cdn_24point_questions';
 const QUESTION_TIMESTAMP_KEY = 'cdn_24point_questions_ts';
 const CACHE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时缓存

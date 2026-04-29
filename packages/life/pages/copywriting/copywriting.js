@@ -95,7 +95,7 @@ Page({
     // 缓存不存在或已过期，从CDN加载
     wx.showLoading({ title: '加载中...' });
     wx.request({
-      url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/wordbank/index.json',
+      url: 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/wordbank/index.json',
       method: 'GET',
       timeout: 10000,
       success: (res) => {
@@ -115,7 +115,7 @@ Page({
           categoryKeys.forEach(key => {
             console.debug('[copywriting] 加载分类:', key);
             wx.request({
-              url: `https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/wordbank/${key}.json`,
+              url: `https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/wordbank/${key}.json`,
               method: 'GET',
               success: (categoryRes) => {
                 console.debug('[copywriting] 分类', key, '加载成功', {

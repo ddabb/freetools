@@ -5,7 +5,7 @@ const { playSound } = utils;
 const XLSX = require('wechat-xlsx');
 
 // CDN 数据源地址
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
 const DAILY_CACHE_PREFIX = 'cdn_daily_sudoku_';
 const DAILY_TS_PREFIX = 'cdn_daily_sudoku_ts_';
 const MIN_DAILY_DATE = '2025-01-01';

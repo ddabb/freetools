@@ -2,7 +2,7 @@
 // 版本日志加载工具
 
 const cacheManager = require('./cacheManager');
-const CDN_URL = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/changelog.json';
+const CDN_URL = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/changelog.json';
 
 // 缓存配置（cdn_ 前缀支持 app.js 自动清理）
 const CACHE_KEY_CHANGELOG = 'cdn_changelog';

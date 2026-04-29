@@ -39,7 +39,7 @@ class RelativeCalculator {
     // 从CDN加载
     return new Promise((resolve, reject) => {
       wx.request({
-        url: 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/relative-relation.json',
+        url: 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/relative-relation.json',
         method: 'GET',
         timeout: 10000,
         success: (res) => {
