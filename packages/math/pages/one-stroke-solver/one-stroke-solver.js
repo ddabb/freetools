@@ -201,11 +201,11 @@ Page({
     } else {
       const last = path[path.length - 1];
       if (!this._adjacent(last, idx, cols)) {
-        // 不相邻，提示
-        wx.showToast({ title: '只能走相邻格子', icon: 'none', duration: 800 });
-        return;
+        // 不相邻：清空旧路径，以该格子为新起点
+        _game.path = [idx];
+      } else {
+        _game.path.push(idx);
       }
-      _game.path.push(idx);
     }
 
     this._updatePath();
@@ -239,11 +239,19 @@ Page({
     // 洞则返回
     if (grid[idx] === 1) return;
 
-    // 第一个格子直接加入
+    // 第一个格子直接加入，或重置起点
     if (path.length === 0) {
       _game.path = [idx];
       this._updatePath();
       this.playSoundIfEnabled('click');
+    } else {
+      const last = path[path.length - 1];
+      if (!this._adjacent(last, idx, cols) && grid[idx] !== 1) {
+        // 不相邻且非洞：重置为新起点
+        _game.path = [idx];
+        this._updatePath();
+        this.playSoundIfEnabled('click');
+      }
     }
 
     // 缓存棋盘区域位置
