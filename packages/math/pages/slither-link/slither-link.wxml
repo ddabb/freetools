@@ -32,7 +32,7 @@
     </view>
     <!-- 棋盘 -->
     <view class="grid-shadow" wx:if="{{!loading}}">
-      <view class="grid-container" style="width: {{containerWidth}}px; height: {{containerHeight}}px;">
+      <view class="grid-container" id="game-container" style="width: {{containerWidth}}px; height: {{containerHeight}}px;">
         <!-- 格子和数字提示 -->
         <view class="cells">
           <block wx:for="{{hints}}" wx:for-index="row" wx:for-item="hintRow" wx:key="row">
@@ -60,7 +60,8 @@
               <view class="edge-h {{edge === 1 ? 'line' : ''}}"
                     style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;"
                     data-type="h" data-row="{{row}}" data-col="{{col}}"
-                    bindtap="onEdgeTap">
+                    bindtap="onEdgeTap"
+                    bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" catchtouchmove="catchtouchmove">
                 <text wx:if="{{edge === 2}}" class="cross-mark">×</text>
               </view>
             </block>
@@ -74,7 +75,8 @@
               <view class="edge-v {{edge === 1 ? 'line' : ''}}"
                     style="left: {{col * cellSize + 15}}px; top: {{row * cellSize + 15}}px; height: {{cellSize}}px; width: {{cellSize}}px;"
                     data-type="v" data-row="{{row}}" data-col="{{col}}"
-                    bindtap="onEdgeTap">
+                    bindtap="onEdgeTap"
+                    bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" catchtouchmove="catchtouchmove">
                 <text wx:if="{{edge === 2}}" class="cross-mark">×</text>
               </view>
             </block>

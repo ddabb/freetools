@@ -8,6 +8,13 @@
  * 4. 只能有一个回路
  */
 
+let _touchActive = false;
+let _tapHandled = false;
+let _lastEdgeType = null;
+let _lastEdgeRow = null;
+let _lastEdgeCol = null;
+let _containerRect = null;
+
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data/slither-link';
 
 const utils = require('../../../../utils/index');
@@ -95,6 +102,14 @@ Page({
       this.loadPuzzle('easy', 0);
     }
     preloadSounds(['click', 'win'], this.pageId);
+
+    // 获取游戏容器位置，用于计算触摸坐标对应的边
+    const query = wx.createSelectorQuery();
+    query.select('#game-container').boundingClientRect((rect) => {
+      if (rect) {
+        _containerRect = rect;
+      }
+    }).exec();
   },
 
   onUnload() {
@@ -265,6 +280,11 @@ Page({
 
   onEdgeTap(e) {
     if (this.data.isComplete) return;
+    // 触摸开始时跳过 tap，避免重复触发
+    if (_tapHandled) {
+      _tapHandled = false;
+      return;
+    }
 
     const { type, row, col } = e.currentTarget.dataset;
     const edges = JSON.parse(JSON.stringify(this.data.edges));
@@ -273,6 +293,116 @@ Page({
     const current = edges[type][row][col];
     edges[type][row][col] = (current + 1) % 2;
 
+    this.setData({ edges });
+    this.playSoundIfEnabled('click');
+  },
+
+  /**
+   * 触摸开始：记录起始边，设置标志阻止 tap
+   */
+  onTouchStart(e) {
+    if (this.data.isComplete) return;
+    _touchActive = true;
+    _tapHandled = true;
+
+    const touch = e.touches[0];
+    const edge = this._getEdgeFromTouch(touch);
+    if (!edge) return;
+
+    const { type, row, col } = edge;
+    this._toggleEdge(type, row, col);
+    _lastEdgeType = type;
+    _lastEdgeRow = row;
+    _lastEdgeCol = col;
+  },
+
+  /**
+   * 触摸移动：滑动到新边时自动切换状态
+   */
+  onTouchMove(e) {
+    if (!_touchActive) return;
+    const touch = e.touches[0];
+    const edge = this._getEdgeFromTouch(touch);
+    if (!edge) return;
+
+    const { type, row, col } = edge;
+    // 同一格点不重复处理
+    if (type === _lastEdgeType && row === _lastEdgeRow && col === _lastEdgeCol) return;
+
+    this._toggleEdge(type, row, col);
+    _lastEdgeType = type;
+    _lastEdgeRow = row;
+    _lastEdgeCol = col;
+  },
+
+  /**
+   * 触摸结束：重置状态
+   */
+  onTouchEnd() {
+    _touchActive = false;
+    // 延迟重置 tap 标志，让下一轮点击正常生效
+    setTimeout(() => {
+      _tapHandled = false;
+    }, 0);
+  },
+
+  /**
+   * 阻止触摸冒泡，避免页面滚动
+   */
+  catchtouchmove() {},
+
+  /**
+   * 根据触摸坐标计算对应的边
+   */
+  _getEdgeFromTouch(touch) {
+    if (!_containerRect) return null;
+    const containerLeft = _containerRect.left;
+    const containerTop = _containerRect.top;
+    const x = touch.clientX - containerLeft;
+    const y = touch.clientY - containerTop;
+    const cellSize = this.data.cellSize;
+    const edgeThickness = 8;
+
+    // 检查横向边(h)：行r(0~rows)，列c(0~cols-1)
+    for (let r = 0; r <= this.data.rows; r++) {
+      for (let c = 0; c < this.data.cols; c++) {
+        const top = r * cellSize + 15;
+        const left = c * cellSize + 15;
+        const edgeTop = top - edgeThickness / 2;
+        const edgeBottom = top + edgeThickness / 2;
+        const edgeLeft = left;
+        const edgeRight = left + cellSize;
+        if (x >= edgeLeft && x <= edgeRight && y >= edgeTop && y <= edgeBottom) {
+          return { type: 'h', row: r, col: c };
+        }
+      }
+    }
+
+    // 检查纵向边(v)：行r(0~rows-1)，列c(0~cols)
+    for (let r = 0; r < this.data.rows; r++) {
+      for (let c = 0; c <= this.data.cols; c++) {
+        const top = r * cellSize + 15;
+        const left = c * cellSize + 15;
+        const edgeTop = top;
+        const edgeBottom = top + cellSize;
+        const edgeLeft = left - edgeThickness / 2;
+        const edgeRight = left + edgeThickness / 2;
+        if (x >= edgeLeft && x <= edgeRight && y >= edgeTop && y <= edgeBottom) {
+          return { type: 'v', row: r, col: c };
+        }
+      }
+    }
+
+    return null;
+  },
+
+  /**
+   * 切换边的状态（空↔线）
+   */
+  _toggleEdge(type, row, col) {
+    const edges = JSON.parse(JSON.stringify(this.data.edges));
+    const current = edges[type][row][col];
+    edges[type][row][col] = (current + 1) % 2;
     this.setData({ edges });
     this.playSoundIfEnabled('click');
   },
