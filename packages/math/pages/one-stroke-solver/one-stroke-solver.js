@@ -17,7 +17,7 @@ const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 const DIFFICULTY_CONFIG = {
   easy:   { rows: 6, cols: 6 },
   medium: { rows: 8, cols: 8 },
-  hard:   { rows: 8, cols: 8 }  // 10×10 生成功率低，改用 8×8 稳定方案
+  hard:   { rows: 10, cols: 10 }
 };
 
 // 当前游戏状态（内部）
@@ -117,7 +117,7 @@ Page({
         }
 
         const puzzle = res.data;
-        this.initGame(difficulty, puzzleId, puzzle.holes || []);
+        this.initGame(difficulty, puzzleId, puzzle.holes || [], puzzle.answer || null);
       },
       fail: () => {
         wx.hideLoading();
@@ -130,41 +130,49 @@ Page({
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
     try {
-      // 使用 GridPathFinder.generateValidPuzzle 生成有效的一笔画题目
       const holes = GridPathFinder.generateValidPuzzle(rows, cols, 0.3);
-      this.initGame(difficulty, 0, holes);
+      const finder = new GridPathFinder(rows, cols, holes);
+      let start = 0;
+      for (let i = 0; i < rows * cols; i++) {
+        if (!holes.includes(i)) { start = i; break; }
+      }
+      finder.setPassedPotAndPath(0, start, true);
+      finder.run(0);
+      const answer = finder.getPath();
+      this.initGame(difficulty, 0, holes, answer);
     } catch (e) {
       console.error('本地生成题目失败:', e);
       wx.showToast({ title: '题目生成失败，请重试', icon: 'none' });
     }
   },
 
-  initGame(difficulty, puzzleId, holes) {
+  initGame(difficulty, puzzleId, holes, answer) {
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
     const cellSize = this.calcCellSize(rows, cols);
 
-    // 初始化格子状态
     const grid = Array(rows * cols).fill(0);
     for (const h of holes) grid[h] = 1;
 
     const totalValid = grid.filter(v => v === 0).length;
     _game = { grid, rows, cols, path: [], difficulty, puzzleId, time: 0, timer: null, isComplete: false, isPlaying: true, totalValid };
 
-    // 计算答案路径（用 GridPathFinder 求解）
-    try {
-      const finder = new GridPathFinder(rows, cols, holes);
-      // 找第一个有效格子作为起点
-      let start = 0;
-      for (let i = 0; i < rows * cols; i++) {
-        if (grid[i] === 0) { start = i; break; }
+    if (answer && Array.isArray(answer) && answer.length > 0) {
+      _game.answerPath = answer;
+    } else {
+      try {
+        const finder = new GridPathFinder(rows, cols, holes);
+        let start = 0;
+        for (let i = 0; i < rows * cols; i++) {
+          if (grid[i] === 0) { start = i; break; }
+        }
+        finder.setPassedPotAndPath(0, start, true);
+        const hasSolution = finder.run(0);
+        _game.answerPath = hasSolution ? finder.getPath() : null;
+      } catch (e) {
+        console.error('计算答案路径失败:', e);
+        _game.answerPath = null;
       }
-      finder.setPassedPotAndPath(0, start, true);
-      const hasSolution = finder.run(0);
-      _game.answerPath = hasSolution ? finder.getPath() : null;
-    } catch (e) {
-      console.error('计算答案路径失败:', e);
-      _game.answerPath = null;
     }
 
     // 构建渲染数据（初始不显示答案）
