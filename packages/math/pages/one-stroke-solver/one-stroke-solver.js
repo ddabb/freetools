@@ -17,7 +17,7 @@ const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 const DIFFICULTY_CONFIG = {
   easy:   { rows: 6, cols: 6 },
   medium: { rows: 8, cols: 8 },
-  hard:   { rows: 10, cols: 10 }
+  hard:   { rows: 8, cols: 8 }  // 10×10 生成功率低，改用 8×8 稳定方案
 };
 
 // 当前游戏状态（内部）
@@ -129,9 +129,14 @@ Page({
   initLocalGame(difficulty) {
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
-    // 使用 GridPathFinder.generateValidPuzzle 生成有效的一笔画题目
-    const holes = GridPathFinder.generateValidPuzzle(rows, cols, 0.3);
-    this.initGame(difficulty, 0, holes);
+    try {
+      // 使用 GridPathFinder.generateValidPuzzle 生成有效的一笔画题目
+      const holes = GridPathFinder.generateValidPuzzle(rows, cols, 0.3);
+      this.initGame(difficulty, 0, holes);
+    } catch (e) {
+      console.error('本地生成题目失败:', e);
+      wx.showToast({ title: '题目生成失败，请重试', icon: 'none' });
+    }
   },
 
   initGame(difficulty, puzzleId, holes) {
@@ -402,6 +407,7 @@ Page({
   onDifficultyChange(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
     if (difficulty !== _game.difficulty) {
+      wx.showLoading({ title: '切换难度...' });
       this.startGame(difficulty, 0);
     }
   },
