@@ -204,7 +204,9 @@ Page({
     if (_game.isComplete || !_game.isPlaying) return;
 
     // 防止tap和touch重复处理同一次点击
-    if (this._tapHandled) {
+    // 注意：onTouchStart 设了 _tapHandled=true，但截断操作后已手动重置
+    // 这里只在确实是由touch触发的情况下才忽略，避免阻断后续正常点击
+    if (this._tapHandled && this._touchActive) {
       this._tapHandled = false;
       return;
     }
@@ -222,6 +224,8 @@ Page({
       _game.path = path.slice(0, existingIdx);
       this._updatePath();
       this.playSoundIfEnabled('click');
+      // 截断后重置标志，允许后续点击正常处理
+      this._tapHandled = false;
       return;
     }
 
