@@ -11,6 +11,9 @@ const DIFF_DIR = ['easy', 'medium', 'hard'];
 // 每种难度-尺寸组合的题目数量
 const PUZZLE_COUNT = 30;
 
+// 记录当前题号（用于跳关）
+let currentPuzzleIndex = 1;
+
 Page({
   onLoad() {
     preloadSounds(['click', 'win', 'wrong']);
@@ -20,7 +23,7 @@ Page({
   },
   data: {
     size: 6,
-    difficulty: 2,
+    difficulty: 1,
     board: [],
     userBoard: [],
     solution: [],
@@ -30,19 +33,12 @@ Page({
     elapsed: 0,
     formattedTime: '0:00',
     timer: null,
-    difficultyOptions: [
-      { label: '简单', value: 1 },
-      { label: '中等', value: 2 },
-      { label: '困难', value: 3 },
-    ],
-    sizeOptions: [
-      { label: '5×5', value: 5 },
-      { label: '6×6', value: 6 },
-      { label: '7×7', value: 7 },
-    ],
     loading: false,
     loadingText: '加载题库...',
-    currentPuzzle: null,  // 当前谜题原始数据
+    currentPuzzle: null,
+    maxPuzzles: PUZZLE_COUNT,
+    jumpInputValue: '',
+    currentPuzzleIndex: 1,
   },
 
   onUnload() {
@@ -62,14 +58,26 @@ Page({
     return `${m}:${String(sec).padStart(2, '0')}`;
   },
 
-  // 加载当前难度-尺寸组合的随机一道题
-  _loadPuzzleList() {
+  // 难度到尺寸的映射
+  _getSizeByDifficulty(difficulty) {
+    // 简单=5x5, 中等=6x6, 困难=7x7
+    return difficulty + 4;
+  },
+
+  // 加载当前难度的指定题目
+  _loadPuzzleList(puzzleIndex = null) {
     this.setData({ loading: true, loadingText: '加载题库...' });
-    const { size, difficulty } = this.data;
+    const { difficulty } = this.data;
     const dir = DIFF_DIR[difficulty - 1];
+    const size = this._getSizeByDifficulty(difficulty);
     
-    // 随机选择一道题的编号 (1-30)
-    const puzzleIndex = Math.floor(Math.random() * PUZZLE_COUNT) + 1;
+    // 使用指定题号或随机选择
+    if (puzzleIndex === null) {
+      puzzleIndex = Math.floor(Math.random() * PUZZLE_COUNT) + 1;
+    }
+    currentPuzzleIndex = puzzleIndex;
+    this.setData({ currentPuzzleIndex: puzzleIndex, size });
+    
     const filename = `${size}-${String(puzzleIndex).padStart(4, '0')}.json`;
     const url = `${CDN_BASE}/${dir}/${filename}`;
     
@@ -220,22 +228,18 @@ Page({
     });
   },
 
-  // 下一题
+  // 下一题（顺序加载）
   nextPuzzle() {
-    this._loadPuzzleList();
+    const nextIndex = currentPuzzleIndex >= PUZZLE_COUNT ? 1 : currentPuzzleIndex + 1;
+    this._loadPuzzleList(nextIndex);
   },
 
   // 切换难度
   onDifficultyChange(e) {
     const diff = parseInt(e.currentTarget.dataset.value);
-    this.setData({ difficulty: diff, gameStarted: false });
-    this._loadPuzzleList();
-  },
-
-  // 切换尺寸
-  onSizeChange(e) {
-    const size = parseInt(e.currentTarget.dataset.value);
-    this.setData({ size, gameStarted: false });
+    if (diff === this.data.difficulty) return;
+    const size = this._getSizeByDifficulty(diff);
+    this.setData({ difficulty: diff, size, gameStarted: false, jumpInputValue: '' });
     this._initSizeClass();
     this._loadPuzzleList();
   },
@@ -294,5 +298,33 @@ Page({
     const { size } = this.data;
     const userBoard = Array.from({ length: size }, () => new Array(size).fill(0));
     this.setData({ userBoard, failed: false, userBlackCount: 0 });
+  },
+
+  // 跳关输入
+  onJumpInput(e) {
+    const value = e.detail.value;
+    const max = this.data.maxPuzzles;
+    let jumpInputValue = value;
+    
+    // 实时修正超出范围的值
+    if (value && parseInt(value) > max) {
+      jumpInputValue = String(max);
+    }
+    this.setData({ jumpInputValue });
+  },
+
+  // 执行跳关
+  onJump() {
+    const value = parseInt(this.data.jumpInputValue);
+    const max = this.data.maxPuzzles;
+    
+    if (!value || value < 1) {
+      this.setData({ jumpInputValue: '' });
+      return;
+    }
+    
+    const targetIndex = Math.min(value, max);
+    this.setData({ jumpInputValue: '', solved: false, failed: false });
+    this._loadPuzzleList(targetIndex);
   },
 });

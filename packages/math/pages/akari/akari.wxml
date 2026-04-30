@@ -9,6 +9,7 @@
     </view>
     <view class="info">
       <text class="timer">⏱️ {{timeStr}}</text>
+      <text class="light-count" wx:if="{{maxLights > 0}}">💡 {{lightsCount}}/{{maxLights}}</text>
     </view>
   </view>
 
@@ -55,6 +56,12 @@
     <button class="btn verify" bindtap="onVerify">验证答案</button>
     <button class="btn answer" bindtap="onToggleAnswer">{{showAnswer ? '隐藏答案' : '查看答案'}}</button>
     <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
+  <!-- 跳关 -->
+  <view class="footer">
+    <text class="jump-label">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input-inline" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJumpInline" />
+    <view class="btn-jump" bindtap="onJumpInline">确定</view>
   </view>
 
   <!-- 规则说明 -->

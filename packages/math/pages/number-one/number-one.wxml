@@ -1,28 +1,15 @@
 <view class="container">
   <!-- 设置区 -->
   <view class="settings-bar">
-    <view class="setting-group">
-      <text class="setting-label">尺寸</text>
-      <view class="tab-group">
-        <view
-          wx:for="{{sizeOptions}}"
-          wx:key="value"
-          class="tab {{size === item.value ? 'active' : ''}}"
-          bindtap="onSizeChange"
-          data-value="{{item.value}}"
-        >{{item.label}}</view>
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 1 ? 'active' : ''}}" bindtap="onDifficultyChange" data-value="1">
+        <text>🌱 简单</text>
       </view>
-    </view>
-    <view class="setting-group">
-      <text class="setting-label">难度</text>
-      <view class="tab-group">
-        <view
-          wx:for="{{difficultyOptions}}"
-          wx:key="value"
-          class="tab {{difficulty === item.value ? 'active' : ''}}"
-          bindtap="onDifficultyChange"
-          data-value="{{item.value}}"
-        >{{item.label}}</view>
+      <view class="tab {{difficulty === 2 ? 'active' : ''}}" bindtap="onDifficultyChange" data-value="2">
+        <text>🌿 中等</text>
+      </view>
+      <view class="tab {{difficulty === 3 ? 'active' : ''}}" bindtap="onDifficultyChange" data-value="3">
+        <text>🌳 困难</text>
       </view>
     </view>
   </view>
@@ -82,6 +69,16 @@
       </view>
       <view class="action-btn answer-btn" bindtap="showAnswer">
         <text>👁️ 答案</text>
+      </view>
+    </view>
+
+    <!-- 跳关 -->
+    <view class="jump-row">
+      <text class="jump-label">第 {{currentPuzzleIndex}}/{{maxPuzzles}} 题</text>
+      <input class="jump-input-inline" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+      <view class="btn-jump" bindtap="onJump">确定</view>
+      <view class="action-btn primary" bindtap="nextPuzzle">
+        <text>下一题</text>
       </view>
     </view>
 

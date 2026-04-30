@@ -526,6 +526,41 @@ page {
   justify-content: center;
   gap: 20rpx;
   padding: 24rpx 20rpx;
+  align-items: center;
+}
+
+/* 跳关输入框 */
+.footer text {
+  font-size: 28rpx;
+  color: #64748b;
+}
+
+.jump-input-inline {
+  width: 120rpx;
+  height: 56rpx;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 12rpx;
+  text-align: center;
+  font-size: 28rpx;
+  background: white;
+}
+
+.btn-jump {
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+  border-radius: 12rpx;
+}
+
+/* 跳关footer */
+.jump-footer {
+  gap: 12rpx;
+}
+
+.jump-label {
+  color: #64748b;
+  font-size: 26rpx;
 }
 
 .action-btn {
@@ -571,62 +606,18 @@ page {
   font-weight: 500;
 }
 
-/* ==================== 规则说明 ==================== */
-.rules {
-  margin: 20rpx 24rpx;
-  padding: 24rpx;
+/* ==================== 规则按钮 ==================== */
+.rules-btn {
+  margin: 16rpx auto;
+  padding: 16rpx 32rpx;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  text-align: center;
 }
 
-.rules-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.rules-title {
+.rules-btn text {
   font-size: 28rpx;
-  font-weight: 600;
-  color: #334155;
-}
-
-.rules-toggle {
-  font-size: 24rpx;
   color: #3b82f6;
   font-weight: 500;
-}
-
-.rules-content {
-  margin-top: 20rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.rule-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16rpx;
-}
-
-.rule-num {
-  width: 36rpx;
-  height: 36rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  font-size: 22rpx;
-  font-weight: 600;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.rule-text {
-  font-size: 26rpx;
-  color: #475569;
-  line-height: 1.6;
 }

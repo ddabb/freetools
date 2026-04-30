@@ -26,10 +26,11 @@
 | 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子 |
 | 躲避牛蛙 (frog-escape) | ✅ 已上线 | `packages/math/pages/frog-escape/` | 扫雷换皮（🐸主题） |
 | 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
-| 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 算法重写完成，含黑格数提示 |
-| 数回 (slither-link) | ✅ 已上线 | `packages/math/pages/slither-link/` | 含验证按钮 |
-| 灯塔 (akari) | ✅ 已上线 | `packages/math/pages/akari/` | 含校验反馈 |
+| 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 难度决定尺寸，顺序下一题，跳关选择 |
+| 数回 (slither-link) | ✅ 已上线 | `packages/math/pages/slither-link/` | 规则弹窗，跳关选择 |
+| 灯塔 (akari) | ✅ 已上线 | `packages/math/pages/akari/` | 灯塔数量限制，跳关选择 |
 | 数墙 (nurikabe) | ✅ 已上线 | `packages/math/pages/nurikabe/` | 需验证 |
+| 一笔画 (one-stroke-solver) | ✅ 已上线 | `packages/math/pages/one-stroke-solver/` | 顺序下一题，跳关选择 |
 | 战舰 (battleship) | ⏳ 未开始 | - | - |
 | 幻方 (magic-square) | ⏳ 未开始 | - | - |
 | 推箱子 (sokoban) | ⏳ 未开始 | - | - |
@@ -404,8 +405,33 @@ function minimax(board, depth, alpha, beta, maximizing, player) {
 - 步数统计：操作次数
 - 撤销/重做：历史记录
 - 难度选择：简单/中等/困难
-- 关卡选择：显示进度
+- **关卡选择：显示「第 N/M 题」，输入框跳转，确定按钮**
 - 设置面板：音效/主题等
+
+### 5.1.1 跳关功能规范
+所有格子游戏统一实现跳关功能：
+
+**UI 布局：**
+```
+[第 N/M 题] [输入框] [确定]
+```
+
+**功能要求：**
+- 显示当前题号和总题数
+- 输入框 type="number"，placeholder="跳转"
+- 输入超出范围自动修正为最大值
+- 确定按钮点击或输入框回车执行跳转
+- 跳转后清空输入框
+
+**下一题行为：**
+- 点击「下一题」按钮顺序加载（N+1，超过最大则循环回 1）
+- 不随机选择题目
+
+**已实现游戏：**
+- ✅ 灯塔 - 各 1000 题
+- ✅ 数回 - easy 200 / medium 100 / hard 50
+- ✅ 数壹 - 每种难度 30 题（难度自动决定尺寸）
+- ✅ 一笔画 - 各 1000 题
 
 ### 5.2 数据存储
 - 关卡进度：localStorage
@@ -426,16 +452,17 @@ function minimax(board, depth, alpha, beta, maximizing, player) {
 packages/math/pages/
 ├── sudoku-solver/      # 数独求解器
 ├── sudoku-generator/   # 数独生成器
-├── array-puzzle/       # 数织
-├── minesweeper/        # 扫雷 [新增]
-├── othello/            # 黑白棋 [新增]
-├── slither-link/       # 数回 [新增]
-├── hitori/             # 数壹 [新增]
-├── akari/              # 灯塔 [新增]
-├── nurikabe/           # 数墙 [新增]
-├── battleship/         # 战舰 [新增]
-├── magic-square/       # 幻方 [新增]
-└── sokoban/            # 推箱子 [新增]
+├── nonogram/           # 数织
+├── frog-escape/        # 躲避牛蛙（扫雷换皮）
+├── othello/            # 黑白棋
+├── number-one/         # 数壹
+├── slither-link/       # 数回
+├── akari/              # 灯塔
+├── nurikabe/           # 数墙
+├── one-stroke-solver/  # 一笔画 [新增]
+├── battleship/         # 战舰 [未开始]
+├── magic-square/       # 幻方 [未开始]
+└── sokoban/            # 推箱子 [未开始]
 ```
 
 ### 6.2 公共组件
@@ -670,6 +697,7 @@ npm install @blex41/word-search
 | 数回 | ✅ 已上线 | Simon Tatham, Puzzlink |
 | 灯塔 | ✅ 已上线 | Simon Tatham, Puzzlink |
 | 数墙 | ✅ 已上线 | nurikabe solver |
+| 一笔画 | ✅ 已上线 | GridPathFinder |
 
 ---
 

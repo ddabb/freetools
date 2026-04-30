@@ -47,6 +47,11 @@
     <button class="btn {{showAnswer ? 'active' : ''}}" bindtap="onShowAnswer">{{showAnswer ? '隐藏答案' : '显示答案'}}</button>
     <button class="btn next" bindtap="nextPuzzle">下一题</button>
   </view>
+  <view class="footer">
+    <text>跳转:</text>
+    <input class="jump-input-inline" type="number" placeholder="1-{{maxPuzzles}}" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJumpInline" />
+    <button class="btn jump" bindtap="onJumpInline">确定</button>
+  </view>
 
   <!-- 规则说明 -->
   <view class="rules">

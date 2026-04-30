@@ -3,7 +3,7 @@
 .container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  padding: 20rpx;
+  padding: 12rpx;
   box-sizing: border-box;
 }
 
@@ -12,10 +12,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx 30rpx;
+  padding: 14rpx 20rpx;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 20rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 12rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
@@ -51,12 +51,28 @@
   color: #333;
 }
 
+.light-count {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #f5576c;
+  background: #fff;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+}
+
 /* 游戏区域 */
 .game-area {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40rpx 0;
+  padding: 10rpx 0;
+  flex: 0 0 auto;
+}
+
+/* 棋盘自适应屏幕 */
+.grid {
+  max-width: calc(100vw - 40rpx);
+  overflow: auto;
 }
 
 .grid {
@@ -175,16 +191,22 @@
 .footer {
   display: flex;
   justify-content: center;
-  gap: 30rpx;
-  padding: 20rpx;
+  gap: 16rpx;
+  padding: 16rpx 10rpx;
+  flex-wrap: wrap;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20rpx;
+  margin-top: 16rpx;
 }
 
 .btn {
-  padding: 20rpx 60rpx;
+  padding: 18rpx 28rpx;
   border-radius: 20rpx;
-  font-size: 30rpx;
+  font-size: 28rpx;
   border: none;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
+  flex: 1;
+  min-width: 0;
 }
 
 .btn.reset {
@@ -212,26 +234,62 @@
   color: white;
 }
 
+.btn.jump {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+/* 跳转输入框 */
+.jump-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.jump-input-inline {
+  width: 120rpx;
+  height: 56rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: 2rpx solid #ddd;
+  border-radius: 12rpx;
+  background: white;
+  margin: 0 10rpx;
+}
+
+.btn-jump {
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+  border-radius: 12rpx;
+}
+
+.btn.jump {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
 /* 规则说明 */
 .rules {
-  margin-top: 30rpx;
-  padding: 30rpx;
+  margin-top: 16rpx;
+  padding: 20rpx 24rpx;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 20rpx;
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  gap: 10rpx;
 }
 
 .rules-title {
-  font-size: 32rpx;
+  font-size: 28rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10rpx;
+  margin-bottom: 6rpx;
 }
 
 .rules-text {
-  font-size: 26rpx;
+  font-size: 24rpx;
   color: #666;
-  line-height: 1.6;
+  line-height: 1.5;
 }

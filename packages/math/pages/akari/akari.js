@@ -7,7 +7,7 @@
  */
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/akari';
-const _totalPuzzles = { easy: 100, medium: 50, hard: 50 };
+const _totalPuzzles = { easy: 1000, medium: 1000, hard: 1000 };
 
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
@@ -22,17 +22,24 @@ const CELL_BLACK_3 = 5;  // 黑格数字3
 const CELL_BLACK_4 = 6;  // 黑格数字4
 
 // CDN数据格式映射：将CDN数据格式转换为内部常量
-// CDN格式："."=白格, " "=白格, 0-4=黑格数字
+// CDN格式：" "=白格, "#"=黑格(无数字), 0-4=黑格数字
+// 题库已存储为前端常量格式，直接返回即可
 function mapCell(cell) {
+  // 数字类型直接返回（题库已经是常量格式）
+  if (typeof cell === 'number') return cell;
+  // 字符串类型需要映射（兼容旧格式）
   if (cell === " " || cell === ".") return CELL_WHITE;  // 白格
-  // cell是0-4，表示黑格数字0-4
-  return CELL_BLACK_0 + parseInt(cell, 10);  // 0→2, 1→3, 2→4, 3→5, 4→6
+  if (cell === "#") return CELL_BLACK;  // 无数字黑格
+  // 字符串数字 0-4
+  const num = parseInt(cell, 10);
+  if (isNaN(num) || num < 0 || num > 4) return CELL_BLACK;  // 兜底
+  return CELL_BLACK_0 + num;  // '0'→2, '1'→3, '2'→4, '3'→5, '4'→6
 }
 
 const DIFFICULTY_CONFIG = {
-  easy: { text: '6×6 简单', size: 6, cellSize: 50 },
-  medium: { text: '8×8 中等', size: 8, cellSize: 42 },
-  hard: { text: '8×8 困难', size: 8, cellSize: 38 }
+  easy: { text: '7×7 简单', size: 7, cellSize: 46 },
+  medium: { text: '10×10 中等', size: 10, cellSize: 33 },
+  hard: { text: '12×12 困难', size: 12, cellSize: 27 }
 };
 
 // TOTAL_PUZZLES 已废弃，使用 _totalPuzzles
@@ -46,12 +53,16 @@ Page({
     lit: [],            // 被照亮的位置 lit[r][c] = true/false
     difficulty: 'easy',
     puzzleId: 0,
+    jumpInputValue: 1,
     time: 0,
     timeStr: '0:00',   // 格式化的时间字符串
     isPlaying: false,
     isComplete: false,
     cellSize: 40,
-    showAnswer: false   // 显示答案
+    showAnswer: false,   // 显示答案
+    maxLights: 0,        // 本题最大灯塔数
+    lightsCount: 0,      // 当前已放置灯塔数
+    maxPuzzles: 1000     // 当前难度的最大题号
   },
 
   timer: null,
@@ -168,15 +179,17 @@ Page({
         // 处理cell可能是对象的情况
         let cellVal = cell;
         if (typeof cell === 'object' && cell !== null && !Array.isArray(cell)) {
-          cellVal = cell.value || cell.val || '';
+          cellVal = cell.value !== undefined ? cell.value : (cell.val !== undefined ? cell.val : '');
         }
-        return mapCell(typeof cellVal === 'string' ? cellVal : '');
+        // cellVal可能是: " "(白格), "#"(黑格), 数字0-4(number或string)
+        return mapCell(cellVal);
       });
     });
 
     const lights = Array(rows).fill(null).map(() => Array(cols).fill(false));
 
     this._currentPuzzle = { grid, answer: puzzleData.answer || null };
+    const maxLights = puzzleData.maxLights || 0;
 
     this.setData({
       rows,
@@ -186,12 +199,16 @@ Page({
       lit: [],
       difficulty,
       puzzleId,
+      jumpInputValue: puzzleId + 1,
       time: 0,
       timeStr: '0:00',
       isPlaying: true,
       isComplete: false,
       showAnswer: false,
-      verifyMsg: ''
+      verifyMsg: '',
+      maxLights,
+      lightsCount: 0,
+      maxPuzzles: _totalPuzzles[difficulty] || 1000
     });
 
     this.updateLit();
@@ -247,14 +264,21 @@ Page({
     if (this.data.isComplete) return;
 
     const { row, col } = e.currentTarget.dataset;
-    const { grid, lights } = this.data;
+    const { grid, lights, maxLights, lightsCount } = this.data;
 
     // 黑格不能放灯塔
     if (grid[row][col] >= CELL_BLACK) return;
 
+    // 如果要放置灯塔，检查是否超过限制
+    if (!lights[row][col] && maxLights > 0 && lightsCount >= maxLights) {
+      wx.showToast({ title: '已达到最大灯塔数', icon: 'none' });
+      return;
+    }
+
     // 切换灯塔
+    const newCount = lights[row][col] ? lightsCount - 1 : lightsCount + 1;
     lights[row][col] = !lights[row][col];
-    this.setData({ lights });
+    this.setData({ lights, lightsCount: newCount });
 
     // 更新照亮状态
     this.updateLit();
@@ -376,6 +400,26 @@ Page({
     const nextId = (this.data.puzzleId + 1) % total;
     this.setData({ isComplete: false });
     this.loadPuzzle(this.data.difficulty, nextId);
+  },
+
+  onJumpInputInline(e) {
+    let val = parseInt(e.detail.value) || 1;
+    const max = _totalPuzzles[this.data.difficulty] || 1000;
+    // 自动修正到有效范围
+    if (val < 1) val = 1;
+    if (val > max) val = max;
+    this._jumpToId = val - 1;
+    // 实时更新输入框显示修正后的值
+    if (e.detail.value !== String(val)) {
+      this.setData({ jumpInputValue: val });
+    }
+  },
+
+  onJumpInline() {
+    // 输入时已自动修正，直接跳转
+    const targetId = this._jumpToId !== undefined ? this._jumpToId : this.data.puzzleId;
+    this.setData({ isComplete: false, jumpInputValue: '' });
+    this.loadPuzzle(this.data.difficulty, targetId);
   },
 
   onReset() {

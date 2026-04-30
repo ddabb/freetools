@@ -69,14 +69,21 @@
       <text>↩ 重置</text>
     </view>
     <view class="btn answer-btn" bindtap="onShowAnswer" wx:if="{{!showAnswer}}">
-      <text>💡 查看答案</text>
+      <text>💡 答案</text>
     </view>
     <view class="btn answer-btn hide" bindtap="onHideAnswer" wx:if="{{showAnswer}}">
-      <text>🙈 隐藏答案</text>
+      <text>🙈 隐藏</text>
     </view>
     <view class="btn next" bindtap="nextPuzzle">
       <text>▶ 下一题</text>
     </view>
+  </view>
+
+  <!-- 题号与跳关 -->
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{currentPuzzleIndex}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
   </view>
 
   <!-- 规则说明 -->

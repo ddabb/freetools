@@ -82,7 +82,9 @@ Page({
     containerHeight: 300,
     showAnswer: false,
     showRules: false,
-    loading: true
+    loading: true,
+    maxPuzzles: 200,
+    jumpInputValue: ''
   },
 
   timer: null,
@@ -580,6 +582,8 @@ Page({
   onDifficultyChange(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
     if (difficulty !== this.data.difficulty) {
+      const maxPuzzles = TOTAL_PUZZLES[difficulty];
+      this.setData({ maxPuzzles, jumpInputValue: '' });
       this.loadPuzzle(difficulty, 0);
     }
   },
@@ -587,8 +591,35 @@ Page({
   nextPuzzle() {
     const total = TOTAL_PUZZLES[this.data.difficulty] || 100;
     const nextId = (this.data.puzzleId + 1) % total;
-    this.setData({ isComplete: false });
+    this.setData({ isComplete: false, jumpInputValue: '' });
     this.loadPuzzle(this.data.difficulty, nextId);
+  },
+
+  onJumpInputInline(e) {
+    const value = e.detail.value;
+    const max = this.data.maxPuzzles;
+    let jumpInputValue = value;
+    
+    // 实时修正超出范围的值
+    if (value && parseInt(value) > max) {
+      jumpInputValue = String(max);
+    }
+    
+    this.setData({ jumpInputValue });
+  },
+
+  onJumpInline() {
+    const value = parseInt(this.data.jumpInputValue);
+    const max = this.data.maxPuzzles;
+    
+    if (!value || value < 1) {
+      this.setData({ jumpInputValue: '' });
+      return;
+    }
+    
+    const targetId = Math.min(value, max) - 1;
+    this.setData({ isComplete: false, jumpInputValue: '' });
+    this.loadPuzzle(this.data.difficulty, targetId);
   },
 
   onReset() {
@@ -613,8 +644,13 @@ Page({
     }
   },
 
-  toggleRules() {
-    this.setData({ showRules: !this.data.showRules });
+  showRulesModal() {
+    wx.showModal({
+      title: '📖 游戏规则',
+      content: '1. 点击格点间空位画线段\n2. 数字 = 四周线条数\n3. 形成闭合回路（不分叉、不断开、不交叉）\n4. 再点线段变×（标记无），再点取消',
+      showCancel: false,
+      confirmText: '知道了'
+    });
   },
 
   playSoundIfEnabled(name) {

@@ -51,7 +51,10 @@ Page({
     screenWidth: 375,
     totalValid: 16,
     showAnswer: false,
-    answerPath: []
+    answerPath: [],
+    maxPuzzles: 1000,
+    jumpInputValue: '',
+    currentPuzzleIndex: 1
   },
 
   pageId: 'one-stroke-solver',
@@ -178,12 +181,17 @@ Page({
     // 构建渲染数据（初始不显示答案）
     const gridData = this._buildGridData(grid, rows, cols, [], null);
 
+    // 更新题号显示
+    const currentPuzzleIndex = puzzleId + 1;
+    const maxPuzzles = TOTAL_PUZZLES[difficulty] || 1000;
+
     this.setData({
       rows, cols, gridData, path: [],
       difficulty, puzzleId, cellSize, totalValid,
       time: 0, timeStr: '0:00',
       isComplete: false, isPlaying: true,
-      showAnswer: false, answerPath: []
+      showAnswer: false, answerPath: [],
+      currentPuzzleIndex, maxPuzzles
     });
 
     this.startTimer();
@@ -467,5 +475,33 @@ Page({
     this.setData({ showAnswer: false });
     this._updatePath(); // 重新构建 gridData 不包含答案路径
     this.playSoundIfEnabled('click');
+  },
+
+  // 跳关输入
+  onJumpInput(e) {
+    const value = e.detail.value;
+    const max = this.data.maxPuzzles;
+    let jumpInputValue = value;
+    
+    // 实时修正超出范围的值
+    if (value && parseInt(value) > max) {
+      jumpInputValue = String(max);
+    }
+    this.setData({ jumpInputValue });
+  },
+
+  // 执行跳关
+  onJump() {
+    const value = parseInt(this.data.jumpInputValue);
+    const max = this.data.maxPuzzles;
+    
+    if (!value || value < 1) {
+      this.setData({ jumpInputValue: '' });
+      return;
+    }
+    
+    const targetIndex = Math.min(value, max) - 1; // puzzleId 从 0 开始
+    this.setData({ jumpInputValue: '', isComplete: false });
+    this.startGame(_game.difficulty, targetIndex);
   }
 });

@@ -365,3 +365,38 @@ page {
   color: #475569;
   line-height: 1.8;
 }
+
+/* ==================== 题号与跳关 ==================== */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 16rpx 20rpx 24rpx;
+}
+
+.puzzle-info {
+  font-size: 28rpx;
+  color: #475569;
+  font-weight: 500;
+}
+
+.jump-input {
+  width: 100rpx;
+  height: 56rpx;
+  padding: 0 16rpx;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  text-align: center;
+  background: #fff;
+}
+
+.btn-jump {
+  padding: 12rpx 24rpx;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}

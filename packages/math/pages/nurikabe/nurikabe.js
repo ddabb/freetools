@@ -34,7 +34,9 @@ Page({
     isComplete: false,
     cellSize: 50,
     showAnswer: false,
-    screenWidth: 375
+    screenWidth: 375,
+    maxPuzzles: 1000,
+    jumpInputValue: ''
   },
 
   timer: null,
@@ -277,6 +279,8 @@ Page({
   onDifficultyChange(e) {
     const difficulty = e.currentTarget.dataset.difficulty;
     if (difficulty !== this.data.difficulty) {
+      const maxPuzzles = TOTAL_PUZZLES[difficulty];
+      this.setData({ maxPuzzles, jumpInputValue: '' });
       this.loadPuzzle(difficulty, 0);
     }
   },
@@ -286,7 +290,34 @@ Page({
     const total = TOTAL_PUZZLES[difficulty] || 1000;
     const nextId = (puzzleId + 1) % total;
     this.preloadNext(difficulty, nextId);
+    this.setData({ jumpInputValue: '' });
     this.loadPuzzle(difficulty, nextId);
+  },
+
+  onJumpInputInline(e) {
+    const value = e.detail.value;
+    const max = this.data.maxPuzzles;
+    let jumpInputValue = value;
+    
+    if (value && parseInt(value) > max) {
+      jumpInputValue = String(max);
+    }
+    
+    this.setData({ jumpInputValue });
+  },
+
+  onJumpInline() {
+    const value = parseInt(this.data.jumpInputValue);
+    const max = this.data.maxPuzzles;
+    
+    if (!value || value < 1) {
+      this.setData({ jumpInputValue: '' });
+      return;
+    }
+    
+    const targetId = Math.min(value, max) - 1;
+    this.setData({ jumpInputValue: '' });
+    this.loadPuzzle(this.data.difficulty, targetId);
   },
 
   onReset() {

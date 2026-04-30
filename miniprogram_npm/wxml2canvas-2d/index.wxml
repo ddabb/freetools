@@ -1,0 +1,7 @@
+<canvas
+  wx:if="{{!offscreen}}"
+  type="2d"
+  id="wxml2canvas"
+  class="wxml2canvas box-class"
+  style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+/>
