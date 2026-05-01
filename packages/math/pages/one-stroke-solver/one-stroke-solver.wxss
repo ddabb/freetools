@@ -204,6 +204,20 @@ page {
   opacity: 0.9;
 }
 
+/* 答案路径-起点（绿色标记） */
+.answer-start {
+  color: #fef08a !important;
+  text-shadow: 0 0 8rpx rgba(254, 240, 138, 0.8);
+  font-size: 32rpx;
+}
+
+/* 答案路径-终点（红色标记） */
+.answer-end {
+  color: #fca5a5 !important;
+  text-shadow: 0 0 8rpx rgba(252, 165, 165, 0.8);
+  font-size: 32rpx;
+}
+
 @keyframes answerPulse {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }

@@ -4,7 +4,7 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1777522339609, function(require, module, exports) {
+__DEFINE__(1777622356630, function(require, module, exports) {
 // wordbank package - exports all copywriting data
 const lifeData = require('./data/life');
 const loveData = require('./data/love');
@@ -73,8 +73,8 @@ exports.allCategories = [
   laserData
 ];
 
-}, function(modId) {var map = {"./data/life":1777522339610,"./data/love":1777522339611,"./data/friendship":1777522339612,"./data/family":1777522339613,"./data/travel":1777522339614,"./data/food":1777522339615,"./data/work":1777522339616,"./data/life-style":1777522339617,"./data/spring-festival":1777522339618,"./data/birthday":1777522339619,"./data/national-day":1777522339620,"./data/teacher-day":1777522339621,"./data/new-year":1777522339622,"./data/labor-day":1777522339623,"./data/children-day":1777522339624,"./data/mid-autumn":1777522339625,"./data/study":1777522339626,"./data/nurses-day":1777522339627,"./data/programmer-day":1777522339628,"./data/laser":1777522339629}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339610, function(require, module, exports) {
+}, function(modId) {var map = {"./data/life":1777622356631,"./data/love":1777622356632,"./data/friendship":1777622356633,"./data/family":1777622356634,"./data/travel":1777622356635,"./data/food":1777622356636,"./data/work":1777622356637,"./data/life-style":1777622356638,"./data/spring-festival":1777622356639,"./data/birthday":1777622356640,"./data/national-day":1777622356641,"./data/teacher-day":1777622356642,"./data/new-year":1777622356643,"./data/labor-day":1777622356644,"./data/children-day":1777622356645,"./data/mid-autumn":1777622356646,"./data/study":1777622356647,"./data/nurses-day":1777622356648,"./data/programmer-day":1777622356649,"./data/laser":1777622356650}; return __REQUIRE__(map[modId], modId); })
+__DEFINE__(1777622356631, function(require, module, exports) {
 // 人生感悟文案数据
 module.exports = {
   id: 'life',
@@ -136,7 +136,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339611, function(require, module, exports) {
+__DEFINE__(1777622356632, function(require, module, exports) {
 // 爱情文案数据
 module.exports = {
   id: 'love',
@@ -180,7 +180,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339612, function(require, module, exports) {
+__DEFINE__(1777622356633, function(require, module, exports) {
 // 友情文案数据
 module.exports = {
   id: 'friendship',
@@ -215,7 +215,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339613, function(require, module, exports) {
+__DEFINE__(1777622356634, function(require, module, exports) {
 // 亲情文案数据
 module.exports = {
   id: 'family',
@@ -251,7 +251,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339614, function(require, module, exports) {
+__DEFINE__(1777622356635, function(require, module, exports) {
 // 旅行文案数据
 module.exports = {
   id: 'travel',
@@ -287,7 +287,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339615, function(require, module, exports) {
+__DEFINE__(1777622356636, function(require, module, exports) {
 // 美食文案数据
 module.exports = {
   id: 'food',
@@ -323,7 +323,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339616, function(require, module, exports) {
+__DEFINE__(1777622356637, function(require, module, exports) {
 // 职场文案数据
 module.exports = {
   id: 'work',
@@ -360,7 +360,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339617, function(require, module, exports) {
+__DEFINE__(1777622356638, function(require, module, exports) {
 // 生活方式文案数据
 module.exports = {
   id: 'life-style',
@@ -396,7 +396,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339618, function(require, module, exports) {
+__DEFINE__(1777622356639, function(require, module, exports) {
 // 春节文案数据
 module.exports = {
   id: 'spring-festival',
@@ -417,7 +417,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339619, function(require, module, exports) {
+__DEFINE__(1777622356640, function(require, module, exports) {
 // 生日祝福文案数据
 module.exports = {
   id: 'birthday',
@@ -443,7 +443,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339620, function(require, module, exports) {
+__DEFINE__(1777622356641, function(require, module, exports) {
 // 国庆节文案数据
 module.exports = {
   id: 'national-day',
@@ -469,7 +469,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339621, function(require, module, exports) {
+__DEFINE__(1777622356642, function(require, module, exports) {
 // 教师节文案数据
 module.exports = {
   id: 'teacher-day',
@@ -495,7 +495,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339622, function(require, module, exports) {
+__DEFINE__(1777622356643, function(require, module, exports) {
 // 元旦文案数据
 module.exports = {
   id: 'new-year',
@@ -521,7 +521,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339623, function(require, module, exports) {
+__DEFINE__(1777622356644, function(require, module, exports) {
 // 劳动节文案数据
 module.exports = {
   id: 'labor-day',
@@ -547,7 +547,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339624, function(require, module, exports) {
+__DEFINE__(1777622356645, function(require, module, exports) {
 // 儿童节文案数据
 module.exports = {
   id: 'children-day',
@@ -573,7 +573,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339625, function(require, module, exports) {
+__DEFINE__(1777622356646, function(require, module, exports) {
 // 中秋节文案数据
 module.exports = {
   id: 'mid-autumn',
@@ -599,7 +599,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339626, function(require, module, exports) {
+__DEFINE__(1777622356647, function(require, module, exports) {
 // 学习文案数据
 module.exports = {
   id: 'study',
@@ -625,7 +625,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339627, function(require, module, exports) {
+__DEFINE__(1777622356648, function(require, module, exports) {
 // 护士节文案数据
 module.exports = {
   id: 'nurses-day',
@@ -651,7 +651,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339628, function(require, module, exports) {
+__DEFINE__(1777622356649, function(require, module, exports) {
 // 程序员节文案数据
 module.exports = {
   id: 'programmer-day',
@@ -677,7 +677,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-__DEFINE__(1777522339629, function(require, module, exports) {
+__DEFINE__(1777622356650, function(require, module, exports) {
 // 激光文案数据
 module.exports = {
   id: 'laser',
@@ -708,7 +708,7 @@ module.exports = {
   ]
 };
 }, function(modId) { var map = {}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1777522339609);
+return __REQUIRE__(1777622356630);
 })()
 //miniprogram-npm-outsideDeps=[]
 //# sourceMappingURL=index.js.map

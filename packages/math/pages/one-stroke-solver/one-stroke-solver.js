@@ -35,6 +35,9 @@ let _game = {
   totalValid: 16
 };
 
+// 答案动画定时器
+let _answerAnimTimer = null;
+
 Page({
   data: {
     rows: 4,
@@ -52,6 +55,7 @@ Page({
     totalValid: 16,
     showAnswer: false,
     answerPath: [],
+    answerAnimIndex: -1,
     maxPuzzles: 1000,
     jumpInputValue: '',
     currentPuzzleIndex: 1
@@ -63,6 +67,7 @@ Page({
   _tapHandled: false,     // 防止tap和touch重复处理同一次点击
 
   onLoad(options) {
+    console.log('[OneStroke] onLoad options:', options);
     const sysInfo = wx.getSystemInfoSync();
     this.setData({ screenWidth: sysInfo.screenWidth });
 
@@ -105,13 +110,35 @@ Page({
   },
 
   startGame(difficulty, puzzleId) {
+    console.log('[OneStroke] startGame', difficulty, puzzleId);
+
+    // 清除答案动画定时器
+    if (_answerAnimTimer) {
+      clearInterval(_answerAnimTimer);
+      _answerAnimTimer = null;
+    }
+
     wx.showLoading({ title: '加载中...' });
     const fileId = String(puzzleId + 1).padStart(4, '0');
+    const cacheKey = 'cdn_onestroke_' + difficulty + '_' + fileId;
     const url = `${CDN_BASE}${difficulty}-${fileId}.json?t=${Date.now()}`;
+
+    // 尝试缓存
+    const cached = wx.getStorageSync(cacheKey);
+    if (cached && cached.holes && cached.answer) {
+      console.log('[OneStroke] 从缓存加载', cacheKey);
+      wx.hideLoading();
+      this.initGame(difficulty, puzzleId, cached.holes, cached.answer);
+      return;
+    }
+
+    // 递增请求ID，用于防止竞态条件
+    const loadId = ++this._loadId || 1;
 
     wx.request({
       url,
       success: (res) => {
+        console.log('[OneStroke] CDN res', res.statusCode, url);
         wx.hideLoading();
         if (res.statusCode !== 200 || !res.data) {
           // CDN失败，用内置生成器
@@ -120,9 +147,18 @@ Page({
         }
 
         const puzzle = res.data;
+        console.log('[OneStroke] puzzle holes:', puzzle.holes, 'ans:', puzzle.answer);
+        console.log('[OneStroke] answer:', JSON.stringify(puzzle.answer));
+
+        // 写入缓存
+        if (puzzle.holes && puzzle.answer) {
+          wx.setStorageSync(cacheKey, { holes: puzzle.holes, answer: puzzle.answer });
+        }
+
         this.initGame(difficulty, puzzleId, puzzle.holes || [], puzzle.answer || null);
       },
       fail: () => {
+        console.log('[OneStroke] CDN fail, local');
         wx.hideLoading();
         this.initLocalGame(difficulty);
       }
@@ -130,10 +166,12 @@ Page({
   },
 
   initLocalGame(difficulty) {
+    console.log('[OneStroke] initLocalGame', difficulty);
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
     try {
       const holes = GridPathFinder.generateValidPuzzle(rows, cols, 0.3);
+      console.log('[OneStroke] generate holes', holes);
       const finder = new GridPathFinder(rows, cols, holes);
       let start = 0;
       for (let i = 0; i < rows * cols; i++) {
@@ -142,6 +180,7 @@ Page({
       finder.setPassedPotAndPath(0, start, true);
       finder.run(0);
       const answer = finder.getPath();
+      console.log('[OneStroke] answer', answer ? answer.length : 'null');
       this.initGame(difficulty, 0, holes, answer);
     } catch (e) {
       console.error('本地生成题目失败:', e);
@@ -150,6 +189,7 @@ Page({
   },
 
   initGame(difficulty, puzzleId, holes, answer) {
+    console.log('[OneStroke] initGame', difficulty, puzzleId, 'holes:', JSON.stringify(holes), 'ans:', JSON.stringify(answer));
     const cfg = DIFFICULTY_CONFIG[difficulty] || DIFFICULTY_CONFIG.easy;
     const { rows, cols } = cfg;
     const cellSize = this.calcCellSize(rows, cols);
@@ -171,7 +211,9 @@ Page({
         }
         finder.setPassedPotAndPath(0, start, true);
         const hasSolution = finder.run(0);
+        console.log('[OneStroke] run result', hasSolution);
         _game.answerPath = hasSolution ? finder.getPath() : null;
+        console.log('[OneStroke] answerPath', _game.answerPath ? _game.answerPath.length : 0);
       } catch (e) {
         console.error('计算答案路径失败:', e);
         _game.answerPath = null;
@@ -190,7 +232,7 @@ Page({
       difficulty, puzzleId, cellSize, totalValid,
       time: 0, timeStr: '0:00',
       isComplete: false, isPlaying: true,
-      showAnswer: false, answerPath: [],
+      showAnswer: false, answerPath: [], answerAnimIndex: -1,
       currentPuzzleIndex, maxPuzzles
     });
 
@@ -198,18 +240,34 @@ Page({
     this.playSoundIfEnabled('click');
   },
 
-  _buildGridData(grid, rows, cols, path, answerPath) {
+  _buildGridData(grid, rows, cols, path, answerPath, answerAnimIndex = -1) {
     return grid.map((v, i) => {
       const visited = path.indexOf(i) >= 0;
       const pathIndex = visited ? path.indexOf(i) : -1;
       const answerVisited = !visited && answerPath && answerPath.indexOf(i) >= 0;
       const answerPathIndex = answerVisited ? answerPath.indexOf(i) : -1;
+
+      let answerType = '';
+      if (answerVisited && answerPath && answerPath.length > 1) {
+        const idx = answerPath.indexOf(i);
+        if (idx === 0) {
+          answerType = 'start';
+        } else if (idx === answerPath.length - 1) {
+          answerType = 'end';
+        } else {
+          answerType = 'path';
+        }
+      }
+
+      const shouldShowAnswer = answerAnimIndex >= 0 && answerVisited && answerPathIndex <= answerAnimIndex;
+
       return {
-        type: v,       // 0=有效, 1=洞
+        type: v,
         visited,
         pathIndex,
-        answerVisited,
-        answerPathIndex
+        answerVisited: shouldShowAnswer,
+        answerPathIndex,
+        answerType
       };
     });
   },
@@ -223,6 +281,7 @@ Page({
 
   // 点击格子
   onCellTap(e) {
+    console.log('[OneStroke] onCellTap idx:', e.currentTarget.dataset.idx);
     if (_game.isComplete || !_game.isPlaying) return;
 
     // 防止tap和touch重复处理同一次点击
@@ -243,6 +302,7 @@ Page({
     // 已在路径中 → 点击已绘制的格子，把之后的格子截断
     const existingIdx = path.indexOf(idx);
     if (existingIdx >= 0) {
+      console.log('[OneStroke] truncate', existingIdx);
       _game.path = path.slice(0, existingIdx);
       this._updatePath();
       this.playSoundIfEnabled('click');
@@ -253,13 +313,16 @@ Page({
 
     // 第一个格子：直接加入
     if (path.length === 0) {
+      console.log('[OneStroke] first', idx);
       _game.path = [idx];
     } else {
       const last = path[path.length - 1];
       if (!this._adjacent(last, idx, cols)) {
         // 不相邻：清空旧路径，以该格子为新起点
+        console.log('[OneStroke] reset/adjacent last:', last, 'idx:', idx);
         _game.path = [idx];
       } else {
+        console.log('[OneStroke] add', idx);
         _game.path.push(idx);
       }
     }
@@ -268,6 +331,7 @@ Page({
     this.playSoundIfEnabled('click');
 
     // 检查是否完成
+    console.log('[OneStroke] path len', _game.path.length, 'valid', _game.totalValid);
     if (_game.path.length === _game.totalValid) {
       this._onComplete();
     }
@@ -275,6 +339,7 @@ Page({
 
   // 触摸开始
   onTouchStart(e) {
+    console.log('[OneStroke] onTouchStart', e.currentTarget.dataset.idx);
     if (_game.isComplete || !_game.isPlaying) return;
     this._tapHandled = true;   // 标记本次点击已被touch处理，阻止onCellTap再次处理
     this._touchActive = true;
@@ -357,7 +422,8 @@ Page({
   _updatePath() {
     const { grid, rows, cols, path } = _game;
     const answerPath = this.data.showAnswer ? _game.answerPath : null;
-    const gridData = this._buildGridData(grid, rows, cols, path, answerPath);
+    const answerAnimIndex = this.data.showAnswer ? this.data.answerAnimIndex : -1;
+    const gridData = this._buildGridData(grid, rows, cols, path, answerPath, answerAnimIndex);
     this.setData({ gridData, path: path.slice() });
   },
 
@@ -429,6 +495,12 @@ Page({
   },
 
   nextPuzzle() {
+    // 清除答案动画定时器
+    if (_answerAnimTimer) {
+      clearInterval(_answerAnimTimer);
+      _answerAnimTimer = null;
+    }
+
     const { difficulty } = _game;
     const total = TOTAL_PUZZLES[difficulty] || 200;
     const nextId = (_game.puzzleId + 1) % total;
@@ -459,21 +531,83 @@ Page({
     }
   },
 
-  // 查看答案：显示可行解路径
+  // 查看答案：显示可行解路径（带循环动画效果）
   onShowAnswer() {
     if (!_game.answerPath) {
       wx.showToast({ title: '暂无答案', icon: 'none' });
       return;
     }
-    this.setData({ showAnswer: true });
-    this._updatePath(); // 重新构建 gridData 包含答案路径
+
+    // 清除之前的动画定时器
+    if (_answerAnimTimer) {
+      clearInterval(_answerAnimTimer);
+      _answerAnimTimer = null;
+    }
+
+    // 保存用户路径，隐藏时需要恢复
+    this._savedPath = _game.path.slice();
+    this._savedTime = _game.time;
+
+    // 清空用户路径，显示纯答案
+    _game.path = [];
+    _game.time = 0;
+    this.stopTimer();
+
+    this.setData({ showAnswer: true, answerAnimIndex: -1, path: [], time: 0, timeStr: '0:00' });
+    this._updatePath();
+
+    // 启动循环动画
+    const totalSteps = _game.answerPath.length;
+
+    const runAnimation = () => {
+      let animIndex = 0;
+
+      _answerAnimTimer = setInterval(() => {
+        animIndex++;
+        this.setData({ answerAnimIndex: animIndex });
+        this._updatePath();
+
+        if (animIndex >= totalSteps - 1) {
+          clearInterval(_answerAnimTimer);
+          _answerAnimTimer = null;
+          // 等待一小段时间后重新开始动画
+          setTimeout(() => {
+            if (this.data.showAnswer) {
+              runAnimation();
+            }
+          }, 500);
+        }
+      }, 150);
+    };
+
+    runAnimation();
     this.playSoundIfEnabled('click');
   },
 
   // 隐藏答案
   onHideAnswer() {
-    this.setData({ showAnswer: false });
-    this._updatePath(); // 重新构建 gridData 不包含答案路径
+    // 清除动画定时器
+    if (_answerAnimTimer) {
+      clearInterval(_answerAnimTimer);
+      _answerAnimTimer = null;
+    }
+
+    // 恢复用户路径
+    _game.path = this._savedPath || [];
+    _game.time = this._savedTime || 0;
+    this._savedPath = null;
+    this._savedTime = null;
+
+    const timeStr = this.formatTime(_game.time);
+
+    this.setData({ showAnswer: false, answerAnimIndex: -1, path: _game.path, time: _game.time, timeStr });
+    this._updatePath();
+
+    // 恢复计时器
+    if (_game.path.length > 0 && !_game.isComplete) {
+      this.startTimer();
+    }
+
     this.playSoundIfEnabled('click');
   },
 

@@ -79,7 +79,7 @@ Page({
     this.setData({ currentPuzzleIndex: puzzleIndex, size });
     
     const filename = `${size}-${String(puzzleIndex).padStart(4, '0')}.json`;
-    const url = `${CDN_BASE}/${dir}/${filename}`;
+    const url = `${CDN_BASE}/${dir}/${filename}?t=${Date.now()}`;
     
     console.debug('[数壹] 加载题目:', url);
     

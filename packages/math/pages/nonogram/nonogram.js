@@ -1,7 +1,7 @@
-// 数织 Nonogram - CDN版（约束传播求解）
+// 数织 Nonogram - CDN版（约束传播求解�?
 var SIZES = { easy: 5, medium: 8, hard: 10 };
 var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
-var DIFF_TEXT = { easy: '简单 5x5', medium: '中等 8x8', hard: '困难 10x10' };
+var DIFF_TEXT = { easy: '简�?5x5', medium: '中等 8x8', hard: '困难 10x10' };
 var RECORDS_KEY = 'nonogram_records_v7';
 
 var utils = require('../../../../utils/index');
@@ -90,14 +90,14 @@ function solveLine(hints, line, n, mode) {
     if (mustFillFlag) mustFill.push(i);
     if (mustEmptyFlag) mustEmpty.push(i);
   }
-  // 填充模式特殊规则：若已填格子数等于提示数总和，且当前编码与提示数匹配，
+  // 填充模式特殊规则：若已填格子数等于提示数总和，且当前编码与提示数匹配�?
   // 则剩余未标记的格子（必须为空的）全部自动打叉
   if (mode === 'fill') {
     var fc = 0;
     for (var fi = 0; fi < n; fi++) { if (line[fi] === 1) fc++; }
     var hs = hints.reduce(function(a, b) { return a + b; }, 0);
     if (fc === hs) {
-      // 计算当前已填格子的编码（run-length 形式）
+      // 计算当前已填格子的编码（run-length 形式�?
       var enc = [];
       var runLen = 0, inRun = false;
       for (var ei = 0; ei < n; ei++) {
@@ -169,7 +169,7 @@ function applyConstraints(grid, rowHints, colHints, size) {
 Page({
   data: {
     difficulty: 'easy',
-    difficultyText: '简单 5x5',
+    difficultyText: '简�?5x5',
     currentLevel: 1,
     colHints: [],
     rowHints: [],
@@ -190,7 +190,7 @@ Page({
     showLevelSelector: false,
     completedCount: 0,
     levelNumbers: [],
-    soundEnabled: true // 音效开关状态
+    soundEnabled: true // 音效开关状�?
   },
 
   _timer: null,
@@ -205,12 +205,12 @@ Page({
     preloadSounds(['click', 'win']);
     var soundEnabled = utils.isPageSoundEnabled('nonogram');
     this.setData({ soundEnabled });
-    // 尝试恢复上次的游戏进度
+    // 尝试恢复上次的游戏进�?
     var saved = wx.getStorageSync('nonogram_saved');
     if (saved && saved.grid && saved.grid.length > 0) {
       this.setData({
         difficulty: saved.difficulty || 'easy',
-        difficultyText: saved.difficultyText || '简单 5x5',
+        difficultyText: saved.difficultyText || '简�?5x5',
         gridSize: saved.gridSize || 5,
         grid: saved.grid,
         colHints: saved.colHints || [],
@@ -279,9 +279,10 @@ Page({
     if (cached) return Promise.resolve(cached);
     var filename = difficulty + '-' + String(level).padStart(4, '0') + '.json';
     var self = this;
+    console.log('[nonogram] 请求URL:', CDN_BASE + '/nonogram/' + filename + '?t=' + Date.now());
     return new Promise(function(resolve, reject) {
       wx.request({
-        url: CDN_BASE + '/nonogram/' + filename,
+        url: CDN_BASE + '/nonogram/' + filename + '?t=' + Date.now(),
         method: 'GET',
         timeout: 8000,
         success: function(r) {
@@ -446,14 +447,14 @@ Page({
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    // 仅在同一行+同一列内做约束传播（不影响其他行列）
-    // 每轮：先解行→标记→再解列→标记，循环直到收敛
+    // 仅在同一�?同一列内做约束传播（不影响其他行列）
+    // 每轮：先解行→标记→再解列→标记，循环直到收�?
     var changed = true;
     var iter = 0;
     while (changed) {
       iter++;
       changed = false;
-      // 求解当前行
+      // 求解当前�?
       var rowLine = [];
       for (var cc = 0; cc < size; cc++) {
         rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
@@ -470,14 +471,14 @@ Page({
           if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
         }
       }
-      // mustEmpty仅在rowSatisfied时触发（填充模式编码匹配会添加到mustEmpty）
+      // mustEmpty仅在rowSatisfied时触发（填充模式编码匹配会添加到mustEmpty�?
       if (rowSatisfied) {
         for (var i = 0; i < rowRes.mustEmpty.length; i++) {
           var cc = rowRes.mustEmpty[i];
           if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
         }
       }
-      // 求解当前列
+      // 求解当前�?
       var colLine = [];
       for (var rr = 0; rr < size; rr++) {
         colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
@@ -494,7 +495,7 @@ Page({
           if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
         }
       }
-      // mustEmpty仅在colSatisfied时触发
+      // mustEmpty仅在colSatisfied时触�?
       if (colSatisfied) {
         for (var i = 0; i < colRes.mustEmpty.length; i++) {
           var rr = colRes.mustEmpty[i];

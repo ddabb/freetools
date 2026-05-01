@@ -44,7 +44,9 @@
               <text wx:if="{{cell.type === 1}}" class="cell-text hole-text">×</text>
               <!-- 用户路径序号 -->
               <text wx:elif="{{cell.visited}}" class="cell-text path-num">{{cell.pathIndex + 1}}</text>
-              <!-- 答案路径序号（不与用户路径重叠时显示） -->
+              <!-- 答案路径（起点、终点、中间路径用不同样式） -->
+              <text wx:elif="{{cell.answerVisited && cell.answerType === 'start'}}" class="cell-text answer-start">{{cell.answerPathIndex + 1}}</text>
+              <text wx:elif="{{cell.answerVisited && cell.answerType === 'end'}}" class="cell-text answer-end">{{cell.answerPathIndex + 1}}</text>
               <text wx:elif="{{cell.answerVisited}}" class="cell-text answer-num">{{cell.answerPathIndex + 1}}</text>
             </view>
           </view>

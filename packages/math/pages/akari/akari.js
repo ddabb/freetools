@@ -126,6 +126,7 @@ Page({
 
     self.setData({ isPlaying: false });
 
+    console.log('[akari] URL:', CDN_BASE + '/' + filename + '?t=' + Date.now());
     wx.request({
       url: CDN_BASE + '/' + filename + '?t=' + Date.now(),
       method: 'GET',

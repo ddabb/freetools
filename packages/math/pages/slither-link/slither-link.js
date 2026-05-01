@@ -151,6 +151,7 @@ Page({
     
     self.setData({ loading: true });
     
+    console.log('[slither-link] URL:', CDN_BASE + '/' + filename + '?t=' + Date.now());
     wx.request({
       url: CDN_BASE + '/' + filename + '?t=' + Date.now(),
       method: 'GET',
