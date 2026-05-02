@@ -36,7 +36,8 @@ Page({
     showAnswer: false,
     screenWidth: 375,
     maxPuzzles: 1000,
-    jumpInputValue: ''
+    jumpInputValue: '',
+    showRules: false
   },
 
   timer: null,
@@ -76,11 +77,10 @@ Page({
 
   // 计算格子大小，适配屏幕
   calcCellSize(rows, cols) {
-    const sw = this.data.screenWidth;
-    // 游戏区最大占屏幕 95%，两边各留边距
-    const maxGridPx = sw * 0.95;
+    const sw = this.data.screenWidth || 375;
+    const maxGridPx = sw * 0.85; // 稍微缩小一点，确保不超出屏幕
     const rawSize = Math.floor(maxGridPx / Math.max(rows, cols));
-    return Math.max(24, Math.min(rawSize, 50));
+    return Math.max(20, Math.min(rawSize, 45)); // 稍微调整最大最小值
   },
 
   loadPuzzle(difficulty, puzzleId) {
@@ -102,6 +102,7 @@ Page({
         const rows = puzzle.size;
         const cols = puzzle.size;
         const numbers = puzzle.grid;
+        const solution = puzzle.solution;
         const cellSize = this.calcCellSize(rows, cols);
 
         // 初始化：数字格为白，其他未确定
@@ -110,7 +111,7 @@ Page({
         );
 
         this.setData({
-          rows, cols, numbers, board,
+          rows, cols, numbers, solution, board,
           difficulty,
           puzzleId,
           time: 0,
@@ -118,7 +119,8 @@ Page({
           cellSize,
           isPlaying: true,
           isComplete: false,
-          showAnswer: false
+          showAnswer: false,
+          maxPuzzles: TOTAL_PUZZLES[difficulty] || 1000
         });
 
         this.startTimer();
@@ -294,7 +296,7 @@ Page({
     this.loadPuzzle(difficulty, nextId);
   },
 
-  onJumpInputInline(e) {
+  onJumpInput(e) {
     const value = e.detail.value;
     const max = this.data.maxPuzzles;
     let jumpInputValue = value;
@@ -306,7 +308,7 @@ Page({
     this.setData({ jumpInputValue });
   },
 
-  onJumpInline() {
+  onJump() {
     const value = parseInt(this.data.jumpInputValue);
     const max = this.data.maxPuzzles;
     
@@ -327,15 +329,18 @@ Page({
   onShowAnswer() {
     const showAnswer = !this.data.showAnswer;
     if (showAnswer) {
+      const { rows, cols, solution } = this.data;
+      if (!solution) {
+        wx.showToast({ title: '暂无答案', icon: 'none' });
+        return;
+      }
+      this.setData({ showAnswer, board: solution });
+    } else {
       const { rows, cols, numbers } = this.data;
       const board = Array(rows).fill(null).map((_, r) =>
-        Array(cols).fill(null).map((_, c) =>
-          numbers[r][c] > 0 ? CELL_WHITE : CELL_BLACK
-        )
+        Array(cols).fill(null).map((_, c) => numbers[r][c] > 0 ? CELL_WHITE : null)
       );
       this.setData({ showAnswer, board });
-    } else {
-      this.loadPuzzle(this.data.difficulty, this.data.puzzleId);
     }
   },
 
@@ -349,5 +354,17 @@ Page({
     if (isPageSoundEnabled(this.pageId)) {
       playSound(name, { pageId: this.pageId });
     }
+  },
+
+  onShowRules() {
+    this.setData({ showRules: true });
+  },
+
+  onHideRules() {
+    this.setData({ showRules: false });
+  },
+
+  stopPropagation() {
+    // 阻止事件冒泡
   }
 });

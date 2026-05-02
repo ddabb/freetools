@@ -25,12 +25,12 @@
 | 数独生成器 | ✅ 已上线 | `packages/math/pages/sudoku-generator/` | 生成题目，用户求解 |
 | 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子 |
 | 躲避牛蛙 (frog-escape) | ✅ 已上线 | `packages/math/pages/frog-escape/` | 扫雷换皮（🐸主题） |
-| 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典黑白棋游戏 |
-| 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 难度决定尺寸，顺序下一题，跳关选择 |
+| 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典对战游戏 |
+| 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 难度决定尺寸，顺序下一题 |
 | 数回 (slither-link) | ✅ 已上线 | `packages/math/pages/slither-link/` | 规则弹窗，跳关选择 |
 | 灯塔 (akari) | ✅ 已上线 | `packages/math/pages/akari/` | 灯塔数量限制，跳关选择 |
 | 数墙 (nurikabe) | ✅ 已上线 | `packages/math/pages/nurikabe/` | 需验证 |
-| 一笔画 (one-stroke-solver) | ✅ 已上线 | `packages/math/pages/one-stroke-solver/` | 顺序下一题，跳关选择 |
+| 一笔画 (one-stroke-solver) | ✅ 已上线 | `packages/math/pages/one-stroke-solver/` | 顺序下一题，跳关选择，答案动画 |
 | 战舰 (battleship) | ⏳ 未开始 | - | - |
 | 幻方 (magic-square) | ⏳ 未开始 | - | - |
 | 推箱子 (sokoban) | ⏳ 未开始 | - | - |
@@ -293,28 +293,64 @@ function minimax(board, depth, alpha, beta, maximizing, player) {
 
 #### 规则
 - N×N 格子，部分格子有数字
-- 数字表示该格子所属白色区域的大小
-- 目标：涂黑部分格子，使得：
-  1. 每个数字格子属于一个大小等于该数字的白色连通区域
-  2. 所有黑色格子连通
-  3. 没有2×2的全黑区域
+- **白色组成「房间」**，黑色组成「数墙」
+- **数字表示该格所属「白色房间」的格子数（不含数字格本身）**
+- 每个白色房间只能有 **1 个数字格**
+- **目标：涂黑部分格子（数墙），使得：**
+  1. 每个数字格属于一个大小等于该数字的白色房间
+  2. 所有黑色格子（数墙）连通
+  3. 没有 2×2 的全黑区域
 
 #### 难度设计
 | 难度 | 格子数 |
 |------|--------|
 | 简单 | 5×5 |
-| 中等 | 10×10 |
-| 困难 | 15×15 |
+| 中等 | 7×7 |
+| 困难 | 10×10 |
 
 #### 交互设计
-- 点击格子：涂黑/涂白
-- 显示白色区域大小
+- 点击格子：白格 ↔ 黑格 互相切换
+- 显示数字提示
 - 完成时验证所有规则
 
 #### 技术要点
 - 连通区域计算：BFS/DFS
 - 2×2黑格检测：遍历检查
 - 题目生成：先生成解，再提取数字提示
+
+#### 完整示例
+
+**题目（输入）：**
+```
+5 . . . .
+2 . . . .
+3 5 2 . 5
+. . . . 1
+. . . . .
+```
+（数字 = 白色房间大小，. = 待填充的空格）
+
+**解（输出）：**
+```
+■ ■ 5 ■ ■
+■ ■ ■ ■ ■
+3 ■ 2 ■ 5
+■ ■ ■ ■ ■
+■ ■ ■ ■ ■
+```
+（■ = 黑色数墙，白色 = 房间）
+
+**验证：**
+| 白色房间 | 包含数字 | 房间大小 | 是否有效 |
+|----------|----------|----------|----------|
+| 房间1 | 5 | 5 | ✅ |
+| 房间2 | 2 | 2 | ✅ |
+| 房间3 | 3 | 3 | ✅ |
+| 房间4 | 5 | 5 | ✅ |
+| 房间5 | 1 | 1 | ✅ |
+
+**数墙连通性：** 所有■相连 ✅
+**2×2检查：** 无全黑2×2 ✅
 
 ---
 
@@ -505,7 +541,7 @@ utils/
 - [x] 数回（Slither Link）：核心逻辑 + UI（含验证按钮）
 - [x] 灯塔（Akari）：核心逻辑 + UI（含校验反馈）
 - [x] 数墙（Nurikabe）：核心逻辑 + UI（⚠️ 需验证）
-- [ ] 测试 + 优化
+- [x] 一笔画（One-Stroke）：核心逻辑 + UI + CDN题库（3000题）+ 答案动画
 
 ### Phase 5: P3 游戏 (按需)
 - [ ] 战舰（Battleship）：核心逻辑 + UI
@@ -697,7 +733,7 @@ npm install @blex41/word-search
 | 数回 | ✅ 已上线 | Simon Tatham, Puzzlink |
 | 灯塔 | ✅ 已上线 | Simon Tatham, Puzzlink |
 | 数墙 | ✅ 已上线 | nurikabe solver |
-| 一笔画 | ✅ 已上线 | GridPathFinder |
+| 一笔画 | ✅ 已上线 | GridPathFinder + Warnsdorff算法 |
 
 ---
 

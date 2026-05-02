@@ -1,7 +1,8 @@
-// 数织 Nonogram - CDN版（约束传播求解�?
-var SIZES = { easy: 5, medium: 8, hard: 10 };
+// 数织 Nonogram - CDN版（约束传播求解）
+var SIZES = { easy: 6, medium: 8, hard: 10 };
 var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
-var DIFF_TEXT = { easy: '简�?5x5', medium: '中等 8x8', hard: '困难 10x10' };
+var DIFF_TEXT = { easy: '简单 6x6', medium: '中等 8x8', hard: '困难 10x10' };
+var TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 var RECORDS_KEY = 'nonogram_records_v7';
 
 var utils = require('../../../../utils/index');
@@ -90,14 +91,11 @@ function solveLine(hints, line, n, mode) {
     if (mustFillFlag) mustFill.push(i);
     if (mustEmptyFlag) mustEmpty.push(i);
   }
-  // 填充模式特殊规则：若已填格子数等于提示数总和，且当前编码与提示数匹配�?
-  // 则剩余未标记的格子（必须为空的）全部自动打叉
   if (mode === 'fill') {
     var fc = 0;
     for (var fi = 0; fi < n; fi++) { if (line[fi] === 1) fc++; }
     var hs = hints.reduce(function(a, b) { return a + b; }, 0);
     if (fc === hs) {
-      // 计算当前已填格子的编码（run-length 形式�?
       var enc = [];
       var runLen = 0, inRun = false;
       for (var ei = 0; ei < n; ei++) {
@@ -105,7 +103,6 @@ function solveLine(hints, line, n, mode) {
         else { if (inRun) { enc.push(runLen); inRun = false; runLen = 0; } }
       }
       if (inRun) { enc.push(runLen); inRun = false; runLen = 0; }
-      // 与提示数比较（忽略末尾空串）
       var match = (enc.length === hints.length);
       if (match) {
         for (var mi = 0; mi < enc.length; mi++) {
@@ -113,7 +110,6 @@ function solveLine(hints, line, n, mode) {
         }
       }
       if (match) {
-        // 编码一致：未标记的格子（排除mustFill）全部标记为X
         for (var xi = 0; xi < n; xi++) {
           if (line[xi] === 0 && mustFill.indexOf(xi) === -1 && mustEmpty.indexOf(xi) === -1) {
             mustEmpty.push(xi);
@@ -125,56 +121,15 @@ function solveLine(hints, line, n, mode) {
   return { mustFill: mustFill, mustEmpty: mustEmpty };
 }
 
-function applyConstraints(grid, rowHints, colHints, size) {
-  var changed = true;
-  while (changed) {
-    changed = false;
-    for (var r = 0; r < size; r++) {
-      var line = [];
-      for (var c = 0; c < size; c++) {
-        if (grid[r][c] === 1) line.push(1);
-        else if (grid[r][c] === 2) line.push(-1);
-        else line.push(0);
-      }
-      var res = solveLine(rowHints[r], line, size);
-      for (var i = 0; i < res.mustFill.length; i++) {
-        var c = res.mustFill[i];
-        if (grid[r][c] === 0) { grid[r][c] = 1; changed = true; }
-      }
-      for (var i = 0; i < res.mustEmpty.length; i++) {
-        var c = res.mustEmpty[i];
-        if (grid[r][c] === 0) { grid[r][c] = 2; changed = true; }
-      }
-    }
-    for (var c = 0; c < size; c++) {
-      var line2 = [];
-      for (var r = 0; r < size; r++) {
-        if (grid[r][c] === 1) line2.push(1);
-        else if (grid[r][c] === 2) line2.push(-1);
-        else line2.push(0);
-      }
-      var res2 = solveLine(colHints[c], line2, size);
-      for (var i = 0; i < res2.mustFill.length; i++) {
-        var r = res2.mustFill[i];
-        if (grid[r][c] === 0) { grid[r][c] = 1; changed = true; }
-      }
-      for (var i = 0; i < res2.mustEmpty.length; i++) {
-        var r = res2.mustEmpty[i];
-        if (grid[r][c] === 0) { grid[r][c] = 2; changed = true; }
-      }
-    }
-  }
-}
-
 Page({
   data: {
     difficulty: 'easy',
-    difficultyText: '简�?5x5',
+    difficultyText: '简单 6x6',
     currentLevel: 1,
     colHints: [],
     rowHints: [],
     answer: [],
-    gridSize: 5,
+    gridSize: 6,
     grid: [],
     rowGroups: [],
     mode: 'fill',
@@ -190,7 +145,11 @@ Page({
     showLevelSelector: false,
     completedCount: 0,
     levelNumbers: [],
-    soundEnabled: true // 音效开关状�?
+    soundEnabled: true,
+    maxPuzzles: 1000,
+    jumpInputValue: '',
+    currentPuzzleIndex: 1,
+    showAnswer: false
   },
 
   _timer: null,
@@ -200,32 +159,14 @@ Page({
   _swiped: null,
   _boardRect: null,
   _colHintBottom: 0,
+  _savedGrid: null,
 
   onLoad: function() {
     preloadSounds(['click', 'win']);
     var soundEnabled = utils.isPageSoundEnabled('nonogram');
     this.setData({ soundEnabled });
-    // 尝试恢复上次的游戏进�?
-    var saved = wx.getStorageSync('nonogram_saved');
-    if (saved && saved.grid && saved.grid.length > 0) {
-      this.setData({
-        difficulty: saved.difficulty || 'easy',
-        difficultyText: saved.difficultyText || '简�?5x5',
-        gridSize: saved.gridSize || 5,
-        grid: saved.grid,
-        colHints: saved.colHints || [],
-        rowHints: saved.rowHints || [],
-        answer: saved.answer || [],
-        currentLevel: saved.currentLevel || 1,
-        mode: saved.mode || 'fill',
-        timerText: saved.timerText || '0:00',
-        filledCount: saved.filledCount || 0,
-        totalFill: saved.totalFill || 0,
-        completedCount: saved.completedCount || 0,
-      });
-    } else {
-      this.newGame(1);
-    }
+    // 始终从 CDN 加载第1题，不读本地缓存恢复
+    this.newGame(1);
   },
 
   onShow: function() {
@@ -244,7 +185,6 @@ Page({
 
   onUnload: function() {
     if (this._timer) clearInterval(this._timer);
-    // 保存游戏进度
     wx.setStorageSync('nonogram_saved', {
       difficulty: this.data.difficulty,
       difficultyText: this.data.difficultyText,
@@ -254,6 +194,8 @@ Page({
       rowHints: this.data.rowHints,
       answer: this.data.answer,
       currentLevel: this.data.currentLevel,
+      currentPuzzleIndex: this.data.currentPuzzleIndex,
+      maxPuzzles: this.data.maxPuzzles,
       mode: this.data.mode,
       timerText: this.data.timerText,
       filledCount: this.data.filledCount,
@@ -274,19 +216,15 @@ Page({
   },
 
   loadPuzzle: function(difficulty, level) {
-    var key = 'cdn_nonogram_' + difficulty + '_' + String(level).padStart(4, '0');
-    var cached = wx.getStorageSync(key);
-    if (cached) return Promise.resolve(cached);
     var filename = difficulty + '-' + String(level).padStart(4, '0') + '.json';
     var self = this;
-    console.log('[nonogram] 请求URL:', CDN_BASE + '/nonogram/' + filename + '?t=' + Date.now());
     return new Promise(function(resolve, reject) {
       wx.request({
         url: CDN_BASE + '/nonogram/' + filename + '?t=' + Date.now(),
         method: 'GET',
         timeout: 8000,
         success: function(r) {
-          if (r.statusCode === 200) { wx.setStorageSync(key, r.data); resolve(r.data); }
+          if (r.statusCode === 200) { resolve(r.data); }
           else reject(new Error('HTTP' + r.statusCode));
         },
         fail: reject
@@ -310,7 +248,7 @@ Page({
     var rowHintW = Math.max(42, maxRowLen * (numFont + 6) + 8);
     var colHintH = Math.max(22, maxColLen * (numFont + 3) + 6);
     var availW = W - 32 - rowHintW;
-    var availH = H - 126 - colHintH;
+    var availH = H - 160 - colHintH;
     var cellPx = Math.max(22, Math.min(Math.floor(availW / size), Math.floor(availH / size), 50));
     var boardPx = rowHintW + size * cellPx + (size - 1);
     this.setData({ cellPx: cellPx, hintPx: rowHintW, colHintH: colHintH, boardPx: boardPx });
@@ -337,12 +275,71 @@ Page({
     return groups;
   },
 
+  // 检查行/列是否已完成（填满且匹配提示数），完成则将剩余空格标记为X
+  _checkAndMarkEmpty: function(grid, r, c, size) {
+    // 检查行
+    var rowHints = this.data.rowHints[r];
+    var rowSum = rowHints.reduce(function(a, b) { return a + b; }, 0);
+    var rowFilled = 0, rowEmpty = 0;
+    for (var cc = 0; cc < size; cc++) {
+      if (grid[r][cc] === 1) rowFilled++;
+      else if (grid[r][cc] === 2) rowEmpty++;
+    }
+    if (rowFilled === rowSum && rowFilled + rowEmpty < size) {
+      // 填满数等于提示和，但还有空格，检查序列是否匹配
+      var enc = [], runLen = 0, inRun = false;
+      for (var cc = 0; cc < size; cc++) {
+        if (grid[r][cc] === 1) { inRun = true; runLen++; }
+        else { if (inRun) { enc.push(runLen); inRun = false; runLen = 0; } }
+      }
+      if (inRun) enc.push(runLen);
+      var match = (enc.length === rowHints.length);
+      if (match) {
+        for (var i = 0; i < enc.length; i++) {
+          if (enc[i] !== rowHints[i]) { match = false; break; }
+        }
+      }
+      if (match) {
+        for (var cc = 0; cc < size; cc++) {
+          if (grid[r][cc] === 0) grid[r][cc] = 2;
+        }
+      }
+    }
+    // 检查列
+    var colHints = this.data.colHints[c];
+    var colSum = colHints.reduce(function(a, b) { return a + b; }, 0);
+    var colFilled = 0, colEmpty = 0;
+    for (var rr = 0; rr < size; rr++) {
+      if (grid[rr][c] === 1) colFilled++;
+      else if (grid[rr][c] === 2) colEmpty++;
+    }
+    if (colFilled === colSum && colFilled + colEmpty < size) {
+      var enc2 = [], runLen2 = 0, inRun2 = false;
+      for (var rr = 0; rr < size; rr++) {
+        if (grid[rr][c] === 1) { inRun2 = true; runLen2++; }
+        else { if (inRun2) { enc2.push(runLen2); inRun2 = false; runLen2 = 0; } }
+      }
+      if (inRun2) enc2.push(runLen2);
+      var match2 = (enc2.length === colHints.length);
+      if (match2) {
+        for (var i = 0; i < enc2.length; i++) {
+          if (enc2[i] !== colHints[i]) { match2 = false; break; }
+        }
+      }
+      if (match2) {
+        for (var rr = 0; rr < size; rr++) {
+          if (grid[rr][c] === 0) grid[rr][c] = 2;
+        }
+      }
+    }
+  },
+
   newGame: function(level) {
     var self = this;
     if (this._timer) { clearInterval(this._timer); this._timer = null; }
     this._seconds = 0;
     this._timerRunning = false;
-    this.setData({ loading: true, showWin: false });
+    this.setData({ loading: true, showWin: false, showAnswer: false });
     this.loadPuzzle(this.data.difficulty, level).then(function(puzzle) {
       var size = puzzle.size;
       self._calcLayout(puzzle.rowHints, puzzle.colHints, size);
@@ -357,16 +354,12 @@ Page({
           if (puzzle.answer[r][c]) totalFill++;
         }
       }
-      var filledCount = 0;
-      for (var r = 0; r < size; r++) {
-        for (var c = 0; c < size; c++) {
-          if (grid[r][c] === 1) filledCount++;
-        }
-      }
       var rowGroups = self._buildRowGroups(grid, size);
       var completed = getCompleted(self.data.difficulty);
+      var maxPuzzles = TOTAL_PUZZLES[self.data.difficulty] || 1000;
       self.setData({
         currentLevel: level,
+        currentPuzzleIndex: level,
         colHints: puzzle.colHints,
         rowHints: puzzle.rowHints,
         answer: puzzle.answer,
@@ -375,11 +368,14 @@ Page({
         rowGroups: rowGroups,
         showWin: false,
         timerText: '0:00',
-        filledCount: filledCount,
+        filledCount: 0,
         totalFill: totalFill,
         loading: false,
         completedCount: completed.length,
         showLevelSelector: false,
+        maxPuzzles: maxPuzzles,
+        jumpInputValue: '',
+        showAnswer: false,
       });
     }).catch(function(err) {
       console.error('加载失败:', err);
@@ -388,13 +384,8 @@ Page({
     });
   },
 
-  _refreshRowGroups: function(grid, size) {
-    var rowGroups = this._buildRowGroups(grid, size);
-    this.setData({ rowGroups: rowGroups });
-  },
-
   onTouchStart: function(e) {
-    if (this.data.loading || !this.data.grid.length) return;
+    if (this.data.loading || !this.data.grid.length || this.data.showAnswer) return;
     var dataset = e.currentTarget.dataset;
     var r = Number(dataset.row);
     var c = Number(dataset.col);
@@ -410,8 +401,12 @@ Page({
     var current = this.data.grid[r][c];
     var mode = this.data.mode;
     var op;
-    if (mode === 'fill') op = (current === 1 ? 0 : 1);
-    else op = (current === 2 ? 0 : 2);
+    if (mode === 'fill') {
+      op = (current + 1) % 3; // 0→1→2→0 循环
+    } else {
+      if (current === 2) op = 0;
+      else op = 2; // 0→2→0
+    }
     this._swipeOp = op;
     this._swiped = {};
     this._swiped[r + '_' + c] = true;
@@ -420,7 +415,7 @@ Page({
   },
 
   onTouchMove: function(e) {
-    if (!this._swipeOp || !this._boardRect || this.data.loading) return;
+    if (!this._swipeOp || !this._boardRect || this.data.loading || this.data.showAnswer) return;
     var touch = e.touches[0];
     var br = this._boardRect;
     var step = this.data.cellPx + 1;
@@ -440,71 +435,26 @@ Page({
   _doOp: function(r, c, op) {
     if (this.data.loading || !this.data.grid.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
+    if (this.data.showAnswer) return;
     playSound('click', { pageId: 'nonogram' });
     var size = this.data.gridSize;
+    var mode = this.data.mode;
     var grid = [];
     for (var i = 0; i < size; i++) grid.push(this.data.grid[i].slice());
     var old = grid[r][c];
     if (old === op) return;
     grid[r][c] = op;
-    // 仅在同一�?同一列内做约束传播（不影响其他行列）
-    // 每轮：先解行→标记→再解列→标记，循环直到收�?
-    var changed = true;
-    var iter = 0;
-    while (changed) {
-      iter++;
-      changed = false;
-      // 求解当前�?
-      var rowLine = [];
+
+    // 只在当前行+列做完成检查（仅当行/列已完全填满且匹配提示数时才自动标记X）
+    this._checkAndMarkEmpty(grid, r, c, size);
+    var autoChanges = [];
+    for (var rr = 0; rr < size; rr++) {
       for (var cc = 0; cc < size; cc++) {
-        rowLine.push(grid[r][cc] === 1 ? 1 : grid[r][cc] === 2 ? -1 : 0);
-      }
-      var rowRes = solveLine(this.data.rowHints[r], rowLine, size, this.data.mode);
-      var rHints = this.data.rowHints[r];
-      var rfc = 0; for (var _i = 0; _i < size; _i++) { if (rowLine[_i] === 1) rfc++; }
-      var rhSum = rHints.reduce(function(a, b) { return a + b; }, 0);
-      var rowSatisfied = rfc >= rhSum;
-      console.log('[doOp] row', r, 'hints', JSON.stringify(rHints), 'line', JSON.stringify(rowLine), 'mustFill', JSON.stringify(rowRes.mustFill), 'mustEmpty', JSON.stringify(rowRes.mustEmpty), 'rfc', rfc, 'rhSum', rhSum, 'rowSat', rowSatisfied, 'mode', this.data.mode);
-      if (this.data.mode === 'mark' || rowSatisfied) {
-        for (var i = 0; i < rowRes.mustFill.length; i++) {
-          var cc = rowRes.mustFill[i];
-          if (grid[r][cc] === 0) { grid[r][cc] = 1; changed = true; }
+        if (this.data.grid[rr][cc] === 0 && grid[rr][cc] !== 0) {
+          autoChanges.push({r: rr, c: cc, from: 0, to: grid[rr][cc]});
         }
       }
-      // mustEmpty仅在rowSatisfied时触发（填充模式编码匹配会添加到mustEmpty�?
-      if (rowSatisfied) {
-        for (var i = 0; i < rowRes.mustEmpty.length; i++) {
-          var cc = rowRes.mustEmpty[i];
-          if (grid[r][cc] === 0) { grid[r][cc] = 2; changed = true; }
-        }
-      }
-      // 求解当前�?
-      var colLine = [];
-      for (var rr = 0; rr < size; rr++) {
-        colLine.push(grid[rr][c] === 1 ? 1 : grid[rr][c] === 2 ? -1 : 0);
-      }
-      var colRes = solveLine(this.data.colHints[c], colLine, size, this.data.mode);
-      var cHints = this.data.colHints[c];
-      var cfc = 0; for (var _j = 0; _j < size; _j++) { if (colLine[_j] === 1) cfc++; }
-      var chSum = cHints.reduce(function(a, b) { return a + b; }, 0);
-      var colSatisfied = cfc >= chSum;
-      console.log('[doOp] col', c, 'hints', JSON.stringify(cHints), 'line', JSON.stringify(colLine), 'mustFill', JSON.stringify(colRes.mustFill), 'mustEmpty', JSON.stringify(colRes.mustEmpty), 'cfc', cfc, 'chSum', chSum, 'colSat', colSatisfied, 'mode', this.data.mode);
-      if (this.data.mode === 'mark' || colSatisfied) {
-        for (var i = 0; i < colRes.mustFill.length; i++) {
-          var rr = colRes.mustFill[i];
-          if (grid[rr][c] === 0) { grid[rr][c] = 1; changed = true; }
-        }
-      }
-      // mustEmpty仅在colSatisfied时触�?
-      if (colSatisfied) {
-        for (var i = 0; i < colRes.mustEmpty.length; i++) {
-          var rr = colRes.mustEmpty[i];
-          if (grid[rr][c] === 0) { grid[rr][c] = 2; changed = true; }
-        }
-      }
-      if (iter > 50) break; // 防死循环
     }
-    this._refreshRowGroups(grid, size);
     var answer = this.data.answer;
     var win = true;
     outer: for (var rr = 0; rr < size && win; rr++) {
@@ -518,7 +468,7 @@ Page({
         if (grid[i][j] === 1) filledCount++;
       }
     }
-    this.setData({ grid: grid, filledCount: filledCount });
+    this.setData({ grid: grid, rowGroups: this._buildRowGroups(grid, size), filledCount: filledCount });
     if (win) {
       if (this._timer) clearInterval(this._timer);
       playSound('win', { pageId: 'nonogram' });
@@ -528,9 +478,9 @@ Page({
   },
 
   openLevelSelector: function() {
-    var size = SIZES[this.data.difficulty];
+    var total = TOTAL_PUZZLES[this.data.difficulty] || 1000;
     var nums = [];
-    for (var i = 1; i <= size; i++) nums.push(i);
+    for (var i = 1; i <= total; i++) nums.push(i);
     this.setData({ showLevelSelector: true, levelNumbers: nums });
   },
 
@@ -547,8 +497,64 @@ Page({
   },
 
   undo: function() { this.newGame(this.data.currentLevel); },
-  nextLevel: function() { this.setData({ showWin: false }); this.newGame(this.data.currentLevel + 1); },
+
+  nextLevel: function() {
+    this.setData({ showWin: false });
+    var next = this.data.currentLevel + 1;
+    var max = TOTAL_PUZZLES[this.data.difficulty] || 1000;
+    if (next > max) next = 1;
+    this.newGame(next);
+  },
+
   closeWin: function() { this.setData({ showWin: false }); },
+
+  // 查看答案
+  onShowAnswer: function() {
+    var answer = this.data.answer;
+    var size = this.data.gridSize;
+    var grid = [];
+    for (var r = 0; r < size; r++) {
+      grid.push([]);
+      for (var c = 0; c < size; c++) {
+        grid[r].push(answer[r][c] ? 1 : 2);
+      }
+    }
+    this._savedGrid = this.data.grid;
+    var rowGroups = this._buildRowGroups(grid, size);
+    this.setData({ grid: grid, rowGroups: rowGroups, filledCount: this.data.totalFill, showAnswer: true });
+  },
+
+  onHideAnswer: function() {
+    if (this._savedGrid) {
+      var grid = this._savedGrid;
+      this._savedGrid = null;
+      var rowGroups = this._buildRowGroups(grid, this.data.gridSize);
+      var filledCount = 0;
+      for (var i = 0; i < this.data.gridSize; i++) {
+        for (var j = 0; j < this.data.gridSize; j++) {
+          if (grid[i][j] === 1) filledCount++;
+        }
+      }
+      this.setData({ grid: grid, rowGroups: rowGroups, filledCount: filledCount, showAnswer: false });
+    }
+  },
+
+  // 跳关
+  onJumpInput: function(e) {
+    var value = e.detail.value;
+    var max = this.data.maxPuzzles;
+    if (value && parseInt(value) > max) value = String(max);
+    this.setData({ jumpInputValue: value });
+  },
+
+  onJump: function() {
+    var value = parseInt(this.data.jumpInputValue);
+    var max = this.data.maxPuzzles;
+    if (!value || value < 1) { this.setData({ jumpInputValue: '' }); return; }
+    var target = Math.min(value, max);
+    this.setData({ jumpInputValue: '' });
+    this.newGame(target);
+  },
 
   _startTimer: function() {
     var self = this;

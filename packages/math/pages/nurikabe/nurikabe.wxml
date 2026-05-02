@@ -3,31 +3,45 @@
   <!-- 顶部信息栏 -->
   <view class="header">
     <view class="difficulty-tabs">
-      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
-      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
-      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌱</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌿</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌳</text>
+        <text class="tab-text">困难</text>
+      </view>
     </view>
     <view class="info">
-      <text class="timer">⏱️ {{timeStr}}</text>
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
     </view>
   </view>
 
   <!-- 游戏区域 -->
   <view class="game-area">
-    <view class="grid" style="width: {{cols * cellSize}}px;">
-      <block wx:for="{{board}}" wx:for-index="row" wx:for-item="boardRow">
-        <view class="row">
-          <block wx:for="{{boardRow}}" wx:for-index="col" wx:for-item="cell">
-            <view class="cell {{cell === 1 ? 'black' : 'white'}}"
-                  style="width: {{cellSize}}px; height: {{cellSize}}px;"
-                  data-row="{{row}}" data-col="{{col}}"
-                  bindtap="onCellTap">
-              <!-- 数字格 -->
-              <text wx:if="{{numbers[row][col] > 0}}" class="number">{{numbers[row][col]}}</text>
-            </view>
-          </block>
-        </view>
-      </block>
+    <view class="grid-shadow">
+      <view class="grid" style="width: {{cols * cellSize}}px;">
+        <block wx:for="{{board}}" wx:for-index="row" wx:for-item="boardRow">
+          <view class="row">
+            <block wx:for="{{boardRow}}" wx:for-index="col" wx:for-item="cell">
+              <view class="cell {{cell === 1 ? 'black' : 'white'}}"
+                    style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                    data-row="{{row}}" data-col="{{col}}"
+                    bindtap="onCellTap">
+                <!-- 数字格 -->
+                <text wx:if="{{numbers[row][col] > 0}}" class="number {{cell === 1 ? 'number-black' : ''}}" style="font-size: {{cellSize * 0.55}}px;">{{numbers[row][col]}}</text>
+              </view>
+            </block>
+          </view>
+        </block>
+      </view>
     </view>
   </view>
 
@@ -35,30 +49,73 @@
   <view class="complete-overlay" wx:if="{{isComplete}}">
     <view class="complete-card">
       <text class="complete-icon">🎉</text>
-      <text class="complete-text">恭喜完成！</text>
+      <text class="complete-text">全部通过！</text>
       <text class="complete-time">用时 {{timeStr}}</text>
-      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+      <view class="next-btn" bindtap="nextPuzzle">下一题 ›</view>
+    </view>
+  </view>
+
+  <!-- 规则弹窗 -->
+  <view class="rules-overlay" wx:if="{{showRules}}" bindtap="onHideRules">
+    <view class="rules-card" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">📖 数墙规则</text>
+        <view class="rules-close" bindtap="onHideRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <view class="rule-item">
+          <view class="rule-icon rule-black"></view>
+          <text class="rule-desc">所有<text class="hl-black">黑格</text>必须连成一片（数墙）</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-white"></view>
+          <text class="rule-desc">每个数字属于一个<text class="hl-white">白格连通区域</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-num">3</view>
+          <text class="rule-desc">数字 = 所属白区域的<text class="hl-num">格子数</text>（含自身）</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-unique">1</view>
+          <text class="rule-desc">每个白区域<text class="hl-num">仅有1个数字格</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-no2x2">2×2</view>
+          <text class="rule-desc">禁止出现 <text class="hl-black">2×2 全黑</text>区域</text>
+        </view>
+        <view class="rule-divider"></view>
+        <view class="rule-item">
+          <view class="rule-icon rule-tap">👆</view>
+          <text class="rule-desc">点击格子切换：白格 ↔ 黑格</text>
+        </view>
+      </view>
+      <view class="rules-footer">
+        <view class="rules-ok-btn" bindtap="onHideRules">知道了</view>
+      </view>
     </view>
   </view>
 
   <!-- 底部按钮 -->
   <view class="footer">
-    <button class="btn reset" bindtap="onReset">重置</button>
-    <button class="btn {{showAnswer ? 'active' : ''}}" bindtap="onShowAnswer">{{showAnswer ? '隐藏答案' : '显示答案'}}</button>
-    <button class="btn next" bindtap="nextPuzzle">下一题</button>
-  </view>
-  <view class="footer">
-    <text>跳转:</text>
-    <input class="jump-input-inline" type="number" placeholder="1-{{maxPuzzles}}" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJumpInline" />
-    <button class="btn jump" bindtap="onJumpInline">确定</button>
+    <view class="btn reset" bindtap="onReset">
+      <text>↩ 重置</text>
+    </view>
+    <view class="btn rules-btn" bindtap="onShowRules">
+      <text>📖 规则</text>
+    </view>
+    <view class="btn answer-btn {{showAnswer ? 'hide' : ''}}" bindtap="onShowAnswer">
+      <text wx:if="{{!showAnswer}}">💡 答案</text>
+      <text wx:if="{{showAnswer}}">🙈 隐藏</text>
+    </view>
+    <view class="btn next" bindtap="nextPuzzle">
+      <text>▶ 下一题</text>
+    </view>
   </view>
 
-  <!-- 规则说明 -->
-  <view class="rules">
-    <text class="rules-title">游戏规则</text>
-    <text class="rules-text">• 点击格子涂黑/涂白</text>
-    <text class="rules-text">• 数字表示该格所属白色区域大小</text>
-    <text class="rules-text">• 所有黑格必须连通</text>
-    <text class="rules-text">• 不能有 2×2 的全黑区域</text>
+  <!-- 题号与跳关 -->
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
   </view>
 </view>

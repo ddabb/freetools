@@ -8,10 +8,6 @@
 
   <!-- 顶栏 -->
   <view class="top-info">
-    <view class="level-btn" bindtap="openLevelSelector">
-      <text class="level-num">第 {{currentLevel}} 关</text>
-      <text class="level-arrow">▼</text>
-    </view>
     <view class="mode-toggle">
       <view class="mode-btn {{mode==='fill'?'on':''}}" bindtap="setMode" data-mode="fill">● 填充</view>
       <view class="mode-btn {{mode==='mark'?'on':''}}" bindtap="setMode" data-mode="mark">✕ 标记</view>
@@ -61,9 +57,19 @@
   <!-- 操作 -->
   <view class="action-bar" wx:if="{{!loading}}">
     <view class="btn" bindtap="undo">↩ 重来</view>
+    <view class="btn answer-btn" bindtap="onShowAnswer" wx:if="{{!showAnswer}}">💡 答案</view>
+    <view class="btn answer-btn hide" bindtap="onHideAnswer" wx:if="{{showAnswer}}">🙈 隐藏</view>
+    <view class="btn next" bindtap="nextLevel">▶ 下一题</view>
     <view class="btn sound-btn {{soundEnabled ? 'active' : ''}}" bindtap="toggleSound">
       {{soundEnabled ? '🔊' : '🔇'}}
     </view>
+  </view>
+
+  <!-- 题号与跳关 -->
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{currentPuzzleIndex}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
   </view>
 
   <!-- 通关弹窗 -->
@@ -73,28 +79,6 @@
       <view class="card-title">通关！</view>
       <view class="card-time">用时 {{timerText}}</view>
       <view class="card-btn" bindtap="nextLevel">下一关 ▶</view>
-    </view>
-  </view>
-
-  <!-- 关卡选择器 -->
-  <view class="mask" wx:if="{{showLevelSelector}}" bindtap="closeLevelSelector">
-    <view class="level-card" catchtap="">
-      <view class="level-card-header">
-        <text class="level-card-title">{{difficultyText}} · {{completedCount}}关已完成</text>
-        <view class="level-close" bindtap="closeLevelSelector">✕</view>
-      </view>
-      <scroll-view class="level-scroll" scroll-y>
-        <view class="level-grid">
-          <view
-            class="level-item {{isCompleted(n)?'done':''}} {{n===currentLevel?'curr':''}}"
-            wx:for="{{levelNumbers}}"
-            wx:for-item="n"
-            wx:key="*this"
-            bindtap="selectLevel"
-            data-l="{{n}}"
-          >{{n}}<text class="done-mark" wx:if="{{isCompleted(n)}}">✓</text></view>
-        </view>
-      </scroll-view>
     </view>
   </view>
 </view>

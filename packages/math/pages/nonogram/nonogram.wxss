@@ -8,9 +8,6 @@ page { background: #eef0ec; min-height: 100vh; }
 
 /* 顶栏 */
 .top-info { display: flex; align-items: center; width: 100%; padding: 4px 16px 6px; gap: 10px; }
-.level-btn { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.level-num { font-size: 14px; font-weight: 700; color: #333; }
-.level-arrow { font-size: 10px; color: #999; }
 .mode-toggle { display: flex; gap: 6px; flex: 1; justify-content: center; }
 .mode-btn { font-size: 12px; padding: 5px 14px; border-radius: 16px; background: #e0e0e0; color: #666; }
 .mode-btn.on { background: #333; color: #fff; }
@@ -57,8 +54,18 @@ page { background: #eef0ec; min-height: 100vh; }
 .mark-x { font-size: 65%; color: #e53935; font-weight: 700; line-height: 1; }
 
 /* 操作栏 */
-.action-bar { display: flex; gap: 14px; margin-top: 12px; }
-.btn { font-size: 13px; padding: 10px 28px; border-radius: 20px; background: #fff; color: #555; border: 1px solid #ccc; }
+.action-bar { display: flex; gap: 10px; margin-top: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.btn { font-size: 13px; padding: 8px 18px; border-radius: 20px; background: #fff; color: #555; border: 1px solid #ccc; }
+.btn.next { background: #43a047; color: #fff; border-color: #43a047; }
+.btn.answer-btn { background: #ff9800; color: #fff; border-color: #ff9800; }
+.btn.answer-btn.hide { background: #9e9e9e; border-color: #9e9e9e; }
+.sound-btn { font-size: 16px; padding: 6px 12px; }
+
+/* 跳关导航 */
+.nav-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 0 16px; }
+.puzzle-info { font-size: 13px; color: #666; white-space: nowrap; }
+.jump-input { width: 60px; height: 30px; font-size: 13px; text-align: center; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+.btn-jump { font-size: 12px; padding: 5px 14px; border-radius: 14px; background: #43a047; color: #fff; }
 
 /* 通关弹窗 */
 .mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 99; }
@@ -67,25 +74,3 @@ page { background: #eef0ec; min-height: 100vh; }
 .card-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 6px; }
 .card-time { font-size: 14px; color: #999; margin-bottom: 16px; }
 .card-btn { display: inline-block; font-size: 14px; padding: 10px 32px; border-radius: 20px; background: #43a047; color: #fff; font-weight: 600; }
-
-/* 关卡选择器 */
-.level-card { background: #fff; border-radius: 16px; padding: 20px; width: 82%; max-width: 380px; max-height: 70vh; display: flex; flex-direction: column; }
-.level-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-.level-card-title { font-size: 14px; font-weight: 600; color: #333; }
-.level-close { font-size: 16px; color: #999; padding: 2px 8px; }
-.level-scroll { flex: 1; overflow-y: auto; }
-.level-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.level-item {
-  width: 42px; height: 42px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  border-radius: 8px;
-  background: #f0f0f0;
-  color: #666;
-  font-weight: 500;
-  position: relative;
-}
-.level-item.done { background: #e8f5e9; color: #43a047; }
-.level-item.curr { background: #43a047; color: #fff; }
-.level-item.done.curr { background: #2e7d32; }
-.done-mark { font-size: 9px; position: absolute; bottom: 2px; right: 4px; }
