@@ -28,9 +28,9 @@
   <view class="game-area">
     <view class="grid-shadow">
       <view class="grid" style="width: {{cols * cellSize}}px;">
-        <block wx:for="{{board}}" wx:for-index="row" wx:for-item="boardRow">
-          <view class="row">
-            <block wx:for="{{boardRow}}" wx:for-index="col" wx:for-item="cell">
+        <block wx:for="{{board}}" wx:key="row" wx:for-index="row" wx:for-item="boardRow">
+          <view class="row" wx:key="row">
+            <block wx:for="{{boardRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
               <view class="cell {{cell === 1 ? 'black' : 'white'}}"
                     style="width: {{cellSize}}px; height: {{cellSize}}px;"
                     data-row="{{row}}" data-col="{{col}}"
@@ -81,7 +81,7 @@
         </view>
         <view class="rule-item">
           <view class="rule-icon rule-no2x2">2×2</view>
-          <text class="rule-desc">禁止出现 <text class="hl-black">2×2 全黑</text>区域</text>
+          <text class="rule-desc">禁止包含 <text class="hl-black">2×2 全黑</text>区域</text>
         </view>
         <view class="rule-divider"></view>
         <view class="rule-item">
@@ -90,7 +90,7 @@
         </view>
       </view>
       <view class="rules-footer">
-        <view class="rules-ok-btn" bindtap="onHideRules">知道了</view>
+        <view class="rules-ok-btn" bindtap="onHideRules">我知道了</view>
       </view>
     </view>
   </view>

@@ -1,0 +1,86 @@
+<!--桥游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">简单</view>
+      <view class="tab {{difficulty === 'medium' ? 'active' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">中等</view>
+      <view class="tab {{difficulty === 'hard' ? 'active' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">困难</view>
+    </view>
+    <view class="info">
+      <text class="timer">⏱️ {{timeStr}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid-wrapper" style="width: {{cols * cellSize + 2}}px; height: {{rows * cellSize + 2}}px;">
+      <!-- 网格背景 -->
+      <view class="grid-bg" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px;">
+        <block wx:for="{{rows}}" wx:for-item="row" wx:for-index="ri">
+          <view class="grid-row" style="width: {{cols * cellSize}}px; height: {{cellSize}}px;">
+            <block wx:for="{{cols}}" wx:for-item="col" wx:for-index="ci">
+              <view class="grid-cell {{islandMap[ri] && islandMap[ri][ci] >= 0 ? 'has-island' : ''}}"
+                    style="width: {{cellSize}}px; height: {{cellSize}}px;"></view>
+            </block>
+          </view>
+        </block>
+      </view>
+      <!-- 渲染桥 -->
+      <block wx:for="{{bridgeList}}" wx:for-item="b" wx:key="index">
+        <!-- 水平桥 -->
+        <view wx:if="{{b.type === 'h'}}"
+              class="bridge bridge-h {{b.count === 2 ? 'bridge-h-2' : 'bridge-h-1'}}"
+              style="left: {{b.left}}px; top: {{b.top}}px; width: {{b.width}}px;">
+        </view>
+        <!-- 垂直桥 -->
+        <view wx:if="{{b.type === 'v'}}"
+              class="bridge bridge-v {{b.count === 2 ? 'bridge-v-2' : 'bridge-v-1'}}"
+              style="left: {{b.left}}px; top: {{b.top}}px; height: {{b.height}}px;">
+        </view>
+      </block>
+      <!-- 岛屿 -->
+      <block wx:for="{{islands}}" wx:for-item="isl" wx:key="id">
+        <view class="island {{selectedIsland === isl.id ? 'selected' : ''}} {{isl.bridgeCount >= isl.n ? 'satisfied' : ''}}"
+              style="left: {{isl.c * cellSize}}px; top: {{isl.r * cellSize}}px; {{isl.islandStyle || ''}}"
+              data-id="{{isl.id}}" bindtap="onIslandTap">
+          <text class="island-num">{{isl.n}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">恭喜完成！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <button class="next-btn" bindtap="nextPuzzle">下一题</button>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="btn reset" bindtap="onReset">重置</button>
+    <button class="btn verify" bindtap="onVerify">验证</button>
+    <button class="btn answer" bindtap="onToggleAnswer">{{showAnswer ? '隐藏答案' : '查看答案'}}</button>
+    <button class="btn next" bindtap="nextPuzzle">下一题</button>
+  </view>
+  <!-- 跳关 -->
+  <view class="footer">
+    <text class="jump-label">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input-inline" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJumpInline" />
+    <view class="btn-jump" bindtap="onJumpInline">确定</view>
+  </view>
+
+  <!-- 规则说明 -->
+  <view class="rules">
+    <text class="rules-title">游戏规则</text>
+    <text class="rules-text">• 点击岛屿选中，再点击相邻岛屿连桥</text>
+    <text class="rules-text">• 两岛之间最多2座桥</text>
+    <text class="rules-text">• 桥不能交叉</text>
+    <text class="rules-text">• 岛上数字 = 需连接的桥数</text>
+    <text class="rules-text">• 所有岛屿必须连通</text>
+  </view>
+</view>

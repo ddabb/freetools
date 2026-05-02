@@ -722,6 +722,17 @@ const tools = [
     description: '涂黑格子形成白色区域，数字表示区域大小'
   },
   {
+    id: 'bridges',
+    name: '桥',
+    icon: '🌉',
+    color: 'blue',
+    url: '/packages/math/pages/bridges/bridges',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['桥', '连岛', '画桥', 'Hashiwokakero', '逻辑', '益智'],
+    description: '用桥连接岛屿，数字表示需要连接的桥数',
+    publish: false
+  },
+  {
     id: 'frog-escape',
     name: '躲避牛蛙',
     icon: '🐸',

@@ -268,9 +268,9 @@ Page({
     for (var r = 0; r < size; r++) {
       var cells = [];
       for (var c = 0; c < size; c++) {
-        cells.push({ ci: c, s: grid[r][c], cls: this._getCellClass(grid[r][c], r, c, size) });
+        cells.push({ ci: c, s: grid[r][c], cls: this._getCellClass(grid[r][c], r, c, size), uid: r + '-' + c });
       }
-      groups.push({ ri: r, cells: cells });
+      groups.push({ ri: r, cells: cells, uid: 'row-' + r });
     }
     return groups;
   },
@@ -432,6 +432,20 @@ Page({
 
   onTouchEnd: function() { this._swipeOp = null; this._swiped = null; },
 
+  _checkLineMatch: function(line, hints) {
+    var enc = [], runLen = 0, inRun = false;
+    for (var i = 0; i < line.length; i++) {
+      if (line[i] === 1) { inRun = true; runLen++; }
+      else { if (inRun) { enc.push(runLen); inRun = false; runLen = 0; } }
+    }
+    if (inRun) enc.push(runLen);
+    if (enc.length !== hints.length) return false;
+    for (var i = 0; i < enc.length; i++) {
+      if (enc[i] !== hints[i]) return false;
+    }
+    return true;
+  },
+
   _doOp: function(r, c, op) {
     if (this.data.loading || !this.data.grid.length) return;
     if (r < 0 || r >= this.data.gridSize || c < 0 || c >= this.data.gridSize) return;
@@ -445,7 +459,6 @@ Page({
     if (old === op) return;
     grid[r][c] = op;
 
-    // 只在当前行+列做完成检查（仅当行/列已完全填满且匹配提示数时才自动标记X）
     this._checkAndMarkEmpty(grid, r, c, size);
     var autoChanges = [];
     for (var rr = 0; rr < size; rr++) {
@@ -455,11 +468,15 @@ Page({
         }
       }
     }
-    var answer = this.data.answer;
     var win = true;
-    outer: for (var rr = 0; rr < size && win; rr++) {
+    for (var rr = 0; rr < size && win; rr++) {
+      if (!this._checkLineMatch(grid[rr], this.data.rowHints[rr])) win = false;
+    }
+    if (win) {
       for (var cc = 0; cc < size && win; cc++) {
-        if (answer[rr][cc] === 1 && grid[rr][cc] !== 1) { win = false; break outer; }
+        var colLine = [];
+        for (var rr = 0; rr < size; rr++) colLine.push(grid[rr][cc]);
+        if (!this._checkLineMatch(colLine, this.data.colHints[cc])) win = false;
       }
     }
     var filledCount = 0;

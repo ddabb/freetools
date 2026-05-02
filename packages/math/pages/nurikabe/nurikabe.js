@@ -88,11 +88,13 @@ Page({
 
     const fileId = String(puzzleId + 1).padStart(4, '0');
     const url = `${CDN_BASE}${difficulty}-${fileId}.json?t=${Date.now()}`;
+    console.log('加载题目:', url);
 
     wx.request({
       url,
       success: (res) => {
         wx.hideLoading();
+        console.log('题目数据:', res.data);
         if (res.statusCode !== 200 || !res.data || !res.data.grid) {
           wx.showToast({ title: '加载失败', icon: 'none' });
           return;
@@ -103,6 +105,7 @@ Page({
         const cols = puzzle.size;
         const numbers = puzzle.grid;
         const solution = puzzle.solution;
+        console.log('solution:', solution);
         const cellSize = this.calcCellSize(rows, cols);
 
         // 初始化：数字格为白，其他未确定
@@ -126,8 +129,9 @@ Page({
         this.startTimer();
         this.playSoundIfEnabled('click');
       },
-      fail: () => {
+      fail: (err) => {
         wx.hideLoading();
+        console.log('加载失败:', err);
         wx.showToast({ title: '网络错误', icon: 'none' });
       }
     });
@@ -167,41 +171,144 @@ Page({
     board[row][col] = board[row][col] === CELL_WHITE ? CELL_BLACK : CELL_WHITE;
     this.setData({ board });
     this.playSoundIfEnabled('click');
+    
+    console.log('=== 点击后棋盘状态 ===');
+    this.printBoard();
+    
     this.checkCompletion();
+  },
+
+  printBoard() {
+    const { rows, cols, numbers, board } = this.data;
+    console.log('Numbers:');
+    for (let r = 0; r < rows; r++) {
+      let row = '';
+      for (let c = 0; c < cols; c++) {
+        row += numbers[r][c] ? ` ${numbers[r][c]} ` : ' . ';
+      }
+      console.log(row);
+    }
+    console.log('Board:');
+    for (let r = 0; r < rows; r++) {
+      let row = '';
+      for (let c = 0; c < cols; c++) {
+        row += board[r][c] === CELL_BLACK ? ' X ' : ' O ';
+      }
+      console.log(row);
+    }
   },
 
   checkCompletion() {
     const { rows, cols, numbers, board } = this.data;
+    console.log('=== 开始检查完成 ===');
 
-    // 1. 检查没有 2×2 全黑
+    // 检查 2x2 全黑
+    console.log('检查 2x2 全黑...');
     for (let r = 0; r < rows - 1; r++) {
       for (let c = 0; c < cols - 1; c++) {
         if (board[r][c] === CELL_BLACK &&
             board[r][c + 1] === CELL_BLACK &&
             board[r + 1][c] === CELL_BLACK &&
             board[r + 1][c + 1] === CELL_BLACK) {
+          console.log(`❌ 发现 2x2 全黑在 (${r},${c})`);
           return;
         }
       }
     }
+    console.log('✅ 2x2 检查通过');
 
-    // 2. 检查每个数字格的白色区域大小
     const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
+    const regionOfNumber = Array(rows).fill(null).map(() => Array(cols).fill(-1));
+
+    let regionId = 0;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        if (numbers[r][c] > 0) {
-          if (this.countWhiteRegion(r, c, visited) !== numbers[r][c]) return;
+        if (!visited[r][c] && board[r][c] === CELL_WHITE) {
+          const regionCells = [];
+          const queue = [[r, c]];
+          visited[r][c] = true;
+          while (queue.length > 0) {
+            const [cr, cc] = queue.shift();
+            regionCells.push([cr, cc]);
+            const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            for (const [dr, dc] of dirs) {
+              const nr = cr + dr, nc = cc + dc;
+              if (nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+                  !visited[nr][nc] && board[nr][nc] === CELL_WHITE) {
+                visited[nr][nc] = true;
+                queue.push([nr, nc]);
+              }
+            }
+          }
+          for (const [cr, cc] of regionCells) {
+            regionOfNumber[cr][cc] = regionId;
+          }
+          console.log(`白色区域 ${regionId}: ${regionCells.length} 格`);
+          regionId++;
         }
       }
     }
 
-    // 3. 检查所有黑格连通
-    if (!this.areBlackCellsConnected()) return;
+    const numberInRegion = {};
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (numbers[r][c] > 0) {
+          const rid = regionOfNumber[r][c];
+          console.log(`数字 ${numbers[r][c]} 在 (${r},${c}), 所属区域: ${rid}`);
+          if (rid === -1) {
+            console.log('❌ 数字格在黑格里');
+            return;
+          }
+          if (numberInRegion[rid] !== undefined) {
+            console.log(`❌ 区域 ${rid} 里有多个数字`);
+            return;
+          }
+          numberInRegion[rid] = numbers[r][c];
+        }
+      }
+    }
 
-    // 4. 检查白色区域数量 = 数字数量
-    if (!this.areWhiteRegionsSeparated()) return;
+    let numberCount = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (numbers[r][c] > 0) numberCount++;
+      }
+    }
 
-    // 完成！
+    console.log(`数字总数: ${numberCount}, 白色区域数: ${regionId}`);
+    if (Object.keys(numberInRegion).length !== numberCount) {
+      console.log('❌ 有数字没在白色区域里');
+      return;
+    }
+    if (regionId !== numberCount) {
+      console.log('❌ 区域数与数字数不一致');
+      return;
+    }
+
+    const regionSizeMap = {};
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (regionOfNumber[r][c] !== -1) {
+          const rid = regionOfNumber[r][c];
+          regionSizeMap[rid] = (regionSizeMap[rid] || 0) + 1;
+        }
+      }
+    }
+
+    for (const rid in numberInRegion) {
+      console.log(`区域 ${rid}: 大小 ${regionSizeMap[rid]}, 数字 ${numberInRegion[rid]}`);
+      if (regionSizeMap[rid] !== numberInRegion[rid]) {
+        console.log('❌ 区域大小与数字不一致');
+        return;
+      }
+    }
+
+    if (!this.areBlackCellsConnected()) {
+      console.log('❌ 黑格不连通');
+      return;
+    }
+
+    console.log('✅ 所有检查通过！');
     this.setData({ isComplete: true });
     this.stopTimer();
     this.playSoundIfEnabled('win');
@@ -213,21 +320,6 @@ Page({
       showCancel: false,
       confirmText: '下一题'
     }).then(() => this.nextPuzzle());
-  },
-
-  countWhiteRegion(startR, startC, visited) {
-    const { rows, cols, board } = this.data;
-    const queue = [[startR, startC]];
-    let count = 0;
-    while (queue.length > 0) {
-      const [r, c] = queue.shift();
-      if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-      if (visited[r][c] || board[r][c] === CELL_BLACK) continue;
-      visited[r][c] = true;
-      count++;
-      queue.push([r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]);
-    }
-    return count;
   },
 
   areBlackCellsConnected() {
@@ -257,25 +349,6 @@ Page({
       for (let c = 0; c < cols; c++)
         if (board[r][c] === CELL_BLACK) totalBlack++;
     return connectedCount === totalBlack;
-  },
-
-  areWhiteRegionsSeparated() {
-    const { rows, cols, numbers, board } = this.data;
-    const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
-    let regionCount = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        if (!visited[r][c] && board[r][c] === CELL_WHITE) {
-          this.countWhiteRegion(r, c, visited);
-          regionCount++;
-        }
-      }
-    }
-    let numberCount = 0;
-    for (let r = 0; r < rows; r++)
-      for (let c = 0; c < cols; c++)
-        if (numbers[r][c] > 0) numberCount++;
-    return regionCount === numberCount;
   },
 
   onDifficultyChange(e) {
@@ -327,6 +400,9 @@ Page({
   },
 
   onShowAnswer() {
+    console.log('点击了显示答案');
+    console.log('this.data.solution:', this.data.solution);
+    
     const showAnswer = !this.data.showAnswer;
     if (showAnswer) {
       const { rows, cols, solution } = this.data;
@@ -334,12 +410,14 @@ Page({
         wx.showToast({ title: '暂无答案', icon: 'none' });
         return;
       }
+      console.log('显示答案:', solution);
       this.setData({ showAnswer, board: solution });
     } else {
       const { rows, cols, numbers } = this.data;
       const board = Array(rows).fill(null).map((_, r) =>
-        Array(cols).fill(null).map((_, c) => numbers[r][c] > 0 ? CELL_WHITE : null)
+        Array(cols).fill(null).map((_, c) => numbers[r][c] > 0 ? CELL_WHITE : CELL_WHITE)
       );
+      console.log('隐藏答案，恢复棋盘:', board);
       this.setData({ showAnswer, board });
     }
   },

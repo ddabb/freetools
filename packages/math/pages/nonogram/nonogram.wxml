@@ -27,25 +27,25 @@
       <!-- 列提示 -->
       <view class="col-hints-row">
         <view class="corner" style="width:{{hintPx}}px;height:{{colHintH}}px;"></view>
-        <view class="col-hint" wx:for="{{colHints}}" wx:key="idx" style="width:{{cellPx}}px;height:{{colHintH}}px;">
+        <view class="col-hint" wx:for="{{colHints}}" wx:for-index="cIdx" wx:key="*this" style="width:{{cellPx}}px;height:{{colHintH}}px;">
           <text class="hn" wx:for="{{item}}" wx:for-item="n" wx:key="*this">{{n}}</text>
         </view>
       </view>
       <!-- 行 -->
-      <view class="row-group" wx:for="{{rowGroups}}" wx:key="ri">
+      <view class="row-group" wx:for="{{rowGroups}}" wx:for-item="rowItem" wx:key="uid">
         <view class="row-hint" style="width:{{hintPx}}px;height:{{cellPx}}px;">
-          <text class="hn" wx:for="{{rowHints[item.ri]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
+          <text class="hn" wx:for="{{rowHints[rowItem.ri]}}" wx:for-item="n" wx:key="*this">{{n}}</text>
         </view>
         <view
-          wx:for="{{item.cells}}"
+          wx:for="{{rowItem.cells}}"
           wx:for-item="cell"
-          wx:key="ci"
+          wx:key="uid"
           class="{{cell.cls}}"
           style="width:{{cellPx}}px;height:{{cellPx}}px;"
           catchtouchstart="onTouchStart"
           catchtouchmove="onTouchMove"
           catchtouchend="onTouchEnd"
-          data-row="{{item.ri}}"
+          data-row="{{rowItem.ri}}"
           data-col="{{cell.ci}}"
         >
           <text wx:if="{{cell.s === 2}}" class="mark-x">✕</text>
