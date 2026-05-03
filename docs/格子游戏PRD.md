@@ -23,14 +23,17 @@
 |------|------|------|------|
 | 数独求解器 | ✅ 已上线 | `packages/math/pages/sudoku-solver/` | 输入题目，自动求解 |
 | 数独生成器 | ✅ 已上线 | `packages/math/pages/sudoku-generator/` | 生成题目，用户求解 |
-| 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子 |
+| 数织 (nonogram) | ✅ 已上线 | `packages/math/pages/nonogram/` | 根据提示填充格子，支持提示匹配判断胜利 |
 | 躲避牛蛙 (frog-escape) | ✅ 已上线 | `packages/math/pages/frog-escape/` | 扫雷换皮（🐸主题） |
 | 黑白棋 (othello) | ✅ 已上线 | `packages/math/pages/othello/` | 经典对战游戏 |
 | 数壹 (number-one) | ✅ 已上线 | `packages/math/pages/number-one/` | 难度决定尺寸，顺序下一题 |
 | 数回 (slither-link) | ✅ 已上线 | `packages/math/pages/slither-link/` | 规则弹窗，跳关选择 |
 | 灯塔 (akari) | ✅ 已上线 | `packages/math/pages/akari/` | 灯塔数量限制，跳关选择 |
-| 数墙 (nurikabe) | ✅ 已上线 | `packages/math/pages/nurikabe/` | 需验证 |
+| 数墙 (nurikabe) | ✅ 已上线 | `packages/math/pages/nurikabe/` | 规则弹窗，胜利判断改为满足提示条件，题库3000题 |
 | 一笔画 (one-stroke-solver) | ✅ 已上线 | `packages/math/pages/one-stroke-solver/` | 顺序下一题，跳关选择，答案动画 |
+| 帐篷 (tents) | ✅ 已上线 | `packages/math/pages/tents/` | 树旁放帐篷，题库待生成 |
+| 珍珠 (masyu) | ✅ 已上线 | `packages/math/pages/masyu/` | 画闭合回路，黑白珍珠规则不同 |
+| 桥 (bridges) | 🔒 已禁用 | `packages/math/pages/bridges/` | `publish: false`，待完善 |
 | 战舰 (battleship) | ⏳ 未开始 | - | - |
 | 幻方 (magic-square) | ⏳ 未开始 | - | - |
 | 推箱子 (sokoban) | ⏳ 未开始 | - | - |
@@ -47,7 +50,7 @@
 | P0 | 黑白棋 (Othello) | ✅ 已上线 | 经典对战游戏，AI实现成熟 | - |
 | P1 | 数壹 (Hitori) | ✅ 已上线 | 算法重写完成，含黑格数提示 | Puzzlink_Assistance |
 | P1 | 数织 (Nonogram) | ✅ 已上线 | 规则独特，视觉效果好 | topics/picross (11+ JS项目) |
-| P1 | 桥 (Hashiwokakero) | ⏳ 待开发 | 规则简单，有现成生成器 | Simon Tatham, Hashiwokakero-Generator |
+| P1 | 桥 (Hashiwokakero) | 🔒 已禁用 | 规则验证问题，待修复后启用 | Simon Tatham, Hashiwokakero-Generator |
 | P1 | 珍珠 (Masyu) | ⏳ 待开发 | 规则优雅，逻辑性强 | Simon Tatham, Puzzlink_Assistance |
 | P2 | 数回 (Slither Link) | ✅ 已上线 | 含验证按钮 | Simon Tatham, Puzzlink |
 | P2 | 灯塔 (Akari) | ✅ 已上线 | 含校验反馈 | Simon Tatham, Puzzlink |
@@ -294,7 +297,7 @@ function minimax(board, depth, alpha, beta, maximizing, player) {
 #### 规则
 - N×N 格子，部分格子有数字
 - **白色组成「房间」**，黑色组成「数墙」
-- **数字表示该格所属「白色房间」的格子数（不含数字格本身）**
+- **数字表示该格所属「白色房间」的格子数（包含数字格本身）**
 - 每个白色房间只能有 **1 个数字格**
 - **目标：涂黑部分格子（数墙），使得：**
   1. 每个数字格属于一个大小等于该数字的白色房间
@@ -540,14 +543,14 @@ utils/
 ### Phase 4: P2 游戏 (2周)
 - [x] 数回（Slither Link）：核心逻辑 + UI（含验证按钮）
 - [x] 灯塔（Akari）：核心逻辑 + UI（含校验反馈）
-- [x] 数墙（Nurikabe）：核心逻辑 + UI（⚠️ 需验证）
+- [x] 数墙（Nurikabe）：核心逻辑 + UI（✅ 胜利判断改为满足提示条件，题库3000题，规则弹窗）
 - [x] 一笔画（One-Stroke）：核心逻辑 + UI + CDN题库（3000题）+ 答案动画
 
 ### Phase 5: P3 游戏 (按需)
 - [ ] 战舰（Battleship）：核心逻辑 + UI
 
 ### Phase 6: 新增游戏 (基于 GitHub 资源)
-- [ ] 桥（Hashiwokakero）：参考 Simon Tatham + Hashiwokakero-Generator
+- [ ] 桥（Hashiwokakero）：🔒 已禁用，需修复规则验证后启用
 - [ ] 珍珠（Masyu）：参考 Simon Tatham + Puzzlink_Assistance
 - [ ] 帐篷（Tents）：参考 Simon Tatham + asp-tents-puzzle
 - [ ] 2048：参考 topics/2048 (262+ JS项目)
@@ -732,7 +735,7 @@ npm install @blex41/word-search
 | 数壹 | ✅ 已上线 | Puzzlink_Assistance |
 | 数回 | ✅ 已上线 | Simon Tatham, Puzzlink |
 | 灯塔 | ✅ 已上线 | Simon Tatham, Puzzlink |
-| 数墙 | ✅ 已上线 | nurikabe solver |
+| 数墙 | ✅ 已上线（题库3000题，提示匹配胜利判断） | nurikabe solver |
 | 一笔画 | ✅ 已上线 | GridPathFinder + Warnsdorff算法 |
 
 ---

@@ -114,24 +114,38 @@ Page({
     return result;
   },
 
-  // 合并相邻相同字母
+  // 合并相邻相同字母（一次只合并一遍，不连续合并）
   merge(arr) {
     let merged = false;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] === arr[i + 1] && arr[i] !== '') {
-        arr[i] = this.getNextTile(arr[i]);
-        arr.splice(i + 1, 1);
-        arr.push('');
-        merged = true;
+    const result = [];
+    let i = 0;
+    
+    while (i < arr.length) {
+      // 如果当前和下一个相同且不为空，合并
+      if (i < arr.length - 1 && arr[i] === arr[i + 1] && arr[i] !== '') {
+        const nextTile = this.getNextTile(arr[i]);
+        result.push(nextTile);
         playSound('drop', { pageId: 'merge-abc' });
         // 检测到 Z 触发胜利音效
-        if (arr[i] === 'Z') {
+        if (nextTile === 'Z') {
           setTimeout(() => playSound('win', { pageId: 'merge-abc' }), 150);
         }
-        i--;
+        i += 2;
+        merged = true;
+      } else if (arr[i] !== '') {
+        result.push(arr[i]);
+        i++;
+      } else {
+        i++;
       }
     }
-    return [merged, arr];
+    
+    // 补全空格
+    while (result.length < 4) {
+      result.push('');
+    }
+    
+    return [merged, result];
   },
 
   // 向左移动

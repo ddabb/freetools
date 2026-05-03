@@ -1,0 +1,117 @@
+<!--帐篷游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌱</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌿</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌳</text>
+        <text class="tab-text">困难</text>
+      </view>
+    </view>
+    <view class="info">
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid-shadow">
+      <view class="grid" style="width: {{cols * cellSize}}px;">
+        <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
+          <view class="row" wx:key="row">
+            <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
+              <view class="cell {{grid[row][col] === 1 ? 'tree' : ''}} {{tents[row][col] ? 'tent' : ''}}"
+                    style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                    data-row="{{row}}" data-col="{{col}}"
+                    bindtap="onCellTap">
+                <text wx:if="{{grid[row][col] === 1}}" class="tree-icon">🌲</text>
+                <text wx:if="{{tents[row][col]}}" class="tent-icon">⛺</text>
+              </view>
+            </block>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">全部通过！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <view class="next-btn" bindtap="nextPuzzle">下一题 ›</view>
+    </view>
+  </view>
+
+  <!-- 规则弹窗 -->
+  <view class="rules-overlay" wx:if="{{showRules}}" bindtap="onHideRules">
+    <view class="rules-card" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">📖 帐篷规则</text>
+        <view class="rules-close" bindtap="onHideRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <view class="rule-item">
+          <view class="rule-icon rule-tree">🌲</view>
+          <text class="rule-desc">每个<text class="hl-tree">树</text>旁边必须有1个帐篷</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-adj">🧭</view>
+          <text class="rule-desc">帐篷只能放在树的<text class="hl-adj">上下左右</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-unique">1:1</view>
+          <text class="rule-desc">树与帐篷是<text class="hl-unique">一一对应</text>的</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-noadj">⛺×⛺</view>
+          <text class="rule-desc">帐篷之间<text class="hl-noadj">不能相邻</text>（上下左右）</text>
+        </view>
+        <view class="rule-divider"></view>
+        <view class="rule-item">
+          <view class="rule-icon rule-tap">👆</view>
+          <text class="rule-desc">点击格子放置/移除帐篷</text>
+        </view>
+      </view>
+      <view class="rules-footer">
+        <view class="rules-ok-btn" bindtap="onHideRules">我知道了</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <view class="btn reset" bindtap="onReset">
+      <text>↩ 重置</text>
+    </view>
+    <view class="btn rules-btn" bindtap="onShowRules">
+      <text>📖 规则</text>
+    </view>
+    <view class="btn answer-btn {{showAnswer ? 'hide' : ''}}" bindtap="onShowAnswer">
+      <text wx:if="{{!showAnswer}}">💡 答案</text>
+      <text wx:if="{{showAnswer}}">🙈 隐藏</text>
+    </view>
+    <view class="btn next" bindtap="nextPuzzle">
+      <text>▶ 下一题</text>
+    </view>
+  </view>
+
+  <!-- 题号与跳关 -->
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
+  </view>
+</view>

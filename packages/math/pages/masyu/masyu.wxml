@@ -1,0 +1,151 @@
+<!--珍珠游戏页面-->
+<view class="container">
+  <!--顶部信息栏-->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌱</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌿</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌳</text>
+        <text class="tab-text">困难</text>
+      </view>
+    </view>
+    <view class="info">
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!--游戏区域-->
+  <view class="game-area">
+    <view class="grid-shadow">
+      <view class="grid-container" style="width: {{containerWidth}}px; height: {{containerHeight}}px;">
+        <!--格点-->
+        <view class="dots">
+          <block wx:for="{{rows + 1}}" wx:for-index="r" wx:key="r">
+            <block wx:for="{{cols + 1}}" wx:for-index="c" wx:key="c">
+              <view class="dot" style="left: {{c * cellSize + 15}}px; top: {{r * cellSize + 15}}px;"></view>
+            </block>
+          </block>
+        </view>
+
+        <!--珍珠（点）-->
+        <view class="pearls">
+          <block wx:for="{{rows + 1}}" wx:for-index="r" wx:key="r">
+            <block wx:for="{{cols + 1}}" wx:for-index="c" wx:key="c">
+              <view class="pearl-wrap"
+                    style="left: {{c * cellSize + 15}}px; top: {{r * cellSize + 15}}px;">
+                <view wx:if="{{grid[r] && grid[r][c] === 1}}"
+                      class="pearl white-pearl"></view>
+                <view wx:elif="{{grid[r] && grid[r][c] === 2}}"
+                      class="pearl black-pearl"></view>
+              </view>
+            </block>
+          </block>
+        </view>
+
+        <!--横边（向右）-->
+        <view class="edges-h">
+          <block wx:for="{{rows + 1}}" wx:for-index="r" wx:key="r">
+            <block wx:for="{{cols}}" wx:for-index="c" wx:key="c">
+              <view class="edge-h {{lines[r][c].right ? 'line' : ''}}"
+                    style="left: {{c * cellSize + 15}}px; top: {{r * cellSize + 15}}px; width: {{cellSize}}px; height: {{cellSize}}px;"
+                    data-r="{{r}}" data-c="{{c}}" data-dir="h"
+                    catchtap="onEdgeTap"></view>
+            </block>
+          </block>
+        </view>
+
+        <!--竖边（向下）-->
+        <view class="edges-v">
+          <block wx:for="{{rows}}" wx:for-index="r" wx:key="r">
+            <block wx:for="{{cols + 1}}" wx:for-index="c" wx:key="c">
+              <view class="edge-v {{lines[r][c].bottom ? 'line' : ''}}"
+                    style="left: {{c * cellSize + 15}}px; top: {{r * cellSize + 15}}px; height: {{cellSize}}px; width: {{cellSize}}px;"
+                    data-r="{{r}}" data-c="{{c}}" data-dir="v"
+                    catchtap="onEdgeTap"></view>
+            </block>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!--完成提示-->
+  <view class="complete-overlay" wx:if="{{isComplete}}" bindtap="nextPuzzle">
+    <view class="complete-card" catchtap="">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">全部通过！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <view class="next-btn" bindtap="nextPuzzle">下一题 ›</view>
+    </view>
+  </view>
+
+  <!--规则弹窗-->
+  <view class="rules-overlay" wx:if="{{showRules}}" bindtap="onHideRules">
+    <view class="rules-card" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">📖 珍珠规则</text>
+        <view class="rules-close" bindtap="onHideRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <view class="rule-item">
+          <view class="rule-icon rule-circle">●</view>
+          <text class="rule-desc">用线画单一闭合回路</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-white">○</view>
+          <text class="rule-desc">白珍珠必须直线穿过</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-black">●</view>
+          <text class="rule-desc">黑珍珠必须直角转弯</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-no-cross">✕</view>
+          <text class="rule-desc">线条不能交叉或分叉</text>
+        </view>
+        <view class="rule-divider"></view>
+        <view class="rule-item">
+          <view class="rule-icon rule-tap">👆</view>
+          <text class="rule-desc">点击格子边来画线条</text>
+        </view>
+      </view>
+      <view class="rules-footer">
+        <view class="rules-ok-btn" bindtap="onHideRules">我知道了</view>
+      </view>
+    </view>
+  </view>
+
+  <!--底部按钮-->
+  <view class="footer">
+    <view class="btn reset" bindtap="onReset">
+      <text>↩ 重置</text>
+    </view>
+    <view class="btn rules-btn" bindtap="onShowRules">
+      <text>📖 规则</text>
+    </view>
+    <view class="btn answer-btn {{showAnswer ? 'hide' : ''}}" bindtap="onShowAnswer">
+      <text wx:if="{{!showAnswer}}">💡 答案</text>
+      <text wx:if="{{showAnswer}}">🙈 隐藏</text>
+    </view>
+    <view class="btn next" bindtap="nextPuzzle">
+      <text>▶ 下一题</text>
+    </view>
+  </view>
+
+  <!--题号与跳关-->
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
+  </view>
+</view>

@@ -702,6 +702,26 @@ const tools = [
     description: '在格点间画线形成闭合环路，数字提示四周线段数'
   },
   {
+    id: 'tents',
+    name: '帐篷',
+    icon: '⛺',
+    color: 'green',
+    url: '/packages/math/pages/tents/tents',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['帐篷', '树', 'Tents', '逻辑', '益智'],
+    description: '在树旁放置帐篷，每个树旁只能有一个帐篷'
+  },
+  {
+    id: 'masyu',
+    name: '珍珠',
+    icon: '🔮',
+    color: 'indigo',
+    url: '/packages/math/pages/masyu/masyu',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['珍珠', 'Masyu', '画线', '环路', '逻辑', '益智'],
+    description: '用线画出闭合回路，黑白珍珠有不同转弯规则'
+  },
+  {
     id: 'akari',
     name: '灯塔',
     icon: '💡',

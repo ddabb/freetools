@@ -89,7 +89,9 @@
         "pages/slither-link/slither-link",
         "pages/akari/akari",
         "pages/nurikabe/nurikabe",
-        "pages/bridges/bridges"
+        "pages/bridges/bridges",
+        "pages/masyu/masyu",
+        "pages/tents/tents"
       ]
     },
     {

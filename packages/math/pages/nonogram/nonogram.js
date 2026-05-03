@@ -402,7 +402,7 @@ Page({
     var mode = this.data.mode;
     var op;
     if (mode === 'fill') {
-      op = (current + 1) % 3; // 0→1→2→0 循环
+      op = current === 1 ? 0 : 1; // 填充模式: 0→1→0（空→填→空）
     } else {
       if (current === 2) op = 0;
       else op = 2; // 0→2→0
