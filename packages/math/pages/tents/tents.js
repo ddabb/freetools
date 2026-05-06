@@ -31,7 +31,9 @@ Page({
     showRules: false,
     maxPuzzles: 1000,
     treeCount: 0,
-    tentCount: 0
+    tentCount: 0,
+    rowHints: [],
+    colHints: []
   },
 
   timer: null,
@@ -161,6 +163,10 @@ Page({
     const cellSize = this._calcCellSize(rows, cols);
     console.log(`[Tents] 计算出的格子大小: ${cellSize}`);
 
+    // 行列提示
+    const rowHints = puzzleData.rowCounts || Array(rows).fill(0);
+    const colHints = puzzleData.colCounts || Array(cols).fill(0);
+
     this.setData({
       rows,
       cols,
@@ -177,7 +183,9 @@ Page({
       cellSize,
       treeCount,
       tentCount: 0,
-      maxPuzzles
+      maxPuzzles,
+      rowHints,
+      colHints
     });
 
     this.startTimer();
@@ -271,8 +279,9 @@ Page({
 
   checkCompletion() {
     console.log('[Tents] checkCompletion 开始检查完成');
-    const { rows, cols, grid, tents } = this.data;
+    const { rows, cols, grid, tents, rowHints, colHints } = this.data;
 
+    // 1. 每棵树必须有1个帐篷紧邻
     const treeWithTent = {};
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
@@ -310,10 +319,11 @@ Page({
       }
     }
 
+    // 2. 帐篷之间不能相邻（含对角线）
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (tents[r][c]) {
-          const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+          const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
           for (const [dr, dc] of dirs) {
             const nr = r + dr, nc = c + dc;
             if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && tents[nr][nc]) {
@@ -321,6 +331,28 @@ Page({
               return;
             }
           }
+        }
+      }
+    }
+
+    // 3. 行列提示验证
+    if (rowHints && rowHints.length > 0) {
+      for (let r = 0; r < rows; r++) {
+        let cnt = 0;
+        for (let c = 0; c < cols; c++) { if (tents[r][c]) cnt++; }
+        if (cnt !== rowHints[r]) {
+          console.log(`[Tents] ❌ 第 ${r} 行帐篷数 ${cnt} ≠ 提示 ${rowHints[r]}`);
+          return;
+        }
+      }
+    }
+    if (colHints && colHints.length > 0) {
+      for (let c = 0; c < cols; c++) {
+        let cnt = 0;
+        for (let r = 0; r < rows; r++) { if (tents[r][c]) cnt++; }
+        if (cnt !== colHints[c]) {
+          console.log(`[Tents] ❌ 第 ${c} 列帐篷数 ${cnt} ≠ 提示 ${colHints[c]}`);
+          return;
         }
       }
     }
@@ -357,15 +389,12 @@ Page({
     this.loadPuzzle(difficulty, nextId);
   },
 
-  onJumpInput(e) {
-    const value = e.detail.value;
+  onJumpInputInline(e) {
+    const v = e.detail.value;
     const max = this.data.maxPuzzles;
-    let jumpInputValue = value;
-    
-    if (value && parseInt(value) > max) {
-      jumpInputValue = String(max);
-    }
-    console.log(`[Tents] onJumpInput 输入: ${value}, 处理后: ${jumpInputValue}`);
+    let jumpInputValue = v;
+    if (v && parseInt(v) > max) jumpInputValue = String(max);
+    console.log(`[Tents] onJumpInputInline 输入: ${v}, 处理后: ${jumpInputValue}`);
     this.setData({ jumpInputValue });
   },
 

@@ -23,11 +23,25 @@
     "miniprogram": {
       "list": [
         {
-          "name": "数回游戏",
-          "pathName": "packages/math/pages/slither-link/slither-link",
+          "name": "珍珠游戏",
+          "pathName": "packages/math/pages/masyu/masyu",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "灯塔游戏",
+          "pathName": "packages/math/pages/akari/akari",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "数回游戏",
+          "pathName": "packages/math/pages/slither-link/slither-link",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "数壹游戏",

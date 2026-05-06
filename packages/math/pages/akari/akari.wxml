@@ -16,9 +16,9 @@
   <!-- 游戏区域 -->
   <view class="game-area">
     <view class="grid" style="width: {{cols * cellSize}}px;">
-      <block wx:for="{{grid}}" wx:for-index="row" wx:for-item="gridRow">
+      <block wx:for="{{grid}}" wx:for-index="r" wx:for-item="gridRow" wx:key="r">
         <view class="row">
-          <block wx:for="{{gridRow}}" wx:for-index="col" wx:for-item="cell">
+          <block wx:for="{{gridRow}}" wx:for-index="c" wx:for-item="cell" wx:key="c">
             <!-- 黑格：CELL_BLACK=1, CELL_BLACK_0=2, CELL_BLACK_1=3... -->
             <view wx:if="{{cell >= 1}}"
                   class="cell black"
@@ -28,11 +28,11 @@
             </view>
             <!-- 白格：CELL_WHITE=0 -->
             <view wx:else
-                  class="cell white {{lit[row][col] ? 'lit' : ''}} {{lights[row][col] ? 'light' : ''}} {{showAnswer && answerLights[row][col] ? 'answer-light' : ''}}"
+                  class="cell white {{lit[r][c] ? 'lit' : ''}} {{lights[r][c] ? 'light' : ''}} {{showAnswer && answerLights[r][c] ? 'answer-light' : ''}}"
                   style="width: {{cellSize}}px; height: {{cellSize}}px;"
-                  data-row="{{row}}" data-col="{{col}}"
+                  data-row="{{r}}" data-col="{{c}}"
                   bindtap="onCellTap">
-              <text wx:if="{{showAnswer ? answerLights[row][col] : lights[row][col]}}" class="light-icon">{{showAnswer ? '✅' : '💡'}}</text>
+              <text wx:if="{{showAnswer ? answerLights[r][c] : lights[r][c]}}" class="light-icon">{{showAnswer ? '✅' : '💡'}}</text>
             </view>
           </block>
         </view>

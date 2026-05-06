@@ -712,16 +712,6 @@ const tools = [
     description: '在树旁放置帐篷，每个树旁只能有一个帐篷'
   },
   {
-    id: 'masyu',
-    name: '珍珠',
-    icon: '🔮',
-    color: 'indigo',
-    url: '/packages/math/pages/masyu/masyu',
-    categories: ['学习工具', '数学工具'],
-    keywords: ['珍珠', 'Masyu', '画线', '环路', '逻辑', '益智'],
-    description: '用线画出闭合回路，黑白珍珠有不同转弯规则'
-  },
-  {
     id: 'akari',
     name: '灯塔',
     icon: '💡',
@@ -740,17 +730,6 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['数墙', '涂黑', '连通', 'Nurikabe', '逻辑'],
     description: '涂黑格子形成白色区域，数字表示区域大小'
-  },
-  {
-    id: 'bridges',
-    name: '桥',
-    icon: '🌉',
-    color: 'blue',
-    url: '/packages/math/pages/bridges/bridges',
-    categories: ['学习工具', '数学工具'],
-    keywords: ['桥', '连岛', '画桥', 'Hashiwokakero', '逻辑', '益智'],
-    description: '用桥连接岛屿，数字表示需要连接的桥数',
-    publish: false
   },
   {
     id: 'frog-escape',

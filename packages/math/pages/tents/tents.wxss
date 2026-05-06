@@ -113,13 +113,65 @@ page {
   filter: drop-shadow(0 8rpx 32rpx rgba(46, 125, 50, 0.15));
 }
 
-.grid {
+.grid-with-hints {
   background: #fff;
   border-radius: 16rpx;
   overflow: hidden;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
-  max-width: calc(100vw - 40rpx);
-  overflow-x: auto;
+}
+
+.hints-row {
+  display: flex;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+.hint-corner {
+  width: 48rpx;
+  height: 40rpx;
+  flex-shrink: 0;
+}
+
+.col-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.col-hint.has-value {
+  font-weight: 700;
+}
+
+.grid-row-with-hint {
+  display: flex;
+}
+
+.row-hint {
+  width: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #2e7d32;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  flex-shrink: 0;
+}
+
+.row-hint.has-value {
+  font-weight: 700;
+}
+
+.grid {
+  background: #fff;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  max-width: none;
+  overflow-x: visible;
 }
 
 .row {
@@ -390,6 +442,11 @@ page {
   font-size: 24rpx;
 }
 
+.rule-icon.rule-hint {
+  background: #e3f2fd;
+  font-size: 24rpx;
+}
+
 .rule-desc {
   font-size: 27rpx;
   color: #334155;
@@ -413,6 +470,11 @@ page {
 
 .hl-noadj {
   color: #c62828;
+  font-weight: 700;
+}
+
+.hl-hint {
+  color: #1565c0;
   font-weight: 700;
 }
 
@@ -453,6 +515,15 @@ page {
   font-size: 28rpx;
   color: #475569;
   font-weight: 500;
+}
+
+.puzzle-idx {
+  font-size: 24rpx;
+  color: #4caf50;
+  font-weight: 600;
+  background: #e8f5e9;
+  padding: 10rpx 18rpx;
+  border-radius: 10rpx;
 }
 
 .jump-input {

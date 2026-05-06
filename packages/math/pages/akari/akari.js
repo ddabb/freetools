@@ -625,9 +625,13 @@ Page({
       const prevLit = lit.map(row => [...row]);
       markLit(r, c);
       if (isPartialValid() && backtrack(index + 1)) return true;
-      // 回溯
+      // 回溯：恢复 lit 状态
       lights[r][c] = false;
-      lit = prevLit;
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          lit[i][j] = prevLit[i][j];
+        }
+      }
       return false;
     };
     

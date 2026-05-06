@@ -17,6 +17,7 @@
       </view>
     </view>
     <view class="info">
+      <view class="puzzle-idx">{{puzzleId + 1}}/{{maxPuzzles}}</view>
       <view class="timer-box">
         <text class="timer-icon">⏱</text>
         <text class="timer">{{timeStr}}</text>
@@ -27,18 +28,29 @@
   <!-- 游戏区域 -->
   <view class="game-area">
     <view class="grid-shadow">
-      <view class="grid" style="width: {{cols * cellSize}}px;">
+      <view class="grid-with-hints">
+        <!-- 列提示行 -->
+        <view class="hints-row">
+          <view class="hint-corner"></view>
+          <block wx:for="{{colHints}}" wx:key="index">
+            <view class="col-hint {{item > 0 ? 'has-value' : ''}}" style="width: {{cellSize}}px;">{{item > 0 ? item : ''}}</view>
+          </block>
+        </view>
+        <!-- 带行提示的网格行 -->
         <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
-          <view class="row" wx:key="row">
-            <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
-              <view class="cell {{grid[row][col] === 1 ? 'tree' : ''}} {{tents[row][col] ? 'tent' : ''}}"
-                    style="width: {{cellSize}}px; height: {{cellSize}}px;"
-                    data-row="{{row}}" data-col="{{col}}"
-                    bindtap="onCellTap">
-                <text wx:if="{{grid[row][col] === 1}}" class="tree-icon">🌲</text>
-                <text wx:if="{{tents[row][col]}}" class="tent-icon">⛺</text>
-              </view>
-            </block>
+          <view class="grid-row-with-hint">
+            <view class="row-hint {{rowHints[row] > 0 ? 'has-value' : ''}}">{{rowHints[row] > 0 ? rowHints[row] : ''}}</view>
+            <view class="row">
+              <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
+                <view class="cell {{grid[row][col] === 1 ? 'tree' : ''}} {{tents[row][col] ? 'tent' : ''}}"
+                      style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                      data-row="{{row}}" data-col="{{col}}"
+                      bindtap="onCellTap">
+                  <text wx:if="{{grid[row][col] === 1}}" class="tree-icon">🌲</text>
+                  <text wx:if="{{tents[row][col]}}" class="tent-icon">⛺</text>
+                </view>
+              </block>
+            </view>
           </view>
         </block>
       </view>
@@ -77,7 +89,11 @@
         </view>
         <view class="rule-item">
           <view class="rule-icon rule-noadj">⛺×⛺</view>
-          <text class="rule-desc">帐篷之间<text class="hl-noadj">不能相邻</text>（上下左右）</text>
+          <text class="rule-desc">帐篷之间<text class="hl-noadj">不能相邻</text>（含对角线）</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-hint">🔢</view>
+          <text class="rule-desc">外侧数字表示<text class="hl-hint">该行/列帐篷数</text></text>
         </view>
         <view class="rule-divider"></view>
         <view class="rule-item">
@@ -111,7 +127,7 @@
   <!-- 题号与跳关 -->
   <view class="nav-row">
     <text class="puzzle-info">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
-    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJump" />
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJump" />
     <view class="btn-jump" bindtap="onJump">确定</view>
   </view>
 </view>
