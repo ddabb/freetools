@@ -37,7 +37,7 @@
 | 帐篷 (tents)              | ✅ 已上线 | `packages/math/pages/tents/`             | 树旁放帐篷，CDN题库1000题/难度       |
 | 珍珠 (masyu)              | ❌ 已放弃 | -                                        | 代码已删除，不再维护                |
 | 桥 (bridges)             | ❌ 已放弃 | -                                        | 代码已删除，不再维护                |
-| 战舰 (battleship)         | ⏳ 未开始 | -                                        | -                         |
+| 战舰 (battleship)         | ✅ 已上线 | `packages/math/pages/battleship/`        | 海战逻辑谜题，CDN题库1000题/难度     |
 | 幻方 (magic-square)       | ⏳ 未开始 | -                                        | -                         |
 | 推箱子 (sokoban)           | ⏳ 未开始 | -                                        | -                         |
 
@@ -763,7 +763,24 @@ utils/
 
 ***
 
-### 9.10 滑块拼图类
+### 9.10 战舰/Battleship
+
+| 项目            | GitHub                  | 语言   | 说明                  |
+| ------------- | ----------------------- | ---- | ------------------- |
+| battleship-js | danielborowski/battleship | JS   | JavaScript 战舰游戏实现 |
+| battleship    | samuelberthelot/battleship | TS   | TypeScript 战舰解谜游戏 |
+
+***
+
+### 9.11 星系/Galaxies
+
+| 项目       | GitHub                | 语言   | 说明                  |
+| -------- | --------------------- | ---- | ------------------- |
+| galaxies | jspenguin2017/galaxies | JS   | JavaScript Galaxies 游戏 |
+
+***
+
+### 9.12 滑块拼图类
 
 | 项目                  | GitHub                           | 语言   | 说明                  |
 | ------------------- | -------------------------------- | ---- | ------------------- |

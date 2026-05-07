@@ -47,6 +47,7 @@ const commonTools = [
   { id: 'password-generator', name: '密码生成', icon: '🔒', color: 'gray', url: '/packages/text/pages/password-generator/password-generator', categories: ['安全工具'], keywords: ['密码', '生成', '安全', '随机'], description: '生成安全的随机密码' },
 
   // ===== 其他常用 =====
+  { id: 'guessnumber', name: '猜猜数字', icon: '🔢', color: 'purple', url: '/packages/math/pages/guessnumber/guessnumber', categories: ['学习工具', '数学工具'], keywords: ['猜数字', 'Bulls and Cows', '猜谜', '逻辑', '益智'], description: '经典 Bulls and Cows 游戏，根据反馈猜出4位密码' },
   { id: 'random-selector', name: '取数模拟器', icon: '🎰', color: 'purple', url: '/packages/math/pages/random-selector/random-selector', categories: ['生活工具', '数学工具'], keywords: ['随机', '选号', '模拟', '六红一蓝', '五红两蓝'], description: '随机生成号码组合，支持模拟结果和匹配计算', frequency: 40 },
   { id: 'health-calculator', name: '健康计算', icon: '💪', color: 'teal', url: '/packages/health/pages/health-calculator/health-calculator', categories: ['健康工具'], keywords: ['健康', 'BMI', '体重', '身高'], description: '计算BMI和健康指标' },
   { id: 'emoji-to-png', name: 'Emoji转图片', icon: '🖼️', color: 'pink', url: '/packages/text/pages/emoji-to-png/emoji-to-png', categories: ['生活工具', '学习工具'], keywords: ['emoji', 'PNG', '图片', '转换'], description: '将单个emoji转换为小文件PNG图片' },

@@ -13,6 +13,9 @@ const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 const CELL_EMPTY = 0;
 const CELL_TREE = 1;
 
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds } = utils;
+
 Page({
   data: {
     rows: 6,
@@ -39,6 +42,7 @@ Page({
   timer: null,
   _currentPuzzle: null,
   _loadId: 0,
+  _pageId: 'tents',
 
   onLoad(options) {
     console.log('[Tents] onLoad 开始加载页面');
@@ -274,6 +278,7 @@ Page({
 
     console.log(`[Tents] onCellTap (${row},${col}) 切换帐篷，当前 ${tentCount} 个`);
     this.setData({ tents, tentCount });
+    playSound('click', { pageId: this._pageId });
     this.checkCompletion();
   },
 
@@ -358,6 +363,7 @@ Page({
     }
 
     console.log('[Tents] ✅ 所有检查通过！');
+    playSound('win', { vibrate: true, pageId: this._pageId });
     this.setData({ isComplete: true });
     this.stopTimer();
     wx.removeStorageSync('tents_saved');

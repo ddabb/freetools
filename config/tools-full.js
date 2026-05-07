@@ -641,6 +641,16 @@ const tools = [
     publish: true
   },
   {
+    id: 'guessnumber',
+    name: '猜猜数字',
+    icon: '🔢',
+    color: 'purple',
+    url: '/packages/math/pages/guessnumber/guessnumber',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['猜数字', 'Bulls and Cows', '猜谜', '逻辑', '益智'],
+    description: '经典 Bulls and Cows 游戏，根据反馈猜出4位密码'
+  },
+  {
     id: 'one-stroke-solver',
     name: '一笔画',
     icon: '✏️',
@@ -730,6 +740,16 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['数墙', '涂黑', '连通', 'Nurikabe', '逻辑'],
     description: '涂黑格子形成白色区域，数字表示区域大小'
+  },
+  {
+    id: 'battleship',
+    name: '战舰',
+    icon: '🚢',
+    color: 'blue',
+    url: '/packages/math/pages/battleship/battleship',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['战舰', 'Battleship', '海战', '逻辑', '益智'],
+    description: '根据边缘数字找出所有战舰位置，经典海战谜题'
   },
   {
     id: 'frog-escape',

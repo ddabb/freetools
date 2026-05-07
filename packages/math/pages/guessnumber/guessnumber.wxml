@@ -1,0 +1,93 @@
+<view class="container">
+  <view class="header">
+    <view class="title">猜猜数字</view>
+    <view class="subtitle">找出4位不重复的数字密码</view>
+  </view>
+
+  <!-- 当前输入框 -->
+  <view class="input-section">
+    <view class="input-label">当前猜测</view>
+    <view class="input-row">
+      <view class="input-boxes">
+        <view class="input-box {{currentInput[0] !== undefined ? 'filled' : ''}}">
+          <text wx:if="{{currentInput[0] !== undefined}}">{{currentInput[0]}}</text>
+          <text wx:else class="placeholder">_</text>
+        </view>
+        <view class="input-box {{currentInput[1] !== undefined ? 'filled' : ''}}">
+          <text wx:if="{{currentInput[1] !== undefined}}">{{currentInput[1]}}</text>
+          <text wx:else class="placeholder">_</text>
+        </view>
+        <view class="input-box {{currentInput[2] !== undefined ? 'filled' : ''}}">
+          <text wx:if="{{currentInput[2] !== undefined}}">{{currentInput[2]}}</text>
+          <text wx:else class="placeholder">_</text>
+        </view>
+        <view class="input-box {{currentInput[3] !== undefined ? 'filled' : ''}}">
+          <text wx:if="{{currentInput[3] !== undefined}}">{{currentInput[3]}}</text>
+          <text wx:else class="placeholder">_</text>
+        </view>
+      </view>
+      <!-- 操作按钮 -->
+      <view class="input-actions">
+        <view class="action-btn delete" bindtap="onDeleteTap">⌫</view>
+        <view class="action-btn confirm" bindtap="onSubmitTap">✓</view>
+      </view>
+    </view>
+    <!-- 隐藏的真实输入框 -->
+    <input
+      class="hidden-input"
+      type="number"
+      maxlength="4"
+      value="{{inputValue}}"
+      bindinput="onInputChange"
+      focus="{{inputFocus}}"
+    />
+    <!-- 点击区域触发输入框聚焦 -->
+    <view class="input-trigger" bindtap="onInputTap"></view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-bar">
+    <text class="tips-text">{{history.length > 0 ? lastFeedback : '输入4位不重复数字，10次机会猜出答案'}}</text>
+  </view>
+
+  <!-- 猜测历史 -->
+  <view class="history-section">
+    <view class="history-header">
+      <text class="history-title">猜测历史</text>
+      <text class="history-count">{{history.length}}/10</text>
+    </view>
+    <scroll-view class="history-list" scroll-y="true" scroll-into-view="{{scrollToId}}">
+      <view id="history-{{index}}" class="history-item" wx:for="{{history}}" wx:key="index">
+        <view class="history-guess">
+          <text class="guess-num" wx:for="{{item.guess}}" wx:key="index" wx:for-item="digit">{{digit}}</text>
+        </view>
+        <view class="history-feedback">
+          <text class="feedback-correct" wx:if="{{item.position > 0}}">{{item.position}}A</text>
+          <text class="feedback-wrong" wx:if="{{item.numbers - item.position > 0}}">{{item.numbers - item.position}}B</text>
+        </view>
+      </view>
+      <view class="empty-history" wx:if="{{history.length === 0}}">
+        <text>还没有猜测记录</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部重置按钮 -->
+  <view class="footer">
+    <view class="footer-btn" bindtap="onReset">
+      <text class="btn-icon">↻</text>
+      <text class="btn-text">重新开始</text>
+    </view>
+  </view>
+
+  <!-- 成功弹窗 -->
+  <view class="result-modal" wx:if="{{isComplete && !showAnswer}}">
+    <view class="result-content">
+      <view class="result-icon">{{isWin ? '🎉' : '😢'}}</view>
+      <view class="result-title">{{isWin ? '恭喜猜对！' : '很遗憾，机会用完了'}}</view>
+      <view class="result-answer">答案是：{{answer.join('')}}</view>
+      <view class="result-stats">用时：{{timeStr}} | 尝试：{{history.length}}次</view>
+      <view class="result-close" bindtap="onReset">再来一局</view>
+    </view>
+  </view>
+</view>

@@ -89,7 +89,9 @@
         "pages/slither-link/slither-link",
         "pages/akari/akari",
         "pages/nurikabe/nurikabe",
-        "pages/tents/tents"
+        "pages/tents/tents",
+        "pages/battleship/battleship",
+        "pages/guessnumber/guessnumber"
       ]
     },
     {

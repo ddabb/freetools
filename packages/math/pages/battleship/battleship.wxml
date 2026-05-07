@@ -1,0 +1,115 @@
+<!--战舰游戏页面-->
+<view class="container">
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🚣</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🚢</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🚤</text>
+        <text class="tab-text">困难</text>
+      </view>
+    </view>
+    <view class="info">
+      <view class="puzzle-idx">{{puzzleId + 1}}/{{maxPuzzles}}</view>
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="game-area">
+    <view class="grid-shadow">
+      <view class="grid-with-hints">
+        <view class="hints-row">
+          <view class="hint-corner"></view>
+          <block wx:for="{{colHints}}" wx:key="index">
+            <view class="col-hint {{item > 0 ? 'has-value' : ''}}" style="width: {{cellSize}}px;">{{item > 0 ? item : ''}}</view>
+          </block>
+        </view>
+        <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
+          <view class="grid-row-with-hint">
+            <view class="row-hint {{rowHints[row] > 0 ? 'has-value' : ''}}">{{rowHints[row] > 0 ? rowHints[row] : ''}}</view>
+            <view class="row">
+              <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
+                <view class="cell {{cell === 1 ? 'ship' : ''}} {{cell === 2 ? 'water' : ''}}"
+                      style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                      data-row="{{row}}" data-col="{{col}}"
+                      bindtap="onCellTap">
+                  <text wx:if="{{cell === 1}}" class="ship-icon">🚢</text>
+                  <text wx:if="{{cell === 2}}" class="water-icon">💧</text>
+                </view>
+              </block>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">全部通过！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <view class="next-btn" bindtap="nextPuzzle">下一题 ›</view>
+    </view>
+  </view>
+
+  <view class="rules-overlay" wx:if="{{showRules}}" bindtap="onHideRules">
+    <view class="rules-card" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">📖 战舰规则</text>
+        <view class="rules-close" bindtap="onHideRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <view class="rule-item">
+          <view class="rule-icon rule-num">🔢</view>
+          <text class="rule-desc">边缘数字表示<text class="hl-num">该行/列战舰格子数</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-ship">🚢</view>
+          <text class="rule-desc">战舰形状有<text class="hl-ship">1×1, 1×2, 1×3, 1×4</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-overlap">❌</view>
+          <text class="rule-desc">战舰之间<text class="hl-overlap">不能重叠</text></text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon rule-diag">↘</view>
+          <text class="rule-desc">战舰对角相邻<text class="hl-diag">是允许的</text></text>
+        </view>
+        <view class="rule-divider"></view>
+        <view class="rule-item">
+          <view class="rule-icon rule-tap">👆</view>
+          <text class="rule-desc">点击格子标记战舰，再次点击取消，第三次标记水域</text>
+        </view>
+      </view>
+      <view class="rules-footer">
+        <view class="rules-ok-btn" bindtap="onHideRules">我知道了</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <view class="btn reset" bindtap="onReset">↩ 重置</view>
+    <view class="btn rules-btn" bindtap="onShowRules">📖 规则</view>
+    <view class="btn answer-btn" bindtap="onShowAnswer">
+      <text wx:if="{{!showAnswer}}">💡 答案</text>
+      <text wx:if="{{showAnswer}}">🙈 隐藏</text>
+    </view>
+    <view class="btn next" bindtap="nextPuzzle">下一题 ▶</view>
+  </view>
+
+  <view class="nav-row">
+    <text class="puzzle-info">第 {{puzzleId + 1}}/{{maxPuzzles}} 题</text>
+    <input class="jump-input" type="number" placeholder="跳转" value="{{jumpInputValue}}" bindinput="onJumpInputInline" bindconfirm="onJump" />
+    <view class="btn-jump" bindtap="onJump">确定</view>
+  </view>
+</view>

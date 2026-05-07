@@ -1,0 +1,346 @@
+/* 猜猜数字游戏 - 简洁风格 */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  padding-bottom: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 头部 */
+.header {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+  margin-bottom: 8rpx;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 当前输入区域 */
+.input-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.input-label {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  text-align: center;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.input-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.input-box {
+  width: 90rpx;
+  height: 90rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #999;
+  border: 3rpx solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+.input-box.filled {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-color: #764ba2;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
+}
+
+.input-box .placeholder {
+  color: #ccc;
+  font-size: 44rpx;
+}
+
+/* 操作按钮 */
+.input-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.action-btn {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn.delete {
+  background: rgba(255, 255, 255, 0.9);
+  color: #666;
+  border: 3rpx solid #e0e0e0;
+}
+
+.action-btn.confirm {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: #fff;
+}
+
+/* 隐藏的真实输入框 */
+.hidden-input {
+  position: absolute;
+  left: -9999rpx;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+/* 点击区域 */
+.input-trigger {
+  position: absolute;
+  left: 0;
+  right: 240rpx;
+  top: 50rpx;
+  bottom: 0;
+  z-index: 10;
+}
+
+/* 提示信息 */
+.tips-bar {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.tips-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+}
+
+/* 历史记录 */
+.history-section {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+  max-height: 520rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.history-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.history-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-guess {
+  display: flex;
+  gap: 10rpx;
+}
+
+.guess-num {
+  width: 48rpx;
+  height: 48rpx;
+  background: #f0f0f0;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.history-feedback {
+  display: flex;
+  gap: 10rpx;
+}
+
+.feedback-correct {
+  padding: 6rpx 16rpx;
+  background: #4caf50;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.feedback-wrong {
+  padding: 6rpx 16rpx;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.empty-history {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  padding: 40rpx 0;
+}
+
+/* 底部重置按钮 */
+.footer {
+  display: flex;
+  gap: 12rpx;
+}
+
+.footer-btn {
+  flex: 1;
+  padding: 24rpx 0;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 16rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.footer-btn:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.btn-icon {
+  font-size: 36rpx;
+}
+
+.btn-text {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 结果弹窗 */
+.result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.result-content {
+  width: 80%;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 48rpx;
+  text-align: center;
+}
+
+.result-icon {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.result-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.result-answer {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 12rpx;
+  letter-spacing: 16rpx;
+}
+
+.result-stats {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 28rpx;
+}
+
+.result-close {
+  padding: 20rpx 60rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  display: inline-block;
+}

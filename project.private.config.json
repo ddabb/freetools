@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "珍珠游戏",
-          "pathName": "packages/math/pages/masyu/masyu",
+          "name": "猜猜数字",
+          "pathName": "packages/math/pages/guessnumber/guessnumber",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "珍珠游戏",
+          "pathName": "packages/math/pages/masyu/masyu",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "灯塔游戏",
