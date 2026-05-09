@@ -1,0 +1,143 @@
+<!--推箱子游戏页面-->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="difficulty-tabs">
+      <view class="tab {{difficulty === 'easy' ? 'active easy' : ''}}" data-difficulty="easy" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌱</text>
+        <text class="tab-text">简单</text>
+      </view>
+      <view class="tab {{difficulty === 'medium' ? 'active medium' : ''}}" data-difficulty="medium" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌿</text>
+        <text class="tab-text">中等</text>
+      </view>
+      <view class="tab {{difficulty === 'hard' ? 'active hard' : ''}}" data-difficulty="hard" bindtap="onDifficultyChange">
+        <text class="tab-icon">🌳</text>
+        <text class="tab-text">困难</text>
+      </view>
+    </view>
+    <view class="info">
+      <view class="puzzle-idx">{{puzzleId + 1}}/{{maxPuzzles}}</view>
+      <view class="timer-box">
+        <text class="timer-icon">⏱</text>
+        <text class="timer">{{timeStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏状态 -->
+  <view class="status-bar">
+    <view class="stat-item">
+      <text class="stat-label">步数</text>
+      <text class="stat-value">{{moveCount}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">箱子</text>
+      <text class="stat-value">{{boxCount}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">目标</text>
+      <text class="stat-value">{{goalCount}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-area">
+    <view class="grid-container" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px;">
+      <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
+        <view class="grid-row" style="height: {{cellSize}}px;">
+          <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
+            <view class="cell {{cell === 1 ? 'wall' : ''}}"
+                  style="width: {{cellSize}}px; height: {{cellSize}}px;"
+                  data-r="{{row}}" data-c="{{col}}"
+                  bindtap="onCellTap">
+              <!-- 目标点 -->
+              <view wx:if="{{goals.length > 0 && goals.some(function(g){return g[0] === row && g[1] === col;})}}" class="goal {{boxes.some(function(b){return b[0] === row && b[1] === col;}) ? 'box-on-goal' : ''}}">
+                <text wx:if="{{boxes.some(function(b){return b[0] === row && b[1] === col;})}}" class="box-icon">📦</text>
+                <text wx:else class="goal-icon">●</text>
+              </view>
+              <!-- 箱子（不在目标上） -->
+              <view wx:elif="{{boxes.length > 0 && boxes.some(function(b){return b[0] === row && b[1] === col;}) && !goals.some(function(g){return g[0] === row && g[1] === col;})}}" class="box">
+                <text class="box-icon">📦</text>
+              </view>
+              <!-- 玩家 -->
+              <view wx:elif="{{playerPos[0] === row && playerPos[1] === col}}" class="player">
+                <text class="player-icon">🧑</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="controls">
+    <view class="control-btn" bindtap="onPrevPuzzle">◀ 上一题</view>
+    <view class="control-btn reset-btn" bindtap="onReset">重置</view>
+    <view class="control-btn" bindtap="onNextPuzzle">下一题 ▶</view>
+  </view>
+
+  <!-- 功能按钮 -->
+  <view class="func-btns">
+    <view class="func-btn" bindtap="onShowRules">📖 规则</view>
+    <view class="func-btn" bindtap="onShowAnswer">💡 提示</view>
+  </view>
+
+  <!-- 完成提示 -->
+  <view class="complete-overlay" wx:if="{{isComplete}}">
+    <view class="complete-card">
+      <text class="complete-icon">🎉</text>
+      <text class="complete-text">恭喜通关！</text>
+      <text class="complete-time">用时 {{timeStr}}</text>
+      <text class="complete-moves">步数 {{moveCount}}</text>
+      <view class="next-btn" bindtap="onNextPuzzle">下一题 ›</view>
+    </view>
+  </view>
+
+  <!-- 规则弹窗 -->
+  <view class="rules-overlay" wx:if="{{showRules}}" bindtap="onShowRules">
+    <view class="rules-card" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">📖 推箱子规则</text>
+        <view class="rules-close" bindtap="onShowRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <view class="rule-item">
+          <view class="rule-number">1</view>
+          <text class="rule-desc">推动箱子到<text class="hl-goal">目标点</text>即可通关</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-number">2</view>
+          <text class="rule-desc">每次只能推动一个箱子</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-number">3</view>
+          <text class="rule-desc">箱子不能穿过墙壁或其他箱子</text>
+        </view>
+        <view class="rule-item">
+          <view class="rule-number">4</view>
+          <text class="rule-desc"><text class="hl-player">点击</text>空格移动玩家</text>
+        </view>
+        <view class="rule-icon-legend">
+          <text class="legend-item">🧑 玩家</text>
+          <text class="legend-item">📦 箱子</text>
+          <text class="legend-item">● 目标点</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答案演示弹窗 -->
+  <view class="answer-overlay" wx:if="{{showAnswer}}">
+    <view class="answer-card">
+      <view class="answer-header">
+        <text class="answer-title">💡 答案演示中...</text>
+        <view class="answer-close" bindtap="onCloseAnswer">✕</view>
+      </view>
+      <view class="answer-body">
+        <text class="answer-hint">观看解题动画</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,497 @@
+/* 推箱子游戏样式 */
+page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+}
+
+.container {
+  min-height: 100vh;
+  padding: 20rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== 顶部信息栏 ==================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 152, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.difficulty-tabs {
+  display: flex;
+  gap: 12rpx;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 14rpx 20rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  background: #f1f5f9;
+  transition: all 0.25s ease;
+  border: 2rpx solid transparent;
+}
+
+.tab.active {
+  color: #fff;
+}
+
+.tab.active.easy {
+  background: #4caf50;
+  border-color: #43a047;
+}
+
+.tab.active.medium {
+  background: #ff9800;
+  border-color: #fb8c00;
+}
+
+.tab.active.hard {
+  background: #f44336;
+  border-color: #e53935;
+}
+
+.tab-icon {
+  font-size: 24rpx;
+}
+
+.tab-text {
+  font-weight: 500;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.puzzle-idx {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #37474f;
+}
+
+.timer-box {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 16rpx;
+  background: #f1f5f9;
+  border-radius: 12rpx;
+}
+
+.timer-icon {
+  font-size: 24rpx;
+}
+
+.timer {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #37474f;
+  font-family: monospace;
+}
+
+/* ==================== 状态栏 ==================== */
+.status-bar {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  padding: 16rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #64748b;
+}
+
+.stat-value {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #37474f;
+}
+
+/* ==================== 游戏区域 ==================== */
+.game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.15);
+}
+
+.grid-row {
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1rpx solid #eee;
+  background: #f5f5f5;
+  transition: background 0.15s ease;
+}
+
+.cell.wall {
+  background: #5d4037;
+  border-color: #4e342e;
+}
+
+/* 目标点 */
+.goal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 152, 0, 0.2);
+  border-radius: 8rpx;
+}
+
+.goal-icon {
+  font-size: 20rpx;
+  color: #ff9800;
+}
+
+.goal.box-on-goal {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+/* 箱子 */
+.box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffb74d;
+  border-radius: 8rpx;
+}
+
+.box-icon {
+  font-size: 36rpx;
+}
+
+/* 玩家 */
+.player {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #bbdefb;
+  border-radius: 50%;
+}
+
+.player-icon {
+  font-size: 40rpx;
+}
+
+/* ==================== 操作按钮 ==================== */
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+.control-btn {
+  padding: 16rpx 32rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #37474f;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.control-btn.reset-btn {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+/* ==================== 功能按钮 ==================== */
+.func-btns {
+  display: flex;
+  justify-content: center;
+  gap: 20rpx;
+  padding: 0 20rpx 20rpx;
+}
+
+.func-btn {
+  padding: 12rpx 24rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+/* ==================== 完成弹窗 ==================== */
+.complete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.complete-card {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  box-shadow: 0 16rpx 64rpx rgba(0, 0, 0, 0.3);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.complete-icon {
+  font-size: 80rpx;
+}
+
+.complete-text {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.complete-time,
+.complete-moves {
+  font-size: 28rpx;
+  color: #64748b;
+}
+
+.next-btn {
+  margin-top: 16rpx;
+  padding: 16rpx 48rpx;
+  background: #4caf50;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* ==================== 规则弹窗 ==================== */
+.rules-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.rules-card {
+  background: #fff;
+  border-radius: 24rpx;
+  width: 80%;
+  max-height: 70%;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.rules-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.rules-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #37474f;
+}
+
+.rules-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32rpx;
+  color: #94a3b8;
+}
+
+.rules-body {
+  padding: 24rpx;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.rule-number {
+  width: 36rpx;
+  height: 36rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 22rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.rule-desc {
+  font-size: 28rpx;
+  color: #37474f;
+  line-height: 1.5;
+}
+
+.rule-icon-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24rpx;
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.legend-item {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.hl-goal {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.hl-player {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* ==================== 答案演示弹窗 ==================== */
+.answer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.answer-card {
+  background: #fff;
+  border-radius: 24rpx;
+  width: 80%;
+  max-width: 600rpx;
+  padding: 40rpx;
+  animation: slideUp 0.25s ease;
+}
+
+.answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.answer-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ff9800;
+}
+
+.answer-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f1f5f9;
+  border-radius: 50%;
+  font-size: 28rpx;
+  color: #64748b;
+}
+
+.answer-body {
+  text-align: center;
+}
+
+.answer-hint {
+  font-size: 28rpx;
+  color: #64748b;
+}

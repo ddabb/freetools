@@ -1,0 +1,519 @@
+/**
+ * 推箱子 (Sokoban) 游戏 - CDN版
+ * 规则：
+ * 1. 玩家推动箱子到目标位置
+ * 2. 箱子只能被推动，不能拉动
+ * 3. 每次只能推动一个箱子
+ * 4. 所有箱子到达目标位置即可通关
+ */
+
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/sokoban';
+const TOTAL_PUZZLES = { easy: 50, medium: 48, hard: 10 };
+
+const CELL_EMPTY = 0;
+const CELL_WALL = 1;
+const CELL_BOX = 2;
+const CELL_GOAL = 3;
+const CELL_BOX_ON_GOAL = 4;
+
+const utils = require('../../../../utils/index');
+const { playSound, preloadSounds } = utils;
+
+Page({
+  data: {
+    rows: 6,
+    cols: 6,
+    grid: [],
+    playerPos: [0, 0],
+    boxes: [],
+    goals: [],
+    difficulty: 'easy',
+    puzzleId: 0,
+    jumpInputValue: '',
+    time: 0,
+    timeStr: '0:00',
+    isPlaying: false,
+    isComplete: false,
+    cellSize: 40,
+    showAnswer: false,
+    showRules: false,
+    maxPuzzles: 50,
+    boxCount: 0,
+    goalCount: 0,
+    moveCount: 0
+  },
+
+  timer: null,
+  _currentPuzzle: null,
+  _loadId: 0,
+  _pageId: 'sokoban',
+  _solutionMoves: [],
+  _playbackTimer: null,
+  _playbackStep: 0,
+
+  // A* 求解器
+  _solveAStar(grid, boxes, goals, playerPos, maxSteps = 500) {
+    const rows = grid.length;
+    const cols = grid[0] ? grid[0].length : 0;
+    
+    // 检查位置是否有效
+    const isValid = (r, c) => r >= 0 && r < rows && c >= 0 && c < cols && grid[r] && grid[r][c] !== CELL_WALL;
+    
+    // 检查箱子是否在目标上
+    const isAllDone = (bxs) => bxs.every(b => goals.some(g => g[0] === b[0] && g[1] === b[1]));
+    
+    // 状态哈希
+    const stateKey = (p, bxs) => p[0] + ',' + p[1] + '|' + bxs.map(b => b[0] + ',' + b[1]).sort().join(';');
+    
+    // BFS/A* 搜索
+    const openSet = new Map();
+    const closedSet = new Set();
+    const cameFrom = new Map();
+    const gScore = new Map();
+    
+    const startKey = stateKey(playerPos, boxes);
+    openSet.set(startKey, 0);
+    gScore.set(startKey, 0);
+    
+    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    
+    while (openSet.size > 0) {
+      // 取出 fScore 最小的状态
+      let current = null;
+      let minF = Infinity;
+      for (const [key, f] of openSet) {
+        if (f < minF) {
+          minF = f;
+          current = key;
+        }
+      }
+      
+      if (!current) break;
+      openSet.delete(current);
+      
+      if (closedSet.has(current)) continue;
+      closedSet.add(current);
+      
+      // 解析当前状态
+      const [posPart, boxPart] = current.split('|');
+      const [pr, pc] = posPart.split(',').map(Number);
+      const bxs = boxPart.split(';').map(b => b.split(',').map(Number));
+      
+      // 检查是否完成
+      if (isAllDone(bxs)) {
+        // 重建路径
+        const path = [];
+        let key = current;
+        while (cameFrom.has(key)) {
+          const prev = cameFrom.get(key);
+          const [, move] = key.split(':');
+          if (move) path.unshift(move);
+          key = prev;
+        }
+        return path;
+      }
+      
+      const currentG = gScore.get(current);
+      if (currentG >= maxSteps) continue;
+      
+      // 尝试四个方向
+      for (const [dr, dc] of directions) {
+        const nr = pr + dr;
+        const nc = pc + dc;
+        
+        if (!isValid(nr, nc)) continue;
+        
+        const newBoxes = bxs.map(b => [...b]);
+        let moved = false;
+        let move = null;
+        
+        // 检查是否推动箱子
+        const boxIdx = newBoxes.findIndex(b => b[0] === nr && b[1] === nc);
+        if (boxIdx >= 0) {
+          const nbr = nr + dr;
+          const nbc = nc + dc;
+          if (!isValid(nbr, nbc)) continue;
+          
+          const nextBoxIdx = newBoxes.findIndex(b => b[0] === nbr && b[1] === nbc);
+          if (nextBoxIdx >= 0) continue;
+          
+          newBoxes[boxIdx] = [nbr, nbc];
+          moved = true;
+          move = dr === 1 ? 'down' : dr === -1 ? 'up' : dc === 1 ? 'right' : 'left';
+        } else {
+          move = dr === 1 ? 'down' : dr === -1 ? 'up' : dc === 1 ? 'right' : 'left';
+        }
+        
+        const nextKey = stateKey([nr, nc], newBoxes) + (move ? ':' + move : '');
+        if (closedSet.has(nextKey)) continue;
+        
+        const nextG = currentG + 1;
+        const heuristic = newBoxes.filter(b => !goals.some(g => g[0] === b[0] && g[1] === b[1])).length * 2;
+        const nextF = nextG + heuristic;
+        
+        if (!gScore.has(nextKey) || nextG < gScore.get(nextKey)) {
+          gScore.set(nextKey, nextG);
+          cameFrom.set(nextKey, current);
+          openSet.set(nextKey, nextF);
+        }
+      }
+    }
+    
+    return null; // 无解
+  },
+
+  // 播放动画
+  _playSolution() {
+    if (!this._solutionMoves || this._solutionMoves.length === 0) return;
+    
+    this._playbackStep = 0;
+    this._playbackTimer = setInterval(() => {
+      if (this._playbackStep >= this._solutionMoves.length) {
+        this._stopPlayback();
+        return;
+      }
+      
+      const move = this._solutionMoves[this._playbackStep];
+      this._applyMove(move);
+      this._playbackStep++;
+    }, 300);
+  },
+
+  _applyMove(direction) {
+    const { playerPos, grid, boxes, goals } = this.data;
+    const [pr, pc] = playerPos;
+    
+    const dr = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
+    const dc = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
+    
+    const nr = pr + dr;
+    const nc = pc + dc;
+    
+    if (grid[nr] && grid[nr][nc] === CELL_WALL) return;
+    
+    let newBoxes = boxes.map(b => [...b]);
+    
+    const boxIdx = newBoxes.findIndex(b => b[0] === nr && b[1] === nc);
+    if (boxIdx >= 0) {
+      const nbr = nr + dr;
+      const nbc = nc + dc;
+      if (grid[nbr] && grid[nbr][nbc] === CELL_WALL) return;
+      if (newBoxes.some(b => b[0] === nbr && b[1] === nbc)) return;
+      newBoxes[boxIdx] = [nbr, nbc];
+    }
+    
+    this.setData({ playerPos: [nr, nc], boxes: newBoxes, moveCount: this.data.moveCount + 1 });
+  },
+
+  _stopPlayback() {
+    if (this._playbackTimer) {
+      clearInterval(this._playbackTimer);
+      this._playbackTimer = null;
+    }
+    this._solutionMoves = [];
+    this._playbackStep = 0;
+  },
+
+  onCloseAnswer() {
+    console.log('[Sokoban] 关闭答案');
+    this._stopPlayback();
+    this.setData({ showAnswer: false });
+    this.onReset();
+  },
+
+  onLoad(options) {
+    console.log('[Sokoban] onLoad 开始加载页面');
+    preloadSounds(this, ['tap', 'push', 'win', 'error']);
+    
+    const saved = wx.getStorageSync('sokoban_saved');
+    if (saved && saved.grid) {
+      console.log('[Sokoban] 使用本地缓存数据');
+      this.setData({
+        ...saved,
+        isPlaying: true,
+        showAnswer: false
+      });
+      this._currentPuzzle = { grid: saved.grid, boxes: saved.boxes, goals: saved.goals };
+      this.startTimer();
+    } else {
+      const difficulty = options.difficulty || 'easy';
+      console.log(`[Sokoban] 从 ${difficulty} 难度第 1 题开始`);
+      this.loadPuzzle(difficulty, 0);
+    }
+  },
+
+  onUnload() {
+    console.log('[Sokoban] onUnload 页面卸载');
+    this.stopTimer();
+    if (this.data.isPlaying && !this.data.isComplete) {
+      console.log('[Sokoban] 保存游戏状态');
+      wx.setStorageSync('sokoban_saved', {
+        rows: this.data.rows,
+        cols: this.data.cols,
+        grid: this.data.grid,
+        boxes: this.data.boxes,
+        goals: this.data.goals,
+        playerPos: this.data.playerPos,
+        difficulty: this.data.difficulty,
+        puzzleId: this.data.puzzleId,
+        time: this.data.time
+      });
+    }
+  },
+
+  loadPuzzle(difficulty, puzzleId) {
+    const self = this;
+    const loadId = ++this._loadId;
+    const maxPuzzles = TOTAL_PUZZLES[difficulty] || 50;
+    
+    console.log(`[Sokoban] loadPuzzle ${difficulty} 难度第 ${puzzleId + 1}/${maxPuzzles} 题, loadId=${loadId}`);
+
+    this.setData({ isPlaying: false, isComplete: false, showAnswer: false, moveCount: 0 });
+
+    const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
+    const cacheKey = 'cdn_sokoban_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
+
+    const cached = wx.getStorageSync(cacheKey);
+    if (cached && cached.grid) {
+      console.log('[Sokoban] 使用本地缓存的题目');
+      cached._loadId = loadId;
+      this._applyPuzzle(cached, difficulty, puzzleId, maxPuzzles);
+      return;
+    }
+
+    wx.downloadFile({
+      url: CDN_BASE + '/' + filename,
+      success(res) {
+        console.log('[Sokoban] 下载成功');
+        const fs = wx.getFileSystemManager();
+        const content = fs.readFileSync(res.tempFilePath, 'utf8');
+        let puzzle;
+        try {
+          puzzle = JSON.parse(content);
+          puzzle._loadId = loadId;
+          wx.setStorageSync(cacheKey, puzzle);
+        } catch (e) {
+          console.error('[Sokoban] 解析失败', e);
+          self.loadPuzzle(difficulty, puzzleId);
+          return;
+        }
+        self._applyPuzzle(puzzle, difficulty, puzzleId, maxPuzzles);
+      },
+      fail(err) {
+        console.error('[Sokoban] 下载失败', err);
+        self.loadPuzzle(difficulty, puzzleId);
+      }
+    });
+  },
+
+  _applyPuzzle(puzzle, difficulty, puzzleId, maxPuzzles) {
+    if (puzzle._loadId !== this._loadId) {
+      console.log('[Sokoban] 忽略过期题目');
+      return;
+    }
+
+    console.log('[Sokoban] 应用题目', puzzle.rows + 'x' + puzzle.cols);
+
+    const grid = puzzle.grid || [];
+    const rows = puzzle.rows || 6;
+    const cols = puzzle.cols || 6;
+    const boxes = puzzle.boxes || [];
+    const goals = puzzle.goals || [];
+    const playerPos = puzzle.playerStart || puzzle.playerPos || [0, 0];
+
+    this._currentPuzzle = { grid, boxes, goals, playerPos };
+
+    const cellSize = cols > 8 ? 35 : (cols > 6 ? 40 : 45);
+
+    this.setData({
+      rows, cols,
+      grid, boxes, goals,
+      playerPos,
+      difficulty,
+      puzzleId,
+      maxPuzzles,
+      boxCount: boxes.length,
+      goalCount: goals.length,
+      cellSize,
+      isPlaying: true,
+      isComplete: false,
+      showAnswer: false
+    });
+
+    this.startTimer();
+  },
+
+  startTimer() {
+    this.stopTimer();
+    this.setData({ time: 0, timeStr: '0:00' });
+    this.timer = setInterval(() => {
+      const t = this.data.time + 1;
+      const m = Math.floor(t / 60);
+      const s = t % 60;
+      this.setData({ time: t, timeStr: m + ':' + String(s).padStart(2, '0') });
+    }, 1000);
+  },
+
+  stopTimer() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  },
+
+  onCellTap(e) {
+    if (!this.data.isPlaying || this.data.isComplete) return;
+
+    const { r, c } = e.currentTarget.dataset;
+    const { playerPos, grid, boxes, goals, cellSize } = this.data;
+    const [pr, pc] = playerPos;
+
+    const dr = r - pr;
+    const dc = c - pc;
+
+    if (Math.abs(dr) + Math.abs(dc) !== 1) return;
+
+    const nr = pr + dr;
+    const nc = pc + dc;
+
+    if (grid[nr] && grid[nr][nc] === CELL_WALL) {
+      playSound(this, 'error');
+      return;
+    }
+
+    const boxIndex = boxes.findIndex(b => b[0] === nr && b[1] === nc);
+    
+    if (boxIndex >= 0) {
+      const nbr = nr + dr;
+      const nbc = nc + dc;
+
+      if (grid[nbr] && grid[nbr][nbc] === CELL_WALL) {
+        playSound(this, 'error');
+        return;
+      }
+
+      const nextBoxIndex = boxes.findIndex(b => b[0] === nbr && b[1] === nbc);
+      if (nextBoxIndex >= 0) {
+        playSound(this, 'error');
+        return;
+      }
+
+      playSound(this, 'push');
+      boxes[boxIndex] = [nbr, nbc];
+      this.setData({ boxes, playerPos: [nr, nc], moveCount: this.data.moveCount + 1 });
+    } else {
+      playSound(this, 'tap');
+      this.setData({ playerPos: [nr, nc], moveCount: this.data.moveCount + 1 });
+    }
+
+    this._checkWin();
+  },
+
+  _checkWin() {
+    const { boxes, goals } = this.data;
+    let allOnGoal = true;
+
+    for (const box of boxes) {
+      const onGoal = goals.some(g => g[0] === box[0] && g[1] === box[1]);
+      if (!onGoal) {
+        allOnGoal = false;
+        break;
+      }
+    }
+
+    if (allOnGoal) {
+      console.log('[Sokoban] 通关');
+      this.stopTimer();
+      this.setData({ isComplete: true, isPlaying: false });
+      playSound(this, 'win');
+      wx.removeStorageSync('sokoban_saved');
+    }
+  },
+
+  onNextPuzzle() {
+    const { difficulty, puzzleId, maxPuzzles } = this.data;
+    const nextId = (puzzleId + 1) % maxPuzzles;
+    console.log(`[Sokoban] 下一题 ${difficulty} 难度第 ${nextId + 1} 题`);
+    this.loadPuzzle(difficulty, nextId);
+  },
+
+  onPrevPuzzle() {
+    const { difficulty, puzzleId, maxPuzzles } = this.data;
+    const prevId = (puzzleId - 1 + maxPuzzles) % maxPuzzles;
+    console.log(`[Sokoban] 上一题 ${difficulty} 难度第 ${prevId + 1} 题`);
+    this.loadPuzzle(difficulty, prevId);
+  },
+
+  onDifficultyChange(e) {
+    const difficulty = e.currentTarget.dataset.difficulty;
+    console.log(`[Sokoban] 切换难度 ${difficulty}`);
+    this.loadPuzzle(difficulty, 0);
+  },
+
+  onJumpInput(e) {
+    this.setData({ jumpInputValue: e.detail.value });
+  },
+
+  onJumpSubmit() {
+    const { difficulty, maxPuzzles, jumpInputValue } = this.data;
+    let id = parseInt(jumpInputValue) - 1;
+    if (isNaN(id) || id < 0) id = 0;
+    if (id >= maxPuzzles) id = maxPuzzles - 1;
+    console.log(`[Sokoban] 跳转第 ${id + 1} 题`);
+    this.setData({ jumpInputValue: '' });
+    this.loadPuzzle(difficulty, id);
+  },
+
+  onReset() {
+    console.log('[Sokoban] 重置本题');
+    if (this._currentPuzzle) {
+      this.setData({
+        grid: this._currentPuzzle.grid,
+        boxes: this._currentPuzzle.boxes,
+        goals: this._currentPuzzle.goals,
+        playerPos: this._currentPuzzle.playerPos,
+        moveCount: 0
+      });
+      this.startTimer();
+    }
+  },
+
+  onShowRules() {
+    this.setData({ showRules: !this.data.showRules });
+  },
+
+  onShowAnswer() {
+    if (this.data.isComplete) return;
+    if (this.data.showAnswer) {
+      // 已经在显示答案，关闭并重置
+      this.onCloseAnswer();
+      return;
+    }
+    console.log('[Sokoban] 开始求解');
+    this.stopTimer();
+    
+    const { grid, boxes, goals, playerPos } = this._currentPuzzle || this.data;
+    const solution = this._solveAStar(grid, boxes, goals, playerPos);
+    
+    if (!solution || solution.length === 0) {
+      console.log('[Sokoban] 无解');
+      wx.showToast({ title: '此题无解', icon: 'none' });
+      this.setData({ showAnswer: false });
+      return;
+    }
+    
+    console.log('[Sokoban] 找到解法，步数：' + solution.length);
+    this._solutionMoves = solution;
+    this.setData({ showAnswer: true });
+    
+    // 开始动画播放
+    this._playSolution();
+  },
+
+  onShowAnswerOld() {
+    if (this.data.isComplete) return;
+    console.log('[Sokoban] 显示答案');
+    this.setData({ showAnswer: true });
+    this.stopTimer();
+  }
+});

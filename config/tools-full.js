@@ -752,6 +752,16 @@ const tools = [
     description: '根据边缘数字找出所有战舰位置，经典海战谜题'
   },
   {
+    id: 'sokoban',
+    name: '推箱子',
+    icon: '📦',
+    color: 'orange',
+    url: '/packages/math/pages/sokoban/sokoban',
+    categories: ['学习工具', '数学工具'],
+    keywords: ['推箱子', 'Sokoban', '仓库', '益智', '经典'],
+    description: '推动箱子到目标位置，经典推箱子谜题'
+  },
+  {
     id: 'frog-escape',
     name: '躲避牛蛙',
     icon: '🐸',

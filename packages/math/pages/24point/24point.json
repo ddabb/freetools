@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "🎮 24点速算"
+  "navigationBarTitleText": "24点速算",
+  "navigationBarBackgroundColor": "#3498db",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {}
 }

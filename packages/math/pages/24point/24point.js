@@ -603,7 +603,8 @@ Page({
       });
       
       // 处理平方根
-      calcExpression = calcExpression.replace(/√?\(\d+)/g, (match, num) => {
+      calcExpression = calcExpression.replace(/√?\(\d+\)/g, (match) => {
+        const num = match.match(/\d+/)[0];
         return Math.sqrt(parseInt(num));
       });
       
