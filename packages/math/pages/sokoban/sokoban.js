@@ -614,37 +614,9 @@ Page({
     console.log('[Sokoban] 答案步数：' + moves.length);
     this._solutionMoves = moves;
     this.setData({ showAnswer: true });
-    
+
     // 开始动画播放
     this._playSolution();
-  },
-
-  // 触摸滑动切换题目
-  onTouchStart(e) {
-    this._touchStartX = e.touches[0].clientX;
-    this._touchStartY = e.touches[0].clientY;
-  },
-
-  onTouchEnd(e) {
-    if (!this._touchStartX) return;
-    const dx = e.changedTouches[0].clientX - this._touchStartX;
-    const dy = e.changedTouches[0].clientY - this._touchStartY;
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
-    // 滑动距离小于 30px 视为无效
-    if (Math.max(absDx, absDy) < 30) {
-      this._touchStartX = null;
-      this._touchStartY = null;
-      return;
-    }
-    // 确定滑动方向（横向优先）
-    if (absDx > absDy) {
-      this.onNavigate(dx > 0 ? 'next' : 'prev');
-    } else {
-      this.onNavigate(dy > 0 ? 'next' : 'prev');
-    }
-    this._touchStartX = null;
-    this._touchStartY = null;
   },
 
   onShowAnswerOld() {
@@ -659,6 +631,10 @@ Page({
     this._touchStartX = e.touches[0].clientX;
     this._touchStartY = e.touches[0].clientY;
     this._touchMoved = false;
+  },
+
+  onTouchMove(e) {
+    this._touchMoved = true;
   },
 
   onTouchEnd(e) {

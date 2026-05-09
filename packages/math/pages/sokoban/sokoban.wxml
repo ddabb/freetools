@@ -46,7 +46,7 @@
   <!-- 游戏区域 -->
   <view class="game-area">
     <view class="grid-container" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px;"
-          bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
+          catchtouchstart="onTouchStart" catchtouchmove="onTouchMove" catchtouchend="onTouchEnd">
       <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
         <view class="grid-row" style="height: {{cellSize}}px;">
           <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">

@@ -14,6 +14,14 @@ const audioCache = {};
 // 正在下载的音效
 const downloading = new Set();
 
+// 音效名称别名映射（兼容 CDN 实际文件名）
+const SOUND_ALIASES = {
+  tap: 'click',   // 脚步声/敲击 → click.wav
+  push: 'bong',   // 推箱子 → bong.wav
+  error: 'wrong', // 撞墙/错误 → wrong.wav
+  win: 'win'      // 胜利（已存在）
+};
+
 /**
  * 获取全局音效开关状态
  * @returns {boolean}
@@ -117,6 +125,7 @@ function isCached(name) {
  * @returns {Promise<string>} 本地路径
  */
 function downloadSound(name) {
+  name = SOUND_ALIASES[name] || name;
   return new Promise((resolve, reject) => {
     if (downloading.has(name)) {
       // 正在下载，等待
@@ -164,6 +173,7 @@ function downloadSound(name) {
  * @param {string} options.pageId 页面ID（用于检查页面级开关）
  */
 async function playSound(name, options = {}) {
+  name = SOUND_ALIASES[name] || name;
   const { vibrate = false, pageId } = options;
 
   // 检查音效开关
@@ -215,7 +225,7 @@ async function playSound(name, options = {}) {
     // 降级：直接用CDN URL播放
     try {
       const audio = wx.createInnerAudioContext();
-      audio.src = `${SOUNDS_BASE}/${name}.wav`;
+      audio.src = `${SOUNDS_BASE}/${SOUND_ALIASES[name] || name}.wav`;
       audio.play();
       audio.onEnded(() => audio.destroy());
       audio.onError(() => audio.destroy());
