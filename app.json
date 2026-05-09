@@ -91,6 +91,7 @@
         "pages/nurikabe/nurikabe",
         "pages/tents/tents",
         "pages/battleship/battleship",
+        "pages/sokoban/sokoban",
         "pages/guessnumber/guessnumber"
       ]
     },

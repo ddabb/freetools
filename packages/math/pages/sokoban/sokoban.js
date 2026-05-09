@@ -8,7 +8,7 @@
  */
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/sokoban';
-const TOTAL_PUZZLES = { easy: 50, medium: 48, hard: 10 };
+const TOTAL_PUZZLES = { easy: 1000, medium: 1000, hard: 1000 };
 
 const CELL_EMPTY = 0;
 const CELL_WALL = 1;
@@ -270,7 +270,7 @@ Page({
 
     this.setData({ isPlaying: false, isComplete: false, showAnswer: false, moveCount: 0 });
 
-    const filename = difficulty + '/' + difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
+    const filename = difficulty + '-' + String(puzzleId + 1).padStart(4, '0') + '.json';
     const cacheKey = 'cdn_sokoban_' + difficulty + '_' + String(puzzleId + 1).padStart(4, '0');
 
     const cached = wx.getStorageSync(cacheKey);
