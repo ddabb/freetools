@@ -83,6 +83,17 @@ page {
   color: #37474f;
 }
 
+.jump-input {
+  width: 100rpx;
+  height: 48rpx;
+  padding: 0 16rpx;
+  font-size: 24rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 12rpx;
+  text-align: center;
+  background: #fff;
+}
+
 .timer-box {
   display: flex;
   align-items: center;
@@ -492,6 +503,11 @@ page {
 }
 
 .answer-hint {
-  font-size: 28rpx;
-  color: #64748b;
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 12rpx;
+  text-align: center;
+  margin-bottom: 16rpx;
 }

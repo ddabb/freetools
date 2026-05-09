@@ -40,7 +40,11 @@ Page({
     maxPuzzles: 50,
     boxCount: 0,
     goalCount: 0,
-    moveCount: 0
+    moveCount: 0,
+    goalsMap: [],
+    boxesMap: [],
+    playerRow: 0,
+    playerCol: 0
   },
 
   timer: null,
@@ -51,8 +55,35 @@ Page({
   _playbackTimer: null,
   _playbackStep: 0,
 
+  // 预计算单元格地图（WXML不支持复杂JS表达式，必须用2D数组做简单查表）
+  _computeCellMaps(rows, cols, boxes, goals) {
+    const goalsMap = [];
+    const boxesMap = [];
+    for (let r = 0; r < rows; r++) {
+      goalsMap[r] = [];
+      boxesMap[r] = [];
+      for (let c = 0; c < cols; c++) {
+        goalsMap[r][c] = goals.some(g => g[0] === r && g[1] === c) ? 1 : 0;
+        boxesMap[r][c] = boxes.some(b => b[0] === r && b[1] === c) ? 1 : 0;
+      }
+    }
+    return { goalsMap, boxesMap };
+  },
+
+  _updateBoxesMap() {
+    const { rows, cols, boxes, goals } = this.data;
+    const newBoxesMap = [];
+    for (let r = 0; r < rows; r++) {
+      newBoxesMap[r] = [];
+      for (let c = 0; c < cols; c++) {
+        newBoxesMap[r][c] = boxes.some(b => b[0] === r && b[1] === c) ? 1 : 0;
+      }
+    }
+    this.setData({ boxesMap: newBoxesMap });
+  },
+
   // A* 求解器
-  _solveAStar(grid, boxes, goals, playerPos, maxSteps = 500) {
+  _solveAStar(grid, boxes, goals, playerPos, maxSteps = 2000) {
     const rows = grid.length;
     const cols = grid[0] ? grid[0].length : 0;
     
@@ -180,16 +211,27 @@ Page({
   },
 
   _applyMove(direction) {
+    console.log('[Sokoban] _applyMove:', direction);
     const { playerPos, grid, boxes, goals } = this.data;
     const [pr, pc] = playerPos;
+    const { rows, cols } = this.data;
     
     const dr = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
     const dc = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
     
     const nr = pr + dr;
     const nc = pc + dc;
+    console.log('[Sokoban] move from', pr, pc, 'to', nr, nc, 'grid size', rows, cols);
     
-    if (grid[nr] && grid[nr][nc] === CELL_WALL) return;
+    // 先检查边界
+    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) {
+      console.log('[Sokoban] out of bounds');
+      return;
+    }
+    if (grid[nr] && grid[nr][nc] === CELL_WALL) {
+      console.log('[Sokoban] hit wall');
+      return;
+    }
     
     let newBoxes = boxes.map(b => [...b]);
     
@@ -202,7 +244,8 @@ Page({
       newBoxes[boxIdx] = [nbr, nbc];
     }
     
-    this.setData({ playerPos: [nr, nc], boxes: newBoxes, moveCount: this.data.moveCount + 1 });
+    this.setData({ playerPos: [nr, nc], boxes: newBoxes, moveCount: this.data.moveCount + 1, playerRow: nr, playerCol: nc });
+    this._updateBoxesMap();
   },
 
   _stopPlayback() {
@@ -212,6 +255,8 @@ Page({
     }
     this._solutionMoves = [];
     this._playbackStep = 0;
+    // 答案播完，检查是否完成
+    this._checkWin();
   },
 
   onCloseAnswer() {
@@ -228,12 +273,19 @@ Page({
     const saved = wx.getStorageSync('sokoban_saved');
     if (saved && saved.grid) {
       console.log('[Sokoban] 使用本地缓存数据');
+      const { goalsMap, boxesMap } = this._computeCellMaps(
+        saved.rows, saved.cols, saved.boxes, saved.goals
+      );
       this.setData({
         ...saved,
         isPlaying: true,
-        showAnswer: false
+        showAnswer: false,
+        goalsMap,
+        boxesMap,
+        playerRow: saved.playerPos[0],
+        playerCol: saved.playerPos[1]
       });
-      this._currentPuzzle = { grid: saved.grid, boxes: saved.boxes, goals: saved.goals };
+      this._currentPuzzle = { grid: saved.grid, boxes: saved.boxes, goals: saved.goals, playerPos: saved.playerPos };
       this.startTimer();
     } else {
       const difficulty = options.difficulty || 'easy';
@@ -321,14 +373,17 @@ Page({
     const goals = puzzle.goals || [];
     const playerPos = puzzle.playerStart || puzzle.playerPos || [0, 0];
 
-    this._currentPuzzle = { grid, boxes, goals, playerPos };
+    this._currentPuzzle = { grid, boxes, goals, playerPos, answer: puzzle.answer };
 
     const cellSize = cols > 8 ? 35 : (cols > 6 ? 40 : 45);
 
+    const { goalsMap, boxesMap } = this._computeCellMaps(rows, cols, boxes, goals);
     this.setData({
       rows, cols,
       grid, boxes, goals,
       playerPos,
+      playerRow: playerPos[0],
+      playerCol: playerPos[1],
       difficulty,
       puzzleId,
       maxPuzzles,
@@ -337,7 +392,9 @@ Page({
       cellSize,
       isPlaying: true,
       isComplete: false,
-      showAnswer: false
+      showAnswer: false,
+      goalsMap,
+      boxesMap
     });
 
     this.startTimer();
@@ -400,10 +457,11 @@ Page({
 
       playSound(this, 'push');
       boxes[boxIndex] = [nbr, nbc];
-      this.setData({ boxes, playerPos: [nr, nc], moveCount: this.data.moveCount + 1 });
+      this.setData({ boxes, playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
+      this._updateBoxesMap();
     } else {
       playSound(this, 'tap');
-      this.setData({ playerPos: [nr, nc], moveCount: this.data.moveCount + 1 });
+      this.setData({ playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
     }
 
     this._checkWin();
@@ -465,14 +523,24 @@ Page({
   },
 
   onReset() {
-    console.log('[Sokoban] 重置本题');
+    console.log('[Sokoban] 重置本题 _currentPuzzle:', JSON.stringify(this._currentPuzzle));
+    this._stopPlayback();
     if (this._currentPuzzle) {
+      const { grid, boxes, goals, playerPos } = this._currentPuzzle;
+      const rows = this.data.rows;
+      const cols = this.data.cols;
+      const { goalsMap, boxesMap } = this._computeCellMaps(rows, cols, boxes, goals);
+      console.log('[Sokoban] 重置 boxes:', JSON.stringify(boxes), 'goals:', JSON.stringify(goals));
       this.setData({
-        grid: this._currentPuzzle.grid,
-        boxes: this._currentPuzzle.boxes,
-        goals: this._currentPuzzle.goals,
-        playerPos: this._currentPuzzle.playerPos,
-        moveCount: 0
+        grid, boxes, goals, playerPos,
+        playerRow: playerPos[0],
+        playerCol: playerPos[1],
+        moveCount: 0,
+        isComplete: false,
+        isPlaying: true,
+        showAnswer: false,
+        goalsMap,
+        boxesMap
       });
       this.startTimer();
     }
@@ -489,21 +557,23 @@ Page({
       this.onCloseAnswer();
       return;
     }
-    console.log('[Sokoban] 开始求解');
+    console.log('[Sokoban] 使用题库答案');
     this.stopTimer();
     
-    const { grid, boxes, goals, playerPos } = this._currentPuzzle || this.data;
-    const solution = this._solveAStar(grid, boxes, goals, playerPos);
-    
-    if (!solution || solution.length === 0) {
-      console.log('[Sokoban] 无解');
-      wx.showToast({ title: '此题无解', icon: 'none' });
-      this.setData({ showAnswer: false });
+    // 直接使用 CDN 提供的 answer 字段
+    const puzzle = this._currentPuzzle;
+    console.log('[Sokoban] _currentPuzzle:', JSON.stringify(puzzle));
+    if (!puzzle || !puzzle.answer) {
+      console.log('[Sokoban] 没有答案数据, answer:', puzzle ? puzzle.answer : 'puzzle is null');
+      wx.showToast({ title: '无答案', icon: 'none' });
       return;
     }
     
-    console.log('[Sokoban] 找到解法，步数：' + solution.length);
-    this._solutionMoves = solution;
+    // NEW标准编码：D=下, U=上, R=右, L=左
+    const directionMap = { D: 'down', U: 'up', R: 'right', L: 'left', D1: 'down', U1: 'up', R1: 'right', L1: 'left' };
+    const moves = puzzle.answer.map(a => directionMap[a] || a);
+    console.log('[Sokoban] 答案步数：' + moves.length);
+    this._solutionMoves = moves;
     this.setData({ showAnswer: true });
     
     // 开始动画播放

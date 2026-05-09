@@ -18,6 +18,7 @@
     </view>
     <view class="info">
       <view class="puzzle-idx">{{puzzleId + 1}}/{{maxPuzzles}}</view>
+      <input class="jump-input" placeholder="输入题号" type="number" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJumpSubmit"/>
       <view class="timer-box">
         <text class="timer-icon">⏱</text>
         <text class="timer">{{timeStr}}</text>
@@ -52,16 +53,16 @@
                   data-r="{{row}}" data-c="{{col}}"
                   bindtap="onCellTap">
               <!-- 目标点 -->
-              <view wx:if="{{goals.length > 0 && goals.some(function(g){return g[0] === row && g[1] === col;})}}" class="goal {{boxes.some(function(b){return b[0] === row && b[1] === col;}) ? 'box-on-goal' : ''}}">
-                <text wx:if="{{boxes.some(function(b){return b[0] === row && b[1] === col;})}}" class="box-icon">📦</text>
+              <view wx:if="{{goalsMap[row][col] === 1}}" class="goal {{boxesMap[row][col] === 1 ? 'box-on-goal' : ''}}">
+                <text wx:if="{{boxesMap[row][col] === 1}}" class="box-icon">📦</text>
                 <text wx:else class="goal-icon">●</text>
               </view>
               <!-- 箱子（不在目标上） -->
-              <view wx:elif="{{boxes.length > 0 && boxes.some(function(b){return b[0] === row && b[1] === col;}) && !goals.some(function(g){return g[0] === row && g[1] === col;})}}" class="box">
+              <view wx:elif="{{boxesMap[row][col] === 1 && goalsMap[row][col] !== 1}}" class="box">
                 <text class="box-icon">📦</text>
               </view>
               <!-- 玩家 -->
-              <view wx:elif="{{playerPos[0] === row && playerPos[1] === col}}" class="player">
+              <view wx:elif="{{playerRow === row && playerCol === col}}" class="player">
                 <text class="player-icon">🧑</text>
               </view>
             </view>
@@ -81,7 +82,7 @@
   <!-- 功能按钮 -->
   <view class="func-btns">
     <view class="func-btn" bindtap="onShowRules">📖 规则</view>
-    <view class="func-btn" bindtap="onShowAnswer">💡 提示</view>
+    <view class="func-btn" bindtap="onShowAnswer">💡 答案</view>
   </view>
 
   <!-- 完成提示 -->
@@ -128,16 +129,8 @@
     </view>
   </view>
 
-  <!-- 答案演示弹窗 -->
-  <view class="answer-overlay" wx:if="{{showAnswer}}">
-    <view class="answer-card">
-      <view class="answer-header">
-        <text class="answer-title">💡 答案演示中...</text>
-        <view class="answer-close" bindtap="onCloseAnswer">✕</view>
-      </view>
-      <view class="answer-body">
-        <text class="answer-hint">观看解题动画</text>
-      </view>
-    </view>
+  <!-- 答案演示（不覆盖游戏区域，直接在格子上显示） -->
+  <view class="answer-hint" wx:if="{{showAnswer}}">
+    <text>💡 演示中... 步数 {{moveCount}}</text>
   </view>
 </view>
