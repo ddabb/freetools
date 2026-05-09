@@ -18,7 +18,8 @@
     </view>
     <view class="info">
       <view class="puzzle-idx">{{puzzleId + 1}}/{{maxPuzzles}}</view>
-      <input class="jump-input" placeholder="输入题号" type="number" value="{{jumpInputValue}}" bindinput="onJumpInput" bindconfirm="onJumpSubmit"/>
+      <input class="jump-input" placeholder="题号" type="number" value="{{jumpInputValue}}" bindinput="onJumpInput"/>
+      <view class="jump-btn" bindtap="onJumpSubmit">跳转</view>
       <view class="timer-box">
         <text class="timer-icon">⏱</text>
         <text class="timer">{{timeStr}}</text>
@@ -44,7 +45,8 @@
 
   <!-- 游戏区域 -->
   <view class="game-area">
-    <view class="grid-container" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px;">
+    <view class="grid-container" style="width: {{cols * cellSize}}px; height: {{rows * cellSize}}px;"
+          bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
       <block wx:for="{{grid}}" wx:key="row" wx:for-index="row" wx:for-item="gridRow">
         <view class="grid-row" style="height: {{cellSize}}px;">
           <block wx:for="{{gridRow}}" wx:key="col" wx:for-index="col" wx:for-item="cell">
@@ -52,18 +54,18 @@
                   style="width: {{cellSize}}px; height: {{cellSize}}px;"
                   data-r="{{row}}" data-c="{{col}}"
                   bindtap="onCellTap">
-              <!-- 目标点 -->
-              <view wx:if="{{goalsMap[row][col] === 1}}" class="goal {{boxesMap[row][col] === 1 ? 'box-on-goal' : ''}}">
+              <!-- 玩家（优先级最高：人站在哪就画人） -->
+              <view wx:if="{{playerRow === row && playerCol === col}}" class="player {{boxesMap[row][col] === 1 ? 'on-goal' : ''}}">
+                <text class="player-icon">🧑</text>
+              </view>
+              <!-- 目标点（人不在这里时才显示） -->
+              <view wx:elif="{{goalsMap[row][col] === 1}}" class="goal {{boxesMap[row][col] === 1 ? 'box-on-goal' : ''}}">
                 <text wx:if="{{boxesMap[row][col] === 1}}" class="box-icon">📦</text>
                 <text wx:else class="goal-icon">●</text>
               </view>
-              <!-- 箱子（不在目标上） -->
-              <view wx:elif="{{boxesMap[row][col] === 1 && goalsMap[row][col] !== 1}}" class="box">
+              <!-- 箱子（人不在这里、也不是目标时才显示） -->
+              <view wx:elif="{{boxesMap[row][col] === 1}}" class="box">
                 <text class="box-icon">📦</text>
-              </view>
-              <!-- 玩家 -->
-              <view wx:elif="{{playerRow === row && playerCol === col}}" class="player">
-                <text class="player-icon">🧑</text>
               </view>
             </view>
           </block>
@@ -129,8 +131,4 @@
     </view>
   </view>
 
-  <!-- 答案演示（不覆盖游戏区域，直接在格子上显示） -->
-  <view class="answer-hint" wx:if="{{showAnswer}}">
-    <text>💡 演示中... 步数 {{moveCount}}</text>
-  </view>
 </view>

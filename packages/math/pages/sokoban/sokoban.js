@@ -17,7 +17,7 @@ const CELL_GOAL = 3;
 const CELL_BOX_ON_GOAL = 4;
 
 const utils = require('../../../../utils/index');
-const { playSound, preloadSounds } = utils;
+const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 Page({
   data: {
@@ -37,6 +37,7 @@ Page({
     cellSize: 40,
     showAnswer: false,
     showRules: false,
+    showAnswerDone: false,
     maxPuzzles: 50,
     boxCount: 0,
     goalCount: 0,
@@ -44,7 +45,8 @@ Page({
     goalsMap: [],
     boxesMap: [],
     playerRow: 0,
-    playerCol: 0
+    playerCol: 0,
+    pageId: 'sokoban',
   },
 
   timer: null,
@@ -55,7 +57,11 @@ Page({
   _playbackTimer: null,
   _playbackStep: 0,
 
-  // 预计算单元格地图（WXML不支持复杂JS表达式，必须用2D数组做简单查表）
+  playSoundIfEnabled(name) {
+    if (isPageSoundEnabled('sokoban')) {
+      playSound(name, { pageId: 'sokoban' });
+    }
+  },
   _computeCellMaps(rows, cols, boxes, goals) {
     const goalsMap = [];
     const boxesMap = [];
@@ -255,20 +261,28 @@ Page({
     }
     this._solutionMoves = [];
     this._playbackStep = 0;
-    // 答案播完，检查是否完成
-    this._checkWin();
+    // 不再自动切换下一题，只显示完成提示
+    this.setData({ showAnswer: false, showAnswerDone: true });
   },
 
   onCloseAnswer() {
-    console.log('[Sokoban] 关闭答案');
-    this._stopPlayback();
-    this.setData({ showAnswer: false });
-    this.onReset();
+    console.log('[Sokoban] 关闭答案弹窗');
+    if (this._playbackTimer) {
+      clearInterval(this._playbackTimer);
+      this._playbackTimer = null;
+    }
+    this._solutionMoves = [];
+    this._playbackStep = 0;
+    this.setData({ showAnswer: false, showAnswerDone: false });
+    // 复位谜题状态，便于再次演示
+    const { initPlayerPos, initBoxes } = this.data;
+    this.setData({ playerPos: initPlayerPos, playerRow: initPlayerPos[0], playerCol: initPlayerPos[1], boxes: initBoxes, moveCount: 0 });
+    this._updateBoxesMap();
   },
 
   onLoad(options) {
     console.log('[Sokoban] onLoad 开始加载页面');
-    preloadSounds(this, ['tap', 'push', 'win', 'error']);
+    preloadSounds(['tap', 'push', 'win', 'error'], 'sokoban');
     
     const saved = wx.getStorageSync('sokoban_saved');
     if (saved && saved.grid) {
@@ -434,7 +448,7 @@ Page({
     const nc = pc + dc;
 
     if (grid[nr] && grid[nr][nc] === CELL_WALL) {
-      playSound(this, 'error');
+      this.playSoundIfEnabled('error');
       return;
     }
 
@@ -445,22 +459,22 @@ Page({
       const nbc = nc + dc;
 
       if (grid[nbr] && grid[nbr][nbc] === CELL_WALL) {
-        playSound(this, 'error');
+        this.playSoundIfEnabled('error');
         return;
       }
 
       const nextBoxIndex = boxes.findIndex(b => b[0] === nbr && b[1] === nbc);
       if (nextBoxIndex >= 0) {
-        playSound(this, 'error');
+        this.playSoundIfEnabled('error');
         return;
       }
 
-      playSound(this, 'push');
+      this.playSoundIfEnabled('push');
       boxes[boxIndex] = [nbr, nbc];
       this.setData({ boxes, playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
       this._updateBoxesMap();
     } else {
-      playSound(this, 'tap');
+      this.playSoundIfEnabled('tap');
       this.setData({ playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
     }
 
@@ -469,8 +483,12 @@ Page({
 
   _checkWin() {
     const { boxes, goals } = this.data;
+    // 提前校验数据完整性
+    if (!boxes || boxes.length === 0 || !goals || goals.length === 0) {
+      console.log('[Sokoban] _checkWin: 数据不完整，跳过检测');
+      return;
+    }
     let allOnGoal = true;
-
     for (const box of boxes) {
       const onGoal = goals.some(g => g[0] === box[0] && g[1] === box[1]);
       if (!onGoal) {
@@ -478,13 +496,16 @@ Page({
         break;
       }
     }
+    console.log(`[Sokoban] _checkWin: ${boxes.length}箱 ${goals.length}目标 allOnGoal=${allOnGoal}`);
 
     if (allOnGoal) {
-      console.log('[Sokoban] 通关');
+      console.log('[Sokoban] 通关！');
       this.stopTimer();
       this.setData({ isComplete: true, isPlaying: false });
-      playSound(this, 'win');
+      this.playSoundIfEnabled('win');
       wx.removeStorageSync('sokoban_saved');
+      // 给用户一个 toast 提示通关，然后再显示 overlay
+      wx.showToast({ title: '🎉 恭喜通关！', icon: 'none', duration: 2000 });
     }
   },
 
@@ -524,7 +545,12 @@ Page({
 
   onReset() {
     console.log('[Sokoban] 重置本题 _currentPuzzle:', JSON.stringify(this._currentPuzzle));
-    this._stopPlayback();
+    if (this._playbackTimer) {
+      clearInterval(this._playbackTimer);
+      this._playbackTimer = null;
+    }
+    this._solutionMoves = [];
+    this._playbackStep = 0;
     if (this._currentPuzzle) {
       const { grid, boxes, goals, playerPos } = this._currentPuzzle;
       const rows = this.data.rows;
@@ -570,7 +596,20 @@ Page({
     }
     
     // NEW标准编码：D=下, U=上, R=右, L=左
-    const directionMap = { D: 'down', U: 'up', R: 'right', L: 'left', D1: 'down', U1: 'up', R1: 'right', L1: 'left' };
+    // 推箱子题库多推指令最多到3，预设到9以防后续扩展
+    const dm = { D:'down', U:'up', R:'right', L:'left' };
+    const directionMap = Object.assign({}, dm,
+      {D0:'down',U0:'up',R0:'right',L0:'left'},
+      {D1:'down',U1:'up',R1:'right',L1:'left'},
+      {D2:'down',U2:'up',R2:'right',L2:'left'},
+      {D3:'down',U3:'up',R3:'right',L3:'left'},
+      {D4:'down',U4:'up',R4:'right',L4:'left'},
+      {D5:'down',U5:'up',R5:'right',L5:'left'},
+      {D6:'down',U6:'up',R6:'right',L6:'left'},
+      {D7:'down',U7:'up',R7:'right',L7:'left'},
+      {D8:'down',U8:'up',R8:'right',L8:'left'},
+      {D9:'down',U9:'up',R9:'right',L9:'left'}
+    );
     const moves = puzzle.answer.map(a => directionMap[a] || a);
     console.log('[Sokoban] 答案步数：' + moves.length);
     this._solutionMoves = moves;
@@ -580,10 +619,67 @@ Page({
     this._playSolution();
   },
 
+  // 触摸滑动切换题目
+  onTouchStart(e) {
+    this._touchStartX = e.touches[0].clientX;
+    this._touchStartY = e.touches[0].clientY;
+  },
+
+  onTouchEnd(e) {
+    if (!this._touchStartX) return;
+    const dx = e.changedTouches[0].clientX - this._touchStartX;
+    const dy = e.changedTouches[0].clientY - this._touchStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    // 滑动距离小于 30px 视为无效
+    if (Math.max(absDx, absDy) < 30) {
+      this._touchStartX = null;
+      this._touchStartY = null;
+      return;
+    }
+    // 确定滑动方向（横向优先）
+    if (absDx > absDy) {
+      this.onNavigate(dx > 0 ? 'next' : 'prev');
+    } else {
+      this.onNavigate(dy > 0 ? 'next' : 'prev');
+    }
+    this._touchStartX = null;
+    this._touchStartY = null;
+  },
+
   onShowAnswerOld() {
     if (this.data.isComplete) return;
     console.log('[Sokoban] 显示答案');
     this.setData({ showAnswer: true });
     this.stopTimer();
+  },
+
+  // 触摸滑动移动玩家
+  onTouchStart(e) {
+    this._touchStartX = e.touches[0].clientX;
+    this._touchStartY = e.touches[0].clientY;
+    this._touchMoved = false;
+  },
+
+  onTouchEnd(e) {
+    if (!this._touchStartX) return;
+    const dx = e.changedTouches[0].clientX - this._touchStartX;
+    const dy = e.changedTouches[0].clientY - this._touchStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    // 滑动距离小于 30px 视为无效
+    if (Math.max(absDx, absDy) < 30) {
+      this._touchStartX = null;
+      this._touchStartY = null;
+      return;
+    }
+    // 确定滑动方向（横向优先）
+    if (absDx > absDy) {
+      this._applyMove(dx > 0 ? 'right' : 'left');
+    } else {
+      this._applyMove(dy > 0 ? 'down' : 'up');
+    }
+    this._touchStartX = null;
+    this._touchStartY = null;
   }
 });

@@ -92,6 +92,18 @@ page {
   border-radius: 12rpx;
   text-align: center;
   background: #fff;
+  flex-shrink: 0;
+}
+
+.jump-btn {
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  background: linear-gradient(145deg, #ff9800 0%, #f57c00 100%);
+  color: #fff;
+  border-radius: 12rpx;
+  border: none;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 8rpx rgba(255, 152, 0, 0.4);
 }
 
 .timer-box {
@@ -170,14 +182,14 @@ page {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  border: 1rpx solid #eee;
+  border: 2rpx solid #ccc;
   background: #f5f5f5;
   transition: background 0.15s ease;
 }
 
 .cell.wall {
   background: #5d4037;
-  border-color: #4e342e;
+  border-color: #3e2723;
 }
 
 /* 目标点 */
@@ -187,47 +199,70 @@ page {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 152, 0, 0.2);
-  border-radius: 8rpx;
+  background: rgba(255, 87, 34, 0.12);
+  border-radius: 50%;
 }
 
 .goal-icon {
-  font-size: 20rpx;
-  color: #ff9800;
+  width: 54%;
+  height: 54%;
+  border-radius: 50%;
+  background: #f44336;
+  border: 3rpx solid #c62828;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2rpx 8rpx rgba(244, 67, 54, 0.45);
 }
 
 .goal.box-on-goal {
-  background: rgba(76, 175, 80, 0.3);
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.goal.box-on-goal .goal-icon {
+  background: #4caf50;
+  border-color: #388e3c;
+  box-shadow: 0 2rpx 8rpx rgba(76, 175, 80, 0.5);
 }
 
 /* 箱子 */
 .box {
-  width: 100%;
-  height: 100%;
+  width: 86%;
+  height: 86%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ffb74d;
-  border-radius: 8rpx;
+  background: linear-gradient(145deg, #ff9800 0%, #e65100 100%);
+  border-radius: 10rpx;
+  border: 3rpx solid #bf360c;
+  box-shadow: 0 4rpx 12rpx rgba(191, 54, 12, 0.4), inset 0 2rpx 6rpx rgba(255,255,255,0.35);
 }
 
 .box-icon {
-  font-size: 36rpx;
+  font-size: 80%;
 }
 
 /* 玩家 */
 .player {
-  width: 100%;
-  height: 100%;
+  width: 88%;
+  height: 88%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #bbdefb;
+  background: linear-gradient(145deg, #42a5f5 0%, #1565c0 100%);
   border-radius: 50%;
+  border: 3rpx solid #0d47a1;
+  box-shadow: 0 4rpx 12rpx rgba(13, 71, 161, 0.4), inset 0 2rpx 6rpx rgba(255,255,255,0.3);
 }
 
 .player-icon {
-  font-size: 40rpx;
+  font-size: 80%;
+}
+
+.player.on-goal {
+  background: linear-gradient(145deg, #a5d6a7 0%, #388e3c 100%);
+  border-color: #1b5e20;
+  box-shadow: 0 4rpx 12rpx rgba(56, 142, 60, 0.4), inset 0 2rpx 6rpx rgba(255,255,255,0.3);
 }
 
 /* ==================== 操作按钮 ==================== */
@@ -510,4 +545,45 @@ page {
   border-radius: 12rpx;
   text-align: center;
   margin-bottom: 16rpx;
+}
+
+.answer-done-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.answer-done-card {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+  box-shadow: 0 12rpx 48rpx rgba(0,0,0,0.2);
+  min-width: 400rpx;
+}
+
+.answer-done-icon {
+  font-size: 80rpx;
+}
+
+.answer-done-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #37474f;
+}
+
+.answer-done-btn {
+  padding: 20rpx 60rpx;
+  font-size: 30rpx;
+  background: linear-gradient(145deg, #ff9800 0%, #f57c00 100%);
+  color: #fff;
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 152, 0, 0.4);
 }
