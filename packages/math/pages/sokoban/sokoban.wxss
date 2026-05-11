@@ -309,6 +309,17 @@ page {
   color: #64748b;
 }
 
+.btn-sound {
+  padding: 12rpx 20rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.btn-sound.active {
+  background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+}
+
 /* ==================== 完成弹窗 ==================== */
 .complete-overlay {
   position: fixed;
@@ -333,6 +344,7 @@ page {
   gap: 16rpx;
   box-shadow: 0 16rpx 64rpx rgba(0, 0, 0, 0.3);
   animation: popIn 0.3s ease;
+  position: relative;
 }
 
 @keyframes popIn {
@@ -348,6 +360,21 @@ page {
 
 .complete-icon {
   font-size: 80rpx;
+}
+
+.complete-close {
+  position: absolute;
+  top: 24rpx;
+  right: 24rpx;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32rpx;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border-radius: 50%;
 }
 
 .complete-text {

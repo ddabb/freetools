@@ -463,6 +463,16 @@ const tools = [
     keywords: ['密码', '生成', '安全', '随机'],
     description: '生成安全的随机密码'
   },
+  {
+    id: 'nickname',
+    name: '昵称特效',
+    icon: '✨',
+    color: 'pink',
+    url: '/packages/text/pages/nickname/nickname',
+    categories: ['生活工具'],
+    keywords: ['昵称', '上标', '下标', '翅膀', '特效字', '颜文字', '符号', '火星文'],
+    description: '生成上标/下标电话、翅膀昵称、特效字体、颜文字、特殊符号'
+  },
 
   {
     id: 'price-comparison',
@@ -760,16 +770,6 @@ const tools = [
     categories: ['学习工具', '数学工具'],
     keywords: ['推箱子', 'Sokoban', '仓库', '益智', '经典'],
     description: '推动箱子到目标位置，经典推箱子谜题'
-  },
-  {
-    id: 'frog-escape',
-    name: '躲避牛蛙',
-    icon: '🐸',
-    color: 'green',
-    url: '/packages/math/pages/frog-escape/frog-escape',
-    categories: ['学习工具', '数学工具'],
-    keywords: ['躲避牛蛙', '扫雷', '踩雷', '青蛙', '益智'],
-    description: '躲避牛蛙踩地雷，经典扫雷玩法'
   }
 ];
 
@@ -830,6 +830,7 @@ const commonTools = [
 
   // ===== 安全工具 =====
   tools.find(t => t.id === 'password-generator'), // 密码生成
+  tools.find(t => t.id === 'nickname'),           // 昵称工具箱
 
   // ===== 其他常用 =====
   tools.find(t => t.id === 'random-selector'),    // 取数模拟器

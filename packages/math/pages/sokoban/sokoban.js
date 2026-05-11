@@ -47,6 +47,7 @@ Page({
     playerRow: 0,
     playerCol: 0,
     pageId: 'sokoban',
+    soundEnabled: true,
   },
 
   timer: null,
@@ -238,9 +239,8 @@ Page({
       console.log('[Sokoban] hit wall');
       return;
     }
-    
+
     let newBoxes = boxes.map(b => [...b]);
-    
     const boxIdx = newBoxes.findIndex(b => b[0] === nr && b[1] === nc);
     if (boxIdx >= 0) {
       const nbr = nr + dr;
@@ -248,10 +248,14 @@ Page({
       if (grid[nbr] && grid[nbr][nbc] === CELL_WALL) return;
       if (newBoxes.some(b => b[0] === nbr && b[1] === nbc)) return;
       newBoxes[boxIdx] = [nbr, nbc];
+      this.setData({ playerPos: [nr, nc], boxes: newBoxes, moveCount: this.data.moveCount + 1, playerRow: nr, playerCol: nc });
+      this.playSoundIfEnabled('push');
+    } else {
+      this.setData({ playerPos: [nr, nc], playerRow: nr, playerCol: nc });
+      this.playSoundIfEnabled('tap');
     }
-    
-    this.setData({ playerPos: [nr, nc], boxes: newBoxes, moveCount: this.data.moveCount + 1, playerRow: nr, playerCol: nc });
     this._updateBoxesMap();
+    this._checkWin(newBoxes);
   },
 
   _stopPlayback() {
@@ -274,15 +278,50 @@ Page({
     this._solutionMoves = [];
     this._playbackStep = 0;
     this.setData({ showAnswer: false, showAnswerDone: false });
-    // 复位谜题状态，便于再次演示
     const { initPlayerPos, initBoxes } = this.data;
-    this.setData({ playerPos: initPlayerPos, playerRow: initPlayerPos[0], playerCol: initPlayerPos[1], boxes: initBoxes, moveCount: 0 });
-    this._updateBoxesMap();
+    if (initPlayerPos && initBoxes) {
+      const { goals } = this.data;
+      const { goalsMap, boxesMap } = this._computeCellMaps(this.data.rows, this.data.cols, initBoxes, goals);
+      this.setData({
+        playerPos: initPlayerPos,
+        playerRow: initPlayerPos[0],
+        playerCol: initPlayerPos[1],
+        boxes: initBoxes.map(b => [...b]),
+        moveCount: 0,
+        goalsMap,
+        boxesMap
+      });
+    }
+  },
+
+  onCloseComplete() {
+    console.log('[Sokoban] 关闭完成弹窗并重置');
+    const { initPlayerPos, initBoxes, goals } = this.data;
+    if (initPlayerPos && initBoxes) {
+      const { goalsMap, boxesMap } = this._computeCellMaps(this.data.rows, this.data.cols, initBoxes, goals);
+      this.setData({
+        isComplete: false,
+        isPlaying: true,
+        playerPos: initPlayerPos,
+        playerRow: initPlayerPos[0],
+        playerCol: initPlayerPos[1],
+        boxes: initBoxes.map(b => [...b]),
+        moveCount: 0,
+        goalsMap,
+        boxesMap
+      });
+      this.startTimer();
+    } else {
+      this.setData({ isComplete: false, isPlaying: true });
+    }
   },
 
   onLoad(options) {
     console.log('[Sokoban] onLoad 开始加载页面');
     preloadSounds(['tap', 'push', 'win', 'error'], 'sokoban');
+    
+    const soundEnabled = isPageSoundEnabled('sokoban');
+    this.setData({ soundEnabled });
     
     const saved = wx.getStorageSync('sokoban_saved');
     if (saved && saved.grid) {
@@ -305,6 +344,20 @@ Page({
       const difficulty = options.difficulty || 'easy';
       console.log(`[Sokoban] 从 ${difficulty} 难度第 1 题开始`);
       this.loadPuzzle(difficulty, 0);
+    }
+  },
+
+  onShow() {
+    const soundEnabled = isPageSoundEnabled('sokoban');
+    this.setData({ soundEnabled });
+  },
+
+  toggleSound() {
+    const newEnabled = !this.data.soundEnabled;
+    this.setData({ soundEnabled: newEnabled });
+    utils.setPageSoundEnabled('sokoban', newEnabled);
+    if (newEnabled) {
+      playSound('tap', { pageId: 'sokoban' });
     }
   },
 
@@ -408,7 +461,9 @@ Page({
       isComplete: false,
       showAnswer: false,
       goalsMap,
-      boxesMap
+      boxesMap,
+      initPlayerPos: playerPos,
+      initBoxes: boxes.map(b => [...b])
     });
 
     this.startTimer();
@@ -433,10 +488,15 @@ Page({
   },
 
   onCellTap(e) {
-    if (!this.data.isPlaying || this.data.isComplete) return;
+    console.log('[Sokoban] onCellTap called', e.currentTarget.dataset);
+    if (!this.data.isPlaying || this.data.isComplete) {
+      console.log('[Sokoban] onCellTap skipped: isPlaying=', this.data.isPlaying, 'isComplete=', this.data.isComplete);
+      return;
+    }
 
     const { r, c } = e.currentTarget.dataset;
     const { playerPos, grid, boxes, goals, cellSize } = this.data;
+    console.log('[Sokoban] onCellTap state:', { playerPos, boxes, goals, isPlaying: this.data.isPlaying, isComplete: this.data.isComplete });
     const [pr, pc] = playerPos;
 
     const dr = r - pr;
@@ -452,7 +512,8 @@ Page({
       return;
     }
 
-    const boxIndex = boxes.findIndex(b => b[0] === nr && b[1] === nc);
+    const newBoxes = boxes.map(b => [...b]);
+    const boxIndex = newBoxes.findIndex(b => b[0] === nr && b[1] === nc);
     
     if (boxIndex >= 0) {
       const nbr = nr + dr;
@@ -463,35 +524,49 @@ Page({
         return;
       }
 
-      const nextBoxIndex = boxes.findIndex(b => b[0] === nbr && b[1] === nbc);
+      const nextBoxIndex = newBoxes.findIndex(b => b[0] === nbr && b[1] === nbc);
       if (nextBoxIndex >= 0) {
         this.playSoundIfEnabled('error');
         return;
       }
 
       this.playSoundIfEnabled('push');
-      boxes[boxIndex] = [nbr, nbc];
-      this.setData({ boxes, playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
+      newBoxes[boxIndex] = [nbr, nbc];
+      this.setData({ boxes: newBoxes, playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
       this._updateBoxesMap();
+      this._checkWin(newBoxes);
     } else {
       this.playSoundIfEnabled('tap');
       this.setData({ playerPos: [nr, nc], playerRow: nr, playerCol: nc, moveCount: this.data.moveCount + 1 });
+      this._checkWin();
     }
-
-    this._checkWin();
   },
 
-  _checkWin() {
-    const { boxes, goals } = this.data;
-    // 提前校验数据完整性
+  _checkWin(checkBoxes = null) {
+    const boxes = checkBoxes || this.data.boxes;
+    const { goals } = this.data;
+    console.log('[Sokoban] _checkWin called', { boxesLength: boxes?.length, goalsLength: goals?.length, boxes, goals });
     if (!boxes || boxes.length === 0 || !goals || goals.length === 0) {
       console.log('[Sokoban] _checkWin: 数据不完整，跳过检测');
       return;
     }
     let allOnGoal = true;
-    for (const box of boxes) {
-      const onGoal = goals.some(g => g[0] === box[0] && g[1] === box[1]);
-      if (!onGoal) {
+    for (let i = 0; i < boxes.length; i++) {
+      const box = boxes[i];
+      const boxR = Number(box[0]);
+      const boxC = Number(box[1]);
+      let foundGoal = false;
+      for (let j = 0; j < goals.length; j++) {
+        const goal = goals[j];
+        const goalR = Number(goal[0]);
+        const goalC = Number(goal[1]);
+        if (goalR === boxR && goalC === boxC) {
+          foundGoal = true;
+          break;
+        }
+      }
+      console.log(`[Sokoban] box[${i}] at [${boxR},${boxC}] foundGoal=${foundGoal}`);
+      if (!foundGoal) {
         allOnGoal = false;
         break;
       }
@@ -504,7 +579,6 @@ Page({
       this.setData({ isComplete: true, isPlaying: false });
       this.playSoundIfEnabled('win');
       wx.removeStorageSync('sokoban_saved');
-      // 给用户一个 toast 提示通关，然后再显示 overlay
       wx.showToast({ title: '🎉 恭喜通关！', icon: 'none', duration: 2000 });
     }
   },
@@ -608,7 +682,13 @@ Page({
       {D6:'down',U6:'up',R6:'right',L6:'left'},
       {D7:'down',U7:'up',R7:'right',L7:'left'},
       {D8:'down',U8:'up',R8:'right',L8:'left'},
-      {D9:'down',U9:'up',R9:'right',L9:'left'}
+      {D9:'down',U9:'up',R9:'right',L9:'left'},
+      {D10:'down',U10:'up',R10:'right',L10:'left'},
+      {D11:'down',U11:'up',R11:'right',L11:'left'},
+      {D12:'down',U12:'up',R12:'right',L12:'left'},
+      {D15:'down',U15:'up',R15:'right',L15:'left'},
+      {D20:'down',U20:'up',R20:'right',L20:'left'},
+      {D99:'down',U99:'up',R99:'right',L99:'left'}
     );
     const moves = puzzle.answer.map(a => directionMap[a] || a);
     console.log('[Sokoban] 答案步数：' + moves.length);
@@ -657,5 +737,10 @@ Page({
     }
     this._touchStartX = null;
     this._touchStartY = null;
+  },
+
+  // 阻止事件冒泡，防止点击规则卡时触发页面级触摸导航
+  stopPropagation(e) {
+    e.stopPropagation && e.stopPropagation();
   }
 });

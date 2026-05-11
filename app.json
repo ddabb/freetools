@@ -118,7 +118,8 @@
         "pages/onlychinese/onlychinese",
         "pages/password-generator/password-generator",
         "pages/regex-tester/regex-tester",
-        "pages/poster-generator/poster-generator"
+        "pages/poster-generator/poster-generator",
+        "pages/nickname/nickname"
       ]
     },
     {

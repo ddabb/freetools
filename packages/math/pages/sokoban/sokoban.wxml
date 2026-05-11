@@ -85,11 +85,15 @@
   <view class="func-btns">
     <view class="func-btn" bindtap="onShowRules">📖 规则</view>
     <view class="func-btn" bindtap="onShowAnswer">💡 答案</view>
+    <view class="func-btn btn-sound {{soundEnabled ? 'active' : ''}}" bindtap="toggleSound">
+      {{soundEnabled ? '🔊' : '🔇'}}
+    </view>
   </view>
 
   <!-- 完成提示 -->
-  <view class="complete-overlay" wx:if="{{isComplete}}">
-    <view class="complete-card">
+  <view class="complete-overlay" wx:if="{{isComplete}}" bindtap="onCloseComplete">
+    <view class="complete-card" catchtap="stopPropagation">
+      <view class="complete-close" bindtap="onCloseComplete">✕</view>
       <text class="complete-icon">🎉</text>
       <text class="complete-text">恭喜通关！</text>
       <text class="complete-time">用时 {{timeStr}}</text>

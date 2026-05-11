@@ -1,0 +1,169 @@
+<!--昵称特效页面模板-->
+<view class="container">
+  <!-- 预览区 -->
+  <view class="card preview-card">
+    <view class="preview-label">效果预览</view>
+    <view class="preview-content">
+      <text class="preview-text">{{currentResult || inputText || '彪哥爱玉芬'}}</text>
+    </view>
+    <view class="preview-actions">
+      <input
+        class="preview-input"
+        placeholder="输入文字，如：彪哥爱玉芬"
+        value="{{inputText}}"
+        bindinput="onInputChange"
+        bindconfirm="onCopyResult"
+      />
+      <text class="clear-btn" bindtap="onClearInput" wx:if="{{inputText}}">✕</text>
+      <view class="btn-copy" bindtap="onCopyResult">
+        <text>复制</text>
+      </view>
+      <!-- 上标/下标开关 -->
+      <view class="toggle-inline">
+        <view class="tbtn {{scriptMode === 'off' ? 'active' : ''}}" data-mode="off" bindtap="onScriptModeChange">普通</view>
+        <view class="tbtn {{scriptMode === 'superscript' ? 'active' : ''}}" data-mode="superscript" bindtap="onScriptModeChange">上</view>
+        <view class="tbtn {{scriptMode === 'subscript' ? 'active' : ''}}" data-mode="subscript" bindtap="onScriptModeChange">下</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tab 栏 -->
+  <view class="tab-bar">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="tab-item {{activeTab === item.id ? 'active' : ''}}"
+      data-tab="{{item.id}}"
+      bindtap="onTabChange"
+    >
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- 可滚动内容区 -->
+  <scroll-view class="scroll-area" scroll-y enhanced show-scrollbar>
+
+    <!-- 上标/下标开关（大号展示区） -->
+    <view class="script-toggle">
+      <view class="toggle-btn {{scriptMode === 'off' ? 'active' : ''}}" data-mode="off" bindtap="onScriptModeChange">普通</view>
+      <view class="toggle-btn {{scriptMode === 'superscript' ? 'active' : ''}}" data-mode="superscript" bindtap="onScriptModeChange">上标</view>
+      <view class="toggle-btn {{scriptMode === 'subscript' ? 'active' : ''}}" data-mode="subscript" bindtap="onScriptModeChange">下标</view>
+    </view>
+    <view class="script-hint" wx:if="{{scriptMode !== 'off'}}">
+      <text>上标/下标仅对英文字母和数字生效（如 AB12 → ᴬᴮ¹²）</text>
+    </view>
+
+    <!-- 翅膀标签页（每行2个） -->
+    <view class="card content-card" wx:if="{{activeTab === 'wings'}}">
+      <view class="section-title">选择样式</view>
+      <view class="option-grid-2col">
+        <view
+          class="option-item-2col {{selectedWingsId === item.id ? 'selected' : ''}}"
+          wx:for="{{wingsList}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onWingsSelect"
+        >
+          <text class="option-symbol-2col">{{item.preview}}</text>
+          <text class="option-name-2col">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 特效字标签页（每行2个） -->
+    <view class="card content-card" wx:if="{{activeTab === 'effects'}}">
+      <view class="section-title">选择样式</view>
+      <view class="option-grid-2col">
+        <view
+          class="option-item-2col {{selectedEffectId === item.id ? 'selected' : ''}}"
+          wx:for="{{effectsList}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onEffectSelect"
+        >
+          <text class="option-symbol-2col">{{item.preview}}</text>
+          <text class="option-name-2col">{{item.name}}</text>
+        </view>
+        <view
+          class="option-item-2col extra-item {{selectedEffectId === 'martian' ? 'selected' : ''}}"
+          bindtap="generateMartian"
+        >
+          <text class="option-symbol-2col">🌏</text>
+          <text class="option-name-2col">火星文</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 颜文字标签页 -->
+    <view class="card content-card" wx:if="{{activeTab === 'kaomoji'}}">
+      <view class="section-title">颜文字</view>
+      <view class="search-box">
+        <input
+          class="search-input"
+          placeholder="搜索颜文字..."
+          value="{{kaomojiSearchText}}"
+          bindinput="onKaomojiSearchInput"
+        />
+        <view class="search-clear" wx:if="{{kaomojiSearchText}}" bindtap="clearKaomojiSearch">✕</view>
+      </view>
+      <view class="category-chips" wx:if="{{!kaomojiSearchText}}">
+        <view
+          class="chip {{currentKaomojiCategory === item ? 'active' : ''}}"
+          wx:for="{{kaomojiCategories}}"
+          wx:key="*this"
+          data-category="{{item}}"
+          bindtap="onKaomojiCategoryChange"
+        >
+          {{kaomojiCategoryNames[item] || item}}
+        </view>
+      </view>
+      <view class="search-result-info" wx:if="{{kaomojiSearchText}}">
+        <text>共 {{currentKaomojiList.length}} 个</text>
+      </view>
+      <view class="kaomoji-list">
+        <view
+          class="kaomoji-item {{selectedKaomoji === item ? 'selected' : ''}}"
+          wx:for="{{currentKaomojiList}}"
+          wx:key="*this"
+          data-text="{{item}}"
+          bindtap="onKaomojiClick"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 符号标签页 -->
+    <view class="card content-card" wx:if="{{activeTab === 'symbols'}}">
+      <view class="section-title">特殊符号</view>
+      <view class="category-chips">
+        <view
+          class="chip {{currentSymbolCategory === item ? 'active' : ''}}"
+          wx:for="{{symbolCategories}}"
+          wx:key="*this"
+          data-category="{{item}}"
+          bindtap="onSymbolCategoryChange"
+        >
+          {{symbolCategoryNames[item] || item}}
+        </view>
+      </view>
+      <view class="symbol-grid">
+        <view
+          class="symbol-item {{selectedSymbol === item ? 'selected' : ''}}"
+          wx:for="{{currentSymbolList}}"
+          wx:key="*this"
+          data-symbol="{{item}}"
+          bindtap="onSymbolClick"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+  </scroll-view>
+
+  <!-- Toast -->
+  <view class="toast {{showToast ? 'show' : ''}}">
+    <text>{{toastText}}</text>
+  </view>
+</view>
