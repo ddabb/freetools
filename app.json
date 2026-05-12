@@ -119,7 +119,9 @@
         "pages/password-generator/password-generator",
         "pages/regex-tester/regex-tester",
         "pages/poster-generator/poster-generator",
-        "pages/nickname/nickname"
+        "pages/nickname/nickname",
+        "pages/poetry-query/poetry-query",
+        "pages/poetry-detail/poetry-detail"
       ]
     },
     {

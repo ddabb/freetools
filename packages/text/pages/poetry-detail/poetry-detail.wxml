@@ -1,0 +1,32 @@
+<!--packages/text/pages/poetry-detail/poetry-detail.wxml-->
+<view class="page" wx:if="{{poet}}">
+  <!-- 诗人信息 -->
+  <view class="poet-header">
+    <view class="poet-name">{{poet.n}}</view>
+    <view class="poet-dynasty">{{poet.d}}</view>
+    <view wx:if="{{poet.desc}}" class="poet-desc">{{poet.desc}}</view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索诗名..." value="{{searchText}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearch" />
+    <view wx:if="{{searchText}}" class="search-clear" bindtap="onClearSearch">✕</view>
+  </view>
+
+  <!-- 诗词列表 -->
+  <view class="poems-section">
+    <view class="section-title">{{searchText ? '搜索结果' : '作品'}}（{{displayPoems.length}} 首）</view>
+    <view wx:for="{{displayPoems}}" wx:key="n" class="poem-item">
+      <view class="poem-title" data-idx="{{index}}" bindtap="onTogglePoem">
+        <text>{{item.n}}</text>
+        <text class="arrow {{expandedPoem === index ? 'expanded' : ''}}">▸</text>
+      </view>
+      <view wx:if="{{item.f}}" class="poem-form">{{item.f}}</view>
+      <view wx:if="{{expandedPoem === index}}" class="poem-content">
+        <text>{{item.c}}</text>
+      </view>
+      <view wx:if="{{expandedPoem === index}}" class="copy-btn" data-title="{{item.n}}" data-author="{{poet.n}}" data-content="{{item.c}}" bindtap="onCopyPoem">复制</view>
+    </view>
+    <view wx:if="{{!displayPoems.length}}" class="no-result">未找到相关诗词</view>
+  </view>
+</view>

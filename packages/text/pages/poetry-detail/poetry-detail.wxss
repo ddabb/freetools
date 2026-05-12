@@ -1,0 +1,35 @@
+/* packages/text/pages/poetry-detail/poetry-detail.wxss */
+/* 诗词详情页 - 适老化优化版 */
+
+/* 页面整体 */
+.page { padding: 24rpx; background: #f8f6f2; min-height: 100vh; }
+
+/* 搜索栏 */
+.search-bar { display: flex; align-items: center; background: #fff; border-radius: 16rpx; padding: 12rpx 20rpx; margin-bottom: 20rpx; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06); border: 2rpx solid #e0dcd4; }
+.search-input { flex: 1; font-size: 32rpx; color: #333; }
+.search-clear { color: #888; font-size: 28rpx; padding: 8rpx; margin-left: 12rpx; }
+
+/* 诗人头部 - 放大 */
+.poet-header { background: #fff; border-radius: 20rpx; padding: 36rpx; margin-bottom: 24rpx; text-align: center; border: 2rpx solid #e0dcd4; }
+.poet-name { font-size: 48rpx; font-weight: 700; color: #2d7d46; }
+.poet-dynasty { font-size: 32rpx; color: #666; margin-top: 12rpx; }
+.poet-desc { font-size: 30rpx; color: #555; margin-top: 20rpx; line-height: 1.8; }
+
+/* 诗词列表 - 放大 */
+.poems-section { background: #fff; border-radius: 20rpx; padding: 24rpx; border: 2rpx solid #eee; }
+.section-title { font-size: 34rpx; font-weight: 600; color: #222; margin-bottom: 20rpx; padding-left: 12rpx; }
+
+.poem-item { padding: 24rpx 0; border-bottom: 2rpx solid #eee; }
+.poem-item:last-child { border-bottom: none; }
+.poem-title { display: flex; justify-content: space-between; align-items: center; font-size: 36rpx; color: #222; font-weight: 600; }
+.arrow { font-size: 28rpx; color: #888; transition: transform 0.2s; }
+.arrow.expanded { transform: rotate(90deg); }
+.poem-form { font-size: 28rpx; color: #2d7d46; margin-top: 10rpx; font-weight: 500; }
+.poem-content { margin-top: 20rpx; padding: 24rpx; background: #f5f8f4; border-radius: 12rpx; font-size: 34rpx; color: #333; line-height: 2; white-space: pre-wrap; }
+.copy-btn { display: inline-block; margin-top: 16rpx; background: #2d7d46; color: #fff; padding: 12rpx 32rpx; border-radius: 8rpx; font-size: 28rpx; }
+
+/* 返回按钮 */
+.back-btn { font-size: 32rpx; color: #2d7d46; margin-bottom: 16rpx; display: inline-block; }
+
+/* 无结果 */
+.no-result { text-align: center; padding: 40rpx; color: #999; font-size: 30rpx; }

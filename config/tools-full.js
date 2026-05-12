@@ -475,6 +475,17 @@ const tools = [
   },
 
   {
+    id: 'poetry-query',
+    name: '诗词查询',
+    icon: '📖',
+    color: 'green',
+    url: '/packages/text/pages/poetry-query/poetry-query',
+    categories: ['文本工具', '查询工具', '文化工具'],
+    keywords: ['诗词', '唐诗', '宋词', '查询', '诗人', '古文'],
+    description: '搜索诗词、诗人，支持诗名、诗句、诗人名搜索'
+  },
+
+  {
     id: 'price-comparison',
     name: '价格对比',
     icon: '🛒',
