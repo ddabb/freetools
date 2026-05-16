@@ -1,4 +1,4 @@
-<view class="retirement-container">
+﻿<view class="retirement-container">
   <view class="form-section">
     <view class="form-item">
       <text class="label">当前年龄</text>
@@ -100,4 +100,6 @@
 
   <!-- 隐藏的Canvas用于生成分享图片 -->
   <canvas id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

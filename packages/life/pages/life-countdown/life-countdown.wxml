@@ -1,4 +1,4 @@
-<!--packages/life/pages/life-countdown/life-countdown.wxml-->
+﻿<!--packages/life/pages/life-countdown/life-countdown.wxml-->
 <view class="container">
   <!-- 头部介绍 -->
   <view class="header">
@@ -134,4 +134,6 @@
 
   <!-- 隐藏的Canvas用于生成分享图片 -->
   <canvas id="cvs1" canvas-id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

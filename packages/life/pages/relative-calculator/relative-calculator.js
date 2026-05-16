@@ -1,10 +1,11 @@
-// 导入RelativeCalculator类
+﻿// 导入RelativeCalculator类
 const RelativeCalculator = require('./relativeCalculator');
 
 // 创建亲属关系计算器实例
 const calculator = new RelativeCalculator();
 
 Page({
+  behaviors: [adBehavior],
   data: {
     relationshipChain: [],
     result: '',
@@ -468,3 +469,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

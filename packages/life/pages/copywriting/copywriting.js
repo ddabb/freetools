@@ -1,4 +1,4 @@
-// packages/life/pages/copywriting/copywriting.js
+﻿// packages/life/pages/copywriting/copywriting.js
 const utils = require('../../../../utils/index');
 const imgGen = require('../../../../utils/imageGenerator');
 
@@ -17,6 +17,7 @@ if (isHarmonyOS) {
 let allCategories = [];
 
 Page({
+  behaviors: [adBehavior],
   data: {
     categories: [],
     selectedCategory: '',
@@ -426,3 +427,4 @@ Page({
   },
 
 });
+const adBehavior = require('../../../../utils/ad-behavior');

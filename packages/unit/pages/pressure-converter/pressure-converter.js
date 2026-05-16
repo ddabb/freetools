@@ -1,5 +1,8 @@
-// packages/unit/pages/pressure-converter/pressure-converter.js
+﻿// packages/unit/pages/pressure-converter/pressure-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['帕斯卡', '千帕', '兆帕', '巴', '标准大气压', '毫米汞柱', '磅每平方英寸'],
     unitValues: {

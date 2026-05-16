@@ -1,6 +1,7 @@
-const utils = require('../../../../utils/index');
+﻿const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     // 戒烟设置
     quitDate: '',           // 戒烟开始日期（格式：YYYY-MM-DD）
@@ -413,3 +414,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

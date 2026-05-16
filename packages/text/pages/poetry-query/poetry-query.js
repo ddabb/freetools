@@ -1,4 +1,4 @@
-// packages/text/pages/poetry-query/poetry-query.js
+﻿// packages/text/pages/poetry-query/poetry-query.js
 // 诗词查询页面 - v1 基础版：搜索 + 结果列表
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/poetry';
@@ -20,7 +20,10 @@ function request(url) {
   });
 }
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     searchText: '',
     activeDynasty: '全部',

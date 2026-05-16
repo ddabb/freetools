@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 一笔画 (One-Stroke Path) 游戏
  * 规则：从起点出发，一次经过所有有效格子，不重复，最终回到起点（或不回到起点）。
  * 交互：点击格子按顺序经过
@@ -39,6 +39,7 @@ let _game = {
 let _answerAnimTimer = null;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 4,
     cols: 4,
@@ -639,3 +640,4 @@ Page({
     this.startGame(_game.difficulty, targetIndex);
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

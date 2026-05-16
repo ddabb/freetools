@@ -1,5 +1,8 @@
-// packages/unit/pages/weight-converter/weight-converter.js
+﻿// packages/unit/pages/weight-converter/weight-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['千克', '克', '毫克', '吨', '磅', '盎司'],
     unitValues: {

@@ -1,7 +1,8 @@
-// packages/text/pages/poster-generator/poster-generator.js
+﻿// packages/text/pages/poster-generator/poster-generator.js
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     title: '',
     content: '',
@@ -99,3 +100,4 @@ Page({
   },
 
 });
+const adBehavior = require('../../../../utils/ad-behavior');

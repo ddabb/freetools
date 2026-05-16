@@ -1,4 +1,4 @@
-<!--index.wxml-->
+﻿<!--index.wxml-->
 <wxs module="filters" src="../../utils/filters.wxs" />
 
 <view class="home-container">
@@ -109,6 +109,9 @@
       </scroll-view>
     </view>
   </view>
+
+  <!-- 首页底部广告 -->
+  <ad unit-id="adunit-7c367b556fa848ca" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 
   <!-- 最近使用工具栏 -->
   <view class="recent-section" wx:if="{{recentTools.length > 0}}">

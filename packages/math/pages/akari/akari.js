@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 灯塔 (Akari / Light Up) 游戏 - CDN版
  * 规则：
  * 1. 在白格放置灯塔，照亮所有白格
@@ -45,6 +45,7 @@ const DIFFICULTY_CONFIG = {
 // TOTAL_PUZZLES 已废弃，使用 _totalPuzzles
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 7,
     cols: 7,
@@ -639,3 +640,4 @@ Page({
     return result ? lights : null;
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

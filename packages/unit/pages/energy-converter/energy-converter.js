@@ -1,5 +1,8 @@
-// packages/unit/pages/energy-converter/energy-converter.js
+﻿// packages/unit/pages/energy-converter/energy-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['焦耳', '千焦', '兆焦', '卡路里', '千瓦时', '英热单位', '电子伏特'],
     unitValues: {

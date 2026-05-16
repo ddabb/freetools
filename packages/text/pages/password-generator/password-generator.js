@@ -1,7 +1,8 @@
-// packages/text/pages/password-generator/password-generator.js
+﻿// packages/text/pages/password-generator/password-generator.js
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     length: 12,
     includeUppercase: true,
@@ -410,3 +411,4 @@ Page({
   // 分享给好友
   // 分享到朋友圈
 });
+const adBehavior = require('../../../../utils/ad-behavior');

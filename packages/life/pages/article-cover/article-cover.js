@@ -1,8 +1,9 @@
-// packages/life/pages/article-cover/article-cover.js
+﻿// packages/life/pages/article-cover/article-cover.js
 const utils = require('../../../../utils/index');
 const imgGen = require('../../../../utils/imageGenerator');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     // 配图参数
     title: '',
@@ -309,3 +310,4 @@ Page({
       });
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

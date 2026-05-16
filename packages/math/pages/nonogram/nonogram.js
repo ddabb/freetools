@@ -1,4 +1,4 @@
-// 数织 Nonogram - CDN版（约束传播求解）
+﻿// 数织 Nonogram - CDN版（约束传播求解）
 var SIZES = { easy: 6, medium: 8, hard: 10 };
 var CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data';
 var DIFF_TEXT = { easy: '简单 6x6', medium: '中等 8x8', hard: '困难 10x10' };
@@ -122,6 +122,7 @@ function solveLine(hints, line, n, mode) {
 }
 
 Page({
+  behaviors: [adBehavior],
   data: {
     difficulty: 'easy',
     difficultyText: '简单 6x6',
@@ -585,3 +586,4 @@ Page({
     }, 1000);
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

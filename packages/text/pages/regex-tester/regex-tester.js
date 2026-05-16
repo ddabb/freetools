@@ -1,5 +1,8 @@
-// packages/text/pages/regex-tester/regex-tester.js
+﻿// packages/text/pages/regex-tester/regex-tester.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     regexPattern: '', // 正则表达式模式
     testText: '', // 测试文本

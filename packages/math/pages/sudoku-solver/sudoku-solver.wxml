@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 全局控制区域 -->
   <view class="control-section" style="width: 724rpx; display: block; box-sizing: border-box" style="width: 724rpx; display: block; box-sizing: border-box">
     <!-- 模式选择 -->
@@ -193,4 +193,6 @@
       <text class="btn-text">音效</text>
     </button>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

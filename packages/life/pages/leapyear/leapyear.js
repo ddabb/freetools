@@ -1,5 +1,8 @@
-//leapyear.js
+﻿//leapyear.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     year: '',
     result: {},

@@ -1,4 +1,4 @@
-// packages/life/pages/merge-abc/merge-abc.js
+﻿// packages/life/pages/merge-abc/merge-abc.js
 // ABC合成记 - 字母合并游戏
 
 const utils = require('../../../../utils/index');
@@ -16,6 +16,7 @@ const SCORES = {
 const TILES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 Page({
+  behaviors: [adBehavior],
   data: {
     board: [],       // 16格棋盘
     score: 0,
@@ -325,3 +326,4 @@ Page({
     return { title: `ABC合成记 - 我得了${this.data.score}分！` };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

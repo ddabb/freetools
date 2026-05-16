@@ -1,4 +1,4 @@
-<!--packages/text/pages/poetry-detail/poetry-detail.wxml-->
+﻿<!--packages/text/pages/poetry-detail/poetry-detail.wxml-->
 <view class="page" wx:if="{{poet}}">
   <!-- 诗人信息 -->
   <view class="poet-header">
@@ -29,4 +29,6 @@
     </view>
     <view wx:if="{{!displayPoems.length}}" class="no-result">未找到相关诗词</view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

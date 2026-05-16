@@ -1,4 +1,4 @@
-// packages/math/pages/number-one/number-one.js
+﻿// packages/math/pages/number-one/number-one.js
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
@@ -15,6 +15,7 @@ const PUZZLE_COUNT = 30;
 let currentPuzzleIndex = 1;
 
 Page({
+  behaviors: [adBehavior],
   onLoad() {
     preloadSounds(['click', 'win', 'wrong']);
     wx.setNavigationBarTitle({ title: '数壹' });
@@ -328,3 +329,4 @@ Page({
     this._loadPuzzleList(targetIndex);
   },
 });
+const adBehavior = require('../../../../utils/ad-behavior');

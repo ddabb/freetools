@@ -1,4 +1,4 @@
-// battery-health.js
+﻿// battery-health.js
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
@@ -161,6 +161,7 @@ const platform = {
 };
 
 Page({
+  behaviors: [adBehavior],
   data: {
     level: null, // 设备电量百分比（1-100%）
     isCharging: null, // 是否正在充电
@@ -509,3 +510,4 @@ Page({
 
 
 })
+const adBehavior = require('../../../../utils/ad-behavior');

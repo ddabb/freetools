@@ -1,7 +1,10 @@
-// oddEven.js - 奇偶判断功能
+﻿// oddEven.js - 奇偶判断功能
 // 实时计算，无按钮
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     inputValue: '',
     result: {},

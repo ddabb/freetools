@@ -1,5 +1,8 @@
-// packages/text/pages/word-counter/word-counter.js
+﻿// packages/text/pages/word-counter/word-counter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     inputText: '', // 输入文本
     targetWords: 1000, // 目标字数

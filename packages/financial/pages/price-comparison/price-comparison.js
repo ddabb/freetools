@@ -1,4 +1,4 @@
-// packages/financial/pages/price-comparison/price-comparison.js
+﻿// packages/financial/pages/price-comparison/price-comparison.js
 
 // 单位换算配置
 const UNIT_CONFIG = {
@@ -51,7 +51,10 @@ const UNIT_OPTIONS = [
   { category: 'length', label: '长度', units: Object.entries(UNIT_CONFIG.length).map(([k, v]) => ({ value: `length:${k}`, label: v.name })) }
 ];
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     items: [],
     unitOptions: UNIT_OPTIONS,

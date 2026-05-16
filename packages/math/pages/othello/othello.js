@@ -1,4 +1,4 @@
-// 黑白棋 (Othello / Reversi)
+﻿// 黑白棋 (Othello / Reversi)
 // 人机对战版本
 const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
@@ -28,6 +28,7 @@ const WHITE = 2;  // 白棋（AI）
 
 // 音效已移至 utils/sound-manager.js
 Page({
+  behaviors: [adBehavior],
   onLoad() {
     preloadSounds(['click', 'win', 'lose']);
     const soundEnabled = utils.isPageSoundEnabled('othello');
@@ -546,3 +547,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

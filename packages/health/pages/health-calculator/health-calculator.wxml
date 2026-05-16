@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 表单区域 -->
   <view class="form-container">
     <!-- 年龄输入 -->
@@ -89,4 +89,6 @@
     <canvas canvas-id="cvs1" type="2d" style="width: {{canvaswidth}}px; height: {{canvasheight}}px; position: fixed; left: -9999rpx; top: -9999rpx;" />
     <button class="btn-share" hover-class="btn-share-hover" bindtap="MakePosters">生成分享海报</button>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

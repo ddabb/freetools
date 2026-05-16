@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 设置区域 -->
   <view class="settings-section">
     <view class="setting-item">
@@ -169,4 +169,6 @@
   <view class="loading-state" wx:if="{{isComparing}}">
     <text>⚡ 正在对比...</text>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

@@ -1,5 +1,8 @@
-// packages/text/pages/poetry-detail/poetry-detail.js
+﻿// packages/text/pages/poetry-detail/poetry-detail.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     poet: null,           // { n, d, desc, p: [ { n, c, f } ] }
     expandedPoem: -1,

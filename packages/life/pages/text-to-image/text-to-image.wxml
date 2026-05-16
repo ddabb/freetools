@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 内容区域 -->
   <view class="content-area">
     <!-- 输入区域 -->
@@ -77,4 +77,6 @@
   
   <!-- 隐藏的画布元素，用于生成高清图片 -->
   <canvas id="cvsTextToImage" type="2d" style="width: 375px; height: 667px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

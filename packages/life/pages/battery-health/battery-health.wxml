@@ -1,4 +1,4 @@
-<!--battery-health.wxml-->
+﻿<!--battery-health.wxml-->
 <view class="container">
   <!-- 标题区 -->
   <view class="header">
@@ -43,4 +43,6 @@
       <button class="btn-share" hover-class="btn-share-hover" bindtap="MakePosters" >生成分享海报</button>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

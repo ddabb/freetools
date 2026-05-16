@@ -1,5 +1,8 @@
-// packages/developer/pages/timestamp-converter/timestamp-converter.js
+﻿// packages/developer/pages/timestamp-converter/timestamp-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     currentTime: '', // 当前时间字符串
     currentTimestamp: '', // 当前时间戳

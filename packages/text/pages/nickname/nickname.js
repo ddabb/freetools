@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 昵称工具箱页面
  * 上标/下标：即输即反馈；翅膀/特效字/颜文字/符号：点击预览
  */
@@ -6,6 +6,7 @@
 const { superscript, subscript, wings, effects, kaomoji, symbols } = require('./data/index.js');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     activeTab: 'wings',
 
@@ -242,3 +243,4 @@ Page({
     setTimeout(() => this.setData({ showToast: false }), 2000);
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

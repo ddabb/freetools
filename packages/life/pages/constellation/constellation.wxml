@@ -1,4 +1,4 @@
-<!-- 查询区域 -->
+﻿<!-- 查询区域 -->
 <view class="query-section">
   <view class="input-group">
     <view class="input-hint">选择日期(公历):</view>
@@ -86,6 +86,8 @@
     </view>
     <view class="detail-content">幸运数字：{{constellationData.luckyNumber}} | 幸运色：{{constellationData.luckyColor}} | 幸运日：{{constellationData.luckyDay}}</view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>
 
 

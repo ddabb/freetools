@@ -1,9 +1,10 @@
-// idiom-query.js - 成语查询页面
+﻿// idiom-query.js - 成语查询页面
 const dataService = require('../../utils/idiom-data-service.js');
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     queryMode: 'forward',
     queryInput: '',
@@ -472,3 +473,4 @@ Page({
     }, 500);
   },
 });
+const adBehavior = require('../../../../utils/ad-behavior');

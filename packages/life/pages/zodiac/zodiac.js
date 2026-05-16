@@ -1,5 +1,8 @@
-// 生肖查询页面
+﻿// 生肖查询页面
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     year: 1966,
     zodiacName: '午马',

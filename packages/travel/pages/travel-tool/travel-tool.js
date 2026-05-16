@@ -1,5 +1,8 @@
-// travel-tool.js
+﻿// travel-tool.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     days: 3, // 旅行天数
     destination: '', // 目的地

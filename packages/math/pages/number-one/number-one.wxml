@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 设置区 -->
   <view class="settings-bar">
     <view class="difficulty-tabs">
@@ -101,4 +101,6 @@
     <view class="rule-item">③ 所有未涂黑的格子必须连通</view>
     <view class="rule-item">④ 点击格子标记/取消涂黑</view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

@@ -1,7 +1,10 @@
-// packages/math/pages/prime-factorization/prime-factorization.js
+﻿// packages/math/pages/prime-factorization/prime-factorization.js
 // 实时计算，无按钮
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     number: '',
     factors: [],

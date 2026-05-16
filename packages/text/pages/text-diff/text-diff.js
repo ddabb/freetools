@@ -1,5 +1,8 @@
-// packages/text/pages/text-diff/text-diff.js
+﻿// packages/text/pages/text-diff/text-diff.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     textA: '',
     textB: '',

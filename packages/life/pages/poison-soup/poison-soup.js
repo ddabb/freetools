@@ -1,7 +1,8 @@
-// packages/life/pages/poison-soup/poison-soup.js
+﻿// packages/life/pages/poison-soup/poison-soup.js
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     currentSoup: '',
     soupList: [],
@@ -185,3 +186,4 @@ Page({
     }, 300);
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

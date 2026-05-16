@@ -1,4 +1,4 @@
-// packages/unit/pages/timezone-converter/timezone-converter.js
+﻿// packages/unit/pages/timezone-converter/timezone-converter.js
 
 // 常用城市时区数据
 const TIMEZONE_DATA = [
@@ -38,7 +38,10 @@ const REGION_GROUPS = {
   '非洲': ['开罗', '约翰内斯堡']
 };
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     // 当前基准时间
     baseDate: '',

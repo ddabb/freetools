@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 真心话/大冒险 切换 -->
   <view class="mode-tabs">
     <view class="mode-tab {{mode === 'truth' ? 'active truth' : ''}}" data-mode="truth" bindtap="switchMode">
@@ -147,4 +147,6 @@
       <view class="share-cancel" bindtap="hideShareModal">取消</view>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

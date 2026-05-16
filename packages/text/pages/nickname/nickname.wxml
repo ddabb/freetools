@@ -1,4 +1,4 @@
-<!--昵称特效页面模板-->
+﻿<!--昵称特效页面模板-->
 <view class="container">
   <!-- 预览区 -->
   <view class="card preview-card">
@@ -166,4 +166,6 @@
   <view class="toast {{showToast ? 'show' : ''}}">
     <text>{{toastText}}</text>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

@@ -1,4 +1,4 @@
-// packages/math/pages/sudoku-solver/sudoku-solver.js
+﻿// packages/math/pages/sudoku-solver/sudoku-solver.js
 const sudoku = require('../../utils/sudoku');
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
@@ -55,6 +55,7 @@ function getDailyCacheTsKey(dateValue) {
 }
 
 Page({
+  behaviors: [adBehavior],
   data: {
     board: [],
     solving: false,
@@ -940,3 +941,4 @@ Page({
     }
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

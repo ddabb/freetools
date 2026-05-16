@@ -1,7 +1,8 @@
-// text-tool.js
+﻿// text-tool.js
 const pinyinPro = require('pinyin-pro');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     inputText: '', // 输入文本
     outputText: '', // 输出文本
@@ -262,3 +263,4 @@ Page({
   },
 
 })
+const adBehavior = require('../../../../utils/ad-behavior');

@@ -1,4 +1,4 @@
-// packages/text/pages/mdconvert/mdconvert.js
+﻿// packages/text/pages/mdconvert/mdconvert.js
 let md = null;
 
 // 安全初始化 markdown-it
@@ -39,6 +39,7 @@ function simpleMarkdownToHtml(text) {
 }
 
 Page({
+  behaviors: [adBehavior],
   data: {
     mdText: '',
     htmlResult: '',
@@ -385,3 +386,4 @@ const result = await fetch('/api/data', {
   // 分享给好友
   // 分享到朋友圈
 });
+const adBehavior = require('../../../../utils/ad-behavior');

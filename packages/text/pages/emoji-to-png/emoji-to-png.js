@@ -1,7 +1,8 @@
-// Emoji转图片页面逻辑（简化版）
+﻿// Emoji转图片页面逻辑（简化版）
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     inputEmoji: '',
     canExport: false,
@@ -233,3 +234,4 @@ Page({
     this.updatePreview();
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

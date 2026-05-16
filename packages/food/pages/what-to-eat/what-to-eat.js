@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 食物数据优化说明：
  * - calories: 热量 (大卡/100g)
  * - portion: 合理一份的重量 (g/ml/个)
@@ -235,6 +235,7 @@ function getAllFoods() {
 }
 
 Page({
+  behaviors: [adBehavior],
   data: {
     isSpinning: false,
     result: null,
@@ -631,3 +632,4 @@ Page({
     }, 1000);
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

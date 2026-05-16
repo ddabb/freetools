@@ -1,10 +1,11 @@
-// idiom-battle.js - 成语对战页面
+﻿// idiom-battle.js - 成语对战页面
 const dataService = require('../../utils/idiom-data-service.js');
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
 const USER_STATS_KEY = 'idiom_battle_stats';
 
 Page({
+  behaviors: [adBehavior],
   data: {
     loading: true,
     battleState: 'idle',   // idle | playing | ended
@@ -368,3 +369,4 @@ Page({
     }, 500);
   },
 });
+const adBehavior = require('../../../../utils/ad-behavior');

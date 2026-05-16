@@ -1,5 +1,8 @@
-// packages/unit/pages/volume-converter/volume-converter.js
+﻿// packages/unit/pages/volume-converter/volume-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['立方米', '升', '分升', '毫升', '加仑'],
     unitValues: {

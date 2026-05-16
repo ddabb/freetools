@@ -1,4 +1,4 @@
-<!-- packages/life/pages/poison-soup/poison-soup.wxml -->
+﻿<!-- packages/life/pages/poison-soup/poison-soup.wxml -->
 <view class="container">
   <!-- 顶部区域 -->
   <view class="header">
@@ -75,4 +75,6 @@
       <view class="share-cancel" bindtap="hideShare">取消</view>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

@@ -1,5 +1,8 @@
-//onlychinese.js
+﻿//onlychinese.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     inputText: '',
     result: {},

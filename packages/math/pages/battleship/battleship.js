@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 战舰 (Battleship Solitaire) 游戏 - CDN版
  * 规则：
  * 1. 根据边缘数字找出所有战舰位置
@@ -18,6 +18,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 6,
     cols: 6,
@@ -394,3 +395,4 @@ Page({
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

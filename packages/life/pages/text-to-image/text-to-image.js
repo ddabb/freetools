@@ -1,8 +1,9 @@
-// packages/life/pages/text-to-image/text-to-image.js
+﻿// packages/life/pages/text-to-image/text-to-image.js
 const utils = require('../../../../utils/index');
 const imgGen = require('../../../../utils/imageGenerator');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     text: '',
     from: '',
@@ -286,3 +287,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

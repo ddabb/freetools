@@ -1,4 +1,4 @@
-// packages/financial/pages/retirementCalculator/retirementCalculator.js
+﻿// packages/financial/pages/retirementCalculator/retirementCalculator.js
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 
@@ -161,6 +161,7 @@ const platform = {
 };
 
 Page({
+  behaviors: [adBehavior],
   data: {
     currentAge: '',
     retireAge: 60,
@@ -608,3 +609,4 @@ Page({
     }
   }
 })
+const adBehavior = require('../../../../utils/ad-behavior');

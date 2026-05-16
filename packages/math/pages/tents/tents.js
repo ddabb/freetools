@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 帐篷 (Tents) 游戏 - CDN版
  * 规则：
  * 1. 每个树旁必须放一个帐篷
@@ -17,6 +17,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 6,
     cols: 6,
@@ -470,3 +471,4 @@ Page({
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

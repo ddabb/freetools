@@ -1,4 +1,7 @@
+﻿const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     // 游戏状态
     diceValues: [1, 2, 3, 4, 5, 6], // 初始显示各个面

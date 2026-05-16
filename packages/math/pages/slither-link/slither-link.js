@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 数回 (Slither Link) 游戏 - CDN版
  * 
  * 规则：
@@ -65,6 +65,7 @@ function computeCellSize(rows, cols) {
 }
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 5,
     cols: 5,
@@ -660,3 +661,4 @@ Page({
     }
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

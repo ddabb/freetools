@@ -1,5 +1,8 @@
-// packages/unit/pages/area-converter/area-converter.js
+﻿// packages/unit/pages/area-converter/area-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['平方毫米', '平方厘米', '平方分米', '平方米', '平方千米', '公顷', '亩', '平方英尺', '平方码', '平方英寸', '英亩', '平方英里'],
     unitValues: {

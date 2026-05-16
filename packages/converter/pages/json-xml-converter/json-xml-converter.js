@@ -1,7 +1,8 @@
-// packages/converter/pages/json-xml-converter/json-xml-converter.js
+﻿// packages/converter/pages/json-xml-converter/json-xml-converter.js
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     activeTab: 'json2xml', // 当前激活的标签页
     
@@ -272,3 +273,4 @@ Page({
     wx.setNavigationBarTitle({ title: 'JSON·XML转换器' });
   }
 })
+const adBehavior = require('../../../../utils/ad-behavior');

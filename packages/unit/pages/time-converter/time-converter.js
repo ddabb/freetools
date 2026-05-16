@@ -1,5 +1,8 @@
-// packages/unit/pages/time-converter/time-converter.js
+﻿// packages/unit/pages/time-converter/time-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['毫秒', '秒', '分钟', '小时', '天', '周', '月', '年', '十年', '世纪'],
     unitValues: {

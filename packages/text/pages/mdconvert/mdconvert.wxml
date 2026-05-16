@@ -1,4 +1,4 @@
-<!-- packages/text/pages/mdconvert/mdconvert.wxml -->
+﻿<!-- packages/text/pages/mdconvert/mdconvert.wxml -->
 <view class="page-container">
   <!-- 顶部装饰 -->
   <view class="header-bg">
@@ -196,4 +196,6 @@
       </view>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

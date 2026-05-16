@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 推箱子 (Sokoban) 游戏 - CDN版
  * 规则：
  * 1. 玩家推动箱子到目标位置
@@ -20,6 +20,7 @@ const utils = require('../../../../utils/index');
 const { playSound, preloadSounds, isPageSoundEnabled } = utils;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 6,
     cols: 6,
@@ -744,3 +745,4 @@ Page({
     e.stopPropagation && e.stopPropagation();
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

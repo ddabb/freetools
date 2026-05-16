@@ -1,8 +1,9 @@
-const app = getApp();
+﻿const app = getApp();
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     // 功德计数
     meritCount: 0,       // 累计功德
@@ -251,3 +252,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

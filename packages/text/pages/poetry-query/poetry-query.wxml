@@ -1,4 +1,4 @@
-<!--packages/text/pages/poetry-query/poetry-query.wxml-->
+﻿<!--packages/text/pages/poetry-query/poetry-query.wxml-->
 <view class="page">
   <!-- 搜索栏 -->
   <view class="search-bar">
@@ -45,4 +45,6 @@
 
   <!-- Loading -->
   <view wx:if="{{isLoading}}" class="loading">加载中...</view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

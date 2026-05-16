@@ -1,4 +1,4 @@
-<view class="price-comparison-container">
+﻿<view class="price-comparison-container">
   <!-- 商品列表 -->
   <view class="items-list">
     <view class="item-card {{index === bestDealIndex && showResult ? 'best-deal' : ''}} {{item.error ? 'has-error' : ''}}" 
@@ -148,4 +148,6 @@
       <text class="tip-item">• 例如：500g 和 1kg 可以直接对比</text>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

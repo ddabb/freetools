@@ -1,5 +1,8 @@
-// packages/unit/pages/base-converter/base-converter.js
+﻿// packages/unit/pages/base-converter/base-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     bases: ['十进制', '二进制', '八进制', '十六进制', 'Base64'],
     baseValues: {

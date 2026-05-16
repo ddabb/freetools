@@ -1,9 +1,10 @@
-// packages/life/pages/truth-or-dare/truth-or-dare.js
+﻿// packages/life/pages/truth-or-dare/truth-or-dare.js
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
 
 // 真心话大冒险页面
 Page({
+  behaviors: [adBehavior],
   data: {
     // 当前模式：truth / dare
     mode: 'truth',
@@ -334,3 +335,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

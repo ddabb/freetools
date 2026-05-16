@@ -1,5 +1,8 @@
-// packages/life/pages/time-tool/time-tool.js
+﻿// packages/life/pages/time-tool/time-tool.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     activeTab: 0,
     tabs: ['秒表', '计时器', '世界时钟'],

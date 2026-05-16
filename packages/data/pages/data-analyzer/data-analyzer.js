@@ -1,7 +1,8 @@
-// packages/data/pages/data-analyzer/data-analyzer.js
+﻿// packages/data/pages/data-analyzer/data-analyzer.js
 const XLSX = require('wechat-xlsx');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     inputData: '',
     analysisResult: null,
@@ -358,3 +359,4 @@ Page({
     }
   }
 })
+const adBehavior = require('../../../../utils/ad-behavior');

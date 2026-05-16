@@ -1,4 +1,4 @@
-<!-- idiom-battle.wxml - 成语对战页面 -->
+﻿<!-- idiom-battle.wxml - 成语对战页面 -->
 <view class="container">
 
   <!-- 加载中 -->
@@ -192,5 +192,7 @@
       </view>
     </view>
   </block>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 
 </view>

@@ -1,4 +1,4 @@
-// 躲避牛蛙 (Frog Escape) - 扫雷换皮
+﻿// 躲避牛蛙 (Frog Escape) - 扫雷换皮
 // 雷→🐸牛蛙（要躲避） | 数字→周围牛蛙数 | 安全→💧水花 / 数字提示
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/minesweeper';
 const RECORDS_KEY = 'frog_escape_records';
@@ -7,6 +7,7 @@ const { playSound, preloadSounds } = utils;
 // 音效和震动反馈已移至 utils/sound-manager.js
 // 页面加载时预加载音效
 Page({
+  behaviors: [adBehavior],
   onLoad() {
     preloadSounds(['click', 'flag', 'win', 'lose']);
     this.loadRecord();
@@ -539,3 +540,4 @@ Page({
     return colors[cell.nearby] || cell.nearby;
   },
 });
+const adBehavior = require('../../../../utils/ad-behavior');

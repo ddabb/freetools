@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 数墙 (Nurikabe) 游戏
  * 规则：
  * 1. 每个数字格子属于一个大小等于该数字的白色连通区域
@@ -21,6 +21,7 @@ const CELL_BLACK = 1;
 let puzzleCache = { easy: 0, hard: 0 };
 
 Page({
+  behaviors: [adBehavior],
   data: {
     rows: 5,
     cols: 5,
@@ -446,3 +447,4 @@ Page({
     // 阻止事件冒泡
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

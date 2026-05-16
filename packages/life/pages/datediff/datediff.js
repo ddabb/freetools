@@ -1,5 +1,8 @@
-//datediff.js
+﻿//datediff.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     startDate: '',
     endDate: '',

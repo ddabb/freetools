@@ -1,7 +1,10 @@
-// prime-checker.js - 质数判断功能
+﻿// prime-checker.js - 质数判断功能
 // 实时计算，无按钮
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     inputValue: '',
     result: {},

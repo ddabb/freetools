@@ -1,4 +1,4 @@
-<!--packages/life/pages/time-tool/time-tool.wxml-->
+﻿<!--packages/life/pages/time-tool/time-tool.wxml-->
 <view class="container">
   <!-- 标签页切换 -->
   <view class="tabs">
@@ -164,4 +164,6 @@
       </view>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

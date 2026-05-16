@@ -1,5 +1,8 @@
-// packages/unit/pages/temperature-converter/temperature-converter.js
+﻿// packages/unit/pages/temperature-converter/temperature-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['摄氏度', '华氏度', '开尔文', '兰金温标', '列氏温标', '牛顿温标', '罗默温标'],
     unitValues: {

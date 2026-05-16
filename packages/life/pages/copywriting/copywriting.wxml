@@ -1,4 +1,4 @@
-<!-- packages/copywriting/pages/copywriting/copywriting.wxml -->
+﻿<!-- packages/copywriting/pages/copywriting/copywriting.wxml -->
 <view class="container">
   <!-- 搜索框 -->
   <view class="search-section">
@@ -95,5 +95,7 @@
 
   <!-- 画布元素，用于生成图片 -->
   <canvas id="cvs1" type="2d" style="width: 375px; height: 667px; position: absolute; left: -9999rpx; top: -9999rpx;"></canvas>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 
 </view>

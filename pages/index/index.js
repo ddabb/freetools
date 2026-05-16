@@ -164,5 +164,13 @@ Page({
 
   onShareTimeline() {
     return { title: '免费工具箱 - 精选实用工具集合', query: 'index' };
+  },
+
+  // 广告事件
+  onAdError(err) {
+    console.warn('[广告] 首页banner错误:', err.detail.errCode, err.detail.errMsg);
+  },
+  onAdClose() {
+    console.log('[广告] 首页banner关闭');
   }
 });

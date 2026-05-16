@@ -1,7 +1,10 @@
-// packages/math/pages/divisor-finder/divisor-finder.js
+﻿// packages/math/pages/divisor-finder/divisor-finder.js
 // 实时计算，无按钮
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     number: '',
     divisors: [],

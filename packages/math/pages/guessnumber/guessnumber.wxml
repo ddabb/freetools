@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <view class="header">
     <view class="title">猜猜数字</view>
     <view class="subtitle">找出4位不重复的数字密码</view>
@@ -90,4 +90,6 @@
       <view class="result-close" bindtap="onReset">再来一局</view>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

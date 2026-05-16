@@ -1,4 +1,4 @@
-const utils = require('../../../../utils/index');
+﻿const utils = require('../../../../utils/index');
 
 // 使用 markdown-it 渲染 Markdown
 let markdownIt = null;
@@ -29,6 +29,7 @@ const THEMES = ['默认', 'GitHub', '暗黑', '护眼'];
 const THEME_CLASSES = ['', 'github-theme', 'dark-theme', 'eye-care-theme'];
 
 Page({
+  behaviors: [adBehavior],
   data: {
     activeTab: 'edit',
     markdownText: '',
@@ -213,3 +214,4 @@ Page({
     this.renderMarkdown(md);
   },
 });
+const adBehavior = require('../../../../utils/ad-behavior');

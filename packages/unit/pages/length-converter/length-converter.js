@@ -1,5 +1,8 @@
-// packages/unit/pages/length-converter/length-converter.js
+﻿// packages/unit/pages/length-converter/length-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['纳米', '微米', '毫米', '厘米', '分米', '米', '千米', '光年', '英里', '英尺', '英寸', '码', '海里', '丈', '尺', '寸'],
     unitValues: {

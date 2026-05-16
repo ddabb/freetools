@@ -1,10 +1,13 @@
-// 星座查询页面
+﻿// 星座查询页面
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/freetools@main/data';
 const CONSTELLATION_KEY = 'constellation_info';
 const CONSTELLATION_TS_KEY = 'constellation_info_ts';
 const CACHE_EXPIRE = 30 * 24 * 60 * 60 * 1000; // 30天
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     currentDate: '',
     year: 1990,

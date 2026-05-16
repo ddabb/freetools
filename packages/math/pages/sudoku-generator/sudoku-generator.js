@@ -1,7 +1,8 @@
-// packages/math/pages/sudoku-generator/sudoku-generator.js
+﻿// packages/math/pages/sudoku-generator/sudoku-generator.js
 const sudoku = require('../../utils/sudoku');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     board: [],
     difficulty: 'medium',
@@ -372,3 +373,4 @@ Page({
     return { title: '数独生成器 - 随机生成数独题目' };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

@@ -1,4 +1,4 @@
-// packages/life/pages/calendar/calendar.js
+﻿// packages/life/pages/calendar/calendar.js
 // 导入 lunar-javascript
 const { Solar, Lunar } = require('lunar-javascript');
 const utils = require('../../../../utils/index');
@@ -165,6 +165,7 @@ const platform = {
 };
 
 Page({
+  behaviors: [adBehavior],
   data: {
     currentDate: '',
     selectedDate: '',
@@ -790,3 +791,4 @@ Page({
     }
   }
 })
+const adBehavior = require('../../../../utils/ad-behavior');

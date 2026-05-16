@@ -167,8 +167,11 @@ const platform = {
   }
 };
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 // 页面定义
 const PageDefinition = {
+  behaviors: [adBehavior],
   data: {
     birthDate: '', // 出生日期
     expectedLifeYears: 75, // 预计寿命（岁） 调整为更现实的数值

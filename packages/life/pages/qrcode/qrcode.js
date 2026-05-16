@@ -58,7 +58,10 @@ const platform = {
 };
 
 // 页面定义
+const adBehavior = require('../../../../utils/ad-behavior');
+
 const PageDefinition = {
+  behaviors: [adBehavior],
   data: {
     text: '',
     qrcodeSize: 280,

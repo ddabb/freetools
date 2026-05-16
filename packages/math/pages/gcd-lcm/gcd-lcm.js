@@ -1,5 +1,8 @@
-// packages/math/pages/gcd-lcm/gcd-lcm.js
+﻿// packages/math/pages/gcd-lcm/gcd-lcm.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     num1: '', // 第一个数
     num2: '', // 第二个数

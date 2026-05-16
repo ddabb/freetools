@@ -120,5 +120,13 @@ Page({
         confirmText: '知道了'
       });
     }
+  },
+
+  // 广告事件
+  onAdError(err) {
+    console.warn('[广告] 关于页banner错误:', err.detail.errCode, err.detail.errMsg);
+  },
+  onAdClose() {
+    console.log('[广告] 关于页banner关闭');
   }
 });

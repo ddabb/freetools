@@ -1,10 +1,11 @@
-// pages/changelog/changelog.js
+﻿// pages/changelog/changelog.js
 // 版本日志页面
 
 const changelogExporter = require('../../utils/changelog-exporter');
 const changelogLoader = require('../../utils/changelog-loader');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     loading: true,
     error: '',
@@ -106,3 +107,4 @@ Page({
     wx.navigateBack();
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

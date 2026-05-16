@@ -1,4 +1,4 @@
-// health-calculator.js
+﻿// health-calculator.js
 // 检测运行环境
 const isHarmonyOS = typeof ohos !== 'undefined' || (typeof window !== 'undefined' && typeof window.$element !== 'undefined');
 const utils = require('../../../../utils/index');
@@ -162,6 +162,7 @@ const platform = {
 };
 
 Page({
+  behaviors: [adBehavior],
   data: {
     height: '', // 身高（cm）
     weight: '', // 体重（kg）
@@ -617,3 +618,4 @@ Page({
 
 
 })
+const adBehavior = require('../../../../utils/ad-behavior');

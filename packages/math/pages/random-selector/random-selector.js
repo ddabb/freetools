@@ -1,7 +1,8 @@
-// packages/math/pages/random-selector/random-selector.js
+﻿// packages/math/pages/random-selector/random-selector.js
 const XLSX = require('wechat-xlsx');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     // 选号模式：'double'（六棕一绿）或 'lottery'（五棕两绿）
     mode: 'double',
@@ -1336,3 +1337,4 @@ Page({
     });
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

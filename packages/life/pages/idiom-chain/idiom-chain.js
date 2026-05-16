@@ -1,4 +1,4 @@
-// idiom-chain.js - 成语龙链页面
+﻿// idiom-chain.js - 成语龙链页面
 const HISTORY_KEY = 'idiom_chain_history';
 
 function pad(value) {
@@ -41,7 +41,10 @@ function persistHistory(chains) {
   });
 }
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     chains: [],
   },

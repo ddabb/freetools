@@ -1,4 +1,4 @@
-// packages/math/pages/24point/24point.js
+﻿// packages/math/pages/24point/24point.js
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
 
@@ -37,6 +37,7 @@ const localQuestionBank = [
 ];
 
 Page({
+  behaviors: [adBehavior],
   data: {
     numbers: [1, 2, 3, 4], // 当前游戏4个数字
     expression: '', // 用户输入的表达式
@@ -838,3 +839,4 @@ Page({
     wx.stopPullDownRefresh();
   }
 })
+const adBehavior = require('../../../../utils/ad-behavior');

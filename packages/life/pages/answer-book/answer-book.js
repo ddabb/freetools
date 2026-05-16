@@ -1,4 +1,4 @@
-// packages/life/pages/answer-book/answer-book.js
+﻿// packages/life/pages/answer-book/answer-book.js
 
 const utils = require('../../../../utils/index');
 const { playSound } = utils;
@@ -84,6 +84,7 @@ const KEYWORD_RULES = [
 ];
 
 Page({
+  behaviors: [adBehavior],
   data: {
     question: '',
     answer: '',
@@ -380,3 +381,4 @@ Page({
     };
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

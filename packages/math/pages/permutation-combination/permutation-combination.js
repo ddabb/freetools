@@ -1,7 +1,10 @@
-// packages/math/pages/permutation-combination/permutation-combination.js
+﻿// packages/math/pages/permutation-combination/permutation-combination.js
 // 实时计算，无按钮
 
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     n: '',
     r: '',

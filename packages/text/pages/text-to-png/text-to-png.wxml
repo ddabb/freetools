@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 隐藏的Canvas用于生成PNG图片 -->
   <canvas id="textCanvas" type="2d" style="width: {{canvasWidth}}rpx; height: {{canvasHeight}}rpx; position: absolute; left: -9999px; top: -9999px;"></canvas>
   
@@ -96,4 +96,6 @@
     <view class="spinner"></view>
     <p>正在生成高清图片，请稍候...</p>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

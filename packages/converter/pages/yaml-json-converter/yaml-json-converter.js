@@ -1,5 +1,8 @@
-// packages/converter/pages/yaml-json-converter/yaml-json-converter.js
+﻿// packages/converter/pages/yaml-json-converter/yaml-json-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     activeTab: 'yaml2json', // 当前激活的标签
     

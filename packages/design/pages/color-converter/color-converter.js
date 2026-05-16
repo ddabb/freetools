@@ -1,5 +1,8 @@
-// packages/design/pages/color-converter/color-converter.js
+﻿// packages/design/pages/color-converter/color-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     // 当前颜色
     currentColor: '#667eea',

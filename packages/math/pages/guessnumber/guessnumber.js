@@ -1,10 +1,11 @@
-const utils = require('../../../../utils/index');
+﻿const utils = require('../../../../utils/index');
 const { playSound, preloadSounds } = utils;
 
 const MAX_ATTEMPTS = 10;
 const COLS = 4;
 
 Page({
+  behaviors: [adBehavior],
   data: {
     currentInput: [],      // 当前输入的数字
     inputValue: '',        // 输入框的值
@@ -229,3 +230,4 @@ Page({
     }
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

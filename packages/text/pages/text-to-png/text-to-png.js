@@ -1,7 +1,8 @@
-// 文本转图片页面逻辑
+﻿// 文本转图片页面逻辑
 const utils = require('../../../../utils/index');
 
 Page({
+  behaviors: [adBehavior],
   data: {
     inputText: '',
     selectedTemplate: 'template1',
@@ -957,3 +958,4 @@ Page({
     this.updatePreview();
   }
 });
+const adBehavior = require('../../../../utils/ad-behavior');

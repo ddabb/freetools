@@ -1,5 +1,8 @@
-// packages/unit/pages/speed-converter/speed-converter.js
+﻿// packages/unit/pages/speed-converter/speed-converter.js
+const adBehavior = require('../../../../utils/ad-behavior');
+
 Page({
+  behaviors: [adBehavior],
   data: {
     units: ['米/秒', '千米/小时', '英里/小时', '节', '光速'],
     unitValues: {

@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 顶部标签页 -->
   <view class="tab-container">
     <view class="tab-item {{activeTab === 'json2xml' ? 'active' : ''}}" bindtap="switchTab" data-tab="json2xml">
@@ -128,4 +128,6 @@
       <text class="help-text">• 会自动处理重复的元素名</text>
     </view>
   </view>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>

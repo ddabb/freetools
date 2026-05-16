@@ -1,4 +1,4 @@
-<view class="container">
+﻿<view class="container">
   <!-- 封面预览 -->
   <view class="preview-section">
     <view class="preview-wrapper">
@@ -78,4 +78,6 @@
 
   <!-- 隐藏的画布 -->
   <canvas id="cvsArticleCover" type="2d" style="width: 750px; height: 320px; position: absolute; left: -9999px; top: -9999px;"></canvas>
+  <!-- 搴曢儴骞垮憡 -->
+  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
 </view>
