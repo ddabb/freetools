@@ -1,4 +1,4 @@
-﻿// packages/text/pages/poetry-query/poetry-query.js
+// packages/text/pages/poetry-query/poetry-query.js
 // 诗词查询页面 - v1 基础版：搜索 + 结果列表
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/ddabb/FreeToolsPuzzle@main/data/poetry';
@@ -33,6 +33,10 @@ Page({
     isLoading: false,
     isIndexLoaded: false,
     refresherTriggered: false,
+    poetPage: 1,       // 诗人列表当前页码
+    poetPageSize: 50,  // 每页条数
+    hasMorePoets: true, // 是否还有更多诗人
+    loadingMore: false, // 是否正在加载更多
   },
 
   onLoad() {
@@ -74,8 +78,9 @@ Page({
       wx.setStorageSync(STORAGE_KEY + '_dynasties', sortedDynasties);
       this.setData({
         dynasties: sortedDynasties,
-        poets: data.poets.slice(0, 50), // 首批展示50位诗人
-        isIndexLoaded: true,
+        poets: data.poets.slice(0, this.data.poetPageSize),
+        poetPage: 1,
+        hasMorePoets: data.poets.length > this.data.poetPageSize,
         isLoading: false,
       });
     } catch (e) {
@@ -91,10 +96,12 @@ Page({
     const cachedDynasties = wx.getStorageSync(STORAGE_KEY + '_dynasties');
     if (cachedData && cachedDynasties) {
       this.indexData = cachedData; // 缓存数据（不含ft倒排索引）
+      const total = cachedData.poets.length;
       this.setData({
         dynasties: cachedDynasties,
-        poets: cachedData.poets.slice(0, 50),
-        isIndexLoaded: true,
+        poets: cachedData.poets.slice(0, this.data.poetPageSize),
+        poetPage: 1,
+        hasMorePoets: total > this.data.poetPageSize,
       });
     }
     // 再请求CDN更新
@@ -122,10 +129,28 @@ Page({
   onSearch() {
     const q = this.data.searchText.trim();
     console.log('[搜索] searchText:', q, 'indexData:', !!this.indexData);
+    
+    // 搜索词为空时，重置显示所有诗人（按当前朝代筛选）
     if (!q) {
-      console.log('[搜索] 搜索词为空');
+      console.log('[搜索] 搜索词为空，重置诗人列表');
+      if (!this.indexData) {
+        wx.showToast({ title: '数据加载中...', icon: 'none' });
+        return;
+      }
+      let filtered = this.indexData.poets;
+      if (this.data.activeDynasty !== '全部') {
+        filtered = filtered.filter(p => p.d === this.data.activeDynasty);
+      }
+      const total = filtered.length;
+      this.setData({ 
+        results: [],
+        poets: filtered.slice(0, this.data.poetPageSize),
+        poetPage: 1,
+        hasMorePoets: total > this.data.poetPageSize,
+      });
       return;
     }
+    
     const idx = this.indexData;
     if (!idx) {
       console.log('[搜索] indexData 未加载');
@@ -162,11 +187,49 @@ Page({
   // 切换朝代筛选
   onDynastyTap(e) {
     const d = e.currentTarget.dataset.d;
-    this.setData({ activeDynasty: d });
+    this.setData({ activeDynasty: d, poetPage: 1 });
     if (!this.indexData) return;
     let filtered = this.indexData.poets;
     if (d !== '全部') filtered = filtered.filter(p => p.d === d);
-    this.setData({ poets: filtered.slice(0, 50) });
+    const total = filtered.length;
+    this.setData({ 
+      poets: filtered.slice(0, this.data.poetPageSize),
+      hasMorePoets: total > this.data.poetPageSize,
+    });
+  },
+
+  // 加载更多诗人
+  loadMorePoets() {
+    if (this.data.loadingMore || !this.data.hasMorePoets) return;
+    if (!this.indexData) return;
+
+    this.setData({ loadingMore: true });
+    
+    let filtered = this.indexData.poets;
+    if (this.data.activeDynasty !== '全部') {
+      filtered = filtered.filter(p => p.d === this.data.activeDynasty);
+    }
+
+    const nextPage = this.data.poetPage + 1;
+    const start = (nextPage - 1) * this.data.poetPageSize;
+    const end = start + this.data.poetPageSize;
+    const newPoets = filtered.slice(start, end);
+
+    setTimeout(() => {
+      this.setData({
+        poets: [...this.data.poets, ...newPoets],
+        poetPage: nextPage,
+        hasMorePoets: end < filtered.length,
+        loadingMore: false,
+      });
+    }, 300);
+  },
+
+  // 滚动到底部自动加载更多
+  onScrollToLower() {
+    if (!this.data.results.length && !this.data.isLoading) {
+      this.loadMorePoets();
+    }
   },
 
   // 点击诗人 → 跳转详情（需加载 poet/{initial}.json）

@@ -2,7 +2,13 @@
 /* 诗词查询页面 - 适老化优化版 */
 
 /* 页面整体 */
-.page { padding: 24rpx; background: #f8f6f2; min-height: 100vh; }
+.page { background: #f8f6f2; min-height: 100vh; }
+
+/* 主内容滚动区域 */
+.content-scroll { height: calc(100vh - 200rpx); padding: 0 24rpx 24rpx; }
+
+/* 搜索栏区域 */
+.search-bar-wrap { padding: 24rpx; }
 
 /* 搜索栏 - 放大 */
 .search-bar { display: flex; align-items: center; background: #fff; border-radius: 20rpx; padding: 16rpx 24rpx; margin-bottom: 24rpx; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.08); border: 2rpx solid #e0dcd4; }
@@ -27,6 +33,10 @@
 
 /* Loading */
 .loading { text-align: center; padding: 48rpx; color: #888; font-size: 32rpx; }
+
+/* 加载更多 */
+.loading-more { text-align: center; padding: 32rpx; color: #999; font-size: 30rpx; }
+.no-more { text-align: center; padding: 32rpx; color: #ccc; font-size: 28rpx; }
 
 /* 提示文字 */
 page { font-size: 30rpx; color: #555; }

@@ -117,7 +117,7 @@
         <text class="project-title">📞 联系我们</text>
       </view>
       <view class="project-content">
-        <view class="contact-item" hover-class="contact-item-hover" bindtap="onCopyWechat">
+        <view class="contact-item" hover-class="contact-item-hover" bindtap="onOpenOfficialAccount">
           <text class="contact-icon">📱</text>
           <view class="contact-info">
             <text class="contact-label">微信公众号</text>

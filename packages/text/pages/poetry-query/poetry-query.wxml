@@ -1,4 +1,4 @@
-﻿<!--packages/text/pages/poetry-query/poetry-query.wxml-->
+<!--packages/text/pages/poetry-query/poetry-query.wxml-->
 <view class="page">
   <!-- 搜索栏 -->
   <view class="search-bar">
@@ -16,35 +16,42 @@
     </view>
   </scroll-view>
 
-  <!-- 搜索结果 -->
-  <view wx:if="{{results.length}}" class="results-section">
-    <view class="section-title">搜索结果（{{results.length}}）</view>
-    <view wx:for="{{results}}" wx:key="index"
-          class="result-item clickable"
-          data-name="{{item.name || item.poet}}" 
-          data-initial="{{item.initial}}"
-          data-title="{{item.title}}"
-          data-poet="{{item.poet}}"
-          bindtap="{{item.type === 'poet' ? 'onPoetTap' : 'onPoemTap'}}">
-      <view class="result-title">{{item.name || item.title}}</view>
-      <view class="result-sub">{{item.poet || item.dynasty}} · {{item.poemCount ? item.poemCount + '首' : item.dynasty}}</view>
+  <!-- 主内容区域（可滚动） -->
+  <scroll-view class="content-scroll" scroll-y bindscrolltolower="onScrollToLower">
+    <!-- 搜索结果 -->
+    <view wx:if="{{results.length}}" class="results-section">
+      <view class="section-title">搜索结果（{{results.length}}）</view>
+      <view wx:for="{{results}}" wx:key="index"
+            class="result-item clickable"
+            data-name="{{item.name || item.poet}}" 
+            data-initial="{{item.initial}}"
+            data-title="{{item.title}}"
+            data-poet="{{item.poet}}"
+            bindtap="{{item.type === 'poet' ? 'onPoetTap' : 'onPoemTap'}}">
+        <view class="result-title">{{item.name || item.title}}</view>
+        <view class="result-sub">{{item.poet || item.dynasty}} · {{item.poemCount ? item.poemCount + '首' : item.dynasty}}</view>
+      </view>
     </view>
-  </view>
 
-  <!-- 诗人列表（未搜索时展示） -->
-  <view wx:if="{{!results.length && !isLoading}}" class="poets-section">
-    <view class="section-title">{{activeDynasty === '全部' ? '唐代诗人（示例）' : activeDynasty + '诗人'}}</view>
-    <view wx:for="{{poets}}" wx:key="n"
-          class="poet-item"
-          data-name="{{item.n}}" data-initial="{{item.i}}"
-          bindtap="onPoetTap">
-      <view class="poet-name">{{item.n}}</view>
-      <view class="poet-info">{{item.d}} · {{item.pc}}首</view>
+    <!-- 诗人列表（未搜索时展示） -->
+    <view wx:if="{{!results.length && !isLoading}}" class="poets-section">
+      <view class="section-title">{{activeDynasty === '全部' ? '唐代诗人（示例）' : activeDynasty + '诗人'}}</view>
+      <view wx:for="{{poets}}" wx:key="n"
+            class="poet-item"
+            data-name="{{item.n}}" data-initial="{{item.i}}"
+            bindtap="onPoetTap">
+        <view class="poet-name">{{item.n}}</view>
+        <view class="poet-info">{{item.d}} · {{item.pc}}首</view>
+      </view>
+      
+      <!-- 加载更多提示 -->
+      <view wx:if="{{loadingMore}}" class="loading-more">加载中...</view>
+      <view wx:if="{{!hasMorePoets && poets.length > 0}}" class="no-more">— 已加载全部诗人 —</view>
     </view>
-  </view>
 
-  <!-- Loading -->
-  <view wx:if="{{isLoading}}" class="loading">加载中...</view>
-  <!-- 搴曢儴骞垮憡 -->
-  <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
+    <!-- Loading -->
+    <view wx:if="{{isLoading}}" class="loading">加载中...</view>
+    <!-- 底部广告 -->
+    <ad unit-id="adunit-07e9c9da9e4b8254" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
+  </scroll-view>
 </view>

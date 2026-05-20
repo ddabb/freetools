@@ -70,15 +70,19 @@ Page({
     });
   },
 
-  // 复制微信公众号名称
-  onCopyWechat() {
-    wx.setClipboardData({
-      data: '随身工具宝',
-      success: () => {
+  // 打开微信公众号
+  onOpenOfficialAccount() {
+    wx.openOfficialAccountProfile({
+      username: 'gh_d9b54132dd2c',
+      success(res) {
+        console.log('打开公众号成功');
+      },
+      fail(err) {
+        console.log('打开失败', err);
         wx.showToast({
-          title: '已复制公众号名称',
-          icon: 'success',
-          duration: 2000
+          title: '请手动搜索公众号：随身工具宝',
+          icon: 'none',
+          duration: 3000
         });
       }
     });

@@ -359,12 +359,10 @@ Page({
       var completed = getCompleted(self.data.difficulty);
       var maxPuzzles = TOTAL_PUZZLES[self.data.difficulty] || 1000;
       self.setData({
-        currentLevel: level,
         currentPuzzleIndex: level,
         colHints: puzzle.colHints,
         rowHints: puzzle.rowHints,
         answer: puzzle.answer,
-        gridSize: size,
         grid: grid,
         rowGroups: rowGroups,
         showWin: false,
@@ -372,8 +370,6 @@ Page({
         filledCount: 0,
         totalFill: totalFill,
         loading: false,
-        completedCount: completed.length,
-        showLevelSelector: false,
         maxPuzzles: maxPuzzles,
         jumpInputValue: '',
         showAnswer: false,
@@ -491,7 +487,7 @@ Page({
       if (this._timer) clearInterval(this._timer);
       playSound('win', { pageId: 'nonogram' });
       saveRecord(this.data.difficulty, this.data.currentLevel, this._seconds);
-      this.setData({ showWin: true, completedCount: getCompleted(this.data.difficulty).length });
+      this.setData({ showWin: true });
     }
   },
 
@@ -499,13 +495,12 @@ Page({
     var total = TOTAL_PUZZLES[this.data.difficulty] || 1000;
     var nums = [];
     for (var i = 1; i <= total; i++) nums.push(i);
-    this.setData({ showLevelSelector: true, levelNumbers: nums });
+    this.setData({ levelNumbers: nums });
   },
 
-  closeLevelSelector: function() { this.setData({ showLevelSelector: false }); },
+  closeLevelSelector: function() { },
 
   selectLevel: function(e) {
-    this.setData({ showLevelSelector: false });
     this.newGame(Number(e.currentTarget.dataset.l));
   },
 

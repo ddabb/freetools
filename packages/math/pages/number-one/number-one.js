@@ -124,7 +124,6 @@ Page({
       solved: false,
       failed: false,
       gameStarted: true,
-      elapsed: 0,
       formattedTime: '0:00',
       currentPuzzle: puzzle,
     });
