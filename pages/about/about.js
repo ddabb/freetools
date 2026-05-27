@@ -1,5 +1,6 @@
 // about.js
 const utils = require('../../utils/index');
+const { showRewardedVideoAd } = require('../../utils/ad-helper');
 
 Page({
   data: {
@@ -39,9 +40,8 @@ Page({
   },
 
   onShow() {
-    // 检查本地缓存状态
-    const cacheCleared = wx.getStorageSync('cdn_cached') || false;
-    this.setData({ cacheCleared });
+    // 不再在此处调用 setData，避免生命周期过渡期触发的重渲染
+    // 导致 glass-easel 框架中 text 节点 ID 映射丢失
   },
 
   // 清除CDN缓存
@@ -56,7 +56,7 @@ Page({
           const cdnKeys = keys.filter(key => key.startsWith('cdn_'));
           cdnKeys.forEach(key => wx.removeStorageSync(key));
           
-          this.setData({ cacheCleared: false });
+          this.setData({ cacheCleared: true });
           utils.showSuccess(`已清除 ${cdnKeys.length} 个缓存`);
         }
       }
@@ -126,11 +126,23 @@ Page({
     }
   },
 
-  // 广告事件
-  onAdError(err) {
-    console.warn('[广告] 关于页banner错误:', err.detail.errCode, err.detail.errMsg);
+  // 激励视频广告
+  watchRewardedAd() {
+    showRewardedVideoAd().then((success) => {
+      if (success) {
+        utils.showText('感谢您的支持！');
+      }
+    });
   },
-  onAdClose() {
-    console.log('[广告] 关于页banner关闭');
+
+  // 原生模板广告事件
+  adLoad() {
+    console.log('[广告] 关于页原生模板广告加载成功');
+  },
+  adError(err) {
+    console.error('[广告] 关于页原生模板广告加载失败', err);
+  },
+  adClose() {
+    console.log('[广告] 关于页原生模板广告关闭');
   }
 });

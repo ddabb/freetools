@@ -166,11 +166,14 @@ Page({
     return { title: '免费工具箱 - 精选实用工具集合', query: 'index' };
   },
 
-  // 广告事件
-  onAdError(err) {
-    console.warn('[广告] 首页banner错误:', err.detail.errCode, err.detail.errMsg);
+  // 原生模板广告事件
+  adLoad() {
+    console.log('[广告] 首页原生模板广告加载成功');
   },
-  onAdClose() {
-    console.log('[广告] 首页banner关闭');
+  adError(err) {
+    console.error('[广告] 首页原生模板广告加载失败', err);
+  },
+  adClose() {
+    console.log('[广告] 首页原生模板广告关闭');
   }
 });

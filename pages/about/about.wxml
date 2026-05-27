@@ -1,5 +1,5 @@
 ﻿<!-- about.wxml -->
-<scroll-view class="scrollarea" scroll-y type="list">
+<view class="scrollarea">
   <view class="container">
     <!-- 小程序码卡片 -->
     <view class="project-card">
@@ -79,7 +79,8 @@
         
         <view class="cache-info">
           <text class="cache-label">CDN缓存状态：</text>
-          <text class="cache-value {{cacheCleared ? 'success' : ''}}">{{cacheCleared ? '已清除' : '缓存正常'}}</text>
+          <text class="cache-value success" wx:if="{{cacheCleared}}">已清除</text>
+          <text class="cache-value" wx:else>缓存正常</text>
         </view>
         
         <view class="cache-hint">
@@ -95,6 +96,21 @@
         <button class="changelog-btn" hover-class="changelog-btn-hover" bindtap="goToChangelog">
           <text class="changelog-icon">📋</text>
           <text class="changelog-text">更新日志</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 支持我们卡片（激励视频广告） -->
+    <view class="project-card">
+      <view class="project-header">
+        <text class="project-title">❤️ 支持我们</text>
+      </view>
+      <view class="project-content">
+        <text class="project-description">如果您觉得小程序对您有帮助，</text>
+        <text class="project-description">欢迎观看一段视频广告支持我们持续开发！</text>
+        <button class="support-btn" hover-class="support-btn-hover" bindtap="watchRewardedAd">
+          <text class="support-icon">🎥</text>
+          <text class="support-text">观看视频支持我们</text>
         </button>
       </view>
     </view>
@@ -151,6 +167,6 @@
     </view>
 
     <!-- 关于页底部广告 -->
-    <ad unit-id="adunit-7c367b556fa848ca" ad-intervals="30" binderror="onAdError" bindclose="onAdClose"></ad>
+    <ad-custom unit-id="adunit-7c367b556fa848ca" bindload="adLoad" binderror="adError" bindclose="adClose"></ad-custom>
   </view>
-</scroll-view>
+</view>

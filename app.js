@@ -1,6 +1,7 @@
 // app.js
 const { allTools } = require('./config/tools');
 const knowledgeCategory = require('./utils/knowledgeCategory');
+const { showInterstitialAd } = require('./utils/ad-helper');
 
 // 重写 Page 函数，为所有页面自动添加分享功能
 const originalPage = Page;
@@ -55,13 +56,27 @@ App({
 
     // 检查更新
     this.checkForUpdate();
+
+    // 记录启动时间，用于控制广告展示频率
+    this._appLaunchTime = Date.now();
+    this._lastInterstitialTime = 0;
   },
 
 
 
 
 
-  onShow() {},
+  onShow() {
+    // 从后台切回前台时，尝试展示插屏广告
+    // 1. 小程序启动 30 秒内不允许展示（微信限制 2001）
+    // 2. 两次插屏广告间隔至少 60 秒
+    const now = Date.now();
+    if (now - this._appLaunchTime < 30000) return;
+    if (now - this._lastInterstitialTime > 60000) {
+      this._lastInterstitialTime = now;
+      showInterstitialAd();
+    }
+  },
 
   onHide() {},
 
