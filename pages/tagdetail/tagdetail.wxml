@@ -1,6 +1,8 @@
 <!-- 面包屑导航 -->
 <view class="breadcrumb">
-  <text class="breadcrumb-item" hover-class="breadcrumb-item-hover" bindtap="goToTagList">🏷️ 标签列表</text>
+  <text class="breadcrumb-item" hover-class="breadcrumb-item-hover" bindtap="goToKnowledgeList">📚 列表</text>
+  <text class="breadcrumb-sep">/</text>
+  <text class="breadcrumb-item" hover-class="breadcrumb-item-hover" bindtap="goToTagList">🏷️ 标签</text>
   <text class="breadcrumb-sep">/</text>
   <text class="breadcrumb-current">{{tagName}}</text>
 </view>

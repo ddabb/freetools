@@ -43,6 +43,10 @@ Page({
     return parts.length ? parts[parts.length - 1] : category;
   },
 
+  goToKnowledgeList() {
+    wx.switchTab({ url: '/pages/knowledgelist/knowledgelist' });
+  },
+
   goToCategoryList() {
     wx.navigateTo({ url: '/pages/categorylist/categorylist' });
   },

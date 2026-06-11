@@ -18,6 +18,11 @@
   <view class="article-hero" wx:if="{{article && !loading && !error}}">
     <!-- 分类标签行 -->
     <view class="category-row">
+      <!-- 列表按钮 -->
+      <view class="category-list-btn" hover-class="category-list-btn-hover" bindtap="goToKnowledgeList">
+        <text class="category-list-icon">📚</text>
+        <text class="category-list-text">列表</text>
+      </view>
       <!-- 分类列表按钮 -->
       <view class="category-list-btn" hover-class="category-list-btn-hover" bindtap="onCategoryListTap">
         <text class="category-list-icon">📂</text>
@@ -55,7 +60,7 @@
     <view class="article-wrapper">
 
       <!-- 文章描述 -->
-      <view class="article-desc-card">
+      <view class="article-desc-card" wx:if="{{article.description && article.description.trim().length > 0}}">
         <text class="desc-icon">💡</text>
         <text class="desc-text">{{article.description}}</text>
       </view>

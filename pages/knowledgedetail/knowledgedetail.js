@@ -406,6 +406,13 @@ Page({
   },
 
   /**
+   * 跳转知识列表（tabBar页面）
+   */
+  goToKnowledgeList() {
+    wx.switchTab({ url: '/pages/knowledgelist/knowledgelist' });
+  },
+
+  /**
    * 重试加载
    */
   onRetry() {

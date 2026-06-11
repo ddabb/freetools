@@ -36,6 +36,10 @@ Page({
     });
   },
 
+  goToKnowledgeList() {
+    wx.switchTab({ url: '/pages/knowledgelist/knowledgelist' });
+  },
+
   goToTagList() {
     wx.navigateTo({ url: '/pages/taglist/taglist' });
   },
