@@ -209,6 +209,61 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* 性别设置行 */
+.gender-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  margin: 0 8px;
+  gap: 12px;
+}
+
+.gender-label {
+  font-size: 15px;
+  color: #cbd5e0;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.gender-options {
+  display: flex;
+  gap: 10px;
+}
+
+.gender-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #cbd5e0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.25s ease;
+}
+
+.gender-icon {
+  font-size: 16px;
+}
+
+.gender-active-male {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+.gender-active-female {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: #fff;
+  border-color: #ec4899;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+}
+
 .relation-btn {
   background: linear-gradient(145deg, #4a5568, #2d3748);
   border: 2px solid rgba(255, 255, 255, 0.15);

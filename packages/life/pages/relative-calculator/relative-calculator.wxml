@@ -33,6 +33,21 @@
     
     <!-- 按钮区域 -->
     <view class="buttons-container">
+      <!-- 性别设置行 -->
+      <view class="gender-row">
+        <text class="gender-label">我的性别：</text>
+        <view class="gender-options">
+          <view class="gender-option {{gender === 'male' ? 'gender-active-male' : ''}}" data-gender="male" bindtap="setGender">
+            <text class="gender-icon">♂</text>
+            <text>男</text>
+          </view>
+          <view class="gender-option {{gender === 'female' ? 'gender-active-female' : ''}}" data-gender="female" bindtap="setGender">
+            <text class="gender-icon">♀</text>
+            <text>女</text>
+          </view>
+        </view>
+      </view>
+
       <!-- 第一行：操作按钮 -->
       <view class="button-row action-row">
         <view class="action-btn delete-btn" hover-class="action-btn-hover" bindtap="deleteRelation" >删除</view>
@@ -41,23 +56,15 @@
         <view class="action-btn export-btn" hover-class="action-btn-hover" bindtap="exportResult" >导出</view>
       </view>
       
-      <!-- 第二行：子女 -->
+      <!-- 第二行：配偶与子女 -->
       <view class="button-row">
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="儿子" bindtap="addRelation" >儿子</view>
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="女儿" bindtap="addRelation" >女儿</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="老公" bindtap="addRelation" >老公</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="老婆" bindtap="addRelation" >老婆</view>
+        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="儿子" bindtap="addRelation" >儿子</view>
+        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="女儿" bindtap="addRelation" >女儿</view>
       </view>
       
-      <!-- 第三行：祖父母 -->
-      <view class="button-row">
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="爷爷" bindtap="addRelation" >爷爷</view>
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="奶奶" bindtap="addRelation" >奶奶</view>
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="外公" bindtap="addRelation" >外公</view>
-        <view class="relation-btn" hover-class="relation-btn-hover" data-relation="外婆" bindtap="addRelation" >外婆</view>
-      </view>
-      
-      <!-- 第四行：父母 -->
+      <!-- 第三行：父母 -->
       <view class="button-row">
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="爸爸" bindtap="addRelation" >爸爸</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="妈妈" bindtap="addRelation" >妈妈</view>
@@ -65,7 +72,7 @@
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="婶婶" bindtap="addRelation" >婶婶</view>
       </view>
       
-      <!-- 第五行：叔叔阿姨 -->
+      <!-- 第四行：叔姑姨舅 -->
       <view class="button-row">
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="叔叔" bindtap="addRelation" >叔叔</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="阿姨" bindtap="addRelation" >阿姨</view>
@@ -73,7 +80,7 @@
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="姨妈" bindtap="addRelation" >姨妈</view>
       </view>
       
-      <!-- 第六行：兄弟姐妹 -->
+      <!-- 第五行：兄弟姐妹 -->
       <view class="button-row">
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="哥哥" bindtap="addRelation" >哥哥</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="弟弟" bindtap="addRelation" >弟弟</view>
@@ -81,7 +88,7 @@
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="妹妹" bindtap="addRelation" >妹妹</view>
       </view>
       
-      <!-- 第七行：侄甥 -->
+      <!-- 第六行：侄甥 -->
       <view class="button-row">
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="侄子" bindtap="addRelation" >侄子</view>
         <view class="relation-btn" hover-class="relation-btn-hover" data-relation="侄女" bindtap="addRelation" >侄女</view>

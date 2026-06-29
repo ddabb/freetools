@@ -32,10 +32,22 @@ Page({
     searchText: '',
     showSearchResult: false,
     recentTools: [],
-    loading: false
+    loading: false,
+    showAd: true
   },
 
   onLoad() {
+    // 开发版/体验版不展示广告
+    try {
+      const accountInfo = wx.getAccountInfoSync();
+      const envVersion = accountInfo.miniProgram.envVersion;
+      if (envVersion !== 'release') {
+        this.setData({ showAd: false });
+      }
+    } catch (e) {
+      // 获取失败不阻塞流程
+    }
+
     // 预建 Map（用于 recentTools 验证、navigateToTool 查找）
     this._toolsMap = {};
     this._urlMap = {};
@@ -175,5 +187,23 @@ Page({
   },
   adClose() {
     console.log('[广告] 首页原生模板广告关闭');
+  },
+
+  // 打开微信公众号
+  onOpenOfficialAccount() {
+    wx.openOfficialAccountProfile({
+      username: 'gh_d9b54132dd2c',
+      success(res) {
+        console.log('打开公众号成功');
+      },
+      fail(err) {
+        console.log('打开失败', err);
+        wx.showToast({
+          title: '请手动搜索公众号：随身工具宝',
+          icon: 'none',
+          duration: 3000
+        });
+      }
+    });
   }
 });

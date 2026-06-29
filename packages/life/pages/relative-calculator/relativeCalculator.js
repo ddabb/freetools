@@ -70,22 +70,67 @@ class RelativeCalculator {
     });
   }
   // 计算关系链
-  calculate(chain) {
+  // userGender: 用户设置的性别 'male' | 'female' | 'unknown'
+  calculate(chain, userGender) {
     if (!chain || chain.length === 0) {
       return '请选择亲戚关系';
     }
 
-    // 从链的第一个词判断起始人性别
-    // "老公" → 女；"老婆" → 男；其他 → 性别未知（随机选）
-    let gender = 'unknown';
-    if (chain[0] === '老公') {
-      gender = 'female';
-    } else if (chain[0] === '老婆') {
-      gender = 'male';
+    // 优先使用用户设置的性别
+    let gender = userGender || 'unknown';
+
+    // 如果用户未设置性别，尝试从链的第一个词推断
+    // "老公" → 女；"老婆" → 男
+    if (gender === 'unknown') {
+      if (chain[0] === '老公') {
+        gender = 'female';
+      } else if (chain[0] === '老婆') {
+        gender = 'male';
+      }
     }
 
     // 处理复杂树形结构关系
     return this.calculateTreeStructure(chain, gender);
+  }
+
+  /**
+   * 检查第一个关系是否与用户性别冲突（数据驱动）
+   * @param {string} userGender - 'male' | 'female' | 'unknown'
+   * @param {string} firstRelation - 链的第一项关系名
+   * @returns {{ valid: boolean, message?: string }}
+   */
+  checkFirstRelationConflict(userGender, firstRelation) {
+    if (userGender === 'unknown' || !this.relationGraph) return { valid: true };
+    const selfNode = this.relationGraph['自己'];
+    if (!selfNode) return { valid: true };
+
+    const targets = selfNode[firstRelation];
+    if (!targets) return { valid: true };
+
+    // 统一转为数组处理
+    const targetList = Array.isArray(targets) ? targets : [targets];
+
+    for (const targetName of targetList) {
+      const targetNode = this.relationGraph[targetName];
+      if (!targetNode || !targetNode.gender) continue;
+
+      // 性别相同才可能有冲突
+      if (targetNode.gender !== userGender) continue;
+
+      // 数据驱动判断：目标节点是"配偶节点"当且仅当
+      // 该节点通过「老公」或「老婆」关系回指到「自己」
+      const isSpouseNode =
+        targetNode['老公'] === '自己' || targetNode['老婆'] === '自己';
+
+      if (isSpouseNode) {
+        return {
+          valid: false,
+          message: `你的性别为${userGender === 'male' ? '男' : '女'}，无法选择「${firstRelation}」`
+        };
+      }
+    }
+
+    return { valid: true };
   }
 
   // 基于图论的关系计算算法

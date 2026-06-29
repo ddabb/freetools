@@ -11,7 +11,8 @@ Page({
     result: '',
     inputDisplayText: '',
     loading: true,
-    error: ''
+    error: '',
+    gender: 'unknown'
   },
 
   onLoad() {
@@ -52,11 +53,20 @@ Page({
     const relation = e.currentTarget.dataset.relation;
     console.debug('selected relation:', relation);
 
+    // 性别校验：当已设置性别且添加第一个关系时，检查性别冲突
+    if (this.data.relationshipChain.length === 0 && this.data.gender !== 'unknown') {
+      const conflict = calculator.checkFirstRelationConflict(this.data.gender, relation);
+      if (!conflict.valid) {
+        wx.showToast({ title: conflict.message, icon: 'none', duration: 2000 });
+        return;
+      }
+    }
+
     const newChain = [...this.data.relationshipChain, relation];
     console.debug('new relationship chain:', newChain);
 
-    // 实时计算结果
-    const result = calculator.calculate(newChain);
+    // 实时计算结果，传入用户设置的性别
+    const result = calculator.calculate(newChain, this.data.gender);
     const inputDisplayText = newChain.length === 0 ? '' : `我的${newChain.join('的')}`;
 
     this.setData({
@@ -77,7 +87,7 @@ Page({
 
     if (this.data.relationshipChain.length > 0) {
       const newChain = this.data.relationshipChain.slice(0, -1);
-      const result = newChain.length > 0 ? calculator.calculate(newChain) : '';
+      const result = newChain.length > 0 ? calculator.calculate(newChain, this.data.gender) : '';
       const inputDisplayText = newChain.length === 0 ? '' : `我的${newChain.join('的')}`;
 
       this.setData({
@@ -86,6 +96,36 @@ Page({
         inputDisplayText: inputDisplayText
       });
     }
+  },
+
+  // 设置我的性别
+  setGender: function (e) {
+    const gender = e.currentTarget.dataset.gender;
+    const newGender = this.data.gender === gender ? 'unknown' : gender;
+
+    // 检查切换性别后，当前关系链的第一个关系是否与性别冲突
+    const chain = this.data.relationshipChain;
+    if (newGender !== 'unknown' && chain.length > 0) {
+      const conflict = calculator.checkFirstRelationConflict(newGender, chain[0]);
+      if (!conflict.valid) {
+        wx.showToast({ title: conflict.message + '，已清空', icon: 'none', duration: 2500 });
+        this.setData({
+          gender: newGender,
+          relationshipChain: [],
+          result: '',
+          inputDisplayText: ''
+        });
+        return;
+      }
+    }
+
+    this.setData({ gender: newGender }, () => {
+      // 重新计算结果
+      if (this.data.relationshipChain.length > 0) {
+        const result = calculator.calculate(this.data.relationshipChain, this.data.gender);
+        this.setData({ result: result });
+      }
+    });
   },
 
   // 清空单个关系（C按钮）
